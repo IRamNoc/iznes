@@ -1,10 +1,78 @@
-<app-my-informations [icon]="'fa-user'" [header]="'My information: ' + userInfo.firstName + ' ' + userInfo.lastName" [subTitle]="'Here are the data concerning me on ' + appConfig.platform" [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()">
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-welcome-additionnal"><i class="fa fa-user"></i><span mltag="txt_myinformation">My information</span></h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="button">
+            <i class="fa fa-bars"></i> <span mltag="txt_vieweditinformation">View/edit information</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <h2><span mltag="txt_userdetails">User Details</span>:</h2>
+            <p><span mltag="txt_youcanviewedityourprofileinfor19a4d7473f">You can view/edit your profile information below</span>:</p>
+            <app-my-informations [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()">
 
 
 
 
 
+            </app-my-informations>
 
+            <div class="hr-line-dashed"></div>
 
+            <h2 mltag="txt_changeyourpassword">Change your password</h2>
+            <p><span mltag="txt_youcanchangeyourpasswordanytim6c0cb698df">You can change your password anytime here</span>:</p>
 
-</app-my-informations>
+            <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
+                <section class="form-block">
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="cpOldPassword">
+                                <span mltag="txt_oldpassword">Old Password</span>
+                            </label>
+                            <div class="password-container">
+                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
+                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                            </div>
+                            <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="text-danger" mltag="txt_oldpasswordisrequired">Old Password is required</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="cpPassword">
+                                <span mltag="txt_password">Password</span>
+                            </label>
+                            <div class="password-container">
+                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45">
+                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                            </div>
+                            <div *ngIf="password.hasError('required') && password.touched" class="text-danger" mltag="txt_passwordisrequired">Password is required</div>
+                            <div *ngIf="changePassForm.controls.password.hasError('minlength') && !password.hasError('required') && password.touched" class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">Your password must be at least 6 characters</div>
+                            <div *ngIf="!changePassForm.controls.password.hasError('required') && !changePassForm.controls.password.hasError('minlength') && changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="text-danger" mltag="txt_thenewpasswordshouldnotbethesa868f5aa8e0">The new password should not be the same as the old</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="cpPasswordConfirm">
+                                <span mltag="txt_passwordconfirmation">Password confirmation</span>
+                            </label>
+                            <div class="password-container">
+                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
+                                <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                            </div>
+                            <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_confirmationisrequired">Confirmation is required</div>
+                            <div *ngIf="changePassForm.controls.passwordConfirm.hasError('minlength') && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger" mltag="txt_yourpasswordmustbeatleast6chard618084a6b">Your password must be at least 6 characters</div>
+                            <div *ngIf="!passwordConfirm.hasError('required') && !changePassForm.controls.passwordConfirm.hasError('minlength') && changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="text-danger" mltag="txt_passworddoesnotmatch">Password does not match</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid"><i class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                    </div>
+                </section>
+            </form>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

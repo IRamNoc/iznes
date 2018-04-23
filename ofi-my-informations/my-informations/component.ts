@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 // Services
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {fromJS} from "immutable";
+import {fromJS} from 'immutable';
 
 export enum ViewMode {
     PAGE = 'PAGE',
@@ -27,9 +27,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     // Locale
     language = 'fr-Latn';
 
-    @Input() icon: string;
-    @Input() header: string;
-    @Input() subTitle: string;
     @Input() viewMode: ViewMode;
     @Input() type: string;
     @Output() onClose = new EventEmitter<void>();
@@ -287,7 +284,8 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 private _ngRedux: NgRedux<any>,
                 private _fb: FormBuilder,
-                private mcService: OfiManagementCompanyService) {
+                private mcService: OfiManagementCompanyService,
+    ) {
 
         this.additionnalForm = this._fb.group({
             email: [

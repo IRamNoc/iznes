@@ -83,7 +83,20 @@ describe('Subscription order', () => {
                             ''
                         ]
                     },
-                    'addencumbrances': [],
+                    'addencumbrances': [
+                        [
+                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
+                            "ordershare2|ordershare2",
+                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                            "(10000000 / nav) * 100000",
+                            [],
+                            [[
+                                "wallet_address",
+                                0,
+                                0
+                            ]]
+                        ]
+                    ],
                     'events': [
                         'commit',
                         'expiry'
@@ -93,7 +106,7 @@ describe('Subscription order', () => {
                     'protocol': 'dvp',
                     'encumbrance': [
                         true,
-                        'use_encumbrance'
+                        "use_encumbrance"
                     ],
                     'metadata': "{\"doc\":{},\"title\":\"Subscription order for ordershare2|ordershare2\"}"
                 }
@@ -171,7 +184,20 @@ describe('Subscription order', () => {
                             ""
                         ]
                     },
-                    "addencumbrances": [],
+                    "addencumbrances": [
+                        [
+                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
+                            "ordershare2|ordershare2",
+                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                            10000000,
+                            [],
+                            [[
+                                "wallet_address",
+                                0,
+                                0
+                            ]],
+                        ]
+                    ],
                     "events": [
                         "commit",
                         "expiry"
@@ -260,7 +286,22 @@ describe('Subscription order', () => {
                             ""
                         ]
                     },
-                    "addencumbrances": [],
+                    "addencumbrances": [
+                        [
+                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
+                            "ordershare2|ordershare2",
+                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                            "(10000000 / nav) * 100000",
+                            [],
+                            [
+                                [
+                                    "wallet_address",
+                                    0,
+                                    0
+                                ]
+                            ]
+                        ]
+                    ],
                     "events": [
                         "commit",
                         "expiry"
@@ -350,7 +391,20 @@ describe('Subscription order', () => {
                             ""
                         ]
                     },
-                    "addencumbrances": [],
+                    "addencumbrances": [
+                        [
+                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
+                            "ordershare2|ordershare2",
+                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
+                            10000000,
+                            [],
+                            [[
+                                "wallet_address",
+                                0,
+                                0
+                            ]]
+                        ]
+                    ],
                     "events": [
                         "commit",
                         "expiry"

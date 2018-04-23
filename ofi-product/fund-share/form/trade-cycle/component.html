@@ -3,12 +3,11 @@
         <div class="form-group col-sm-6">
             <label class="control-label required-field" for="{{typeLowercase}}TradeCyclePeriod">{{typeCapitilised}} Trade Cycle Period</label>
 
-            <ng-select id="{{typeLowercase}}TradeCyclePeriod" [items]="model.dropdownItems.tradeCyclePeriodItems" [active]="model.form.value.tradeCyclePeriod" [allowClear]="true" placeholder="" [formControl]="model.form.controls['tradeCyclePeriod']">
-
-
-
-
-
+            <ng-select id="{{typeLowercase}}TradeCyclePeriod"
+                [items]="model.dropdownItems.tradeCyclePeriodItems"
+                [active]="model.form.value.tradeCyclePeriod"
+                placeholder=""
+                [formControl]="model.form.controls['tradeCyclePeriod']">
             </ng-select>
         </div>
     </div>
@@ -17,13 +16,12 @@
         <div class="form-group col-sm-4">
             <label class="control-label required-field" for="{{typeLowercase}}WeeklyDealingDays">Weekly {{typeCapitilised}} Dealing Days</label>
 
-            <ng-select id="{{typeLowercase}}WeeklyDealingDays" [items]="model.dropdownItems.weeklyItems" [active]="model.form.value.weeklyDealingDays" [multiple]="true" [allowClear]="true" placeholder="" [formControl]="model.form.controls['weeklyDealingDays']">
-
-
-
-
-
-
+            <ng-select id="{{typeLowercase}}WeeklyDealingDays"
+                [items]="model.dropdownItems.weeklyItems"
+                [active]="model.form.value.weeklyDealingDays"
+                [multiple]="true"
+                placeholder=""
+                [formControl]="model.form.controls['weeklyDealingDays']">
             </ng-select>
         </div>
     </div>
@@ -33,33 +31,29 @@
             <div class="form-group col-sm-4">
                 <label class="control-label required-field" for="{{typeLowercase}}MonthlyDealingDaysTermA" mltag="txt_number">Number</label>
 
-                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" [allowClear]="true" placeholder="" [formControl]="control.controls.termA">
-
-
-
-
+                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermA"
+                    [items]="model.dropdownItems.numberItems"
+                    placeholder=""
+                    [formControl]="control.controls.termA">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-4">
                 <label class="control-label required-field" for="{{typeLowercase}}MonthlyDealingDaysTermB" mltag="txt_day">Day</label>
 
-                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" [allowClear]="true" placeholder="" [formControl]="control.controls.termB">
-
-
-
-
+                <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB"
+                    [items]="model.dropdownItems.dayItems"
+                    placeholder=""
+                    [formControl]="control.controls.termB">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-4">
                 <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                 <button class="btn btn-warning" (click)="removeMonthlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.monthlyDealingDays.controls.length)" mltag="txt_remove">
-
                     Remove
                 </button>
                 <button class="btn btn-primary" (click)="addMonthlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.monthlyDealingDays.controls.length)" mltag="txt_add">
-
                     Add
                 </button>
             </div>
@@ -71,44 +65,39 @@
             <div class="form-group col-sm-3">
                 <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermA" mltag="txt_number">Number</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" [allowClear]="true" placeholder="" [formControl]="control.controls.termA">
-
-
-
-
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA"
+                    [items]="model.dropdownItems.numberItems"
+                    placeholder=""
+                    [formControl]="control.controls.termA">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3">
                 <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermB" mltag="txt_day">Day</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" [allowClear]="true" placeholder="" [formControl]="control.controls.termB">
-
-
-
-
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB"
+                    [items]="model.dropdownItems.dayItems"
+                    placeholder=""
+                    [formControl]="control.controls.termB">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3">
                 <label class="control-label required-field" for="{{typeLowercase}}YearlyDealingDaysTermC" mltag="txt_month">Month</label>
 
-                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC" [items]="model.dropdownItems.monthItems" [allowClear]="true" placeholder="" [formControl]="control.controls.termC">
-
-
-
-
+                <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC"
+                    [items]="model.dropdownItems.monthItems"
+                    placeholder=""
+                    [formControl]="control.controls.termC">
                 </ng-select>
             </div>
 
             <div class="form-group col-sm-3">
                 <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                 <button class="btn btn-warning" (click)="removeYearlyDealingDays(idx)" [hidden]="!showRemove(idx, model.form.controls.yearlyDealingDays.controls.length)" mltag="txt_remove">
-
                     Remove
                 </button>
                 <button class="btn btn-primary" (click)="addYearlyDealingDays()" [hidden]="!showAdd(idx, model.form.controls.yearlyDealingDays.controls.length)" mltag="txt_add">
-
                     Add
                 </button>
             </div>

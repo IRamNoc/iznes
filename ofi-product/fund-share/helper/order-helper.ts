@@ -15,6 +15,7 @@ import {
     ArrangementActionType,
     ConditionType
 // } from '../../../../utils/services/blockchain-contract/model';
+
 } from '@setl/utils/services/blockchain-contract/model';
 
 interface OrderRequest {
@@ -428,7 +429,7 @@ export class OrderHelper {
         // Check order value (quantity / amount) is meet requirements:
         // - [] greater than initial min order value ;
         // - [x] greater than subsequent min order value ;
-        if (orderValueToCheck <= this.subsequentMinFig) {
+        if (orderValueToCheck < this.subsequentMinFig) {
             return {
                 orderValid: false,
                 errorMessage: 'Order value does not meet subsequent minimum'
@@ -514,7 +515,8 @@ export class OrderHelper {
     }
 
     buildSubscriptionArrangementData(): ArrangementData | VerifyResponse {
-        let actionData;
+        let actionData, addEncs;
+        // [investorAddress, issueAsset, '', cpToEncToBank, [[bankAddress, 0, 0], [item.address, 0, 0]], []]
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
@@ -522,7 +524,7 @@ export class OrderHelper {
         if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDate);
         } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
-            return OrderHelper.getChildErrorMessage(orderDate);
+            return OrderHelper.getChildErrorMessage(orderFigures);
         } else {
             orderDate = orderDate as OrderDates;
             orderFigures = orderFigures as OrderFigures;
@@ -551,6 +553,11 @@ export class OrderHelper {
                     actionType: ArrangementActionType.ISSUE
                 }
             ];
+
+            addEncs = [
+                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+            ];
+
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
             actionData = [
@@ -569,6 +576,11 @@ export class OrderHelper {
                     actionType: ArrangementActionType.ISSUE
                 }
             ];
+
+            addEncs = [
+                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                    [], [[this.amIssuingAddress, 0, 0]]]];
+
 
         } else {
             return {
@@ -602,6 +614,7 @@ export class OrderHelper {
                     'address': this.amIssuingAddress
                 }
             ],
+            addEncs,
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
@@ -610,7 +623,7 @@ export class OrderHelper {
     }
 
     buildRedemptionArrangementData(): ArrangementData | VerifyResponse {
-        let actionData;
+        let actionData, addEncs;
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
@@ -647,6 +660,11 @@ export class OrderHelper {
                     actionType: ArrangementActionType.SEND
                 }
             ];
+
+            addEncs = [
+                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+            ];
+
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
             actionData = [
@@ -664,6 +682,10 @@ export class OrderHelper {
                     },
                     actionType: ArrangementActionType.SEND
                 }
+            ];
+
+            addEncs = [
+                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
             ];
 
         } else {
@@ -698,6 +720,7 @@ export class OrderHelper {
                     'address': this.amIssuingAddress
                 }
             ],
+            addEncs,
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,

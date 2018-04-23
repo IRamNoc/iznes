@@ -4,99 +4,101 @@ export class ShareDocumentsMandatory extends DynamicFormsValidator {
     prospectus: FormItem = {
         type: FormItemType.file,
         label: 'Prospectus',
-        required: true        
+        required: true,
+        filePermission: 0
     }
     kiid: FormItem = {
         type: FormItemType.file,
         label: 'KIID (Key Investor Information Document )',
-        required: true        
+        required: true,
+        filePermission: 0
     }
 }
 
 export class ShareDocumentsOptional extends DynamicFormsValidator {
-    annualActivityReport : FormItem = {
+    annualActivityReport: FormItem = {
         type: FormItemType.file,
         label: 'Annual Activity Report',
-        required: false       
+        required: false
     }
-    semiAnnualSummary : FormItem = {
+    semiAnnualSummary: FormItem = {
         type: FormItemType.file,
         label: 'Semi-annual Summary',
-        required: false        
+        required: false
     }
-    sharesAllocation : FormItem = {
+    sharesAllocation: FormItem = {
         type: FormItemType.file,
         label: 'Shares Allocation',
-        required: false        
+        required: false
     }
     sriPolicy: FormItem = {
         type: FormItemType.file,
         label: 'SRI Policy (Socially Responsible Investment)',
-        required: false        
+        required: false
     }
-    transparencyCode : FormItem = {
+    transparencyCode: FormItem = {
         type: FormItemType.file,
         label: 'Transparency Code',
-        required: false        
+        required: false
     }
     businessLetter: FormItem = {
         type: FormItemType.file,
         label: 'Business Letter',
-        required: false        
+        required: false
     }
     productSheet: FormItem = {
         type: FormItemType.file,
         label: 'Product Sheet',
-        required: false        
+        required: false
     }
-    monthlyFinancialReport : FormItem = {
+    monthlyFinancialReport: FormItem = {
         type: FormItemType.file,
         label: 'Monthly Financial Report',
-        required: false        
+        required: false
     }
-    monthlyExtraFinancialReport : FormItem = {
+    monthlyExtraFinancialReport: FormItem = {
         type: FormItemType.file,
         label: 'Monthly Extra-Financial Report',
-        required: false        
+        required: false
     }
-    quarterlyFinancialReport : FormItem = {
+    quarterlyFinancialReport: FormItem = {
         type: FormItemType.file,
         label: 'Quarterly Financial Report',
-        required: false        
+        required: false
     }
-    quarterlyExtraFinancialReport : FormItem = {
+    quarterlyExtraFinancialReport: FormItem = {
         type: FormItemType.file,
         label: 'Quarterly Extra-Financial Report',
-        required: false        
+        required: false
     }
     letterToShareholders: FormItem = {
         type: FormItemType.file,
         label: 'Letter to shareholders',
-        required: false        
+        required: false
     }
     kid: FormItem = {
         type: FormItemType.file,
         label: 'KIDs (Key Information Documents)',
-        required: false        
+        required: false
     }
     statutoryAuditorsCertification: FormItem = {
         type: FormItemType.file,
         label: 'Statutory Auditors Certification',
-        required: false        
+        required: false
     }
     ept: FormItem = {
         type: FormItemType.file,
         label: 'EPT (European PRIIPS Template)',
-        required: false        
+        required: false
     }
     emt: FormItem = {
         type: FormItemType.file,
         label: 'EMT (European MIF Template)',
-        required: false        
+        required: false
     }
     tpts2: FormItem = {
         type: FormItemType.file,
         label: 'TPTS2 (Third Parties Template Solvency 2)',
-        required: false        
+        required: false
     }
 }
