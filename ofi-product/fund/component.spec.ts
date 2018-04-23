@@ -1,7 +1,6 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import * as _ from 'lodash';
 import {of} from 'rxjs/observable/of';
 
 
@@ -633,8 +632,6 @@ describe('FundComponent', () => {
             const testPayload = {
                 isFundStructure: '1',
                 fundName: 'test',
-                AuMFund: 'test',
-                AuMFundDate: '2017-02-02',
                 legalEntityIdentifier: null,
                 registerOffice: null,
                 registerOfficeAddress: null,
@@ -708,7 +705,7 @@ describe('FundComponent', () => {
 
                 it('should call fundService.createFund', fakeAsync(() => {
 
-                    const expectedResult: Fund = Object(_.omit({
+                    const expectedResult: Fund = Object({
                         ...testPayload,
                         domicile: testPayload.domicile[0].id,
                         legalForm: testPayload.legalForm[0].id,
@@ -720,7 +717,7 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
-                    }, ['AuMFund', 'AuMFundDate']));
+                    });
                     comp.submitFundForm();
 
                     expect(iznCreateFund).toHaveBeenCalledTimes(1);
@@ -760,7 +757,7 @@ describe('FundComponent', () => {
 
                 it('should call fundService.updateFund', fakeAsync(() => {
 
-                    const expectedResult: Fund = Object(_.omit({
+                    const expectedResult: Fund = Object({
                         ...testPayload,
                         domicile: testPayload.domicile[0].id,
                         legalForm: testPayload.legalForm[0].id,
@@ -772,7 +769,7 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
-                    }, ['AuMFund', 'AuMFundDate']));
+                    });
                     comp.submitFundForm();
 
                     expect(iznUpdateFund).toHaveBeenCalledTimes(1);
