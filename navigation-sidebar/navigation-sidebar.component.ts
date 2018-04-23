@@ -118,9 +118,13 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
      * @param  {string}  route - the route being tested
      * @return {boolean} active - true if the route tested is matching the url
      */
-    public activeRoute(route: string): boolean {
-        const routeRegex = new RegExp(`^${route}(\/\S+)*`);
-        return routeRegex.test(this.router.url);
+    public activeRoute(route: string, isChild: boolean = false): boolean {
+        if(isChild) {
+            return route === this.router.url;
+        } else {
+            const routeRegex = new RegExp(`^${route}(\/\S+)?`);
+            return routeRegex.test(this.router.url);
+        }
     }
 
     public menuSelected(id) {
