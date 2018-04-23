@@ -171,33 +171,33 @@ export class ChannelService {
             case 'uduwp': // update user wallet permissions
                 console.log(' | UPDATE USER WALLET PERMISSION: ');
 
-                const asyncTaskPipes = this.myWalletsService.requestWalletDirectory();
+                const asyncTaskPipesDirectory = this.myWalletsService.requestWalletDirectory();
 
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_WALLET_DIRECTORY],
                     [],
-                    asyncTaskPipes,
+                    asyncTaskPipesDirectory,
                     {}
                 ));
 
                 // need to be retrieve as the admin does not know our wallet list
-                const asyncTaskPipes = this.myWalletsService.requestOwnWallets();
+                const asyncTaskPipesWallets = this.myWalletsService.requestOwnWallets();
 
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_OWN_WALLETS],
                     [],
-                    asyncTaskPipes, {}));
+                    asyncTaskPipesWallets, {}));
 
                 // Set the state flag to true. so we do not request it again.
                 this.ngRedux.dispatch(setRequestedMyChainAccess());
 
                 // Request the list.
-                const asyncTaskPipe = this.chainService.requestMyChainAccess();
+                const asyncTaskPipeAccess = this.chainService.requestMyChainAccess();
 
                 this.ngRedux.dispatch(SagaHelper.runAsync(
                     [SET_MY_CHAIN_ACCESS],
                     [],
-                    asyncTaskPipe,
+                    asyncTaskPipeAccess,
                     {}
                 ));
 
