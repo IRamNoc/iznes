@@ -4,78 +4,78 @@ import * as PC from '../../productConfig';
 export class ShareUmbrellaFund extends DynamicFormsValidator {
     umbrellaFundName: FormItem = {
         type: FormItemType.text,
-        label: 'umbrellaFundName',
+        label: 'Umbrella Fund Name',
         required: false,
         disabled: true
     }
     registerOffice: FormItem = {
         type: FormItemType.text,
-        label: 'registerOffice',
+        label: 'Name of the Registred Office of the Umbrella Fund',
         required: false,
         disabled: true
     }
     registerOfficeAddress: FormItem = {
         type: FormItemType.text,
-        label: 'registerOfficeAddress',
+        label: 'Address of the Registred Office of the Umbrella Fund',
         required: false,
         disabled: true
     }
     legalEntityIdentifier: FormItem = {
         type: FormItemType.text,
-        label: 'legalEntityIdentifier',
+        label: 'Legal Entity Identifier (LEI)',
         required: false,
         disabled: true
     }
     domicile: FormItem = {
         type: FormItemType.list,
-        label: 'domicile',
+        label: 'Umbrella Fund Domicile (Country)',
         required: false,
         disabled: true,
         listItems: PC.fundItems.domicileItems
     }
     umbrellaFundCreationDate: FormItem = {
         type: FormItemType.text,
-        label: 'umbrellaFundCreationDate',
+        label: 'Umbrella Fund Creation Date',
         required: false,
         disabled: true
     }
     managementCompanyID: FormItem = {
         type: FormItemType.list,
-        label: 'managementCompanyID',
+        label: 'Management Company',
         required: false,
         disabled: true
     }
     fundAdministratorID: FormItem = {
         type: FormItemType.list,
-        label: 'fundAdministratorID',
+        label: 'Fund Administrator',
         required: false,
         disabled: true,
         listItems: PC.fundItems.fundAdministratorItems
     }
     custodianBankID: FormItem = {
         type: FormItemType.list,
-        label: 'custodianBankID',
+        label: 'Custodian Bank',
         required: false,
         disabled: true,
         listItems: PC.fundItems.custodianBankItems
     }
     investmentManagerID: FormItem = {
         type: FormItemType.list,
-        label: 'investmentManagerID',
+        label: 'Investment Manager',
         required: false,
         disabled: true,
         listItems: PC.fundItems.investmentManagerItems
     }
     investmentAdvisorID: FormItem = {
         type: FormItemType.list,
-        label: 'investmentAdvisorID',
+        label: 'Investment Advisor',
         required: false,
         disabled: true,
         listItems: PC.fundItems.investmentAdvisorItems
     }
     payingAgentID: FormItem = {
         type: FormItemType.list,
-        label: 'payingAgentID',
+        label: 'Paying Agent',
         required: false,
         disabled: true,
         listItems: PC.fundItems.payingAgentItems
