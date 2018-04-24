@@ -1,6 +1,6 @@
 :host {
     clr-tabs {
-        margin-bottom: 20px;
+        margin: 20px 0;
 
         button .required {
             color: red;
@@ -17,9 +17,11 @@
     }
     .actions {
         border-bottom: 1px dotted #DDD;
-        margin: 0 0 20px;
+        margin: 20px 0 20px;
         padding: 0 0 20px;
         width: calc(100% - 20px);
+
+        .btn { margin-top: 0 }
 
         &.bottom {
             border-bottom: none;
