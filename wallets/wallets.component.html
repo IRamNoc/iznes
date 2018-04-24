@@ -58,7 +58,7 @@
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="wallet.walletLocked === 0" class="label label-success" mltag="txt_unlocked">Unlocked</span>
-                        <span *ngIf="wallet.walletLocked === 1" class="label label-warning" mltag="txt_locked">Locked</span>
+                        <span *ngIf="wallet.walletLocked === 1" class="label label-danger" mltag="txt_locked">Locked</span>
                     </clr-dg-cell>
                 </clr-dg-row>
 
