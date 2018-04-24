@@ -7,7 +7,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',
         required: true,
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_maxdecshares'
     }
     subscriptionCategory: FormItem = {
         type: FormItemType.list,
@@ -18,7 +19,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
             { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' }
         ],
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_subcat'
     }
     subscriptionCurrency: FormItem = {
         type: FormItemType.list,
@@ -33,7 +35,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_subcurrency'
     }
     minInitialSubscriptionInShare: FormItem = {
         type: FormItemType.number,
@@ -42,7 +45,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubinshare'
     }
     minInitialSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -51,7 +55,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubinamount'
     }
     minSubsequentSubscriptionInShare: FormItem = {
         type: FormItemType.number,
@@ -60,7 +65,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubsubinshare'
     }
     minSubsequentSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -69,7 +75,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubsubinamount'
     }
     redemptionCategory: FormItem = {
         type: FormItemType.list,
@@ -80,7 +87,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             { id: E.SubscriptionCategoryEnum.Amount, text: 'Amount' },
             { id: E.SubscriptionCategoryEnum.Both, text: 'Shares and Amount' }
         ],
-        style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_redcat'
     }
     redemptionCurrency: FormItem = {
         type: FormItemType.list,
@@ -95,7 +103,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_redcurrency'
     }
     minInitialRedemptionInShare: FormItem = {
         type: FormItemType.number,
@@ -104,7 +113,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minredinshare'
     }
     minInitialRedemptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -113,7 +123,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minredinamount'
     }
     minSubsequentRedemptionInShare: FormItem = {
         type: FormItemType.number,
@@ -122,7 +133,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubredinshare'
     }
     minSubsequentRedemptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -131,7 +143,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        }
+        },
+        mltag: 'txt_fundshare_minsubredinamount'
     }
 }
 
@@ -145,6 +158,7 @@ export class ShareCharacteristicOptional {
             { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
             { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
             { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' }
-        ]
+        ],
+        mltag: 'txt_fundshare_portfoliohedge'
     }
 }
