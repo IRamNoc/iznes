@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.*;
@@ -25,6 +26,8 @@ import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPres
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.fundCheckRoundingUp;
 import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -99,12 +102,12 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         try {
-            String umbFundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]")).getText();
+            String umbFundName = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).getText();
             String umbFundLEI = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[2]")).getText();
             String umbFundManagement = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getText();
             String umbFundCountry = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]")).getText();
@@ -167,9 +170,13 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")));
+
             String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-            assertFalse(postCreationNo.equals(preCreationNo + 1));
+            assertNotEquals(postCreationNo, preCreationNo + 1);
         }catch (Exception e){
             fail();
         }
@@ -182,12 +189,11 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
-            driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).click();
+            driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();
         }catch (Exception e){
             fail(e.getMessage());
         }
-        String title = driver.findElement(By.id("edit-fund-title")).getText();
-        assertTrue(title.contains("Umbrella fund:"));
+        assertTrue(driver.findElement(By.id("uf_umbrellaFundName")).isDisplayed());
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys("Updated");
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         try {

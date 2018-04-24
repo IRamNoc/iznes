@@ -191,11 +191,34 @@ public class LoginAndNavigationHelper {
         waitForHomePageToLoad();
     }
 
+    public static void loginAndVerifyFailure(String username, String password) throws InterruptedException {
+        navigateToLoginPage();
+        enterLoginCredentialsUserName(username);
+        enterLoginCredentialsPassword(password);
+        clickLoginButton();
+        waitForLoginFailPopup();
+    }
+
     public static void waitForHomePageToLoad() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             WebElement topBar = driver.findElement(By.id("topBarMenu"));
             wait.until(visibilityOf(topBar));
+
+        } catch (Exception e) {
+            fail("Page heading was not present " + e.getMessage());
+        }
+    }
+
+    public static void waitForLoginFailPopup(){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+            wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+
+            String loginFail = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(loginFail.equals("Warning!"));
+            String loginMsg = driver.findElement(By.xpath("//jaspero-alerts/jaspero-alert/div[2]/div[3]/span")).getText();
+            assertTrue(loginMsg.equals("Invalid email address or password!"));
 
         } catch (Exception e) {
             fail("Page heading was not present " + e.getMessage());

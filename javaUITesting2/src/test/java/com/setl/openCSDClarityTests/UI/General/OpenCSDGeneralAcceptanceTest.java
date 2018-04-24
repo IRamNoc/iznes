@@ -110,7 +110,6 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
-    @Repeat
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
