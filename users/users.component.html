@@ -294,6 +294,7 @@
                                 [items]="filteredChainList"
                                 [allowClear]="true"
                                 placeholder="Select Chain"
+                                [active]="selectedChainItem"                                
                                 (selected)="setFormChainId(tabid, $event)"
                                 mltag="txt_selectchain"
                         ></ng-select>
