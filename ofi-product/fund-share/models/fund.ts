@@ -169,11 +169,10 @@ export class ShareFund extends DynamicFormsValidator {
         mltag: 'txt_fundshare_fund_payingagent'
     }
     fundManagers: FormItem = {
-        type: FormItemType.list,
+        type: FormItemType.text,
         label: 'Fund Managers',
         required: false,
         disabled: true,
-        listItems: PC.fundItems.investmentManagerItems,
         mltag: 'txt_fundshare_fund_managers'
     }
     isDedicatedFund: FormItem = {
