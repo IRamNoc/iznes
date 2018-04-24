@@ -23,25 +23,25 @@ const noop = () => {
 export class VariousAddressSelectComponent implements ControlValueAccessor {
 
     @Input() ownWalletAddressArray = [
-        {id: 1, text: '2 Relationship'},
+        {id: 1, text: '2 Connection'},
         {id: 2, text: 'Owned Address'},
         {id: 3, text: 'Other Address'},
     ];
     @Input() relationshipArray = [
-        {id: 1, text: '1 Relationship'},
+        {id: 1, text: '1 Connection'},
         {id: 2, text: 'Owned Address'},
         {id: 3, text: 'Other Address'},
     ];
     @Input() required: boolean = false;
     addressTypes = [
-        {id: 1, text: 'Relationship'},
+        {id: 1, text: 'Connection'},
         {id: 2, text: 'Owned Address'},
         {id: 3, text: 'Other Address'},
     ];
 
     selectedAddressType = 1;
 
-    addressTypeSelect = new FormControl([{id: 1, text: 'Relationship'}]);
+    addressTypeSelect = new FormControl([{id: 1, text: 'Connection'}]);
     relationshipSelect = new FormControl();
     owndAddressSelect = new FormControl();
     otherAddress = new FormControl();
