@@ -147,7 +147,11 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             monthlyRedemptionDealingDays: item.get('monthlyRedemptionDealingDays', 0),
             yearlyRedemptionDealingDays: item.get('yearlyRedemptionDealingDays', 0),
             navPeriodForSubscription: item.get('navPeriodForSubscription', 0),
-            navPeriodForRedemption: item.get('navPeriodForRedemption', 0)
+            navPeriodForRedemption: item.get('navPeriodForRedemption', 0),
+            kiid: item.get('kiid', ''),
+            prospectus: item.get('prospectus', ''),
+
+
         };
 
         return result;

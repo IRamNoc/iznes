@@ -224,7 +224,7 @@
                                 <span class="" mltag="txt_nav">NAV</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="nav" [readonly]="true" appNumberFormatter [fractionSize]="2">
+                                <input type="text" class="form-control" [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
                             </div>
                         </div>
                     </div>
@@ -371,11 +371,12 @@
                                 <span class="" mltag="txt_quantity">Quantity</span>
                             </label>
                             <div>
-                                <input type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="shareData.maximumNumDecimal">
+                                <input [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="shareData.maximumNumDecimal">
                             </div>
                             <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
-                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger" mltag="txt_lessthanminordervalue">Less than minimum order value</span>
+                            <span *ngIf="isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger" mltag="txt_insufficientbalancetoredeem">Insufficient balance to redeem</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
@@ -384,11 +385,11 @@
                                 <span class="" mltag="txt_amount">Amount</span>
                             </label>
                             <div>
-                                <input id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="2">
+                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="4">
                             </div>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
-                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
+                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger" mltag="txt_lessthanminordervalue">Less than minimum order value</span>
                         </div>
                     </div>
                 </div>
@@ -452,8 +453,10 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="form-group" mltag="txt_thelastestversionofthekiidcanb50d81733e5">The lastest version of the KIID can be accessed via this link: "www.[Share Name]/KIID"
-
+                        <div class="form-group">
+                            <span></span>
+                            <span mltag="txt_thelastestversionofthekiidcanb50d81733e5" style="margin-right: 5px">The lastest version of the KIID can be accessed via here</span>
+                            <setl-file-viewer [fileHash]="getKiidFileHash()" [viewType]="1"></setl-file-viewer>
                         </div>
                     </div>
                 </div>

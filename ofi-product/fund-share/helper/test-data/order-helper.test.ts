@@ -239,7 +239,7 @@ describe('Subscription order', () => {
                                     "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
                                     "ordershare2",
                                     "ordershare2",
-                                    "(10000000 / nav) * 100000",
+                                    400000,
                                     "",
                                     "",
                                     false,
@@ -260,7 +260,7 @@ describe('Subscription order', () => {
                                     "wallet_address",
                                     "ordershare2",
                                     "ordershare2",
-                                    "(10000000 / nav) * 100000"
+                                    400000
                                 ]
                             ],
                             "",
@@ -286,22 +286,7 @@ describe('Subscription order', () => {
                             ""
                         ]
                     },
-                    "addencumbrances": [
-                        [
-                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
-                            "ordershare2|ordershare2",
-                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
-                            "(10000000 / nav) * 100000",
-                            [],
-                            [
-                                [
-                                    "wallet_address",
-                                    0,
-                                    0
-                                ]
-                            ]
-                        ]
-                    ],
+                    "addencumbrances": [],
                     "events": [
                         "commit",
                         "expiry"
@@ -391,20 +376,7 @@ describe('Subscription order', () => {
                             ""
                         ]
                     },
-                    "addencumbrances": [
-                        [
-                            "AG0YlfYb1KlINJc0XphF63G4gEj8sk2WCg",
-                            "ordershare2|ordershare2",
-                            'wallet_address' + orderHelper.getOrderTimeStamp().expiryTimeStamp,
-                            10000000,
-                            [],
-                            [[
-                                "wallet_address",
-                                0,
-                                0
-                            ]]
-                        ]
-                    ],
+                    "addencumbrances": [],
                     "events": [
                         "commit",
                         "expiry"

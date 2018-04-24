@@ -128,7 +128,7 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             couponType: share.couponType,
             freqOfDistributionDeclaration: share.freqOfDistributionDeclaration,
             maximumNumDecimal: share.maximumNumDecimal,
-            subscriptioinCategory: share.subscriptioinCategory,
+            subscriptionCategory: share.subscriptionCategory,
             subscriptionCurrency: share.subscriptionCurrency,
             minInitialSubscriptionInShare: share.minInitialSubscriptionInShare,
             minInitialSubscriptionInAmount: share.minInitialSubscriptionInAmount,
