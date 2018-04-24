@@ -6,6 +6,11 @@
             margin-bottom: 0px;
         }
 
+        .form-group textarea.form-control {
+            min-height: 80px;
+            width: 95%;
+        }
+
         input[type='checkbox'] {
             // This fixes checkboxes in forms.
             width: auto;
@@ -143,7 +148,7 @@ form, .form {
 
         }
 
-        input[type] {
+        input[type], textarea {
             border: 1px solid #dadada;
             background: white;
             padding: 5px;
