@@ -42,7 +42,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
