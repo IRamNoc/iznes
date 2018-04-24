@@ -26,8 +26,7 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 import static org.junit.Assert.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -147,11 +146,94 @@ public class OpenCSDSprint4AcceptanceTest {
     }
 
     @Test
-    public void shouldAssertThatUmbrellaFundsHas3ExpandableFields() throws InterruptedException {
+    public void shouldAssertThatUmbrellaFundsHas2ExpandableFields() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
+        selectUmbrellaFund();
+        verifyOptInfoPageContents();
+        verifyMainInfoPageContents();
+    }
+
+    private void selectUmbrellaFund() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
+        wait.until(elementToBeClickable(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
+        WebElement uFund = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName"));
+        uFund.click();
+
+        wait.until(visibilityOfElementLocated(By.id("edit-fund-title")));
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
+    }
+
+    private void verifyOptInfoPageContents() {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        mainInfo.click();
+        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2"));
+        optInfo.click();
+        wait.until(visibilityOfElementLocated(By.id("uf_giin")));
+        wait.until(visibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
+        wait.until(visibilityOfElementLocated(By.id("uf_auditor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_taxAuditor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_principalPromoter")));
+        wait.until(visibilityOfElementLocated(By.id("uf_legalAdvisor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_directors")));
+        wait.until(visibilityOfElementLocated(By.id("uf_internalReference")));
+        wait.until(visibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        optInfo.click();
+
+
+        wait.until(invisibilityOfElementLocated(By.id("uf_giin")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_auditor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_taxAuditor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_principalPromoter")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_legalAdvisor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_directors")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_internalReference")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_additionnalNotes")));
+
+    }
+
+    private void verifyMainInfoPageContents() {
+
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        mainInfo.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("uf_umbrellaFundName")));
+        wait.until(visibilityOfElementLocated(By.id("uf_lei")));
+        wait.until(visibilityOfElementLocated(By.id("uf_registerOffice")));
+        wait.until(visibilityOfElementLocated(By.id("uf_registerOfficeAddress")));
+        wait.until(visibilityOfElementLocated(By.id("uf_domicile")));
+        wait.until(visibilityOfElementLocated(By.id("uf_umbrellaFundCreationDate")));
+        wait.until(visibilityOfElementLocated(By.id("uf_managementCompany")));
+        wait.until(visibilityOfElementLocated(By.id("uf_fundAdministrator")));
+        wait.until(visibilityOfElementLocated(By.id("uf_custodian")));
+        wait.until(visibilityOfElementLocated(By.id("uf_investmentManager")));
+        wait.until(visibilityOfElementLocated(By.id("uf_investmentAdvisor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
+        mainInfo.click();
+
+        wait.until(invisibilityOfElementLocated(By.id("uf_umbrellaFundName")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_lei")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_registerOffice")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_registerOfficeAddress")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_domicile")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_umbrellaFundCreationDate")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_managementCompany")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_fundAdministrator")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_custodian")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_investmentManager")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
+
+
     }
 
     @Test
