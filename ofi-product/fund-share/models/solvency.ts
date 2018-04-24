@@ -11,7 +11,8 @@ export class ShareSolvencyOptional {
             { id: E.MIFIDSecuritiesClassificationEnum.Complex, text: 'Complex instrument' },
             { id: E.MIFIDSecuritiesClassificationEnum.Others, text: 'Others' }
         ],
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_mifidsecclass'
     }
     efamaMainEFCCategory: FormItem = {
         type: FormItemType.list,
@@ -29,73 +30,86 @@ export class ShareSolvencyOptional {
     efamaActiveEFCClassification: FormItem = {
         type: FormItemType.text,
         label: 'EFAMA Active EFC Classification',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_efamaefccclass'
     }
     hasTripartiteReport: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Tripartite Report',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_hastripartite'
     }
     lastTripartiteReportDate: FormItem = {
         type: FormItemType.date,
         label: 'Last Tripartite Report Date',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_lasttripartitedate'
     }
     interestRateUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Interest Rate Up',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_interestrateup'
     } // 1
     interestRateDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Interest Rate Down',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_interestratedown'
     } // 1
     equityTypeI: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Equity Type I',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_equitytypei'
     }; // 1
     equityTypeII: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Equity Type II',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_equitytypeii'
     } // 1
     property: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Property',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_scrproperty'
     } // 1
     spreadBonds: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Spread Bonds',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_spreadbonds'
     } // 1
     spreadStructured: FormItem = {
         type: FormItemType.text,
         label: 'SCR Market Spread Structured',
         required: false,
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_spreadstructured'
     } // 1
     spreadDerivativesUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Spread Derivatives Up',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_spreadderivativesup'
     } // 1
     spreadDerivativesDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market Spread Derivatives Down',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_spreadderivativedown'
     } // 1
     fxUp: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market FX Up',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_scrfxup'
     } // 1
     fxDown: FormItem = {
         type: FormItemType.number,
         label: 'SCR Market FX Down',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_scrfxdown'
     } // 1
-
 }
