@@ -107,9 +107,9 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         try {
             String umbFundName = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).getText();
-            String umbFundLEI = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[2]")).getText();
-            String umbFundManagement = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getText();
-            String umbFundCountry = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]")).getText();
+            String umbFundLEI = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-legalEntityIdentifier\"]/span")).getText();
+            String umbFundManagement = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-managementCompany\"]/span")).getText();
+            String umbFundCountry = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-domicile\"]/span")).getText();
             System.out.println(umbFundName + ", " + umbFundLEI + ", " + umbFundManagement + ", " + umbFundCountry);
             assertTrue(umbFundName.equals(uFundDetails[0]));
             assertTrue(umbFundLEI.equals("testLei"));
