@@ -218,8 +218,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.setFund(this.fund);
 
             if(this.hasUmbrellaFund()) {
-                this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: number) => {
-                    return index === this.model.umbrellaFundID;
+                this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
+                    return index === this.model.umbrellaFundID.toString();
                 }));
             }
             

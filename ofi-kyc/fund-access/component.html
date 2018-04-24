@@ -45,7 +45,7 @@
                                             <label class="switch">
                                                 <input type="checkbox"
                                                        id="{{row['isin'] + '-access'}}"
-                                                       [value]="access[row['id']]['access']"
+                                                       [checked]="access[row['id']]['access']"
                                                        (click)="onClickAccess(access[row['id']])"
                                                 >
                                                 <span class="slider round"></span>
