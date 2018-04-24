@@ -38,6 +38,7 @@
                                 <ng-select id="{{item}}"
                                     [items]="model[item].listItems"
                                     [active]="model[item].preset"
+                                    [disabled]="model[item].control.disabled"
                                     placeholder="{{model[item].placeholder}}"
                                     [formControl]="model[item].control"
                                     [required]="model[item].required">
@@ -58,6 +59,14 @@
                                     <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
                                     <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a>                                     -->
                                 </div>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="6">
+                                <textarea id="{{item}}" name="{{item}}" class="form-control"
+                                    [class.required-field]="model[item].required"
+                                    placeholder="{{model[item].placeholder}}"
+                                    formControlName="{{item}}">
+                                </textarea>
                             </ng-container>
                         </ng-container>
 
