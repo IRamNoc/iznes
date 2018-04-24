@@ -468,6 +468,19 @@ export class ShareKeyFactsOptional {
     ucitsKiidUrl: FormItem = {
         type: FormItemType.text,
         label: 'UCITS KIID URL',
-        required: false
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
+    }
+    internalReference: FormItem = {
+        type: FormItemType.text,
+        label: 'Internal Reference',
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
+    }
+    additionalComments: FormItem = {
+        type: FormItemType.textarea,
+        label: 'Additional Comments',
+        required: false,
+        style: [FormItemStyle.BreakOnAfter]
     }
 }

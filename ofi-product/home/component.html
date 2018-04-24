@@ -53,7 +53,12 @@
                             data-id="{{row.id}}"
                             id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}"
                     >
-                        <span *ngIf="dataCol.dataSource == panel.columnLink" class="fakeLink" (click)="goToView(panel.link, row[panel.linkIdent])">{{row[dataCol.dataSource]}}</span>
+                        <span *ngIf="dataCol.dataSource == panel.columnLink"
+                            class="fakeLink"
+                            id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}"
+                            (click)="goToView(panel.link, row[panel.linkIdent])">
+                            {{row[dataCol.dataSource]}}
+                        </span>
                         <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
                     </clr-dg-cell>
                 </clr-dg-row>
