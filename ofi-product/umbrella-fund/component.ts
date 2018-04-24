@@ -241,6 +241,17 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptionsArray.push(this.umbrellaFundForm.controls['domicile'].valueChanges.subscribe((form) => this.processFormChanges(form)));
 
+        this.subscriptionsArray.push(
+            this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
+                .subscribe((name) => {
+                    const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
+                    if (registerOffice.dirty || this.editForm) {
+                        return;
+                    }
+                    this.umbrellaFundForm.controls['registerOffice'].setValue(name);
+                })
+        );
+
         // language
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((d) => this.getLanguage(d)));
         this.subscriptionsArray.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
