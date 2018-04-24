@@ -357,20 +357,6 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.fundForm.controls['centralizingAgent'].setValue([]);
                 this.fundForm.controls['homeCountryLegalType'].setValue([]);
 
-                if (this.isTransferAgentActive()) {
-                    this.fundForm.controls['transferAgent'].setValidators(Validators.required);
-                } else {
-                    this.fundForm.controls['transferAgent'].clearValidators();
-                    this.fundForm.controls['transferAgent'].updateValueAndValidity();
-                }
-
-                if (this.isCentralizingAgentActive()) {
-                    this.fundForm.controls['centralizingAgent'].setValidators(Validators.required);
-                } else {
-                    this.fundForm.controls['centralizingAgent'].clearValidators();
-                    this.fundForm.controls['centralizingAgent'].updateValueAndValidity();
-                }
-
                 if (this.isHomeCountryLegalTypeVisible()) {
                     this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
                     this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
