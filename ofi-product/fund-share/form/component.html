@@ -17,7 +17,7 @@
                     <p mltag="txt_sharedesc">Please fill in the following information to create a new Share.</p>
                 </div>
             </div>
-            <div class="well">
+            <div class="well" *ngIf="hasUmbrellaFund()">
                 <div class="row panel-header">
                     <div class="col-sm-12">
                         <a href="#" (click)="openPanel(panels['umbrella'], $event)">

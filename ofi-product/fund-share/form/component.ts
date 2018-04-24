@@ -216,7 +216,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
             }
             
             this.model.setFund(this.fund);
-            this.model.setUmbrellaFund(this.umbrellaFundList[Object.keys(this.umbrellaFundList)[0]]);
+
+            if(this.hasUmbrellaFund()) {
+                this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
+                    return index === this.model.umbrellaFundID.toString();
+                }));
+            }
             
             this.isReady = true;
 
@@ -253,6 +258,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     loadUI(): boolean {
         return this.isReady;
+    }
+
+    hasUmbrellaFund(): boolean {
+        return this.model.umbrellaFundID > 0;
     }
 
     calendarSubscriptionModelEvent(model: FundShareTradeCycleModel): void {
