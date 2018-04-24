@@ -258,7 +258,10 @@ public class OpenCSDVNewFundsAcceptanceTest {
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
         driver.findElement(By.id("fund-submitfund-btn")).click();
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
