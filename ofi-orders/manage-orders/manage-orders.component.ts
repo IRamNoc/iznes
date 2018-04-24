@@ -71,12 +71,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         fromDate: null,
         toDate: null,
     };
-    filtersFromRedux = {
-        isin: '',
-        shareName: '',
-        status: '',
-        orderType: '',
-    };
+    filtersFromRedux: any;
     filtersApplied = false;
     lastPage: number;
     loading = true;
@@ -476,29 +471,32 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     applyFilters() {
         if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
-                this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
-                this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType) {
+                if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
+                    this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
+                    this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
+                    const statusFound = this.orderStatuses.find(o => o.id === this.filtersFromRedux.status);
+                    if (statusFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('status').patchValue([{id: statusFound.id, text: statusFound.text}], {emitEvent: false});
+                        this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                }
+                // if (this.filtersFromRedux.orderType && this.filtersFromRedux.orderType !== '') {
+                //     this.tabsControl[0].searchForm.get('type').patchValue(this.filtersFromRedux.orderType, {emitEvent: false});
+                //     this.tabsControl[0].searchForm.get('type').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                // }
+
+                // remove filters from redux
+                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
+                this.filtersApplied = true;
+                this.requestSearch(this.tabsControl[0].searchForm);
             }
-            if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
-                this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
-                this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-            }
-            // if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
-            //     this.tabsControl[0].searchForm.get('status').patchValue(this.filtersFromRedux.status, {emitEvent: false});
-            //     this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-            // }
-            // if (this.filtersFromRedux.orderType && this.filtersFromRedux.orderType !== '') {
-            //     this.tabsControl[0].searchForm.get('type').patchValue(this.filtersFromRedux.orderType, {emitEvent: false});
-            //     this.tabsControl[0].searchForm.get('type').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-            // }
-
-            // remove filters from redux
-            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
-
-            this.filtersApplied = true;
-
-            this.requestSearch(this.tabsControl[0].searchForm);
         }
     }
 

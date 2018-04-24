@@ -8,3 +8,7 @@ export interface OfiCentralizationReportsRequestBody extends OfiMemberNodeBody {
     token: string;
     search?: any;
 }
+
+export interface OfiAmHoldersRequestBody extends OfiMemberNodeBody {
+    token: string;
+}

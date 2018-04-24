@@ -241,7 +241,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
             const orderFilters = { filters: {
                 isin: obj.isin,
                 shareName: obj.fundShareName,
-                status: '',
+                status: 1,
                 orderType: '',
             }};
 

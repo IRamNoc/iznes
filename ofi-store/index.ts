@@ -115,6 +115,10 @@ export {
     ofiClearRequestedCentralizationReports,
     ofiSetRequestedCentralizationReports,
     ofiCentralizationReportsActions,
+    OFI_SET_AM_HOLDERS_LIST,
+    ofiClearRequestedAmHolders,
+    ofiSetRequestedAmHolders,
+    ofiAmHoldersActions
 } from './ofi-reports';
 
 export {

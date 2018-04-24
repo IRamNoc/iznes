@@ -12,12 +12,16 @@ import {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
     ofiSetRequestedCentralizationReports,
     ofiClearRequestedCentralizationReports,
+    OFI_SET_AM_HOLDERS_LIST,
+    ofiClearRequestedAmHolders,
+    ofiSetRequestedAmHolders,
 } from '../../ofi-store/';
 
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
     OfiCentralizationReportsRequestBody,
+    OfiAmHoldersRequestBody,
 } from './model';
 
 interface CentralizationReportsData {
@@ -59,12 +63,46 @@ export class OfiReportsService {
         ));
     }
 
+    static setRequestedAmHoldersList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if (!boolValue) {
+            ngRedux.dispatch(ofiClearRequestedAmHolders());
+        } else {
+            ngRedux.dispatch(ofiSetRequestedAmHolders());
+        }
+    }
+
+    static defaultRequestAmHoldersList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(ofiSetRequestedAmHolders());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestAmHoldersList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_AM_HOLDERS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     requestCentralizationReportsList(data: CentralizationReportsData): any {
 
         const messageBody: OfiCentralizationReportsRequestBody = {
             RequestName: 'getallshareinfo',
             token: this.memberSocketService.token,
             search: data.search,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestAmHoldersList(): any {
+
+        const messageBody: OfiAmHoldersRequestBody = {
+            RequestName: 'izngetamholders',
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

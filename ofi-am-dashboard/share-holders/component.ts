@@ -24,7 +24,12 @@ import {ConfirmationService, immutableHelper, SagaHelper, NumberConverterService
 /* Core redux */
 
 
-/* Ofi service */
+/* services */
+import {MemberSocketService} from '@setl/websocket-service';
+import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+
+/* store */
+import {ofiAmHoldersActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */
 interface SelectedItem {
@@ -94,20 +99,20 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     currencyList = [
-        {id : 0, code: 'EUR', label: 'Euro'},
-        {id : 1, code: 'USD', label: 'US Dollar'},
-        {id : 2, code: 'GBP', label: 'Pound Sterling'},
-        {id : 3, code: 'CHF', label: 'Swiss Franc'},
-        {id : 4, code: 'JPY', label: 'Yen'},
-        {id : 5, code: 'AUD', label: 'Australian Dollar'},
-        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
-        {id : 7, code: 'SEK', label: 'Swedish Krona'},
-        {id : 8, code: 'ZAR', label: 'Rand'},
-        {id : 9, code: 'RUB', label: 'Russian Ruble'},
-        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
-        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
-        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
-        {id : 13, code: 'PLN', label: 'Zloty'},
+        {id : 0, text: 'EUR'},
+        {id : 1, text: 'USD'},
+        {id : 2, text: 'GBP'},
+        {id : 3, text: 'CHF'},
+        {id : 4, text: 'JPY'},
+        {id : 5, text: 'AUD'},
+        {id : 6, text: 'NOK'},
+        {id : 7, text: 'SEK'},
+        {id : 8, text: 'ZAR'},
+        {id : 9, text: 'RUB'},
+        {id : 10, text: 'SGD'},
+        {id : 11, text: 'AED'},
+        {id : 12, text: 'CNY'},
+        {id : 13, text: 'PLN'},
     ];
 
     /* Private Properties. */
@@ -116,10 +121,13 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
     private reduxUnsubscribe: Unsubscribe;
     dataList: Array<any> = [];
     dataListForSearch: Array<any> = [];
+    holdersList: Array<any> = [];
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
+    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -129,6 +137,8 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
         private router: Router,
         private _numberConverterService: NumberConverterService,
         private _fb: FormBuilder,
+        private memberSocketService: MemberSocketService,
+        private ofiReportsService: OfiReportsService,
         private _confirmationService: ConfirmationService
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -138,6 +148,9 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Assign list to a property. */
             this.myDetails = myDetails;
         });
+
+        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
+        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
 
         this.createSearchListForm();
         this.createSearchInShareForm();
@@ -195,13 +208,6 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
                 // this.searchListForm.get('search').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
             }
         }));
-
-        /* for example to remove when get real datas */
-        this.dataListForSearch = [
-            {id: 1, text: 'Groupama Avenir Euro - MC (FR123456789)'},
-            {id: 2, text: 'Ameri-Gan - IC (FR0012121212)'},
-            {id: 3, text: 'G FUND ALPHA FIXED INCOME II - IC (FR015684640654654)'},
-        ];
     }
 
     public ngOnInit() {
@@ -225,6 +231,140 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
                     break;
             }
         }
+    }
+
+    getAmHoldersRequested(requested): void {
+        if (!requested) {
+            OfiReportsService.defaultRequestAmHoldersList(this.ofiReportsService, this.ngRedux);
+        }
+    }
+
+    getAmHoldersListFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.holdersList = listImu.reduce((result, item) => {
+
+            result.push({
+                fundId: item.get('fundId'),
+                fundName: item.get('fundName'),
+                fundLei: item.get('fundLei'),
+                fundCurrency: item.get('fundCurrency'),
+                fundAum: item.get('fundAum'),
+                fundHolderNumber: item.get('fundHolderNumber'),
+                shareId: item.get('shareId'),
+                shareName: item.get('shareName'),
+                shareIsin: item.get('shareIsin'),
+                shareNav: item.get('shareNav'),
+                shareUnitNumber: item.get('shareUnitNumber'),
+                shareCurrency: item.get('shareCurrency'),
+                shareAum: item.get('shareAum'),
+                shareHolderNumber: item.get('shareHolderNumber'),
+                shareRatio: item.get('shareRatio'),
+            });
+
+            return result;
+        }, []);
+
+        // hardcoded
+        this.holdersList = [{
+            'fundId': 1,
+            'fundName': 'fund1',
+            'fundLei': '',
+            'fundCurrency': '',
+            'fundAum': 15000,
+            'fundHolderNumber': 3,
+            'shareId': '',
+            'shareName': '',
+            'shareIsin': '',
+            'shareNav': 0,
+            'shareUnitNumber': 0,
+            'shareCurrency': '',
+            'shareAum': 0,
+            'shareHolderNumber': 0,
+            'isFund': true,
+            'shareRatio': 0
+        }, {
+            'fundId': 1,
+            'fundName': 'fund1',
+            'fundLei': '',
+            'fundCurrency': '',
+            'fundAum': 0,
+            'fundHolderNumber': 0,
+            'shareId': 1,
+            'shareName': 'fundshare 1',
+            'shareIsin': 'fundshare 1',
+            'shareNav': 10,
+            'shareUnitNumber': 1500,
+            'shareCurrency': '',
+            'shareAum': 15000,
+            'shareHolderNumber': 2,
+            'isFund': false,
+            'shareRatio': 100
+        }, {
+            'fundId': 1,
+            'fundName': 'fund1',
+            'fundLei': '',
+            'fundCurrency': '',
+            'fundAum': 0,
+            'fundHolderNumber': 0,
+            'shareId': 2,
+            'shareName': 'fund share 2',
+            'shareIsin': 'isin fund share 2',
+            'shareNav': 0,
+            'shareUnitNumber': 800,
+            'shareCurrency': '',
+            'shareAum': 0,
+            'shareHolderNumber': 1,
+            'isFund': false,
+            'shareRatio': 0
+        }, {
+            'fundId': 2,
+            'fundName': 'fund2',
+            'fundLei': '',
+            'fundCurrency': '',
+            'fundAum': 0,
+            'fundHolderNumber': 1,
+            'shareId': '',
+            'shareName': '',
+            'shareIsin': '',
+            'shareNav': 0,
+            'shareUnitNumber': 0,
+            'shareCurrency': '',
+            'shareAum': 0,
+            'shareHolderNumber': 0,
+            'isFund': true,
+            'shareRatio': 0
+        }, {
+            'fundId': 2,
+            'fundName': 'fund2',
+            'fundLei': '',
+            'fundCurrency': '',
+            'fundAum': 0,
+            'fundHolderNumber': 0,
+            'shareId': 3,
+            'shareName': 'fund2-share1',
+            'shareIsin': 'fund2-share1-isin',
+            'shareNav': 0,
+            'shareUnitNumber': 100,
+            'shareCurrency': '',
+            'shareAum': 0,
+            'shareHolderNumber': 1,
+            'isFund': false,
+            'shareRatio': 0
+        }];
+
+        for (const holder of this.holdersList) {
+            if (!holder.isFund) {
+                this.dataListForSearch.push({
+                    id: holder.shareId,
+                    text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
+                });
+            }
+        }
+
+        // this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+
+        this.changeDetectorRef.markForCheck();
     }
 
     createSearchListForm() {
@@ -276,47 +416,6 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.buildLink('new');
         }
-
-        // const tmpDataGridParams = {
-        //     shareName: this.dataGridParams.shareName,
-        //     status: this.dataGridParams.status,
-        //     orderType: this.dataGridParams.orderType,
-        //     pageSize: this.dataGridParams.pageSize,
-        //     rowOffSet: this.dataGridParams.rowOffSet,
-        //     sortByField: this.dataGridParams.sortByField,
-        //     sortOrder: this.dataGridParams.sortOrder,
-        //     dateSearchField: this.dataGridParams.dateSearchField,
-        //     fromDate: this.dataGridParams.fromDate,
-        //     toDate: this.dataGridParams.toDate,
-        // };
-        //
-        // this.dataGridParams.shareName = (this.tabsControl[0].searchForm.get('sharename').value !== '' && this.tabsControl[0].searchForm.get('sharename').value.length > 2) ? this.tabsControl[0].searchForm.get('sharename').value : null;
-        // this.dataGridParams.status = (this.tabsControl[0].searchForm.get('status').value && this.tabsControl[0].searchForm.get('status').value[0] && this.tabsControl[0].searchForm.get('status').value[0].id) ? this.tabsControl[0].searchForm.get('status').value[0].id : null;
-        // this.dataGridParams.orderType = (this.tabsControl[0].searchForm.get('type').value && this.tabsControl[0].searchForm.get('type').value[0] && this.tabsControl[0].searchForm.get('type').value[0].id) ? this.tabsControl[0].searchForm.get('type').value[0].id : null;
-        // // date filters
-        // if ((this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id)) {
-        //     const tmpDateSearchField = (this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id) ? this.tabsControl[0].searchForm.get('dateType').value[0].id : null;
-        //     const tmpFromDate = (this.tabsControl[0].searchForm.get('fromDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('fromDate').value))) ? this.tabsControl[0].searchForm.get('fromDate').value : null;
-        //     let tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
-        //     if (tmpFromDate !== null && tmpToDate !== null) {
-        //         let toDate = new Date(this.tabsControl[0].searchForm.get('toDate').value);
-        //         toDate.setDate(toDate.getDate() + 1);
-        //         tmpToDate = toDate.toISOString().substring(0, 10);
-        //     }
-        //     if (tmpDateSearchField !== null && tmpFromDate !== null && tmpToDate !== null) {
-        //         this.dataGridParams.dateSearchField = tmpDateSearchField;
-        //         this.dataGridParams.fromDate = tmpFromDate;
-        //         this.dataGridParams.toDate = tmpToDate;
-        //     }
-        // } else {
-        //     this.dataGridParams.dateSearchField = null;
-        //     this.dataGridParams.fromDate = null;
-        //     this.dataGridParams.toDate = null;
-        // }
-        //
-        // if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-        //     this.getAmOrdersList();
-        // }
     }
 
     buildLink(id) {
@@ -339,72 +438,27 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
         console.log('raw filters', state.filters);
         console.log('map filters', filters);
 
-        // const tmpDataGridParams = {
-        //     shareName: this.dataGridParams.shareName,
-        //     status: this.dataGridParams.status,
-        //     orderType: this.dataGridParams.orderType,
-        //     pageSize: this.dataGridParams.pageSize,
-        //     rowOffSet: this.dataGridParams.rowOffSet,
-        //     sortByField: this.dataGridParams.sortByField,
-        //     sortOrder: this.dataGridParams.sortOrder,
-        //     dateSearchField: this.dataGridParams.dateSearchField,
-        //     fromDate: this.dataGridParams.fromDate,
-        //     toDate: this.dataGridParams.toDate,
-        // };
-        //
-        // if (state.sort) {
-        //     switch (state.sort.by) {
-        //         // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
-        //         case 'orderRef':
-        //             this.dataGridParams.sortByField = 'orderId';
-        //             break;
-        //         case 'investor':
-        //             this.dataGridParams.sortByField = 'investorWalletID';
-        //             break;
-        //         case 'orderType':
-        //             this.dataGridParams.sortByField = 'orderType';
-        //             break;
-        //         case 'isin':
-        //             this.dataGridParams.sortByField = 'isin';
-        //             break;
-        //         case 'shareName':
-        //             this.dataGridParams.sortByField = 'shareName';
-        //             break;
-        //         case 'shareCurrency':
-        //             this.dataGridParams.sortByField = 'currency';
-        //             break;
-        //         case 'quantity':
-        //             this.dataGridParams.sortByField = 'quantity';
-        //             break;
-        //         case 'grossAmount':
-        //             this.dataGridParams.sortByField = 'amountWithCost';
-        //             break;
-        //         case 'orderDate':
-        //             this.dataGridParams.sortByField = 'orderDate';
-        //             break;
-        //         case 'cutOffDate':
-        //             this.dataGridParams.sortByField = 'cutoffDate';
-        //             break;
-        //         case 'settlementDate':
-        //             this.dataGridParams.sortByField = 'settlementDate';
-        //             break;
-        //         case 'orderStatus':
-        //             this.dataGridParams.sortByField = 'orderStatus';
-        //             break;
-        //     }
-        //     this.dataGridParams.sortOrder = (!state.sort.reverse) ? 'asc' : 'desc';
-        // }
-
-        // this.dataGridParams.pageSize =  this.itemPerPage;
-        // this.dataGridParams.rowOffSet = (state.page.from / this.itemPerPage);
-        //
-        // // send request only if changes
-        // if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-        //     this.loading = true;
-        //     this.getAmOrdersList();
-        // }
-
         this.changeDetectorRef.markForCheck();
+    }
+
+    exportHolders() {
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerHolders&userId=' + this.myDetails.userId;
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
+
+    generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
+    }
+
+    showCurrency(order) {
+        const obj = this.currencyList.find(o => o.id === order.currency);
+        if (obj !== undefined) {
+            return obj.text;
+        } else {
+            return 'Not found!';
+        }
     }
 
     /**
@@ -414,7 +468,7 @@ export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @returns {string}
      */
     private numPad(num) {
-        return num < 10 ? "0" + num : num;
+        return num < 10 ? '0' + num : num;
     }
 
     ngOnDestroy(): void {

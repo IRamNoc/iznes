@@ -31,14 +31,15 @@
 
                 <div class="hr-line-dashed"></div>
 
-                <ng-container *ngIf="id === 0">
-                    <!-- list tab. -->
-                    <ng-container *ngTemplateOutlet="staticList">
+                <!--<ng-container *ngIf="id === 0">-->
+                    <!--&lt;!&ndash; list tab. &ndash;&gt;-->
+                    <!--<ng-container *ngTemplateOutlet="staticList">-->
 
-                    </ng-container>
-                </ng-container>
+                    <!--</ng-container>-->
+                <!--</ng-container>-->
 
-                <ng-container *ngIf="id > 0">
+                <!--<ng-container *ngIf="id > 0">-->
+                <ng-container>
                     <!-- Create new tab -->
                     <ng-container *ngTemplateOutlet="dynamicView; context: {'shareData': tabdata.shareData, 'tabid': id}">
 
