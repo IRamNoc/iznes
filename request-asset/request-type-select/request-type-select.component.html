@@ -12,11 +12,11 @@
 
 <div [ngSwitch]="selectedRequestType">
     <div class="form-group col-sm-6" *ngSwitchCase="1">
-        <label class="control-label" for="requestFromRelationship" mltag="txt_requestfromrelationship">Request From Relationship</label>
+        <label class="control-label" for="requestFromRelationship" mltag="txt_requestfromrelationship">Request From Connection</label>
         <ng-select id="requestFromRelationship"
             [items]="walletRelationships"
             [allowClear]="true"
-            placeholder="Select Relationship"
+            placeholder="Select Connection"
             [formControl]="requestTypeForm.controls['fromRelationship']"
             (selected)="onRelationshipSelect($event)"
        mltag="txt_selectrelationship">
