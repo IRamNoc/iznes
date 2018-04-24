@@ -364,6 +364,16 @@
                                                 <input type="text" id="uf_directors" class="form-control" formControlName="directors">
                                             </div>
                                         </div>
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                            <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-group col-sm-6">
+                                            <label class="control-label" for="uf_additionnalNotes" mltag="txt_additionnalnotes">Additionnal Notes</label>
+                                            <textarea id="uf_additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -424,39 +434,6 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group col-sm-6" *ngIf="fundForm.controls['isFundStructure'].value === enums.isFundStructure.UMBRELLA.toString()">
-                                                <label class="control-label" for="umbrellaFundID" mltag="txt_umbrellaname">Umbrella Name</label>
-                                                <input type="text" name="umbrellaFundID" id="umbrellaFundID" value="{{umbrellaControl.value[0].text}}" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="form-group col-sm-6">
-                                                <div>
-                                                    <label class="control-label" for="AuMFund" mltag="txt_aumfund">AuM Fund</label>
-                                                    <input type="text" name="AuMFund" id="AuMFund" formControlName="AuMFund">
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <div>
-                                                    <label class="control-label" for="AuMFundDate" mltag="txt_aumfunddate">AuM Fund Date</label>
-                                                    <div class="input-group">
-                                                        <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                        <input id="AuMFundDate" formControlName="AuMFundDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
-
-
-
-
-
-
-
-
-                                                    </div>
-                                                    <span *ngIf="fundForm.controls['AuMFundDate'].touched && fundForm.controls['AuMFundDate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="legalEntityIdentifier" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
                                                 <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
@@ -777,6 +754,11 @@
                                                     <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
+                                                <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -854,11 +836,6 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="directors" mltag="txt_directors">Directors</label>
                                                 <input type="text" name="directors" id="directors" formControlName="directors">
-                                            </div>
-
-                                            <div class="form-group col-sm-6">
-                                                <label class="control-label" for="pocket" mltag="txt_pocket">Pocket</label>
-                                                <input type="text" name="pocket" id="pocket" formControlName="pocket">
                                             </div>
 
                                             <div class="form-group col-sm-6">
@@ -1029,15 +1006,19 @@
                                                     <label for="hasDurationHedge2" mltag="txt_no">No</label>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group col-sm-6">
+                                                <label class="control-label" for="internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                                <input type="text" name="internalReference" id="internalReference" formControlName="internalReference" maxlength="50">
+                                            </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
-                                                <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
+                                                <label class="control-label" for="additionnalNotes" mltag="txt_additionnalnotes">Additionnal Notes</label>
+                                                <textarea name="additionnalNotes" id="additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

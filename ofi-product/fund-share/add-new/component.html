@@ -16,12 +16,10 @@
                                 <label class="control-label required-field" mltag="txt_isthissharepartofanexistingfunadd88fe222">Is this Share part of an existing Fund?</label>
                                 <ng-select id="selectFund"
                                     [items]="fundListItems"
-                                    [allowClear]="true"
                                     placeholder=""
                                     [formControl]="newFundShareForm.controls['fund']"
                                     [required]="true">
                                 </ng-select>
-
                             </div>
                         </section>
                     </form>
@@ -39,6 +37,25 @@
                         </div>
                     </section>
                 </div>
+            </div>
+
+            <div class="row" *ngIf="fundForm.value.legalEntity">
+                <form [formGroup]="fundForm">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label class="control-label" mltag="txt_fundlegalentity">Legal Entity Identifier (LEI)</label>
+                                <input type="text" id="legalEntity" name="legalEntity" formControlName="legalEntity">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <label class="control-label" mltag="txt_funddomicile">Domicile</label>
+                                <input type="text" id="domicile" name="domicile" formControlName="domicile">
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
             <div class="row">
                 <div class="col-sm-12">
