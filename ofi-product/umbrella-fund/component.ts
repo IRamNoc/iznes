@@ -5,6 +5,7 @@ import {fromJS} from 'immutable';
 import {select, NgRedux} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
+import * as _ from 'lodash';
 
 /* Internal */
 import {Subscription} from 'rxjs/Subscription';
@@ -22,6 +23,7 @@ import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-f
 
 /* Utils. */
 import {SagaHelper, NumberConverterService} from '@setl/utils';
+import {FundComponent} from '../fund/component';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -36,9 +38,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     umbrellaFundForm: FormGroup;
     umbrellaFundList = [];
     managementCompanyList = [];
-
-    showTransferAgent = false;
-    showCentralizingAgent = false;
 
     umbrellaFund: any;
     umbrellaFundID: any = 0;
@@ -67,13 +66,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fundAdminOptions = [];
     custodianBankOptions = [];
-    investmentManagerOptions = [];
     investmentAdvisorOptions = [];
     payingagentOptions = [];
     auditorOptions = [];
     taxAuditorOptions = [];
     principalPromoterOptions = [];
     legalAdvisorOptions = [];
+    transferAgentOptions = [];
+    centralizingAgentOptions = [];
 
     /* Private properties. */
     subscriptionsArray: Array<Subscription> = [];
@@ -84,6 +84,18 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
+
+    static getListItem(value: string, list: any[]): any[] {
+        if (value === null) {
+            return [];
+        }
+
+        const item = _.find(list, { id: value });
+        if (!item) {
+            return [];
+        }
+        return [item];
+    }
 
     constructor(
         private _fb: FormBuilder,
@@ -103,13 +115,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.countries = productConfig.fundItems.domicileItems;
         this.fundAdminOptions = productConfig.fundItems.fundAdministratorItems;
         this.custodianBankOptions = productConfig.fundItems.custodianBankItems;
-        this.investmentManagerOptions = productConfig.fundItems.investmentManagerItems;
         this.investmentAdvisorOptions = productConfig.fundItems.investmentAdvisorItems;
         this.payingagentOptions = productConfig.fundItems.payingAgentItems;
         this.auditorOptions = productConfig.fundItems.auditorItems;
         this.taxAuditorOptions = productConfig.fundItems.taxAuditorItems;
         this.principalPromoterOptions = productConfig.fundItems.principalPromoterItems;
         this.legalAdvisorOptions = productConfig.fundItems.legalAdvisorItems;
+        this.transferAgentOptions = productConfig.fundItems.transferAgentItems;
+        this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
 
         // param url
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
@@ -182,23 +195,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     Validators.required
                 ])
             ],
-            investmentManagerID: [
-                [],
-                Validators.compose([
-                    Validators.required
-                ])
-            ],
             investmentAdvisorID: [
                 [],
-                Validators.compose([
-                    Validators.required
-                ])
             ],
             payingAgentID: [
                 [],
-                Validators.compose([
-                    Validators.required
-                ])
             ],
             transferAgentID: [
                 [],
@@ -239,7 +240,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
         });
 
-        this.subscriptionsArray.push(this.umbrellaFundForm.controls['domicile'].valueChanges.subscribe((form) => this.processFormChanges(form)));
+        this.subscriptionsArray.push(
+            this.umbrellaFundForm.controls['domicile'].valueChanges
+                .subscribe(() => {
+                    this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
+                    this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
+                })
+        );
 
         this.subscriptionsArray.push(
             this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
@@ -265,6 +272,16 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
 
+    }
+
+    isTransferAgentActive() {
+        const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
+        return id === 'IE' || id === 'LU';
+    }
+
+    isCentralizingAgentActive() {
+        const id = _.get(this.umbrellaFundForm.controls['domicile'].value, ['0', 'id'], false);
+        return id === 'FR';
     }
 
     getLanguage(language): void {
@@ -301,11 +318,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 managementCompanyID: item.get('managementCompanyID', '0'),
                 fundAdministratorID: item.get('fundAdministratorID', '0'),
                 custodianBankID: item.get('custodianBankID', '0'),
-                investmentManagerID: item.get('investmentManagerID', '0'),
                 investmentAdvisorID: item.get('investmentAdvisorID', '0'),
                 payingAgentID: item.get('payingAgentID', '0'),
                 transferAgentID: item.get('transferAgentID', '0'),
                 centralisingAgentID: item.get('centralisingAgentID', '0'),
+                transferAgent: item.get('transferAgentID', '0'),
+                centralizingAgent: item.get('centralisingAgentID', '0'),
                 giin: item.get('giin', 0),
                 delegatedManagementCompanyID: item.get('delegatedManagementCompanyID', '0'),
                 auditorID: item.get('auditorID', '0'),
@@ -378,10 +396,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         if (custodianBank.length > 0) {
             this.umbrellaFundForm.get('custodianBankID').patchValue(custodianBank, {emitEvent: false});
         }
-        const investmentManager = this.investmentManagerOptions.filter(element => element.id.toString() === this.umbrellaFund[0].investmentManagerID.toString());
-        if (investmentManager.length > 0) {
-            this.umbrellaFundForm.get('investmentManagerID').patchValue(investmentManager, {emitEvent: false});
-        }
         const investmentAdvisor = this.investmentAdvisorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].investmentAdvisorID.toString());
         if (investmentAdvisor.length > 0) {
             this.umbrellaFundForm.get('investmentAdvisorID').patchValue(investmentAdvisor, {emitEvent: false});
@@ -390,8 +404,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         if (payingAgent.length > 0) {
             this.umbrellaFundForm.get('payingAgentID').patchValue(payingAgent, {emitEvent: false});
         }
-        this.umbrellaFundForm.get('transferAgentID').patchValue(this.umbrellaFund[0].transferAgentID, {emitEvent: false});
-        this.umbrellaFundForm.get('centralisingAgentID').patchValue(this.umbrellaFund[0].centralisingAgentID, {emitEvent: false});
+
+        const transferAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].transferAgentID, this.transferAgentOptions);
+        const centralizingAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].centralisingAgentID, this.centralizingAgentOptions);
+        this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, {emitEvent: false});
+        this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, {emitEvent: false});
         this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, {emitEvent: false});
         const delegatedManagementCompany = this.managementCompanyList.filter(element => element.id.toString() === this.umbrellaFund[0].delegatedManagementCompanyID.toString());
         if (delegatedManagementCompany.length > 0) {
@@ -420,33 +437,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundForm.updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
     }
 
-    processFormChanges(field): void {
-        this.showTransferAgent = false;
-        this.showCentralizingAgent = false;
-        if (!!field && field.length > 0) {
-            if (field[0].id === 'LU' || field[0].id === 'IE') {
-                this.umbrellaFundForm.get('transferAgentID').setValidators(Validators.required);
-                this.showTransferAgent = true;
-            } else  if (field[0].id === 'FR') {
-                this.umbrellaFundForm.get('centralisingAgentID').setValidators(Validators.required);
-                this.showCentralizingAgent = true;
-            } else {
-                this.umbrellaFundForm.get('transferAgentID').patchValue(null, {emitEvent: false});
-                this.umbrellaFundForm.get('transferAgentID').setValidators(null);
-                this.umbrellaFundForm.get('centralisingAgentID').patchValue(null, {emitEvent: false});
-                this.umbrellaFundForm.get('centralisingAgentID').setValidators(null);
-            }
-        } else {
-            this.umbrellaFundForm.get('transferAgentID').patchValue(null, {emitEvent: false});
-            this.umbrellaFundForm.get('transferAgentID').setValidators(null);
-            this.umbrellaFundForm.get('centralisingAgentID').patchValue(null, {emitEvent: false});
-            this.umbrellaFundForm.get('centralisingAgentID').setValidators(null);
-        }
-        // apply changes
-        this.umbrellaFundForm.get('transferAgentID').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-        this.umbrellaFundForm.get('centralisingAgentID').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    }
-
     cancel() {
         this._router.navigateByUrl('/product-module');
     }
@@ -462,11 +452,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : '0',
             fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : '0',
             custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : '0',
-            investmentManagerID: (formValues.investmentManagerID.length > 0) ? formValues.investmentManagerID[0].id : '0',
             investmentAdvisorID: (formValues.investmentAdvisorID.length > 0) ? formValues.investmentAdvisorID[0].id : '0',
             payingAgentID: (formValues.payingAgentID.length > 0) ? formValues.payingAgentID[0].id : '0',
-            transferAgentID: formValues.transferAgentID || '0',
-            centralisingAgentID: formValues.centralisingAgentID || '0',
+            transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], 0),
+            centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], 0),
             giin: formValues.giin || null,
             delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : '0',
             auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : '0',

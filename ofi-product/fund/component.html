@@ -240,16 +240,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_investmentManager">
-                                                <span mltag="txt_investmentmanager">Investment Manager</span>
-                                            </label>
-                                            <div>
-                                                <input type="text" id="uf_investmentManager" class="form-control" formControlName="investmentManagerID">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-6">
                                             <label for="uf_investmentAdvisor">
                                                 <span mltag="txt_investmentadvisor">Investment Advisor</span>
                                             </label>
@@ -265,8 +255,6 @@
                                                 <input type="text" id="uf_payingAgent" class="form-control" formControlName="payingAgentID">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row" *ngIf="umbrellaEditForm.controls['transferAgentID'].value || umbrellaEditForm.controls['centralisingAgentID'].value">
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['transferAgentID'].value">
                                             <label>
                                                 <span mltag="txt_transferagent">Transfer Agent</span>
@@ -698,7 +686,7 @@
                                                 <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched" mltag="txt_incorrectentry">Incorrect entry</span>
                                             </div>
 
-                                            <div class="form-group required-field col-sm-6" *ngIf="isTransferAgentActive()">
+                                            <div class="form-group col-sm-6" *ngIf="isTransferAgentActive()">
                                                 <div>
                                                     <label class="control-label" for="transferAgent" mltag="txt_transferagent">Transfer Agent</label>
                                                     <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['transferAgent']" mltag="txt_select">
@@ -709,11 +697,10 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['transferAgent'].hasError('required') && fundForm.controls['transferAgent'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
 
-                                            <div class="form-group required-field col-sm-6" *ngIf="isCentralizingAgentActive()">
+                                            <div class="form-group col-sm-6" *ngIf="isCentralizingAgentActive()">
                                                 <div>
                                                     <label class="control-label" for="centralizingAgent" mltag="txt_centralizingagent">Centralizing Agent</label>
                                                     <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['centralizingAgent']" mltag="txt_select">
@@ -724,7 +711,6 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['centralizingAgent'].hasError('required') && fundForm.controls['centralizingAgent'].touched" mltag="txt_fieldisrequired">Field is required</span>
                                                 </div>
                                             </div>
 

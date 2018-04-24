@@ -197,7 +197,6 @@ export class FundComponent implements OnInit, OnDestroy {
             'fundAdministratorID': {value: '', disabled: true},
             'giin': {value: '', disabled: true},
             'investmentAdvisorID': {value: '', disabled: true},
-            'investmentManagerID': {value: '', disabled: true},
             'legalAdvisorID': {value: '', disabled: true},
             'legalEntityIdentifier': {value: '', disabled: true},
             'managementCompanyID': {value: '', disabled: true},
@@ -312,7 +311,6 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['fundAdministratorID'].setValue(FundComponent.getListItemText(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
                     this.umbrellaEditForm.controls['giin'].setValue(newUmbrella.giin);
                     this.umbrellaEditForm.controls['investmentAdvisorID'].setValue(FundComponent.getListItemText(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
-                    this.umbrellaEditForm.controls['investmentManagerID'].setValue(FundComponent.getListItemText(newUmbrella.investmentManagerID, this.investmentManagerItems));
                     this.umbrellaEditForm.controls['legalAdvisorID'].setValue(FundComponent.getListItemText(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
                     this.umbrellaEditForm.controls['legalEntityIdentifier'].setValue(newUmbrella.legalEntityIdentifier);
                     this.umbrellaEditForm.controls['managementCompanyID'].setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
@@ -334,7 +332,6 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['managementCompanyID'].setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
                     this.fundForm.controls['fundAdministrator'].setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
                     this.fundForm.controls['custodianBank'].setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
-                    this.fundForm.controls['investmentManager'].setValue(FundComponent.getListItem(newUmbrella.investmentManagerID, this.investmentManagerItems));
                     this.fundForm.controls['investmentAdvisor'].setValue(FundComponent.getListItem(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
                     this.fundForm.controls['payingAgent'].setValue(FundComponent.getListItem(newUmbrella.payingAgentID, this.payingAgentItems));
                     this.fundForm.controls['delegatedManagementCompany'].setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
@@ -356,20 +353,6 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.fundForm.controls['transferAgent'].setValue([]);
                 this.fundForm.controls['centralizingAgent'].setValue([]);
                 this.fundForm.controls['homeCountryLegalType'].setValue([]);
-
-                if (this.isTransferAgentActive()) {
-                    this.fundForm.controls['transferAgent'].setValidators(Validators.required);
-                } else {
-                    this.fundForm.controls['transferAgent'].clearValidators();
-                    this.fundForm.controls['transferAgent'].updateValueAndValidity();
-                }
-
-                if (this.isCentralizingAgentActive()) {
-                    this.fundForm.controls['centralizingAgent'].setValidators(Validators.required);
-                } else {
-                    this.fundForm.controls['centralizingAgent'].clearValidators();
-                    this.fundForm.controls['centralizingAgent'].updateValueAndValidity();
-                }
 
                 if (this.isHomeCountryLegalTypeVisible()) {
                     this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
