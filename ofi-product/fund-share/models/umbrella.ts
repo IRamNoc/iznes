@@ -68,14 +68,6 @@ export class ShareUmbrellaFund extends DynamicFormsValidator {
         listItems: PC.fundItems.custodianBankItems,
         mltag: 'txt_fundshare_custodianbankid'
     }
-    investmentManagerID: FormItem = {
-        type: FormItemType.list,
-        label: 'Investment Manager',
-        required: false,
-        disabled: true,
-        listItems: PC.fundItems.investmentManagerItems,
-        mltag: 'txt_fundshare_investmanid'
-    }
     investmentAdvisorID: FormItem = {
         type: FormItemType.list,
         label: 'Investment Advisor',
