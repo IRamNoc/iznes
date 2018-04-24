@@ -2,8 +2,7 @@ import {
     Component,
     Input,
     Output,
-    EventEmitter,
-    AfterViewInit
+    EventEmitter
 } from '@angular/core';
 
 import {
@@ -24,7 +23,7 @@ interface Option {
   styleUrls: ['./option-list.component.css']
 })
 
-export class OptionListComponent implements AfterViewInit {
+export class OptionListComponent {
     /* The option list, needs to follow the interface above. */
     @Input()
     optionsList:Array<Option> = [
@@ -47,10 +46,6 @@ export class OptionListComponent implements AfterViewInit {
             'color': 'red',
         }
     ];
-
-    /* The value bound to this option list, defaulted to Do not allow. */
-    @Input()
-    optionSelect:Option = this.optionsList[1];
 
     /* The selected event, triggered everytime an option is selected and on init. */
     @Output()
@@ -82,32 +77,13 @@ export class OptionListComponent implements AfterViewInit {
         });
     }
 
-    ngAfterViewInit () {
-        if (!this.initData) {
-            /* No data. */
-            return;
+    get optionSelect(){
+        let value = 1;
+        if(this.initData){
+            value = this.initData;
         }
 
-        this.initData.subscribe((rawData) => {
-            /* Get our own data. */
-            let value = 0;
-            if (
-                rawData &&
-                rawData[ this.metaData['permissionId'] ] &&
-                rawData[ this.metaData['permissionId'] ][ this.metaData['levelId'] ]
-            ) {
-                value = rawData[ this.metaData['permissionId'] ][ this.metaData['levelId'] ];
-            }
-
-            /* Find the init value in the list. */
-            for ( let i in this.optionsList ) {
-                if (this.optionsList[i].id == value) {
-                    /* Then set and return. */
-                    this.optionSelect = this.optionsList[i];
-                    return;
-                }
-            }
-        })
+        return this.optionsList.find(el => el.id == value);
     }
 
     /**
@@ -121,17 +97,11 @@ export class OptionListComponent implements AfterViewInit {
      * @return {[type]}        [description]
      */
     public handleSelection (option:Option) {
-        /* The option selected to the new option. */
-        this.optionSelect = option;
-
         /* Emit. */
-        this.selected.emit( this.optionSelect );
+        this.selected.emit( option );
 
         /* Toggle the state. */
         this.toggleOpen();
-
-        /* Return. */
-        return;
     }
 
     /**
