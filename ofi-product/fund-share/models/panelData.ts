@@ -1,4 +1,6 @@
 export class PanelData {
+    umbrella = { open: false }
+    fund = { open: false }
     keyFacts = {
         mandatory: { open: true },
         optional: { open: false }

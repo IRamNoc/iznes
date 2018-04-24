@@ -2,7 +2,7 @@ import {Action} from 'redux';
 import * as UmbrellaFundActions from './actions';
 import {UmbrellaFundDetail, UmbrellaFundListState} from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 
 const initialState: UmbrellaFundListState = {
@@ -61,7 +61,9 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 taxAuditorID: item.get('taxAuditorID').toString(),
                 principlePromoterID: item.get('principlePromoterID').toString(),
                 legalAdvisorID: item.get('legalAdvisorID').toString(),
-                directors: item.get('directors')
+                directors: item.get('directors'),
+                internalReference: item.get('internalReference'),
+                additionnalNotes: item.get('comment'),
             };
             return result;
         },

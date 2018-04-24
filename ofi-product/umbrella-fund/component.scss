@@ -4,3 +4,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+textarea {
+  min-height: 40px;
+  max-height: 160px;
+}

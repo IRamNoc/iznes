@@ -11,36 +11,12 @@ import {ToasterService} from 'angular2-toaster';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {typeOfEuDirective} from '../productConfig';
 
-interface UmbrellaItem {
-    auditorID: string;
-    centralisingAgentID: string;
-    custodianBankID: string;
-    delegatedManagementCompanyID: string;
-    directors: string;
-    domicile: string;
-    fundAdministratorID: string;
-    giin: string;
-    investmentAdvisorID: string;
-    investmentManagerID: string;
-    legalAdvisorID: string;
-    legalEntityIdentifier: string;
-    managementCompanyID: string;
-    payingAgentID: string;
-    principlePromoterID: string;
-    registerOffice: string;
-    registerOfficeAddress: string;
-    taxAuditorID: string;
-    transferAgentID: string;
-    umbrellaFundCreationDate: string; // datetime
-    umbrellaFundID: string;
-    umbrellaFundName: string;
-}
-
 interface UmbrellaList {
-    [key: string]: UmbrellaItem;
+    [key: string]: UmbrellaFundDetail;
 }
 
 interface FundList {
@@ -234,13 +210,14 @@ export class FundComponent implements OnInit, OnDestroy {
             'umbrellaFundCreationDate': {value: '', disabled: true},
             'umbrellaFundID': {value: '', disabled: true},
             'umbrellaFundName': {value: '', disabled: true},
+            'internalReference': {value: '', disabled: true},
+            'additionnalNotes': {value: '', disabled: true},
+
         });
 
         this.fundForm = fb.group({
             'isFundStructure': {value: '', disabled: true},
             'fundName': [null, Validators.compose([Validators.required, this.validators.alphanumeric])],
-            'AuMFund': [null],
-            'AuMFundDate': [null, Validators.compose([this.validators.date.day])],
             'legalEntityIdentifier': [null, this.validators.lei],
             'registerOffice': [null, Validators.compose([this.validators.alphanumeric])],
             'registerOfficeAddress': [null, Validators.compose([this.validators.alphanumeric])],
@@ -276,7 +253,6 @@ export class FundComponent implements OnInit, OnDestroy {
             'taxAuditor': [[]],
             'legalAdvisor': [[]],
             'directors': [null],
-            'pocket': [null],
             'hasEmbeddedDirective': [null],
             'hasCapitalPreservation': [null],
             'capitalPreservationLevel': [null, Validators.compose([
@@ -296,6 +272,8 @@ export class FundComponent implements OnInit, OnDestroy {
             'hasSwap': [null],
             'hasDurationHedge': [null],
             'investmentObjective': [null],
+            'internalReference': ['', this.validators.internalReference],
+            'additionnalNotes': ['', this.validators.additionnalNotes],
         });
 
         this.umbrellaForm.addControl('umbrellaFund', this.umbrellaControl);
@@ -347,6 +325,8 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['umbrellaFundCreationDate'].setValue(newUmbrella.umbrellaFundCreationDate.split(' ', 1)[0]);
                     this.umbrellaEditForm.controls['umbrellaFundID'].setValue(newUmbrella.umbrellaFundID);
                     this.umbrellaEditForm.controls['umbrellaFundName'].setValue(newUmbrella.umbrellaFundName);
+                    this.umbrellaEditForm.controls['internalReference'].setValue(newUmbrella.internalReference);
+                    this.umbrellaEditForm.controls['additionnalNotes'].setValue(newUmbrella.additionnalNotes);
 
                     this.fundForm.controls['isFundStructure'].setValue(this.enums.isFundStructure.UMBRELLA.toString());
 
@@ -572,8 +552,6 @@ export class FundComponent implements OnInit, OnDestroy {
 
                     this.fundForm.setValue({
                         ...fund,
-                        AuMFund: null,
-                        AuMFundDate: null,
                         domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
                         typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
                         UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
@@ -611,7 +589,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     submitFundForm() {
-        const payload: Fund = _.omit({
+        const payload: Fund = {
             ...this.fundForm.getRawValue(),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
@@ -637,7 +615,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-        }, ['AuMFund', 'AuMFundDate']);
+        };
 
         if (this.param === 'new') {
             this.fundService.iznCreateFund(payload)

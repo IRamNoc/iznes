@@ -166,7 +166,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             columnLink: 'umbrellaFundName'
         },
         {
-            title: 'Funds',
+            title: 'Funds/Subfunds',
             columns: [
                 this.columns['fFundName'],
                 this.columns['lei'],

@@ -12,24 +12,43 @@
             <span mltag="txt_fundshare">Fund Share</span>
         </button>
         <clr-tab-content class="outer">
-            <div class="form-group row actions">
+            <div class="row">
                 <div class="col-sm-12">
-                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom" mltag="txt_cancel">Cancel</button>
-
-                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareTop" (click)="saveFundShare()" [disabled]="!model.isValid()">
-
-                        <i class="fa fa-save"></i>
-                        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
-                        <span [hidden]="!isUpdate()" mltag="txt_updatefundshare">Update Fund Share</span>
-                    </button>
+                    <p mltag="txt_sharedesc">Please fill in the following information to create a new Share.</p>
+                </div>
+            </div>
+            <div class="well" *ngIf="hasUmbrellaFund()">
+                <div class="row panel-header">
+                    <div class="col-sm-12">
+                        <a href="#" (click)="openPanel(panels['umbrella'], $event)">
+                            <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['umbrella'])"></i>
+                            <h2 id="toggleFund"><span mltag="txt_umbrellafund">Umbrella Fund</span>: {{model.umbrella.umbrellaFundName.value()}}</h2>
+                        </a>
+                    </div>
+                </div>
+                <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['umbrella'])">
+                    <app-dynamic-form [model]="model.umbrella"></app-dynamic-form>
+                </div>
+            </div>
+            <div class="well">
+                <div class="row panel-header">
+                    <div class="col-sm-12">
+                        <a href="#" (click)="openPanel(panels['fund'], $event)">
+                            <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund'])"></i>
+                            <h2 id="toggleFund"><span mltag="txt_fund">Fund</span>: {{model.fund.name.value()}}</h2>
+                        </a>
+                    </div>
+                </div>
+                <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund'])">
+                    <app-dynamic-form [model]="model.fund"></app-dynamic-form>
                 </div>
             </div>
 
             <clr-tabs>
                 <clr-tab>
                     <button clrTabLink id="tabKeyFactsButton">
-                        <span><span mltag="txt_keyfacts">Key Facts</span>
-
+                        <span>
+                            <span mltag="txt_keyfacts">Key Facts</span>
                             <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
                         </span>
                     </button>
@@ -329,7 +348,7 @@
                         </span>
                     </button>
                     <clr-tab-content>
-                        <div class="well" *ngIf="fundShareDocsLoaded">
+                        <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['documents'].mandatory, $event)">

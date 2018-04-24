@@ -302,8 +302,14 @@
                                 <input type="text" id="uf_directors" formControlName="directors">
                             </div>
 
-                            <!-- Leave it for the case for being able to display dropdowns' content -->
-                            <div *ngIf="optionalInformationOpen" [ngStyle]="{'height':'20px'}"></div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="uf_internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="uf_additionnalNotes" mltag="txt_additionnalnotes">Additionnal Notes</label>
+                                <textarea id="uf_additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
+                            </div>
                         </div>
                     </div>
                     <br>
