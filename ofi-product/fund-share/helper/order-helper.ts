@@ -154,6 +154,7 @@ export class OrderHelper {
     minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
+    helperTimeStamp: number;
 
 
     get feePercentage() {
@@ -210,6 +211,7 @@ export class OrderHelper {
         this.amWalletId = fundShare.amWalletID;
         this.investorAddress = orderRequest.subportfolio;
         this.investorWalletId = Number(orderRequest.portfolioid);
+        this.helperTimeStamp = moment();
     }
 
     static getChildErrorMessage(response) {
@@ -221,6 +223,60 @@ export class OrderHelper {
 
     static isResponseGood(response: VerifyResponse): boolean {
         return !('orderValid' in response) || response.orderValid;
+    }
+
+    /**
+     *
+     * @param walletId
+     * @param ref
+     * @param fromAddress: benificiary/administrator address
+     * @param namespace
+     * @param instrument
+     * @param amount
+     * @param {string} protocol
+     * @param {string} metadata
+     * @return {{messagetype: string; messagebody: {txtype: string; walletid: any; reference: any; address: any; subjectaddress: any; namespace: any; instrument: any; amount: any; protocol: string | undefined; metadata: string | undefined}}}
+     */
+    static buildUnencumberRequestBody(walletId: number, ref: string, fromAddress: string, namespace: string, instrument: string, amount: number, protocol = '', metadata = '') {
+        return {
+            messagetype: 'tx',
+            messagebody: {
+                txtype: 'unenc',
+                walletid: walletId,
+                reference: ref,
+                address: fromAddress,
+                subjectaddress: fromAddress,
+                namespace,
+                instrument,
+                amount,
+                protocol,
+                metadata
+            }
+        };
+    }
+
+    /**
+     * build cancel contract request body
+     * @param fundShareData
+     * @param orderType
+     * @param orderByType
+     * @return {any | number}
+     */
+
+    static buildCancelContract(walletId: number, contractAddress: string, commitAddress: string) {
+        const contractData = BlockchainContractService.buildCancelContractMessageBody(contractAddress, commitAddress).contractdata;
+
+        return {
+            messageType: 'tx',
+            messageBody: {
+                'topic': 'cocom',
+                'walletid': walletId,
+                'address': commitAddress,
+                'function': 'dvp_uk_commit',
+                'contractdata': contractData,
+                'contractaddress': contractAddress
+            }
+        };
     }
 
     static getSubsequentMinFig(fundShareData, orderType, orderByType) {
@@ -616,13 +672,14 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            {
-                conditionData: {
-                    authoriseRef: AuthoriseRef,
-                    address: this.amIssuingAddress
-                },
-                conditionType: ConditionType.AUTHORISE
-            }
+            // on the groupama mvp, we don't need authorisation
+            // {
+            //     conditionData: {
+            //         authoriseRef: AuthoriseRef,
+            //         address: this.amIssuingAddress
+            //     },
+            //     conditionType: ConditionType.AUTHORISE
+            // }
         ];
 
         return {
@@ -635,6 +692,7 @@ export class OrderHelper {
                 }
             ],
             addEncs,
+            useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
@@ -723,13 +781,14 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            {
-                conditionData: {
-                    authoriseRef: AuthoriseRef,
-                    address: this.amIssuingAddress
-                },
-                conditionType: ConditionType.AUTHORISE
-            }
+            // on the groupama mvp, we don't need authorisation
+            // {
+            //     conditionData: {
+            //         authoriseRef: AuthoriseRef,
+            //         address: this.amIssuingAddress
+            //     },
+            //     conditionType: ConditionType.AUTHORISE
+            // }
         ];
 
         return {
@@ -742,6 +801,7 @@ export class OrderHelper {
                 }
             ],
             addEncs,
+            useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
@@ -772,6 +832,42 @@ export class OrderHelper {
             };
         }
 
+    }
+
+    getEncumberReference() {
+        return this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
+    }
+
+    buildRedeemEncumberRequestBody() {
+        let figures = this.getOrderFigures();
+
+        if (!OrderHelper.isResponseGood(figures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(figures);
+        } else {
+            figures = figures as OrderFigures;
+        }
+
+        const quantity = figures.quantity;
+
+        const messageBody = {
+            txtype: 'encum',
+            walletid: this.investorWalletId,
+            reference: this.getEncumberReference(),
+            address: this.investorAddress,
+            subjectaddress: this.investorAddress,
+            namespace: this.fundShare.isin,
+            instrument: this.fundShare.fundShareName,
+            amount: quantity,
+            beneficiaries: [[this.amIssuingAddress, 0, 0]],
+            administrators: [[this.amIssuingAddress, 0, 0]],
+            protocol: '',
+            metadata: ''
+        };
+
+        return {
+            messagetype: 'tx',
+            messagebody: messageBody
+        };
     }
 
 }

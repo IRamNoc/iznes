@@ -548,6 +548,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
             const orderRef = commonHelper.pad(orderId, 8, '0');
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
+            this.handleClose();
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
