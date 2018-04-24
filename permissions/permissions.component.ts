@@ -325,40 +325,39 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
      */
     public handleEdit(index): void {
         /* Check if the tab is already open. */
-        let i;
+        let i, foundTabId = 0, newTabId;
         for (i = 0; i < this.tabsControl.length; i++) {
             if (this.tabsControl[i].groupId === this.allGroupList[index].groupId) {
-                /* Found the index for that tab, lets activate it... */
-                this.router.navigateByUrl('/user-administration/' + i);
-
-                /* And return. */
-                return;
+                foundTabId = i;
             }
         }
 
-        /* Push the edit tab into the array. */
         let group = this.allGroupList[index];
 
-        /* And also prefill the form... let's sort some of the data out. */
-        this.tabsControl.push({
-            "title": {
-                "icon": "fa-pencil",
-                "text": this.allGroupList[index].groupName,
-            },
-            "groupId": group.groupId,
-            "formControl": new FormGroup(
-                {
-                    "name": new FormControl(group.groupName),
-                    "description": new FormControl(group.groupDescription),
-                    "type": new FormControl({value: group.category, disabled: false}),
-                    "permissions": new FormControl([])
-                }
-            ),
-            "permissionsEmitter": new EventEmitter(), // This will be used to pass permissions in.
-            "active": false // this.editFormControls
-        });
-
-        console.log(group.groupIsTx);
+        if(!foundTabId){
+            /* And also prefill the form... let's sort some of the data out. */
+            this.tabsControl.push({
+                "title": {
+                    "icon": "fa-pencil",
+                    "text": this.allGroupList[index].groupName,
+                },
+                "groupIndex" : index,
+                "groupId": group.groupId,
+                "formControl": new FormGroup(
+                    {
+                        "name": new FormControl(group.groupName),
+                        "description": new FormControl(group.groupDescription),
+                        "type": new FormControl({value: group.category, disabled: false}),
+                        "permissions": new FormControl([])
+                    }
+                ),
+                "permissionsEmitter": new EventEmitter(), // This will be used to pass permissions in.
+                "active": false // this.editFormControls
+            });
+            newTabId = this.tabsControl.length - 1;
+        } else{
+            newTabId = foundTabId;
+        }
 
         /* Let's get the permission data. */
         this.userAdminService.requestPermissions({
@@ -398,7 +397,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         });
 
         /* Activate the new tab. */
-        const newTabId = this.tabsControl.length - 1;
         this.router.navigateByUrl('/user-administration/permissions/' + newTabId);
 
         /* Return. */
