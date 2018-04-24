@@ -126,6 +126,20 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             return routeRegex.test(this.router.url);
         }
     }
+    public activeChildRoute(children){
+        let routerUrl = this.router.url;
+        let active = false;
+
+        children.forEach(child => {
+            let route = child.router_link;
+            let routeRegex = new RegExp(`^${route}(\/\S+)*`);
+
+            active = active || routeRegex.test(routerUrl);
+        });
+
+        return active;
+    }
+
 
     public menuSelected(id) {
         if (this.menuParentOpen == id) {
