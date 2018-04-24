@@ -174,22 +174,26 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 if (share && typeof share !== 'undefined' && share !== undefined && share !== null) {
                     // this.fundShareID = order.fundShareID;
                     // this.tabsControl[0].active = false;
-                    const tabTitle = 'Orders history';
+                    const tabTitle = 'History';
                     // if (order.orderType === 3) tabTitle += 'Subscription: ';
                     // if (order.orderType === 4) tabTitle += 'Redemption: ';
                     // tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
 
-                    this.tabsControl.push(
-                        {
-                            'title': {
-                                'icon': 'fa-calendar',
-                                'text': tabTitle,
-                            },
-                            'shareId': this.shareID,
-                            'active': true,
-                            shareData: share,
-                        }
-                    );
+                    const tabAlreadyHere = this.tabsControl.find(o => o.shareId === this.shareID);
+                    if (tabAlreadyHere === undefined) {
+                        this.tabsControl = [
+                            {
+                                'title': {
+                                    'icon': 'fa-calendar',
+                                    'text': tabTitle,
+                                },
+                                'shareId': this.shareID,
+                                'active': true,
+                                shareData: share,
+                            }
+                        ];
+                    }
+                    this.setTabActive(this.shareID);
 
                     // this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
                     // const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
@@ -197,6 +201,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                     // OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
                 }
             } else {
+                this.router.navigateByUrl('/reports/centralization');
                 // this.tabsControl[0].active = true;
                 this.searchForm.get('search').patchValue(null, {emitEvent: false});
                 // this.searchForm.get('search').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
@@ -255,6 +260,13 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             ],
         });
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
+    }
+
+    public setTabActive(id) {
+        for (const i in this.tabsControl) {
+            this.tabsControl[i].active = (Number(this.tabsControl[i].shareId) === Number(id));
+        }
+        this.changeDetectorRef.markForCheck();
     }
 
     getMonday(date) {

@@ -1,80 +1,213 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl} from '@angular/forms';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+
+import {MemberSocketService} from '@setl/websocket-service';
+
 import {NgRedux, select} from '@angular-redux/store';
+import {Observable} from 'rxjs/Observable';
+import {Unsubscribe} from 'redux';
+import {fromJS} from 'immutable';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+
+/* Alerts and confirms. */
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
+import * as math from 'mathjs';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+
+/* Clarity */
+import {ClrDatagridStateInterface} from '@clr/angular';
+
+import * as _ from 'lodash';
+
+/* services */
+import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+
+/* store */
+import {ofiManageOrderActions, ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
+
+/* Types. */
+interface SelectedItem {
+    id: any;
+    text: number | string;
+}
+
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CentralizationReportComponent implements OnInit, OnDestroy {
 
-    filterInput = new FormControl('');
-    searchFilter: string;
-    sports = ['Tennis', 'Football', 'Handball', 'Baseball', 'Badminton', 'Bowling', 'Curling'];
-    colors = ['Blue', 'Red', 'Green', 'Pink', 'Black', 'White', 'Orange'];
-    genders = ['Male', 'Female'];
-    currencies = ['€', '$', '£'];
-    available = ['Available', 'Blocked'];
-    names = ['Laurent', 'David', 'Albert', 'Ollie', 'Ming', 'Dan', 'Anthony', 'Mathieu', 'Merwan'];
+    unknownValue = '???';
 
-    fakeDatas = [];
-    filteredDatas = [];
+    centralizationReportsList: Array<any> = [];
 
+    // Locale
+    language = 'en';
+
+    // Datepicker config
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language
+    };
+
+    currencyList = [
+        {id : 0, text: 'EUR'},
+        {id : 1, text: 'USD'},
+        {id : 2, text: 'GBP'},
+        {id : 3, text: 'CHF'},
+        {id : 4, text: 'JPY'},
+        {id : 5, text: 'AUD'},
+        {id : 6, text: 'NOK'},
+        {id : 7, text: 'SEK'},
+        {id : 8, text: 'ZAR'},
+        {id : 9, text: 'RUB'},
+        {id : 10, text: 'SGD'},
+        {id : 11, text: 'AED'},
+        {id : 12, text: 'CNY'},
+        {id : 13, text: 'PLN'},
+    ];
+
+    searchForm: FormGroup;
+
+    private myDetails: any = {};
+    private subscriptions: Array<any> = [];
+    private reduxUnsubscribe: Unsubscribe;
     unsubscribe = new Subject();
 
-    constructor(
-        // private _fb: FormBuilder,
-        // private ngRedux: NgRedux<any>,
-    ) {
-        this.filterInput.valueChanges
-            .takeUntil(this.unsubscribe)
-            .subscribe((v) => {
-                this.searchFilter = v;
-                this.requestSearch(null);
-            });
-        for (let i = 0; i < 1000; i++) {
+    dataListForSearch: Array<any> = [];
 
-            const startDateRef = this.convertDate(new Date(+(new Date()) - Math.floor(Math.random() * 10000000000)));
-            this.fakeDatas.push({
-                isin: Math.floor(Math.random() * Math.floor(1000)),
-                shareName: this.names[Math.floor(Math.random() * Math.floor(this.names.length))],
-                navDate: Math.floor(Math.random() * Math.floor(1000000)),
-                settlementDate: startDateRef,
-                shareCurrency: this.currencies[Math.floor(Math.random() * Math.floor(this.currencies.length))],
-                latestNav: this.convertDate(new Date(startDateRef).setDate(new Date(startDateRef).getDate() + Math.floor(Math.random() * 1000))),
-                aum: this.sports[Math.floor(Math.random() * Math.floor(this.sports.length))],
-                netPositionShareCurrency: Math.random().toString(36).substring(7),
-                netPositionPerCentAum: this.available[Math.floor(Math.random() * Math.floor(this.available.length))],
+    /* Observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private alertsService: AlertsService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private _fb: FormBuilder,
+        private memberSocketService: MemberSocketService,
+        private ofiReportsService: OfiReportsService,
+        private alerts: AlertsService,
+        private _confirmationService: ConfirmationService,
+    ) {
+        this.createsearchForm();
+
+        this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+
+        /* Subscribe for this user's details. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
+            /* Assign list to a property. */
+            this.myDetails = myDetails;
+        });
+
+        this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
+        this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
+    }
+
+    public ngOnInit() {
+    }
+
+    getLanguage(requested): void {
+        if (requested) {
+            switch (requested) {
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
+            }
+        }
+    }
+
+    getCentralizationReportsRequested(requested): void {
+        if (!requested) {
+            OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
+        }
+    }
+
+    getCentralizationReportsListFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.centralizationReportsList = listImu.reduce((result, item) => {
+
+            result.push({
+                cutoffDate: item.get('cutoffDate'),
+                fundShareID: item.get('fundShareID'),
+                fundShareName: item.get('fundShareName'),
+                isin: item.get('isin'),
+                latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
+                latestNavBackup: (item.get('latestNavBackup') === null) ? 0 : item.get('latestNavBackup'),
+                navDate: item.get('navDate'),
+                navDateBackup: item.get('navDateBackup'),
+                redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
+                redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
+                settlementDate: item.get('settlementDate'),
+                shareClassCurrency: item.get('shareClassCurrency'),
+                subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
+                subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
+            });
+
+            return result;
+        }, []);
+
+        for (const report of this.centralizationReportsList) {
+            this.dataListForSearch.push({
+                id: report.fundShareID,
+                text: report.fundShareName,
             });
         }
-        this.requestSearch(null);
-    }
 
-    ngOnInit() {
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
 
-    }
-
-    ngOnDestroy() {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
+        this.changeDetectorRef.markForCheck();
     }
 
     requestSearch(form) {
-        this.filteredDatas = this.fakeDatas;
-
-        if (!this.searchFilter) {
-            return;
+        if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
+            this.buildLink(this.searchForm.get('search').value[0].id);
         }
-        const searchRegex = new RegExp(this.searchFilter, 'i');
+    }
 
-        this.filteredDatas = this.filteredDatas.filter((item) => {
-            return searchRegex.test(item.isin.toString())
-                || searchRegex.test(item.shareName.toString());
+    buildLink(id) {
+        const dest = 'am-reports-section/centralization-history/' + id;
+        this.router.navigateByUrl(dest);
+    }
+
+    createsearchForm() {
+        this.searchForm = this._fb.group({
+            search: [
+                '',
+            ],
         });
+    }
 
+    showCurrency(currency) {
+        const obj = this.currencyList.find(o => o.id === currency);
+        if (obj !== undefined) {
+            return obj.text;
+        } else {
+            return 'Not found!';
+        }
+    }
+
+    calculNetPosition(suba, reda, redq, subq, latestNav) {
+        return (isFinite(((suba - reda) / ((redq + subq) * latestNav)) * 100)) ? ((suba - reda) / ((redq + subq) * latestNav)) * 100 : 0;
     }
 
     convertDate(inputDate) {
@@ -91,23 +224,76 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         return yyyy + '/' + mm + '/' + dd;
     }
 
-    onClickExportCentralizationReport() {
-        console.log('onClickExportCentralizationReport');
+    onClickExportCentralizationReport(id) {
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv';
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
     }
 
-    onClickViewCorrespondingOrders() {
-        console.log('onClickViewCorrespondingOrders');
+
+    onClickViewCentralizationHistory(id) {
+        this.buildLink(id);
     }
 
-    onClickViewCentralizationHistory() {
-        console.log('onClickViewCentralizationHistory');
+    onClickViewCorrespondingOrders(id) {
+        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        if (obj !== undefined) {
+            const orderFilters = { filters: {
+                isin: obj.isin,
+                shareName: obj.fundShareName,
+                status: 1,
+                orderType: '',
+            }};
+
+            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+            this.router.navigateByUrl('manage-orders/list');
+        }
     }
 
-    onClickDownloadCorrespondingOrders() {
-        console.log('onClickDownloadCorrespondingOrders');
+    onClickDownloadCorrespondingOrders(id) {
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
+
+        console.log(this.centralizationReportsList, id);
+
+        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        if (obj !== undefined) {
+            const params = {
+                shareName: obj.fundShareName,
+                isin: obj.isin,
+                status: null,
+                orderType: null,
+                pageSize: null,
+                rowOffSet: null,
+                sortByField: null,
+                sortOrder: null,
+                dateSearchField: null,
+                fromDate: null,
+                toDate: null,
+            };
+            for (let filter in params) {
+                if (params.hasOwnProperty(filter)) {
+                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
+                }
+            }
+            const url = this.generateExportURL(paramUrl, false);
+            // console.log(url);
+            window.open(url, '_blank');
+        }
     }
 
-    onClickDownloadCentralizationHistory() {
-        console.log('onClickDownloadCentralizationHistory');
+    onClickDownloadCentralizationHistory(id) {
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id;
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
+
+    generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
+    }
+
+    ngOnDestroy() {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

@@ -11,6 +11,7 @@ import {OfiClientTxService} from './ofi-client-tx/service';
 import {OfiWalletnodeChannelService} from '../ofi-req-services/ofi-walletnode-channel/service';
 import {OfiAmDashboardService} from './ofi-am-dashboard/service';
 import {OfiKycService} from './ofi-kyc/service';
+import {OfiReportsService} from './ofi-reports/service';
 
 import {OfiCorpActionService} from './ofi-corp-actions/service';
 import {OfiMemberNodeChannelService} from './ofi-member-node-channel/service';
@@ -30,7 +31,8 @@ import {OfiMemberNodeChannelService} from './ofi-member-node-channel/service';
         OfiClientTxService,
         OfiWalletnodeChannelService,
         OfiAmDashboardService,
-        OfiKycService
+        OfiKycService,
+        OfiReportsService
     ]
 })
 

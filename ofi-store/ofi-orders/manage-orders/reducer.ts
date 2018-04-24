@@ -14,7 +14,8 @@ const initialState: ManageOrders = {
     orderList: {},
     requested: false,
     newOrder: false,
-    openedTabs: []
+    openedTabs: [],
+    filters: {},
 };
 
 /* Reducer. */
@@ -48,6 +49,10 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
 
         case ofiManageOrdersActions.SET_ALL_TABS:
             return handleSetAllTabs(action, state);
+
+        case ofiManageOrdersActions.OFI_SET_ORDERS_FILTERS:
+            const filters = _.get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
+            return Object.assign({}, state, filters);
 
         /* Default. */
         default:
