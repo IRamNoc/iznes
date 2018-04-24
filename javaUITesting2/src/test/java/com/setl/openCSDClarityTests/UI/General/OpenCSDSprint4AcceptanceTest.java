@@ -55,7 +55,7 @@ public class OpenCSDSprint4AcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         Thread.sleep(750);
         //Get the name of the umbrella fund from the database
@@ -71,6 +71,7 @@ public class OpenCSDSprint4AcceptanceTest {
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
+            System.out.println(popup);
             assertTrue(popup.contains("has been successfully updated!"));
         }catch (Exception e){
             fail(e.getMessage());

@@ -104,7 +104,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         try {
             String umbFundName = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).getText();
@@ -117,8 +116,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             assertTrue(umbFundManagement.equals("Management Company"));
             assertTrue(umbFundCountry.equals("Jordan"));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
     }
 
     @Test
@@ -171,15 +169,13 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
         try {
             wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")));
 
             String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
             assertNotEquals(postCreationNo, preCreationNo + 1);
         }catch (Exception e){
-            fail();
-        }
+            fail();}
     }
 
     @Test
@@ -191,8 +187,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
         assertTrue(driver.findElement(By.id("uf_umbrellaFundName")).isDisplayed());
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys("Updated");
         driver.findElement(By.id("mcBtnSubmitForm")).click();
@@ -200,14 +195,12 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             String popup = driver.findElement(By.className("toast-title")).getText();
             assertTrue(popup.contains("has been successfully updated!"));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
         try {
             String umFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
             assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
     }
 
     private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
