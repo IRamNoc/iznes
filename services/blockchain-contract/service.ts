@@ -225,7 +225,7 @@ export class BlockchainContractService {
             // todo
             // The encumbrance is hardcoded to use 'use_encumbrance' now.
             // It should be specific to a unique reference, when the encumbrance is created.
-            encumbrance: [true, 'use_encumbrance'],
+            encumbrance: arrangementData.useEncum,
             metadata: JSON.stringify(metaData)
         };
 
@@ -239,7 +239,11 @@ export class BlockchainContractService {
 
     }
 
-    handleWalletCommitContract(contract, thisContractAddress, thisCommitAddr, thisPartyId, commitType) {
+    static buildCancelContractMessageBody(contractAddress: string, commitAddress: string) {
+        return this.handleWalletCommitContract({}, contractAddress, commitAddress, 0, 'cancelCommit');
+    }
+
+    static handleWalletCommitContract(contract, thisContractAddress, thisCommitAddr, thisPartyId, commitType) {
 
         const payList = [];
         const receiveList = [];
@@ -276,7 +280,12 @@ export class BlockchainContractService {
                 authorise: authoriseList
             };
         } else if (commitType === 'cancelCommit') {
-
+            contractData = {
+                'contractfunction': 'dvp_uk_commit',
+                'issuingaddress': thisCommitAddr,
+                'contractaddress': thisContractAddress,
+                'cancel': [thisCommitAddr, '']
+            };
         }
 
         return {
