@@ -1,7 +1,6 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {DebugElement, Directive, Input} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import * as _ from 'lodash';
 import {of} from 'rxjs/observable/of';
 
 
@@ -269,13 +268,13 @@ describe('FundComponent', () => {
             const formGroupMainEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:first-child div.form-group')
             );
-            expect(formGroupMainEls.length).toEqual(27);
+            expect(formGroupMainEls.length).toEqual(26);
 
             // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
             const formGroupOptionEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:last-child div.form-group')
             );
-            expect(formGroupOptionEls.length).toEqual(24);
+            expect(formGroupOptionEls.length).toEqual(22);
         }));
 
         describe('conditionnal inputs', () => {
@@ -289,35 +288,6 @@ describe('FundComponent', () => {
                 fixture.detectChanges();
 
             }));
-
-            describe('umbrellaFundID', () => {
-                it('should display the umbrellaFundID input', fakeAsync(() => {
-                    const value1 = comp.umbrellaItems[0];
-                    comp.umbrellaControl.setValue([value1]);
-                    tick();
-                    fixture.detectChanges();
-
-                    const umbrellaBeforeEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaBeforeEls.length).toEqual(0);
-
-                    const value2 = comp.umbrellaItems[1];
-                    comp.umbrellaControl.setValue([value2]);
-                    tick();
-                    fixture.detectChanges();
-                    const umbrellaAfterEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaAfterEls.length).toEqual(1);
-                }));
-
-                it('should not display the umbrellaFundID input', fakeAsync(() => {
-                    const value1 = comp.umbrellaItems[0];
-                    comp.umbrellaControl.setValue([value1]);
-                    tick();
-                    fixture.detectChanges();
-                    const umbrellaEls = fixture.debugElement.queryAllNodes(By.css('input#umbrellaFundID'));
-                    expect(umbrellaEls.length).toEqual(0);
-                }));
-
-            });
 
             describe('typeOfEuDirective', () => {
                 it('should display the typeOfEuDirective input', fakeAsync(() => {
@@ -633,8 +603,6 @@ describe('FundComponent', () => {
             const testPayload = {
                 isFundStructure: '1',
                 fundName: 'test',
-                AuMFund: 'test',
-                AuMFundDate: '2017-02-02',
                 legalEntityIdentifier: null,
                 registerOffice: null,
                 registerOfficeAddress: null,
@@ -669,7 +637,6 @@ describe('FundComponent', () => {
                 taxAuditor: null,
                 legalAdvisor: null,
                 directors: null,
-                pocket: null,
                 hasEmbeddedDirective: null,
                 hasCapitalPreservation: null,
                 capitalPreservationLevel: null,
@@ -708,7 +675,7 @@ describe('FundComponent', () => {
 
                 it('should call fundService.createFund', fakeAsync(() => {
 
-                    const expectedResult: Fund = Object(_.omit({
+                    const expectedResult: Fund = Object({
                         ...testPayload,
                         domicile: testPayload.domicile[0].id,
                         legalForm: testPayload.legalForm[0].id,
@@ -720,7 +687,7 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
-                    }, ['AuMFund', 'AuMFundDate']));
+                    });
                     comp.submitFundForm();
 
                     expect(iznCreateFund).toHaveBeenCalledTimes(1);
@@ -760,7 +727,7 @@ describe('FundComponent', () => {
 
                 it('should call fundService.updateFund', fakeAsync(() => {
 
-                    const expectedResult: Fund = Object(_.omit({
+                    const expectedResult: Fund = Object({
                         ...testPayload,
                         domicile: testPayload.domicile[0].id,
                         legalForm: testPayload.legalForm[0].id,
@@ -772,7 +739,7 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
-                    }, ['AuMFund', 'AuMFundDate']));
+                    });
                     comp.submitFundForm();
 
                     expect(iznUpdateFund).toHaveBeenCalledTimes(1);
