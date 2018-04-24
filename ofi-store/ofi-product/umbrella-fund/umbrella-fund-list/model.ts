@@ -9,7 +9,6 @@ export interface UmbrellaFundDetail {
     managementCompanyID: string;
     fundAdministratorID: string;
     custodianBankID: string;
-    investmentManagerID: string;
     investmentAdvisorID: string;
     payingAgentID: string;
     transferAgentID: string;
