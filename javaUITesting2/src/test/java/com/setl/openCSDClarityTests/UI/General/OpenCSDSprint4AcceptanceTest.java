@@ -135,7 +135,11 @@ public class OpenCSDSprint4AcceptanceTest {
     }
 
     @Test
-    public void shouldAssertThatUmbrellaFundsHas3ExpandableFields(){
+    public void shouldAssertThatUmbrellaFundsHas3ExpandableFields() throws InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPage("product-module");
     }
 
     @Test

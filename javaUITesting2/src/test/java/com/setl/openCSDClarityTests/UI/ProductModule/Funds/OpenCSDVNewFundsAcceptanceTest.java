@@ -27,6 +27,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -225,12 +227,17 @@ public class OpenCSDVNewFundsAcceptanceTest {
         } catch (Error e) {
             fail(e.getMessage());
         }
-        scrollElementIntoViewById("fund-cancelfund-btn");
+        driver.findElement(By.id("investmentObjective")).sendKeys("");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
-
-        driver.findElement(By.id("fund-cancelfund-btn")).click();
         try {
+            driver.findElement(By.id("fund-cancelfund-btn")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+            try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         } catch (Exception e) {
@@ -303,8 +310,8 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
-        driver.findElement(By.id("AuMFund")).sendKeys(fundName);
-        driver.findElement(By.id("AuMFundDate")).sendKeys("2019-04-04");
+        //driver.findElement(By.id("AuMFund")).sendKeys(fundName);
+        //driver.findElement(By.id("AuMFundDate")).sendKeys("2019-04-04");
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isEuDirective2")).click();
@@ -325,7 +332,10 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");

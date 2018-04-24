@@ -102,7 +102,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
-        searchAndSelectTopDropdown("uf_domicile", "Jordan");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
@@ -170,7 +170,6 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -190,12 +189,11 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
-            driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).click();
+            driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();
         }catch (Exception e){
             fail(e.getMessage());
         }
-        String title = driver.findElement(By.id("edit-fund-title")).getText();
-        assertTrue(title.contains("Umbrella fund:"));
+        assertTrue(driver.findElement(By.id("uf_umbrellaFundName")).isDisplayed());
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys("Updated");
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         try {
