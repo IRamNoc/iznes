@@ -157,14 +157,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     return;
                 }
                 if (params.category === 'compose') {
-                    this.messageService.loadReply().then((reply:any)=>{
-                        if (reply){
+                    this.messageService.loadReply().then((reply: any) => {
+                        if (reply) {
                             this.messageService.clearReply();
 
                             this.messageComposeForm.setValue({
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{id: {walletId: reply.senderId}, text: reply.senderWalletName}],
-                                body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' + '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' + reply.senderWalletName + '</b> ' + reply.date + ':</p>' + reply.body.replace(/<p>/g,'<p>&nbsp;&nbsp;&nbsp;')
+                                body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' + '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' + reply.senderWalletName + '</b> ' + reply.date + ':</p>' + reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;')
                             });
                         }
                     });
@@ -364,16 +364,18 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             this.messages = messages;
             currentMessage.isRead = true;
+            // if ((currentMessage.action) &&
+            //     typeof currentMessage.action === 'string' &&
+            //     currentMessage.action.length > 0
+            // ) {
+
             if ((currentMessage.action) &&
                 typeof currentMessage.action === 'string' &&
                 currentMessage.action.length > 0
             ) {
                 currentMessage.action = JSON.parse(currentMessage.action);
-            } else {
-                currentMessage.action = {
-                    type: null
-                };
             }
+
             this.messageView = true;
             this.currentMessage = currentMessage;
             this.changeDetectorRef.detectChanges();
@@ -537,7 +539,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }).join(',');
     }
 
-    replyMessage(){
+    replyMessage() {
         this.messageService.saveReply(this.currentMessage);
         this.router.navigateByUrl('/messages/compose');
     }
