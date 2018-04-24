@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 
@@ -25,6 +26,8 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -48,6 +51,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
     @Test
     public void shouldUpdateUmbrellaFund() throws IOException, InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -58,6 +62,13 @@ public class OpenCSDSprint4AcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         Thread.sleep(750);
+        try {
+            String popupBefore = driver.findElement(By.className("toast-title")).getText();
+            System.out.println(popupBefore);
+            wait.until(invisibilityOfElementLocated(By.className("toast-title")));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
         //Get the name of the umbrella fund from the database
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
