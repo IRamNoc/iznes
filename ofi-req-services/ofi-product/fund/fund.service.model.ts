@@ -129,7 +129,6 @@ export interface Fund {
     taxAuditor: number;
     legalAdvisor: number;
     directors: string;
-    pocket: string;
     hasEmbeddedDirective: hasEmbeddedDirective;
     hasCapitalPreservation: hasCapitalPreservation;
     capitalPreservationLevel: number;
@@ -146,6 +145,8 @@ export interface Fund {
     hasSwap: hasSwap;
     hasDurationHedge: hasDurationHedge;
     investmentObjective: string;
+    internalReference: string;
+    additionnalNotes: string;
 }
 
 export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {

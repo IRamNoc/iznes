@@ -32,7 +32,11 @@ import {
 /*
  Ofi Orders
  */
-import {OfiOrdersReducer, OfiOrdersState} from "./ofi-orders";
+import {OfiOrdersReducer, OfiOrdersState} from './ofi-orders';
+/*
+ Ofi Reports
+ */
+import {OfiReportsReducer, OfiReportsState} from './ofi-reports';
 /*
  Ofi My Informations
  */
@@ -65,7 +69,6 @@ export {
     ofiClearRequestedIssuedAssets,
     ofiSetRequestedUserIssuedAssets
 } from './ofi-corp-actions';
-
 
 export {
     /* Manage orders */
@@ -105,6 +108,18 @@ export {
     clearRequestedCollectiveArchive,
     SET_COLLECTIVE_ARCHIVE
 } from './ofi-orders';
+
+
+export {
+    OFI_SET_CENTRALIZATION_REPORTS_LIST,
+    ofiClearRequestedCentralizationReports,
+    ofiSetRequestedCentralizationReports,
+    ofiCentralizationReportsActions,
+    OFI_SET_AM_HOLDERS_LIST,
+    ofiClearRequestedAmHolders,
+    ofiSetRequestedAmHolders,
+    ofiAmHoldersActions
+} from './ofi-reports';
 
 export {
     OfiProductState,
@@ -167,6 +182,7 @@ export interface OfiState {
     ofiOrders: OfiOrdersState;
     ofiClientTx: OfiClientTxState;
     ofiKyc: KycState;
+    ofiReports: OfiReportsState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -176,4 +192,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiOrders: OfiOrdersReducer,
     ofiClientTx: OfiClientTxReducer,
     ofiKyc: KycReducer,
+    ofiReports: OfiReportsReducer,
 });

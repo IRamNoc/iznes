@@ -31,6 +31,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     fundList: any;
     fundListItems: any;
     newFundShareForm: FormGroup;
+    fundForm: FormGroup;
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -44,16 +45,24 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         private ofiFundShareService: OfiFundShareService) {}
 
     ngOnInit() {
-        this.initForm();
+        this.initForms();
         this.initSubscriptions();
 
         this.redux.dispatch(ofiClearCurrentFundShareSelectedFund());
     }
 
-    private initForm(): void {
+    private initForms(): void {
         this.newFundShareForm = new FormGroup({
             fund: new FormControl()
         });
+
+        this.fundForm = new FormGroup({
+            legalEntity: new FormControl(),
+            domicile: new FormControl()
+        });
+
+        this.fundForm.controls.legalEntity.disable();
+        this.fundForm.controls.domicile.disable();
     }
 
     private initSubscriptions(): void {
@@ -63,6 +72,19 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundListOb.subscribe(navFund => {
             this.updateFundList(navFund);
         }));
+        this.subscriptionsArray.push(this.newFundShareForm.controls.fund.valueChanges.subscribe(fund => {
+            this.updateFundForm(fund);
+        }));
+    }
+
+    private updateFundForm(fund): void {
+        const fundObj = _.find(this.fundList, (fundItem) => {
+            return fundItem.fundID === fund[0].id;
+        });
+
+        const legalEntity = fundObj.legalEntityIdentifier ? fundObj.legalEntityIdentifier : 'N/A';
+        this.fundForm.controls.legalEntity.patchValue(legalEntity);
+        this.fundForm.controls.domicile.patchValue(fundObj.domicile);
     }
 
     /**

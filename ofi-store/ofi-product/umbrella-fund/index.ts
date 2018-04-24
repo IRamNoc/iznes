@@ -4,12 +4,14 @@ import {
     UmbrellaFundListState,
     UmbrellaFundListReducer,
     SET_UMBRELLA_FUND_LIST,
+    setRequestedUmbrellaFund
 } from './umbrella-fund-list';
 
 export {
     UmbrellaFundListState,
     UmbrellaFundListReducer,
     SET_UMBRELLA_FUND_LIST,
+    setRequestedUmbrellaFund
 };
 
 export interface UmbrellaFundState {

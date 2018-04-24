@@ -166,7 +166,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             columnLink: 'umbrellaFundName'
         },
         {
-            title: 'Funds',
+            title: 'Funds/Subfunds',
             columns: [
                 this.columns['fFundName'],
                 this.columns['lei'],
@@ -256,6 +256,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
+
+        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+        OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+        OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
     }
 
     ngOnDestroy(): void {

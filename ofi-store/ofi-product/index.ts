@@ -22,6 +22,7 @@ import {
     UmbrellaFundState,
     UmbrellaFundReducer,
     SET_UMBRELLA_FUND_LIST,
+    setRequestedUmbrellaFund
 } from './umbrella-fund';
 
 import {

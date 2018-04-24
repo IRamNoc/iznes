@@ -153,21 +153,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
-                                <label for="uf_investmentManager" class="control-label" mltag="txt_investmentmanager">Investment Manager</label>
-                                <ng-select id="uf_investmentManager" [items]="investmentManagerOptions" [allowClear]="true" placeholder="Select" formControlName="investmentManagerID" mltag="txt_select">
-
-
-
-
-                                </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['investmentManagerID'].hasError('required') && umbrellaFundForm.controls['investmentManagerID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-
-                                </div>
-                            </div>
-
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_investmentAdvisor" class="control-label" mltag="txt_investmentadvisor">Investment Advisor</label>
                                 <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" placeholder="Select" formControlName="investmentAdvisorID" mltag="txt_select">
 
@@ -176,13 +162,9 @@
 
 
                                 </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['investmentAdvisorID'].hasError('required') && umbrellaFundForm.controls['investmentAdvisorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-
-                                </div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group col-sm-6">
                                 <label for="uf_payingAgent" class="control-label" mltag="txt_payingagent">Paying Agent</label>
                                 <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" placeholder="Select" formControlName="payingAgentID" mltag="txt_select">
 
@@ -191,27 +173,31 @@
 
 
                                 </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['payingAgentID'].hasError('required') && umbrellaFundForm.controls['payingAgentID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-
-                                </div>
                             </div>
 
-                            <!-- TODO: Implement data once we have a proper definition of what these two fields must have -->
-                            <div *ngIf="showTransferAgent" class="form-group required-field col-sm-6">
+                            <div *ngIf="isTransferAgentActive()" class="form-group col-sm-6">
                                 <label for="uf_transferAgent" class="control-label" mltag="txt_transferagent">Transfer Agent</label>
-                                <input type="number" id="uf_transferAgent" formControlName="transferAgentID">
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
+                                <ng-select id="uf_transferAgent" [items]="transferAgentOptions" [allowClear]="true" placeholder="Select" [formControl]="umbrellaFundForm.controls['transferAgentID']" mltag="txt_select">
+
+
+
+
+
+
+                                </ng-select>
                             </div>
 
-                            <div *ngIf="showCentralizingAgent" class="form-group required-field col-sm-6">
+                            <div *ngIf="isCentralizingAgentActive()" class="form-group col-sm-6">
                                 <label for="uf_centralizingAgent" class="control-label" mltag="txt_centralisingagent">Centralising Agent</label>
-                                <input type="number" id="uf_centralizingAgent" formControlName="centralisingAgentID">
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
-                            </div>
+                                <ng-select id="uf_centralizingAgent" [items]="centralizingAgentOptions" [allowClear]="true" placeholder="Select" [formControl]="umbrellaFundForm.controls['centralisingAgentID']" mltag="txt_select">
 
-                            <!-- Leave it for the case for being able to display dropdowns' content -->
-                            <div *ngIf="mainInformationOpen" [ngStyle]="{'height':'100px'}"></div>
+
+
+
+
+
+                                </ng-select>
+                            </div>
                         </div>
                     </div>
 
@@ -302,8 +288,14 @@
                                 <input type="text" id="uf_directors" formControlName="directors">
                             </div>
 
-                            <!-- Leave it for the case for being able to display dropdowns' content -->
-                            <div *ngIf="optionalInformationOpen" [ngStyle]="{'height':'20px'}"></div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="uf_internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="uf_additionnalNotes" mltag="txt_additionnalnotes">Additionnal Notes</label>
+                                <textarea id="uf_additionnalNotes" class="form-control" formControlName="additionnalNotes" maxlength="500"></textarea>
+                            </div>
                         </div>
                     </div>
                     <br>

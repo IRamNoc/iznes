@@ -2,7 +2,7 @@ import {Action} from 'redux';
 import * as UmbrellaFundActions from './actions';
 import {UmbrellaFundDetail, UmbrellaFundListState} from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 
 const initialState: UmbrellaFundListState = {
@@ -47,21 +47,22 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 legalEntityIdentifier: item.get('legalEntityIdentifier'),
                 domicile: item.get('domicile'),
                 umbrellaFundCreationDate: item.get('umbrellaFundCreationDate').split(' ')[0],
-                managementCompanyID: item.get('managementCompanyID').toString(),
-                fundAdministratorID: item.get('fundAdministratorID').toString(),
-                custodianBankID: item.get('custodianBankID').toString(),
-                investmentManagerID: item.get('investmentManagerID').toString(),
-                investmentAdvisorID: item.get('investmentAdvisorID').toString(),
-                payingAgentID: item.get('payingAgentID').toString(),
-                transferAgentID: item.get('transferAgentID').toString(),
-                centralisingAgentID: item.get('centralisingAgentID').toString(),
+                managementCompanyID: item.get('managementCompanyID', '').toString(),
+                fundAdministratorID: item.get('fundAdministratorID', '').toString(),
+                custodianBankID: item.get('custodianBankID', '').toString(),
+                investmentAdvisorID: item.get('investmentAdvisorID', '') ? item.get('investmentAdvisorID', '').toString() : '',
+                payingAgentID: item.get('payingAgentID', '') ? item.get('payingAgentID', '').toString() : '',
+                transferAgentID: item.get('transferAgentID', '') ? item.get('transferAgentID', '').toString() : '',
+                centralisingAgentID: item.get('centralisingAgentID', '') ? item.get('centralisingAgentID', '').toString() : '',
                 giin: item.get('giin'),
-                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID').toString(),
-                auditorID: item.get('auditorID').toString(),
-                taxAuditorID: item.get('taxAuditorID').toString(),
-                principlePromoterID: item.get('principlePromoterID').toString(),
-                legalAdvisorID: item.get('legalAdvisorID').toString(),
-                directors: item.get('directors')
+                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID', '') ? item.get('delegatedManagementCompanyID', '').toString() : '',
+                auditorID: item.get('auditorID', '') ? item.get('auditorID', '').toString() : '',
+                taxAuditorID: item.get('taxAuditorID', '') ? item.get('taxAuditorID', '').toString() : '',
+                principlePromoterID: item.get('principlePromoterID', '') ? item.get('principlePromoterID', '').toString() : '',
+                legalAdvisorID: item.get('legalAdvisorID', '') ? item.get('legalAdvisorID', '').toString() : '',
+                directors: item.get('directors'),
+                internalReference: item.get('internalReference'),
+                additionnalNotes: item.get('comment'),
             };
             return result;
         },

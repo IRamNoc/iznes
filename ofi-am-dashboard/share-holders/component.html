@@ -60,7 +60,7 @@
 
                         </td>
                         <td class="text-right" valign="middle">
-                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisholderslistforallthef4ca32ae77">Export this holders list for all these Funds & Shares below</button>
+                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisholderslistforallthef4ca32ae77" (click)="exportHolders()">Export this holders list for all these Funds & Shares below</button>
                         </td>
                     </tr>
                 </tbody>
@@ -69,69 +69,115 @@
             <br>
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid>
-                <clr-dg-column [clrDgField]="'fundName'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_fundname">Fund name</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_fundname">Fund name</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_sharename">Share name</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_sharename">Share name</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_currency">Currency</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_currency">Currency</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_isin">ISIN</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_nav">NAV</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_numberofunits">Number of units</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_numberofunits">Number of units</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_aumccy">AUM (CCY)</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_aumccy">AUM</span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_ratio">Ratio</span> (%)
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'numberOfHolders'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_numberofholders">Number of holders</span> <span class="column-label"></span>
+                <clr-dg-column>
+                    <span mltag="txt_numberofholders">Number of holders</span>
                 </clr-dg-column>
                 <!-- ACTIONS -->
                 <!--<clr-dg-column><span>Action</span></clr-dg-column>-->
 
-                <clr-dg-row *ngFor="let data of dataList; let i = index">
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                <clr-dg-row *clrDgItems="let data of holdersList">
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col1">
+                            {{data.fundName}}
+                        </span>
+                        <ng-template #col1>
+                            <!--empty-->
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col2">
+                            <!--empty-->
+                        </span>
+                        <ng-template #col2>
+                            {{data.shareName}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col3">
+                            {{showCurrency(data.fundCurrency)}}
+                        </span>
+                        <ng-template #col3>
+                            {{showCurrency(data.shareCurrency)}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col4">
+                            <!--empty-->
+                        </span>
+                        <ng-template #col4>
+                            {{data.shareIsin}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col5">
+                            <!--empty-->
+                        </span>
+                        <ng-template #col5>
+                            {{data.shareNav}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col6">
+                            <!--empty-->
+                        </span>
+                        <ng-template #col6>
+                            {{data.shareUnitNumber}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col7">
+                            {{data.fundAum}}
+                        </span>
+                        <ng-template #col7>
+                            {{data.shareAum}}
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col8">
+                            <!--empty-->
+                        </span>
+                        <ng-template #col8>
+                            {{data.shareRatio}}%
+                        </ng-template>
                     </clr-dg-cell>
-                    <clr-dg-cell mltag="txt_yo">yo
-
+                    <clr-dg-cell>
+                        <span *ngIf="data.isFund; else col9">
+                            {{data.fundHolderNumber}}
+                        </span>
+                        <ng-template #col9>
+                            {{data.shareHolderNumber}}
+                        </ng-template>
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                <clr-dg-footer>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}-->
+                    </clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -276,413 +322,6 @@
                 <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', 'list']" mltag="txt_backtoallholderspage">Back to ALL holders page</button>
             </div>
 
-            <!--<div class="m-1">{{shareData | json}}</div>-->
-            <!--<div class="m-1">{{fundShare | json}}</div>-->
-
-            <!--<div class="well mb-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="clientInformation  = !clientInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="clientInformation "></i>-->
-            <!--<h2> Client Information</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!clientInformation">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Company name</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{unknownValue}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="well ml-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="clientDetailsInformation  = !clientDetailsInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="clientDetailsInformation "></i>-->
-            <!--<h2> Details</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!clientDetailsInformation">-->
-            <!--<div class="form-group col-sm-12">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>First name</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{unknownValue}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Last name</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{unknownValue}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="well mb-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="generalInvestmentInformation  = !generalInvestmentInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="generalInvestmentInformation "></i>-->
-            <!--<h2> General Investment Information</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!generalInvestmentInformation">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Asset Management Company</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{showManagementCompany(shareData)}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Investor</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{showInvestor(shareData)}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>(Entry/Exit) fees</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.feePercentage}}%</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="well ml-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="mifid  = !mifid ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="mifid "></i>-->
-            <!--<h2> MIFID II Costs & Charges</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!mifid">-->
-            <!--<div class="form-group col-sm-12">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>One-off charges</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.mifiidChargesOneOff}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>On-going charges</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.mifiidChargesOngoing}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Costs related to transactions initiated</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.mifiidTransactionCosts}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Charges related to ancillary services</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.mifiidServicesCosts}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Incidental costs</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.mifiidIncidentalCosts}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="well mb-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="productInformation  = !productInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="productInformation "></i>-->
-            <!--<h2> Product Information</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!productInformation">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>ISIN</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.isin}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Share Name</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.fundShareName}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Asset Class</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.assetClass}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>SRRI</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>SRI</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Share Currency</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{showCurrency(shareData)}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>NAV</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>NAV Date</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Decimalization</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{maximumNumDecimal}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="well mb-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="datesInformation  = !datesInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="datesInformation "></i>-->
-            <!--<h2> Dates Information</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!datesInformation">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Order Date</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.orderDate | date:'long'}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Cut-off Date</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.cutoffDate | date:'long'}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>NAV Date</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.valuationDate | date:'shortDate'}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Settlement Date</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.settlementDate | date:'shortDate'}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="well mb-1">-->
-            <!--&lt;!&ndash; Panel header &ndash;&gt;-->
-            <!--<div class="row panel-header">-->
-            <!--<div class="col-xs-6">-->
-            <!--<a href="#" (click)="orderInformation  = !orderInformation ; $event.preventDefault();">-->
-            <!--<i class="fa fa-chevron-right" [class.rotate]="orderInformation "></i>-->
-            <!--<h2> Order Information</h2>-->
-            <!--</a>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--&lt;!&ndash; Panel body &ndash;&gt;-->
-            <!--<div class="panel-body" [class.hidden]="!orderInformation">-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Order Reference</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.orderID}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Order Type</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{showTypes(shareData)}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Quantity</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.quantity | moneyValue: 5}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Amount</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{amountWithCost | moneyValue: 4}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Gross Amount</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.amountWithCost | moneyValue: 4}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Fee Amount</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.feePercentage * shareData.amountWithCost}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-6">-->
-            <!--<label>-->
-            <!--<span>Net Amount</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{shareData.amountWithCost + (shareData.feePercentage * shareData.amountWithCost)}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="row mb-1">-->
-            <!--<div class="form-group col-sm-12">-->
-            <!--<label>-->
-            <!--<span>Comment</span>-->
-            <!--</label>-->
-            <!--<div>-->
-            <!--<span class="readonly-field">{{orderNote}}</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
         </div>
     </ng-template>
 
