@@ -304,6 +304,7 @@ export class FundShare {
         this.setListItemPreset(this.fund.managementCompany, fund.managementCompanyID);
         this.setListItemPreset(this.fund.fundAdministrator, fund.fundAdministrator);
         this.setListItemPreset(this.fund.custodianBank, fund.custodianBank);
+        this.setListItemPreset(this.fund.investmentManager, fund.investmentManager);
         this.setListItemPreset(this.fund.principalPromoter, fund.principalPromoter);
         this.setListItemPreset(this.fund.payingAgent, fund.payingAgent);
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
@@ -321,7 +322,6 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
         this.setListItemPreset(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
-        this.setListItemPreset(this.umbrella.investmentManagerID, umbrellaFund.investmentManagerID);
         this.setListItemPreset(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
         this.setListItemPreset(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
     }
