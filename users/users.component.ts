@@ -2,10 +2,10 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit,
     ViewChild
-} from "@angular/core";
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {NgRedux, select} from "@angular-redux/store";
-import * as _ from "lodash";
+} from '@angular/core';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgRedux, select} from '@angular-redux/store';
+import * as _ from 'lodash';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import 'rxjs/add/operator/map';
 /* Alerts and confirms. */
@@ -57,6 +57,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
     public chainList: { [chainId: number]: { chainId: number | string, chainName: string } } = {};
     public filteredChainList: Array<{ id: number | string, text: string }> = [];
+    public selectedChainItem: any = [];
 
     @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
 
@@ -195,13 +196,17 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Update the fitered list. */
             this.filteredChainList = [];
             for (chainId in chainList) {
-                this.filteredChainList.push({
-                    id: chainId,
-                    text: chainList[chainId].chainName
-                });
+                if (chainId) {
+                    this.filteredChainList.push({
+                        id: chainId,
+                        text: chainList[chainId].chainName
+                    });
+                }
             }
 
-            console.log("chain list: ", this.filteredChainList);
+            if (this.filteredChainList.length) {
+                this.selectedChainItem.push({id: this.filteredChainList[0].id, text: this.filteredChainList[0].text});
+            }
         });
 
         this.subscriptions['requestedChainList'] = this.requestedChainListOb.subscribe((requestedState) => {
