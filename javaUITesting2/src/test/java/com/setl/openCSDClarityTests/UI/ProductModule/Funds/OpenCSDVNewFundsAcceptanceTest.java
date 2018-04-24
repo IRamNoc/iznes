@@ -198,8 +198,12 @@ public class OpenCSDVNewFundsAcceptanceTest {
         } catch (Error e) {
             fail(e.getMessage());}
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        try {
+            scrollElementIntoViewById("fund-cancelfund-btn");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+            wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
         try {
             driver.findElement(By.id("fund-cancelfund-btn")).click();
@@ -259,7 +263,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewById("fund-submitfund-btn");
+        try {
+            scrollElementIntoViewById("fund-submitfund-btn");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
         driver.findElement(By.id("fund-submitfund-btn")).click();
