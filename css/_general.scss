@@ -273,6 +273,13 @@ ul.breadcrumb li a:hover {
                 }
             }
         }
+        &:not(.menuHideNav){
+            .sidenav{
+                label.active{
+                    border-left : none !important;
+                }
+            }
+        }
     }
 }
 
