@@ -460,7 +460,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.getDocumentsRequest(data.fundShareID),
             (docsData) => {
                 this.toaster.pop('success', data.fundShareName + ' has been successfully created');
-                this.router.navigateByUrl(`product-module/home`);
+                this.router.navigateByUrl(`product-module`);
             },
             (e) => this.onCreateError(e[1].Data[0]));
     }
