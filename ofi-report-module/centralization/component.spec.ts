@@ -1,4 +1,4 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {DebugElement} from '@angular/core';
 import {By} from '@angular/platform-browser';
 
@@ -10,10 +10,10 @@ import {SetlComponentsModule} from '@setl/utils/components';
 
 describe('CentralizationReportComponent', () => {
 
-    let comp:    CentralizationReportComponent;
+    let comp: CentralizationReportComponent;
     let fixture: ComponentFixture<CentralizationReportComponent>;
-    let de:      DebugElement;
-    let el:      HTMLElement;
+    let de: DebugElement;
+    let el: HTMLElement;
 
     const resetTestingModule = TestBed.resetTestingModule;
 
@@ -43,10 +43,10 @@ describe('CentralizationReportComponent', () => {
         el = de.nativeElement;
     });
 
-    describe('structure', () => {
-        it('should render a title with the wording: \'Centralization Report: All Shares\'', () => {
-            const headerEl = fixture.debugElement.query(By.css('div')).nativeElement;
-            expect(headerEl.innerText.trim()).toEqual('Centralization Report: All Shares');
-        });
-    });
+    // describe('structure', () => {
+    //     it('should render a title with the wording: \'Centralization Report: All Shares\'', () => {
+    //         // const headerEl = fixture.debugElement.query(By.css('div')).nativeElement;
+    //         // expect(headerEl.innerText.trim()).toEqual('Centralization Report: All Shares');
+    //     });
+    // });
 });
