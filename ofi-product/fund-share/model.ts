@@ -13,16 +13,22 @@ import {ShareProfileMandatory, ShareProfileOptional} from './models/profile';
 import {ShareRepresentationOptional} from './models/representation';
 import {ShareSolvencyOptional} from './models/solvency';
 import {ShareTaxationOptional} from './models/taxation';
+import {ShareFund} from './models/fund';
+import {ShareUmbrellaFund} from './models/umbrella';
 import {ShareDocumentsMandatory, ShareDocumentsOptional} from './models/documents';
 import {FundShareTradeCycleModel} from './form/trade-cycle/model';
+import * as PC from '../productConfig';
 
 export {PanelData} from './models/panelData';
 
 export class FundShare {
     fundID: number;
+    umbrellaFundID: number;
     fundShareId: number;
     accountId: number;
 
+    fund = new ShareFund();
+    umbrella = new ShareUmbrellaFund();
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,
@@ -152,6 +158,7 @@ export class FundShare {
     }
 
     setFundShare(fundShare: OfiFundShare): void {
+        this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = fundShare.isin;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCode, fundShare.shareClassCode);
@@ -273,6 +280,51 @@ export class FundShare {
         this.setDocumentItem(this.documents.optional.statutoryAuditorsCertification, fundShareDocs.statutoryAuditorsCertification);
         this.setDocumentItem(this.documents.optional.tpts2, fundShareDocs.tpts2);
         this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
+    }
+
+    setFund(fund: any): void {
+        this.umbrellaFundID = fund.umbrellaFundID;
+        this.fund.name.preset = fund.fundName;
+        this.fund.aumFund.preset = fund.fundName;
+        this.fund.aumFundDate.preset = fund.fundName;
+        this.fund.LEI.preset = fund.legalEntityIdentifier;
+        this.fund.fundRegisteredOfficeName.preset = fund.registerOffice;
+        this.fund.fundRegisteredOfficeAddress.preset = fund.registerOfficeAddress;
+        this.setListItemPreset(this.fund.domicile, fund.domicile);
+        this.fund.isEUDirectiveRelevant.preset = fund.isEuDirective;
+        this.setListItemPreset(this.fund.legalForm, fund.legalForm);
+        this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
+        this.setListItemPreset(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
+        this.fund.creationDate.preset = fund.fundCreationDate;
+        this.fund.launchDate.preset = fund.fundLaunchate;
+        this.setListItemPreset(this.fund.currency, fund.fundCurrency);
+        this.fund.openOrCloseEnded.preset = fund.openOrCloseEnded;
+        this.fund.fiscalYearEnd.preset = fund.fiscalYearEnd;
+        this.fund.isFundOfFunds.preset = fund.isFundOfFund;
+        this.setListItemPreset(this.fund.managementCompany, fund.managementCompanyID);
+        this.setListItemPreset(this.fund.fundAdministrator, fund.fundAdministrator);
+        this.setListItemPreset(this.fund.custodianBank, fund.custodianBank);
+        this.setListItemPreset(this.fund.investmentManager, fund.investmentManager);
+        this.setListItemPreset(this.fund.principalPromoter, fund.principalPromoter);
+        this.setListItemPreset(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
+        this.fund.isDedicatedFund.preset = fund.isDedicatedFund;
+        this.setListItemPreset(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
+    }
+
+    setUmbrellaFund(umbrellaFund: any): void {
+        this.umbrella.umbrellaFundName.preset = umbrellaFund.umbrellaFundName;
+        this.umbrella.registerOffice.preset = umbrellaFund.registerOffice;
+        this.umbrella.registerOfficeAddress.preset = umbrellaFund.registerOfficeAddress;
+        this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
+        this.setListItemPreset(this.umbrella.domicile, umbrellaFund.domicile);
+        this.umbrella.umbrellaFundCreationDate.preset = umbrellaFund.umbrellaFundCreationDate;
+        this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
+        this.setListItemPreset(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
+        this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
+        this.setListItemPreset(this.umbrella.investmentManagerID, umbrellaFund.investmentManagerID);
+        this.setListItemPreset(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
+        this.setListItemPreset(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
