@@ -200,6 +200,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             scrollElementIntoViewById("fund-cancelfund-btn");
+            Thread.sleep(750);
         }catch (Exception e){
             fail(e.getMessage());
         }
