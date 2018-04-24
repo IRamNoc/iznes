@@ -153,20 +153,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group required-field col-sm-6">
-                                <label for="uf_investmentManager" class="control-label" mltag="txt_investmentmanager">Investment Manager</label>
-                                <ng-select id="uf_investmentManager" [items]="investmentManagerOptions" [allowClear]="true" placeholder="Select" formControlName="investmentManagerID" mltag="txt_select">
-
-
-
-
-                                </ng-select>
-
-                                <div *ngIf="umbrellaFundForm.controls['investmentManagerID'].hasError('required') && umbrellaFundForm.controls['investmentManagerID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-
-                                </div>
-                            </div>
-
                             <div class="form-group col-sm-6">
                                 <label for="uf_investmentAdvisor" class="control-label" mltag="txt_investmentadvisor">Investment Advisor</label>
                                 <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" placeholder="Select" formControlName="investmentAdvisorID" mltag="txt_select">

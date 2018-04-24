@@ -50,7 +50,6 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 managementCompanyID: item.get('managementCompanyID', '').toString(),
                 fundAdministratorID: item.get('fundAdministratorID', '').toString(),
                 custodianBankID: item.get('custodianBankID', '').toString(),
-                investmentManagerID: item.get('investmentManagerID', '').toString(),
                 investmentAdvisorID: item.get('investmentAdvisorID', '') ? item.get('investmentAdvisorID', '').toString() : '',
                 payingAgentID: item.get('payingAgentID', '') ? item.get('payingAgentID', '').toString() : '',
                 transferAgentID: item.get('transferAgentID', '') ? item.get('transferAgentID', '').toString() : '',

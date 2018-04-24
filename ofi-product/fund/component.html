@@ -240,16 +240,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_investmentManager">
-                                                <span mltag="txt_investmentmanager">Investment Manager</span>
-                                            </label>
-                                            <div>
-                                                <input type="text" id="uf_investmentManager" class="form-control" formControlName="investmentManagerID">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-sm-6">
                                             <label for="uf_investmentAdvisor">
                                                 <span mltag="txt_investmentadvisor">Investment Advisor</span>
                                             </label>
@@ -265,8 +255,6 @@
                                                 <input type="text" id="uf_payingAgent" class="form-control" formControlName="payingAgentID">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row" *ngIf="umbrellaEditForm.controls['transferAgentID'].value || umbrellaEditForm.controls['centralisingAgentID'].value">
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['transferAgentID'].value">
                                             <label>
                                                 <span mltag="txt_transferagent">Transfer Agent</span>

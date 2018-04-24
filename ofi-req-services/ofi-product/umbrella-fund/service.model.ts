@@ -17,7 +17,6 @@ export interface SaveUmbrellaFundRequestBody extends MemberNodeMessageBody {
     managementCompanyID: string;
     fundAdministratorID: string;
     custodianBankID: string;
-    investmentManagerID: string;
     investmentAdvisorID: string;
     payingAgentID: string;
     transferAgentID: string;
@@ -46,7 +45,6 @@ export interface UpdateUmbrellaFundRequestBody extends MemberNodeMessageBody {
     managementCompanyID: string;
     fundAdministratorID: string;
     custodianBankID: string;
-    investmentManagerID: string;
     investmentAdvisorID: string;
     payingAgentID: string;
     transferAgentID: string;
