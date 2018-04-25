@@ -1,0 +1,8 @@
+clr-dg-column.right.datagrid-column {
+    justify-content: flex-end;
+    text-align: right; 
+}
+
+clr-dg-cell.right {
+    text-align: right;
+}
