@@ -96,7 +96,8 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
                 break;
 
-            case 'iznesneworder':
+            case 'iznesupdateorder':
+                console.log('got the broadcast order');
                 this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
                 this.ngRedux.dispatch(ofiSetNewOrderMyOrder());
                 break;

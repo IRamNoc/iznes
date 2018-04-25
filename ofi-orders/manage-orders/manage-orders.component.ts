@@ -143,6 +143,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id : 13, text: 'PLN'},
     ];
 
+    get isInvestorUser(){
+        return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
+    }
+
     /* Public Properties */
     public connectedWalletName = '';
 
@@ -944,9 +948,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
-                    orderID: this.ordersList[index].orderID,
-                });
+                let asyncTaskPipe;
+                if(this.isInvestorUser){
+                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
+                        orderID: this.ordersList[index].orderID,
+                    });
+                }else{
+                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+                        orderID: this.ordersList[index].orderID,
+                    });
+                }
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
