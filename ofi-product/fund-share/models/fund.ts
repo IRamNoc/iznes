@@ -144,6 +144,14 @@ export class ShareFund extends DynamicFormsValidator {
         listItems: PC.fundItems.custodianBankItems,
         mltag: 'txt_fundshare_fund_custodianbank'
     }
+    investmentManager: FormItem = {
+        type: FormItemType.list,
+        label: 'Investment Manager',
+        required: false,
+        disabled: true,
+        listItems: PC.fundItems.investmentManagerItems,
+        mltag: 'txt_fundshare_fund_investmentman'
+    }
     principalPromoter: FormItem = {
         type: FormItemType.list,
         label: 'Principal Promoter',

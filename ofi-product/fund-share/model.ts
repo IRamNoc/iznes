@@ -90,7 +90,7 @@ export class FundShare {
             fundShareID: this.fundShareId,
             fundID: this.fundID,
             isin: this.keyFacts.mandatory.isin.value(),
-            shareClassCode: this.getSelectValue(this.keyFacts.mandatory.shareClassCode),
+            shareClassCode: this.keyFacts.mandatory.shareClassCode.value(),
             shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.mandatory.shareClassInvestmentStatus),
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.launchDate.value(),
@@ -161,7 +161,7 @@ export class FundShare {
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = fundShare.isin;
-        this.setListItemPreset(this.keyFacts.mandatory.shareClassCode, fundShare.shareClassCode);
+        this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
         this.keyFacts.mandatory.launchDate.preset = fundShare.launchDate;
@@ -304,6 +304,7 @@ export class FundShare {
         this.setListItemPreset(this.fund.managementCompany, fund.managementCompanyID);
         this.setListItemPreset(this.fund.fundAdministrator, fund.fundAdministrator);
         this.setListItemPreset(this.fund.custodianBank, fund.custodianBank);
+        this.setListItemPreset(this.fund.investmentManager, fund.investmentManager);
         this.setListItemPreset(this.fund.principalPromoter, fund.principalPromoter);
         this.setListItemPreset(this.fund.payingAgent, fund.payingAgent);
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
@@ -321,7 +322,6 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
         this.setListItemPreset(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
-        this.setListItemPreset(this.umbrella.investmentManagerID, umbrellaFund.investmentManagerID);
         this.setListItemPreset(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
         this.setListItemPreset(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
     }
