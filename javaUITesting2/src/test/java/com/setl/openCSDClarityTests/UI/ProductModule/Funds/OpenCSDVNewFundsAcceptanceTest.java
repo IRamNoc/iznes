@@ -40,7 +40,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -77,11 +77,9 @@ public class OpenCSDVNewFundsAcceptanceTest {
         } catch (Error e) {
             fail(e.getMessage());}
         shouldFillOutFundDetailsStep2("TestFund1");
-        try {
+
             driver.findElement(By.id("fund-submitfund-btn")).click();
-        } catch (Exception e) {
-            fail(e.getMessage());}
-        Thread.sleep(2500);
+
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
