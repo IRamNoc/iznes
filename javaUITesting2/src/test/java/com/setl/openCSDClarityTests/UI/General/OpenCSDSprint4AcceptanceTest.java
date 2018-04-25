@@ -134,7 +134,50 @@ public class OpenCSDSprint4AcceptanceTest {
     }
 
     @Test
-    public void shouldAssertThatUmbrellaFundsTableDisplaysAllInformation(){
+    public void shouldAssertThatUmbrellaFundsTableDisplaysAllInformation() throws InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPage("product-module");
+
+        String umbFundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[1]/div[1]/a/h2")).getText();
+        int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
+        System.out.println(umbFundCount);
+
+        selectAddUmbrellaFund();
+        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0]);
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+
+        getUmbrellaTableRow(umbFundCount, uFundDetails[0], "testLei", "Management Company", "Jordan");
+    }
+
+    private void getUmbrellaTableRow(int rowNo, String umbFundNameExpected , String leiExpected, String managementCompExpected, String domicileExpected){
+        String shareNameID = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + rowNo + "-umbrellaFundName")).getAttribute("id");
+        System.out.println("before truncation : " + shareNameID);
+        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
+        System.out.println("after truncation : " + shareNameNo);
+
+        String umbFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-umbrellaFundName")).getText();
+        System.out.println("Expected : " + umbFundNameExpected);
+        System.out.println("Actual   : " + umbFundName);
+        assertTrue(umbFundName.equals(umbFundNameExpected));
+
+        String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
+        System.out.println("Expected : " + leiExpected);
+        System.out.println("Actual   : " + leiName);
+        assertTrue(leiName.equals(leiExpected));
+
+        String managementComp = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-managementCompany")).getText();
+        System.out.println("Expected : " + managementCompExpected);
+        System.out.println("Actual   : " + managementComp);
+        assertTrue(managementComp.equals(managementCompExpected));
+
+        String domicile = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-domicile")).getText();
+        System.out.println("Expected : " + domicileExpected);
+        System.out.println("Actual   : " + domicile);
+        assertTrue(domicile.equals(domicileExpected));
     }
 
     @Test
