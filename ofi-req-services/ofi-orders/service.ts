@@ -263,6 +263,17 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    requestCancelOrderByInvestor(data: CancelOrderData): any {
+
+        const messageBody: OfiCancelOrderRequestBody = {
+            RequestName: 'izncancelorderbyinvestor',
+            token: this.memberSocketService.token,
+            orderID: data.orderID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     /**
      * Get Manage Orders List
      * ----------------------
