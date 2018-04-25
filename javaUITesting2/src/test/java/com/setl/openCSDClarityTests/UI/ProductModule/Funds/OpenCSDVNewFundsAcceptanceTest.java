@@ -40,7 +40,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -247,43 +247,29 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldUpdateFund() throws IOException, InterruptedException {
+    public void shouldUpdateFund() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        System.out.println(umbFundNamePrev);
-        try {
-            driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
-        } catch (Exception e) {
-            fail(e.getMessage());}
+        driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
+
+
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        try {
-            scrollElementIntoViewById("fund-submitfund-btn");
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
+        scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
         driver.findElement(By.id("fund-submitfund-btn")).click();
-        try {
-            String popup = driver.findElement(By.className("toast-title")).getText();
-            Thread.sleep(750);
-            assertTrue(popup.contains("has been successfully updated."));
-        } catch (Exception e) {
-            fail(e.getMessage());}
-        try {
-            String umFundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-            assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
-        } catch (Exception e) {
-            fail(e.getMessage());}
+        assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
+        assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
+
     }
 
-    private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
+    private void shouldFillOutFundDetailsStep2(String fundName) {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
