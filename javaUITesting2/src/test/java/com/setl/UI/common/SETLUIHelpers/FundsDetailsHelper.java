@@ -19,6 +19,18 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[] {umbrellaFundName};
     }
 
+    public static String[] generateRandomFundsDetails() {
+        String str = randomAlphabetic(5);
+        String umbrellaFundName = "Test_Fund_" + str;
+        return new String[] {umbrellaFundName};
+    }
+
+    public static String[] generateRandomDetails() {
+        String str = randomAlphabetic(5);
+        String umbrellaFundName = str;
+        return new String[] {umbrellaFundName};
+    }
+
     public static void selectAddUmbrellaFund(){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));

@@ -65,6 +65,11 @@ public class OpenCSDVNewFundsAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
+
+        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+        System.out.println(fundCount);
+
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
         try {
@@ -76,19 +81,19 @@ public class OpenCSDVNewFundsAcceptanceTest {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
         } catch (Error e) {
             fail(e.getMessage());}
-        shouldFillOutFundDetailsStep2("TestFund1");
+        String [] uFundDetails = generateRandomFundsDetails();
+        shouldFillOutFundDetailsStep2(uFundDetails[0]);
 
             driver.findElement(By.id("fund-submitfund-btn")).click();
 
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
-            assertTrue(popup.equals("TestFund1 has been successfully created."));
+            assertTrue(popup.equals(uFundDetails[0] + " has been successfully created."));
         } catch (Exception e) {
             fail(e.getMessage());}
-        String fundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        assertTrue(fundName.equals("TestFund1"));
-        validateDatabaseFundExists(1, "TestFund1");
+        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+        validateDatabaseFundExists(1, uFundDetails[0]);
     }
 
     @Test
@@ -218,6 +223,48 @@ public class OpenCSDVNewFundsAcceptanceTest {
     @Test
     public void shouldQueryDatabaseForFunds() throws InterruptedException, IOException {
 
+    }
+
+    private void getFundTableRow(int rowNo, String fundNameExpected , String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected){
+        String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
+        System.out.println("before truncation : " + shareNameID);
+        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
+        System.out.println("after truncation : " + shareNameNo);
+
+        String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
+        System.out.println("Expected : " + fundNameExpected);
+        System.out.println("Actual   : " + fundName);
+        assertTrue(fundName.equals(fundNameExpected));
+
+        String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
+        System.out.println("Expected : " + leiExpected);
+        System.out.println("Actual   : " + leiName);
+        assertTrue(leiName.equals(leiExpected));
+
+        String fundCurrency = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")).getText();
+        System.out.println("Expected : " + fundCurrencyExpected);
+        System.out.println("Actual   : " + fundCurrency);
+        assertTrue(fundCurrency.equals(fundCurrencyExpected));
+
+        String managementComp = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-managementCompany")).getText();
+        System.out.println("Expected : " + managementCompExpected);
+        System.out.println("Actual   : " + managementComp);
+        assertTrue(managementComp.equals(managementCompExpected));
+
+        String domicile = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-domicile")).getText();
+        System.out.println("Expected : " + domicileExpected);
+        System.out.println("Actual   : " + domicile);
+        assertTrue(domicile.equals(domicileExpected));
+
+        String legalForm = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-lawStatus")).getText();
+        System.out.println("Expected : " + legalFormExpected);
+        System.out.println("Actual   : " + legalForm);
+        assertTrue(legalForm.equals(legalFormExpected));
+
+        String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
+        System.out.println("Expected : " + umbFundExpected);
+        System.out.println("Actual   : " + umbFund);
+        assertTrue(umbFund.equals(umbFundExpected));
     }
 
     public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
