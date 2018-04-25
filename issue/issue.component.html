@@ -27,22 +27,23 @@
     <ng-template #staticBalanceList>
         <div class="panel-body">
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_identifier">Identifier</clr-dg-column>
                 <clr-dg-column mltag="txt_asset">Asset</clr-dg-column>
-                <clr-dg-column mltag="txt_total">Total</clr-dg-column>
-
+                <clr-dg-column class="right" mltag="txt_total">Total</clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let issuer of issuers$ | async">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleViewBreakdown(issuer)" class="btn">
-                                <i class="fa fa-search"></i><span mltag="txt_view">View</span></button>
-                        </div>
-                    </clr-dg-cell>
                     <clr-dg-cell></clr-dg-cell>
                     <clr-dg-cell>{{issuer.asset | truncate:10}}</clr-dg-cell>
-                    <clr-dg-cell>{{issuer.total | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{issuer.total | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell class="right">
+                        <div class="btn-group btn-sm">
+                            <button (click)="handleViewBreakdown(issuer)" class="btn">
+                                <i class="fa fa-search"></i>
+                                <span mltag="txt_view">View</span>
+                            </button>
+                        </div>
+                    </clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -59,18 +60,18 @@
             <clr-datagrid #myDataGrid>
                 <clr-dg-column mltag="txt_wallet">Wallet</clr-dg-column>
                 <clr-dg-column mltag="txt_address">Address</clr-dg-column>
-                <clr-dg-column mltag="txt_percentageofholding">Percentage of Holding</clr-dg-column>
-                <clr-dg-column mltag="txt_total">Total</clr-dg-column>
-                <clr-dg-column mltag="txt_encumbered">Encumbered</clr-dg-column>
-                <clr-dg-column mltag="txt_free">Free</clr-dg-column>
+                <clr-dg-column mltag="txt_percentageofholding" class="right">Percentage of Holding</clr-dg-column>
+                <clr-dg-column mltag="txt_total" class="right">Total</clr-dg-column>
+                <clr-dg-column mltag="txt_encumbered" class="right">Encumbered</clr-dg-column>
+                <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let holder of holdings">
                     <clr-dg-cell>{{holder.walletName}}</clr-dg-cell>
                     <clr-dg-cell>{{holder.addr}}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.percentage | number }}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.balance | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.encumbered | moneyValue}}</clr-dg-cell>
-                    <clr-dg-cell>{{holder.free | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{holder.percentage | number }}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{holder.balance | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{holder.encumbered | moneyValue}}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{holder.free | moneyValue}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
