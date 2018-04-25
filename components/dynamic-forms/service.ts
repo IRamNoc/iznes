@@ -40,6 +40,7 @@ export class DynamicFormService {
         } else {
             if (item.type === FormItemType.boolean) preset = false;
             if (item.type === FormItemType.text) preset = '';
+            if (item.type === FormItemType.textarea) preset = '';
             if (item.type === FormItemType.date) preset = '';
             if (item.type === FormItemType.number) preset = null;
             if (item.type === FormItemType.list) preset = null;

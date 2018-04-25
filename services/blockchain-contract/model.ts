@@ -66,6 +66,7 @@ export interface ArrangementData {
     stepTitle: string;
     creatorAddress: string;
     addEncs?: Array<any>;
+    useEncum?: Array<any>;
 }
 
 

@@ -14,11 +14,11 @@
 
 <div [ngSwitch]="selectedAddressType">
   <div class="form-group" *ngSwitchCase="1">
-    <label class="control-label" [class.required-field]="required">Relationship</label>
+    <label class="control-label" [class.required-field]="required">Connection</label>
     <ng-select
       [items]="relationshipArray"
       [allowClear]="true"
-      placeholder="Select Relationship"
+      placeholder="Select Connection"
       (selected)="writeValue($event.id)"
       (blur)="onBlur()"
       [formControl]="relationshipSelect"
