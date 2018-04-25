@@ -7,8 +7,6 @@ export class FundShareTestData {
     constructor() {}
 
     static generate(model: FundShare) {
-        model.keyFacts.mandatory.aumClass.preset = 1;
-        model.keyFacts.mandatory.aumClassDate.preset = '2018-04-01';
         (model.keyFacts.mandatory.couponType.preset as any) = [{id: E.CouponTypeEnum.Interest, text: 'Interest' }];
         (model.keyFacts.mandatory.freqOfDistributionDeclaration.preset as any) = [{id: E.FrequencyOfDistributionDeclarationEnum.Daily, text: 'Daily' }];
         model.keyFacts.mandatory.fundShareName.preset = `Test Fund Share - ${moment().unix().toString()}`;
@@ -16,9 +14,7 @@ export class FundShareTestData {
         (model.keyFacts.mandatory.historicOrForwardPricing.preset as any) = [{id: E.PricingTypeEnum.Historic, text: 'Historic' }];
         model.keyFacts.mandatory.isin.preset = moment().unix().toString();
         model.keyFacts.mandatory.launchDate.preset = '2018-04-01';
-        model.keyFacts.mandatory.nosClass.preset = 1;
-        model.keyFacts.mandatory.nosClassDate.preset = '2018-04-01';
-        (model.keyFacts.mandatory.shareClassCode.preset as any) = [{id: E.ClassCodeEnum.ClassA, text: 'Class A' }];
+        model.keyFacts.mandatory.shareClassCode.preset = 'Class A';
         (model.keyFacts.mandatory.shareClassCurrency.preset as any) = [{id: E.CurrencyEnum.EUR, text: 'EUR' }];
         (model.keyFacts.mandatory.shareClassInvestmentStatus.preset as any) = [{id: E.InvestmentStatusEnum.Open, text: 'Open' }];
         (model.keyFacts.mandatory.status.preset as any) = [{id: E.StatusEnum.NA, text: 'N/A' }];

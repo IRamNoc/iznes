@@ -174,14 +174,18 @@ export class OrderHelper {
     get initialMinFig() {
         return ({
             [OrderType.Subscription]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInAmount),
-                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInShare),
+                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInAmount || 0),
+                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInShare || 0),
             },
             [OrderType.Redemption]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInAmount),
-                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInShare),
+                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInAmount || 0),
+                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInShare || 0),
             }
         }[this.orderType] || {})[this.orderBy] || 0;
+    }
+
+    get disableValidation(): Boolean {
+        return Number(this.fundShare.isProduction) === 0;
     }
 
     get subsequentMinFig() {
@@ -282,12 +286,12 @@ export class OrderHelper {
     static getSubsequentMinFig(fundShareData, orderType, orderByType) {
         return ({
             [OrderType.Subscription]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInAmount),
-                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInShare),
+                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInAmount || 0),
+                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInShare || 0),
             },
             [OrderType.Redemption]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInAmount),
-                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInShare),
+                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInAmount || 0),
+                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInShare || 0),
             },
         }[orderType] || {})[orderByType] || 0;
     }
@@ -415,6 +419,15 @@ export class OrderHelper {
     }
 
     getOrderDates(): VerifyResponse | OrderDates {
+        // the logic is for testing purpose, it will disable all the validation
+        if (this.disableValidation) {
+            return {
+                cutoff: moment().add(1, 'minutes'),
+                valuation: moment().add(2, 'minutes'),
+                settlement: moment().add(3, 'minutes')
+            };
+        }
+
         // depend on order by cutoff, valuation, and settlement date.
         let dateValid = false;
         let cutoff, valuation, settlement;

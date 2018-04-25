@@ -327,10 +327,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     return item.id === share.shareClassInvestmentStatus;
                 }).text;
 
-                const shareClass = _.find(keyFactsModel.shareClassCode.listItems, (item) => {
-                    return item.id === share.shareClassCode;
-                }).text;
-
                 const shareCurrency = _.find(this.fundCurrencyItems, {id: share.shareClassCurrency.toString()}) || {text: ''};
 
                 shareList.push({
@@ -339,7 +335,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     fundName: share.fundName,
                     isin: share.isin,
                     managementCompany: share.managementCompanyName,
-                    shareClass: shareClass,
+                    shareClass: share.shareClassCode,
                     status: status,
                     shareCurrency: shareCurrency.text,
                     umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),

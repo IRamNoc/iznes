@@ -15,16 +15,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_isin'
     }
     shareClassCode: FormItem = {
-        type: FormItemType.list,
+        type: FormItemType.text,
         label: 'Share Class Code',
         required: true,
-        listItems: [
-            { id: E.ClassCodeEnum.ClassA, text: 'Class A' },
-            { id: E.ClassCodeEnum.ClassC, text: 'Class C' },
-            { id: E.ClassCodeEnum.ClassD, text: 'Class D' },
-            { id: E.ClassCodeEnum.ClassR, text: 'Class R' },
-            { id: E.ClassCodeEnum.ClassI, text: 'Class I' }
-        ],
         mltag: 'txt_fundshare_classcode'        
     }
     shareClassCurrency: FormItem = {
@@ -63,30 +56,6 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.InvestmentStatusEnum.ClosedSubscriptionRedemption, text: 'Closed for subscription and redemption' }
         ],
         mltag: 'txt_fundshare_classinveststatus'
-    }
-    aumClass: FormItem = {
-        type: FormItemType.number,
-        label: 'AuM Share Class',
-        required: true,
-        mltag: 'txt_fundshare_aumclass'
-    }
-    aumClassDate: FormItem = {
-        type: FormItemType.date,
-        label: 'AuM Share Class Date',
-        required: true,
-        mltag: 'txt_fundshare_aumclassdate'
-    }
-    nosClass: FormItem = {
-        type: FormItemType.number,
-        label: 'NoS Share Class',
-        required: true,
-        mltag: 'txt_fundshare_nosclass'
-    }
-    nosClassDate: FormItem = {
-        type: FormItemType.date,
-        label: 'NoS Share Class Date',
-        required: true,
-        mltag: 'txt_fundshare_nosclassdate'
     }
     valuationNAV: FormItem = {
         type: FormItemType.number,
