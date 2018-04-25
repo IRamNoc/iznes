@@ -11,14 +11,14 @@ export class ShareUmbrellaFund extends DynamicFormsValidator {
     }
     registerOffice: FormItem = {
         type: FormItemType.text,
-        label: 'Name of the Registred Office of the Umbrella Fund',
+        label: 'Name of the Registered Office of the Umbrella Fund',
         required: false,
         disabled: true,
         mltag: 'txt_fundshare_umb_regoffice'
     }
     registerOfficeAddress: FormItem = {
         type: FormItemType.text,
-        label: 'Address of the Registred Office of the Umbrella Fund',
+        label: 'Address of the Registered Office of the Umbrella Fund',
         required: false,
         disabled: true,
         mltag: 'txt_fundshare_umb_regofficeaddr'
