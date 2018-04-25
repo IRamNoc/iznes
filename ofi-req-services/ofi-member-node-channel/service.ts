@@ -14,7 +14,6 @@ import {
     clearRequestedFundAccessMy,
     ofiClearRequestedIssuedAssets,
     clearRequestedCollectiveArchive,
-    ofiSetNewOrderManageOrder,
     setamkyclist,
     clearrequested
 } from '../../ofi-store';
@@ -23,7 +22,6 @@ import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-li
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
 
 import {resetHomepage} from '@setl/core-store';
-import {ofiSetNewOrderMyOrder} from '../../ofi-store/ofi-orders/my-orders';
 
 /* Service class. */
 @Injectable()
@@ -82,15 +80,6 @@ export class OfiMemberNodeChannelService {
                 handleUpdateNav(this.ngRedux);
                 break;
 
-            case 'newArrangementList':
-                console.log('----------got new arrangement update-----');
-
-                this.ngRedux.dispatch(ofiClearRequestedHomeOrder());
-                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
-                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(clearRequestedCollectiveArchive());
-                break;
-
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
@@ -98,8 +87,8 @@ export class OfiMemberNodeChannelService {
 
             case 'iznesupdateorder':
                 console.log('got the broadcast order');
-                this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
-                this.ngRedux.dispatch(ofiSetNewOrderMyOrder());
+                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
+                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
                 break;
 
             case 'updatekyc':

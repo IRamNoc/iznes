@@ -56,7 +56,6 @@ export interface ManageOrders {
         [key: string]: ManageOrderDetails
     };
     requested: boolean;
-    newOrder: boolean;
     openedTabs: Array<OrderTab>;
     filters: any;
 }

@@ -6,14 +6,13 @@ import {ManageOrders, ManageOrderDetails} from './model';
 import * as ofiManageOrdersActions from './actions';
 import {SET_ALL_TABS} from './actions';
 import {immutableHelper} from '@setl/utils';
-import {List, fromJS, Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
 const initialState: ManageOrders = {
     orderList: {},
     requested: false,
-    newOrder: false,
     openedTabs: [],
     filters: {},
 };
@@ -23,29 +22,13 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
     switch (action.type) {
         /* Set Coupon List. */
         case ofiManageOrdersActions.OFI_SET_MANAGE_ORDER_LIST:
-            // return ofiSetOrderList(state, action);
-
-            const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-
-            if (data.Status !== 'Fail') {
-                const orderList = formatManageOrderDataResponse(data);
-                return Object.assign({}, state, {
-                    orderList
-                });
-            }
-            return state;
+            return ofiSetOrderList(state, action);
 
         case ofiManageOrdersActions.OFI_SET_REQUESTED_MANAGE_ORDER:
             return toggleRequestState(state, true);
 
         case ofiManageOrdersActions.OFI_CLEAR_REQUESTED_MANAGE_ORDER:
             return toggleRequestState(state, false);
-
-        case ofiManageOrdersActions.OFI_SET_NEW_ORDER_MANAGE_ORDER:
-            return toggleNewOrderState(state, true);
-
-        case ofiManageOrdersActions.OFI_CLEAR_NEW_ORDER_MANAGE_ORDER:
-            return toggleNewOrderState(state, false);
 
         case ofiManageOrdersActions.SET_ALL_TABS:
             return handleSetAllTabs(action, state);
@@ -121,31 +104,18 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
  * ---------------
  * Deals with replacing the local orders list with a new one.
  *
- * @param {state} ManageOrders - the current state.
- * @param {action} Action - the action requested.
- *
- * @return {newState} object - the new state.
+ * @param {ManageOrders} state
+ * @param {Action} action
+ * @return {any}
  */
 function ofiSetOrderList(state: ManageOrders, action: Action) {
-    /* Variables. */
-    let
-        newState: ManageOrders,
-        newOrderList = _.get(action, 'payload[1].Data', []);
 
-    /* Let's unpack the metaData... */
-    newOrderList = newOrderList.map((order) => {
-        /* ...json parse it... */
-        order.metaData = JSON.parse(order.metaData);
+    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-        /* ..return. */
-        return order;
+    const orderList = formatManageOrderDataResponse(data);
+    return Object.assign({}, state, {
+        orderList
     });
-
-    /* Set the new state. */
-    newState = Object.assign({}, state, {orderList: newOrderList});
-
-    /* Return. */
-    return newState;
 }
 
 /**
@@ -156,10 +126,6 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
  */
 function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
     return Object.assign({}, state, {requested});
-}
-
-function toggleNewOrderState(state: ManageOrders, newOrder: boolean): ManageOrders {
-    return Object.assign({}, state, {newOrder});
 }
 
 /**
