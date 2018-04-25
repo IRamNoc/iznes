@@ -5,7 +5,8 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
     subscriptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Subscription',
-        required: true
+        required: true,
+        mltag: 'txt_fundshare_cutofftimesub'
     }
     subscriptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
@@ -36,7 +37,8 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.TimezonesEnum.UTCM10, text: 'UTC -10' },
             { id: E.TimezonesEnum.UTCM11, text: 'UTC -11' }           
         ],
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_cuttofftimesubred'
     }
     navPeriodForSubscription: FormItem = {
         type: FormItemType.list,
@@ -51,12 +53,14 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: '5' }
         ],
         required: true,
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_navperiodsub'
     }
     redemptionCutOffTime: FormItem = {
         type: FormItemType.text,
         label: 'Cut-off Time For Redemption',
-        required: true
+        required: true,
+        mltag: 'txt_fundshare_cutofftimered'
     }
     redemptionCutOffTimeZone: FormItem = {
         type: FormItemType.list,
@@ -87,7 +91,8 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.TimezonesEnum.UTCM10, text: 'UTC -10' },
             { id: E.TimezonesEnum.UTCM11, text: 'UTC -11' }            
         ],
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_cutofftimesubred'
     }
     navPeriodForRedemption: FormItem = {
         type: FormItemType.list,
@@ -102,7 +107,8 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Five, text: '5' }
         ],
         required: true,
-        style: [FormItemStyle.BreakOnAfter]
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_navperiodred'
     }
     subscriptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -115,7 +121,8 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Three, text: '3' },
             { id: E.BusinessDaysEnum.Four, text: '4' },
             { id: E.BusinessDaysEnum.Five, text: '5' }
-        ]
+        ],
+        mltag: 'txt_fundshare_subsettleperiod'
     }
     redemptionSettlementPeriod: FormItem = {
         type: FormItemType.list,
@@ -128,12 +135,14 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
             { id: E.BusinessDaysEnum.Three, text: '3' },
             { id: E.BusinessDaysEnum.Four, text: '4' },
             { id: E.BusinessDaysEnum.Five, text: '5' }
-        ]
+        ],
+        mltag: 'txt_fundshare_redsettleperiod'
     }
     subscriptionRedemptionCalendar: FormItem = {
         type: FormItemType.text,
         label: 'Calendar of subscription/redemption',
-        required: true
+        required: true,
+        mltag: 'txt_fundshare_subredcalendar'
     }
 }
 
@@ -141,6 +150,7 @@ export class ShareCalendarOptional extends DynamicFormsValidator {
     holidayManagement: FormItem = {
         type: FormItemType.text,
         label: 'Holiday management',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_holmanage'
     } // 1
 }

@@ -30,7 +30,7 @@ export const FundShareTest = {
         'holidayManagement': ''
     },
     'redemptionCategory': 2,
-    'price': 90000000,
+    'price': 2500000,
     'shareClassCurrency': 0,
     'maximumNumDecimal': 2,
     'minInitialSubscriptionInShare': 1,

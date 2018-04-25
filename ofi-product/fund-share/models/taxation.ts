@@ -11,67 +11,80 @@ export class ShareTaxationOptional {
             { id: E.TISTIDReportingEnum.TIS, text: 'Only for TIS' },
             { id: E.TISTIDReportingEnum.TID, text: 'Only for TID' },
             { id: E.TISTIDReportingEnum.NoBoth, text: 'No, for both TIS and TID' }
-        ]
+        ],
+        mltag: 'txt_fundshare_tistidreport'
     }
     hasDailyDeliveryOfInterimProfit: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Daily Delivery Of Interim Profit To WM Daten',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_hasdailydeliveryinterim'
     }
     hasReducedLuxembourgTax: FormItem = {
         type: FormItemType.boolean,
         label: "Has Reduced Luxembourg Taxe d'Abonnement",
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_hasreducedluxtax'
     }
     luxembourgTax: FormItem = {
         type: FormItemType.number,
         label: "Luxembourg Taxe d'abonnement",
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_luxtax'
     }
     hasSwissTaxReporting: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Swiss Tax Reporting',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_swisstax'
     }
     swissTaxStatusRuling: FormItem = {
         type: FormItemType.boolean,
         label: 'Tax Status Switzerland - Tax Ruling',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_swisstaxstatusruling'
     }
     isEligibleForTaxDeferredFundSwitchInSpain: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Eligible For Tax Deferred Fund Switch In Spain',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_eligibletaxdeferinspain'
     }
     hasUKReportingStatus: FormItem = {
         type: FormItemType.boolean,
         label: 'Has UK Reporting Status',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_hasukreportstatus'
     }
     ukReportingStatusValidFrom: FormItem = {
         type: FormItemType.date,
         label: 'UK Reporting Status Valid From',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_ukreportstatusvalidfrom'
     }
     ukReportingStatusValidUntil: FormItem = {
         type: FormItemType.date,
         label: 'UK Reporting Status Valid Until',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_ukreportstatusvaliduntil'
     }
     hasUKConfirmationOfExcessAmount: FormItem = {
         type: FormItemType.boolean,
         label: 'Has UK Confirmation Of Excess Amount',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_ukexcessamount'
     }
     isUSTaxFormsW8W9Needed: FormItem = {
         type: FormItemType.boolean,
         label: 'Is US Tax Forms W8 W9 Needed',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_uxtaxformneeded'
     }
     isFlowThroughEntityByUSTaxLaw: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Flow-Through Entity By US Tax Law',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_flowthroughentitybyuslaw'
     }
     fatcaStatusV2: FormItem = {
         type: FormItemType.list,
@@ -105,11 +118,13 @@ export class ShareTaxationOptional {
             { id: E.FatcaStatusV2Enum.DirectReportingNFFE, text: 'Direct reporting NFFE' },
             { id: E.FatcaStatusV2Enum.SponsoredDirectReportingNFFE, text: 'Sponsored direct reporting NFFE' },
             { id: E.FatcaStatusV2Enum.NotAFinancialAccount, text: 'Account that is not a financial account' }
-        ]
+        ],
+        mltag: 'txt_fundshare_fatcastatusv2'
     }
     isSubjectToFATCAWithholdingTaxation: FormItem = {
         type: FormItemType.boolean,
         label: 'Subject To FATCA Withholding Taxation',
-        required: false
+        required: false,
+        mltag: 'txt_fundshare_subjectfatcawithholdingtax'
     }
 }

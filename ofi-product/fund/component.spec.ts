@@ -157,7 +157,6 @@ describe('FundComponent', () => {
                 managementCompanyID: '24',
                 fundAdministratorID: '0',
                 custodianBankID: '0',
-                investmentManagerID: '0',
                 investmentAdvisorID: '0',
                 payingAgentID: '0',
                 transferAgentID: '0',

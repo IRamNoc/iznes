@@ -27,7 +27,7 @@ export interface IznesShareDetail {
     couponType: string;
     freqOfDistributionDeclaration: string;
     maximumNumDecimal: string;
-    subscriptioinCategory: string;
+    subscriptionCategory: string;
     subscriptionCurrency: string;
     minInitialSubscriptionInShare: string;
     minInitialSubscriptionInAmount: string;

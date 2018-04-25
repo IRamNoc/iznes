@@ -18,7 +18,11 @@ import {
 
 } from '@setl/utils/services/blockchain-contract/model';
 
-interface OrderRequest {
+
+// todo
+// need to check the user balance. when redeeming
+
+export interface OrderRequest {
     token: string;
     shareisin: string;
     portfolioid: string;
@@ -150,6 +154,7 @@ export class OrderHelper {
     minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
+    helperTimeStamp: number;
 
 
     get feePercentage() {
@@ -184,6 +189,13 @@ export class OrderHelper {
         return OrderHelper.getSubsequentMinFig(this.fundShare, this.orderType, this.orderBy);
     }
 
+    get orderAllowCategory() {
+        return Number({
+            [OrderType.Subscription]: this.fundShare.subscriptionCategory || 0,
+            [OrderType.Redemption]: this.fundShare.redemptionCategory || 0,
+        }[this.orderType]);
+    }
+
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {
         this.calendarHelper = new CalendarHelper(fundShare);
         this.orderRequest = orderRequest;
@@ -199,6 +211,7 @@ export class OrderHelper {
         this.amWalletId = fundShare.amWalletID;
         this.investorAddress = orderRequest.subportfolio;
         this.investorWalletId = Number(orderRequest.portfolioid);
+        this.helperTimeStamp = moment();
     }
 
     static getChildErrorMessage(response) {
@@ -210,6 +223,60 @@ export class OrderHelper {
 
     static isResponseGood(response: VerifyResponse): boolean {
         return !('orderValid' in response) || response.orderValid;
+    }
+
+    /**
+     *
+     * @param walletId
+     * @param ref
+     * @param fromAddress: benificiary/administrator address
+     * @param namespace
+     * @param instrument
+     * @param amount
+     * @param {string} protocol
+     * @param {string} metadata
+     * @return {{messagetype: string; messagebody: {txtype: string; walletid: any; reference: any; address: any; subjectaddress: any; namespace: any; instrument: any; amount: any; protocol: string | undefined; metadata: string | undefined}}}
+     */
+    static buildUnencumberRequestBody(walletId: number, ref: string, fromAddress: string, namespace: string, instrument: string, amount: number, protocol = '', metadata = '') {
+        return {
+            messagetype: 'tx',
+            messagebody: {
+                txtype: 'unenc',
+                walletid: walletId,
+                reference: ref,
+                address: fromAddress,
+                subjectaddress: fromAddress,
+                namespace,
+                instrument,
+                amount,
+                protocol,
+                metadata
+            }
+        };
+    }
+
+    /**
+     * build cancel contract request body
+     * @param fundShareData
+     * @param orderType
+     * @param orderByType
+     * @return {any | number}
+     */
+
+    static buildCancelContract(walletId: number, contractAddress: string, commitAddress: string) {
+        const contractData = BlockchainContractService.buildCancelContractMessageBody(contractAddress, commitAddress).contractdata;
+
+        return {
+            messageType: 'tx',
+            messageBody: {
+                'topic': 'cocom',
+                'walletid': walletId,
+                'address': commitAddress,
+                'function': 'dvp_uk_commit',
+                'contractdata': contractData,
+                'contractaddress': contractAddress
+            }
+        };
     }
 
     static getSubsequentMinFig(fundShareData, orderType, orderByType) {
@@ -449,6 +516,12 @@ export class OrderHelper {
             return OrderHelper.getChildErrorMessage(checkOrderValue);
         }
 
+        const checkAllowOrderType = this.checkOrderByIsAllow();
+
+        if (!OrderHelper.isResponseGood(checkAllowOrderType)) {
+            return OrderHelper.getChildErrorMessage(checkAllowOrderType);
+        }
+
         switch (this.orderBy) {
             case OrderByType.Quantity:
                 quantity = this.orderValue;
@@ -473,10 +546,13 @@ export class OrderHelper {
                 /**
                  * quantity = amount / nav
                  */
-                amount = this.orderValue;
+                // if redemption amount will always be estimated.
+                amount = this.orderType === OrderType.Subscription ? this.orderValue : 0;
                 estimatedAmount = this.orderValue;
 
-                quantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+                // if redemption amount will always be estimated.
+                estimatedQuantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+                quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
 
                 // calculate fee
                 fee = calFee(estimatedAmount, this.feePercentage);
@@ -596,13 +672,14 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            {
-                conditionData: {
-                    authoriseRef: AuthoriseRef,
-                    address: this.amIssuingAddress
-                },
-                conditionType: ConditionType.AUTHORISE
-            }
+            // on the groupama mvp, we don't need authorisation
+            // {
+            //     conditionData: {
+            //         authoriseRef: AuthoriseRef,
+            //         address: this.amIssuingAddress
+            //     },
+            //     conditionType: ConditionType.AUTHORISE
+            // }
         ];
 
         return {
@@ -615,6 +692,7 @@ export class OrderHelper {
                 }
             ],
             addEncs,
+            useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
@@ -623,7 +701,8 @@ export class OrderHelper {
     }
 
     buildRedemptionArrangementData(): ArrangementData | VerifyResponse {
-        let actionData, addEncs;
+        let actionData;
+        const addEncs = [];
 
         let orderDate = this.getOrderDates();
         let orderFigures = this.getOrderFigures();
@@ -661,16 +740,16 @@ export class OrderHelper {
                 }
             ];
 
-            addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
-            ];
+            // addEncs = [
+            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+            // ];
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
             actionData = [
                 {
                     actionData: {
-                        amount: '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                        amount: orderFigures.quantity,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -684,9 +763,9 @@ export class OrderHelper {
                 }
             ];
 
-            addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
-            ];
+            // addEncs = [
+            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
+            // ];
 
         } else {
             return {
@@ -702,13 +781,14 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            {
-                conditionData: {
-                    authoriseRef: AuthoriseRef,
-                    address: this.amIssuingAddress
-                },
-                conditionType: ConditionType.AUTHORISE
-            }
+            // on the groupama mvp, we don't need authorisation
+            // {
+            //     conditionData: {
+            //         authoriseRef: AuthoriseRef,
+            //         address: this.amIssuingAddress
+            //     },
+            //     conditionType: ConditionType.AUTHORISE
+            // }
         ];
 
         return {
@@ -721,12 +801,75 @@ export class OrderHelper {
                 }
             ],
             addEncs,
+            useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
             creatorAddress: this.investorAddress
         };
     }
+
+
+    checkOrderByIsAllow(orderType = this.orderRequest.orderby): VerifyResponse {
+        const tryingToOrderBy = OrderByNumber[orderType] - 1;
+        // check if order type is allow
+        const typesAllow = this.orderAllowCategory;
+
+        if (typesAllow === 2) {
+            return {
+                orderValid: true
+            };
+        }
+
+        if (typesAllow !== tryingToOrderBy) {
+            return {
+                orderValid: false,
+                errorMessage: 'Not allow to order by this type'
+            };
+        } else {
+            return {
+                orderValid: true
+            };
+        }
+
+    }
+
+    getEncumberReference() {
+        return this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
+    }
+
+    buildRedeemEncumberRequestBody() {
+        let figures = this.getOrderFigures();
+
+        if (!OrderHelper.isResponseGood(figures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(figures);
+        } else {
+            figures = figures as OrderFigures;
+        }
+
+        const quantity = figures.quantity;
+
+        const messageBody = {
+            txtype: 'encum',
+            walletid: this.investorWalletId,
+            reference: this.getEncumberReference(),
+            address: this.investorAddress,
+            subjectaddress: this.investorAddress,
+            namespace: this.fundShare.isin,
+            instrument: this.fundShare.fundShareName,
+            amount: quantity,
+            beneficiaries: [[this.amIssuingAddress, 0, 0]],
+            administrators: [[this.amIssuingAddress, 0, 0]],
+            protocol: '',
+            metadata: ''
+        };
+
+        return {
+            messagetype: 'tx',
+            messagebody: messageBody
+        };
+    }
+
 }
 
 /**
