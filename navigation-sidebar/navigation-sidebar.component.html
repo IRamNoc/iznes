@@ -11,7 +11,7 @@
         <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}<span *ngIf="childMenuJson.router_link == '/messages' && this.unreadMessages > 0" class="label label-success">{{this.unreadMessages}}</span></span>
     </a>
     <span *ngIf="disableMenu" class="fakeLink">
-        <i class="{{childMenuJson.icon_class}} sidenav-label" style="width:20px;"></i>{{childMenuJson.label}}
+        <i class="{{childMenuJson.icon_class}}" style="width:20px;"></i><span class="sidenav-label">{{childMenuJson.label}}</span>
     </span>
 
     <section *ngIf="childMenuJson.children && !disableMenu" class="nav-group collapsible">
