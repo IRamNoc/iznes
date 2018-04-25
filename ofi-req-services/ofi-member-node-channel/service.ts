@@ -23,6 +23,7 @@ import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-li
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
 
 import {resetHomepage} from '@setl/core-store';
+import {ofiSetNewOrderMyOrder} from '../../ofi-store/ofi-orders/my-orders';
 
 /* Service class. */
 @Injectable()
@@ -95,15 +96,16 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
                 break;
 
-            case 'izncreateorderbyinvestor':
+            case 'iznesneworder':
                 this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
+                this.ngRedux.dispatch(ofiSetNewOrderMyOrder());
                 break;
 
             case 'updatekyc':
                 this.ngRedux.dispatch(clearrequested());
                 this.ngRedux.dispatch(setamkyclist());
                 break;
-                
+
             case 'kycaccepted':
                 //enable menu.
                 this.ngRedux.dispatch(resetHomepage());

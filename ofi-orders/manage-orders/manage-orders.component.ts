@@ -181,15 +181,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersObj;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersObj;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersObj: any;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListObj: any;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'newOrder']) newOrderOfiInvOrdersObj;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyObj;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListObj;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersOb;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListOb;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'newOrder']) newOrderOfiAmOrdersOb;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'newOrder']) newOrderOfiInvOrdersOb;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyOb;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
     // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderBuffer']) orderBufferOb: any;
     // @select(['ofi', 'ofiOrders', 'homeOrders', 'orderFilter']) orderFilterOb: any;
@@ -223,22 +223,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        this.subscriptions.push(this.requestedOfiManagementCompanyObj.subscribe((requested) => this.getManagementCompanyRequested(requested)));
-        this.subscriptions.push(this.OfiManagementCompanyListObj.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
+        this.subscriptions.push(this.requestedOfiManagementCompanyOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
+        this.subscriptions.push(this.OfiManagementCompanyListOb.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
         this.subscriptions['walletDirectory'] = this.walletDirectoryOb.subscribe((walletDirectory) => { this.walletDirectory = walletDirectory; });
 
         if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
-            this.subscriptions.push(this.requestedOfiAmOrdersObj.subscribe((requested) => this.getAmOrdersRequested(requested)));
-            this.subscriptions.push(this.OfiAmOrdersListObj.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+            this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersRequested(requested)));
+            this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
             // if new Orders coming (broadcast)
-            this.subscriptions.push(this.newOrderOfiAmOrdersObj.subscribe((newAmOrder) => this.getAmOrdersNewOrder(newAmOrder)));
+            this.subscriptions.push(this.newOrderOfiAmOrdersOb.subscribe((newAmOrder) => this.getAmOrdersNewOrder(newAmOrder)));
         } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
-            this.subscriptions.push(this.requestedOfiInvOrdersObj.subscribe((requested) => this.getInvOrdersRequested(requested)));
-            this.subscriptions.push(this.OfiInvOrdersListObj.subscribe((list) => this.getInvOrdersListFromRedux(list)));
+            this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersRequested(requested)));
+            this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
             // if new Orders coming (broadcast)
-            this.subscriptions.push(this.newOrderOfiInvOrdersObj.subscribe((newInvOrder) => this.getInvOrdersNewOrder(newInvOrder)));
+            this.subscriptions.push(this.newOrderOfiInvOrdersOb.subscribe((newInvOrder) => this.getInvOrdersNewOrder(newInvOrder)));
         }
-        this.subscriptions.push(this.OfiAmOrdersFiltersObj.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
+        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
     }
 
     ngOnInit() {
