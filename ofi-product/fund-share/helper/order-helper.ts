@@ -6,17 +6,17 @@ import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
-import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
-// import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
+// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
+import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
     ContractData,
     ArrangementData,
     ArrangementActionType,
     ConditionType
-} from '../../../../utils/services/blockchain-contract/model';
+// } from '../../../../utils/services/blockchain-contract/model';
 
-// } from '@setl/utils/services/blockchain-contract/model';
+} from '@setl/utils/services/blockchain-contract/model';
 
 
 // todo
