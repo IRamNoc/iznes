@@ -15,16 +15,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_isin'
     }
     shareClassCode: FormItem = {
-        type: FormItemType.list,
+        type: FormItemType.text,
         label: 'Share Class Code',
         required: true,
-        listItems: [
-            { id: E.ClassCodeEnum.ClassA, text: 'Class A' },
-            { id: E.ClassCodeEnum.ClassC, text: 'Class C' },
-            { id: E.ClassCodeEnum.ClassD, text: 'Class D' },
-            { id: E.ClassCodeEnum.ClassR, text: 'Class R' },
-            { id: E.ClassCodeEnum.ClassI, text: 'Class I' }
-        ],
         mltag: 'txt_fundshare_classcode'        
     }
     shareClassCurrency: FormItem = {

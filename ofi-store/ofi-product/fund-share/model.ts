@@ -4,7 +4,7 @@ export interface OfiFundShare {
     fundShareName: string;
     fundID: number;
     isin: string;
-    shareClassCode: number;
+    shareClassCode: string;
     shareClassInvestmentStatus: number;
     subscriptionStartDate: string;
     launchDate: string;
