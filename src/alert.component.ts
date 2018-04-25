@@ -5,7 +5,8 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
 @Component({
     selector: 'jaspero-alert',
     template: `
-        <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"></div>
+        <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"
+             (window:keydown)="keyDownFunction($event)"></div>
         <div class="jaspero__dialog" [@wrapperAn]="animationState">
 
             <div *ngIf="incomingData.titleMessage" class="jaspero__dialog-title">
@@ -301,6 +302,15 @@ export class AlertComponent implements OnInit {
     overlayClick() {
         if (!this.incomingData.overlayClickToClose) return;
         this.closeSelf();
+    }
+
+    keyDownFunction(event) {
+        if (!this.incomingData.overlayClickToClose) return;
+        if (event.keyCode === 13 || event.keyCode === 27) {
+            console.log('Enter or Esc pressed - close alert');
+            event.preventDefault();
+            this.closeSelf();
+        }
     }
 
     updateMessage(message) {
