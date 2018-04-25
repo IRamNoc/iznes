@@ -9,6 +9,8 @@ import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
 import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+import 'rxjs/add/operator/debounceTime';
+import * as moment from 'moment';
 
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
@@ -21,11 +23,12 @@ import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
 import {getOfiFundShareSelectedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 /* Ofi Store stuff. */
-import {ofiManageOrderActions, ofiMyOrderActions} from '@ofi/ofi-main/ofi-store';
+import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
 
 import * as math from 'mathjs';
 import {ActivatedRoute, Params, Router} from '@angular/router';
@@ -82,7 +85,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     // Datepicker config
     configDate = {
         firstDayOfWeek: 'mo',
-        format: 'YYYY-MM-DD',
+        format: 'DD/MM/YYYY',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language
@@ -102,23 +105,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     datesInformation = true;
     orderInformation = true;
 
-    /* Ui Lists. */
     orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
-        {id: 1, text: 'Initiated'}, // estimatedPrice
-        {id: 2, text: 'Waiting NAV'},   // estimatedPrice
-        {id: 3, text: 'Waiting Settlement'},    // price
-        {id: -1, text: 'Settled'},  // price
-        // {id: 4, text: 'Precentralised'},
-        // {id: 5, text: 'Centralised'},
-        {id: 6, text: 'Unpaid'}, // price
+        {id: 1, text: 'Initiated'},
+        {id: 2, text: 'Waiting NAV'},
+        {id: 3, text: 'Waiting Settlement'},
+        {id: 4, text: 'Unpaid'},
+        {id: -1, text: 'Settled'},
         {id: 0, text: 'Cancelled'}, // estimatedPrice
     ];
+
     orderTypes: Array<SelectedItem> = [
         {id: 0, text: 'All'},
         {id: 3, text: 'Subscription'},
         {id: 4, text: 'Redemption'},
     ];
+
     dateTypes: Array<SelectedItem> = [
         {id: 'orderDate', text: 'Order Date'},
         {id: 'cutOffDate', text: 'Cut-off Date'},
@@ -127,23 +129,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     currencyList = [
-        {id : 0, text: 'EUR'},
-        {id : 1, text: 'USD'},
-        {id : 2, text: 'GBP'},
-        {id : 3, text: 'CHF'},
-        {id : 4, text: 'JPY'},
-        {id : 5, text: 'AUD'},
-        {id : 6, text: 'NOK'},
-        {id : 7, text: 'SEK'},
-        {id : 8, text: 'ZAR'},
-        {id : 9, text: 'RUB'},
-        {id : 10, text: 'SGD'},
-        {id : 11, text: 'AED'},
-        {id : 12, text: 'CNY'},
-        {id : 13, text: 'PLN'},
+        {id: 0, text: 'EUR'},
+        {id: 1, text: 'USD'},
+        {id: 2, text: 'GBP'},
+        {id: 3, text: 'CHF'},
+        {id: 4, text: 'JPY'},
+        {id: 5, text: 'AUD'},
+        {id: 6, text: 'NOK'},
+        {id: 7, text: 'SEK'},
+        {id: 8, text: 'ZAR'},
+        {id: 9, text: 'RUB'},
+        {id: 10, text: 'SGD'},
+        {id: 11, text: 'AED'},
+        {id: 12, text: 'CNY'},
+        {id: 13, text: 'PLN'},
     ];
 
-    get isInvestorUser(){
+    get isInvestorUser() {
         return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
     }
 
@@ -213,22 +215,25 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
+        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {
             /* Assign list to a property. */
             this.myDetails = myDetails;
-        });
+        }));
 
         this.createForm();
         this.setInitialTabs();
 
         this.subscriptions.push(this.requestedOfiManagementCompanyOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
         this.subscriptions.push(this.OfiManagementCompanyListOb.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
-        this.subscriptions['walletDirectory'] = this.walletDirectoryOb.subscribe((walletDirectory) => { this.walletDirectory = walletDirectory; });
+        this.subscriptions.push(this.walletDirectoryOb.subscribe((walletDirectory) => {
+            this.walletDirectory = walletDirectory;
+        }));
 
         if (!this.isInvestorUser) {  // AM side
             this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        } {  // INV side
+        }
+        {  // INV side
             this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
         }
@@ -236,7 +241,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(1000).subscribe((form) => this.requestSearch(form)));
         this.changeDetectorRef.markForCheck();
     }
 
@@ -303,13 +308,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.language = 'en';
                     break;
             }
-        }
-    }
-
-    getAmOrdersRequested(requested): void {
-        if (!requested) {
-            OfiOrdersService.setAmNewOrder(false, this.ngRedux);
-            OfiOrdersService.defaultRequestManageOrdersList(this.ofiOrdersService, this.ngRedux);
         }
     }
 
@@ -384,7 +382,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
                     const statusFound = this.orderStatuses.find(o => o.id === this.filtersFromRedux.status);
                     if (statusFound !== undefined) {
-                        this.tabsControl[0].searchForm.get('status').patchValue([{id: statusFound.id, text: statusFound.text}], {emitEvent: false});
+                        this.tabsControl[0].searchForm.get('status').patchValue([{
+                            id: statusFound.id,
+                            text: statusFound.text
+                        }], {emitEvent: false});
                         this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                     }
                 }
@@ -394,13 +395,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.filtersApplied = true;
                 this.requestSearch(this.tabsControl[0].searchForm);
             }
-        }
-    }
-
-    getInvOrdersRequested(requested): void {
-        if (!requested) {
-            OfiOrdersService.setInvNewOrder(false, this.ngRedux);
-            OfiOrdersService.defaultRequestInvestorOrdersList(this.ofiOrdersService, this.ngRedux);
         }
     }
 
@@ -458,16 +452,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    getAmOrdersNewOrder(newAmOrder): void {
-        if (newAmOrder) {
+    getAmOrdersNewOrder(requested): void {
+        if (!requested) {
+            // set flag to true, so we don't request the order again.
+            this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
+
             this.loading = true;
             this.getOrdersList();
             this.changeDetectorRef.markForCheck();
         }
     }
 
-    getInvOrdersNewOrder(newInvOrder): void {
-        if (newInvOrder) {
+    getInvOrdersNewOrder(requested): void {
+        if (!requested) {
+            // set flag to true, so we don't request the order again.
+            this.ngRedux.dispatch(ofiMyOrderActions.ofiSetRequestedMyOrder());
+
             this.loading = true;
             this.getOrdersList();
             this.changeDetectorRef.markForCheck();
@@ -625,11 +625,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ).subscribe((ans) => {
             if (ans.resolved) {
                 let asyncTaskPipe;
-                if(this.isInvestorUser){
+                if (this.isInvestorUser) {
                     asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
                         orderID: this.ordersList[index].orderID,
                     });
-                }else{
+                } else {
                     asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
                         orderID: this.ordersList[index].orderID,
                     });
@@ -689,26 +689,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             toDate: this.dataGridParams.toDate,
         };
 
-        this.dataGridParams.shareName = (this.tabsControl[0].searchForm.get('sharename').value !== '' && this.tabsControl[0].searchForm.get('sharename').value.length > 2) ? this.tabsControl[0].searchForm.get('sharename').value : null;
-        this.dataGridParams.isin = (this.tabsControl[0].searchForm.get('isin').value !== '' && this.tabsControl[0].searchForm.get('isin').value.length > 2) ? this.tabsControl[0].searchForm.get('isin').value : null;
-        this.dataGridParams.status = (this.tabsControl[0].searchForm.get('status').value && this.tabsControl[0].searchForm.get('status').value[0] && this.tabsControl[0].searchForm.get('status').value[0].id) ? this.tabsControl[0].searchForm.get('status').value[0].id : null;
-        this.dataGridParams.orderType = (this.tabsControl[0].searchForm.get('type').value && this.tabsControl[0].searchForm.get('type').value[0] && this.tabsControl[0].searchForm.get('type').value[0].id) ? this.tabsControl[0].searchForm.get('type').value[0].id : null;
+        const searchValues = this.tabsControl[0].searchForm.value;
+
+        this.dataGridParams.shareName = _.get(searchValues, 'sharename', null);
+        this.dataGridParams.isin = _.get(searchValues, 'isin', null);
+        this.dataGridParams.status = _.get(searchValues, ['status', '0', 'id'], null);
+        const orderType = _.get(searchValues, ['type', '0', 'id'], null);
+        this.dataGridParams.orderType = orderType === 0 ? null : orderType;
         // date filters
-        if ((this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id)) {
-            const tmpDateSearchField = (this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id) ? this.tabsControl[0].searchForm.get('dateType').value[0].id : null;
-            const tmpFromDate = (this.tabsControl[0].searchForm.get('fromDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('fromDate').value))) ? this.tabsControl[0].searchForm.get('fromDate').value : null;
-            let tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
-            if (tmpFromDate !== null && tmpToDate !== null) {
-                let toDate = new Date(this.tabsControl[0].searchForm.get('toDate').value);
-                toDate.setDate(toDate.getDate() + 1);
-                tmpToDate = toDate.toISOString().substring(0, 10);
-            }
-            if (tmpDateSearchField !== null && tmpFromDate !== null && tmpToDate !== null) {
-                this.dataGridParams.dateSearchField = tmpDateSearchField;
-                this.dataGridParams.fromDate = tmpFromDate;
-                this.dataGridParams.toDate = tmpToDate;
-            }
-        } else {
+        this.dataGridParams.dateSearchField = _.get(searchValues, ['dateType', '0', 'id'], false);
+        const fromDate = moment(_.get(searchValues, ['fromDate'], null), 'DD/MM/YYYY');
+        const toDate = moment(_.get(searchValues, ['toDate'], null), 'DD/MM/YYYY').add(1, 'days').subtract(1, 'minutes');
+
+        this.dataGridParams.fromDate = fromDate.format('YYYY-MM-DD HH:mm');
+        this.dataGridParams.toDate = toDate.format('YYYY-MM-DD HH:mm');
+
+        if (this.dataGridParams.toDate === 'Invalid date' || this.dataGridParams.fromDate === 'Invalid date') {
             this.dataGridParams.dateSearchField = null;
             this.dataGridParams.fromDate = null;
             this.dataGridParams.toDate = null;
@@ -720,10 +716,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
-        let filters: {[prop: string]: any[]} = {};
+        let filters: { [prop: string]: any[] } = {};
         if (state.filters) {
             for (const filter of state.filters) {
-                const {property, value} = <{property: string, value: string}>filter;
+                const {property, value} = <{ property: string, value: string }>filter;
                 filters[property] = [value];
             }
         }
@@ -784,7 +780,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dataGridParams.sortOrder = (!state.sort.reverse) ? 'asc' : 'desc';
         }
 
-        this.dataGridParams.pageSize =  this.itemPerPage;
+        this.dataGridParams.pageSize = this.itemPerPage;
         this.dataGridParams.rowOffSet = (state.page.from / this.itemPerPage);
         // this.loading = false; // temp debug
 

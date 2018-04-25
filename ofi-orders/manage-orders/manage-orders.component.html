@@ -9,7 +9,10 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}} <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i></button>
+            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
+                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+                <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
+            </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <ng-container *ngIf="id === 0">
                     <!-- Coupon list tab. -->
@@ -90,12 +93,6 @@
                                 </label>
                                 <div>
                                     <ng-select id="orders-search-date-types" class="fluid-width" [items]="dateTypes" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['dateType']" placeholder="Type" mltag="txt_type">
-
-
-
-
-
-
                                     </ng-select>
                                 </div>
                             </div>
@@ -156,7 +153,8 @@
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch>
                         <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_assetmanagementcompany">Asset Management Company</span> <span class="column-label"></span>
+                            <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch>
@@ -211,16 +209,6 @@
                     </clr-dg-column>
                     <!-- ACTIONS -->
                     <clr-dg-column><span class="text-center" mltag="txt_cancel">Cancel?</span></clr-dg-column>
-
-                    <!--<clr-dg-column style="min-width: 120px;"><span mltag="txt_action">Action</span></clr-dg-column>-->
-                    <!--<clr-dg-column style="min-width: 170px;"><span mltag="txt_investor">Investor</span></clr-dg-column>-->
-                    <!--<clr-dg-column style="min-width: 200px;"><span mltag="txt_fundname">Fund name</span></clr-dg-column>-->
-                    <!--<clr-dg-column><span mltag="txt_quantity">Quantity</span></clr-dg-column>-->
-                    <!--<clr-dg-column><span mltag="txt_amount">Amount</span></clr-dg-column>-->
-                    <!--<clr-dg-column><span mltag="txt_price">Price</span></clr-dg-column>-->
-                    <!--<clr-dg-column><span mltag="txt_cutoffdate">Cut-off date</span></clr-dg-column>-->
-                    <!--<clr-dg-column><span mltag="txt_deliverydate">Delivery date</span></clr-dg-column>-->
-                    <!--<clr-dg-column style="min-width: 100px;"><span mltag="txt_status">Status</span></clr-dg-column>-->
 
                     <clr-dg-row *ngFor="let order of ordersList; let i = index">
                         <clr-dg-cell>
@@ -287,9 +275,6 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <span *ngIf="order.orderStatus == -3" class="label">
-                                <span mltag="txt_all">All</span>
-                            </span>
                             <span *ngIf="order.orderStatus == 1" class="label label-warning">
                                 <span mltag="txt_initiated">Initiated</span>
                             </span>
@@ -299,11 +284,11 @@
                             <span *ngIf="order.orderStatus == 3" class="label label-info">
                                 <span mltag="txt_waitingsettlement">Waiting settlement</span>
                             </span>
+                            <span *ngIf="order.orderStatus == 4" class="label label-error">
+                                <span mltag="txt_unpaid">Unpaid</span>
+                            </span>
                             <span *ngIf="order.orderStatus == -1" class="label label-success">
                                 <span mltag="txt_settled">Settled</span>
-                            </span>
-                            <span *ngIf="order.orderStatus == 6" class="label label-error">
-                                <span mltag="txt_unpaid">Unpaid</span>
                             </span>
                             <span *ngIf="order.orderStatus == 0" class="label label-error">
                                 <span mltag="txt_cancelled">Cancelled</span>
@@ -322,40 +307,41 @@
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td><b mltag="txt_assetmanagementcompany">Asset Management Company</b></td>
-                                                    <td>{{showManagementCompany(order)}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b mltag="txt_assetmanagementcompany">Asset Management Company</b>
+                                                </td>
+                                                <td>{{showManagementCompany(order)}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td><b mltag="txt_latestnav">Latest NAV</b></td>
-                                                    <td>{{order.estimatedPrice | moneyValue: 2}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b mltag="txt_latestnav">Latest NAV</b></td>
+                                                <td>{{order.estimatedPrice | moneyValue: 2}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td><b mltag="txt_feesamount">Fees Amount</b></td>
-                                                    <td>{{order.feePercentage * order.amountWithCost | moneyValue: 4}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b mltag="txt_feesamount">Fees Amount</b></td>
+                                                <td>{{order.feePercentage * order.amountWithCost | moneyValue: 4}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                                <tr>
-                                                    <td><b mltag="txt_navdate">NAV Date</b></td>
-                                                    <td>{{getOnlyDate(order.valuationDate)}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b mltag="txt_navdate">NAV Date</b></td>
+                                                <td>{{getOnlyDate(order.valuationDate)}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
