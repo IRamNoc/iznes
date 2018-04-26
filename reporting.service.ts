@@ -184,10 +184,11 @@ export class ReportingService {
                 .then((holdings: Array<any>) => {
                     const total = holdings.filter(h => h.balance > 0).reduce((a, h) => a + h.balance, 0);
                     return resolve(holdings.map(holding => {
+
                         return {
                             ...holding,
                             walletName: this.walletInfo.walletName,
-                            percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : ''
+                            percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null
                         };
                     }));
                 })
