@@ -60,7 +60,6 @@ export interface OfiFundShare {
     mifiidServicesCosts: number;
     mifiidIncidentalCosts: number;
     keyFactOptionalData: string;
-    calendarOptionalData: string;
     profileOptionalData: string;
     priipOptionalData: string;
     listingOptionalData: string;

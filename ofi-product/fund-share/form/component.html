@@ -135,18 +135,6 @@
 
                                 <app-dynamic-form [model]="model.calendar.mandatory"></app-dynamic-form>
                             </div>
-
-                            <div class="row panel-header">
-                                <div class="col-xs-6">
-                                    <a href="#" (click)="openPanel(panels['calendar'].optional, $event)">
-                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['calendar'].optional)"></i>
-                                        <h2 id="toggleCalendarOptional" mltag="txt_calendaroptionalinformation">Calendar: Optional Information</h2>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].optional)">
-                                <app-dynamic-form [model]="model.calendar.optional"></app-dynamic-form>
-                            </div>
                         </div>
                     </clr-tab-content>
                 </clr-tab>

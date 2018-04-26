@@ -64,8 +64,6 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
         const shareId = item.get('fundShareID', 0);
 
         const keyFactOptionalData = commonHelper.safeJsonParse(item.get('keyFactOptionalData', '{}'));
-        const characteristicOptionalData = commonHelper.safeJsonParse(item.get('characteristicOptionalData', '{}'));
-        const calendarOptionalData = commonHelper.safeJsonParse(item.get('calendarOptionalData', '{}'));
         const profileOptionalData = commonHelper.safeJsonParse(item.get('profileOptionalData', '{}'));
         const priipOptionalData = commonHelper.safeJsonParse(item.get('priipOptionalData', '{}'));
         const listingOptionalData = commonHelper.safeJsonParse(item.get('listingOptionalData', '{}'));
@@ -114,8 +112,6 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             maxRedemptionFee: item.get('maxRedemptionFee', 0),
             investorProfile: item.get('investorProfile', 0),
             keyFactOptionalData,
-            characteristicOptionalData,
-            calendarOptionalData,
             profileOptionalData,
             priipOptionalData,
             listingOptionalData,
