@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class WalletNodeSocketService{
     public walletnodeClose: EventEmitter<any> = new EventEmitter();
+    public walletnodeOpen: EventEmitter<any> = new EventEmitter();
 
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
@@ -67,7 +68,7 @@ export class WalletNodeSocketService{
                                     if (thisToken !== '') {
                                         this.walletNodeSubscribeForUpdate(ID1, message1, UserData1);
                                     }
-
+                                    this.walletnodeOpen.emit(message1);
                                     // Done connection and authenticate. can resolve here.
                                     resolveConnect();
 
