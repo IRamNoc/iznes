@@ -34,7 +34,7 @@ import {
     OfiUpdateArrangement,
     OfiGetContractByOrder,
     OfiGetArrangementCollectiveArchive,
-    IznesNewOrderRequestBody
+    IznesNewOrderRequestBody, IznesMarkOrderSettleRequestBody
 } from './model';
 
 interface ManageOrdersData {
@@ -178,6 +178,19 @@ export class OfiOrdersService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    markOrderSettle(requestData: {
+        orderId: number;
+    }) {
+        const messageBody: IznesMarkOrderSettleRequestBody = {
+            RequestName: 'iznesmarkordersettle',
+            token: this.memberSocketService.token,
+            orderId: requestData.orderId
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
     }
 
     requestManageOrdersList(data: ManageOrdersData): any {

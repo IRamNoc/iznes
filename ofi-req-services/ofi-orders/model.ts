@@ -73,3 +73,8 @@ export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
     ordervalue: number;
     comment: string;
 }
+
+export interface IznesMarkOrderSettleRequestBody extends MemberNodeMessageBody {
+    token: string;
+    orderId: number;
+}

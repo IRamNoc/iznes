@@ -6,6 +6,7 @@ import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
+
 // ** please don't remove this below commented import please, as i use it for building the compiled version
 // import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
 import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
@@ -19,6 +20,8 @@ import {
 // ** please don't remove this below commented import please, as i use it for building the compiled version
 // } from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
+
+import {Base64} from './base64';
 
 
 // todo
@@ -103,6 +106,47 @@ interface OrderRequestBody {
     contractExpiryTs: number;
     contractStartTs: number;
 
+}
+
+interface UpdateOrderResponse {
+    orderID: number;
+    orderType: number;
+    investorWalletID: number;
+    investorAddress: string;
+    amCompanyID: number;
+    amWalletID: number;
+    amAddress: string;
+    orderStatus: number;
+    currency: number;
+    fundShareID: number;
+    byAmountOrQuantity: number;
+    price: number;
+    estimatedPrice: number;
+    quantity: number;
+    estimatedQuantity: number;
+    amount: number;
+    estimatedAmount: number;
+    amountWithCost: number;
+    estimatedAmountWithCost: number;
+    feePercentage: number;
+    platFormFee: number;
+    cutoffDate: string;
+    valuationDate: string;
+    settlementDate: string;
+    orderNote: string;
+    contractAddr: string;
+    contractExpiryTs: number;
+    contractStartTs: number;
+    navEntered: string;
+    canceledBy: number;
+    dateEntered: string;
+    fundShareName: string;
+    isin: string;
+    investorWalletName: string;
+    amComPub: string;
+    amAccountID: number;
+    investorAccountID: number;
+    clientReference: string;
 }
 
 type TX = 'tx';
@@ -245,6 +289,7 @@ export class OrderHelper {
      * @param walletId
      * @param ref
      * @param fromAddress: benificiary/administrator address
+     * @param toAddress: asset owner address
      * @param namespace
      * @param instrument
      * @param amount
@@ -252,7 +297,7 @@ export class OrderHelper {
      * @param {string} metadata
      * @return {{messagetype: string; messagebody: {txtype: string; walletid: any; reference: any; address: any; subjectaddress: any; namespace: any; instrument: any; amount: any; protocol: string | undefined; metadata: string | undefined}}}
      */
-    static buildUnencumberRequestBody(walletId: number, ref: string, fromAddress: string, namespace: string, instrument: string, amount: number, protocol = '', metadata = '') {
+    static buildUnencumberRequestBody(walletId: number, ref: string, fromAddress: string, toAddress: string, namespace: string, instrument: string, amount: number, protocol = '', metadata = '') {
         return {
             messagetype: 'tx',
             messagebody: {
@@ -260,7 +305,7 @@ export class OrderHelper {
                 walletid: walletId,
                 reference: ref,
                 address: fromAddress,
-                subjectaddress: fromAddress,
+                subjectaddress: toAddress,
                 namespace,
                 instrument,
                 amount,
@@ -305,6 +350,101 @@ export class OrderHelper {
                 [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInShare || 0),
             },
         }[orderType] || {})[orderByType] || 0;
+    }
+
+    static buildOrderReleaseShareRequestBody(order: UpdateOrderResponse) {
+        const walletId = order.amWalletID;
+        const ref = order.amAddress + String(order.contractStartTs) + String(OrderType.Subscription);
+        const fromAddress = order.amAddress;
+        const toAddress = order.investorAddress;
+        const namespace = order.isin;
+        const instrument = order.fundShareName;
+        const amount = order.quantity;
+
+        return OrderHelper.buildUnencumberRequestBody(
+            walletId,
+            ref,
+            fromAddress,
+            toAddress,
+            namespace,
+            instrument,
+            amount
+        );
+    }
+
+    static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse) {
+        const decimalPlaces = 2;
+        const orderReference = pad(order.orderID, 11, '0');
+        const orderType = Number(order.orderType);
+        let subject;
+
+        if (orderType === OrderType.Subscription) {
+            subject = 'SOUSCRIPTION ' + orderReference + ' - <span class="ml" mltag="txt_demon_completed">Shares</span>';
+        } else {
+            subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
+        }
+
+        const generalBody = subject;
+
+        const todayStr = moment().format('DD/MM/YYYY');
+
+        const actionJson = {
+            type: 'sendPdf',
+            data: {
+                pdfType: 'share',
+                pdfMetadata: {
+                    fundName: order.fundShareName,
+                    isinCode: order.isin,
+                    fundsForm: 'Fonds commun de placement',
+                    nationality: 'Français',
+                    clientName: order.investorWalletName, // Customer Wallet Name
+                    listDate: todayStr,
+                    reference: orderReference,
+                    clientReference: order.clientReference,
+                    date: todayStr,
+                    numberOfShares: toNormalScale(Number(order.quantity), decimalPlaces)
+                }
+            }
+        };
+
+        const hasAction = true;
+
+        return OrderHelper.buildSendMessage(
+            subject, generalBody, actionJson, order.amWalletID,
+            order.amComPub, [order.investorAddress, order.amAddress], hasAction
+        );
+    }
+
+    static buildSendMessage(subject: string, mailGeneralContent: string, mailActionJson: any, senderWalletId: number,
+                            senderPub: string, recipientWalletAddresses: Array<string>, hasAction: boolean) {
+
+        const mailBody = JSON.stringify({
+            general: Base64.encode(mailGeneralContent),
+            action: mailActionJson
+        });
+
+        const recipients = OrderHelper.buildAddressRecipients(recipientWalletAddresses);
+
+        return {
+            mailSubject: Base64.encode(subject),
+            mailBody: mailBody,
+            senderId: senderWalletId,
+            senderPub: senderPub,
+            recipients: recipients,
+            parentId: 0,
+            arrangementId: 0,
+            arrangementStatus: 0,
+            attachment: 0,
+            hasAction,
+            isDraft: 0
+        };
+    }
+
+    static buildAddressRecipients(addresses: Array<string>): { [address: string]: 0 } {
+        return addresses.reduce((result, item, index) => {
+            result[item] = 0;
+            return result;
+        }, {});
     }
 
     processOrder() {
@@ -655,7 +795,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+                [this.investorAddress, this.orderAsset, this.getEncumberReference(), orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
             ];
 
         } else if (this.orderBy === OrderByType.Amount) {
@@ -678,7 +818,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                [this.investorAddress, this.orderAsset, this.getEncumberReference(), '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
                     [], [[this.amIssuingAddress, 0, 0]]]];
 
 
@@ -929,3 +1069,23 @@ export function calNetAmount(amount: number | string, fee: number | string, orde
         r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
     }[orderType];
 }
+
+/**
+ *  padding number from left.
+ *
+ * @param num
+ * @param width
+ * @param fill
+ * @return {string}
+ */
+export function pad(num: number, width: number, fill: string): string {
+    const numberStr = num.toString();
+    const len = numberStr.length;
+    return len >= width ? numberStr : new Array(width - len + 1).join(fill) + numberStr;
+}
+
+export function toNormalScale(num: number, numDecimal: number): number {
+    return math.format(math.chain(num).divide(NumberMultiplier).done(), {notation: 'fixed', precision: numDecimal});
+}
+
+
