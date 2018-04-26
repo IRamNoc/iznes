@@ -18,7 +18,6 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     balances$: Observable<HoldingByAsset>;
 
     @ViewChild('myDataGrid') myDataGrid;
-
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
 
     public tabControl: TabControl;
@@ -222,4 +221,3 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 }
-
