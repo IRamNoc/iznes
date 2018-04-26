@@ -10,8 +10,9 @@
         border-bottom: 1px solid #ccc;
 
         .datagrid-column {
-            &.actions {
+            &.actions, &.right {
                 text-align: right;
+                justify-content: flex-end;
             }
         }
     }
@@ -21,7 +22,7 @@
             border-top: 1px solid #ececec;
 
             .datagrid-cell {
-                &.actions {
+                &.actions, &.right {
                     text-align: right;
                 }
             }
