@@ -227,6 +227,16 @@ export class OfiKycService {
         });
     }
 
+    updateInvestor(request) {
+        const messageBody = {
+            RequestName: 'iznesupdateinvestor',
+            token: this.memberSocketService.token,
+            ...request,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     saveFundAccess(requestData: SaveFundAccessRequestData): any {
 
         const messageBody: SaveFundAccessRequestBody = {
