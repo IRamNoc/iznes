@@ -1,5 +1,5 @@
 export {ShareCalendarMandatory} from './calendar';
-export {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './characteristic';
+export {ShareCharacteristicMandatory} from './characteristic';
 export {ShareFeesMandatory, ShareFeesOptional} from './fees';
 export {ShareKeyFactsMandatory, ShareKeyFactsOptional} from './keyFacts';
 export {ShareListingOptional} from './listing';
