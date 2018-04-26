@@ -53,8 +53,6 @@ export interface IznesShareDetail {
     maxRedemptionFee: string;
     investorProfile: string;
     keyFactOptionalData: string;
-    characteristicOptionalData: string;
-    calendarOptionalData: string;
     profileOptionalData: string;
     priipOptionalData: string;
     listingOptionalData: string;

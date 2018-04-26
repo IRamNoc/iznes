@@ -154,8 +154,6 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             maxRedemptionFee: share.maxRedemptionFee,
             investorProfile: share.investorProfile,
             keyFactOptionalData: share.keyFactOptionalData,
-            characteristicOptionalData: share.characteristicOptionalData,
-            calendarOptionalData: share.calendarOptionalData,
             profileOptionalData: share.profileOptionalData,
             priipOptionalData: share.priipOptionalData,
             listingOptionalData: share.listingOptionalData,

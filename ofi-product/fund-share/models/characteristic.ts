@@ -147,18 +147,3 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_minsubredinamount'
     }
 }
-
-export class ShareCharacteristicOptional {
-    portfolioCurrencyHedge: FormItem = {
-        type: FormItemType.list,
-        label: 'Portfolio Currency Hedge',
-        required: false,
-        listItems: [
-            { id: E.CurrencyHedgeEnum.NoHedge, text: 'No Hedge' },
-            { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
-            { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
-            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' }
-        ],
-        mltag: 'txt_fundshare_portfoliohedge'
-    }
-}

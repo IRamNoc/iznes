@@ -145,12 +145,3 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_subredcalendar'
     }
 }
-
-export class ShareCalendarOptional extends DynamicFormsValidator {
-    holidayManagement: FormItem = {
-        type: FormItemType.text,
-        label: 'Holiday management',
-        required: false,
-        mltag: 'txt_fundshare_holmanage'
-    } // 1
-}

@@ -118,8 +118,6 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 mifiidServicesCosts: item.get('mifiidServicesCosts', ''),
                 mifiidIncidentalCosts: item.get('mifiidIncidentalCosts', ''),
                 keyFactOptionalData: item.get('keyFactOptionalData', ''),
-                characteristicOptionalData: item.get('characteristicOptionalData', ''),
-                calendarOptionalData: item.get('calendarOptionalData', ''),
                 profileOptionalData: item.get('profileOptionalData', ''),
                 priipOptionalData: item.get('priipOptionalData', ''),
                 listingOptionalData: item.get('listingOptionalData', ''),

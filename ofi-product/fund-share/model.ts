@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 import {FormItem, FormItemDropdown, FormItemType} from '@setl/utils';
 import {OfiFundShare, OfiFundShareDocuments} from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
-import {ShareCharacteristicMandatory, ShareCharacteristicOptional} from './models/characteristic';
-import {ShareCalendarMandatory, ShareCalendarOptional} from './models/calendar';
+import {ShareCharacteristicMandatory} from './models/characteristic';
+import {ShareCalendarMandatory} from './models/calendar';
 import {ShareFeesMandatory, ShareFeesOptional} from './models/fees';
 import {ShareKeyFactsMandatory, ShareKeyFactsOptional} from './models/keyFacts';
 import {ShareListingOptional} from './models/listing';
@@ -32,12 +32,10 @@ export class FundShare {
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,
-        redemptionTradeCycle: null,
-        optional: new ShareCalendarOptional()
+        redemptionTradeCycle: null
     }
     characteristic = {
-        mandatory: new ShareCharacteristicMandatory(),
-        optional: new ShareCharacteristicOptional()
+        mandatory: new ShareCharacteristicMandatory()
     }
     fees = {
         mandatory: new ShareFeesMandatory(),
@@ -80,10 +78,7 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {
-        const portfolioCurrencyHedgeRaw = this.characteristic.optional.portfolioCurrencyHedge.value();
-        const portfolioCurrencyHedge = portfolioCurrencyHedgeRaw ? portfolioCurrencyHedgeRaw[0].id : null;
-        
+    getRequest(): OfiFundShare {        
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
@@ -116,7 +111,7 @@ export class FundShare {
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
-            portfolioCurrencyHedge: portfolioCurrencyHedge,
+            portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.portfolioCurrencyHedge),
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.subscriptionSettlementPeriod),
@@ -146,8 +141,6 @@ export class FundShare {
             navPeriodForSubscription: this.getSelectValue(this.calendar.mandatory.navPeriodForSubscription),
             navPeriodForRedemption: this.getSelectValue(this.calendar.mandatory.navPeriodForRedemption),
             keyFactOptionalData: this.generateJSONString(this.keyFacts.optional),
-            characteristicOptionalData: this.generateJSONString(this.characteristic.optional),
-            calendarOptionalData: this.generateJSONString(this.calendar.optional),
             profileOptionalData: this.generateJSONString(this.profile.optional),
             priipOptionalData: this.generateJSONString(this.priip.optional),
             listingOptionalData: this.generateJSONString(this.listing.optional),
@@ -187,7 +180,7 @@ export class FundShare {
         this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
-        this.setListItemPreset(this.characteristic.optional.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+        this.setListItemPreset(this.keyFacts.mandatory.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
         this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);
@@ -206,8 +199,6 @@ export class FundShare {
         this.fees.mandatory.miFIDIIIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
         
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
-        this.applyOptionalData((this.characteristic.optional as any), JSON.parse(fundShare.characteristicOptionalData));
-        this.applyOptionalData((this.calendar.optional as any), JSON.parse(fundShare.calendarOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
         this.applyOptionalData((this.priip.optional as any), JSON.parse(fundShare.priipOptionalData));
         this.applyOptionalData((this.listing.optional as any), JSON.parse(fundShare.listingOptionalData));
