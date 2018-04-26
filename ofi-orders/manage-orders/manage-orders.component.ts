@@ -613,9 +613,54 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.ordersList[index].orderType === 4) {
             confMessage += 'Redemption ';
         }
-        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 5);
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
         this.showConfirmationAlert(confMessage, index);
     }
+
+    settleOrder(index) {
+        let confMessage = '';
+        if (this.ordersList[index].orderType === 3) {
+            confMessage += 'Subscription ';
+        }
+        if (this.ordersList[index].orderType === 4) {
+            confMessage += 'Redemption ';
+        }
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
+        this.showConfirmationSettleAlert(confMessage, index);
+
+    }
+
+    showConfirmationSettleAlert(confMessage, index): void {
+        this._confirmationService.create(
+            '<span>Are you sure?</span>',
+            '<span>Are you sure you want settle the ' + confMessage + '?</span>',
+            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.sendSettleOrderRequest(index);
+            }
+        });
+    }
+
+    sendSettleOrderRequest(index) {
+
+        if (!this.isInvestorUser) {
+            const orderId = this.ordersList[index].orderID;
+            this.ofiOrdersService.markOrderSettle({orderId}).then((data) => {
+                // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                // const orderRef = commonHelper.pad(orderId, 11, '0');
+                // this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
+                // this.handleClose();
+                // this._router.navigateByUrl('/order-book/my-orders/list');
+                console.log(data);
+            }).catch((data) => {
+                const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+                // this._toaster.pop('warning', errorMessage);
+                console.log(data);
+            });
+        }
+    }
+
 
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
