@@ -565,7 +565,8 @@ input:checked + .slider:before {
     border-right: 0;
 }
 
-.input-group > :nth-child(2) {
+.input-group > :nth-child(2),
+.input-group > .fa + input[type=time] {
     // fix for ng2-datepicker
     border: 1px solid #dadada;
     border-radius: 3px;
