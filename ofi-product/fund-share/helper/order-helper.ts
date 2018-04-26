@@ -6,6 +6,7 @@ import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
+// ** please don't remove this below commented import please, as i use it for building the compiled version
 // import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
 import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
 import {
@@ -14,8 +15,9 @@ import {
     ArrangementData,
     ArrangementActionType,
     ConditionType
-// } from '../../../../utils/services/blockchain-contract/model';
 
+// ** please don't remove this below commented import please, as i use it for building the compiled version
+// } from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
 
 
@@ -154,7 +156,11 @@ export class OrderHelper {
     minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
-    helperTimeStamp: number;
+
+    // used for testing, when validation is turned off
+    fakeCuoff: any;
+    fakeValuation: any;
+    fakeSettlement: any;
 
 
     get feePercentage() {
@@ -215,7 +221,12 @@ export class OrderHelper {
         this.amWalletId = fundShare.amWalletID;
         this.investorAddress = orderRequest.subportfolio;
         this.investorWalletId = Number(orderRequest.portfolioid);
-        this.helperTimeStamp = moment();
+
+        // used for testing when validation is turned off
+        this.fakeCuoff = moment().add(1, 'minutes');
+        this.fakeValuation = moment().add(2, 'minutes');
+        this.fakeSettlement = moment().add(3, 'minutes');
+
     }
 
     static getChildErrorMessage(response) {
@@ -422,9 +433,9 @@ export class OrderHelper {
         // the logic is for testing purpose, it will disable all the validation
         if (this.disableValidation) {
             return {
-                cutoff: moment().add(1, 'minutes'),
-                valuation: moment().add(2, 'minutes'),
-                settlement: moment().add(3, 'minutes')
+                cutoff: this.fakeCuoff,
+                valuation: this.fakeValuation,
+                settlement: this.fakeSettlement
             };
         }
 
@@ -595,7 +606,7 @@ export class OrderHelper {
 
     getOrderTimeStamp(): OrderTimeStamps {
         const orderDate = this.getOrderDates() as OrderDates;
-        const settleTimeStamp = Number(orderDate.settlement.valueOf() / 1000);
+        const settleTimeStamp = Number(Math.floor(orderDate.settlement.valueOf() / 1000));
         const expiryTimeStamp = settleTimeStamp + ExpirySecond;
         return {
             settleTimeStamp,

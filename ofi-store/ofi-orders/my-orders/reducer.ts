@@ -7,13 +7,12 @@ import {MyOrders, MyOrderDetails} from './model';
 import * as ofiMyOrdersActions from './actions';
 import {SET_ALL_TABS} from './actions';
 import {immutableHelper} from '@setl/utils';
-import {List, fromJS, Map} from 'immutable';
+import {fromJS, Map} from 'immutable';
 
 /* Initial state. */
 const initialState: MyOrders = {
     orderList: {},
     requested: false,
-    newOrder: false,
     openedTabs: []
 };
 
@@ -22,29 +21,14 @@ export const OfiMyOrderListReducer = function (state: MyOrders = initialState, a
     switch (action.type) {
         /* Set Coupon List. */
         case ofiMyOrdersActions.OFI_SET_MY_ORDER_LIST:
-            // return ofiSetMyOrderList(state, action);
+            return ofiSetMyOrderList(state, action);
 
-            const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-
-            if (data.Status !== 'Fail') {
-                const orderList = formatMyOrderDataResponse(data);
-                return Object.assign({}, state, {
-                    orderList
-                });
-            }
-            return state;
 
         case ofiMyOrdersActions.OFI_SET_REQUESTED_MY_ORDER:
             return toggleRequestState(state, true);
 
         case ofiMyOrdersActions.OFI_CLEAR_REQUESTED_MY_ORDER:
             return toggleRequestState(state, false);
-
-        case ofiMyOrdersActions.OFI_SET_NEW_ORDER_MY_ORDER:
-            return toggleNewOrderState(state, true);
-
-        case ofiMyOrdersActions.OFI_CLEAR_NEW_ORDER_MY_ORDER:
-            return toggleNewOrderState(state, false);
 
         case SET_ALL_TABS:
             return handleSetAllTabs(action, state);
@@ -116,31 +100,17 @@ function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
  * ---------------
  * Deals with replacing the local orders list with a new one.
  *
- * @param {state} MyOrders - the current state.
- * @param {action} Action - the action requested.
- *
- * @return {newState} object - the new state.
+ * @param {MyOrders} state
+ * @param {Action} action
+ * @return {any}
  */
 function ofiSetMyOrderList(state: MyOrders, action: Action) {
-    /* Variables. */
-    let
-        newState: MyOrders,
-        newOrderList = _.get(action, 'payload[1].Data', []);
+    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-    /* Let's unpack the metaData... */
-    newOrderList = newOrderList.map((order) => {
-        /* ...json parse it... */
-        order.metaData = JSON.parse(order.metaData);
-
-        /* ..return. */
-        return order;
-    })
-
-    /* Set the new state. */
-    newState = Object.assign({}, state, {orderList: newOrderList});
-
-    /* Return. */
-    return newState;
+    const orderList = formatMyOrderDataResponse(data);
+    return Object.assign({}, state, {
+        orderList
+    });
 }
 
 /**
@@ -151,10 +121,6 @@ function ofiSetMyOrderList(state: MyOrders, action: Action) {
  */
 function toggleRequestState(state: MyOrders, requested: boolean): MyOrders {
     return Object.assign({}, state, {requested});
-}
-
-function toggleNewOrderState(state: MyOrders, newOrder: boolean): MyOrders {
-    return Object.assign({}, state, {newOrder});
 }
 
 /**

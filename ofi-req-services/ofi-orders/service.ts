@@ -12,13 +12,9 @@ import {
     OFI_SET_MANAGE_ORDER_LIST,
     ofiSetRequestedManageOrder,
     ofiClearRequestedManageOrder,
-    ofiClearNewOrderManageOrder,
-    ofiSetNewOrderManageOrder,
     OFI_SET_MY_ORDER_LIST,
     ofiSetRequestedMyOrder,
     ofiClearRequestedMyOrder,
-    ofiClearNewOrderMyOrder,
-    ofiSetNewOrderMyOrder,
     OFI_SET_HOME_ORDER_LIST,
     OFI_SET_HOME_ORDER_BUFFER,
     OFI_RESET_HOME_ORDER_BUFFER,
@@ -104,24 +100,6 @@ export class OfiOrdersService {
             ngRedux.dispatch(ofiClearRequestedManageOrder());
         } else {
             ngRedux.dispatch(ofiSetRequestedManageOrder());
-        }
-    }
-
-    static setAmNewOrder(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(ofiClearNewOrderManageOrder());
-        } else {
-            ngRedux.dispatch(ofiSetNewOrderManageOrder());
-        }
-    }
-
-    static setInvNewOrder(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(ofiClearNewOrderMyOrder());
-        } else {
-            ngRedux.dispatch(ofiSetNewOrderMyOrder());
         }
     }
 
