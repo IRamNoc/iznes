@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
@@ -64,37 +65,27 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void selectTopDropdown(String dropdownID) throws InterruptedException {
-        try {
+
             driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-        }catch (Exception e){
-            fail("this step failed.");
-        }
-        try {
+
             driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected..: " + e.getMessage());
-        }
+
     }
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        //driver.findElement(By.id(dropdownID)).clear();
-        driver.findElement(By.id(dropdownID)).sendKeys(search);
-        try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(search);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+       // driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+
     }
     public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) throws InterruptedException {
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        //driver.findElement(By.id(dropdownID)).clear();
+
         driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
-        try {
+
             driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
+
     }
 
 }
