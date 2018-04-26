@@ -72,26 +72,24 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
-        } catch (Exception e) {
-            fail("dropdown not selected. " + e.getMessage());}
+        driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try {
-            driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        } catch (Error e) {
-            fail(e.getMessage());}
-        String [] uFundDetails = generateRandomFundsDetails();
-        shouldFillOutFundDetailsStep2(uFundDetails[0]);
+        driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
-            driver.findElement(By.id("fund-submitfund-btn")).click();
+        String[] uFundDetails = generateRandomFundsDetails();
+        shouldFillOutFundDetailsStep2(uFundDetails[0]);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
+        driver.findElement(By.id("fund-submitfund-btn")).click();
 
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
             assertTrue(popup.equals(uFundDetails[0] + " has been successfully created."));
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
         getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
         validateDatabaseFundExists(1, uFundDetails[0]);
     }
@@ -117,12 +115,14 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             driver.findElement(By.id("fund-add-new-umbrella-btn")).click();
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
         try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
             assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
-            fail("Page heading text was not correct : " + e.getMessage());}
+            fail("Page heading text was not correct : " + e.getMessage());
+        }
     }
 
     @Test
@@ -140,7 +140,8 @@ public class OpenCSDVNewFundsAcceptanceTest {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
 
     }
 
@@ -151,7 +152,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -175,7 +176,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -223,25 +224,28 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
         } catch (Error e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             scrollElementIntoViewById("fund-cancelfund-btn");
             Thread.sleep(750);
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
-            wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
         try {
             driver.findElement(By.id("fund-cancelfund-btn")).click();
-        }catch (Exception e){
-            fail(e.getMessage());}
-            try {
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -249,7 +253,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     }
 
-    private void getFundTableRow(int rowNo, String fundNameExpected , String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected){
+    private void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
         System.out.println("before truncation : " + shareNameID);
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
