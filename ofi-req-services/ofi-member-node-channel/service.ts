@@ -14,7 +14,6 @@ import {
     clearRequestedFundAccessMy,
     ofiClearRequestedIssuedAssets,
     clearRequestedCollectiveArchive,
-    ofiSetNewOrderManageOrder,
     setamkyclist,
     clearrequested
 } from '../../ofi-store';
@@ -81,29 +80,22 @@ export class OfiMemberNodeChannelService {
                 handleUpdateNav(this.ngRedux);
                 break;
 
-            case 'newArrangementList':
-                console.log('----------got new arrangement update-----');
-
-                this.ngRedux.dispatch(ofiClearRequestedHomeOrder());
-                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
-                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(clearRequestedCollectiveArchive());
-                break;
-
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
                 break;
 
-            case 'izncreateorderbyinvestor':
-                this.ngRedux.dispatch(ofiSetNewOrderManageOrder());
+            case 'iznesupdateorder':
+                console.log('got the broadcast order');
+                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
+                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
                 break;
 
             case 'updatekyc':
                 this.ngRedux.dispatch(clearrequested());
                 this.ngRedux.dispatch(setamkyclist());
                 break;
-                
+
             case 'kycaccepted':
                 //enable menu.
                 this.ngRedux.dispatch(resetHomepage());

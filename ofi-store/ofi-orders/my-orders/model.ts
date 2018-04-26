@@ -56,6 +56,5 @@ export interface MyOrders {
         [key: string]: MyOrderDetails
     };
     requested: boolean;
-    newOrder: boolean;
     openedTabs: Array<OrderTab>;
 }

@@ -76,8 +76,6 @@ export {
     OFI_SET_MANAGE_ORDER_LIST,
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
-    ofiClearNewOrderManageOrder,
-    ofiSetNewOrderManageOrder,
     ofiManageOrderActions,
 
     /* Home orders */
@@ -99,8 +97,6 @@ export {
     OFI_SET_MY_ORDER_LIST,
     ofiClearRequestedMyOrder,
     ofiSetRequestedMyOrder,
-    ofiClearNewOrderMyOrder,
-    ofiSetNewOrderMyOrder,
     ofiMyOrderActions,
 
     // Collective report

@@ -203,27 +203,10 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 this.toasterService.pop('success', 'Share Permissions Saved');
 
                 let recipientsArr = [this.investorData['investorWalletID']];
-                let subjectStr = this.amCompany + ' has approved your application - You can invest!';
+                let subjectStr = this.amCompany + ' has updated your access';
 
                 let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
-                if (shareArray['add'].length > 0) {
-                    bodyStr += '<br><br>You have been authorised to access the following shares:';
-                    Object.keys(emailArray['add']).forEach((key) => {
-                        bodyStr += '<br><br>' + key;
-                        emailArray['add'][key].forEach((row) => {
-                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                        });
-                    });
-                }
-                if (shareArray['remove'].length > 0) {
-                    bodyStr += '<br><br>Access to the following shares has been removed:';
-                    Object.keys(emailArray['remove']).forEach((key) => {
-                        bodyStr += '<br><br>' + key;
-                        emailArray['remove'][key].forEach((row) => {
-                            bodyStr += '<br>' + row['shareName'] + ' - ISIN: ' + row['isin'];
-                        });
-                    });
-                }
+
                 bodyStr += '<br><br><a class="btn" href="/#/list-of-funds/0">Go to the Funds shares page to see all changes and begin trading on IZNES</a><br><br>Thank you,<br><br>The IZNES team.';
                 this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
             });

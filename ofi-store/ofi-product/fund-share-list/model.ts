@@ -84,6 +84,7 @@ export interface IznesShareDetail {
     yearlyRedemptionDealingDays: number;
     navPeriodForSubscription: number;
     navPeriodForRedemption: number;
+    isProduction?: string;
 }
 
 export interface OfiFundShareListState {
