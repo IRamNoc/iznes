@@ -103,7 +103,7 @@ function handleSetRequestedWalletAddresses(state) {
 function handleClearRequestedWalletAddresses(state) {
     const requestedAddressList = false;
     const requestedCompleteAddresses = false;
-    const addressList = [];
+    const addressList = {};
 
     return Object.assign({}, state, {
         addressList,
