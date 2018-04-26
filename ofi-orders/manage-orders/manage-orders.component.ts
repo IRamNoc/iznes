@@ -370,7 +370,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     applyFilters() {
         if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType) {
+            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
                 if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
                     this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
@@ -380,7 +380,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
                 if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
-                    const statusFound = this.orderStatuses.find(o => o.id === this.filtersFromRedux.status);
+                    const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
                             id: statusFound.id,
@@ -388,6 +388,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                         }], {emitEvent: false});
                         this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }
+                if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
+                    const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
+                    if (dateTypeFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('dateType').patchValue([{
+                            id: dateTypeFound.id,
+                            text: dateTypeFound.text
+                        }], {emitEvent: false});
+                        this.tabsControl[0].searchForm.get('dateType').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                }
+                if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
+                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('fromDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
+                    this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('toDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
 
                 // remove filters from redux
@@ -947,7 +965,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted date or empty string.
      */
-    private getOnlyDate(dateString): string {
+    getOnlyDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
@@ -957,7 +975,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted time or empty string.
      */
-    private getOnlyTime(dateString): string {
+    getOnlyTime(dateString): string {
         return this.formatDate('hh:mm:ss', new Date(dateString));
     }
 

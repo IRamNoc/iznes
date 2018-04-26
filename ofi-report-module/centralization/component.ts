@@ -202,7 +202,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         if (obj !== undefined) {
             return obj.text;
         } else {
-            return 'Not found!';
+            return currency;
         }
     }
 

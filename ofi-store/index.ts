@@ -108,6 +108,8 @@ export {
 
 export {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
+    OFI_SET_BASE_CENTRALIZATION_HISTORY,
+    OFI_SET_CENTRALIZATION_HISTORY,
     ofiClearRequestedCentralizationReports,
     ofiSetRequestedCentralizationReports,
     ofiCentralizationReportsActions,

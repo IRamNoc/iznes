@@ -10,6 +10,8 @@ import {SagaHelper, Common} from '@setl/utils';
 /* Import actions. */
 import {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
+    OFI_SET_BASE_CENTRALIZATION_HISTORY,
+    OFI_SET_CENTRALIZATION_HISTORY,
     ofiSetRequestedCentralizationReports,
     ofiClearRequestedCentralizationReports,
     OFI_SET_AM_HOLDERS_LIST,
@@ -22,10 +24,19 @@ import {
     OfiMemberNodeBody,
     OfiCentralizationReportsRequestBody,
     OfiAmHoldersRequestBody,
+    OfiBaseCentralizationHistoryRequestBody,
+    OfiCentralizationHistoryRequestBody,
 } from './model';
 
 interface CentralizationReportsData {
     search: string;
+}
+
+interface CentralizationHistoryData {
+    fundShareID: any;
+    dateFrom: any;
+    dateTo: any;
+    dateRange: any;
 }
 
 @Injectable()
@@ -96,6 +107,41 @@ export class OfiReportsService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestBaseCentralizationHistory(fundShareID: any): any {
+
+        const messageBody: OfiBaseCentralizationHistoryRequestBody = {
+            RequestName: 'getSingleShareBaseInfo',
+            token: this.memberSocketService.token,
+            fundShareID: fundShareID,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_BASE_CENTRALIZATION_HISTORY],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    requestCentralizationHistory(data: CentralizationHistoryData): any {
+
+        const messageBody: OfiCentralizationHistoryRequestBody = {
+            RequestName: 'getSingleShareInfo',
+            token: this.memberSocketService.token,
+            fundShareID: data.fundShareID,
+            dateFrom: data.fundShareID,
+            dateTo: data.fundShareID,
+            dateRange: data.dateRange,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_CENTRALIZATION_HISTORY],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
     }
 
     requestAmHoldersList(): any {
