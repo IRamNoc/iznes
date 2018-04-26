@@ -23,6 +23,7 @@ export interface FormItem {
     listAllowMultiple?: boolean;
 
     dateOptions?: { [key: string]: any };
+    timeOptions?: { [key: string]: any };
 
     fileData?: any;
 
@@ -36,7 +37,8 @@ export enum FormItemType {
     list,
     boolean,
     file,
-    textarea
+    textarea,
+    time
 }
 
 export enum FormItemStyle {
