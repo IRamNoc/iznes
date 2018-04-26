@@ -59,13 +59,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     }
     valuationNAV: FormItem = {
         type: FormItemType.number,
-        label: 'Valuation NAV',
+        label: 'Initial NAV',
         required: true,
         mltag: 'txt_fundshare_valuationnav'
     }
     valuationNAVDate: FormItem = {
         type: FormItemType.date,
-        label: 'Valuation NAV Date',
+        label: 'Initial NAV Date',
         required: true,
         mltag: 'txt_fundshare_valuationnavdate'
     }

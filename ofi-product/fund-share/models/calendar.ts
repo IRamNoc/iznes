@@ -3,7 +3,7 @@ import * as E from '../FundShareEnum';
 
 export class ShareCalendarMandatory extends DynamicFormsValidator {
     subscriptionCutOffTime: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.time,
         label: 'Cut-off Time For Subscription',
         required: true,
         mltag: 'txt_fundshare_cutofftimesub'
@@ -57,7 +57,7 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_navperiodsub'
     }
     redemptionCutOffTime: FormItem = {
-        type: FormItemType.text,
+        type: FormItemType.time,
         label: 'Cut-off Time For Redemption',
         required: true,
         mltag: 'txt_fundshare_cutofftimered'
