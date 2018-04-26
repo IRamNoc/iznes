@@ -1,22 +1,11 @@
-/*
- * Copyright (c) 2016 VMware, Inc. All Rights Reserved.
- * This software is released under MIT license.
- * The full license information can be found in LICENSE in the root directory of this project.
-*/
-
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {WalletNodesModel} from './model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
-import * as _ from 'lodash';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
-/* Actions */
-// import {SET_FUND_SHARE_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
-
-/* Alerts and confirms. */
+// Alerts and confirms
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 // Internal
 import {Subscription} from 'rxjs/Subscription';
@@ -25,10 +14,6 @@ import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.ser
 import {ChainService} from '@setl/core-req-services/chain/service';
 import {MultilingualService} from '@setl/multilingual';
 
-/* Actions */
-
-// import {SET_FUND_SHARE_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
-
 @Component({
     selector: 'app-wallet-nodes',
     styleUrls: ['./component.scss'],
@@ -36,34 +21,12 @@ import {MultilingualService} from '@setl/multilingual';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ManageWalletNodesComponent implements OnInit, OnDestroy {
-
+    tabsControl: Array<object>;
     // Debug for dev
     isDebug = false;
 
     // Locale
-    language = 'fr';
-
-    // Forms
-    multiForm = [];
-    walletNodesForm: FormGroup;
-    modelForm: any;
-    currentTab = null;
-    showSameForm = false;
-
-    // index Tabs
-    showDashboard = false;
-    showAddNewTab = true;
-
-    // Modals
-    showConfirmModal = false;
-    showWaitingModal = false;
-    showTextModal = false;
-    modalTitle = '';
-    modalText = '';
-
-    // close/delete
-    nodeToClose = null;
-    nodeToDelete = null;
+    language = 'en';
 
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -87,10 +50,37 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 private _alertsService: AlertsService,
                 private multilingualService: MultilingualService,
                 private _persistService: PersistService) {
+
+        this.tabsControl = [
+            {
+                title: '<i class="fa fa-th-list"></i> List',
+                chainId: -1,
+                active: true
+            },
+            {
+                title: '<i class="fa fa-plus"></i> Add New Wallet Node',
+                chainId: -1,
+                formControl: this._persistService.watchForm('manageMember/walletNodes', new FormGroup(
+                    {
+                        walletNodeName: new FormControl('', Validators.required),
+                        nodeAddress: new FormControl('', Validators.required),
+                        nodePath: new FormControl(),
+                        nodePort: new FormControl('', Validators.required),
+                        chainId: new FormControl('', Validators.required)
+                    }
+                )),
+                active: false
+            }
+        ];
+
         // language
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-        this.subscriptionsArray.push(this.requestedWalletNodesOb.subscribe((requestedWalletNodeList) => this.getWalletNodesRequested(requestedWalletNodeList)));
-        this.subscriptionsArray.push(this.walletNodesListOb.subscribe((walletNodesList) => this.getWalletNodesListFromRedux(walletNodesList)));
+        this.subscriptionsArray.push(this.requestedWalletNodesOb.subscribe((requestedWalletNodeList) => {
+            this.getWalletNodesRequested(requestedWalletNodeList);
+        }));
+        this.subscriptionsArray.push(this.walletNodesListOb.subscribe((walletNodesList) => {
+            this.getWalletNodesListFromRedux(walletNodesList);
+        }));
         this.subscriptionsArray.push(this.requestedChainOb.subscribe((requested) => this.getChainsListRequested(requested)));
         this.subscriptionsArray.push(this.chainListOb.subscribe((chainsList) => this.getChainsListFromRedux(chainsList)));
     }
@@ -121,7 +111,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 chainId: item.get('chainId', 0),
                 chainName: item.get('chainName', ''),
                 nodeAddress: item.get('nodeAddress', ''),
-                nodePath: item.get('nodePath', ''),
+                nodePath: '',
                 nodePort: item.get('nodePort', 0),
             });
 
@@ -153,214 +143,163 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         this.markForCheck();
     }
 
-    newForm() {
-        this.addForm();
-        // this.showAddNewTab = false;
-    }
 
-    addForm(isEdit?) {
-        this.modelForm = [];
-        this.showDashboard = false;
-        this.walletNodesForm = null;
-        this.walletNodesForm = this._fb.group({
-            walletNodeId: [
-                '',
-            ],
-            walletNodeName: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            chainId: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            nodeAddress: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-            nodePath: [
-                '',
-            ],
-            nodePort: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ])
-            ],
-        });
+    /*HANDLE ADD WALLET NODE*/
+    handleAddWalletNodes(tabId: number): void {
+        if (this.tabsControl[tabId]['formControl'].valid) {
+            const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
+            const walletNodeName = this.tabsControl[tabId]['formControl'].value.walletNodeName;
+            const chainId = this.tabsControl[tabId]['formControl'].value.chainId[0].id;
+            const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
+            const nodePath = this.tabsControl[tabId]['formControl'].value.nodePath;
+            const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
 
-        if (!isEdit) {
-            // init/reset ModelForm used with ngModel
-            this.modelForm = new WalletNodesModel();
-            this.modelForm.walletNodeId = 0;
-        }
-
-        this.multiForm.push({
-            form: isEdit ? this.walletNodesForm : this._persistService.watchForm('manageMember/walletNodes', this.walletNodesForm),
-            modelForm: this.modelForm,
-            isEdit: isEdit ? true : false
-        });
-
-        if (!isEdit) {
-            this.currentTab = this.multiForm.length - 1;
-        }
-    }
-
-    editForm(node: any) {
-        this.showSameForm = false;
-        // check if form already opened (only saved wallet nodes, new form can be opened several times)
-        if (this.multiForm.length > 0) {
-            const nbForms = this.multiForm.length;
-            for (let i = 0; i < nbForms; i++) {
-                if (this.multiForm[i].form.value.walletNodeId !== '') {
-                    if (this.multiForm[i].form.value.walletNodeId === node.walletNodeId) {
-                        this.showDashboard = false;
-                        this.currentTab = i;
-                        this.showSameForm = true;
-                        return;
-                    }
-                }
-            }
-        }
-
-        this.addForm(true);
-        this.modelForm = new WalletNodesModel();
-        for (const result in node) {
-            switch (result) {
-                case 'walletNodeId':
-                    this.modelForm.walletNodeId = node[result];
-                    break;
-                case 'walletNodeName':
-                    this.modelForm.walletNodeName = node[result];
-                    break;
-                case 'chainId':
-                    const chainId = node[result];
-                    const getNameFromID = this.chainsListOptions.find(obj => obj.id === chainId);
-                    if (getNameFromID && getNameFromID.id) {
-                        this.modelForm.chainId = getNameFromID.text;
-                    } else {
-                        this.showWarning('Something went wrong while trying to retrieve information for the chains.');
-                        this.removeForm(this.multiForm.length - 1);
-                        return;
-                    }
-                    break;
-                case 'nodeAddress':
-                    this.modelForm.nodeAddress = node[result];
-                    break;
-                case 'nodePath':
-                    this.modelForm.nodePath = node[result];
-                    break;
-                case 'nodePort':
-                    this.modelForm.nodePort = node[result];
-                    break;
-            }
-        }
-        this.multiForm[this.multiForm.length - 1].modelForm = this.modelForm;
-        if (this.currentTab === null) {
-            this.currentTab = this.multiForm.length - 1;
-        }
-    }
-
-    save(formValues, formIndex) {
-        if (!!formValues.walletNodeId && formValues.walletNodeId !== '') {
-            // UPDATE
-
-            const asyncTaskPipe = this._adminUsersService.updateWalletNode(
-                {
-                    walletNodeId: formValues.walletNodeId,
-                    walletNodeName: formValues.walletNodeName,
-                    nodeAddress: formValues.nodeAddress,
-                    nodePath: formValues.nodePath,
-                    nodePort: formValues.nodePort,
-                },
-                this.ngRedux);
-
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.showSuccess('Wallet Node has successfully been updated');
-                    this.removeForm(this.currentTab);
-                },
-                (data) => {
-                    console.log('Error: ', data);
-                    // this.modalTitle = 'Error';
-                    // this.modalText = JSON.stringify(data);
-                    // this.showTextModal = true;
-                    this.showError(JSON.stringify(data));
-                    this.markForCheck();
-                })
-            );
-        } else {
-            // INSERT
-
+            // Create a saga pipe
             const asyncTaskPipe = this._adminUsersService.saveWalletNode(
                 {
-                    walletNodeId: formValues.walletNodeId,
-                    walletNodeName: formValues.walletNodeName,
-                    chainId: formValues.chainId[0].id,
-                    nodeAddress: formValues.nodeAddress,
-                    nodePath: formValues.nodePath,
-                    nodePort: formValues.nodePort,
+                    walletNodeId,
+                    walletNodeName,
+                    chainId,
+                    nodeAddress,
+                    nodePath,
+                    nodePort,
                 },
-                this.ngRedux);
+                this.ngRedux
+            );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
                     this.showSuccess('Wallet Node has successfully been saved');
-                    this.removeForm(this.currentTab);
                 },
                 (data) => {
                     console.log('Error: ', data);
-                    // this.modalTitle = 'Error';
-                    // this.modalText = JSON.stringify(data);
-                    // this.showTextModal = true;
                     this.showError(JSON.stringify(data));
                     this.markForCheck();
-                })
-            );
+                }
+            ));
         }
     }
 
-    deleteWalletNode(node: any) {
+    /*HANDLE EDIT WALLET NODE*/
+    handleEditWalletNodes(tabId: number): void {
+        if (this.tabsControl[tabId]['formControl'].valid) {
+            const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
+            const walletNodeName = this.tabsControl[tabId]['formControl'].value.walletNodeName;
+            const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
+            const nodePath = this.tabsControl[tabId]['formControl'].value.nodePath;
+            const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
+
+            // Create a saga pipe
+            const asyncTaskPipe = this._adminUsersService.updateWalletNode(
+                {
+                    walletNodeId,
+                    walletNodeName,
+                    nodeAddress,
+                    nodePath,
+                    nodePort,
+                },
+                this.ngRedux
+            );
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
+                    this.showSuccess('Wallet Node has successfully been updated');
+                },
+                (data) => {
+                    console.log('Error: ', data);
+                    this.showError(JSON.stringify(data));
+                    this.markForCheck();
+                }
+            ));
+        }
+    }
+
+    /*HANDLE DELETE*/
+    handleDelete(walletNode: any): void {
         const asyncTaskPipe = this._adminUsersService.deleteWalletNode(
             {
-                walletNodeId: node.walletNodeId
+                walletNodeId: walletNode.walletNodeId
             },
-            this.ngRedux);
+            this.ngRedux
+        );
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
                 AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                this.showSuccess('Your Wallet Node has been deleted successfully!');
+                this.showSuccess('Wallet Node has been deleted');
             },
             (data) => {
                 console.log('error: ', data);
-            })
-        );
+                this.showError(JSON.stringify(data));
+            }
+        ));
     }
 
-    askToRemoveForm(arrayIndex) {
-        this.nodeToClose = arrayIndex;
-        this.showConfirmModal = true;
-    }
 
-    removeForm(arrayIndex) {
-        if (!this.multiForm[arrayIndex].isEdit) {
-            this.showAddNewTab = true;
+    /*HANDLE EDIT CLICK*/
+    handleEdit(index: number): void {
+        /* Check if the tab is already open */
+        let i;
+        for (i = 0; i < this.tabsControl.length; i++) {
+            if (this.tabsControl[i]['walletNodeId'] === this.walletNodesList[index].walletNodeId) {
+                this.setTabActive(i);
+                return;
+            }
         }
-        this.multiForm.splice(arrayIndex, 1);
-        this.showDashboard = true;
-        this.currentTab = null;
+
+        /* Push the edit tab into the array */
+        const walletNode = this.walletNodesList[index];
+
+        this.tabsControl.push({
+            title: '<i class="fa fa-code-fork"></i> ' + walletNode.walletNodeName,
+            walletNodeId: walletNode.walletNodeId,
+            formControl: new FormGroup(
+                {
+                    walletNodeId: new FormControl(walletNode.walletNodeId),
+                    walletNodeName: new FormControl(walletNode.walletNodeName),
+                    nodeAddress: new FormControl(walletNode.nodeAddress),
+                    nodePath: new FormControl(walletNode.nodePath),
+                    nodePort: new FormControl(walletNode.nodePort),
+                    chainId: new FormControl(walletNode.chainId),
+                }
+            ),
+            active: false
+        });
+
+        // Activate the new tab
+        this.setTabActive(this.tabsControl.length - 1);
+    }
+
+    /*CLOSE TAB*/
+    closeTab(index: number): void {
+        if (!index && index !== 0) {
+            return;
+        }
+
+        this.tabsControl = [
+            ...this.tabsControl.slice(0, index),
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+        ];
+
+        // Reset tabs
+        this.setTabActive(0);
+
+        return;
+    }
+
+    /*SET ACTIVE TAB*/
+    setTabActive(index: number): void {
+        const tabControlImu = fromJS(this.tabsControl);
+        const newTabControlImu = tabControlImu.map((item, thisIndex) => {
+            return item.set('active', thisIndex === index);
+        });
+
+        this.tabsControl = newTabControlImu.toJS();
     }
 
     /* SERVICES */
@@ -383,36 +322,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     }
 
     // Modals
-    confirmModal(response): void {
-        this.showConfirmModal = false;
-        if (response === 1) {
-            if (this.nodeToClose !== null) {
-                this.removeForm(this.nodeToClose);
-                this.nodeToClose = null;
-            }
-            if (this.nodeToDelete !== null) {
-                this.deleteWalletNode(this.nodeToDelete);
-                this.nodeToDelete = null;
-            }
-        }
-    }
-
-    showSuccessResponse() {
-        this.showWaitingModal = true;
-        this._alertsService.create('waiting', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-warning" width="500px">
-                            <h3><i class="fa fa-exclamation-triangle text-danger" aria-hidden="true"></i>&nbsp;Do not close your browser window</h3>
-                            <p>We are saving your progress. This may take a few moments.</p>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
-    }
-
     showError(message) {
         /* Show the error. */
         this._alertsService.create('error', `
@@ -455,5 +364,4 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     markForCheck() {
         this._changeDetectorRef.markForCheck();
     }
-
 }
