@@ -80,18 +80,92 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(search);
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
-       // driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-
+        driver.findElement(By.id(dropdownID)).sendKeys(search);
+        try {
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
     }
     public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
 
+        scrollElementIntoViewByXpath("//*[@id=\'" + dropdownID + "\']/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
+
         driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
-
+        try {
             driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
 
+    public static void searchAndSelectLegalFormDropdown(String dropdownID, String search) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+
+        scrollElementIntoViewByXpath("//*[@id=\'" + dropdownID + "\']/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
+
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")).sendKeys(search);
+        try {
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
+
+    public static void searchAndSelectFundDropdown(String dropdownID, String search) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+
+        scrollElementIntoViewByXpath("//*[@id=\'" + dropdownID + "\']/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
+
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/div/input")).sendKeys(search);
+        try {
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
+
+    public static void searchAndSelectFundsDropdown(String dropdownID, String search) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+
+        scrollElementIntoViewByXpath("//*[@id=\'" + dropdownID + "\']/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
+
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/div/input")).sendKeys(search);
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        //driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+    }
+
+    public static void searchAndSelectTopFundXpath(String dropdownID, String search) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div"))));
+
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")).sendKeys(search);
+        try {
+            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
     }
 
     public static void selectFund() {
