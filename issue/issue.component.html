@@ -68,7 +68,7 @@
                 <clr-dg-row *clrDgItems="let holder of holdings">
                     <clr-dg-cell>{{holder.walletName}}</clr-dg-cell>
                     <clr-dg-cell>{{holder.addr}}</clr-dg-cell>
-                    <clr-dg-cell class="right">{{holder.percentage | number }}</clr-dg-cell>
+                    <clr-dg-cell class="right">{{holder.percentage | percentage}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{holder.balance | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{holder.encumbered | moneyValue}}</clr-dg-cell>
                     <clr-dg-cell class="right">{{holder.free | moneyValue}}</clr-dg-cell>
