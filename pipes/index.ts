@@ -144,6 +144,19 @@ export class DateXPipe implements PipeTransform {
     }
 }
 
+@Pipe({name: 'percentage'})
+export class PercentagePipe implements PipeTransform {
+    transform(value: any): any {
+        if (value !== null) {
+            if (typeof value !== 'number') {
+                value = Number(value);
+            }
+            return value.toFixed(2) + '%';
+        }
+        return '';
+    }
+}
+
 @NgModule({
     declarations: [
         TruncatePipe,
@@ -151,7 +164,8 @@ export class DateXPipe implements PipeTransform {
         MoneyValuePipe,
         CapitalizePipe,
         PaddingPipe,
-        DateXPipe
+        DateXPipe,
+        PercentagePipe
     ],
     exports: [
         TruncatePipe,
@@ -159,7 +173,8 @@ export class DateXPipe implements PipeTransform {
         MoneyValuePipe,
         CapitalizePipe,
         PaddingPipe,
-        DateXPipe
+        DateXPipe,
+        PercentagePipe
     ]
 })
 
