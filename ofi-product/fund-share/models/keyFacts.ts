@@ -103,6 +103,19 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         listItems: [],
         mltag: 'txt_fundshare_feeder'
     }
+    portfolioCurrencyHedge: FormItem = {
+        type: FormItemType.list,
+        label: 'Share Currency Hedge',
+        required: true,
+        listItems: [
+            { id: E.CurrencyHedgeEnum.NoHedge, text: 'No Hedge' },
+            { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
+            { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
+            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' }
+        ],
+        style: [FormItemStyle.BreakOnBefore],
+        mltag: 'txt_fundshare_portfoliohedge'
+    }
     valuationFrequency: FormItem = {
         type: FormItemType.list,
         label: 'Valuation Frequency',
