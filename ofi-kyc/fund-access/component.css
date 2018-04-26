@@ -11,6 +11,10 @@
     top: inherit !important;
 }
 
+.switch-container {
+    position: relative;
+}
+
 label.switch {
     position: absolute !important;
     margin: 4px !important;
