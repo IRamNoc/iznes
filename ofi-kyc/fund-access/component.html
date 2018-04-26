@@ -15,9 +15,58 @@
                 <div class="panel-body">
 
                     <div>Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
-
-                    <app-text-input-list [title]="'Professional Investor Details'" [content]="investor"></app-text-input-list>
-
+                    <h2>Professional Investor Details</h2>
+                    <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="companyName">Company name:</label>
+                                <div>
+                                    <input type="text" id="companyName" class="form-control" formControlName="companyName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="clientReference">Client reference:</label>
+                                <div>
+                                    <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="firstName">First name:</label>
+                                <div>
+                                    <input type="text" id="firstName" class="form-control" formControlName="firstName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="lastName">Last name:</label>
+                                <div>
+                                    <input type="text" id="lastName" class="form-control" formControlName="lastName">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="email">Email address:</label>
+                                <div>
+                                    <input type="text" id="email" class="form-control" formControlName="email">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phoneNumber">Phone number:</label>
+                                <div>
+                                    <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="approvalDateRequest">Date of approval request:</label>
+                                <div>
+                                    <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-12 submit-container">
+                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">Save</button>
+                            </div>
+                        </div>
+                    </form>
                     <div class="hr-line-dashed"></div>
 
                     <div>
@@ -42,23 +91,23 @@
 
                                         </clr-dg-cell>
                                         <clr-dg-cell>
-                                            <label class="switch">
-                                                <input type="checkbox"
-                                                       id="{{row['isin'] + '-access'}}"
-                                                       [checked]="access[row['id']]['access']"
-                                                       (click)="onClickAccess(access[row['id']])"
-                                                >
-                                                <span class="slider round"></span>
-                                            </label>
+                                            <div class="switch-container">
+                                                <label class="switch">
+                                                    <input type="checkbox"
+                                                           id="{{row['isin'] + '-access'}}"
+                                                           [checked]="access[row['id']]['access']"
+                                                           (click)="onClickAccess(access[row['id']])"
+                                                    >
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
                                         </clr-dg-cell>
                                     </clr-dg-row>
                                 </clr-datagrid>
                             </div>
-                            <div class="row form-group">
-                                <div class="col-sm-12" align="center">
-                                    <button class="btn btn-info" routerLink="/kyc-am-documents" mltag="txt_back">Back</button>
-                                    <button class="btn btn-primary" (click)="displayModal();" mltag="txt_validate">Validate</button>
-                                </div>
+                            <div class="row">
+                                <button class="btn btn-info" routerLink="/kyc-am-documents" mltag="txt_back">Back</button>
+                                <button class="btn btn-primary" (click)="displayModal();" mltag="txt_validate">Validate</button>
                             </div>
                         </form>
                     </div>

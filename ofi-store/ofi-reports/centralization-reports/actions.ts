@@ -3,9 +3,11 @@ import {kAction} from '@setl/utils/common';
 import {Action, ActionCreator} from 'redux';
 
 /**
- * Set the order list.
+ * Set the centralization list.
  */
 export const OFI_SET_CENTRALIZATION_REPORTS_LIST = `${name}/OFI_SET_CENTRALIZATION_REPORTS_LIST`;
+export const OFI_SET_BASE_CENTRALIZATION_HISTORY = `${name}/OFI_SET_BASE_CENTRALIZATION_HISTORY`;
+export const OFI_SET_CENTRALIZATION_HISTORY = `${name}/OFI_SET_CENTRALIZATION_HISTORY`;
 
 /**
  * Set (Set to true) request Centralization Reports list state
@@ -20,4 +22,3 @@ export const ofiSetRequestedCentralizationReports = kAction(OFI_SET_REQUESTED_CE
  */
 export const OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS = `${name}/OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS`;
 export const ofiClearRequestedCentralizationReports = kAction(OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS);
-

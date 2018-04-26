@@ -3,6 +3,8 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 
+import {MemberSocketService} from '@setl/websocket-service';
+
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
@@ -12,19 +14,14 @@ import {fromJS} from 'immutable';
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
-/* Clarity */
-import {ClrDatagridStateInterface} from '@clr/angular';
-
 /* Utils. */
 import {ConfirmationService, immutableHelper, SagaHelper, NumberConverterService, commonHelper} from '@setl/utils';
 
-/* Selectors */
-
+/* Ofi service */
+import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 
 /* Core redux */
-
-
-/* Ofi service */
+import {ofiManageOrderActions, ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */
 interface SelectedItem {
@@ -34,7 +31,7 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
-    selector: 'am-centralization-history',
+    selector: 'app-am-centralization-history',
     templateUrl: './component.html',
     styleUrls: ['./component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,28 +43,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
     searchForm: FormGroup;
     filterForm: FormGroup;
+    filterParams = {
+        fundShareID: null,
+        dateFrom: null,
+        dateTo: null,
+        dateRange: null,
+    };
     hideCalendars = true;
     isValidDates = true;
-
-    /* Datagrid server driven */
-    total: number;
-    itemPerPage = 10;
-    dataGridParams = {
-        shareName: null,
-        isin: null,
-        status: null,
-        orderType: null,
-        pageSize: this.itemPerPage,
-        rowOffSet: 0,
-        sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
-        sortOrder: 'desc', // asc / desc
-        dateSearchField: null,
-        fromDate: null,
-        toDate: null,
-    };
-    lastPage: number;
-    // loading = true;
-    loading = false; // debug
 
     // Locale
     language = 'fr';
@@ -88,39 +71,44 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     shareID = 0;
     isFundUmbrella = true;
 
+    centralizationReportsList: Array<any> = [];
+    baseCentralizationHistory: any;
+    centralizationHistory: Array<any> = [];
+
     /* expandable div */
 
     /* Ui Lists. */
     periodList: Array<SelectedItem> = [
+        {id: 'custom', text: 'Choose specific dates'},
+        // {id: 'inception', text: 'Since inception'},
         {id: 'lastcutoff', text: 'Since last cut-off'},
-        {id: 'currentweek', text: 'Current week'},
-        {id: 'currentmonth', text: 'Current month'},
-        {id: 'currentquarter', text: 'Current quarter'},
-        {id: 'currentsemester', text: 'Current semester'},
-        {id: 'currentyear', text: 'Current year'},
-        {id: 'lastweek', text: 'Last week'},
-        {id: 'lastmonth', text: 'Last month'},
-        {id: 'lastquarter', text: 'Last quarter'},
-        {id: 'lastsemester', text: 'Last semester'},
-        {id: 'lastyear', text: 'Last year'},
-        {id: 'custom', text: 'Custom date'},
+        // {id: 'currentweek', text: 'Current week'},
+        // {id: 'currentmonth', text: 'Current month'},
+        // {id: 'currentquarter', text: 'Current quarter'},
+        // {id: 'currentsemester', text: 'Current semester'},
+        // {id: 'currentyear', text: 'Current year'},
+        {id: 'week', text: 'Last week'},
+        {id: 'month', text: 'Last month'},
+        {id: 'quarter', text: 'Last quarter'},
+        {id: 'semester', text: 'Last semester'},
+        {id: 'year', text: 'Last year'},
     ];
 
     currencyList = [
-        {id : 0, code: 'EUR', label: 'Euro'},
-        {id : 1, code: 'USD', label: 'US Dollar'},
-        {id : 2, code: 'GBP', label: 'Pound Sterling'},
-        {id : 3, code: 'CHF', label: 'Swiss Franc'},
-        {id : 4, code: 'JPY', label: 'Yen'},
-        {id : 5, code: 'AUD', label: 'Australian Dollar'},
-        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
-        {id : 7, code: 'SEK', label: 'Swedish Krona'},
-        {id : 8, code: 'ZAR', label: 'Rand'},
-        {id : 9, code: 'RUB', label: 'Russian Ruble'},
-        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
-        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
-        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
-        {id : 13, code: 'PLN', label: 'Zloty'},
+        {id : 0, text: 'EUR'},
+        {id : 1, text: 'USD'},
+        {id : 2, text: 'GBP'},
+        {id : 3, text: 'CHF'},
+        {id : 4, text: 'JPY'},
+        {id : 5, text: 'AUD'},
+        {id : 6, text: 'NOK'},
+        {id : 7, text: 'SEK'},
+        {id : 8, text: 'ZAR'},
+        {id : 9, text: 'RUB'},
+        {id : 10, text: 'SGD'},
+        {id : 11, text: 'AED'},
+        {id : 12, text: 'CNY'},
+        {id : 13, text: 'PLN'},
     ];
 
     /* Private Properties. */
@@ -133,6 +121,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'baseCentralizationHistory']) OfiBaseCentralizationHistoryObj;
+    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationHistory']) OfiCentralizationHistoryObj;
 
     constructor(
         private ngRedux: NgRedux<any>,
@@ -140,11 +132,15 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         private alertsService: AlertsService,
         private route: ActivatedRoute,
         private router: Router,
+        private ofiReportsService: OfiReportsService,
+        private memberSocketService: MemberSocketService,
         private _numberConverterService: NumberConverterService,
         private _fb: FormBuilder,
         private _confirmationService: ConfirmationService
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptions.push(this.OfiBaseCentralizationHistoryObj.subscribe((requested) => this.getBaseCentralizationHistoryFromRedux(requested)));
+        this.subscriptions.push(this.OfiCentralizationHistoryObj.subscribe((requested) => this.getCentralizationHistoryFromRedux(requested)));
 
         /* Subscribe for this user's details. */
         this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
@@ -159,65 +155,37 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.route.params.subscribe(params => {
             this.shareID = params['tabid'];
             if (typeof this.shareID !== 'undefined' && this.shareID > 0) {
-                // const share = this.dataList.find(elmt => {
-                //     if (elmt.shareID.toString() === this.shareID.toString()) {
-                //         return elmt;
-                //     }
-                // });
 
-                // debug temp
-                this.dataList = [1, 2, 3, 4, 5];
-                const share = {
-                    id: this.shareID,
-                    label: 'blablabla',
-                };
-                if (share && typeof share !== 'undefined' && share !== undefined && share !== null) {
-                    // this.fundShareID = order.fundShareID;
-                    // this.tabsControl[0].active = false;
-                    const tabTitle = 'History';
-                    // if (order.orderType === 3) tabTitle += 'Subscription: ';
-                    // if (order.orderType === 4) tabTitle += 'Redemption: ';
-                    // tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+                // launch only if got shareID from URL
+                this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
+                this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
+                this.ofiReportsService.requestBaseCentralizationHistory(this.shareID);
 
-                    const tabAlreadyHere = this.tabsControl.find(o => o.shareId === this.shareID);
-                    if (tabAlreadyHere === undefined) {
-                        this.tabsControl = [
-                            {
-                                'title': {
-                                    'icon': 'fa-calendar',
-                                    'text': tabTitle,
-                                },
-                                'shareId': this.shareID,
-                                'active': true,
-                                shareData: share,
-                            }
-                        ];
-                    }
-                    this.setTabActive(this.shareID);
-
-                    // this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
-                    // const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
-                    // requestData.fundShareID = this.fundShareID;
-                    // OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
+                const tabTitle = 'History';
+                const tabAlreadyHere = this.tabsControl.find(o => o.shareId === this.shareID);
+                if (tabAlreadyHere === undefined) {
+                    this.tabsControl = [
+                        {
+                            'title': {
+                                'icon': 'fa-calendar',
+                                'text': tabTitle,
+                            },
+                            'shareId': this.shareID,
+                            'active': true,
+                        }
+                    ];
                 }
+                this.setTabActive(this.shareID);
             } else {
-                this.router.navigateByUrl('/reports/centralization');
-                // this.tabsControl[0].active = true;
                 this.searchForm.get('search').patchValue(null, {emitEvent: false});
-                // this.searchForm.get('search').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                this.router.navigateByUrl('/reports/centralization');
             }
         }));
-
-        /* for example to remove when get real datas */
-        this.dataListForSearch = [
-            {id: 1, text: 'Groupama Avenir Euro - MC (FR123456789)'},
-            {id: 2, text: 'Ameri-Gan - IC (FR0012121212)'},
-            {id: 3, text: 'G FUND ALPHA FIXED INCOME II - IC (FR015684640654654)'},
-        ];
     }
 
     public ngOnInit() {
         this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
         this.changeDetectorRef.markForCheck();
     }
 
@@ -237,6 +205,94 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                     break;
             }
         }
+    }
+
+    getCentralizationReportsRequested(requested): void {
+        if (!requested) {
+            OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
+        }
+    }
+
+    getCentralizationReportsListFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.centralizationReportsList = listImu.reduce((result, item) => {
+
+            result.push({
+                id: item.get('fundShareID'),
+                text: item.get('fundShareName'),
+                // text: item.get('fundShareName') + ' - ' + item.get('isin'),
+            });
+
+            return result;
+        }, []);
+
+        if (this.centralizationReportsList.length > 0) {
+            const obj = this.centralizationReportsList.find(o => o.id.toString() === this.shareID.toString());
+            if (obj !== undefined) {
+                this.searchForm.get('search').patchValue([{id: obj.id, text: obj.text}], {emitEvent: false});
+            }
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getBaseCentralizationHistoryFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.baseCentralizationHistory = listImu.reduce((result, item) => {
+
+            result = {
+                fundName: item.get('fundName'),
+                fundShareName: item.get('fundShareName'),
+                isin: item.get('isin'),
+                shareClassCurrency: item.get('shareClassCurrency'),
+                umbrellaFundName: (item.get('umbrellaFundName') !== '') ? item.get('umbrellaFundName') : 'None',
+            };
+
+            return result;
+        }, []);
+
+
+        if (this.baseCentralizationHistory.length > 0) {
+            // this.baseCentralizationHistory = JSON.parse(JSON.stringify(this.baseCentralizationHistory[0]));
+            this.ofiReportsService.requestCentralizationHistory({
+                fundShareID: this.shareID,
+                dateFrom: '',
+                dateTo: '',
+                dateRange: '',
+            });
+        }
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getCentralizationHistoryFromRedux(list) {
+        const listImu = fromJS(list);
+
+        this.centralizationHistory = listImu.reduce((result, item) => {
+
+            result.push({
+                walletID: item.get('walletID'),
+                latestNav: item.get('latestNav'),
+                navDate: item.get('navDate'),
+                latestNavBackup: item.get('latestNavBackup'),
+                navDateBackup: item.get('navDateBackup'),
+                settlementDate: item.get('settlementDate'),
+                subQuantity: item.get('subQuantity'),
+                subAmount: item.get('subAmount'),
+                redQuantity: item.get('redQuantity'),
+                redAmount: item.get('redAmount'),
+                cutoffDate: item.get('cutoffDate'),
+                aum: item.get('aum'),
+                netPosition: item.get('netPosition'),
+                netPositionPercentage: item.get('netPositionPercentage'),
+            });
+
+            return result;
+        }, []);
+
+        this.changeDetectorRef.markForCheck();
     }
 
     createsearchForm() {
@@ -259,7 +315,6 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 '',
             ],
         });
-        this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
     }
 
     public setTabActive(id) {
@@ -292,11 +347,19 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         return new Date(year, month, 0).getDate();
     }
 
+    private getOnlyDate(dateString): string {
+        return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
+    }
+
+    private getOnlyTime(dateString): string {
+        return this.formatDate('hh:mm:ss', new Date(dateString));
+    }
+
     reformatDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
-    private formatDate(formatString: string, dateObj: Date): string {
+    formatDate(formatString: string, dateObj: Date): string {
         /* Return if we're missing a param. */
         if (!formatString || !dateObj) return '';
 
@@ -310,6 +373,15 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
             .replace('mm', this.numPad(dateObj.getMinutes()))
             .replace('ss', this.numPad(dateObj.getSeconds()))
+    }
+
+    showCurrency(currency) {
+        const obj = this.currencyList.find(o => o.id === currency);
+        if (obj !== undefined) {
+            return obj.text;
+        } else {
+            return currency;
+        }
     }
 
     requestFilters(form) {
@@ -327,47 +399,47 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             switch (this.filterForm.get('period').value[0].id) {
                 case 'lastcutoff':
                     break;
-                case 'currentweek':
-                    this.dateFrom = this.reformatDate(this.getMonday(today));
-                    this.dateTo = this.reformatDate(today);
-                    break;
-                case 'currentmonth':
-                    m = today.getMonth() + 1;
-                    y = today.getFullYear();
-                    nbDaysInMonth = this.daysInMonth(m, y);
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
-                    // this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
-                    this.dateTo = this.reformatDate(today);
-                    break;
-                case 'currentquarter':
-                    y = today.getFullYear();
-                    currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentQuarter * 3) + 1) + '-' + '01'));
-                    this.dateTo = this.reformatDate(today);
-                    break;
-                case 'currentsemester':
-                    y = today.getFullYear();
-                    currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentSemester * 6) + 1) + '-' + '01'));
-                    this.dateTo = this.reformatDate(today);
-                    break;
-                case 'currentyear':
-                    y = today.getFullYear();
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
-                    this.dateTo = this.reformatDate(today);
-                    break;
-                case 'lastweek':
+                // case 'currentweek':
+                //     this.dateFrom = this.reformatDate(this.getMonday(today));
+                //     this.dateTo = this.reformatDate(today);
+                //     break;
+                // case 'currentmonth':
+                //     m = today.getMonth() + 1;
+                //     y = today.getFullYear();
+                //     nbDaysInMonth = this.daysInMonth(m, y);
+                //     this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
+                //     // this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
+                //     this.dateTo = this.reformatDate(today);
+                //     break;
+                // case 'currentquarter':
+                //     y = today.getFullYear();
+                //     currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
+                //     this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentQuarter * 3) + 1) + '-' + '01'));
+                //     this.dateTo = this.reformatDate(today);
+                //     break;
+                // case 'currentsemester':
+                //     y = today.getFullYear();
+                //     currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
+                //     this.dateFrom = this.reformatDate(new Date(y + '-' + ((currentSemester * 6) + 1) + '-' + '01'));
+                //     this.dateTo = this.reformatDate(today);
+                //     break;
+                // case 'currentyear':
+                //     y = today.getFullYear();
+                //     this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
+                //     this.dateTo = this.reformatDate(today);
+                //     break;
+                case 'week':
                     this.dateFrom = this.reformatDate(this.addDays(this.getMonday(today), -7));
                     this.dateTo = this.reformatDate(this.addDays(this.dateFrom, 6));
                     break;
-                case 'lastmonth':
+                case 'month':
                     m = today.getMonth();
                     y = today.getFullYear();
                     nbDaysInMonth = this.daysInMonth(m, y);
                     this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
                     this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
                     break;
-                case 'lastquarter':
+                case 'quarter':
                     y = today.getFullYear();
                     currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
                     if (currentQuarter > 0) {
@@ -382,7 +454,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                         this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
                     }
                     break;
-                case 'lastsemester':
+                case 'semester':
                     y = today.getFullYear();
                     currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
                     if (currentSemester === 1) {
@@ -422,6 +494,66 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             this.dateTo = '';
             this.hideCalendars = true;
         }
+
+
+        // emitEvent = true to not propage to valueChanges
+        this.filterForm.get('period').updateValueAndValidity({emitEvent: false});
+        this.filterForm.get('dateFrom').updateValueAndValidity({emitEvent: false});
+        this.filterForm.get('dateTo').updateValueAndValidity({emitEvent: false});
+
+        const dateRange = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
+
+        const tmpFilterParams = {
+            fundShareID: this.filterParams.fundShareID,
+            dateFrom: this.filterParams.dateFrom,
+            dateTo: this.filterParams.dateTo,
+            dateRange: this.filterParams.dateRange,
+        };
+
+        this.filterParams = {
+            fundShareID: this.shareID,
+            dateFrom: (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id && this.filterForm.get('period').value[0].id === 'custom') ? this.dateFrom : '',
+            dateTo: (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id && this.filterForm.get('period').value[0].id === 'custom') ? this.dateTo : '',
+            dateRange: dateRange,
+        };
+
+        if (JSON.stringify(tmpFilterParams) !== JSON.stringify(this.filterParams)) {
+            this.ofiReportsService.requestCentralizationHistory(this.filterParams);
+        }
+    }
+
+    exportAllHistory(): void {
+        const methodName = 'getSingleShareInfoCsv';
+        const period = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
+
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&fundShareID=' + this.shareID + '&dateFrom=' + this.dateFrom + '&dateTo=' + this.dateTo + '&dateRange=' + period;
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
+
+    exportHistory(navDate): void {
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + this.shareID + '&dateFrom=' + navDate + '&dateTo=' + navDate + '&dateRange=';
+        const url = this.generateExportURL(paramUrl, false);
+        window.open(url, '_blank');
+    }
+
+    generateExportURL(url: string, isProd: boolean = true): string {
+        return isProd ? `https://${window.location.hostname}/mn/${url}` :
+            `http://${window.location.hostname}:9788/${url}`;
+    }
+
+    viewOrder(navDate) {
+        const orderFilters = { filters: {
+            isin: this.baseCentralizationHistory.isin,
+            shareName: this.baseCentralizationHistory.fundShareName,
+            status: '',
+            orderType: '',
+            dateType: 'navDate',
+            fromDate: navDate,
+            toDate: navDate,
+        }};
+        this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+        this.router.navigateByUrl('manage-orders/list');
     }
 
     setInitialTabs() {
@@ -452,51 +584,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
             this.buildLink(this.searchForm.get('search').value[0].id);
         } else {
-            this.buildLink('new');
+            this.buildLink('list');
         }
-
-        // const tmpDataGridParams = {
-        //     shareName: this.dataGridParams.shareName,
-        //     isin: this.dataGridParams.isin,
-        //     status: this.dataGridParams.status,
-        //     orderType: this.dataGridParams.orderType,
-        //     pageSize: this.dataGridParams.pageSize,
-        //     rowOffSet: this.dataGridParams.rowOffSet,
-        //     sortByField: this.dataGridParams.sortByField,
-        //     sortOrder: this.dataGridParams.sortOrder,
-        //     dateSearchField: this.dataGridParams.dateSearchField,
-        //     fromDate: this.dataGridParams.fromDate,
-        //     toDate: this.dataGridParams.toDate,
-        // };
-        //
-        // this.dataGridParams.shareName = (this.tabsControl[0].searchForm.get('sharename').value !== '' && this.tabsControl[0].searchForm.get('sharename').value.length > 2) ? this.tabsControl[0].searchForm.get('sharename').value : null;
-        // this.dataGridParams.isin = (this.tabsControl[0].searchForm.get('isin').value !== '' && this.tabsControl[0].searchForm.get('isin').value.length > 2) ? this.tabsControl[0].searchForm.get('isin').value : null;
-        // this.dataGridParams.status = (this.tabsControl[0].searchForm.get('status').value && this.tabsControl[0].searchForm.get('status').value[0] && this.tabsControl[0].searchForm.get('status').value[0].id) ? this.tabsControl[0].searchForm.get('status').value[0].id : null;
-        // this.dataGridParams.orderType = (this.tabsControl[0].searchForm.get('type').value && this.tabsControl[0].searchForm.get('type').value[0] && this.tabsControl[0].searchForm.get('type').value[0].id) ? this.tabsControl[0].searchForm.get('type').value[0].id : null;
-        // // date filters
-        // if ((this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id)) {
-        //     const tmpDateSearchField = (this.tabsControl[0].searchForm.get('dateType').value && this.tabsControl[0].searchForm.get('dateType').value[0] && this.tabsControl[0].searchForm.get('dateType').value[0].id) ? this.tabsControl[0].searchForm.get('dateType').value[0].id : null;
-        //     const tmpFromDate = (this.tabsControl[0].searchForm.get('fromDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('fromDate').value))) ? this.tabsControl[0].searchForm.get('fromDate').value : null;
-        //     let tmpToDate = (this.tabsControl[0].searchForm.get('toDate').value !== '' && !isNaN(Date.parse(this.tabsControl[0].searchForm.get('toDate').value))) ? this.tabsControl[0].searchForm.get('toDate').value : null;
-        //     if (tmpFromDate !== null && tmpToDate !== null) {
-        //         let toDate = new Date(this.tabsControl[0].searchForm.get('toDate').value);
-        //         toDate.setDate(toDate.getDate() + 1);
-        //         tmpToDate = toDate.toISOString().substring(0, 10);
-        //     }
-        //     if (tmpDateSearchField !== null && tmpFromDate !== null && tmpToDate !== null) {
-        //         this.dataGridParams.dateSearchField = tmpDateSearchField;
-        //         this.dataGridParams.fromDate = tmpFromDate;
-        //         this.dataGridParams.toDate = tmpToDate;
-        //     }
-        // } else {
-        //     this.dataGridParams.dateSearchField = null;
-        //     this.dataGridParams.fromDate = null;
-        //     this.dataGridParams.toDate = null;
-        // }
-        //
-        // if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-        //     this.getAmOrdersList();
-        // }
     }
 
     buildLink(id) {
@@ -504,97 +593,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.router.navigateByUrl(dest);
     }
 
-    refresh(state: ClrDatagridStateInterface) {
-        let filters: {[prop: string]: any[]} = {};
-        if (state.filters) {
-            for (const filter of state.filters) {
-                const {property, value} = <{property: string, value: string}>filter;
-                filters[property] = [value];
-            }
-        }
-
-        console.log('state page', state.page);
-        console.log('page asked', state.page.from);
-        console.log('sort', state.sort);
-        console.log('raw filters', state.filters);
-        console.log('map filters', filters);
-
-        // const tmpDataGridParams = {
-        //     shareName: this.dataGridParams.shareName,
-        //     status: this.dataGridParams.status,
-        //     orderType: this.dataGridParams.orderType,
-        //     pageSize: this.dataGridParams.pageSize,
-        //     rowOffSet: this.dataGridParams.rowOffSet,
-        //     sortByField: this.dataGridParams.sortByField,
-        //     sortOrder: this.dataGridParams.sortOrder,
-        //     dateSearchField: this.dataGridParams.dateSearchField,
-        //     fromDate: this.dataGridParams.fromDate,
-        //     toDate: this.dataGridParams.toDate,
-        // };
-        //
-        // if (state.sort) {
-        //     switch (state.sort.by) {
-        //         // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
-        //         case 'orderRef':
-        //             this.dataGridParams.sortByField = 'orderId';
-        //             break;
-        //         case 'investor':
-        //             this.dataGridParams.sortByField = 'investorWalletID';
-        //             break;
-        //         case 'orderType':
-        //             this.dataGridParams.sortByField = 'orderType';
-        //             break;
-        //         case 'isin':
-        //             this.dataGridParams.sortByField = 'isin';
-        //             break;
-        //         case 'shareName':
-        //             this.dataGridParams.sortByField = 'shareName';
-        //             break;
-        //         case 'shareCurrency':
-        //             this.dataGridParams.sortByField = 'currency';
-        //             break;
-        //         case 'quantity':
-        //             this.dataGridParams.sortByField = 'quantity';
-        //             break;
-        //         case 'grossAmount':
-        //             this.dataGridParams.sortByField = 'amountWithCost';
-        //             break;
-        //         case 'orderDate':
-        //             this.dataGridParams.sortByField = 'orderDate';
-        //             break;
-        //         case 'cutOffDate':
-        //             this.dataGridParams.sortByField = 'cutoffDate';
-        //             break;
-        //         case 'settlementDate':
-        //             this.dataGridParams.sortByField = 'settlementDate';
-        //             break;
-        //         case 'orderStatus':
-        //             this.dataGridParams.sortByField = 'orderStatus';
-        //             break;
-        //     }
-        //     this.dataGridParams.sortOrder = (!state.sort.reverse) ? 'asc' : 'desc';
-        // }
-
-        // this.dataGridParams.pageSize =  this.itemPerPage;
-        // this.dataGridParams.rowOffSet = (state.page.from / this.itemPerPage);
-        //
-        // // send request only if changes
-        // if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-        //     this.loading = true;
-        //     this.getAmOrdersList();
-        // }
-
-        this.changeDetectorRef.markForCheck();
-    }
-
-    /**
-     * Num Pad
-     *
-     * @param num
-     * @returns {string}
-     */
-    private numPad(num) {
-        return num < 10 ? "0" + num : num;
+    numPad(num) {
+        return num < 10 ? '0' + num : num;
     }
 
     ngOnDestroy(): void {

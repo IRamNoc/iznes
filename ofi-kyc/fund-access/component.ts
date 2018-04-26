@@ -11,6 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
 import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -22,8 +23,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
 
     /* Public properties. */
+    currentInvestor: any = {};
     investorData = {};
-    investor = {};
     tableData = [];
     access = {};
     changes = {
@@ -34,6 +35,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     kycId: number;
     investorWalletId: number;
     investorWalletIdFundAccess: Array<number>;
+
+    investorForm: FormGroup;
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
@@ -53,8 +56,19 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 private _route: ActivatedRoute,
                 private _confirmationService: ConfirmationService,
                 private _ofiFundShareService: OfiFundShareService,
-                @Inject(APP_CONFIG) appConfig: AppConfig,) {
+                private _fb: FormBuilder,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
+        this.investorForm = this._fb.group({
+            companyName: {value: '', disabled: true},
+            clientReference: '',
+            firstName: {value: '', disabled: true},
+            lastName: {value: '', disabled: true},
+            email: {value: '', disabled: true},
+            phoneNumber: {value: '', disabled: true},
+            approvalDateRequest: {value: '', disabled: true},
+        });
     }
 
     ngOnInit() {
@@ -141,6 +155,20 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         });
     }
 
+    saveClientReference() {
+        const payload = {
+            clientReference: this.investorForm.controls['clientReference'].value,
+            invitedID: this.currentInvestor.invitedID,
+        };
+        this._ofiKycService.updateInvestor(payload)
+            .then(() => {
+                this.toasterService.pop('success', 'Client reference updated');
+            })
+            .catch(() => {
+                this.toasterService.pop('success', 'Failed to update client reference');
+            });
+    }
+
     saveAccess() {
         if (this.changes['add'] || this.changes['remove']) {
             let shareArray = {
@@ -222,6 +250,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     getAmKycList(amKycList: any) {
         if (amKycList.length > 0 && amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
             const kyc = amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
+            this.currentInvestor = kyc;
             const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber) ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
             const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD hh:mm:ss');
             const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
@@ -237,15 +266,15 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 'approvalDate': approvalDateRequest
             };
 
-            this.investor = {
-                'companyName': {label: 'Company name:', value: kyc.investorCompanyName},
-                'clientReference': {label: 'Client reference:', value: kyc.clientReference},
-                'firstName': {label: 'First name:', value: kyc.investorFirstName},
-                'lastName': {label: 'Last name:', value: kyc.investorLastName},
-                'email': {label: 'Email address:', value: kyc.investorEmail},
-                'phoneNumber': {label: 'Phone number:', value: phoneNumber},
-                'approvalDateRequest': {label: 'Date of approval request:', value: approvalDateRequest}
-            };
+            this.investorForm.setValue({
+                companyName: kyc.investorCompanyName,
+                clientReference: kyc.clientReference,
+                firstName: kyc.investorFirstName,
+                lastName: kyc.investorLastName,
+                email: kyc.investorEmail,
+                phoneNumber: phoneNumber,
+                approvalDateRequest: approvalDateRequest,
+            });
 
             this.amCompany = kyc.companyName;
             this.investorWalletId = kyc.investorWalletID;
