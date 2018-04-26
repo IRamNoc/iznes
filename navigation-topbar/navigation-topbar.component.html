@@ -17,28 +17,25 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">                    
+                <div class="last-login">
                     <span mltag="txt_last">Last</span>
-                    <span>: &nbsp;</span>                
+                    <span>: &nbsp;</span>
                     <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
-                </div>                                
+                </div>
             </div>
 
             <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem mltag="txt_myaccount">My Account</a>
+                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem
+                   mltag="txt_myaccount">My Account</a>
             </div>
         </clr-dropdown>
 
         <div class="wallet">
             <div>
-                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" placeholder="No wallet selected" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet" mltag="txt_nowalletselected">
-
-
-
-
-
-
-
+                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)"
+                           (removed)="removed($event)" placeholder="No wallet selected" [formControl]="selectedWalletId"
+                           [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet"
+                           mltag="txt_nowalletselected">
 
 
                 </ng-select>
@@ -62,7 +59,8 @@
                 </div>
 
                 <div class="dropdown-menu">
-                    <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id" clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
+                    <a *ngFor="let item of profileMenu" [routerLink]="[item.router_link]" [id]="item.element_id"
+                       clrDropdownItem [attr.mltag]="item.label_txt">{{item.label}}</a>
                 </div>
             </clr-dropdown>
 
@@ -73,7 +71,8 @@
                 </a>
                 <div class="dropdown-menu" style="margin-right: 10px">
                     <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang" mltag="txt_language">Language</a>
-                    <a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout" mltag="txt_logout">Log out</a>
+                    <a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout" mltag="txt_logout">Log
+                        out</a>
                 </div>
             </clr-dropdown>
         </div>
@@ -91,9 +90,12 @@
             <span class="ml_translated" mltag="txt_sessionexpiringsoon">Session expiring soon</span></h4>
     </div>
     <div class="modal-body">
-        <p><span mltag="txt_yoursessionwillexpirein">Your session will expire in</span><span class="text-warning">{{remainingSecond && remainingSecond}}</span> <span mltag="txt_seconds">seconds.</span>
+        <p><span mltag="txt_yoursessionwillexpirein">Your session will expire in</span> <span class="text-warning">{{remainingSecond && remainingSecond}}</span>
+            seconds.
         </p>
-        <p><span mltag="txt_press">Press</span><span class="text-primary font-weight-bold ml_translated" mltag="txt_continue">Continue</span> <span mltag="txt_tocontinueusingthissite">to continue using this site.</span>
+        <p><span mltag="txt_press">Press</span> <span
+                class="text-primary font-weight-bold ml_translated">continue</span>
+            <span mltag="txt_tocontinueusingthissite">to continue using this site.</span>
         </p>
     </div>
     <div class="modal-footer">
