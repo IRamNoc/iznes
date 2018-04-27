@@ -60,7 +60,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldNavigateToSharesFundsUmbrellaFunds() throws InterruptedException, IOException{
+    public void shouldNavigateToSharesFundsUmbrellaFunds() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -69,7 +69,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplaySameTitleIconAsNavIcon() throws InterruptedException, IOException{
+    public void shouldDisplaySameTitleIconAsNavIcon() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
@@ -100,7 +100,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -115,8 +115,9 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
             assertTrue(umbFundLEI.equals("testLei"));
             assertTrue(umbFundManagement.equals("Management Company"));
             assertTrue(umbFundCountry.equals("Jordan"));
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -125,7 +126,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "France");
         assertTrue(driver.findElement(By.id("uf_centralizingAgent")).isDisplayed());
@@ -137,7 +138,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Luxembourg");
         assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
@@ -149,7 +150,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Ireland");
         assertTrue(driver.findElement(By.id("uf_transferAgent")).isDisplayed());
@@ -164,7 +165,7 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
         System.out.println(i);
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -174,8 +175,9 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
 
             String postCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
             assertNotEquals(postCreationNo, preCreationNo + 1);
-        }catch (Exception e){
-            fail();}
+        } catch (Exception e) {
+            fail();
+        }
     }
 
     @Test
@@ -186,61 +188,23 @@ public class OpenCSDUmbrellaFundsAcceptanceTest {
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
         assertTrue(driver.findElement(By.id("uf_umbrellaFundName")).isDisplayed());
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys("Updated");
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             assertTrue(popup.contains("has been successfully updated!"));
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
         try {
             String umFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
             assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
-        }catch (Exception e){
-            fail(e.getMessage());}
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
     }
-
-    private void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
-    }
-
-    private void validatePageLayout() {
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
-        assertTrue(isElementPresent(By.id("am-product-home")));
-        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[1]/h1/span")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
-        assertTrue(isElementPresent(By.id("switchActiveShares")));
-        assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contains("Add new Share"));
-
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contains("Funds"));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contains("Add new Fund"));
-
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella funds"));
-        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contains("Add new Umbrella fund"));
-    }
-
 }

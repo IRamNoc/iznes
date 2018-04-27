@@ -40,7 +40,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (300000);
+    public Timeout globalTimeout = new Timeout (30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -141,7 +141,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
         String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-        System.out.println(fundCount);
+        System.out.println(fundCount + " funds are displayed in the funds table");
 
         //Navigate to fund creation and create a fund with umbFund
 
@@ -219,27 +219,6 @@ public class OpenCSDSprint4AcceptanceTest {
         navigateToPage("product-module");
         selectFund();
         verifyFundDropdownElements();
-    }
-
-    private void shouldFillOutFundDetailsStep1(String umbFundName){
-        driver.findElement(By.id("new-fund-btn")).click();
-
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
-
-        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try {
-            driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        } catch (Error e) {
-            fail(e.getMessage());}
-    }
-
-
-    private void verifyFundDropdownElements() {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
     }
 
     @Test

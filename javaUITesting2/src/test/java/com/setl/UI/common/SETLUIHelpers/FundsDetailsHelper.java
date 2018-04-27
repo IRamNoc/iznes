@@ -5,13 +5,18 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
@@ -183,7 +188,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     }
 
-    public static void shouldFillOutFundDetailsStep2(String fundName) {
+    public static void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -212,6 +217,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("isFundOfFund2")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        Thread.sleep(750);
         driver.findElement(By.id("isDedicatedFund1")).click();
     }
 
@@ -360,8 +366,87 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentManager")));
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
+    }
+
+    public static void shouldFillOutFundDetailsStep1(String umbFundName){
+        driver.findElement(By.id("new-fund-btn")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        try {
+            driver.findElement(By.id("isFundStructure1")).isDisplayed();
+        } catch (Error e) {
+            fail(e.getMessage());}
+    }
 
 
+    public static void verifyFundDropdownElements() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
+    }
+
+    public static void validateUmbrellaFundsDataGridHeadings(String [] umbrellaFundsHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
+    }
+
+    public static void validatePageLayout() {
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
+        assertTrue(isElementPresent(By.id("am-product-home")));
+        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[1]/h1/span")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
+        assertTrue(isElementPresent(By.id("switchActiveShares")));
+        assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contains("Add new Share"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contains("Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contains("Add new Fund"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contains("Add new Umbrella fund"));
+    }
+
+    public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
+        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
+        Thread.sleep(750);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
+        }catch (Exception e){
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
+    public static void assertClassRequiredIsPresent(String tabID) throws SQLException, InterruptedException {
+        try {
+            assertTrue(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span")).isDisplayed());
+        }catch (Exception e){ fail("Asterisk was present " + e.getMessage()); }
+    }
+    public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
+        try {
+            assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
+        }catch (Exception e){ fail("Asterisk was present " + e.getMessage()); }
     }
 
 }

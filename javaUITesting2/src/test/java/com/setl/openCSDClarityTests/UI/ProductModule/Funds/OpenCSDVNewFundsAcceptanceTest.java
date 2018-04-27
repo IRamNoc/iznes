@@ -253,46 +253,40 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
     }
 
-    private void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
-        System.out.println("before truncation : " + shareNameID);
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-        System.out.println("after truncation : " + shareNameNo);
+    @Test
+    public void shouldUpdateFund() throws InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPage("product-module");
+        String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
+        driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
 
-        String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
-        System.out.println("Expected : " + fundNameExpected);
-        System.out.println("Actual   : " + fundName);
-        assertTrue(fundName.equals(fundNameExpected));
 
-        String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
-        System.out.println("Expected : " + leiExpected);
-        System.out.println("Actual   : " + leiName);
-        assertTrue(leiName.equals(leiExpected));
+        String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
+        assertTrue(title.contains("Fund"));
+        driver.findElement(By.id("fundName")).sendKeys("Updated");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+        assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
+        assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
 
-        String fundCurrency = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")).getText();
-        System.out.println("Expected : " + fundCurrencyExpected);
-        System.out.println("Actual   : " + fundCurrency);
-        assertTrue(fundCurrency.equals(fundCurrencyExpected));
+    }
 
-        String managementComp = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println("Expected : " + managementCompExpected);
-        System.out.println("Actual   : " + managementComp);
-        assertTrue(managementComp.equals(managementCompExpected));
-
-        String domicile = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println("Expected : " + domicileExpected);
-        System.out.println("Actual   : " + domicile);
-        assertTrue(domicile.equals(domicileExpected));
-
-        String legalForm = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-lawStatus")).getText();
-        System.out.println("Expected : " + legalFormExpected);
-        System.out.println("Actual   : " + legalForm);
-        assertTrue(legalForm.equals(legalFormExpected));
-
-        String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
-        System.out.println("Expected : " + umbFundExpected);
-        System.out.println("Actual   : " + umbFund);
-        assertTrue(umbFund.equals(umbFundExpected));
+    static String split(String value, String separator) {
+        // Returns a substring containing all characters after a string.
+        int posA = value.lastIndexOf(separator);
+        if (posA == -1) {
+            return "";
+        }
+        int adjustedPosA = posA + separator.length();
+        if (adjustedPosA >= value.length()) {
+            return "";
+        }
+        return value.substring(adjustedPosA);
     }
 
     public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
@@ -319,74 +313,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
             stmt.close();
             rs.close();
         }
-    }
-
-    @Test
-    public void shouldUpdateFund() throws InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
-        navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
-        String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
-
-
-        String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
-        assertTrue(title.contains("Fund"));
-        driver.findElement(By.id("fundName")).sendKeys("Updated");
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewById("fund-submitfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-        driver.findElement(By.id("fund-submitfund-btn")).click();
-        assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
-        assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
-
-    }
-
-    private void shouldFillOutFundDetailsStep2(String fundName) {
-        driver.findElement(By.id("fundName")).sendKeys(fundName);
-        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("isEuDirective2")).click();
-        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("fundManagers")).sendKeys("testManager");
-        scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
-        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
-        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
-        driver.findElement(By.id("openOrCloseEnded2")).click();
-        driver.findElement(By.id("isFundOfFund2")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("isDedicatedFund1")).click();
-    }
-
-    static String split(String value, String separator) {
-        // Returns a substring containing all characters after a string.
-        int posA = value.lastIndexOf(separator);
-        if (posA == -1) {
-            return "";
-        }
-        int adjustedPosA = posA + separator.length();
-        if (adjustedPosA >= value.length()) {
-            return "";
-        }
-        return value.substring(adjustedPosA);
     }
 
 }
