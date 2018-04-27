@@ -5,6 +5,7 @@ export class ShareFeesMandatory extends DynamicFormsValidator {
         type: FormItemType.number,
         label: 'Management Fee Maximum',
         required: true,
+        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_manfeemax'
     }
     maxSubscriptionFee: FormItem = {
@@ -17,7 +18,6 @@ export class ShareFeesMandatory extends DynamicFormsValidator {
         type: FormItemType.number,
         label: 'Redemption Fee Maximum',
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_maxredfee'
     }
     miFIDIIOngoingCharges: FormItem = {
