@@ -1,11 +1,15 @@
 /* Model. */
-export {AmHolders} from './model';
+export {OfiHolderState} from './model';
 
 /* Reducer. */
 export {OfiAmHoldersListReducer} from './reducer';
 
 /* Actions. */
-export {OFI_SET_AM_HOLDERS_LIST, ofiSetRequestedAmHolders, ofiClearRequestedAmHolders} from './actions';
-import * as ofiAmHoldersActions from './actions';
-
-export {ofiAmHoldersActions};
+export {
+    OFI_SET_AM_HOLDERS_LIST,
+    ofiSetRequestedAmHolders,
+    ofiClearRequestedAmHolders,
+    ofiSetHolderDetailRequested,
+    ofiClearHolderDetailRequested,
+    OFI_GET_SHARE_HOLDER_DETAIL
+} from './actions';
