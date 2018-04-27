@@ -14,7 +14,7 @@ const mockContent = {
     'test5': {value: 'value5', label: 'label5'},
 };
 
-describe('TextInputListComponent', () => {
+xdescribe('TextInputListComponent', () => {
 
     let fixture: ComponentFixture<TextInputListComponent>;
     let comp:    TextInputListComponent;
