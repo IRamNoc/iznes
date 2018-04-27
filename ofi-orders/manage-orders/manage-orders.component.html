@@ -243,15 +243,15 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- quantity -->{{order.quantity | moneyValue: 5}}
+                            <!-- quantity -->{{order.quantity}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- latestNAV -->{{order.estimatedPrice | moneyValue: 2}}
+                            <!-- latestNAV -->{{order.estimatedPrice}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- grossAmount -->{{order.amountWithCost | moneyValue: 4}}
+                            <!-- grossAmount -->{{order.amountWithCost}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -263,7 +263,7 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- cutOffDate -->{{getOnlyDate(order.cutoffDate)}} {{order.cutoffDate | date:'longTime'}}
+                            <!-- cutOffDate -->{{getOnlyDate(order.cutoffDate)}} {{getOnlyTime(order.cutoffDate)}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -271,7 +271,7 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- settlementDate -->{{getOnlyDate(order.settlementDate)}}
+                            <!-- settlementDate -->{{getOnlyDate(order.settlementDate)}} {{getOnlyTime(order.settlementDate)}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -338,7 +338,7 @@
                                             <tbody>
                                             <tr>
                                                 <td><b mltag="txt_feesamount">Fees Amount</b></td>
-                                                <td>{{order.feePercentage * order.amountWithCost | moneyValue: 4}}</td>
+                                                <td>{{order.feePercentage * order.amountWithCost}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
@@ -743,7 +743,7 @@
                                 <span mltag="txt_quantity">Quantity</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.quantity | moneyValue: 5}}</span>
+                                <span class="readonly-field">{{orderData.quantity}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -751,7 +751,7 @@
                                 <span mltag="txt_amount">Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{amountWithCost | moneyValue: 4}}</span>
+                                <span class="readonly-field">{{orderData.amountWithCost}}</span>
                             </div>
                         </div>
                     </div>
@@ -761,7 +761,7 @@
                                 <span mltag="txt_grossamount">Gross Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.amountWithCost | moneyValue: 4}}</span>
+                                <span class="readonly-field">{{orderData.amountWithCost}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -769,7 +769,7 @@
                                 <span mltag="txt_feeamount">Fee Amount</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.feePercentage * orderData.amountWithCost | moneyValue: 4}}</span>
+                                <span class="readonly-field">{{orderData.feePercentage * orderData.amountWithCost}}</span>
                             </div>
                         </div>
                     </div>
