@@ -11,6 +11,8 @@ import * as _ from 'lodash';
 /* Initial state. */
 const initialState: CentralizationReports = {
     centralizationReportsList: {},
+    baseCentralizationHistory: {},
+    centralizationHistory: {},
     requested: false,
 };
 
@@ -19,14 +21,32 @@ export const OfiCentralizationReportsListReducer = function (state: Centralizati
     switch (action.type) {
         /* Set Coupon List. */
         case ofiCentralizationReportsActions.OFI_SET_CENTRALIZATION_REPORTS_LIST:
-            // return ofiSetOrderList(state, action);
+            const data1 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-
-            if (data.Status !== 'Fail') {
-                const centralizationReportsList = formatCentralizationReportsDataResponse(data);
+            if (data1.Status !== 'Fail') {
+                const centralizationReportsList = formatCentralizationReportsDataResponse(data1);
                 return Object.assign({}, state, {
                     centralizationReportsList
+                });
+            }
+            return state;
+        case ofiCentralizationReportsActions.OFI_SET_BASE_CENTRALIZATION_HISTORY:
+            const data2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+            if (data2.Status !== 'Fail') {
+                const baseCentralizationHistory = formatBaseCentralizationHistoryDataResponse(data2);
+                return Object.assign({}, state, {
+                    baseCentralizationHistory
+                });
+            }
+            return state;
+        case ofiCentralizationReportsActions.OFI_SET_CENTRALIZATION_HISTORY:
+            const data3 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+            if (data3.Status !== 'Fail') {
+                const centralizationHistory = formatCentralizationHistoryDataResponse(data3);
+                return Object.assign({}, state, {
+                    centralizationHistory
                 });
             }
             return state;
@@ -72,6 +92,59 @@ function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<Cen
         {}));
 
     return centralizationReportsList.toJS();
+}
+
+function formatBaseCentralizationHistoryDataResponse(rawData: Array<any>): Array<CentralizationReportsDetails> {
+
+    const rawDataList = fromJS(rawData);
+
+    let i = 0;
+    const data = Map(rawDataList.reduce(
+        function (result, item) {
+            result[i] = {
+                fundName: item.get('fundName'),
+                fundShareName: item.get('fundShareName'),
+                isin: item.get('isin'),
+                shareClassCurrency: item.get('shareClassCurrency'),
+                umbrellaFundName: item.get('umbrellaFundName'),
+            };
+            i++;
+            return result;
+        },
+        {}));
+
+    return data.toJS();
+}
+
+function formatCentralizationHistoryDataResponse(rawData: Array<any>): Array<CentralizationReportsDetails> {
+
+    const rawDataList = fromJS(rawData);
+
+    let i = 0;
+    const data = Map(rawDataList.reduce(
+        function (result, item) {
+            result[i] = {
+                walletID: item.get('walletID'),
+                latestNav: item.get('latestNav'),
+                navDate: item.get('navDate'),
+                latestNavBackup: item.get('latestNavBackup'),
+                navDateBackup: item.get('navDateBackup'),
+                settlementDate: item.get('settlementDate'),
+                subQuantity: item.get('subQuantity'),
+                subAmount: item.get('subAmount'),
+                redQuantity: item.get('redQuantity'),
+                redAmount: item.get('redAmount'),
+                cutoffDate: item.get('cutoffDate'),
+                aum: item.get('aum'),
+                netPosition: item.get('netPosition'),
+                netPositionPercentage: item.get('netPositionPercentage'),
+            };
+            i++;
+            return result;
+        },
+        {}));
+
+    return data.toJS();
 }
 
 function toggleRequestState(state: CentralizationReports, requested: boolean): CentralizationReports {

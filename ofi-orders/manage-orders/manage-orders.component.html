@@ -294,12 +294,20 @@
                                 <span mltag="txt_cancelled">Cancelled</span>
                             </span>
                         </clr-dg-cell>
-                        <clr-dg-cell>
-                            <!-- Actions -->
-                            <button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger" mltag="txt_cancel">Cancel</button>
-                            <ng-template #cancelDisabled>
-                                <button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>
-                            </ng-template>
+                        <clr-dg-cell [ngSwitch]="order.orderStatus">
+                            <!--&lt;!&ndash; Actions &ndash;&gt;-->
+                            <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger" mltag="txt_cancel">Cancel</button>-->
+                            <!--<ng-template #cancelDisabled>-->
+                                <!--<button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>-->
+                            <!--</ng-template>-->
+
+                            <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" mltag="txt_cancel" *ngSwitchCase="1">Cancel</button>
+                            <ng-container *ngSwitchCase="4">
+                                <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info"  disabled mltag="txt_cancel">Cancel</button>
+                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" mltag="txt_settle" (click)="settleOrder(i)" >Settle</button>
+                            </ng-container>
+                            <button type="button" class="btn btn-sm btn-info"  disabled mltag="txt_cancel" *ngSwitchDefault>Cancel</button>
+
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">

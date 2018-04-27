@@ -370,7 +370,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     applyFilters() {
         if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType) {
+            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
                 if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
                     this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
@@ -380,7 +380,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
                 if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
-                    const statusFound = this.orderStatuses.find(o => o.id === this.filtersFromRedux.status);
+                    const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
                             id: statusFound.id,
@@ -388,6 +388,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                         }], {emitEvent: false});
                         this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }
+                if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
+                    const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
+                    if (dateTypeFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('dateType').patchValue([{
+                            id: dateTypeFound.id,
+                            text: dateTypeFound.text
+                        }], {emitEvent: false});
+                        this.tabsControl[0].searchForm.get('dateType').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                }
+                if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
+                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('fromDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
+                    this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate, {emitEvent: false});
+                    this.tabsControl[0].searchForm.get('toDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
 
                 // remove filters from redux
@@ -613,9 +631,54 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.ordersList[index].orderType === 4) {
             confMessage += 'Redemption ';
         }
-        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 5);
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
         this.showConfirmationAlert(confMessage, index);
     }
+
+    settleOrder(index) {
+        let confMessage = '';
+        if (this.ordersList[index].orderType === 3) {
+            confMessage += 'Subscription ';
+        }
+        if (this.ordersList[index].orderType === 4) {
+            confMessage += 'Redemption ';
+        }
+        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
+        this.showConfirmationSettleAlert(confMessage, index);
+
+    }
+
+    showConfirmationSettleAlert(confMessage, index): void {
+        this._confirmationService.create(
+            '<span>Are you sure?</span>',
+            '<span>Are you sure you want settle the ' + confMessage + '?</span>',
+            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.sendSettleOrderRequest(index);
+            }
+        });
+    }
+
+    sendSettleOrderRequest(index) {
+
+        if (!this.isInvestorUser) {
+            const orderId = this.ordersList[index].orderID;
+            this.ofiOrdersService.markOrderSettle({orderId}).then((data) => {
+                // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                // const orderRef = commonHelper.pad(orderId, 11, '0');
+                // this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
+                // this.handleClose();
+                // this._router.navigateByUrl('/order-book/my-orders/list');
+                console.log(data);
+            }).catch((data) => {
+                const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
+                // this._toaster.pop('warning', errorMessage);
+                console.log(data);
+            });
+        }
+    }
+
 
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
@@ -947,7 +1010,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted date or empty string.
      */
-    private getOnlyDate(dateString): string {
+    getOnlyDate(dateString): string {
         return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
     }
 
@@ -957,7 +1020,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @param  {string} dateString - the order's date string.
      * @return {string}            - the formatted time or empty string.
      */
-    private getOnlyTime(dateString): string {
+    getOnlyTime(dateString): string {
         return this.formatDate('hh:mm:ss', new Date(dateString));
     }
 
