@@ -10,7 +10,7 @@ import {DpDatePickerModule} from './ng2-date-picker/date-picker.module';
 import {SwitchButtonComponent} from './switch-button/component';
 import {SetlPipesModule} from '../pipes';
 import {DynamicFormsModule} from './dynamic-forms/module';
-
+import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 
 @NgModule({
     declarations: [
@@ -30,7 +30,8 @@ import {DynamicFormsModule} from './dynamic-forms/module';
         SelectModule,
         ReactiveFormsModule,
         SetlPipesModule,
-        DpDatePickerModule
+        DpDatePickerModule,
+        MultilingualModule
     ],
     providers: [ConfirmationService]
 })

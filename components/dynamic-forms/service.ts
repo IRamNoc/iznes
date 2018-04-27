@@ -42,6 +42,7 @@ export class DynamicFormService {
             if (item.type === FormItemType.text) preset = '';
             if (item.type === FormItemType.textarea) preset = '';
             if (item.type === FormItemType.date) preset = '';
+            if (item.type === FormItemType.time) preset = '';
             if (item.type === FormItemType.number) preset = null;
             if (item.type === FormItemType.list) preset = null;
             if (item.type === FormItemType.file) preset = null;
@@ -79,6 +80,12 @@ export class DynamicFormService {
                     closeOnSelect: true,
                     disableKeypress: true,
                     locale: null
+                }
+            }
+
+            if (item.type === FormItemType.time && !item.timeOptions) {
+                item.timeOptions = {
+                    showSeconds: false
                 }
             }
         });

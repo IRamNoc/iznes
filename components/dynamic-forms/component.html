@@ -4,7 +4,7 @@
             <div class="row">
                 <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
                     <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
-                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{model[item].label}}</label>
+                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}" >{{model[item].label}}</label>
 
                         <ng-container [ngSwitch]="model[item].type">
                             <ng-container *ngSwitchCase="0">
@@ -67,6 +67,15 @@
                                     placeholder="{{model[item].placeholder}}"
                                     formControlName="{{item}}">
                                 </textarea>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="7">
+                                <div class="input-group">
+                                    <span class="fa fa-clock-o"></span>
+                                    <input id="{{item}}" name="{{item}}" type="time"
+                                        placeholder="{{model[item].placeholder}}"
+                                        formControlName="{{item}}" />
+                                </div>
                             </ng-container>
                         </ng-container>
 
