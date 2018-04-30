@@ -9,6 +9,11 @@ import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
 import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
 
+/* Utils. */
+import {
+    NumberConverterService
+} from '@setl/utils';
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
@@ -101,6 +106,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         private ofiReportsService: OfiReportsService,
         private alerts: AlertsService,
         private _confirmationService: ConfirmationService,
+        private _numberConverterService: NumberConverterService,
     ) {
         this.createsearchForm();
 

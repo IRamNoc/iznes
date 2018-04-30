@@ -188,7 +188,7 @@
                         {{getOnlyDate(data.settlementDate)}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{data.latestNav | moneyValue: 2}}
+                        {{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2}}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         {{data.aum | moneyValue: 5}}
@@ -215,9 +215,9 @@
                             </tr>
                             <tr>
                                 <td><span mltag="txt_subscriptions">Subscriptions</span>:</td>
-                                <td mltag="txt_subscqty">{{subQuantity | moneyValue: 4}}</td>
-                                <td mltag="txt_subscamnt">{{subAmount | moneyValue: 5}}</td>
-                                <td mltag="txt_subsccodate">{{getOnlyDate(data.cutoffDate)}} {{data.cutoffDate | date:'longTime'}}</td>
+                                <td mltag="">{{subQuantity | moneyValue: 4}}</td>
+                                <td mltag="">{{subAmount | moneyValue: 5}}</td>
+                                <td mltag="">{{getOnlyDate(data.cutoffDate)}} {{data.cutoffDate | date:'longTime'}}</td>
                             </tr>
                             <tr>
                                 <td><span mltag="txt_redemption">Redemption</span>:</td>
