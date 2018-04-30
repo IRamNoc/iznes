@@ -1,5 +1,5 @@
 // Vendor
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -29,7 +29,7 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ShareHoldersComponent implements OnInit, OnDestroy {
     searchListForm: FormGroup;
     searchInShareForm: FormGroup;
 
