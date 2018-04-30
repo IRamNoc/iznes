@@ -155,8 +155,8 @@ export class OfiReportsService {
             RequestName: 'getSingleShareInfo',
             token: this.memberSocketService.token,
             fundShareID: data.fundShareID,
-            dateFrom: data.fundShareID,
-            dateTo: data.fundShareID,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
             dateRange: data.dateRange,
         };
 

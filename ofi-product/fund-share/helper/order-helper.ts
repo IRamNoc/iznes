@@ -386,7 +386,7 @@ export class OrderHelper {
 
         const generalBody = subject;
 
-        const todayStr = moment().format('DD/MM/YYYY');
+        const todayStr = moment().utc().format('DD/MM/YYYY');
 
         const actionJson = {
             type: 'sendPdf',
@@ -514,9 +514,9 @@ export class OrderHelper {
             orderDates = orderDates as OrderDates;
         }
 
-        const cutoffDate = orderDates.cutoff.format('YYYY-MM-DD HH:mm');
-        const valuationDate = orderDates.valuation.format('YYYY-MM-DD HH:mm');
-        const settlementDate = orderDates.settlement.format('YYYY-MM-DD HH:mm');
+        const cutoffDate = orderDates.cutoff.utc().format('YYYY-MM-DD HH:mm');
+        const valuationDate = orderDates.valuation.utc().format('YYYY-MM-DD HH:mm');
+        const settlementDate = orderDates.settlement.utc().format('YYYY-MM-DD HH:mm');
 
         const orderNote = this.orderRequest.comment;
 
