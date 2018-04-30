@@ -1,31 +1,33 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
-
+import {NgRedux} from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper, Common} from '@setl/utils';
-
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {SagaHelper} from '@setl/utils';
 /* Import actions. */
 import {
-    OFI_SET_CENTRALIZATION_REPORTS_LIST,
+    OFI_SET_AM_HOLDERS_LIST,
     OFI_SET_BASE_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_HISTORY,
-    ofiSetRequestedCentralizationReports,
-    ofiClearRequestedCentralizationReports,
-    OFI_SET_AM_HOLDERS_LIST,
+    OFI_SET_CENTRALIZATION_REPORTS_LIST,
     ofiClearRequestedAmHolders,
+    ofiClearRequestedCentralizationReports,
     ofiSetRequestedAmHolders,
+    ofiSetRequestedCentralizationReports,
+    ofiSetHolderDetailRequested,
+    ofiClearHolderDetailRequested,
+    OFI_GET_SHARE_HOLDER_DETAIL,
 } from '../../ofi-store/';
 
 /* Import interfaces for message bodies. */
 import {
-    OfiMemberNodeBody,
-    OfiCentralizationReportsRequestBody,
     OfiAmHoldersRequestBody,
     OfiBaseCentralizationHistoryRequestBody,
     OfiCentralizationHistoryRequestBody,
+    OfiCentralizationReportsRequestBody,
+    OfiHolderDetailRequestBody,
+    OfiHolderDetailRequestData,
 } from './model';
 
 interface CentralizationReportsData {
@@ -83,6 +85,14 @@ export class OfiReportsService {
         }
     }
 
+    static setRequestedHolderDetail(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(ofiSetHolderDetailRequested());
+        } else {
+            ngRedux.dispatch(ofiClearHolderDetailRequested());
+        }
+    }
+
     static defaultRequestAmHoldersList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(ofiSetRequestedAmHolders());
@@ -92,6 +102,20 @@ export class OfiReportsService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [OFI_SET_AM_HOLDERS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    static defaultRequestHolderDetail(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, holderDetailRequestData: OfiHolderDetailRequestData) {
+        ngRedux.dispatch(ofiSetHolderDetailRequested());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestShareHolderDetail(holderDetailRequestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_GET_SHARE_HOLDER_DETAIL],
             [],
             asyncTaskPipe,
             {},
@@ -149,6 +173,17 @@ export class OfiReportsService {
         const messageBody: OfiAmHoldersRequestBody = {
             RequestName: 'izngetamholders',
             token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestShareHolderDetail(requestData: OfiHolderDetailRequestData): any {
+        const messageBody: OfiHolderDetailRequestBody = {
+            RequestName: 'izngetamholderdetail',
+            token: this.memberSocketService.token,
+            shareId: requestData.shareId,
+            selectedFilter: requestData.selectedFilter,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

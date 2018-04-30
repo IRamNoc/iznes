@@ -1,4 +1,4 @@
-import {MemberNodeRequest, MemberNodeMessageBody} from '@setl/utils/common';
+import {MemberNodeMessageBody} from '@setl/utils/common';
 
 export interface OfiMemberNodeBody extends MemberNodeMessageBody {
     token: string;
@@ -24,4 +24,15 @@ export interface OfiCentralizationHistoryRequestBody extends OfiMemberNodeBody {
 
 export interface OfiAmHoldersRequestBody extends OfiMemberNodeBody {
     token: string;
+}
+
+export interface OfiHolderDetailRequestData {
+    shareId: number;
+    selectedFilter: number;
+}
+
+export interface OfiHolderDetailRequestBody extends OfiMemberNodeBody {
+    token: string;
+    shareId: number;
+    selectedFilter: number;
 }

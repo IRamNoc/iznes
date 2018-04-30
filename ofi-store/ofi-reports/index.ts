@@ -1,7 +1,7 @@
 import {combineReducers, Reducer} from 'redux';
 
 import {CentralizationReports, OfiCentralizationReportsListReducer} from './centralization-reports';
-import {AmHolders, OfiAmHoldersListReducer} from './holders';
+import {OfiAmHoldersListReducer, OfiHolderState} from './holders';
 
 export {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
@@ -16,12 +16,14 @@ export {
     OFI_SET_AM_HOLDERS_LIST,
     ofiClearRequestedAmHolders,
     ofiSetRequestedAmHolders,
-    ofiAmHoldersActions
+    ofiSetHolderDetailRequested,
+    ofiClearHolderDetailRequested,
+    OFI_GET_SHARE_HOLDER_DETAIL,
 } from './holders';
 
 export interface OfiReportsState {
     centralizationReports: CentralizationReports;
-    amHolders: AmHolders;
+    amHolders: OfiHolderState;
 }
 
 export const OfiReportsReducer: Reducer<OfiReportsState> = combineReducers<OfiReportsState>({
