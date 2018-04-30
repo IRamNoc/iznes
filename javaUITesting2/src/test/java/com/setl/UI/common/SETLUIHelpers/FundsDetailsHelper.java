@@ -75,24 +75,27 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void selectTopDropdown(String dropdownID) throws InterruptedException {
-
+    public static void selectTopDropdown(String dropdownID){
             driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-
             driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
 
     }
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
-        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        driver.findElement(By.id(dropdownID)).sendKeys(search);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")));
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")));
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")).sendKeys(search);
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+
         }catch (Exception e){
             fail("dropdown not selected. " + e.getMessage());
         }
     }
-    public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) throws InterruptedException {
+    public static void searchAndSelectTopDropdownXpath(String dropdownID, String search){
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
