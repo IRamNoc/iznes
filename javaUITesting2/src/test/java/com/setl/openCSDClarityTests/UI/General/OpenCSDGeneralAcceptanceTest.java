@@ -429,10 +429,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
-        String xpath = "//*[@id=\\\"iznes\\\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a";
+        String xpath = "//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a";
         clickElementByXpath(xpath);
-
-
 
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
