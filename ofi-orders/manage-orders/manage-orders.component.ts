@@ -310,11 +310,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.ordersList = listImu.reduce((result, item) => {
 
+            const amountWithCost = item.get('orderStatus') in [1, 2] ?
+                this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')) :
+                this._numberConverterService.toFrontEnd(item.get('amountWithCost'));
+
             result.push({
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amWalletID: item.get('amWalletID'),
-                amountWithCost: this._numberConverterService.toFrontEnd(item.get('amountWithCost')),
+                amountWithCost: amountWithCost,
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
                 contractAddr: item.get('contractAddr'),
@@ -972,7 +976,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {string}            - the formatted date or empty string.
      */
     getOnlyDate(dateString): string {
-        return moment(dateString).format('YYYY-MM-DD');
+        return moment(dateString).local().format('YYYY-MM-DD');
     }
 
     /**
