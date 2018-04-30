@@ -12,6 +12,7 @@ import {
 import {APP_CONFIG, AppConfig, MenuItem, SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
+    addWalletNodeInitialSnapshot,
     clearRequestedMailInitial,
     clearRequestedWalletLabel,
     getAuthentication,
@@ -22,14 +23,14 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setMenuShown,
-    setRequestedMailInitial,
-    addWalletNodeInitialSnapshot
+    setRequestedMailInitial
 } from '@setl/core-store';
 import {fromJS} from 'immutable';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
 
 import {
+    ChannelService,
     InitialisationService,
     MyMessagesService,
     MyUserService,
@@ -91,6 +92,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private changeDetectorRef: ChangeDetectorRef,
                 private multilingualService: MultilingualService,
                 private memberSocketService: MemberSocketService,
+                private channelService: ChannelService,
+                private initialisationService: InitialisationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -196,8 +199,18 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         }));
 
         // When membernode reconnect. trigger wallet select.
-        this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() =>
-            this.selected(this.selectedWalletId.value[0])));
+        this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
+
+                // Subscribe to my connection channel, target for my userId
+                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService)
+
+                if (!this.selectedWalletId.value) {
+                    return;
+                }
+
+                this.selected(this.selectedWalletId.value[0]);
+            }
+        ));
     }
 
     ngAfterViewInit() {
