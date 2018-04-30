@@ -21,13 +21,13 @@ import {OfiCorpActionsReducer, OfiCorpActionsState} from "./ofi-corp-actions";
  Ofi Product
  */
 import {
+    OfiFundShare,
     OfiProductReducer,
     OfiProductState,
     SET_FUND_LIST,
+    SET_FUND_SHARE,
     SET_MANAGEMENT_COMPANY_LIST,
-    SET_SICAV_LIST,
-    OfiFundShare,
-    SET_FUND_SHARE
+    SET_SICAV_LIST
 } from "./ofi-product";
 /*
  Ofi Orders
@@ -40,7 +40,7 @@ import {OfiReportsReducer, OfiReportsState} from './ofi-reports';
 /*
  Ofi My Informations
  */
-import {KycReducer, KycState, setamkyclist, setrequested, clearrequested} from './ofi-kyc';
+import {clearrequested, KycReducer, KycState, setamkyclist, setrequested} from './ofi-kyc';
 
 export {
     SET_FUND_ACCESS_MY,
@@ -116,7 +116,9 @@ export {
     OFI_SET_AM_HOLDERS_LIST,
     ofiClearRequestedAmHolders,
     ofiSetRequestedAmHolders,
-    ofiAmHoldersActions
+    ofiSetHolderDetailRequested,
+    ofiClearHolderDetailRequested,
+    OFI_GET_SHARE_HOLDER_DETAIL
 } from './ofi-reports';
 
 export {
