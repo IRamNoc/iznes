@@ -178,9 +178,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-fundID-0")));
         wait.until(elementToBeClickable(By.id("product-dashboard-link-fundID-0")));
         WebElement fund = driver.findElement(By.id("product-dashboard-link-fundID-0"));
-
         fund.click();
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")));
@@ -266,6 +264,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void getUmbrellaTableRow(int rowNo, String umbFundNameExpected , String leiExpected, String managementCompExpected, String domicileExpected){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         String shareNameID = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + rowNo + "-umbrellaFundName")).getAttribute("id");
         System.out.println("before truncation : " + shareNameID);
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
