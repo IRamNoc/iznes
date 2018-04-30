@@ -1,10 +1,11 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th-list"></i><span mltag="txt_transactionreports">Transaction Reports</span></h1>
+    <h1><i class="fa fa-key"></i><span mltag="txt_transactionreports">Transaction Reports</span></h1>
 </div>
 
 <clr-tabs *ngIf="tabs.length > 0">
     <clr-tab *ngFor="let tab of tabs; let id = index">
-        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id)" [innerHTML]="tab.title"></button>
+        <button clrTabLink id="testlink{{id}}" (click)="tabControl.activate(id)" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
+
         <clr-tab-content *clrIfActive="tab.active">
             <div [hidden]="id !== 0">
                 <ng-container
@@ -59,7 +60,7 @@
 <ng-template #dynamicViewTab let-id="id" let-transaction="transaction">
     <div class="transaction-tab-panel-body panel-body">
         <form>
-            <div class="form-horizontal">            
+            <div class="form-horizontal">
                 <div class="form-group tx-view-header">
                     <div class="col-sm-3">&nbsp;</div>
                     <label class="col-sm-4">

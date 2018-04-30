@@ -31,7 +31,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.tabControl = new TabControl({
             title: 'Transactions',
-            icon: 'th-list',
+            icon: 'key',
             active: true,
             data: {}
         });
@@ -87,4 +87,3 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
         }
     }
 }
-

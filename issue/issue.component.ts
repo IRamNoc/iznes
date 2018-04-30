@@ -14,7 +14,6 @@ import { select } from '@angular-redux/store';
 export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
-
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
 
     private issuers$: Observable<any>;
