@@ -120,7 +120,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops082@setl.io", "", "Miller", "Success!");
+        inviteAnInvestor("testops081@setl.io", "", "Miller", "Success!");
     }
 
     @Test
