@@ -36,20 +36,17 @@
             <clr-datagrid>
                 <clr-dg-column [clrDgField]="'walletNodeName'" mltag="txt_nodename">Node Name</clr-dg-column>
                 <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_action">Action</span>
-                </clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_action">Action</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let walletNodes of walletNodesList; let id = index">
                     <clr-dg-cell id="node_names{{id}}">{{walletNodes.walletNodeName}}</clr-dg-cell>
                     <clr-dg-cell id="chain_name_{{id}}">{{walletNodes.chainName}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(id)" class="btn" id="edit-wallet-nodes-{{id}}">
-                                <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button (click)="handleDelete(walletNodes)" class="btn" id="delete-wallet-nodes-{{id}}">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
-                        </div>
+                    <clr-dg-cell class="right">
+                        <button (click)="handleEdit(id)" class="btn btn-success btn-sm" id="edit-wallet-nodes-{{id}}">
+                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                        <button (click)="handleDelete(walletNodes)" class="btn btn-danger btn-sm"
+                                id="delete-wallet-nodes-{{id}}">
+                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
