@@ -13,25 +13,23 @@
         <clr-tab-content *clrIfActive="isAcceptedTabDisplayed">
             <section class="form-block">
                 <clr-datagrid>
-                    <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
                     <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
                     <clr-dg-column [clrDgField]="'subportfolios'">Subportfolio</clr-dg-column>
+                    <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let acceptedConnection of acceptedConnectionList">
-                        <clr-dg-cell>
-                            <div class="btn-group btn-sm">
-                                <button id="edit-button" class="btn"
-                                        (click)="handleEditButtonClick(acceptedConnection)">
-                                    <i class="fa fa-edit"></i>
-                                </button>
-                                <button id="delete-button" class="btn"
-                                        (click)="handleDeleteButtonClick(acceptedConnection)">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </clr-dg-cell>
                         <clr-dg-cell>{{acceptedConnection.connection}}</clr-dg-cell>
                         <clr-dg-cell>{{acceptedConnection.subPortfolio}}</clr-dg-cell>
+                        <clr-dg-cell class="right">
+                            <button id="edit-button" class="btn btn-success btn-sm" (click)="handleEditButtonClick(acceptedConnection)">
+                                <i class="fa fa-edit"></i>
+                                <span mltag="txt_edit">Edit</span>
+                            </button>
+                            <button id="delete-button" class="btn btn-danger btn-sm" (click)="handleDeleteButtonClick(acceptedConnection)">
+                                <i class="fa fa-trash-o"></i>
+                                <span mltag="txt_delete">Delete</span>
+                            </button>
+                        </clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
@@ -55,36 +53,33 @@
                 <clr-datagrid>
                     <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
                     <clr-dg-column [clrDgField]="'info'">Status</clr-dg-column>
-                    <clr-dg-column mltag="txt_action">Actions</clr-dg-column>
+                    <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let pendingConnection of pendingConnectionList">
                         <clr-dg-cell>{{pendingConnection.connection}}</clr-dg-cell>
                         <clr-dg-cell>{{pendingConnection.info}}</clr-dg-cell>
 
-                        <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'">
-                            <div class="btn-group btn-sm">
-                                <button id="reject-connection-button" class="btn"
-                                        (click)="handleRejectButtonClick(pendingConnection, 'This connection has successfully been cancelled')">
-                                    <i class="fa fa-times"></i>
-                                    Cancel
-                                </button>
-                            </div>
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Outgoing'" class="right">
+                            <button id="reject-connection-button" class="btn btn-danger btn-sm"
+                                    (click)="handleRejectButtonClick(pendingConnection, 'This connection has successfully been cancelled')">
+                                <i class="fa fa-times"></i>
+                                Cancel
+                            </button>
                         </clr-dg-cell>
 
-                        <clr-dg-cell *ngIf="pendingConnection.info === 'Incoming'">
-                            <div class="btn-group btn-sm">
-                                <button id="accept-connection-button" class="btn"
-                                        (click)="handleAcceptButtonClick(pendingConnection)">
-                                    <i class="fa fa-check"></i>
-                                    Accept
-                                </button>
+                        <clr-dg-cell *ngIf="pendingConnection.info === 'Incoming'" class="right">
+                            <button id="accept-connection-button" class="btn btn-success btn-sm"
+                                    (click)="handleAcceptButtonClick(pendingConnection)">
+                                <i class="fa fa-check"></i>
+                                Accept
+                            </button>
 
-                                <button id="reject-connection-button" class="btn"
-                                        (click)="handleRejectButtonClick(pendingConnection)">
-                                    <i class="fa fa-ban"></i>
-                                    Reject
-                                </button>
-                            </div>
+                            <button id="reject-connection-button" class="btn btn-danger btn-sm"
+                                    (click)="handleRejectButtonClick(pendingConnection)">
+                                <i class="fa fa-ban"></i>
+                                Reject
+                            </button>
+
                         </clr-dg-cell>
                     </clr-dg-row>
 
