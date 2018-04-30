@@ -11,7 +11,7 @@ const initialState: OfiHolderState = {
     amHoldersList: List<AmHoldersDetails>(),
     requested: false,
     holderDetailRequested: false,
-    shareHolderDetail: List<HolderDetailStructure>(),
+    shareHolderDetail: null,
 };
 
 /* Reducer. */
@@ -57,28 +57,30 @@ const handleGetAmHolders = (state, action) => {
 const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDetails> => {
     let response: List<AmHoldersDetails> = List();
 
-    rawData.forEach((iteratee) => {
-        const holderItem = {
-            isFund: iteratee.isFund,
-            fundId: iteratee.fundId,
-            fundName: iteratee.fundName,
-            fundLei: iteratee.fundLei,
-            fundCurrency: iteratee.fundCurrency,
-            fundAum: iteratee.fundAum,
-            fundHolderNumber: iteratee.fundHolderNumber,
-            shareId: iteratee.shareId,
-            shareName: iteratee.shareName,
-            shareIsin: iteratee.shareIsin,
-            shareNav: iteratee.shareNav,
-            shareUnitNumber: iteratee.shareUnitNumber,
-            shareCurrency: iteratee.shareCurrency,
-            shareAum: iteratee.shareAum,
-            shareHolderNumber: iteratee.shareHolderNumber,
-            shareRatio: iteratee.shareRatio
-        };
+    if (rawData.length > 0) {
+        rawData.forEach((iteratee) => {
+            const holderItem = {
+                isFund: iteratee.isFund,
+                fundId: iteratee.fundId,
+                fundName: iteratee.fundName,
+                fundLei: iteratee.fundLei,
+                fundCurrency: iteratee.fundCurrency,
+                fundAum: iteratee.fundAum,
+                fundHolderNumber: iteratee.fundHolderNumber,
+                shareId: iteratee.shareId,
+                shareName: iteratee.shareName,
+                shareIsin: iteratee.shareIsin,
+                shareNav: iteratee.shareNav,
+                shareUnitNumber: iteratee.shareUnitNumber,
+                shareCurrency: iteratee.shareCurrency,
+                shareAum: iteratee.shareAum,
+                shareHolderNumber: iteratee.shareHolderNumber,
+                shareRatio: iteratee.shareRatio
+            };
 
-        response = response.push(holderItem);
-    });
+            response = response.push(holderItem);
+        });
+    }
 
     return response;
 }
@@ -96,7 +98,6 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
     const response = _.get(action, 'payload[1].Data', []);
 
     if (response.Status !== 'Fail' && response.Message !== 'No holder\'s detail found') {
-        let shareHolderDetail: List<HolderDetailStructure> = List();
         let holders: List<ShareHolderItem> = List();
 
         // Share holders
@@ -113,7 +114,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
         });
 
         // Share info
-        shareHolderDetail = shareHolderDetail.push({
+        const shareHolderDetail: HolderDetailStructure = {
             id: response.id,
             name: response.name,
             currency: response.currency,
@@ -124,7 +125,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
             holderNumber: response.holderNumber,
             ratio: response.ratio,
             holders,
-        });
+        };
 
         return Object.assign({}, state, {shareHolderDetail});
     }
