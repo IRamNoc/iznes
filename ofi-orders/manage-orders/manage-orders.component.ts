@@ -1,15 +1,16 @@
 /* Core/Angular imports. */
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, SagaHelper} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
+import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /* Services. */
@@ -18,10 +19,8 @@ import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
-
 import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
-import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
-import {getOfiFundShareSelectedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
+import {NumberConverterService} from '@setl/utils/services/number-converter/service';
 
 
 /* Alerts and confirms. */
@@ -30,13 +29,8 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
 import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
 
-import * as math from 'mathjs';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
-
-import * as _ from 'lodash';
 
 /* Types. */
 interface SelectedItem {
@@ -107,12 +101,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     orderStatuses: Array<SelectedItem> = [
         {id: -3, text: 'All'},
+        {id: -1, text: 'Settled'},
+        {id: 0, text: 'Cancelled'}, // estimatedPrice
         {id: 1, text: 'Initiated'},
         {id: 2, text: 'Waiting NAV'},
         {id: 3, text: 'Waiting Settlement'},
         {id: 4, text: 'Unpaid'},
-        {id: -1, text: 'Settled'},
-        {id: 0, text: 'Cancelled'}, // estimatedPrice
     ];
 
     orderTypes: Array<SelectedItem> = [
@@ -209,8 +203,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private ofiCorpActionService: OfiCorpActionService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alerts: AlertsService,
-                private _confirmationService: ConfirmationService
-                // public _numberConverterService: NumberConverterService,
+                private _confirmationService: ConfirmationService,
+                public _numberConverterService: NumberConverterService,
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
@@ -316,11 +310,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.ordersList = listImu.reduce((result, item) => {
 
+            const amountWithCost = item.get('orderStatus') in [1, 2] ?
+                this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')) :
+                this._numberConverterService.toFrontEnd(item.get('amountWithCost'));
+
             result.push({
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amWalletID: item.get('amWalletID'),
-                amountWithCost: item.get('amountWithCost'),
+                amountWithCost: amountWithCost,
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
                 contractAddr: item.get('contractAddr'),
@@ -329,9 +327,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
-                estimatedPrice: item.get('estimatedPrice'),
+                estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
                 estimatedQuantity: item.get('estimatedQuantity'),
-                feePercentage: item.get('feePercentage'),
+                feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 iban: item.get('iban'),
@@ -349,7 +347,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 orderFundShareID: item.get('orderFundShareID'),
                 platFormFee: item.get('platFormFee'),
                 price: item.get('price'),
-                quantity: item.get('quantity'),
+                quantity: this._numberConverterService.toFrontEnd(item.get('quantity')),
                 settlementDate: item.get('settlementDate'),
                 totalResult: item.get('totalResult'),
                 valuationDate: item.get('valuationDate'),
@@ -953,39 +951,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
     }
 
-    /**
-     * Format Date
-     * -----------
-     * Formats a date to a string.
-     * YYYY - 4 character year
-     * YY - 2 character year
-     * MM - 2 character month
-     * DD - 2 character date
-     * hh - 2 character hour (24 hour)
-     * hH - 2 character hour (12 hour)
-     * mm - 2 character minute
-     * ss - 2 character seconds
-     *
-     * @param  {string} formatString [description]
-     * @param  {Date}   dateObj      [description]
-     * @return {string}              [description]
-     */
-    private formatDate(formatString: string, dateObj: Date): string {
-        /* Return if we're missing a param. */
-        if (!formatString || !dateObj) return '';
-
-        /* Return the formatted string. */
-        return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
-    }
-
     private numPad(num) {
         return num < 10 ? "0" + num : num;
     }
@@ -1011,7 +976,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {string}            - the formatted date or empty string.
      */
     getOnlyDate(dateString): string {
-        return this.formatDate('YYYY-MM-DD', new Date(dateString)) || '';
+        return moment(dateString).local().format('YYYY-MM-DD');
     }
 
     /**
@@ -1021,7 +986,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {string}            - the formatted time or empty string.
      */
     getOnlyTime(dateString): string {
-        return this.formatDate('hh:mm:ss', new Date(dateString));
+        return moment.utc(dateString).local().format('HH:mm');
     }
 
     /**
