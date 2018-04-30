@@ -226,8 +226,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.isInvestorUser) {  // AM side
             this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        }
-        {  // INV side
+        } else if (this.isInvestorUser) {  // INV side
             this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
         }
@@ -650,7 +649,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want settle the ' + confMessage + '?</span>',
-            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
+            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'info'}
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.sendSettleOrderRequest(index);
