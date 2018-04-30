@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -17,8 +17,8 @@ import {Subscription} from 'rxjs/Subscription';
 
 /* Types. */
 interface SelectedItem {
-    id: any;
-    text: number | string;
+    id: number;
+    text: string;
 }
 
 /* Decorator. */
@@ -29,25 +29,13 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ShareHoldersComponent implements OnInit, OnDestroy {
+export class ShareHoldersComponent implements OnInit, AfterViewInit, OnDestroy {
     searchListForm: FormGroup;
     searchInShareForm: FormGroup;
 
     /* Datagrid server driven */
     total: number;
     itemPerPage = 10;
-    // dataGridParams = {
-    //     shareName: null,
-    //     status: null,
-    //     orderType: null,
-    //     pageSize: this.itemPerPage,
-    //     rowOffSet: 0,
-    //     sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
-    //     sortOrder: 'desc', // asc / desc
-    //     dateSearchField: null,
-    //     fromDate: null,
-    //     toDate: null,
-    // };
     lastPage: number;
     // loading = true;
     loading = false; // debug
@@ -80,10 +68,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     ];
 
     shareTabTitle: string;
-    // dataList: Array<any> = [];
     dataListForSearch: Array<any> = [];
     holdersList: Array<any> = [];
-    holderDetail: any;
+    holderDetailData: any;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -91,7 +78,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
     @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
     @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
-    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) holderDetailObs;
+    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
 
     /* Private Properties. */
     private myDetails: any = {};
@@ -121,11 +108,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         private memberSocketService: MemberSocketService,
         private ofiReportsService: OfiReportsService
     ) {
-        // Reset holders' list and holder detail object
-        OfiReportsService.setRequestedAmHoldersList(false, this.ngRedux);
-        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
-
-        //
         this.shareTabTitle = '';
         this.createSearchListForm();
         this.createSearchInShareForm();
@@ -133,11 +115,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], {emitEvent: false});
+
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
         this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
         this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
-
         this.subscriptions.push(this.route.params.subscribe(params => {
             this.shareID = Number(params['tabid']);
 
@@ -170,6 +153,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
                 this.tabsControl[0].active = true;
                 this.searchListForm.get('search').patchValue(null, {emitEvent: false});
+                this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], {emitEvent: false});
             }
         }));
 
@@ -249,11 +233,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /**
      * Get detail of holders for a given share id
      *
-     * @param holderDetail
+     * @param data
      */
-    getHolderDetailData(holderDetail) {
-        if (holderDetail) {
-            this.holderDetail = holderDetail.toJS() || [];
+    getHolderDetail(data) {
+        if (data) {
+            this.holderDetailData = data.holders.toJS() || [];
             this.changeDetectorRef.markForCheck();
         }
     }
@@ -268,12 +252,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     createSearchInShareForm() {
         this.searchInShareForm = this._fb.group({
-            top: [
-                '',
-            ],
-            dateUsed: [
-                '',
-            ],
+            top: [[this.holderFilters[0]]],
+            dateUsed: [''],
         });
     }
 
@@ -300,10 +280,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     requestSearch(form) {
-        console.clear();
-
         // Reset the flag for getting holder detail
-        // OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
+        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
 
         if (
             this.searchListForm.get('search').value &&
@@ -314,10 +292,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
             const payload = {
                 shareId,
-                selectedFilter: 1
+                selectedFilter: this.holderFilters[0].id
             };
 
             OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
+            this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
 
             this.buildLink(shareId);
         } else {
@@ -330,6 +309,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
+        // TODO: think to check with the backend team that server-data driven will be possible
         let filters: { [prop: string]: any[] } = {};
 
         if (state.filters) {
@@ -339,12 +319,23 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             }
         }
 
-        console.log('state page', state.page);
-        console.log('page asked', state.page.from);
-        console.log('sort', state.sort);
-        console.log('raw filters', state.filters);
-        console.log('map filters', filters);
+        this.changeDetectorRef.markForCheck();
+    }
 
+    handleHolderFilterSelect(selectedFilterId) {
+        const payload = {
+            shareId: this.searchListForm.get('search').value[0].id,
+            selectedFilter: selectedFilterId
+        };
+
+        // Reset holder detail requested flag
+        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
+
+        // Fetch the holders with the newest selected filter
+        OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
+
+        // Retrieve holder detail's data
+        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
         this.changeDetectorRef.markForCheck();
     }
 
@@ -358,95 +349,19 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         window.open(url, '_blank');
     }
 
+    /**
+     * Export the holder detail page to CSV
+     */
+    handleHolderDetailExportButtonClick(): void {
+        const shareId = this.searchListForm.get('search').value[0].id;
+        const selectedFilter = this.searchInShareForm.get('top').value[0].id;
+        const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportShareHolderDetail&shareId=${shareId}&selectedFilter=${selectedFilter}`;
+        const url = this.generateExportURL(paramUrl, false);
+
+        window.open(url, '_blank');
+    }
+
     private generateExportURL(url: string, isProd: boolean = true): string {
         return isProd ? `https://${window.location.hostname}/mn/${url}` : `http://${window.location.hostname}:9788/${url}`;
     }
-
-    // showCurrency(order) {
-    //     const obj = this.currencyList.find(o => o.id === order.currency);
-    //     if (obj !== undefined) {
-    //         return obj.text;
-    //     } else {
-    //         return 'Not found!';
-    //     }
-    // }
-
-    // /**
-    //  * Show Success Message
-    //  * ------------------
-    //  * Shows an success popup.
-    //  *
-    //  * @param  {message} string - the string to be shown in the message.
-    //  * @return {void}
-    //  */
-    // showSuccess(message) {
-    //     /* Show the message. */
-    //     this.alertsService.create('success', `
-    //           <table class="table grid">
-    //               <tbody>
-    //                   <tr>
-    //                       <td class="text-center text-success">${message}</td>
-    //                   </tr>
-    //               </tbody>
-    //           </table>
-    //       `);
-    // }
-    //
-    // /**
-    //  * ===============
-    //  * Alert Functions
-    //  * ===============
-    //  */
-    //
-    // /**
-    //  * Num Pad
-    //  *
-    //  * @param num
-    //  * @returns {string}
-    //  */
-    // private numPad(num) {
-    //     return num < 10 ? '0' + num : num;
-    // }
-    //
-    // /**
-    //  * Show Error Message
-    //  * ------------------
-    //  * Shows an error popup.
-    //  *
-    //  * @param  {message} string - the string to be shown in the message.
-    //  * @return {void}
-    //  */
-    // private showError(message) {
-    //     /* Show the error. */
-    //     this.alertsService.create('error', `
-    //           <table class="table grid">
-    //               <tbody>
-    //                   <tr>
-    //                       <td class="text-center text-danger">${message}</td>
-    //                   </tr>
-    //               </tbody>
-    //           </table>
-    //       `);
-    // }
-    //
-    // /**
-    //  * Show Warning Message
-    //  * ------------------
-    //  * Shows a warning popup.
-    //  *
-    //  * @param  {message} string - the string to be shown in the message.
-    //  * @return {void}
-    //  */
-    // private showWarning(message) {
-    //     /* Show the error. */
-    //     this.alertsService.create('warning', `
-    //           <table class="table grid">
-    //               <tbody>
-    //                   <tr>
-    //                       <td class="text-center text-warning">${message}</td>
-    //                   </tr>
-    //               </tbody>
-    //           </table>
-    //       `);
-    // }
 }
