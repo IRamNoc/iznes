@@ -44,5 +44,5 @@ export interface OfiHolderState {
     amHoldersList: List<AmHoldersDetails>;
     requested: boolean;
     holderDetailRequested: boolean;
-    shareHolderDetail: List<HolderDetailStructure>;
+    shareHolderDetail: HolderDetailStructure;
 }
