@@ -159,15 +159,15 @@
                             <!--empty-->
                         </span>
                         <ng-template #col6>
-                            {{data.shareUnitNumber}}
+                            {{this._numberConverterService.toFrontEnd(data.shareUnitNumber)}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col7">
-                            {{data.fundAum}}
+                            {{this._numberConverterService.toFrontEnd(data.fundAum)}}
                         </span>
                         <ng-template #col7>
-                            {{data.shareAum}}
+                            {{this._numberConverterService.toFrontEnd(data.shareAum)}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -175,7 +175,7 @@
                             <!--empty-->
                         </span>
                         <ng-template #col8>
-                            {{data.shareRatio}}%
+                            {{this._numberConverterService.toFrontEnd(data.shareRatio)}}%
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -254,7 +254,7 @@
                                 <label>
                                     <span><span mltag="txt_aum">AUM</span>:</span>
                                 </label>
-                                <div><span class="readonly-field">€ {{shareData.shareAum}}</span></div>
+                                <div><span class="readonly-field">€ {{this._numberConverterService.toFrontEnd(shareData.shareAum)}}</span></div>
                             </div>
                         </td>
                         <td width="20%">
@@ -263,7 +263,7 @@
                                     <span><span mltag="txt_numberofunits">Number of units</span>:</span>
                                 </label>
                                 <div>
-                                    <span class="readonly-field">{{shareData.shareUnitNumber}}</span>
+                                    <span class="readonly-field">{{this._numberConverterService.toFrontEnd(shareData.shareUnitNumber)}}</span>
                                 </div>
                             </div>
                         </td>
@@ -273,7 +273,7 @@
                                     <span><span mltag="txt_latestnav">Latest NAV</span>:</span>
                                 </label>
                                 <div>
-                                    <span class="readonly-field">{{shareData.shareNav}}</span>
+                                    <span class="readonly-field">{{this._numberConverterService.toFrontEnd(shareData.shareNav)}}</span>
                                 </div>
                             </div>
                         </td>
