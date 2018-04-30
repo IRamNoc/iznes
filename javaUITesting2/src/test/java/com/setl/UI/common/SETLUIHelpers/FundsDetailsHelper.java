@@ -211,6 +211,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
