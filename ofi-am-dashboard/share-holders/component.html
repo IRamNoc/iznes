@@ -30,32 +30,13 @@
                                 <br>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchListForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>
-                                </div>
-                            </div>
-
-                            <!-- Holder detail share info -->
-                            <div *ngIf="tabdata.shareData" class="form-group col-sm-6">
-                                <!-- Share ISIN -->
-                                <div class="form-group col-sm-6">
-                                    <label for="shareIsin" style="margin: 10px 0">
-                                        <span>ISIN:</span>
-                                    </label>
-
-                                    <div id="shareIsin">
-                                        <span class="readonly-field">{{tabdata.shareData.shareIsin}}</span>
-                                    </div>
-                                </div>
-
-                                <!-- Share currency -->
-                                <div class="form-group col-sm-6">
-                                    <label for="shareCurrency" style="margin: 10px 0">
-                                        <span>Currency:</span>
-                                    </label>
-
-                                    <div id="shareCurrency">
-                                        <span class="readonly-field">{{tabdata.shareData.shareCurrency}}</span>
-                                    </div>
+                                    <ng-select id="holders-search-field"
+                                               [items]="dataListForSearch"
+                                               [allowClear]="true"
+                                               placeholder="Type a Share name or ISIN"
+                                               [formControl]="searchListForm.controls['search']"
+                                               mltag="txt_typeasharenameorisin">
+                                    </ng-select>
                                 </div>
                             </div>
                         </div>
@@ -229,74 +210,94 @@
                             </label>
                             <br>
                             <div class="input-button-group">
-                                <ng-select id="top-holders-search-field" [items]="holderFilters" name="top" [allowClear]="true" placeholder="Select" [formControl]="searchInShareForm.controls['top']" mltag="txt_select"></ng-select>
+                                <ng-select id="top-holders-search-field"
+                                           [items]="holderFilters"
+                                           name="top"
+                                           [formControl]="searchInShareForm.controls['top']"
+                                           mltag="txt_select"
+                                           (selected)="handleHolderFilterSelect($event.id)">
+                                </ng-select>
                             </div>
                         </div>
 
                         <div class="form-group col-xl-6 text-right">
                             <label mltag="txt_nbsp">&nbsp;</label>
                             <div>
-                                <button id="holders-export-share-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportholderslistforthisdate">Export holders list for this date</button>
+                                <button id="holders-export-share-btn"
+                                        type="button"
+                                        class="btn btn-success"
+                                        style="max-width: none !important"
+                                        mltag="txt_exportholderslistforthisdate"
+                                        (click)="handleHolderDetailExportButtonClick()">
+                                    Export holders list for this date
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-horizontal">
-                    <div class="row bordered">
-                        <!-- Number of holders -->
-                        <div class="form-group col-sm-3">
-                            <label for="shareHolderNumber">
-                                <span>Number of holders:</span>
-                            </label>
-
-                            <div id="shareHolderNumber">
-                                <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
+                <table style="width: 100%;" class="tableShareDetails">
+                    <tbody>
+                    <tr>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>
+                                    <span><span mltag="txt_numberofholdersforthisdate">Number of holders (for this date)</span>:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- AUM -->
-                        <div class="form-group col-sm-3">
-                            <label for="shareAum">
-                                <span>AUM:</span>
-                            </label>
-
-                            <div id="shareAum">
-                                <span class="readonly-field">{{shareData.shareAum}}</span>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>
+                                    <span><span mltag="txt_aum">AUM</span>:</span>
+                                </label>
+                                <div><span class="readonly-field">€ {{shareData.shareAum}}</span></div>
                             </div>
-                        </div>
-
-                        <!-- Unit number -->
-                        <div class="form-group col-sm-3">
-                            <label for="shareUnitNumber">
-                                <span>Number of units:</span>
-                            </label>
-
-                            <div id="shareUnitNumber">
-                                <span class="readonly-field">{{shareData.shareUnitNumber}}</span>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>
+                                    <span><span mltag="txt_numberofunits">Number of units</span>:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareUnitNumber}}</span>
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- Latest NAV -->
-                        <div class="form-group col-sm-3">
-                            <label for="shareNav">
-                                <span>Latest NAV:</span>
-                            </label>
-
-                            <div id="shareNav">
-                                <span class="readonly-field">{{shareData.shareNav}}</span>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>
+                                    <span><span mltag="txt_latestnav">Latest NAV</span>:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareNav}}</span>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>
+                                    <span><span mltag="txt_currency">Currency</span>:</span>
+                                </label>
+                                <div>
+                                    <span class="readonly-field" mltag="txt_eur">{{shareData.shareCurrency}}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </form>
 
-            <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
+            <clr-datagrid clrDgSortIcon #ordersDataGrid>
                 <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>
                     <span mltag="txt_ranking">Ranking</span> <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch>
+                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>
                     <span mltag="txt_investorname">Investor name</span> <span class="column-label"></span>
                 </clr-dg-column>
 
@@ -312,26 +313,16 @@
                     <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
                 </clr-dg-column>
 
-                <!--<clr-dg-row *ngFor="let data of dataList; let i = index">-->
-                <!--<clr-dg-cell mltag="txt_1">1-->
-
-                <!--</clr-dg-cell>-->
-                <!--<clr-dg-cell mltag="txt_macifinvestissementsa">MACIF Investissement SA-->
-
-                <!--</clr-dg-cell>-->
-                <!--<clr-dg-cell>{{1234.45630 | moneyValue: 5}}-->
-
-                <!--</clr-dg-cell>-->
-                <!--<clr-dg-cell>{{1600000000 | moneyValue: 4}}-->
-
-                <!--</clr-dg-cell>-->
-                <!--<clr-dg-cell mltag="txt_4217">42.17%-->
-
-                <!--</clr-dg-cell>-->
-                <!--</clr-dg-row>-->
+                <clr-dg-row *clrDgItems="let holderItem of holderDetailData">
+                    <clr-dg-cell>{{holderItem.ranking}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.investorName}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.quantity | moneyValue: 5}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.amount | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.ratio}}%</clr-dg-cell>
+                </clr-dg-row>
 
                 <clr-dg-footer>
-                    <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage" [clrDgLastPage]="lastPage"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="itemPerPage"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
 
