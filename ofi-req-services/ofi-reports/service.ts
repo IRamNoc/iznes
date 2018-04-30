@@ -109,7 +109,7 @@ export class OfiReportsService {
     }
 
     static defaultRequestHolderDetail(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, holderDetailRequestData: OfiHolderDetailRequestData) {
-        ngRedux.dispatch(ofiSetHolderDetailRequested);
+        ngRedux.dispatch(ofiSetHolderDetailRequested());
 
         // Request the list.
         const asyncTaskPipe = ofiReportsService.requestShareHolderDetail(holderDetailRequestData);
