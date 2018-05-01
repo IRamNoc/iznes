@@ -162,14 +162,14 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 id: item.get('fundShareID', 0),
                 isin: item.get('isin', ''),
                 shareName: item.get('fundShareName', ''),
-                assetClass: FundShareValue.ClassCodeValue[item.get('shareClassCode', 0)],
+                assetClass: item.get('shareClassCode', ''),
                 assetManager: item.get('companyName', ''),
                 srri: item.getIn(['keyFactOptionalData', 'srri'], ''),
                 sri: item.getIn(['keyFactOptionalData', 'sri'], ''),
                 currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
                 nav,
-                nextSubCutOff: nextSubCutOff.format('DD/MM/YYYY HH:mm'),
-                nextRedCutOff: nextRedCutOff.format('DD/MM/YYYY HH:mm'),
+                nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
+                nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
                 hasNoNav: Boolean(nav <= 0)
             });
 

@@ -39,8 +39,8 @@ import {Router} from '@angular/router';
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
-    static DateTimeFormat = 'DD/MM/YYYY HH:mm';
-    static DateFormat = 'DD/MM/YYYY';
+    static DateTimeFormat = 'YYYY-MM-DD HH:mm';
+    static DateFormat = 'YYYY-MM-DD';
 
     @Input() shareId: number;
     @Input() type: string;
@@ -252,10 +252,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     get allowToPlaceOrder(): string | null {
         return (this.form.valid && this.isValidOrderValue() && this.disclaimer.value && !this.isRedeemTooMuch) ? null : '';
-    }
-
-    get assetClass(): string {
-        return FundShareValue.ClassCodeValue[this.shareData.shareClassCode];
     }
 
     get valuationOffset() {
@@ -763,6 +759,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             }
         }
         return 0;
+    }
+
+    getDate(dateString: string): string {
+        return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
     }
 }
 
