@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -14,6 +14,7 @@ import {immutableHelper, NumberConverterService} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {Subscription} from 'rxjs/Subscription';
+import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 
 /* Types. */
 interface SelectedItem {
@@ -83,6 +84,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
+    private appConfig: any = {};
 
     /**
      * Constructor
@@ -97,17 +99,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param {MemberSocketService} memberSocketService
      * @param {OfiReportsService} ofiReportsService
      */
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private _numberConverterService: NumberConverterService,
-        private _fb: FormBuilder,
-        private memberSocketService: MemberSocketService,
-        private ofiReportsService: OfiReportsService
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private _numberConverterService: NumberConverterService,
+                private _fb: FormBuilder,
+                private memberSocketService: MemberSocketService,
+                private ofiReportsService: OfiReportsService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
         this.shareTabTitle = '';
         this.createSearchListForm();
         this.createSearchInShareForm();
@@ -344,7 +346,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      */
     handleHoldersExportButtonClick(): void {
         const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportAssetManagerHolders`;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
         window.open(url, '_blank');
     }
@@ -356,7 +358,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         const shareId = this.searchListForm.get('search').value[0].id;
         const selectedFilter = this.searchInShareForm.get('top').value[0].id;
         const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportShareHolderDetail&shareId=${shareId}&selectedFilter=${selectedFilter}`;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
         window.open(url, '_blank');
     }

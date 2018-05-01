@@ -12,7 +12,6 @@ import {ConfirmationService, immutableHelper, SagaHelper} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
@@ -21,14 +20,10 @@ import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-pr
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 import {NumberConverterService} from '@setl/utils/services/number-converter/service';
-
-
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 /* Ofi Store stuff. */
 import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
-
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
 
@@ -204,8 +199,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
-                public _numberConverterService: NumberConverterService,
-    ) {
+                public _numberConverterService: NumberConverterService,) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
@@ -435,7 +429,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 estimatedAmount: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
                 estimatedAmountWithCost: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
                 estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
-                estimatedQuantity:  this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
+                estimatedQuantity: this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
                 feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
                 firstName: item.get('firstName'),
                 fundShareID: item.get('fundShareID'),
@@ -724,7 +718,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 paramUrl += '&' + filter + '=' + encodeURIComponent(this.dataGridParams[filter]);
             }
         }
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 
