@@ -26,7 +26,7 @@
             <clr-dg-column mltag="txt_creator" clrDgSortIcon>Creator</clr-dg-column>
             <clr-dg-column mltag="txt_expiry" clrDgSortIcon>Expiry</clr-dg-column>
             <clr-dg-column mltag="txt_status" clrDgSortIcon>Status</clr-dg-column>
-            <clr-dg-column mltag="txt_actions" clrDgSortIcon>Action</clr-dg-column>
+            <clr-dg-column class="right" mltag="txt_actions" clrDgSortIcon>Actions</clr-dg-column>
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
                 <clr-dg-cell><span id="contract-{{contract.index}}"><span mltag="txt_contract">Contract</span> {{contract.name}}</span></clr-dg-cell>
                 <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
@@ -35,12 +35,10 @@
                     <span *ngIf="contract.__completed == -1" class="label label-success" mltag="txt_enabled">Complete</span>
                     <span *ngIf="contract.__completed !== -1" class="label label-warning" mltag="txt_incomplete">Incomplete</span>
                 </clr-dg-cell>
-                <clr-dg-cell>
-                    <div class="btn-group btn-sm" style="float:right">
-                        <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn">
-                            <i class="fa fa-search"></i> <span mltag="txt_view">View</span>
-                        </button>
-                    </div>
+                <clr-dg-cell class="right">
+                    <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn btn-orange btn-sm">
+                        <i class="fa fa-search"></i>&nbsp;<span mltag="txt_view">View</span>
+                    </button>
                 </clr-dg-cell>
             </clr-dg-row>
             <clr-dg-footer>
@@ -86,10 +84,10 @@
         <div *ngIf="contract.parties.length > 0">
             Parties
             <clr-datagrid #partiesDataGrid>
-                <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
                 <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
                 <clr-dg-column mltag="txt_element">Element</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-row *clrDgItems="let party of contract.parties; let i = index">
                     <clr-dg-cell>
                         <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
@@ -100,12 +98,12 @@
                         <span *ngIf="contract.payors[i] !== undefined && contract.payees[i] !== undefined"> - </span>
                         <span *ngIf="contract.payees[i] !== undefined" mltag="txt_receive">Receive</span> {{contract.payees[i]}}
                     </clr-dg-cell>
-                    <clr-dg-cell>
+                    <clr-dg-cell class="right">
                         <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
                         <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
                         <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress">
-                            <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn">
-                                <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
+                            <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn btn-success btn-sm">
+                                <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
                             </button>
                         </span>
                     </clr-dg-cell>
@@ -115,19 +113,19 @@
         <div *ngIf="contract.authorisations.length > 0">
             Authorisations
             <clr-datagrid #authorisationsDataGrid>
-                <clr-dg-column mltag="txt_actions">Action</clr-dg-column>
                 <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
                     <clr-dg-cell>
                         <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
                     </clr-dg-cell>
                     <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
-                    <clr-dg-cell>
+                    <clr-dg-cell class="right">
                         <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
                         <span *ngIf="authorisation.signature == ''">
-                            <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn">
-                                <i class="fa fa-check"></i> <span mltag="txt_view">Commit</span>
+                            <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn btn-success btn-sm">
+                                <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
                             </button>
                         </span>
                     </clr-dg-cell>
