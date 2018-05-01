@@ -1,38 +1,24 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
-
 /* Utils. */
-import {
-    NumberConverterService
-} from '@setl/utils';
-
+import {ConfirmationService, NumberConverterService} from '@setl/utils';
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-
-import * as math from 'mathjs';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-
+import {ActivatedRoute, Router} from '@angular/router';
 /* Clarity */
-import {ClrDatagridStateInterface} from '@clr/angular';
-
-import * as _ from 'lodash';
-
 /* services */
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
-
 /* store */
-import {ofiManageOrderActions, ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
+import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 
 /* Types. */
 interface SelectedItem {
@@ -64,20 +50,20 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     };
 
     currencyList = [
-        {id : 0, text: 'EUR'},
-        {id : 1, text: 'USD'},
-        {id : 2, text: 'GBP'},
-        {id : 3, text: 'CHF'},
-        {id : 4, text: 'JPY'},
-        {id : 5, text: 'AUD'},
-        {id : 6, text: 'NOK'},
-        {id : 7, text: 'SEK'},
-        {id : 8, text: 'ZAR'},
-        {id : 9, text: 'RUB'},
-        {id : 10, text: 'SGD'},
-        {id : 11, text: 'AED'},
-        {id : 12, text: 'CNY'},
-        {id : 13, text: 'PLN'},
+        {id: 0, text: 'EUR'},
+        {id: 1, text: 'USD'},
+        {id: 2, text: 'GBP'},
+        {id: 3, text: 'CHF'},
+        {id: 4, text: 'JPY'},
+        {id: 5, text: 'AUD'},
+        {id: 6, text: 'NOK'},
+        {id: 7, text: 'SEK'},
+        {id: 8, text: 'ZAR'},
+        {id: 9, text: 'RUB'},
+        {id: 10, text: 'SGD'},
+        {id: 11, text: 'AED'},
+        {id: 12, text: 'CNY'},
+        {id: 13, text: 'PLN'},
     ];
 
     searchForm: FormGroup;
@@ -95,19 +81,17 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
 
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private _fb: FormBuilder,
-        private memberSocketService: MemberSocketService,
-        private ofiReportsService: OfiReportsService,
-        private alerts: AlertsService,
-        private _confirmationService: ConfirmationService,
-        private _numberConverterService: NumberConverterService,
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private _fb: FormBuilder,
+                private memberSocketService: MemberSocketService,
+                private ofiReportsService: OfiReportsService,
+                private alerts: AlertsService,
+                private _confirmationService: ConfirmationService,
+                private _numberConverterService: NumberConverterService,) {
         this.createsearchForm();
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -153,7 +137,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.centralizationReportsList = listImu.reduce((result, item) => {
 
             result.push({
-                cutoffDate: item.get('cutoffDate'),
+                cutoffDate: (item.get('cutoffDate') == null) ? '-' : item.get('cutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
@@ -231,7 +215,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickExportCentralizationReport(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv';
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv&userId=' + this.myDetails.userId;
         const url = this.generateExportURL(paramUrl, false);
         window.open(url, '_blank');
     }
@@ -244,12 +228,14 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     onClickViewCorrespondingOrders(id) {
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
-            const orderFilters = { filters: {
-                isin: obj.isin,
-                shareName: obj.fundShareName,
-                status: 1,
-                orderType: '',
-            }};
+            const orderFilters = {
+                filters: {
+                    isin: obj.isin,
+                    shareName: obj.fundShareName,
+                    status: 1,
+                    orderType: '',
+                }
+            };
 
             this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
             this.router.navigateByUrl('manage-orders/list');
@@ -268,10 +254,10 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 isin: obj.isin,
                 status: null,
                 orderType: null,
-                pageSize: null,
-                rowOffSet: null,
-                sortByField: null,
-                sortOrder: null,
+                pageSize: 1000,
+                rowOffSet: 0,
+                sortByField: 'userEntered',
+                sortOrder: 'desc',
                 dateSearchField: null,
                 fromDate: null,
                 toDate: null,
@@ -288,7 +274,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickDownloadCentralizationHistory(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id;
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id + '&userId=' + this.myDetails.userId;
         const url = this.generateExportURL(paramUrl, false);
         window.open(url, '_blank');
     }

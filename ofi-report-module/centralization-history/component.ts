@@ -1,27 +1,30 @@
 // Vendor
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Inject,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-
 /* Alert service. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 /* Utils. */
-import {ConfirmationService, immutableHelper, SagaHelper, NumberConverterService, commonHelper} from '@setl/utils';
-
+import {ConfirmationService, immutableHelper, NumberConverterService} from '@setl/utils';
 /* Ofi service */
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
-
 /* Core redux */
-import {ofiManageOrderActions, ofiCentralizationReportsActions} from '@ofi/ofi-main/ofi-store';
+import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
+import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 
 /* Types. */
 interface SelectedItem {
@@ -33,7 +36,7 @@ interface SelectedItem {
 @Component({
     selector: 'app-am-centralization-history',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
@@ -95,26 +98,27 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     ];
 
     currencyList = [
-        {id : 0, text: 'EUR'},
-        {id : 1, text: 'USD'},
-        {id : 2, text: 'GBP'},
-        {id : 3, text: 'CHF'},
-        {id : 4, text: 'JPY'},
-        {id : 5, text: 'AUD'},
-        {id : 6, text: 'NOK'},
-        {id : 7, text: 'SEK'},
-        {id : 8, text: 'ZAR'},
-        {id : 9, text: 'RUB'},
-        {id : 10, text: 'SGD'},
-        {id : 11, text: 'AED'},
-        {id : 12, text: 'CNY'},
-        {id : 13, text: 'PLN'},
+        {id: 0, text: 'EUR'},
+        {id: 1, text: 'USD'},
+        {id: 2, text: 'GBP'},
+        {id: 3, text: 'CHF'},
+        {id: 4, text: 'JPY'},
+        {id: 5, text: 'AUD'},
+        {id: 6, text: 'NOK'},
+        {id: 7, text: 'SEK'},
+        {id: 8, text: 'ZAR'},
+        {id: 9, text: 'RUB'},
+        {id: 10, text: 'SGD'},
+        {id: 11, text: 'AED'},
+        {id: 12, text: 'CNY'},
+        {id: 13, text: 'PLN'},
     ];
 
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
+    private appConfig: any = {};
     dataList: Array<any> = [];
     dataListForSearch: Array<any> = [];
 
@@ -126,18 +130,18 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     @select(['ofi', 'ofiReports', 'centralizationReports', 'baseCentralizationHistory']) OfiBaseCentralizationHistoryObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationHistory']) OfiCentralizationHistoryObj;
 
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private ofiReportsService: OfiReportsService,
-        private memberSocketService: MemberSocketService,
-        private _numberConverterService: NumberConverterService,
-        private _fb: FormBuilder,
-        private _confirmationService: ConfirmationService
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private ofiReportsService: OfiReportsService,
+                private memberSocketService: MemberSocketService,
+                private _numberConverterService: NumberConverterService,
+                private _fb: FormBuilder,
+                private _confirmationService: ConfirmationService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.OfiBaseCentralizationHistoryObj.subscribe((requested) => this.getBaseCentralizationHistoryFromRedux(requested)));
         this.subscriptions.push(this.OfiCentralizationHistoryObj.subscribe((requested) => this.getCentralizationHistoryFromRedux(requested)));
@@ -186,10 +190,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     public ngOnInit() {
         this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
+
+        this.filterForm.controls['period'].setValue([this.periodList[1]]);
+
         this.changeDetectorRef.markForCheck();
     }
 
-    public ngAfterViewInit() {}
+    public ngAfterViewInit() {
+    }
 
     getLanguage(requested): void {
         if (requested) {
@@ -343,7 +351,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         return result;
     }
 
-    daysInMonth (month, year) {
+    daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
     }
 
@@ -477,7 +485,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             }
 
             // check dates are valid
-            if (this.filterForm.get('dateFrom').value !== '' && this.filterForm.get('dateTo').value !== '') {
+            if (!this.hideCalendars && this.filterForm.get('dateFrom').value !== '' && this.filterForm.get('dateTo').value !== '') {
                 const d1 = new Date(this.filterForm.get('dateFrom').value);
                 const d2 = new Date(this.filterForm.get('dateTo').value);
                 const validDates = (d1 <= d2);
@@ -526,14 +534,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         const methodName = 'getSingleShareInfoCsv';
         const period = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
 
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&fundShareID=' + this.shareID + '&dateFrom=' + this.dateFrom + '&dateTo=' + this.dateTo + '&dateRange=' + period;
-        const url = this.generateExportURL(paramUrl, false);
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&fundShareID=' + this.shareID + '&dateFrom=' + this.dateFrom + '&dateTo=' + this.dateTo + '&dateRange=' + period + '&userId=' + this.myDetails.userId;
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 
     exportHistory(navDate): void {
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + this.shareID + '&dateFrom=' + navDate + '&dateTo=' + navDate + '&dateRange=';
-        const url = this.generateExportURL(paramUrl, false);
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + this.shareID + '&dateFrom=' + navDate + '&dateTo=' + navDate + '&userId=' + this.myDetails.userId;
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 
@@ -543,15 +551,17 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     }
 
     viewOrder(navDate) {
-        const orderFilters = { filters: {
-            isin: this.baseCentralizationHistory.isin,
-            shareName: this.baseCentralizationHistory.fundShareName,
-            status: '',
-            orderType: '',
-            dateType: 'navDate',
-            fromDate: navDate,
-            toDate: navDate,
-        }};
+        const orderFilters = {
+            filters: {
+                isin: this.baseCentralizationHistory.isin,
+                shareName: this.baseCentralizationHistory.fundShareName,
+                status: '',
+                orderType: '',
+                dateType: 'navDate',
+                fromDate: navDate,
+                toDate: navDate,
+            }
+        };
         this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
         this.router.navigateByUrl('manage-orders/list');
     }
