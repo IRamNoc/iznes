@@ -20,3 +20,5 @@ export const ofiSetHolderDetailRequested = kAction(OFI_SET_HOLDER_DETAIL_REQUEST
 
 export const OFI_CLEAR_HOLDER_DETAIL_REQUESTED = `${name}/OFI_CLEAR_HOLDER_DETAIL_REQUESTED`;
 export const ofiClearHolderDetailRequested = kAction(OFI_CLEAR_HOLDER_DETAIL_REQUESTED);
+
+

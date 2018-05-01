@@ -26,6 +26,9 @@ export interface IznesShareDetail {
     hasCoupon: string;
     couponType: string;
     freqOfDistributionDeclaration: string;
+    status: number;
+    master: boolean;
+    feeder: number;
     maximumNumDecimal: string;
     subscriptionCategory: string;
     subscriptionCurrency: string;
@@ -40,7 +43,6 @@ export interface IznesShareDetail {
     minSubsequentRedemptionInShare: string;
     minSubsequentRedemptionInAmount: string;
     portfolioCurrencyHedge: string;
-    tradeDay: string;
     subscriptionCutOffTime: string;
     subscriptionCutOffTimeZone: string;
     subscriptionSettlementPeriod: string;

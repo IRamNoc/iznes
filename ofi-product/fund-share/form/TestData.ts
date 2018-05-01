@@ -20,8 +20,6 @@ export class FundShareTestData {
         (model.keyFacts.mandatory.status.preset as any) = [{id: E.StatusEnum.NA, text: 'N/A' }];
         model.keyFacts.mandatory.subscriptionStartDate.preset = '2018-04-01';
         (model.keyFacts.mandatory.valuationFrequency.preset as any) = [{id: E.ValuationFrequencyEnum.Daily, text: 'Daily' }];
-        model.keyFacts.mandatory.valuationNAV.preset = 1;
-        model.keyFacts.mandatory.valuationNAVDate.preset = '2018-04-01';
 
         model.characteristic.mandatory.maximumNumDecimal.preset = 1;
         model.characteristic.mandatory.minInitialRedemptionInAmount.preset = 1;

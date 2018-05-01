@@ -12,30 +12,23 @@
         <clr-tab-content *clrIfActive>
             <section class="form-block">
                 <form [formGroup]="searchForm" id="search-centralization-reports-form">
-                    <div class="form-horizontal">
-                        <div class="row bordered form-group">
-                            <div class="form-group col-sm-6">
-                                <h3>Please find below the centralization reports by Share:</h3>
-                            </div>
 
-                            <!--<div class="form-group col-sm-6">-->
-                                <!--<label style="margin: 10px 0;">-->
-                                    <!--<b><span>Search for a specific share:</span></b>-->
-                                <!--</label>-->
-                                <!--<br>-->
-                                <!--<div class="input-button-group" *ngIf="dataListForSearch.length > 0">-->
-                                    <!--<ng-select id="centralization-reports-search-field" [items]="dataListForSearch" [allowClear]="true" placeholder="Type a Share name or ISIN" [formControl]="searchForm.controls['search']" mltag="txt_typeasharenameorisin"></ng-select>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="form-group col-sm-6">-->
-                                <!--<label class="control-label" for="input">Search for a specific share:</label>-->
-                                <!--<input type="text" name="input" id="input" placeholder="Type a Share name or ISIN" [formControl]="filterInput"/>-->
-                            <!--</div>-->
-                            <div class="form-group col-sm-6 flex-container-column">
-                                <button class="btn btn-default" (click)="onClickExportCentralizationReport()">Export centralization report</button>
-                            </div>
-                        </div>
-                    </div>
+                    <table style="width: 100%;">
+                        <tbody>
+                        <tr>
+                            <td>
+                                <h3 style="margin-bottom: 3px;">
+                                    <span mltag="">Please find below the centralization reports by Share</span>:
+                                </h3>
+                                <span mltag="">You can see centralization report</span>
+                            </td>
+                            <td class="text-right" valign="middle">
+                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="" (click)="onClickExportCentralizationReport()">Export centralization report</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
                 </form>
                 <br>
 
@@ -93,49 +86,50 @@
                         <clr-dg-cell>{{data.navDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
                         <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.latestNav)}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.aum)}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition))}}</clr-dg-cell>
+                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2 }}</clr-dg-cell>
+                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.aum) | moneyValue: 4}}</clr-dg-cell>
+                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netPositionPercentage}} %</clr-dg-cell>
-
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
                                     <div class="form-group col-sm-7">
                                         <table class="table table-noborder">
                                             <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>Quantity</th>
-                                                    <th>Amount</th>
-                                                    <th>Cut-off Date</th>
-                                                </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>Quantity</th>
+                                                <th>Amount</th>
+                                                <th>Cut-off Date</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td><b>Subscriptions</b></td>
-                                                    <td>{{this._numberConverterService.toFrontEnd(data.subQuantity)}}</td>
-                                                    <td>{{this._numberConverterService.toFrontEnd(data.subAmount)}}</td>
-                                                    <td>{{data.cutoffDate}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>Redemptions</b></td>
-                                                    <td>{{this._numberConverterService.toFrontEnd(data.redQuantity)}}</td>
-                                                    <td>{{this._numberConverterService.toFrontEnd(data.redAmount)}}</td>
-                                                    <td>{{data.cutoffDate}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b>Subscriptions</b></td>
+                                                <td>{{this._numberConverterService.toFrontEnd(data.subQuantity) | moneyValue: 5 }}</td>
+                                                <td>{{this._numberConverterService.toFrontEnd(data.subAmount) | moneyValue: 5 }}</td>
+                                                <td>{{data.cutoffDate}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Redemptions</b></td>
+                                                <td>{{this._numberConverterService.toFrontEnd(data.redQuantity) | moneyValue: 5 }}</td>
+                                                <td>{{this._numberConverterService.toFrontEnd(data.redAmount) | moneyValue: 5 }}</td>
+                                                <td>{{data.cutoffDate}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
 
                                     <div class="form-group col-sm-5 flex-container-column">
                                         <div class="flex-container-row">
-                                            <button class="btn btn-default" type="button" (click)="onClickViewCorrespondingOrders(data.fundShareID)">View corresponding orders</button>
-                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCorrespondingOrders(data.fundShareID)"><i class="fa fa-download"></i></button>
+                                            <button class="btn btn-primary" type="button" (click)="onClickViewCorrespondingOrders(data.fundShareID)">View corresponding orders</button>
+                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCorrespondingOrders(data.fundShareID)">
+                                                <i class="fa fa-download"></i></button>
                                         </div>
                                         <div class="flex-container-row">
-                                            <button class="btn btn-default" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View centralization history</button>
-                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCentralizationHistory(data.fundShareID)"><i class="fa fa-download"></i></button>
+                                            <button class="btn btn-primary" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View centralization history</button>
+                                            <button class="btn btn-default" type="button" (click)="onClickDownloadCentralizationHistory(data.fundShareID)">
+                                                <i class="fa fa-download"></i></button>
                                         </div>
                                     </div>
                                 </div>
