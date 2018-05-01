@@ -319,6 +319,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -380,6 +383,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
+
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
         this.changeDetectorRef.markForCheck();
     }
 
