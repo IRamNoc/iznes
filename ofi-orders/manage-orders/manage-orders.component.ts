@@ -1,5 +1,8 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy,
+    OnInit
+} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -8,7 +11,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, SagaHelper, commonHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -142,6 +145,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 13, text: 'PLN'},
     ];
 
+    appConfig: AppConfig;
+
     get isInvestorUser() {
         return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
     }
@@ -204,7 +209,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
-                public _numberConverterService: NumberConverterService,) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                public _numberConverterService: NumberConverterService) {
+
+        this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
@@ -634,7 +642,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 paramUrl += '&' + filter + '=' + encodeURIComponent(this.dataGridParams[filter]);
             }
         }
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 
