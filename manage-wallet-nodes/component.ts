@@ -65,7 +65,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                         walletNodeName: new FormControl('', Validators.required),
                         nodeAddress: new FormControl('', Validators.required),
                         nodePath: new FormControl(),
-                        nodePort: new FormControl('', Validators.required),
+                        nodePort: new FormControl('', Validators.compose([Validators.required, this.isInteger])),
                         chainId: new FormControl('', Validators.required)
                     }
                 )),
@@ -261,11 +261,11 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             formControl: new FormGroup(
                 {
                     walletNodeId: new FormControl(walletNode.walletNodeId),
-                    walletNodeName: new FormControl(walletNode.walletNodeName),
-                    nodeAddress: new FormControl(walletNode.nodeAddress),
+                    walletNodeName: new FormControl(walletNode.walletNodeName, Validators.required),
+                    nodeAddress: new FormControl(walletNode.nodeAddress, Validators.required),
                     nodePath: new FormControl(walletNode.nodePath),
-                    nodePort: new FormControl(walletNode.nodePort),
-                    chainId: new FormControl(walletNode.chainId),
+                    nodePort: new FormControl(walletNode.nodePort, Validators.compose([Validators.required, this.isInteger])),
+                    chainId: new FormControl(walletNode.chainId, Validators.required),
                 }
             ),
             active: false
@@ -290,6 +290,17 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         this.setTabActive(0);
 
         return;
+    }
+
+    /*CHECK IF INTEGER*/
+    isInteger(control: FormControl) {
+        const nodePort = control.value;
+        const portLength = ('' + nodePort).length;
+        if (Number.isInteger(nodePort) && portLength <= 11) {
+            return null;
+        } else {
+            return {invalid: true};
+        }
     }
 
     /*SET ACTIVE TAB*/
