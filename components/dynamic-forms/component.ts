@@ -67,4 +67,8 @@ export class DynamicFormComponent implements OnInit {
         this.service.uploadFile(event, modelItem, this.changeDetectorRef);
     }
 
+    showDropdown(item: FormItem): boolean {
+        return (!!item.listItems) && item.listItems.length > 0;
+    }
+
 }
