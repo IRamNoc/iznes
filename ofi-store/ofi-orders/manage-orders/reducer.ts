@@ -73,6 +73,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 iban: item.get('iban'),
                 investorAddress: item.get('investorAddress'),
                 investorWalletID: item.get('investorWalletID'),
+                investorCompanyName: item.get('investorCompanyName'),
                 isin: item.get('isin'),
                 label: item.get('label'),
                 lastName: item.get('lastName'),

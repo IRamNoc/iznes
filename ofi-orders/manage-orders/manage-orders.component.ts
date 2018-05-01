@@ -157,7 +157,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private myWallets: any = [];
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
-    private managementCompanyList: any = [];
     fundShare = {
         mifiidChargesOneOff: null,
         mifiidChargesOngoing: null,
@@ -189,8 +188,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyOb;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
 
     constructor(private ofiOrdersService: OfiOrdersService,
@@ -219,8 +216,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        this.subscriptions.push(this.requestedOfiManagementCompanyOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
-        this.subscriptions.push(this.OfiManagementCompanyListOb.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
         this.subscriptions.push(this.walletDirectoryOb.subscribe((walletDirectory) => {
             this.walletDirectory = walletDirectory;
         }));
@@ -395,6 +390,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     iban: _.get(order, 'iban', ''),
                     investorAddress: _.get(order, 'investorAddress', ''),
                     investorWalletID: _.get(order, 'investorWalletID', 0),
+                    investorCompanyName: _.get(order, 'investorCompanyName', ''),
                     isin: _.get(order, 'isin', ''),
                     label: _.get(order, 'label', ''),
                     lastName: _.get(order, 'lastName', ''),
@@ -407,6 +403,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     settlementDate: _.get(order, 'settlementDate', ''),
                     totalResult: _.get(order, 'totalResult', 0),
                     valuationDate: _.get(order, 'valuationDate'),
+
                     amount: orderFigure.amount,
                     amountWithCost: orderFigure.amountWithCost,
                     price: orderFigure.price,
@@ -440,50 +437,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getOrdersList();
             this.changeDetectorRef.markForCheck();
         }
-    }
-
-    getManagementCompanyRequested(requested): void {
-        // console.log('requested', requested);
-        if (!requested) {
-            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.mcService, this.ngRedux);
-        }
-    }
-
-    getManagementCompanyListFromRedux(managementCompanyList) {
-        const managementCompanyListImu = fromJS(managementCompanyList);
-
-        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-
-            result.push({
-                companyID: item.get('companyID', 0),
-                companyName: item.get('companyName', ''),
-                country: item.get('country', ''),
-                addressPrefix: item.get('addressPrefix', ''),
-                postalAddressLine1: item.get('postalAddressLine1', ''),
-                postalAddressLine2: item.get('postalAddressLine2', ''),
-                city: item.get('city', ''),
-                stateArea: item.get('stateArea', ''),
-                postalCode: item.get('postalCode', ''),
-                taxResidence: item.get('taxResidence', ''),
-                registrationNum: item.get('registrationNum', ''),
-                supervisoryAuthority: item.get('supervisoryAuthority', ''),
-                numSiretOrSiren: item.get('numSiretOrSiren', ''),
-                creationDate: item.get('creationDate', ''),
-                shareCapital: item.get('shareCapital', 0),
-                commercialContact: item.get('commercialContact', ''),
-                operationalContact: item.get('operationalContact', ''),
-                directorContact: item.get('directorContact', ''),
-                lei: item.get('lei', ''),
-                bic: item.get('bic', ''),
-                giinCode: item.get('giinCode', ''),
-                logoName: item.get('logoName', ''),
-                logoURL: item.get('logoURL', '')
-            });
-
-            return result;
-        }, []);
-
-        this.changeDetectorRef.markForCheck();
     }
 
     getFundShareFromRedux(fundShare) {
@@ -849,15 +802,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    showManagementCompany(order) {
-        const obj = this.managementCompanyList.find(o => o.companyID === order.amCompanyID);
-        if (obj !== undefined) {
-            return obj.companyName;
-        } else {
-            return 'Not found!';
-        }
-    }
-
     showCurrency(order) {
         const obj = this.currencyList.find(o => o.id === order.currency);
         if (obj !== undefined) {
@@ -907,24 +851,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
     }
 
-    private numPad(num) {
-        return num < 10 ? "0" + num : num;
-    }
-
-    /**
-     * Calc Entry Fee
-     * --------------
-     * Calculates the entry fee from the grossAmount.
-     *
-     * @param  {number} grossAmount - the grossAmount.
-     * @return {number}             - the entry fee.
-     */
-    private calcEntryFee(grossAmount: number): number {
-        return 0; // for OFI test this is 0
-        // TODO: Real example
-        // return Math.round(grossAmount * .0375);
-    }
-
     /**
      * Get Order Date
      *
@@ -935,45 +861,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('YYYY-MM-DD');
     }
 
-    /**
-     * Get Order Time
-     *
-     * @param  {string} dateString - the order's date string.
-     * @return {string}            - the formatted time or empty string.
-     */
-    getOnlyTime(dateString): string {
-        return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('HH:mm');
-    }
-
     getDateTime(dateString): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('YYYY-MM-DD HH:mm');
-    }
-
-    /**
-     * Pad Number Left
-     * -------------
-     * Pads a number left
-     *
-     * @param  {number} num - the orderId.
-     * @return {string}
-     */
-    private padNumberLeft(num: number | string, zeros?: number): string {
-        /* Validation. */
-        if (!num && num !== 0) return '';
-        zeros = zeros || 2;
-
-        /* Variables. */
-        num = num.toString();
-        let // 11 is the total required string length.
-            requiredZeros = zeros - num.length,
-            returnString = '';
-
-        /* Now add the zeros. */
-        while (requiredZeros--) {
-            returnString += '0';
-        }
-
-        return returnString + num;
     }
 
     /**
