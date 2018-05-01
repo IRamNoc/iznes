@@ -29,7 +29,8 @@
                                 <span class="ml_translated" mltag="txt_subportfolioname">Sub-portfolio Name</span>
                             </label>
                             <div>
-                                <input type="text" #portfolioName placeholder="Sub-portfolio name" class="form-control mlp_translated" mltag="txt_subportfolioname">
+                                <input type="text" #portfolioName placeholder="Sub-portfolio name"
+                                       class="form-control mlp_translated" mltag="txt_subportfolioname">
                             </div>
                         </div>
 
@@ -38,7 +39,8 @@
                                 <span class="ml_translated" mltag="txt_subportfolioiban">Sub-portfolio IBAN</span>
                             </label>
                             <div>
-                                <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN" class="form-control mlp_translated" mltag="txt_subportfolioiban">
+                                <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN"
+                                       class="form-control mlp_translated" mltag="txt_subportfolioiban">
                             </div>
                         </div>
 
@@ -55,31 +57,25 @@
             </form>
 
             <clr-datagrid>
-                <clr-dg-column><span mltag="txt_actions">Actions</span></clr-dg-column>
-                <clr-dg-column [clrDgField]="'label'" clrDgSortIcon><span mltag="txt_subportfolio">Sub-portfolio</span> <span class="column-label"></span></clr-dg-column>
-                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon><span class="clr-sort-label" mltag="txt_iban">IBAN</span> <span class="column-label"></span></clr-dg-column>
-                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon><span class="clr-sort-label" mltag="txt_blockchainaddressidentifier">Blockchain address identifier</span> <span class="column-label"></span></clr-dg-column>
+                <clr-dg-column [clrDgField]="'label'" clrDgSortIcon><span mltag="txt_subportfolio">Sub-portfolio</span>
+                    <span class="column-label"></span></clr-dg-column>
+                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon><span class="clr-sort-label"
+                                                                         mltag="txt_iban">IBAN</span> <span
+                        class="column-label"></span></clr-dg-column>
+                <clr-dg-column [clrDgField]="'address'" clrDgSortIcon><span class="clr-sort-label"
+                                                                            mltag="txt_blockchainaddressidentifier">Blockchain address identifier</span>
+                    <span class="column-label"></span></clr-dg-column>
+                <clr-dg-column class="right"><span mltag="txt_actions">Actions</span></clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button *ngIf="!address.editing" (click)="handleEdit(address.address)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>
-                            </button>
-
-                            <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)" class="btn">
-                                <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
-                            </button>
-                        </div>
-                    </clr-dg-cell>
-
                     <clr-dg-cell>
                         <span *ngIf="!address.editing">
                             {{address.label}}
                         </span>
                         <div *ngIf="address.editing">
 
-                            <form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)" style="padding: 0">
+                            <form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"
+                                  style="padding: 0">
                                 <input type="text" [value]="address.label" #subportfolio style="width: inherit">
                                 <i
                                         class="fa fa-floppy-o icon-btn"
@@ -98,7 +94,8 @@
                         </span>
                         <div *ngIf="address.editing">
 
-                            <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)" style="padding: 0">
+                            <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)"
+                                  style="padding: 0">
                                 <input type="text" [value]="address.iban" #iban style="width: inherit">
                                 <i
                                         class="fa fa-floppy-o icon-btn"
@@ -112,6 +109,18 @@
 
                     <clr-dg-cell>
                         {{address.address}}
+                    </clr-dg-cell>
+
+                    <clr-dg-cell class="right">
+                        <button *ngIf="!address.editing" (click)="handleEdit(address.address)"
+                                class="btn btn-sm btn-success">
+                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span>
+                        </button>
+
+                        <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)"
+                                class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash-o"></i> <span mltag="txt_cancel">Cancel</span>
+                        </button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
