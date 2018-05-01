@@ -1,27 +1,24 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
-
-import * as _ from 'lodash';
-
 /* Actions. */
 import {
-    OFI_SET_COUPON_LIST,
-    clearRequestedNavFundsList,
-    ofiClearRequestedHomeOrder,
-    ofiClearRequestedMyOrder,
-    ofiClearRequestedManageOrder,
+    clearrequested,
     clearRequestedFundAccessMy,
+    clearRequestedNavFundsList,
+    OFI_SET_COUPON_LIST,
+    ofiClearRequestedCentralizationReports,
     ofiClearRequestedIssuedAssets,
-    clearRequestedCollectiveArchive,
-    setamkyclist,
-    clearrequested
+    ofiClearRequestedManageOrder,
+    ofiClearRequestedMyOrder,
+    setamkyclist
 } from '../../ofi-store';
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
 
 import {resetHomepage} from '@setl/core-store';
+import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
 
 /* Service class. */
 @Injectable()
@@ -89,6 +86,10 @@ export class OfiMemberNodeChannelService {
                 console.log('got the broadcast order');
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 this.ngRedux.dispatch(ofiClearRequestedManageOrder());
+                this.ngRedux.dispatch(ofiClearRequestedCentralizationReports());
+                this.ngRedux.dispatch(ofiClearRequestedAmHolders());
+                this.ngRedux.dispatch(ofiClearHolderDetailRequested());
+                
                 break;
 
             case 'updatekyc':
