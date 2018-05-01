@@ -35,7 +35,7 @@
                             </ng-container>
 
                             <ng-container *ngSwitchCase="3">
-                                <ng-select id="{{item}}"
+                                <ng-select id="{{item}}" *ngIf="showDropdown(model[item])"
                                     [items]="model[item].listItems"
                                     [active]="model[item].preset"
                                     [disabled]="model[item].control.disabled"
@@ -43,6 +43,11 @@
                                     [formControl]="model[item].control"
                                     [required]="model[item].required">
                                 </ng-select>
+
+                                <input type="text" id="{{item}}_na" name="{{item}}_na" value="N/A"
+                                    class="form-control na-field"
+                                    disabled
+                                    *ngIf="!showDropdown(model[item])" />
                             </ng-container>
 
                             <ng-container *ngSwitchCase="4">
