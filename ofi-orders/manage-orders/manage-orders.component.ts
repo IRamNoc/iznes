@@ -267,7 +267,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateWalletConnection();
         });
 
-        this.orderDatagrid.resize();
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
 
     }
 
@@ -318,9 +320,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.updateTabs();
         this.changeDetectorRef.markForCheck();
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
     }
 
     getAmOrdersFiltersFromRedux(filters) {
@@ -382,9 +381,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.updateTabs();
         this.changeDetectorRef.markForCheck();
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
     }
 
     ordersObjectToList(list) {
