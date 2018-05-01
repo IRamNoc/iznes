@@ -153,14 +153,15 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.centralizationReportsList = listImu.reduce((result, item) => {
 
             result.push({
+                aum: item.get('aum'),
                 cutoffDate: (item.get('cutoffDate') == null) ? '-' : item.get('cutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
                 latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-                latestNavBackup: (item.get('latestNavBackup') === null) ? 0 : item.get('latestNavBackup'),
                 navDate: item.get('navDate'),
-                navDateBackup: item.get('navDateBackup'),
+                netPosition: item.get('netPosition'),
+                netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
                 redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
                 settlementDate: item.get('settlementDate'),
