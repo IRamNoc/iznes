@@ -104,6 +104,37 @@ public class PageHelper extends LoginAndNavigationHelper {
 
     }
 
+    public static void verifyFundOptInfoPageContents() {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        mainInfo.click();
+        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2"));
+        optInfo.click();
+        wait.until(visibilityOfElementLocated(By.id("uf_giin")));
+        wait.until(visibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
+        wait.until(visibilityOfElementLocated(By.id("uf_auditor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_taxAuditor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_principalPromoter")));
+        wait.until(visibilityOfElementLocated(By.id("uf_legalAdvisor")));
+        wait.until(visibilityOfElementLocated(By.id("uf_directors")));
+        wait.until(visibilityOfElementLocated(By.id("uf_internalReference")));
+        wait.until(visibilityOfElementLocated(By.id("uf_additionnalNotes")));
+        optInfo.click();
+
+
+        wait.until(invisibilityOfElementLocated(By.id("uf_giin")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_auditor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_taxAuditor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_principalPromoter")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_legalAdvisor")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_directors")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_internalReference")));
+        wait.until(invisibilityOfElementLocated(By.id("uf_additionnalNotes")));
+
+    }
+
     public static void verifyMainInfoPageContents() {
 
         WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));

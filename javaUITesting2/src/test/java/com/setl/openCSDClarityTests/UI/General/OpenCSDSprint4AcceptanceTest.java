@@ -24,6 +24,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToP
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyFundOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
@@ -40,7 +41,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (300000);
+    public Timeout globalTimeout = new Timeout (30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -219,6 +220,8 @@ public class OpenCSDSprint4AcceptanceTest {
         navigateToPage("product-module");
         selectFund();
         verifyFundDropdownElements();
+        verifyFundMainInfoPageContents();
+        verifyFundOptInfoPageContents();
     }
 
     @Test

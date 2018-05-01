@@ -457,11 +457,11 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath(xpath)).click();
     }
 
-    private static void clickElementById(String id ) {
+    private static void clickElementById(String id) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.xpath(id)));
-        wait.until(elementToBeClickable(By.xpath(id)));
-        driver.findElement(By.xpath(id)).click();
+        wait.until(visibilityOfElementLocated(By.id(id)));
+        wait.until(elementToBeClickable(By.id(id)));
+        driver.findElement(By.id(id)).click();
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
