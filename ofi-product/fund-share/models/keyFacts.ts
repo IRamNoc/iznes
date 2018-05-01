@@ -57,18 +57,6 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         ],
         mltag: 'txt_fundshare_classinveststatus'
     }
-    valuationNAV: FormItem = {
-        type: FormItemType.number,
-        label: 'Initial NAV',
-        required: true,
-        mltag: 'txt_fundshare_valuationnav'
-    }
-    valuationNAVDate: FormItem = {
-        type: FormItemType.date,
-        label: 'Initial NAV Date',
-        required: true,
-        mltag: 'txt_fundshare_valuationnavdate'
-    }
     status: FormItem = {
         type: FormItemType.list,
         label: 'Share Status',
@@ -81,17 +69,6 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         mltag: 'txt_fundshare_status'
     }
     // conditional - status
-    master: FormItem = {
-        type: FormItemType.list,
-        label: 'Master',
-        required: true,
-        hidden: () => {
-            const val = (this.status.value() as any);
-            return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Master;
-        },
-        listItems: [],
-        mltag: 'txt_fundshare_master'
-    }
     feeder: FormItem = {
         type: FormItemType.list,
         label: 'Feeder',
