@@ -233,10 +233,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
         const items = [];
 
         _.forEach(fundShareList, (item) => {
-            items.push({
-                id: item.fundShareID,
-                text: item.fundShareName
-            });
+            if(item.status === Enum.StatusEnum.Master) {
+                items.push({
+                    id: item.fundShareID,
+                    text: item.fundShareName
+                });
+            }
         });
 
         return items;

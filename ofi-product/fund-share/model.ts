@@ -165,7 +165,7 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
-        if(fundShare.feeder !== 0) this.setListItemPreset(this.keyFacts.mandatory.feeder, fundShare.feeder);
+        this.setFeederPreset(fundShare.feeder);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -365,6 +365,16 @@ export class FundShare {
         (field.preset as any) = [_.find(field.listItems, (item) => {
             return item.id == value;
         })];
+    }
+
+    private setFeederPreset(value: any): void {
+        const preset = (!value || value === 0) ?
+            [this.keyFacts.mandatory.feeder.listItems[0]] :
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
+            
+        (this.keyFacts.mandatory.feeder.preset as any) = preset;
     }
 
     private convertArrayToJSON(arr: any[]): string {
