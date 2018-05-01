@@ -104,9 +104,7 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span>Connection's name</span>
-                            </label>
+                            <label class="required-field">Connection</label>
 
                             <ng-select
                                     id="add-connection-select"
@@ -115,20 +113,15 @@
                                     [allowClear]=true
                                     [formControl]="formGroup.controls['connection']">
                             </ng-select>
-
-                            <span class="mandatory-field">*</span>
-                            <div *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="text-danger">This field is required
-                            </div>
+                          
+                            <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                 class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span>Sub-portfolio's name</span>
-                            </label>
-
+                            <label class="required-field">Sub-portfolio</label>
                             <ng-select
                                     id="add-subportfolio-select"
                                     [items]="addressList"
@@ -137,10 +130,7 @@
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
-                            <span class="mandatory-field">*</span>
-                            <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                 class="text-danger">This field is required
-                            </div>
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
                         </div>
                     </div>
 
@@ -167,9 +157,7 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span>Connection's name</span>
-                            </label>
+                            <label class="required-field">Connection</label>
 
                             <ng-select
                                     id="edit-connection-select"
@@ -179,19 +167,15 @@
                                     [formControl]="formGroup.controls['connection']"
                                     [disabled]="isEditTabDisplayed">
                             </ng-select>
-
-                            <span class="mandatory-field">*</span>
-                            <div *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="text-danger">This field is required
-                            </div>
+                            
+                            <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
+                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span>Sub-portfolio's name</span>
-                            </label>
+                            <label class="required-field">Sub-portfolio</label>
 
                             <ng-select
                                     id="edit-subportfolio-select"
@@ -200,11 +184,9 @@
                                     placeholder="Select a sub-portfolio"
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
-
-                            <span class="mandatory-field">*</span>
-                            <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                 class="text-danger">This field is required
-                            </div>
+                           
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
                         </div>
                     </div>
 
