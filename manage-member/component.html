@@ -11,21 +11,21 @@
                 <!-- Member list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                        *ngTemplateOutlet="staticMemberListTab"
+                            *ngTemplateOutlet="staticMemberListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                        *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
+                            *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member edit tabs. -->
                 <ng-container *ngIf="id >= 2 && isSymAdmin">
                     <ng-container
-                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -37,18 +37,18 @@
         <div class="panel-body">
 
             <clr-datagrid #membersDataGrid>
-                <clr-dg-column *ngIf="isSymAdmin" mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_membername">Member Name</clr-dg-column>
+                <clr-dg-column class="right" *ngIf="isSymAdmin" mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-row *clrDgItems="let member of manageMembersList; let id = index">
-                    <clr-dg-cell *ngIf="isSymAdmin">
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(member.index)" class="btn" id="edit-member-{{id}}">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button (click)="handleDelete(member.index)" class="btn">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete" id="delete-member-{{id}}">Delete</span></button>
-                        </div>
-                    </clr-dg-cell>
                     <clr-dg-cell id="member-name-{{id}}">{{member.memberName}}</clr-dg-cell>
+                    <clr-dg-cell class="right" *ngIf="isSymAdmin">
+                        <button (click)="handleEdit(member.index)" class="btn btn-sm btn-success"
+                                id="edit-member-{{id}}">
+                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                        <button (click)="handleDelete(member.index)" class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete"
+                                                                id="delete-member-{{id}}">Delete</span></button>
+                    </clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -71,7 +71,9 @@
                                     <span class="ml_translated" mltag="txt_membername">Member Name</span>
                                 </label>
                                 <div>
-                                    <input type="text" formControlName="memberName" placeholder="Member Name" id="new-member-name" class="form-control mlp_translated" mltag="txt_membername" maxlength="100"/>
+                                    <input type="text" formControlName="memberName" placeholder="Member Name"
+                                           id="new-member-name" class="form-control mlp_translated"
+                                           mltag="txt_membername" maxlength="100"/>
                                 </div>
                             </div>
 
@@ -84,14 +86,17 @@
                                     <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
                                 </label>
                                 <div>
-                                    <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail" id="new-member-email" />
+                                    <input type="email" formControlName="email" name="email"
+                                           placeholder="Enter email..." class="form-control email mlp_translated"
+                                           mltag="txt_enteremail" id="new-member-email"/>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group button-group">
                             <div class="col-sm-12">
                                 <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
+                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save"
+                                                                     id="new-member-save">Save</span>
                                 </button>
                             </div>
                         </div>
@@ -112,7 +117,8 @@
                                 <span class="ml_translated" mltag="txt_membername">Member Name</span>
                             </label>
                             <div>
-                                <input type="text" formControlName="memberName" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username"/>
+                                <input type="text" formControlName="memberName" placeholder="Username"
+                                       class="form-control username mlp_translated" mltag="txt_username"/>
                             </div>
                         </div>
                     </div>
@@ -126,7 +132,8 @@
                                 <button type="submit" [disabled]="!canSave(tabid)" class="btn btn-primary">
                                     <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                                 </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -5,7 +5,7 @@
     </h1>
 </div>
 
-<div class="wrapper wrapper-content">
+<div>
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
@@ -17,12 +17,14 @@
 
                 <!-- Chain add tab -->
                 <ng-container *ngIf="id === 1">
-                    <ng-container *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                    <ng-container
+                            *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
                 </ng-container>
 
                 <!-- Chain edit tab -->
                 <ng-container *ngIf="id >= 2">
-                    <ng-container *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                    <ng-container
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -32,22 +34,21 @@
     <ng-template #chainListTab>
         <div class="panel-body">
             <clr-datagrid>
-                <clr-dg-column [clrDgField]="'chainId'" mltag="txt_chainidentification">Chain Identification</clr-dg-column>
+                <clr-dg-column [clrDgField]="'chainId'" mltag="txt_chainidentification">Chain Identification
+                </clr-dg-column>
                 <clr-dg-column [clrDgField]="'chainName'" mltag="txt_chainname">Chain Name</clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_action">Action</span>
+                <clr-dg-column class="right" mltag="txt_action">
+                    Action
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let chain of chainsList; let id = index">
                     <clr-dg-cell id="chain_id_{{id}}">{{chain.chainId}}</clr-dg-cell>
                     <clr-dg-cell id="chain_name_{{id}}">{{chain.chainName}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(id)" class="btn" id="edit-chain-{{id}}">
-                                <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button (click)="handleDelete(chain)" class="btn" id="delete-chain-{{id}}">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
-                        </div>
+                    <clr-dg-cell class="right">
+                        <button (click)="handleEdit(id)" class="btn btn-success btn-sm" id="edit-chain-{{id}}">
+                            <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span></button>
+                        <button (click)="handleDelete(chain)" class="btn btn-danger btn-sm" id="delete-chain-{{id}}">
+                            <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -69,7 +70,8 @@
                             <label class="control-label">
                                 <span class="ml_translated" mltag="txt_chainidentification">Chain Identification</span>
                             </label>
-                            <input type="number" id="chainId" class="form-control" formControlName="chainId" placeholder="Chain Identification" mltag="txt_chainidentification" />
+                            <input type="number" id="chainId" class="form-control" formControlName="chainId"
+                                   placeholder="Chain Identification" mltag="txt_chainidentification"/>
                         </div>
                     </div>
                 </div>
@@ -80,7 +82,8 @@
                             <label class="control-label">
                                 <span class="ml_translated" mltag="txt_chainname">Chain Name</span>
                             </label>
-                            <input type="text" id="chainName" class="form-control" formControlName="chainName" maxlength="100" />
+                            <input type="text" id="chainName" class="form-control" formControlName="chainName"
+                                   maxlength="100"/>
                         </div>
                     </div>
                 </div>
@@ -108,7 +111,8 @@
                             <label class="control-label">
                                 <span class="ml_translated" mltag="txt_chainidentification">Chain Identification</span>
                             </label>
-                            <input type="number" id="chainId" class="form-control" formControlName="chainId" placeholder="Chain Identification" mltag="txt_chainidentification" disabled />
+                            <input type="number" id="chainId" class="form-control" formControlName="chainId"
+                                   placeholder="Chain Identification" mltag="txt_chainidentification" disabled/>
                         </div>
                     </div>
 
@@ -117,7 +121,8 @@
                             <label class="control-label">
                                 <span class="ml_translated" mltag="txt_chainname">Chain Name</span>
                             </label>
-                            <input type="text" id="chainName" class="form-control" formControlName="chainName" maxlength="100" />
+                            <input type="text" id="chainName" class="form-control" formControlName="chainName"
+                                   maxlength="100"/>
                         </div>
                     </div>
 
@@ -129,7 +134,9 @@
                                         <i class="fa fa-save"></i>
                                         <span class="ml_translated" mltag="txt_save">Save</span>
                                     </button>
-                                    <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</button>
+                                    <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </div>
