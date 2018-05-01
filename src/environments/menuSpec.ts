@@ -75,8 +75,8 @@ const reportsCollectsArchives = {
     label: 'Holders Lists',
     label_txt: 'txt_holderslist',
     icon_class: 'fa fa-book',
-    element_id: 'menu-am-reports-section-collective-archives',
-    router_link: '/am-reports-section/collects-archive'
+    element_id: 'holders-list',
+    router_link: '/reports/holders-list/list'
 };
 const reportsCentralization = {
     label: 'Centralization',
