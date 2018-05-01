@@ -60,7 +60,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -94,7 +93,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -111,7 +109,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-929")
+
     public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
@@ -119,15 +117,13 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops082@setl.io", "", "Miller", "Success!");
+        inviteAnInvestor("testops081@setl.io", "", "Miller", "Success!");
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-929")
     public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();

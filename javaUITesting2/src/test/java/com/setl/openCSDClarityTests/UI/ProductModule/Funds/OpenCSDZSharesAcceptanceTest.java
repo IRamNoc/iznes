@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewFundShareTitle;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
@@ -42,7 +45,7 @@ public class OpenCSDZSharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -168,26 +171,5 @@ public class OpenCSDZSharesAcceptanceTest {
 
 
     }
-
-    public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
-        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-        Thread.sleep(750);
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
-    }
-    public static void assertClassRequiredIsPresent(String tabID) throws SQLException, InterruptedException {
-        try {
-            assertTrue(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span")).isDisplayed());
-        }catch (Exception e){ fail("Asterisk was present " + e.getMessage()); }
-    }
-    public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
-        try {
-            assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
-        }catch (Exception e){ fail("Asterisk was present " + e.getMessage()); }
-    }
-
 
 }

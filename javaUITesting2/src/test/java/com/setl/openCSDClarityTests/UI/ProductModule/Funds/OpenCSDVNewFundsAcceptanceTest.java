@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.ProductModule.Funds;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -65,32 +66,33 @@ public class OpenCSDVNewFundsAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
+
+        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+        System.out.println(fundCount);
+
         driver.findElement(By.id("new-fund-btn")).click();
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
-        } catch (Exception e) {
-            fail("dropdown not selected. " + e.getMessage());}
+        driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        try {
-            driver.findElement(By.id("isFundStructure1")).isDisplayed();
-        } catch (Error e) {
-            fail(e.getMessage());}
-        shouldFillOutFundDetailsStep2("TestFund1");
-        try {
-            driver.findElement(By.id("fund-submitfund-btn")).click();
-        } catch (Exception e) {
-            fail(e.getMessage());}
-        Thread.sleep(2500);
+        driver.findElement(By.id("isFundStructure1")).isDisplayed();
+
+        String[] uFundDetails = generateRandomFundsDetails();
+        shouldFillOutFundDetailsStep2(uFundDetails[0]);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
-            assertTrue(popup.equals("TestFund1 has been successfully created."));
+            assertTrue(popup.equals(uFundDetails[0] + " has been successfully created."));
         } catch (Exception e) {
-            fail(e.getMessage());}
-        String fundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        assertTrue(fundName.equals("TestFund1"));
-        validateDatabaseFundExists(1, "TestFund1");
+            fail(e.getMessage());
+        }
+        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+        validateDatabaseFundExists(1, uFundDetails[0]);
     }
 
     @Test
@@ -114,12 +116,14 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             driver.findElement(By.id("fund-add-new-umbrella-btn")).click();
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
         try {
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
             assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
-            fail("Page heading text was not correct : " + e.getMessage());}
+            fail("Page heading text was not correct : " + e.getMessage());
+        }
     }
 
     @Test
@@ -137,31 +141,56 @@ public class OpenCSDVNewFundsAcceptanceTest {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
 
     }
 
     @Test
-    @Ignore("ignored while funds cannot be created")
     public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
-        try {
-            searchAndSelectTopDropdown("fund-umbrellaControl-select-1", "Jordan");
-        }catch (Exception e){
-            fail(e.getMessage());}
-        Thread.sleep(2000);
-        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/ul/li[1]/div/a")).click();
-        String fundName = driver.findElement(By.id("umbrellaFundName")).getAttribute("value");
-        assertTrue(fundName.equals("umbfund2"));
+        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", uFundDetails[0]);
+        wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText());
+        String fundName = split(fundNameText, " ");
+        assertTrue(fundName.equals(uFundDetails[0]));
+    }
+
+    @Test
+    public void shouldDisplayNoUmbrellaFundWhenNoUmbrellaFundIsSelected() throws InterruptedException, IOException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0]);
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-fund-btn")));
+        driver.findElement(By.id("new-fund-btn")).click();
+        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", "none");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        String fundName = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText();
+        assertTrue(fundName.equals("No Umbrella Fund"));
     }
 
     @Test
@@ -196,25 +225,69 @@ public class OpenCSDVNewFundsAcceptanceTest {
         try {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
         } catch (Error e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewById("fund-cancelfund-btn");
+        try {
+            scrollElementIntoViewById("fund-cancelfund-btn");
+            Thread.sleep(750);
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
         wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
         try {
             driver.findElement(By.id("fund-cancelfund-btn")).click();
-        }catch (Exception e){
-            fail(e.getMessage());}
-            try {
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+        try {
             String pageHeading = driver.findElement(By.id("am-product-home")).getText();
             assertTrue(pageHeading.equals("Shares / Funds / Umbrella funds"));
         } catch (Exception e) {
-            fail(e.getMessage());}
+            fail(e.getMessage());
+        }
     }
 
     @Test
     public void shouldQueryDatabaseForFunds() throws InterruptedException, IOException {
 
+    }
+
+    @Test
+    public void shouldUpdateFund() throws InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPage("product-module");
+        String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
+        driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
+
+
+        String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
+        assertTrue(title.contains("Fund"));
+        driver.findElement(By.id("fundName")).sendKeys("Updated");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+        assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
+        assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
+
+    }
+
+    static String split(String value, String separator) {
+        // Returns a substring containing all characters after a string.
+        int posA = value.lastIndexOf(separator);
+        if (posA == -1) {
+            return "";
+        }
+        int adjustedPosA = posA + separator.length();
+        if (adjustedPosA >= value.length()) {
+            return "";
+        }
+        return value.substring(adjustedPosA);
     }
 
     public static void validateDatabaseFundExists(int expectedCount, String UFundName) throws SQLException {
@@ -243,65 +316,4 @@ public class OpenCSDVNewFundsAcceptanceTest {
         }
     }
 
-    @Test
-    public void shouldUpdateFund() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
-        navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
-        String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        System.out.println(umbFundNamePrev);
-        try {
-            driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
-        } catch (Exception e) {
-            fail(e.getMessage());}
-        String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
-        assertTrue(title.contains("Fund"));
-        driver.findElement(By.id("fundName")).sendKeys("Updated");
-        scrollElementIntoViewById("fund-submitfund-btn");
-        driver.findElement(By.id("fund-submitfund-btn")).click();
-        try {
-            String popup = driver.findElement(By.className("toast-title")).getText();
-            Thread.sleep(750);
-            assertTrue(popup.contains("has been successfully updated."));
-        } catch (Exception e) {
-            fail(e.getMessage());}
-        try {
-            String umFundName = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-            assertTrue(umFundName.equals(umbFundNamePrev + "Updated"));
-        } catch (Exception e) {
-            fail(e.getMessage());}
-    }
-
-    private void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
-        driver.findElement(By.id("fundName")).sendKeys(fundName);
-        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("isEuDirective2")).click();
-        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("fundManagers")).sendKeys("testManager");
-        scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
-        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
-        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
-        driver.findElement(By.id("openOrCloseEnded2")).click();
-        driver.findElement(By.id("isFundOfFund2")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("isDedicatedFund1")).click();
-    }
 }

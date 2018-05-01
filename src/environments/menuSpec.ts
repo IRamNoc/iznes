@@ -72,11 +72,11 @@ const manageOrders = {
     router_link: '/manage-orders/list'
 };
 const reportsCollectsArchives = {
-    label: 'Centralisation',
-    label_txt: 'txt_centralisation',
+    label: 'Holders Lists',
+    label_txt: 'txt_holderslist',
     icon_class: 'fa fa-book',
-    element_id: 'menu-am-reports-section-collective-archives',
-    router_link: '/am-reports-section/collects-archive'
+    element_id: 'holders-list',
+    router_link: '/reports/holders-list/list'
 };
 const reportsCentralization = {
     label: 'Centralization',
@@ -394,8 +394,8 @@ export const menuSpec: MenuSpec = {
             home,
             manageOrders,
             {
-                label: 'Reports',
-                label_txt: 'txt_reports',
+                label: 'My Reports',
+                label_txt: 'txt_my_reports',
                 icon_class: 'fa fa-book',
                 element_id: 'menu-am-report-section',
                 children: [
@@ -633,6 +633,5 @@ export const menuSpec: MenuSpec = {
             }
         ],
     },
-    disabled: ['/manage-orders/list', '/am-reports-section/collects-archive', '/reports-section/csv',
-        '/order-book/my-orders/list', '/asset-management/my-dashboard']
+    disabled: [] // '/manage-orders/list', '/am-reports-section/collects-archive', '/reports-section/csv','/order-book/my-orders/list', '/asset-management/my-dashboard'
 };

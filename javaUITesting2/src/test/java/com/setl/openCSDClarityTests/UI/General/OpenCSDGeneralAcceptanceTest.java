@@ -359,20 +359,15 @@ public class OpenCSDGeneralAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_language_0")).click();
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
+
+        driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
+
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
+        clickElementById("btnKycSubmit");
+
         try {
-            driver.findElement(By.id("btnKycSubmit")).click();
-        } catch (Exception e) {
-            fail("FAILED : " + e.getMessage());
-        }
-        try {
-               wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+            wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
         } catch (Error e) {
             fail(e.getMessage());
         }
@@ -434,13 +429,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
-        try{
+        String xpath = "//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a";
+        clickElementByXpath(xpath);
 
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
-
-        }catch (Exception e){
-            fail("couldnt navigate to messages " + e.getMessage());
-        }
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
@@ -457,6 +448,20 @@ public class OpenCSDGeneralAcceptanceTest {
         } catch (Error e) {
             fail("toaster message did not match");
         }
+    }
+
+    private static void clickElementByXpath(String xpath) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath(xpath)));
+        wait.until(elementToBeClickable(By.xpath(xpath)));
+        driver.findElement(By.xpath(xpath)).click();
+    }
+
+    private static void clickElementById(String id) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id(id)));
+        wait.until(elementToBeClickable(By.id(id)));
+        driver.findElement(By.id(id)).click();
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
