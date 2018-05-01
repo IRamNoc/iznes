@@ -87,10 +87,9 @@
                         <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
                         <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
                         <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2 }}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd((data.redQuantity + data.subQuantity) * data.latestNav) | moneyValue: 4}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.subAmount - data.redAmount) | moneyValue: 5}}</clr-dg-cell>
-                        <clr-dg-cell>{{calculNetPosition(data.subAmount, data.redAmount, data.redQuantity, data.subQuantity, data.latestNav)}} %</clr-dg-cell>
-
+                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.aum) | moneyValue: 4}}</clr-dg-cell>
+                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netPositionPercentage}} %</clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
