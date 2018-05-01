@@ -71,6 +71,7 @@ function formatMyOrderDataResponse(rawData: Array<any>): Array<MyOrderDetails> {
                 iban: item.get('iban'),
                 investorAddress: item.get('investorAddress'),
                 investorWalletID: item.get('investorWalletID'),
+                investorCompanyName: item.get('investorCompanyName'),
                 isin: item.get('isin'),
                 label: item.get('label'),
                 lastName: item.get('lastName'),
