@@ -595,7 +595,7 @@
                                 <span mltag="txt_assetclass">Asset Class</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{fundShare.keyFactOptionalData.assetClass}}</span>
+                                <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
@@ -631,7 +631,7 @@
                                 <span mltag="txt_nav">NAV</span>
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.price}}</span>
+                                <span class="readonly-field">{{orderData.price | moneyValue: 4}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
