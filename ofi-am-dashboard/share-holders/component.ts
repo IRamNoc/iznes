@@ -240,8 +240,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     getHolderDetail(data) {
         if (data) {
             this.holderDetailData = data.holders.toJS() || [];
-            this.changeDetectorRef.markForCheck();
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     createSearchListForm() {
@@ -291,19 +291,26 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.searchListForm.get('search').value[0].id
         ) {
             const shareId = this.searchListForm.get('search').value[0].id;
+            this.openShareId(shareId);
 
-            const payload = {
-                shareId,
-                selectedFilter: this.holderFilters[0].id
-            };
-
-            OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
-            this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
-
-            this.buildLink(shareId);
         } else {
             this.buildLink('0');
         }
+    }
+
+    openShareId(shareId) {
+        this.holderDetailData = [];
+        const payload = {
+            shareId,
+            selectedFilter: this.holderFilters[0].id
+        };
+        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
+
+        OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
+
+        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
+
+        this.buildLink(shareId);
     }
 
     buildLink(id) {
@@ -331,7 +338,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         };
 
         // Reset holder detail requested flag
-        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
+        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
 
         // Fetch the holders with the newest selected filter
         OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
