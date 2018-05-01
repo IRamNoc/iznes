@@ -141,7 +141,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.centralizationReportsList = listImu.reduce((result, item) => {
 
             result.push({
-                cutoffDate: item.get('cutoffDate'),
+                cutoffDate: (item.get('cutoffDate') == null) ? '-' : item.get('cutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),

@@ -1,5 +1,8 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy,
+    OnInit
+} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -8,10 +11,11 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, SagaHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, SagaHelper, commonHelper, APP_CONFIG, AppConfig} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
@@ -20,12 +24,19 @@ import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-pr
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 import {NumberConverterService} from '@setl/utils/services/number-converter/service';
+
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+
 /* Ofi Store stuff. */
 import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
+
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
+
+/* helper */
+import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
 
 /* Types. */
 interface SelectedItem {
@@ -134,6 +145,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 13, text: 'PLN'},
     ];
 
+    appConfig: AppConfig;
+
     get isInvestorUser() {
         return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
     }
@@ -149,7 +162,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private myWallets: any = [];
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
-    private managementCompanyList: any = [];
     fundShare = {
         mifiidChargesOneOff: null,
         mifiidChargesOngoing: null,
@@ -181,8 +193,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyOb;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) OfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
 
     constructor(private ofiOrdersService: OfiOrdersService,
@@ -199,7 +209,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
-                public _numberConverterService: NumberConverterService,) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                public _numberConverterService: NumberConverterService) {
+
+        this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
@@ -211,8 +224,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        this.subscriptions.push(this.requestedOfiManagementCompanyOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
-        this.subscriptions.push(this.OfiManagementCompanyListOb.subscribe((list) => this.getManagementCompanyListFromRedux(list)));
         this.subscriptions.push(this.walletDirectoryOb.subscribe((walletDirectory) => {
             this.walletDirectory = walletDirectory;
         }));
@@ -228,7 +239,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(1000).subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
         this.changeDetectorRef.markForCheck();
     }
 
@@ -299,55 +310,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getAmOrdersListFromRedux(list) {
-        const listImu = fromJS(list);
-
-        this.ordersList = listImu.reduce((result, item) => {
-
-            const amountWithCost = item.get('orderStatus') in [1, 2] ?
-                this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')) :
-                this._numberConverterService.toFrontEnd(item.get('amountWithCost'));
-
-            result.push({
-                amAddress: item.get('amAddress'),
-                amCompanyID: item.get('amCompanyID'),
-                amWalletID: item.get('amWalletID'),
-                amountWithCost: this._numberConverterService.toFrontEnd(amountWithCost),
-                byAmountOrQuantity: item.get('byAmountOrQuantity'),
-                canceledBy: item.get('canceledBy'),
-                contractAddr: item.get('contractAddr'),
-                contractExpiryTs: item.get('contractAddr'),
-                contractStartTs: item.get('contractStartTs'),
-                currency: item.get('currency'),
-                cutoffDate: item.get('cutoffDate'),
-                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
-                estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
-                estimatedQuantity: this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
-                feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
-                fundShareID: item.get('fundShareID'),
-                fundShareName: item.get('fundShareName'),
-                iban: item.get('iban'),
-                investorAddress: item.get('investorAddress'),
-                investorWalletID: item.get('investorWalletID'),
-                isin: item.get('isin'),
-                label: item.get('label'),
-                navEntered: item.get('navEntered'),
-                orderID: item.get('orderID'),
-                orderDate: item.get('orderDate'),
-                orderNote: item.get('orderNote'),
-                orderStatus: item.get('orderStatus'),
-                orderType: item.get('orderType'),
-                investorIban: item.get('investorIban'),
-                orderFundShareID: item.get('orderFundShareID'),
-                platFormFee: item.get('platFormFee'),
-                price: item.get('price'),
-                quantity: this._numberConverterService.toFrontEnd(item.get('quantity')),
-                settlementDate: item.get('settlementDate'),
-                totalResult: item.get('totalResult'),
-                valuationDate: item.get('valuationDate'),
-            });
-
-            return result;
-        }, []);
+        this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
         this.changeDetectorRef.markForCheck();
@@ -355,110 +318,111 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAmOrdersFiltersFromRedux(filters) {
         this.filtersFromRedux = filters;
-        this.applyFilters();
+        // this.applyFilters();
         this.changeDetectorRef.markForCheck();
     }
 
-    applyFilters() {
-        if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
-                if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
-                    this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
-                    this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                }
-                if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
-                    this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
-                    this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                }
-                if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
-                    const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
-                    if (statusFound !== undefined) {
-                        this.tabsControl[0].searchForm.get('status').patchValue([{
-                            id: statusFound.id,
-                            text: statusFound.text
-                        }], {emitEvent: false});
-                        this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                    }
-                }
-                if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
-                    const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
-                    if (dateTypeFound !== undefined) {
-                        this.tabsControl[0].searchForm.get('dateType').patchValue([{
-                            id: dateTypeFound.id,
-                            text: dateTypeFound.text
-                        }], {emitEvent: false});
-                        this.tabsControl[0].searchForm.get('dateType').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                    }
-                }
-                if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
-                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate, {emitEvent: false});
-                    this.tabsControl[0].searchForm.get('fromDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                }
-                if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
-                    this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate, {emitEvent: false});
-                    this.tabsControl[0].searchForm.get('toDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-                }
-
-                // remove filters from redux
-                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
-                this.filtersApplied = true;
-                this.requestSearch(this.tabsControl[0].searchForm);
-            }
-        }
-    }
+    // applyFilters() {
+    //     if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
+    //         if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
+    //             if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
+    //                 this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
+    //                 this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //             }
+    //             if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
+    //                 this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
+    //                 this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //             }
+    //             if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
+    //                 const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
+    //                 if (statusFound !== undefined) {
+    //                     this.tabsControl[0].searchForm.get('status').patchValue([{
+    //                         id: statusFound.id,
+    //                         text: statusFound.text
+    //                     }], {emitEvent: false});
+    //                     this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //                 }
+    //             }
+    //             if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
+    //                 const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
+    //                 if (dateTypeFound !== undefined) {
+    //                     this.tabsControl[0].searchForm.get('dateType').patchValue([{
+    //                         id: dateTypeFound.id,
+    //                         text: dateTypeFound.text
+    //                     }], {emitEvent: false});
+    //                     this.tabsControl[0].searchForm.get('dateType').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //                 }
+    //             }
+    //             if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
+    //                 this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate, {emitEvent: false});
+    //                 this.tabsControl[0].searchForm.get('fromDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //             }
+    //             if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
+    //                 this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate, {emitEvent: false});
+    //                 this.tabsControl[0].searchForm.get('toDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+    //             }
+    //
+    //             // remove filters from redux
+    //             this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
+    //             this.filtersApplied = true;
+    //             this.requestSearch(this.tabsControl[0].searchForm);
+    //         }
+    //     }
+    // }
 
     getInvOrdersListFromRedux(list) {
-        const listImu = fromJS(list);
-
-        this.ordersList = listImu.reduce((result, item) => {
-
-            result.push({
-                amAddress: item.get('amAddress'),
-                amCompanyID: item.get('amCompanyID'),
-                amCompanyName: item.get('amCompanyName'),
-                amWalletID: item.get('amWalletID'),
-                amount: item.get('amount'),
-                amountWithCost: this._numberConverterService.toFrontEnd(item.get('amountWithCost')),
-                byAmountOrQuantity: item.get('byAmountOrQuantity'),
-                canceledBy: item.get('canceledBy'),
-                contractAddr: item.get('contractAddr'),
-                contractExpiryTs: item.get('contractAddr'),
-                contractStartTs: item.get('contractStartTs'),
-                currency: item.get('currency'),
-                cutoffDate: item.get('cutoffDate'),
-                estimatedAmount: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
-                estimatedAmountWithCost: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
-                estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
-                estimatedQuantity: this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
-                feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
-                firstName: item.get('firstName'),
-                fundShareID: item.get('fundShareID'),
-                fundShareName: item.get('fundShareName'),
-                iban: item.get('iban'),
-                investorAddress: item.get('investorAddress'),
-                investorWalletID: item.get('investorWalletID'),
-                isin: item.get('isin'),
-                label: item.get('label'),
-                lastName: item.get('lastName'),
-                navEntered: item.get('navEntered'),
-                orderID: item.get('orderID'),
-                orderDate: item.get('orderDate'),
-                orderNote: item.get('orderNote'),
-                orderStatus: item.get('orderStatus'),
-                orderType: item.get('orderType'),
-                platFormFee: item.get('platFormFee'),
-                price: item.get('price'),
-                quantity: item.get('quantity'),
-                settlementDate: item.get('settlementDate'),
-                totalResult: item.get('totalResult'),
-                valuationDate: item.get('valuationDate'),
-            });
-
-            return result;
-        }, []);
+        this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
         this.changeDetectorRef.markForCheck();
+    }
+
+    ordersObjectToList(list) {
+        return Object.keys(list).reduce((result, orderId) => {
+            const order = list[orderId];
+            const orderFigure = getOrderFigures(order);
+            result.push(
+                {
+                    amAddress: _.get(order, 'amAddress', ''),
+                    amCompanyID: _.get(order, 'amCompanyID', 0),
+                    amCompanyName: _.get(order, 'amCompanyName', ''),
+                    amWalletID: _.get(order, 'amWalletID', 0),
+                    byAmountOrQuantity: _.get(order, 'byAmountOrQuantity', 1),
+                    canceledBy: _.get(order, 'canceledBy', 0),
+                    contractAddr: _.get(order, 'contractAddr', ''),
+                    currency: _.get(order, 'currency', 0),
+                    cutoffDate: _.get(order, 'cutoffDate', ''),
+                    firstName: _.get(order, 'firstName', ''),
+                    fundShareID: _.get(order, 'fundShareID', 0),
+                    fundShareName: _.get(order, 'fundShareName', ''),
+                    iban: _.get(order, 'iban', ''),
+                    investorAddress: _.get(order, 'investorAddress', ''),
+                    investorWalletID: _.get(order, 'investorWalletID', 0),
+                    investorCompanyName: _.get(order, 'investorCompanyName', ''),
+                    isin: _.get(order, 'isin', ''),
+                    label: _.get(order, 'label', ''),
+                    lastName: _.get(order, 'lastName', ''),
+                    navEntered: _.get(order, 'navEntered', ''),
+                    orderID: _.get(order, 'orderID', 0),
+                    orderDate: _.get(order, 'orderDate', ''),
+                    orderNote: _.get(order, 'orderNote', ''),
+                    orderStatus: _.get(order, 'orderStatus', 1),
+                    orderType: _.get(order, 'orderType', 0),
+                    settlementDate: _.get(order, 'settlementDate', ''),
+                    totalResult: _.get(order, 'totalResult', 0),
+                    valuationDate: _.get(order, 'valuationDate'),
+
+                    amount: orderFigure.amount,
+                    amountWithCost: orderFigure.amountWithCost,
+                    price: orderFigure.price,
+                    quantity: orderFigure.quantity,
+                    fee: orderFigure.fee,
+                    feePercentage: orderFigure.feePercentage
+                }
+            );
+
+            return result;
+        }, []);
     }
 
     getAmOrdersNewOrder(requested): void {
@@ -481,50 +445,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getOrdersList();
             this.changeDetectorRef.markForCheck();
         }
-    }
-
-    getManagementCompanyRequested(requested): void {
-        // console.log('requested', requested);
-        if (!requested) {
-            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.mcService, this.ngRedux);
-        }
-    }
-
-    getManagementCompanyListFromRedux(managementCompanyList) {
-        const managementCompanyListImu = fromJS(managementCompanyList);
-
-        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-
-            result.push({
-                companyID: item.get('companyID', 0),
-                companyName: item.get('companyName', ''),
-                country: item.get('country', ''),
-                addressPrefix: item.get('addressPrefix', ''),
-                postalAddressLine1: item.get('postalAddressLine1', ''),
-                postalAddressLine2: item.get('postalAddressLine2', ''),
-                city: item.get('city', ''),
-                stateArea: item.get('stateArea', ''),
-                postalCode: item.get('postalCode', ''),
-                taxResidence: item.get('taxResidence', ''),
-                registrationNum: item.get('registrationNum', ''),
-                supervisoryAuthority: item.get('supervisoryAuthority', ''),
-                numSiretOrSiren: item.get('numSiretOrSiren', ''),
-                creationDate: item.get('creationDate', ''),
-                shareCapital: item.get('shareCapital', 0),
-                commercialContact: item.get('commercialContact', ''),
-                operationalContact: item.get('operationalContact', ''),
-                directorContact: item.get('directorContact', ''),
-                lei: item.get('lei', ''),
-                bic: item.get('bic', ''),
-                giinCode: item.get('giinCode', ''),
-                logoName: item.get('logoName', ''),
-                logoURL: item.get('logoURL', '')
-            });
-
-            return result;
-        }, []);
-
-        this.changeDetectorRef.markForCheck();
     }
 
     getFundShareFromRedux(fundShare) {
@@ -583,7 +503,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                         let tabTitle = '';
                         if (order.orderType === 3) tabTitle += 'Subscription: ';
                         if (order.orderType === 4) tabTitle += 'Redemption: ';
-                        tabTitle += ' ' + this.padNumberLeft(this.orderID, 5);
+                        tabTitle += ' ' + this.getOrderRef(this.orderID);
 
                         const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
                         if (tabAlreadyHere === undefined) {
@@ -622,7 +542,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.ordersList[index].orderType === 4) {
             confMessage += 'Redemption ';
         }
-        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
+        confMessage += this.getOrderRef(this.ordersList[index].orderID);
         this.showConfirmationAlert(confMessage, index);
     }
 
@@ -634,9 +554,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.ordersList[index].orderType === 4) {
             confMessage += 'Redemption ';
         }
-        confMessage += this.padNumberLeft(this.ordersList[index].orderID, 11);
+        confMessage += this.getOrderRef(this.ordersList[index].orderID);
         this.showConfirmationSettleAlert(confMessage, index);
 
+    }
+
+    getOrderRef(orderId): string {
+        return commonHelper.pad(orderId, 11, '0');
     }
 
     showConfirmationSettleAlert(confMessage, index): void {
@@ -727,7 +651,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             `http://${window.location.hostname}:9788/${url}`;
     }
 
-    requestSearch(form) {
+    requestSearch() {
 
         const tmpDataGridParams = {
             shareName: this.dataGridParams.shareName,
@@ -886,15 +810,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    showManagementCompany(order) {
-        const obj = this.managementCompanyList.find(o => o.companyID === order.amCompanyID);
-        if (obj !== undefined) {
-            return obj.companyName;
-        } else {
-            return 'Not found!';
-        }
-    }
-
     showCurrency(order) {
         const obj = this.currencyList.find(o => o.id === order.currency);
         if (obj !== undefined) {
@@ -944,24 +859,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
     }
 
-    private numPad(num) {
-        return num < 10 ? "0" + num : num;
-    }
-
-    /**
-     * Calc Entry Fee
-     * --------------
-     * Calculates the entry fee from the grossAmount.
-     *
-     * @param  {number} grossAmount - the grossAmount.
-     * @return {number}             - the entry fee.
-     */
-    private calcEntryFee(grossAmount: number): number {
-        return 0; // for OFI test this is 0
-        // TODO: Real example
-        // return Math.round(grossAmount * .0375);
-    }
-
     /**
      * Get Order Date
      *
@@ -969,44 +866,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {string}            - the formatted date or empty string.
      */
     getOnlyDate(dateString): string {
-        return moment(dateString).local().format('YYYY-MM-DD');
+        return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('YYYY-MM-DD');
     }
 
-    /**
-     * Get Order Time
-     *
-     * @param  {string} dateString - the order's date string.
-     * @return {string}            - the formatted time or empty string.
-     */
-    getOnlyTime(dateString): string {
-        return moment.utc(dateString).local().format('HH:mm');
-    }
-
-    /**
-     * Pad Number Left
-     * -------------
-     * Pads a number left
-     *
-     * @param  {number} num - the orderId.
-     * @return {string}
-     */
-    private padNumberLeft(num: number | string, zeros?: number): string {
-        /* Validation. */
-        if (!num && num !== 0) return '';
-        zeros = zeros || 2;
-
-        /* Variables. */
-        num = num.toString();
-        let // 11 is the total required string length.
-            requiredZeros = zeros - num.length,
-            returnString = '';
-
-        /* Now add the zeros. */
-        while (requiredZeros--) {
-            returnString += '0';
-        }
-
-        return returnString + num;
+    getDateTime(dateString): string {
+        return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('YYYY-MM-DD HH:mm');
     }
 
     /**

@@ -96,7 +96,7 @@ export class FundShare {
             couponType: this.getSelectValue(this.keyFacts.mandatory.couponType),
             freqOfDistributionDeclaration: this.getSelectValue(this.keyFacts.mandatory.freqOfDistributionDeclaration),
             status: this.getSelectValue(this.keyFacts.mandatory.status),
-            master: this.getStatusMasterValue(),
+            master: this.isStatusMaster(),
             feeder: this.getStatusFeederValue(),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.getSelectValue(this.characteristic.mandatory.subscriptionCategory),
@@ -165,8 +165,7 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
         this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
-        this.setListItemPreset(this.keyFacts.mandatory.master, fundShare.master);
-        this.setListItemPreset(this.keyFacts.mandatory.feeder, fundShare.feeder);
+        this.setFeederPreset(fundShare.feeder);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -368,25 +367,31 @@ export class FundShare {
         })];
     }
 
+    private setFeederPreset(value: any): void {
+        const preset = (!value || value === 0) ?
+            [this.keyFacts.mandatory.feeder.listItems[0]] :
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
+            
+        (this.keyFacts.mandatory.feeder.preset as any) = preset;
+    }
+
     private convertArrayToJSON(arr: any[]): string {
         if((!arr) || arr.length === 0) return null;
 
         return JSON.stringify(arr);
     }
 
-    private getStatusMasterValue(): number {
-        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master) {
-            return this.keyFacts.mandatory.master.value()[0].id;
-        } else {
-            return null;
-        }
+    private isStatusMaster(): boolean {
+        return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
         if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
-            return null;
+            return 0;
         }
     }
 
