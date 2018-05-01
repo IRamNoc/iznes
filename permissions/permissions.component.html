@@ -38,23 +38,27 @@
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_groupname">Group Name</clr-dg-column>
                 <clr-dg-column>
                     <span mltag="txt_grouptype">Group Type</span>
                     <clr-dg-string-filter [clrDgStringFilter]="typeFilter">
-                    </clr-dg-string-filter>
+                    </clr-dg-string-filter>                    
                 </clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let group of allGroupList">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button (click)="handleEdit(group.index)" class="btn"><i class="fa fa-pencil-square-o"></i><span mltag="txt_edit">Edit</span></button>
-                            <button (click)="handleDelete(group.index)" class="btn"><i class="fa fa-trash-o"></i><span mltag="txt_delete">Delete</span></button>
-                        </div>
-                    </clr-dg-cell>
                     <clr-dg-cell>{{group.groupName}}</clr-dg-cell>
                     <clr-dg-cell>{{group.category[0].text}}</clr-dg-cell>
+                    <clr-dg-cell class="right">
+                        <button (click)="handleEdit(group.index)" class="btn btn-success btn-sm">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <span mltag="txt_edit">Edit</span>
+                        </button>
+                        <button (click)="handleDelete(group.index)" class="btn btn-danger btn-sm">
+                            <i class="fa fa-trash-o"></i>
+                            <span mltag="txt_delete">Delete</span>
+                        </button>
+                    </clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}

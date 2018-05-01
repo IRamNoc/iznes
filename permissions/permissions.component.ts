@@ -49,7 +49,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     private txPermAreaListSub: any;
     private subscriptions = {};
 
-    /* Lists set by thos observables. */
+    /* Lists set by those observables. */
     public allGroupList: any; // All lists.
     public adminPermAreasList: any;
     public txPermAreasList: any;

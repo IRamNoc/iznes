@@ -37,28 +37,30 @@
     <ng-template #staticWalletListTab>
         <div class="panel-body">
 
-            <clr-datagrid #walletDataGrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
+            <clr-datagrid #walletDataGrid>                
                 <clr-dg-column mltag="txt_walletname">Wallet Name</clr-dg-column>
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>
                 <clr-dg-column mltag="txt_wallettype">Wallet Type</clr-dg-column>
                 <clr-dg-column mltag="txt_walletstatus">Wallet Status</clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let wallet of walletList">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
-                        </div>
-                    </clr-dg-cell>
+                <clr-dg-row *clrDgItems="let wallet of walletList">                    
                     <clr-dg-cell>{{wallet.walletName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.accountName}}</clr-dg-cell>
                     <clr-dg-cell>{{wallet.walletTypeName}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="wallet.walletLocked === 0" class="label label-success" mltag="txt_unlocked">Unlocked</span>
                         <span *ngIf="wallet.walletLocked === 1" class="label label-danger" mltag="txt_locked">Locked</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="right">                        
+                        <button id="edit-{{wallet.walletId}}" (click)="handleEdit(wallet.index)" class="btn btn-success btn-sm">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <span mltag="txt_edit">Edit</span>
+                        </button>
+                        <button id="delete-{{wallet.walletId}}" (click)="handleDelete(wallet.index)" class="btn btn-danger btn-sm">
+                            <i class="fa fa-trash-o"></i>
+                            <span mltag="txt_delete">Delete</span>
+                        </button>                        
                     </clr-dg-cell>
                 </clr-dg-row>
 

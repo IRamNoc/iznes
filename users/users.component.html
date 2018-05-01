@@ -39,27 +39,29 @@
         <div class="panel-body">
 
             <clr-datagrid #usersDataGrid>
-                <clr-dg-column mltag="txt_actions">Actions</clr-dg-column>
                 <clr-dg-column mltag="txt_username">Username</clr-dg-column>
                 <clr-dg-column mltag="txt_email">Email</clr-dg-column>
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let user of usersList; let i = index">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn">
-                                <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span></button>
-                            <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span></button>
-                        </div>
-                    </clr-dg-cell>
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
                         <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="txt_disabled">Disabled</span>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="right">
+                        <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn btn-success btn-sm">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <span mltag="txt_edit">Edit</span>
+                        </button>
+                        <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn btn-danger btn-sm">
+                            <i class="fa fa-trash-o"></i>
+                            <span mltag="txt_delete">Delete</span>
+                        </button>
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -294,7 +296,7 @@
                                 [items]="filteredChainList"
                                 [allowClear]="true"
                                 placeholder="Select Chain"
-                                [active]="selectedChainItem"                                
+                                [active]="selectedChainItem"
                                 (selected)="setFormChainId(tabid, $event)"
                                 mltag="txt_selectchain"
                         ></ng-select>
