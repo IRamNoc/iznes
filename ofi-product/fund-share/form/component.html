@@ -1,15 +1,15 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-bars"></i>
-        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
-        <span [hidden]="!isUpdate()" mltag="txt_viewfundshare">View Fund Share</span>
+        <span [hidden]="!isCreate()" mltag="txt_addnewshare">Add new Share</span>
+        <span [hidden]="!isUpdate()" mltag="txt_viewshare">View Share</span>
     </h1>
 </div>
 
 <clr-tabs *ngIf="loadUI()">
     <clr-tab>
         <button clrTabLink id="tabFundShareButton">
-            <span mltag="txt_fundshare">Fund Share</span>
+            <span mltag="txt_shares">Shares</span>
         </button>
         <clr-tab-content class="outer">
             <div class="row">
@@ -360,8 +360,8 @@
                     <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
 
                         <i class="fa fa-save"></i>
-                        <span [hidden]="!isCreate()" mltag="txt_addnewfundshare">Add new Fund Share</span>
-                        <span [hidden]="!isUpdate()" mltag="txt_updatefundshare">Update Fund Share</span>
+                        <span [hidden]="!isCreate()" mltag="txt_addnewshare">Add new Share</span>
+                        <span [hidden]="!isUpdate()" mltag="txt_updateshare">Update Share</span>
                     </button>
                 </div>
             </div>

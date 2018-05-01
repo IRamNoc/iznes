@@ -48,8 +48,12 @@ export const OfiCentralizationReportsListReducer = function (state: Centralizati
                 return Object.assign({}, state, {
                     centralizationHistory
                 });
+            }else{
+                const centralizationHistory = {};
+                return Object.assign({}, state, {
+                    centralizationHistory
+                });
             }
-            return state;
 
         case ofiCentralizationReportsActions.OFI_SET_REQUESTED_CENTRALIZATION_REPORTS:
             return toggleRequestState(state, true);

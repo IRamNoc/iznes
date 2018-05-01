@@ -243,19 +243,19 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- quantity -->{{order.quantity}}
+                            <!-- quantity -->{{(order.orderStatus == 1 ? order.estimatedQuantity: order.quantity) | moneyValue}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- latestNAV -->{{order.estimatedPrice}}
+                            <!-- latestNAV -->{{(order.orderStatus == 1 ? order.estimatedPrice : order.price) | moneyValue}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- grossAmount -->{{order.amountWithCost}}
+                            <!-- grossAmount -->{{(order.orderStatus == 1 ? order.estimatedAmountWithCost: order.amountWithCost) | moneyValue}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- feesAmount -->{{order.feePercentage * order.amountWithCost}}
+                            <!-- feesAmount -->{{(order.feePercentage * order.amountWithCost) | moneyValue}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -298,15 +298,15 @@
                             <!--&lt;!&ndash; Actions &ndash;&gt;-->
                             <!--<button type="button" *ngIf="order.orderStatus == 1; else cancelDisabled" (click)="cancelOrder(i)" class="btn btn-sm btn-danger" mltag="txt_cancel">Cancel</button>-->
                             <!--<ng-template #cancelDisabled>-->
-                                <!--<button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>-->
+                            <!--<button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>-->
                             <!--</ng-template>-->
 
                             <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" mltag="txt_cancel" *ngSwitchCase="1">Cancel</button>
                             <ng-container *ngSwitchCase="4">
-                                <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info"  disabled mltag="txt_cancel">Cancel</button>
-                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" mltag="txt_settle" (click)="settleOrder(i)" >Settle</button>
+                                <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>
+                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" mltag="txt_settle" (click)="settleOrder(i)">Settle</button>
                             </ng-container>
-                            <button type="button" class="btn btn-sm btn-info"  disabled mltag="txt_cancel" *ngSwitchDefault>Cancel</button>
+                            <button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel" *ngSwitchDefault>Cancel</button>
 
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>

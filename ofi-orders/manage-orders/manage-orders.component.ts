@@ -226,8 +226,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!this.isInvestorUser) {  // AM side
             this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        }
-        {  // INV side
+        } else if (this.isInvestorUser) {  // INV side
             this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
             this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
         }
@@ -318,7 +317,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amWalletID: item.get('amWalletID'),
-                amountWithCost: amountWithCost,
+                amountWithCost: this._numberConverterService.toFrontEnd(amountWithCost),
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
                 contractAddr: item.get('contractAddr'),
@@ -328,7 +327,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 cutoffDate: item.get('cutoffDate'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
-                estimatedQuantity: item.get('estimatedQuantity'),
+                estimatedQuantity: this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
                 feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
@@ -425,7 +424,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 amCompanyName: item.get('amCompanyName'),
                 amWalletID: item.get('amWalletID'),
                 amount: item.get('amount'),
-                amountWithCost: item.get('amountWithCost'),
+                amountWithCost: this._numberConverterService.toFrontEnd(item.get('amountWithCost')),
                 byAmountOrQuantity: item.get('byAmountOrQuantity'),
                 canceledBy: item.get('canceledBy'),
                 contractAddr: item.get('contractAddr'),
@@ -433,11 +432,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 contractStartTs: item.get('contractStartTs'),
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
-                estimatedAmount: item.get('estimatedAmountWithCost'),
-                estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
-                estimatedPrice: item.get('estimatedPrice'),
-                estimatedQuantity: item.get('estimatedQuantity'),
-                feePercentage: item.get('feePercentage'),
+                estimatedAmount: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
+                estimatedAmountWithCost: this._numberConverterService.toFrontEnd(item.get('estimatedAmountWithCost')),
+                estimatedPrice: this._numberConverterService.toFrontEnd(item.get('estimatedPrice')),
+                estimatedQuantity:  this._numberConverterService.toFrontEnd(item.get('estimatedQuantity')),
+                feePercentage: this._numberConverterService.toFrontEnd(item.get('feePercentage')),
                 firstName: item.get('firstName'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
@@ -650,7 +649,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want settle the ' + confMessage + '?</span>',
-            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
+            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'info'}
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.sendSettleOrderRequest(index);
