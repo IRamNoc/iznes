@@ -138,7 +138,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if (this.fundShareId === fundShareDocs.fundShareID) this.updateFundShareDocs(fundShareDocs);
         }));
         this.subscriptionsArray.push(this.shareListObs.subscribe(fundShareList => {
-            this.model.keyFacts.mandatory.master.listItems = this.generateListItems(fundShareList);
             this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
 
             /**
@@ -146,7 +145,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
              */
             if ((!fundShareList) || Object.keys(fundShareList).length === 0) {
                 _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
-                    return item.id === Enum.StatusEnum.Master || item.id === Enum.StatusEnum.Feeder;
+                    return item.id === Enum.StatusEnum.Feeder;
                 });
             }
 
@@ -230,10 +229,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
         const items = [];
 
         _.forEach(fundShareList, (item) => {
-            items.push({
-                id: item.fundShareID,
-                text: item.fundShareName
-            });
+            if(item.status === Enum.StatusEnum.Master) {
+                items.push({
+                    id: item.fundShareID,
+                    text: item.fundShareName
+                });
+            }
         });
 
         return items;
