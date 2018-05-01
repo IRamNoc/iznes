@@ -80,7 +80,7 @@
                                             <span class="" mltag="txt_oneoffcharges">One-off charges</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifiidChargesOneOff" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidChargesOneOff, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -90,7 +90,7 @@
                                             <span class="" mltag="txt_onegoingcharges">One-going charges</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifiidChargesOngoing" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidChargesOngoing, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
                                             <span class="" mltag="txt_costsrelatedtotransactionsinitd82e13ff15">Costs related to transactions initiated</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifiidTransactionCosts" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidTransactionCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -113,7 +113,7 @@
                                             <span class="" mltag="txt_chargesrelatedtoancillaryservi31f9ae522d">Charges related to ancillary services</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifiidServicesCosts" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidServicesCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +126,7 @@
                                             <span class="" mltag="txt_incidentalcosts">Incidental costs</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="shareData.mifiidIncidentalCosts" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidIncidentalCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@
                                 <span class="" mltag="txt_isin">ISIN</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="'isin'" [readonly]="true">
+                                <input type="text" class="form-control" [value]="shareData.isin" [readonly]="true">
                             </div>
                         </div>
                     </div>
@@ -180,7 +180,7 @@
                                 <span class="" mltag="txt_assetclass">Asset Class</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="assetClass" [readonly]="true">
+                                <input type="text" class="form-control" [value]="shareData.shareClassCode" [readonly]="true">
                             </div>
                         </div>
                     </div>
@@ -234,7 +234,7 @@
                                 <span class="" mltag="txt_lastnavdate">Last NAV Date</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="shareData.priceDate" [readonly]="true">
+                                <input type="text" class="form-control" [value]="getDate(shareData.priceDate)" [readonly]="true">
                             </div>
                         </div>
                     </div>
@@ -466,6 +466,7 @@
         <div class="row">
             <div class="form-group button-group">
                 <div class="col-sm-12">
+                    <button (click)="handleClose()" class="btn btn-secondary" mltag="txt_cancel">Cancel</button>
                     <button type="submit" class="btn btn-primary" *ngIf="type === 'subscribe'" [attr.disabled]="allowToPlaceOrder">
                         <i class="fa fa-sign-in"></i>
                         <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
@@ -474,281 +475,9 @@
                         <i class="fa fa-sign-out"></i>
                         <span class="ml_translated" mltag="txt_placeorder">Place Order</span>
                     </button>
-                    <button (click)="handleClose()" class="btn btn-secondary" mltag="txt_cancel">Cancel</button>
                 </div>
             </div>
         </div>
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_registrar">Registrar</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="metaData.registrar" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_fundshare">Fund share</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="metaData.shareName" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="hr-line-dashed"></div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_isincode">ISIN code</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="metaData.isin" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_currency">Currency</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="metaData.currency" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div class="hr-line-dashed"></div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<app-switch-button [value]="actionBy" (updateValue)="actionBy = $event" [config]="{buttonsText: ['Quantity', 'Amount'], disabled:  metaData.allowType !== 'both'}"></app-switch-button>-->
-        <!--<div>-->
-        <!--<span *ngIf="metaData.allowType === 'both'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can either {{metadata.actionLabel}} by amount or unit for this fund share</span>.</span>-->
-        <!--<span *ngIf="metaData.allowType === 'quantity'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{metadata.actionLabel}}  by quantity for this fund share</span>.</span>-->
-        <!--<span *ngIf="metaData.allowType === 'amount'" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated">You can only {{metadata.actionLabel}}  by amount for this fund share</span>.</span>-->
-        <!--<span class="help-block m-b-none text-success" [ngStyle]="{'width': '100%'}"><i class="fa fa-info-circle" aria-hidden="true"></i> <span class="ml_translated" mltag="txt_decimalisation">Decimalisation</span>: {{metaData.decimalisationNumber}}.</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_quantity">Quantity</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" formControlName="quantity" class="form-control mlp_translated"-->
-        <!--[readonly]="actionBy === 1"-->
-        <!--[class.error]="!form.controls['quantity'].valid && form.controls['quantity'].touched"-->
-        <!--(focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="metaData.decimalisation"/>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_subportfolio">Sub-portfolio</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<ng-select-->
-        <!--[class.error]="!form.controls['address'].valid && form.controls['address'].touched"-->
-        <!--[items]="addressList"-->
-        <!--[allowClear]="false"-->
-        <!--placeholder="Select sub-portfolio"-->
-        <!--formControlName="address"-->
-        <!--(selected)="handleSelectedAddress($event)"-->
-        <!--mltag="txt_selectsubportfolio">-->
-        <!--</ng-select>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div class="row">-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_netassetvalue">Net asset value</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="metaData.nav | moneyValue" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_grossamount">Gross amount</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" formControlName="grossAmount" class="form-control mlp_translated"-->
-        <!--[readonly]="actionBy === 0"-->
-        <!--[class.error]="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched"-->
-        <!--(focus)="subscribeForChange('grossAmount')" (blur)="unSubscribeForChange()" appNumberFormatter>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="hr-line-dashed"></div>-->
-
-        <!--<div class="row">-->
-        <!--<div>-->
-        <!--<span *ngIf="!metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{metadata.actionLabel}} by unknown NAV</span>.</span>-->
-        <!--<span *ngIf="metaData.knownNav" class="help-block m-b-none text-success"><i class="fa fa-info-circle" aria-hidden="true"></i> <span>{{metadata.actionLabel}} by known NAV</span>.</span>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_cutoffdate">Cut-off date</span>-->
-        <!--</label>-->
-        <!--<div class="input-group date-pick-wrapper">-->
-        <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
-
-        <!--&lt;!&ndash;<input [dpDayPicker]="configDate" [value]="metaData.cutoffDateTimeNumber | date:'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>&ndash;&gt;-->
-        <!--<input formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"-->
-        <!--[readonly]="doValidate"-->
-        <!--(dateChange)="subscribeForChangeDate('cutoff', $event)"-->
-        <!--/>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_valuationdate">Valuation date</span>-->
-        <!--</label>-->
-
-        <!--<div class="input-group date-pick-wrapper">-->
-        <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
-
-        <!--&lt;!&ndash;<input [dpDayPicker]="configDate" [value]="metaData.valuationDateTimeNumber | date: 'dd/MM/yyyy' " placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"/>&ndash;&gt;-->
-        <!--<input formControlName="valuationDate" [dpDayPicker]="configDateValuation" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" mltag="txt_chooseadate"-->
-        <!--[readonly]="doValidate"-->
-        <!--(dateChange)="subscribeForChangeDate('valuation', $event)"-->
-        <!--/>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-
-        <!--<div class="row">-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_settlementdate">Settlement date</span>-->
-        <!--</label>-->
-        <!--<div class="input-group date-pick-wrapper">-->
-        <!--<span class="fa fa-calendar" aria-hidden="true"></span>-->
-
-        <!--&lt;!&ndash;<input [dpDayPicker]="configDate" &ndash;&gt;-->
-        <!--&lt;!&ndash;[value]="metaData.settlementDateTimeNumber | date : 'dd/MM/yyyy' "&ndash;&gt;-->
-        <!--&lt;!&ndash;placeholder="Choose a date"&ndash;&gt;-->
-        <!--&lt;!&ndash;mode="day"&ndash;&gt;-->
-        <!--&lt;!&ndash;theme="dp-material"&ndash;&gt;-->
-        <!--&lt;!&ndash;[ngStyle]="{'width':'100%'}" &ndash;&gt;-->
-        <!--&lt;!&ndash;mltag="txt_chooseadate"/>&ndash;&gt;-->
-        <!--<input-->
-        <!--formControlName="settlementDate"-->
-        <!--[dpDayPicker]="configDateCutoff"-->
-        <!--placeholder="Choose a date"-->
-        <!--mode="day"-->
-        <!--theme="dp-material"-->
-        <!--[ngStyle]="{'width':'100%'}"-->
-        <!--[readonly]="doValidate"-->
-        <!--[disabled]="doValidate"-->
-        <!--mltag="txt_chooseadate"/>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated">{{metadata.feeLabel}} fee</span>-->
-        <!--<span class="text-primary">( {{metaData.feePercent}}% + €{{metaData.platformFee}} )</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" class="form-control mlp_translated" [value]="fee | moneyValue" [readonly]="true">-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-
-        <!--<div class="row">-->
-        <!--<div class="form-group col-sm-6">-->
-        <!--<label class="control-label">-->
-        <!--<span class="ml_translated" mltag="txt_comment">Comment</span>-->
-        <!--</label>-->
-        <!--<div>-->
-        <!--<input type="text" formControlName="comment" class="form-control mlp_translated">-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div class="hr-line-dashed"></div>-->
-
-        <!--<div class="row">-->
-        <!--<div class="form-group button-group">-->
-        <!--<div class="col-sm-12">-->
-        <!--<button type="submit" class="btn btn-primary">-->
-        <!--<i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>-->
-        <!--</button>-->
-        <!--<button (click)="handleClose()" class="btn btn-secondary" mltag="txt_close"> Close</button>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--<div *ngIf="!form.controls['quantity'].valid && form.controls['quantity'].touched" class="alert-items">-->
-
-        <!--<div class="alert alert-danger">-->
-        <!--<div class="alert-items">-->
-        <!--<div class="alert-item static">-->
-        <!--<span class="alert-text" mltag="txt_invalidquantity"> Invalid quantity</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div *ngIf="!form.controls['grossAmount'].valid && form.controls['grossAmount'].touched" class="alert-items">-->
-
-        <!--<div class="alert alert-danger">-->
-        <!--<div class="alert-items">-->
-        <!--<div class="alert-item static">-->
-        <!--<span class="alert-text" mltag="txt_invalidgrossamount"> Invalid gross amount</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div *ngIf="!form.controls['comment'].valid && form.controls['comment'].touched" class="alert-items">-->
-
-        <!--<div class="alert alert-danger">-->
-        <!--<div class="alert-items">-->
-        <!--<div class="alert-item static">-->
-        <!--<span class="alert-text" mltag="txt_commentexceedmaxlength"> Comment exceed max length</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
-
-        <!--<div *ngIf="!form.controls['address'].valid && form.controls['address'].touched" class="alert-items">-->
-
-        <!--<div class="alert alert-danger">-->
-        <!--<div class="alert-items">-->
-        <!--<div class="alert-item static">-->
-        <!--<span class="alert-text" mltag="txt_selectasubportfolio"> Select a sub-portfolio</span>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-
-        <!--</div>-->
 
     </div>
 
