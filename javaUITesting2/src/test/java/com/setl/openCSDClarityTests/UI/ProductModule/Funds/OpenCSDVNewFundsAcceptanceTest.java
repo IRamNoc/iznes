@@ -78,7 +78,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
         String[] uFundDetails = generateRandomFundsDetails();
-        shouldFillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0]);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
@@ -262,8 +262,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
         navigateToPage("product-module");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
-
-
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
@@ -271,7 +269,8 @@ public class OpenCSDVNewFundsAcceptanceTest {
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-        driver.findElement(By.id("fund-submitfund-btn")).click();
+        WebElement submit = driver.findElement(By.id("fund-submitfund-btn"));
+        submit.click();
         assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
         assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
 

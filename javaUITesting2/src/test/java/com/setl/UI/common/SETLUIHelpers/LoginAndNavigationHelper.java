@@ -202,8 +202,8 @@ public class LoginAndNavigationHelper {
     public static void waitForHomePageToLoad() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            WebElement topBar = driver.findElement(By.id("topBarMenu"));
-            wait.until(visibilityOf(topBar));
+
+            wait.until(visibilityOfElementLocated(By.id("topBarMenu")));
 
         } catch (Exception e) {
             fail("Page heading was not present " + e.getMessage());
