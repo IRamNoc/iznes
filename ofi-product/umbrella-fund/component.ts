@@ -86,7 +86,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
 
     static getListItem(value: string, list: any[]): any[] {
-        if (value === null) {
+        if (value === null || !list.length) {
             return [];
         }
 
@@ -355,7 +355,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.managementCompanyList = listImu.reduce((result, item) => {
 
             result.push({
-                id: item.get('companyID', '0'),
+                id: item.get('companyID', '0').toString(),
                 text: item.get('companyName', ''),
             });
 
@@ -382,13 +382,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this.umbrellaFundForm.get('domicile').patchValue(domicile, {emitEvent: true});
         }
         this.umbrellaFundForm.get('umbrellaFundCreationDate').patchValue(this.umbrellaFund[0].umbrellaFundCreationDate, {emitEvent: false});
-        const managementCompany = this.managementCompanyList.filter(element => element.id.toString() === this.umbrellaFund[0].managementCompanyID.toString());
+        const managementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].managementCompanyID, this.managementCompanyList);
         if (managementCompany.length > 0) {
             this.umbrellaFundForm.get('managementCompanyID').patchValue(managementCompany, {emitEvent: false});
         }
-        console.log('fundAdministratorID', this.umbrellaFund[0].fundAdministratorID);
         const fundAdministrator = this.fundAdminOptions.filter(element => element.id.toString() === this.umbrellaFund[0].fundAdministratorID.toString());
-        console.log('fundAdministrator', fundAdministrator);
         if (fundAdministrator.length > 0) {
             this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, {emitEvent: false});
         }
