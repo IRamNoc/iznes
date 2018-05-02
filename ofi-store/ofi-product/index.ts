@@ -75,24 +75,35 @@ import {
     OfiFundShareReducer,
     setRequestedFundShare,
     clearRequestedFundShare
- } from './fund-share';
+} from './fund-share';
 
- import {
+import {
+    FundShareAuditDetail,
+    OfiFundShareAuditState,
+    OfiFundShareAuditReducer,
+    setRequestedFundShareAudit,
+    clearRequestedFundShareAudit,
+    SET_FUND_SHARE_AUDIT,
+    SET_REQUESTED_FUND_SHARE_AUDIT,
+    CLEAR_REQUESTED_FUND_SHARE_AUDIT
+} from './fund-share-audit';
+
+import {
     OfiFundShareDocuments,
     SET_FUND_SHARE_DOCS,
     OfiFundShareDocsState,
     OfiFundShareDocsReducer,
     setRequestedFundShareDocs,
     clearRequestedFundShareDocs
- } from './fund-share-docs';
+} from './fund-share-docs';
 
- import {
+import {
     OFI_SET_CURRENT_FUND_SHARE_SF,
     ofiSetCurrentFundShareSelectedFund,
     getOfiFundShareSelectedFund,
     OfiFundShareSelectedFundReducer,
     OfiFundShareSelectedFundState
- } from './fund-share-sf';
+} from './fund-share-sf';
 
 export {
     ManagementCompanyState,
@@ -159,6 +170,15 @@ export {
     OfiFundShareDocsReducer,
     setRequestedFundShareDocs,
     clearRequestedFundShareDocs,
+    // FUND SHARE AUDIT
+    FundShareAuditDetail,
+    OfiFundShareAuditState,
+    OfiFundShareAuditReducer,
+    setRequestedFundShareAudit,
+    clearRequestedFundShareAudit,
+    SET_FUND_SHARE_AUDIT,
+    SET_REQUESTED_FUND_SHARE_AUDIT,
+    CLEAR_REQUESTED_FUND_SHARE_AUDIT,
     // FUND SHARE SELECTED FUND
     OFI_SET_CURRENT_FUND_SHARE_SF,
     ofiSetCurrentFundShareSelectedFund,
@@ -186,6 +206,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiFundShareList: OfiFundShareListReducer,
     ofiUmbrellaFund: UmbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
+    ofiFundShareAudit: OfiFundShareAuditReducer,
     ofiFundShareDocs: OfiFundShareDocsReducer,
     ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,

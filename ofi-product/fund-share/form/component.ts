@@ -528,6 +528,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
         return obj.open;
     }
 
+    goToAuditTrail(): void {
+        this.router.navigateByUrl(`product-module/fund-share/${this.fundShareId}/audit`);
+    }
+
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();

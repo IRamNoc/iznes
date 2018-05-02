@@ -22,7 +22,10 @@ import {
     GET_IZN_SHARES_LIST,
     SET_FUND_SHARE_DOCS,
     setRequestedFundShareDocs,
-    clearRequestedFundShareDocs
+    clearRequestedFundShareDocs,
+    SET_FUND_SHARE_AUDIT,
+    setRequestedFundShareAudit,
+    clearRequestedFundShareAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product';
 
 export interface RequestInvestorFundAccessData {
@@ -285,6 +288,39 @@ export class OfiFundShareService {
     updateFundShareDocuments(requestData): any {
         let messageBody = {
             RequestName: 'iznesupdatefundsharedocs',
+            token: this.memberSocketService.token
+        }
+
+        messageBody = Object.assign(requestData, messageBody);
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
+     * Get fund share audit data
+     * @return {any}
+     */
+    static defaultFundShareAudit(ofiFundService: OfiFundShareService,
+        ngRedux: NgRedux<any>,
+        requestData,
+        successCallback: (data) => void,
+        errorCallback: (e) => void) {
+
+        const asyncTaskPipe = ofiFundService.getFundShareAudit(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_SHARE_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+            (data) => successCallback(data),
+            (e) => errorCallback(e)
+        ));
+    }
+
+    getFundShareAudit(requestData): any {
+        let messageBody = {
+            RequestName: 'getfundshareaudit',
             token: this.memberSocketService.token
         }
 
