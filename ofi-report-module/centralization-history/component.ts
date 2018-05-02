@@ -25,6 +25,7 @@ import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* Core redux */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import * as moment from 'moment';
 
 /* Types. */
 interface SelectedItem {
@@ -84,7 +85,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     periodList: Array<SelectedItem> = [
         {id: 'custom', text: 'Choose specific dates'},
         // {id: 'inception', text: 'Since inception'},
-        {id: 'lastcutoff', text: 'Since last cut-off'},
+        // {id: 'lastcutoff', text: 'Since last cut-off'},
         // {id: 'currentweek', text: 'Current week'},
         // {id: 'currentmonth', text: 'Current month'},
         // {id: 'currentquarter', text: 'Current quarter'},
@@ -405,8 +406,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             ;
 
             switch (this.filterForm.get('period').value[0].id) {
-                case 'lastcutoff':
-                    break;
+                // case 'lastcutoff':
+                //     break;
                 // case 'currentweek':
                 //     this.dateFrom = this.reformatDate(this.getMonday(today));
                 //     this.dateTo = this.reformatDate(today);
@@ -437,50 +438,24 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 //     this.dateTo = this.reformatDate(today);
                 //     break;
                 case 'week':
-                    this.dateFrom = this.reformatDate(this.addDays(this.getMonday(today), -7));
-                    this.dateTo = this.reformatDate(this.addDays(this.dateFrom, 6));
+                    this.dateTo = this.reformatDate(today);
+                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'weeks'));
                     break;
                 case 'month':
-                    m = today.getMonth();
-                    y = today.getFullYear();
-                    nbDaysInMonth = this.daysInMonth(m, y);
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + m + '-' + '01'));
-                    this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
+                    this.dateTo = this.reformatDate(today);
+                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'months'));
                     break;
                 case 'quarter':
-                    y = today.getFullYear();
-                    currentQuarter = Math.floor((today.getMonth() + 3) / 3) - 1;
-                    if (currentQuarter > 0) {
-                        this.dateFrom = this.reformatDate(new Date(y + '-' + (((currentQuarter - 1) * 3) + 1) + '-' + '01'));
-                        m = (((currentQuarter - 1) * 3) + 3);
-                        nbDaysInMonth = this.daysInMonth(m, y);
-                        this.dateTo = this.reformatDate(new Date(y + '-' + m + '-' + nbDaysInMonth));
-                    } else {
-                        y = today.getFullYear() - 1;
-                        this.dateFrom = this.reformatDate(new Date(y + '-' + ((3 * 3) + 1) + '-' + '01'));
-                        nbDaysInMonth = this.daysInMonth(12, y);
-                        this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
-                    }
+                    this.dateTo = this.reformatDate(today);
+                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'quarters'));
                     break;
                 case 'semester':
-                    y = today.getFullYear();
-                    currentSemester = Math.floor((today.getMonth() + 6) / 6) - 1;
-                    if (currentSemester === 1) {
-                        this.dateFrom = this.reformatDate(new Date(y + '-' + (((currentSemester - 1) * 6) + 1) + '-' + '01'));
-                        nbDaysInMonth = this.daysInMonth(6, y);
-                        this.dateTo = this.reformatDate(new Date(y + '-' + '06' + '-' + nbDaysInMonth));
-                    } else {
-                        y = today.getFullYear() - 1;
-                        this.dateFrom = this.reformatDate(new Date(y + '-06-01'));
-                        nbDaysInMonth = this.daysInMonth(12, y);
-                        this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
-                    }
+                    this.dateTo = this.reformatDate(today);
+                    this.dateFrom = this.reformatDate(moment(today).subtract(6, 'months'));
                     break;
-                case 'lastyear':
-                    y = today.getFullYear() - 1;
-                    this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
-                    nbDaysInMonth = this.daysInMonth(12, y);
-                    this.dateTo = this.reformatDate(new Date(y + '-' + '12' + '-' + nbDaysInMonth));
+                case 'year':
+                    this.dateTo = this.reformatDate(today);
+                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'years'));
                     break;
             }
 
