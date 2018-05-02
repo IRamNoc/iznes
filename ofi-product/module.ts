@@ -18,6 +18,8 @@ import {UmbrellaFundComponent} from './umbrella-fund/component';
 import {FundShareComponent} from './fund-share/form/component';
 import {FundShareTradeCycleComponent} from './fund-share/form/trade-cycle/component';
 import {AddNewFundShareComponent} from './fund-share/add-new/component';
+import {FundShareAuditComponent} from './fund-share/audit/component';
+import {FundShareAuditService} from './fund-share/audit/service';
 import {FundComponent} from './fund/component';
 
 /* Graphs. */
@@ -40,6 +42,7 @@ import productConfig from './productConfig';
         FundShareComponent,
         FundShareTradeCycleComponent,
         AddNewFundShareComponent,
+        FundShareAuditComponent,
         FundComponent
     ],
     exports: [
@@ -48,6 +51,7 @@ import productConfig from './productConfig';
         FundShareComponent,
         FundShareTradeCycleComponent,
         AddNewFundShareComponent,
+        FundShareAuditComponent,
         FundComponent,
     ],
     imports: [
@@ -67,6 +71,7 @@ import productConfig from './productConfig';
         SetlComponentsModule
     ],
     providers: [
+        FundShareAuditService,
         { provide: 'product-config', useValue: productConfig },
     ]
 })

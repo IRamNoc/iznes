@@ -1,0 +1,92 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-bars"></i>
+        <span mltag="txt_shareaudittrail">Share Audit Trail</span>
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabFundShareButton">
+            <span mltag="txt_audit">Audit</span>
+        </button>
+        <clr-tab-content class="outer">
+            <form [formGroup]="searchForm" novalidate>
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label" mltag="txt_datefrom">Date from</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateFrom" name="auditDateFrom" placeholder="Choose a date"
+                                    formControlName="dateFrom"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_chooseadate">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label" mltag="txt_dateto">Date to</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateTo" name="auditDateTo" placeholder="Choose a date"
+                                    formControlName="dateTo"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_chooseadate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #dataGrid *ngIf="fundShareAuditData">
+                <clr-dg-column class="col-fundname">
+                    <span mltag="txt_fundname">Fund name</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundsharename">
+                    <span mltag="txt_sharename">Share name</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundsharefield">
+                    <span mltag="txt_field">Field</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundshareoldvalue">
+                    <span mltag="txt_oldvalue">Old value</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundsharenewvalue">
+                    <span mltag="txt_newvalue">New value</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundsharemodifiedby">
+                    <span mltag="txt_modifiedby">Modified by</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-fundsharemodifieddate">
+                    <span mltag="txt_modifieddate">Date</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let item of fundShareAuditData">
+                    <clr-dg-cell class="col-fundname">{{item.fundName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharename">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharefield">{{item.field}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundshareoldvalue">{{item.oldValue}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharenewvalue">{{item.newValue}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharemodifiedby">{{item.userName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-fundsharemodifieddate">{{item.dateModified}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="30"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="row actions">
+                <div class="col-sm-12">
+                    <button class="btn btn-default" (click)="returnToShare()">Cancel</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
