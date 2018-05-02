@@ -331,6 +331,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 principlePromoterID: item.get('principlePromoterID', '0'),
                 legalAdvisorID: item.get('legalAdvisorID', '0'),
                 directors: item.get('directors', ''),
+                internalReference: item.get('internalReference', ''),
+                additionnalNotes: item.get('additionnalNotes', ''),
             });
 
             return result;

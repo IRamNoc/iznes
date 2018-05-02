@@ -62,7 +62,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 legalAdvisorID: item.get('legalAdvisorID'),
                 directors: item.get('directors'),
                 internalReference: item.get('internalReference'),
-                additionnalNotes: item.get('comment'),
+                additionnalNotes: item.get('additionnalNotes'),
             };
             return result;
         },
