@@ -31,9 +31,4 @@ describe('MyPdfService', () => {
         service.getPdfRequest({pdfID:null});
         expect(utilsCommon.createMemberNodeSagaRequest).toHaveBeenCalled();
     }));
-
-    it('should have a sensible base URL', inject([PdfService], (service: PdfService) => {
-        expect(service.baseUrl).toBe('http://localhost:9788');
-    }));
-
 });
