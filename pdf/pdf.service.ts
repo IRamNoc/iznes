@@ -25,7 +25,6 @@ export class PdfService {
     private token: string =  null;
     private userId: string = null;
     public walletId: string = null;
-    public baseUrl: string = null;
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
@@ -34,8 +33,6 @@ export class PdfService {
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>
     ) {
-        this.baseUrl = 'http://localhost:9788';
-        this.token = this.memberSocketService.token;
         if (this.getConnectedWallet) {
             this.getConnectedWallet.subscribe(
                 (function (data) {
@@ -52,18 +49,19 @@ export class PdfService {
         }
     }
 
-    public createPdfMetadata(requestData: CreatePdfMetadata): any {
-        if (this.walletId) {
-            const messageBody: CreatePdfMetadataMessageBody = {
-                RequestName: 'createpdfmetadata',
-                token: this.token,
-                walletID: this.walletId,
-                type: _.get(requestData, 'type', null),
-                metadata: _.get(requestData, 'metadata', null)
-            };
-            return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-        }
-    }
+    // remove as not used
+    // public createPdfMetadata(requestData: CreatePdfMetadata): any {
+    //     if (this.walletId) {
+    //         const messageBody: CreatePdfMetadataMessageBody = {
+    //             RequestName: 'createpdfmetadata',
+    //             token: this.token,
+    //             walletID: this.walletId,
+    //             type: _.get(requestData, 'type', null),
+    //             metadata: _.get(requestData, 'metadata', null)
+    //         };
+    //         return utilsCommon.createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    //     }
+    // }
 
     /**
      * Get PDF
@@ -97,7 +95,7 @@ export class PdfService {
         if (this.walletId) {
             const messageBody: GetPdfMessageBody = {
                 RequestName: 'getpdf',
-                token: this.token,
+                token: this.memberSocketService.token,
                 walletID: this.walletId,
                 pdfID: _.get(requestData, 'pdfID', null)
             };
@@ -105,17 +103,18 @@ export class PdfService {
         }
     }
 
-    public servePdf(fileHash) {
-        if (fileHash) {
-            const path = this.baseUrl +
-                '/file?' +
-                'method=retrieve' +
-                '&userId=' + this.userId +
-                '&walletId=' + this.walletId +
-                '&token=' + this.token +
-                '&fileHash=' + fileHash;
-
-            console.log('Serving from path:' + path);
-        }
-    }
+    // remove as not used
+    // public servePdf(fileHash) {
+    //     if (fileHash) {
+    //         const path = this.baseUrl +
+    //             '/file?' +
+    //             'method=retrieve' +
+    //             '&userId=' + this.userId +
+    //             '&walletId=' + this.walletId +
+    //             '&token=' + this.token +
+    //             '&fileHash=' + fileHash;
+	//
+    //         console.log('Serving from path:' + path);
+    //     }
+    // }
 }
