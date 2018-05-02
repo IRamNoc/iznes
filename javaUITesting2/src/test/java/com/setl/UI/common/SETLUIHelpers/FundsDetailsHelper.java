@@ -47,6 +47,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
         try {
+            wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
             assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
@@ -177,21 +178,18 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void selectFund() {
+    public static void selectFund(int fundCount) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-fundID-0")));
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-fundID-0")));
-        wait.until(elementToBeClickable(By.id("product-dashboard-link-fundID-0")));
-        WebElement fund = driver.findElement(By.id("product-dashboard-link-fundID-0"));
+
+        String fundId = "product-dashboard-link-fundID-" + fundCount;
+        wait.until(visibilityOfElementLocated(By.id(fundId)));
+        wait.until(elementToBeClickable(By.id(fundId)));
+        WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")));
-
-
     }
 
-    public static void shouldFillOutFundDetailsStep2(String fundName) throws InterruptedException {
+    public static void fillOutFundDetailsStep2(String fundName) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -222,7 +220,47 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("isFundOfFund2")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        Thread.sleep(750);
+        driver.findElement(By.id("isDedicatedFund1")).click();
+    }
+
+    public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
+        driver.findElement(By.id("new-fund-btn")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        driver.findElement(By.id("isFundStructure1")).isDisplayed();
+        driver.findElement(By.id("fundName")).sendKeys(fundName);
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("isEuDirective2")).click();
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("fundManagers")).sendKeys("testManager");
+        scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
+        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a"))));
+        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
+        driver.findElement(By.id("openOrCloseEnded2")).click();
+        driver.findElement(By.id("isFundOfFund2")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
     }
 
@@ -304,9 +342,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(elementToBeClickable(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
         WebElement uFund = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName"));
         uFund.click();
-
         wait.until(visibilityOfElementLocated(By.id("edit-fund-title")));
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
     }
@@ -378,13 +414,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void verifyFundMainInfoPageContents() {
 
-        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2"));
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2"));
 
         mainInfo.click();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")).getText().equals("Main information"));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")).getText().equals("Main information"));
         wait.until(visibilityOfElementLocated(By.id("fundName")));
         assertTrue(isElementPresent(By.id("isFundStructure1")));
         assertTrue(isElementPresent(By.id("isFundStructure2")));
@@ -447,7 +483,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("investmentObjective")));
     }
 
-    public static void shouldFillOutFundDetailsStep1(String umbFundName) {
+    public static void fillOutFundDetailsStep1(String umbFundName) {
         driver.findElement(By.id("new-fund-btn")).click();
 
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -463,13 +499,17 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
 
-    public static void verifyFundDropdownElements() {
+    public static void verifyFundDropdownElements(int fundCount) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")).getText().contentEquals("No Umbrella Fund"));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")));
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")).getText().contentEquals("Fund: Test"));
+        System.out.println(fundCount);
+        fundCount = fundCount-1;
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")));
+        //assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText().contentEquals("No Umbrella Fund"));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        //assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")).getText().contentEquals("Fund: Test"));
 
     }
 

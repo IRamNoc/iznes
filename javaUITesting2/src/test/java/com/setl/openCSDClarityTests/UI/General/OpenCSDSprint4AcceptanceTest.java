@@ -5,16 +5,12 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.IOException;
-
 
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
@@ -28,7 +24,6 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyFundOptInfoPageC
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
-import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
@@ -41,7 +36,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (30000);
+    public Timeout globalTimeout = new Timeout (300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -148,8 +143,8 @@ public class OpenCSDSprint4AcceptanceTest {
 
         String [] uFundDetails = generateRandomFundsDetails();
 
-        shouldFillOutFundDetailsStep1(umbFundDetails[0]);
-        shouldFillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0]);
 
         //Assert fund table displays the information for the fund created previously, including umbFund
 
@@ -218,10 +213,35 @@ public class OpenCSDSprint4AcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
-        selectFund();
-        verifyFundDropdownElements();
+        int fundCount = createFund();
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+        selectFund(fundCount);
+        verifyFundDropdownElements(fundCount);
         verifyFundMainInfoPageContents();
         verifyFundOptInfoPageContents();
+    }
+
+    private int createFund() throws InterruptedException {
+
+        selectAddUmbrellaFund();
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+
+        //Store title number count for Funds
+
+        driver.findElement(By.id("mcBtnSubmitForm")).click();
+        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+        System.out.println(fundCount + " funds are displayed in the funds table");
+
+        //Navigate to fund creation and create a fund with umbFund
+
+        String [] uFundDetails = generateRandomFundsDetails();
+
+        //fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetails(uFundDetails[0], umbFundDetails[0]);
+        return fundCount;
     }
 
     @Test
@@ -251,6 +271,7 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldUpdateFundShareAndCheckDatabase(){
     }
+
 
 
 
