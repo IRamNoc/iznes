@@ -18,6 +18,7 @@ export {DpDatePickerModule} from './components/ng2-date-picker/date-picker.modul
 export {SetlDirectivesModule} from './directives';
 export {NumberConverterService} from './services/number-converter/service';
 export {BlockchainContractService} from './services/blockchain-contract/service';
+export {NavHelperService} from './services/nav/service';
 export {ConditionType, ArrangementActionType} from './services/blockchain-contract/model';
 export {SetlServicesModule} from './services';
 
