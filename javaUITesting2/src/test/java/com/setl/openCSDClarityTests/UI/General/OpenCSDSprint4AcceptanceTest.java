@@ -148,7 +148,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
         //Assert fund table displays the information for the fund created previously, including umbFund
 
-        getFundTableRow(fundCount, uFundDetails[0], "12345678901234567890", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         //Navigate to the fund previously created
 
