@@ -357,11 +357,7 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
-            {
-                hour: 23,
-                minute: 59,
-                second: 59
-            }
+            {hour: 23, minute: 59, second: 59}
         );
     }
 

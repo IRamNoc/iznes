@@ -3,6 +3,8 @@ import {RequestData} from './request-data';
 import {OrderHelper} from '../order-helper';
 import {expect} from 'chai';
 import 'mocha';
+import {CalendarHelper} from "../calendar-helper";
+import * as moment from 'moment-business-days';
 
 describe('Subscription order', () => {
     let fundshareTestData;
@@ -13,7 +15,7 @@ describe('Subscription order', () => {
         requestTestData = RequestData;
     });
 
-    it('subscription by amount', () => {
+    xit('subscription by amount', () => {
         requestTestData.orderby = 'a';
         requestTestData.ordervalue = 10000000;
         const orderHelper = new OrderHelper(fundshareTestData, requestTestData);
@@ -114,7 +116,7 @@ describe('Subscription order', () => {
         }));
     });
 
-    it('subscription by quantity', () => {
+    xit('subscription by quantity', () => {
         requestTestData.orderby = 'q';
         requestTestData.ordervalue = 10000000;
         const orderHelper = new OrderHelper(fundshareTestData, requestTestData);
@@ -215,7 +217,7 @@ describe('Subscription order', () => {
         }));
     });
 
-    it('redemption by amount', () => {
+    xit('redemption by amount', () => {
         requestTestData.ordertype = 'r';
         requestTestData.orderby = 'a';
         requestTestData.ordervalue = 10000000;
@@ -305,7 +307,7 @@ describe('Subscription order', () => {
 
     });
 
-    it('redemption by quantity', () => {
+    xit('redemption by quantity', () => {
         requestTestData.ordertype = 'r';
         requestTestData.orderby = 'q';
         requestTestData.ordervalue = 10000000;
@@ -392,5 +394,23 @@ describe('Subscription order', () => {
                 }
             }
         }));
+    });
+
+    it('calendar get valuation from cutoff', () => {
+        const calendarHelper = new CalendarHelper(fundshareTestData);
+        const cutoff = moment('2018-05-02 12:00', 'YYYY-MM-DD HH:mm');
+        const valuation = calendarHelper.getValuationDateFromCutoff(cutoff, 3);
+        const settlement = calendarHelper.getSettlementDateFromCutoff(cutoff, 3);
+    });
+
+    xit('calendar set cutoff time', () => {
+        const calendarHelper = new CalendarHelper(fundshareTestData);
+        const cutoff = moment('2018-05-02 10:00', 'YYYY-MM-DD HH:mm');
+        const cutoffWithTime = calendarHelper.getCutoffTimeForSpecificDate(cutoff, 3);
+    });
+
+
+    it('calendar get valuation from cutoff', () => {
+
     });
 });
