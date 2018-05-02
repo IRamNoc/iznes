@@ -1,32 +1,37 @@
 // Vendor
 import {
-    Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter,
-    Output, OnDestroy, ViewChild, ElementRef
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
 } from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {fromJS} from 'immutable';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
-import {select} from '@angular-redux/store';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
-
 // Internal
-import {immutableHelper, MoneyValuePipe, mDateHelper, NumberConverterService, ConfirmationService} from '@setl/utils';
 import {
-    InitialisationService,
-    MyWalletsService,
-    WalletNodeRequestService
-} from '@setl/core-req-services';
+    commonHelper,
+    ConfirmationService,
+    immutableHelper,
+    mDateHelper,
+    MoneyValuePipe,
+    NumberConverterService
+} from '@setl/utils';
+import {InitialisationService, MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
 import {setRequestedWalletAddresses} from '@setl/core-store';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
 import {OrderHelper, OrderRequest} from '../../ofi-product/fund-share/helper/order-helper';
-import {commonHelper} from '@setl/utils';
-import {OrderByType, OrderType} from '../../ofi-orders/order.model';
+import {OrderByType} from '../../ofi-orders/order.model';
 import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 
@@ -39,8 +44,8 @@ import {Router} from '@angular/router';
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
-    static DateTimeFormat = 'DD/MM/YYYY HH:mm';
-    static DateFormat = 'DD/MM/YYYY';
+    static DateTimeFormat = 'YYYY-MM-DD HH:mm';
+    static DateFormat = 'YYYY-MM-DD';
 
     @Input() shareId: number;
     @Input() type: string;
@@ -254,10 +259,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return (this.form.valid && this.isValidOrderValue() && this.disclaimer.value && !this.isRedeemTooMuch) ? null : '';
     }
 
-    get assetClass(): string {
-        return FundShareValue.ClassCodeValue[this.shareData.shareClassCode];
-    }
-
     get valuationOffset() {
         return this.calenderHelper.valuationOffSet;
     }
@@ -302,7 +303,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
-                private _moneyValuePipe: MoneyValuePipe,
+                public _moneyValuePipe: MoneyValuePipe,
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private _numberConverterService: NumberConverterService,
@@ -763,6 +764,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             }
         }
         return 0;
+    }
+
+    getDate(dateString: string): string {
+        return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
     }
 }
 

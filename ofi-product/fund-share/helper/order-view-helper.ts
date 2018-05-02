@@ -58,7 +58,7 @@ export function getOrderFigures(order: OrderFiguresModel): FigureResponse {
     const platFormFeeRaw = Number(_.get(order, 'platformFee', 0));
     const orderStatus = Number(_.get(order, 'orderStatus', 1));
 
-    if (orderStatus === Number(OrderStatus.Initiated)) {
+    if (orderStatus === Number(OrderStatus.Initiated) || orderStatus === Number(OrderStatus.WaitingNAV)) {
         quantity = Number(toNormalScale(estimatedQuantityRaw, ShareUnitDecimal));
         amount = Number(toNormalScale(estimatedAmountRaw, MoneyUnitDecimal));
         amountWithCost = Number(toNormalScale(estimatedAmountWithCostRaw, MoneyUnitDecimal));

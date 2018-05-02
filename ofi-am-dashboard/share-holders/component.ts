@@ -1,5 +1,5 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -14,6 +14,7 @@ import {immutableHelper, NumberConverterService} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {Subscription} from 'rxjs/Subscription';
+import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 
 /* Types. */
 interface SelectedItem {
@@ -83,6 +84,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
+    private appConfig: any = {};
 
     /**
      * Constructor
@@ -97,17 +99,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param {MemberSocketService} memberSocketService
      * @param {OfiReportsService} ofiReportsService
      */
-    constructor(
-        private ngRedux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private alertsService: AlertsService,
-        private route: ActivatedRoute,
-        private router: Router,
-        private _numberConverterService: NumberConverterService,
-        private _fb: FormBuilder,
-        private memberSocketService: MemberSocketService,
-        private ofiReportsService: OfiReportsService
-    ) {
+    constructor(private ngRedux: NgRedux<any>,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private route: ActivatedRoute,
+                private router: Router,
+                private _numberConverterService: NumberConverterService,
+                private _fb: FormBuilder,
+                private memberSocketService: MemberSocketService,
+                private ofiReportsService: OfiReportsService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
         this.shareTabTitle = '';
         this.createSearchListForm();
         this.createSearchInShareForm();
@@ -238,8 +240,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     getHolderDetail(data) {
         if (data) {
             this.holderDetailData = data.holders.toJS() || [];
-            this.changeDetectorRef.markForCheck();
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     createSearchListForm() {
@@ -289,19 +291,26 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.searchListForm.get('search').value[0].id
         ) {
             const shareId = this.searchListForm.get('search').value[0].id;
+            this.openShareId(shareId);
 
-            const payload = {
-                shareId,
-                selectedFilter: this.holderFilters[0].id
-            };
-
-            OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
-            this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
-
-            this.buildLink(shareId);
         } else {
             this.buildLink('0');
         }
+    }
+
+    openShareId(shareId) {
+        this.holderDetailData = [];
+        const payload = {
+            shareId,
+            selectedFilter: this.holderFilters[0].id
+        };
+        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
+
+        OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
+
+        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
+
+        this.buildLink(shareId);
     }
 
     buildLink(id) {
@@ -329,7 +338,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         };
 
         // Reset holder detail requested flag
-        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
+        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
 
         // Fetch the holders with the newest selected filter
         OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
@@ -344,7 +353,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      */
     handleHoldersExportButtonClick(): void {
         const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportAssetManagerHolders`;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
         window.open(url, '_blank');
     }
@@ -356,7 +365,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         const shareId = this.searchListForm.get('search').value[0].id;
         const selectedFilter = this.searchInShareForm.get('top').value[0].id;
         const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportShareHolderDetail&shareId=${shareId}&selectedFilter=${selectedFilter}`;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
         window.open(url, '_blank');
     }

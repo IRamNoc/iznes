@@ -1,12 +1,13 @@
 export interface CentralizationReportsDetails {
+    aum: any;
     cutoffDate: any;
     fundShareID: any;
     fundShareName: any;
     isin: any;
     latestNav: any;
-    latestNavBackup: any;
     navDate: any;
-    navDateBackup: any;
+    netPosition: any;
+    netPositionPercentage: any;
     redAmount: any;
     redQuantity: any;
     settlementDate: any;

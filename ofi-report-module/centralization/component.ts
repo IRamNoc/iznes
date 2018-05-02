@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 import {MemberSocketService} from '@setl/websocket-service';
@@ -19,6 +19,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* store */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
+import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 
 /* Types. */
 interface SelectedItem {
@@ -69,6 +70,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     searchForm: FormGroup;
 
     private myDetails: any = {};
+    private appConfig: any = {};
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
     unsubscribe = new Subject();
@@ -91,7 +93,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 private ofiReportsService: OfiReportsService,
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
-                private _numberConverterService: NumberConverterService,) {
+                private _numberConverterService: NumberConverterService,
+                @Inject(APP_CONFIG) appConfig: AppConfig) {
+        this.appConfig = appConfig;
         this.createsearchForm();
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -137,14 +141,15 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.centralizationReportsList = listImu.reduce((result, item) => {
 
             result.push({
+                aum: item.get('aum'),
                 cutoffDate: (item.get('cutoffDate') == null) ? '-' : item.get('cutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
                 latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-                latestNavBackup: (item.get('latestNavBackup') === null) ? 0 : item.get('latestNavBackup'),
                 navDate: item.get('navDate'),
-                navDateBackup: item.get('navDateBackup'),
+                netPosition: item.get('netPosition'),
+                netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
                 redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
                 settlementDate: item.get('settlementDate'),
@@ -216,7 +221,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     onClickExportCentralizationReport(id) {
         const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 
@@ -267,7 +272,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                     paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
                 }
             }
-            const url = this.generateExportURL(paramUrl, false);
+            const url = this.generateExportURL(paramUrl, this.appConfig.production);
             // console.log(url);
             window.open(url, '_blank');
         }
@@ -275,7 +280,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     onClickDownloadCentralizationHistory(id) {
         const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id + '&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, false);
+        const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
 

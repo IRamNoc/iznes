@@ -75,14 +75,15 @@ function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<Cen
     const centralizationReportsList = Map(rawDataList.reduce(
         function (result, item) {
             result[i] = {
+                aum: item.get('aum'),
                 cutoffDate: item.get('cutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
                 latestNav: item.get('latestNav'),
-                latestNavBackup: item.get('latestNavBackup'),
                 navDate: item.get('navDate'),
-                navDateBackup: item.get('navDateBackup'),
+                netPosition: item.get('netPosition'),
+                netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: item.get('redAmount'),
                 redQuantity: item.get('redQuantity'),
                 settlementDate: item.get('settlementDate'),
