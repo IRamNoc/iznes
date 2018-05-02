@@ -356,13 +356,25 @@ export class CalendarHelper {
     getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
         this.orderType = orderType;
 
-        return cutoffDate.clone().businessAdd(this.valuationOffSet);
+        return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
+            {
+                hour: 23,
+                minute: 59,
+                second: 59
+            }
+        );
     }
 
     getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
         this.orderType = orderType;
 
-        return cutoffDate.clone().businessAdd(this.settlementOffSet);
+        return cutoffDate.clone().businessAdd(this.settlementOffSet).set(
+            {
+                hour: 23,
+                minute: 59,
+                second: 59
+            }
+        );
     }
 
     getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {

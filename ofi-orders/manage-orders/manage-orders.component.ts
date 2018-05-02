@@ -1,7 +1,7 @@
 /* Core/Angular imports. */
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy,
-    OnInit
+    OnInit, ViewChild
 } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -33,7 +33,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
 
 /* Clarity */
-import {ClrDatagridStateInterface} from '@clr/angular';
+import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
 
 /* helper */
 import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
@@ -146,6 +146,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ];
 
     appConfig: AppConfig;
+
+    @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
 
     get isInvestorUser() {
         return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
@@ -265,6 +267,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateWalletConnection();
         });
 
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
+
     }
 
     createForm() {
@@ -313,6 +319,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
         this.changeDetectorRef.markForCheck();
     }
 
@@ -374,6 +383,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ordersList = this.ordersObjectToList(list);
 
         this.updateTabs();
+
+        if (this.orderDatagrid) {
+            this.orderDatagrid.resize();
+        }
         this.changeDetectorRef.markForCheck();
     }
 

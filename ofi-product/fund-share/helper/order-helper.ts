@@ -6,6 +6,7 @@ import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
+import * as _ from 'lodash';
 
 // ** please don't remove this below commented import please, as i use it for building the compiled version
 // import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
@@ -267,9 +268,9 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
 
         // used for testing when validation is turned off
-        this.fakeCuoff = moment().add(1, 'minutes');
-        this.fakeValuation = moment().add(2, 'minutes');
-        this.fakeSettlement = moment().add(3, 'minutes');
+        this.fakeCuoff = moment().add(30, 'seconds');
+        this.fakeValuation = moment().add(60, 'seconds');
+        this.fakeSettlement = moment().add(90, 'seconds');
 
     }
 
@@ -372,7 +373,7 @@ export class OrderHelper {
         );
     }
 
-    static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse) {
+    static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse, holding: number) {
         const decimalPlaces = 2;
         const orderReference = pad(order.orderID, 11, '0');
         const orderType = Number(order.orderType);
@@ -386,7 +387,7 @@ export class OrderHelper {
 
         const generalBody = subject;
 
-        const todayStr = moment().utc().format('DD/MM/YYYY');
+        const todayStr = moment().utc().format('YYYY-MM-DD');
 
         const actionJson = {
             type: 'sendPdf',
@@ -402,7 +403,7 @@ export class OrderHelper {
                     reference: orderReference,
                     clientReference: order.clientReference,
                     date: todayStr,
-                    numberOfShares: toNormalScale(Number(order.quantity), decimalPlaces)
+                    numberOfShares: toNormalScale(Number(holding), decimalPlaces)
                 }
             }
         };
@@ -447,9 +448,32 @@ export class OrderHelper {
         }, {});
     }
 
-    processOrder() {
+    static getAddressFreeBalanceFromHolderResponse(response: any, address: string): number {
+        const encumbrances = _.get(response, ['data', 'encumbrances'], {});
+        const holders = _.get(response, ['data', 'holders'], {});
 
+        const totalHolding: number = _.get(holders, [address], 0);
+        const encumbered: number = _.get(encumbrances, [address], 0);
+
+        return totalHolding - encumbered;
     }
+
+    static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse){
+        const walletId = order.amWalletID;
+        const namespace = order.isin;
+        const instrument = order.fundShareName;
+
+        return 	{
+            messagetype: 'request',
+            messagebody: {
+                topic: 'holders',
+                walletid: walletId,
+                namespace: namespace,
+                instrument: instrument,
+            },
+        };
+    }
+
 
     buildContractData(): VerifyResponse | ContractData {
 
@@ -608,8 +632,9 @@ export class OrderHelper {
                     };
                 }
 
-                valuation = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffDateFromValuation(valuation, this.orderType);
+                cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
+                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
                 break;
@@ -624,9 +649,10 @@ export class OrderHelper {
                     };
                 }
 
-                settlement = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffDateFromSettlement(settlement, this.orderType);
+                cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(settlement, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
                 break;
 

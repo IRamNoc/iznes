@@ -2,17 +2,19 @@ import {Inject, Injectable} from '@angular/core';
 
 import {WalletnodeTxService} from '@setl/core-req-services';
 import {
+    APP_CONFIG,
+    AppConfig,
+    ArrangementActionType,
     BlockchainContractService,
-    MoneyValuePipe,
-    NumberConverterService,
+    commonHelper,
+    ConditionType,
     immutableHelper,
     mDateHelper,
-    ConditionType,
-    ArrangementActionType,
+    MoneyValuePipe,
+    NumberConverterService,
     SagaHelper
 } from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig, commonHelper} from '@setl/utils';
 import {setLastCreatedContractDetail} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
@@ -26,7 +28,7 @@ export class InvestFundFormService {
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _walletNodeTxService: WalletnodeTxService,
-                private _moneyValuePipe: MoneyValuePipe,
+                public _moneyValuePipe: MoneyValuePipe,
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
                 private _ofiFundInvestService: OfiFundInvestService,
