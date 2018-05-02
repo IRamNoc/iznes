@@ -7,6 +7,8 @@ import {PersistService} from '@setl/core-persist';
 
 // Alerts and confirms
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {ConfirmationService} from '@setl/utils';
+
 // Internal
 import {Subscription} from 'rxjs/Subscription';
 // Services
@@ -14,12 +16,20 @@ import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.ser
 import {ChainService} from '@setl/core-req-services/chain/service';
 import {MultilingualService} from '@setl/multilingual';
 
+// Set default Node Address and Port
+let defaultNodeAddress = null;
+if (location.protocol !== 'https:') {
+    defaultNodeAddress = 'localhost';
+}
+const defaultNodePort = 13535;
+
 @Component({
     selector: 'app-wallet-nodes',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     tabsControl: Array<object>;
     // Debug for dev
@@ -48,6 +58,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 private _chainService: ChainService,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private _alertsService: AlertsService,
+                private _confirmationService: ConfirmationService,
                 private multilingualService: MultilingualService,
                 private _persistService: PersistService) {
 
@@ -63,9 +74,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 formControl: this._persistService.watchForm('manageMember/walletNodes', new FormGroup(
                     {
                         walletNodeName: new FormControl('', Validators.required),
-                        nodeAddress: new FormControl('', Validators.required),
+                        nodeAddress: new FormControl(defaultNodeAddress, Validators.required),
                         nodePath: new FormControl(),
-                        nodePort: new FormControl('', Validators.compose([Validators.required, this.isInteger])),
+                        nodePort: new FormControl(defaultNodePort, Validators.compose([Validators.required, this.isInteger])),
                         chainId: new FormControl('', Validators.required)
                     }
                 )),
@@ -144,6 +155,52 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     }
 
 
+    /*CHECK PORT AND HTTPS*/
+    handleChecks(tabId: number, type): void {
+        let check = 1; // pass check flag
+        let message = '';
+        const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
+        const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
+
+        // CHECK NODE PORT IS 13535
+        if (nodePort !== 13535) {
+            check = 0; // failed check
+            message = message + '<li>In most cases Node Port should be set to 13535</li>';
+        }
+
+        // IF NOT HTTPS CHECK ADDRESS IS LOCALHOST
+        if (location.protocol !== 'https:') {
+            if (nodeAddress !== 'localhost') {
+                check = 0; // failed check
+                message = message + '<li>As you are on a local server, Node Address should be set to localhost</li>';
+            }
+        }
+
+        if (!check) {
+            // TRIGGER WARNING
+            this._confirmationService.create(
+                '<span>Are you sure?</span>',
+                `<strong>Please check the below:</strong><ol>${message}</ol>`,
+                {confirmText: 'Continue', declineText: 'Amend'}
+            ).subscribe((ans) => {
+                if (ans.resolved) {
+                    if (type === 'add') {
+                        this.handleAddWalletNodes(tabId);
+                    } else if (type === 'edit') {
+                        this.handleEditWalletNodes(tabId);
+                    }
+                }
+            });
+        } else {
+            // PROCEED IF PASSES CHECKS
+            if (type === 'add') {
+                this.handleAddWalletNodes(tabId);
+            } else if (type === 'edit') {
+                this.handleEditWalletNodes(tabId);
+            }
+        }
+    }
+
     /*HANDLE ADD WALLET NODE*/
     handleAddWalletNodes(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
@@ -153,6 +210,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
             const nodePath = this.tabsControl[tabId]['formControl'].value.nodePath;
             const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
+
 
             // Create a saga pipe
             const asyncTaskPipe = this._adminUsersService.saveWalletNode(
@@ -172,10 +230,12 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 (data) => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
                     this.showSuccess('Wallet Node has successfully been saved');
+                    this.setTabActive(0);
                 },
                 (data) => {
                     console.log('Error: ', data);
-                    this.showError(JSON.stringify(data));
+                    //this.showError(JSON.stringify(data));
+                    this.showError('Error saving new Wallet Node. Please check that a Wallet Node with this name does not already exist.');
                     this.markForCheck();
                 }
             ));
@@ -208,6 +268,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 (data) => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
                     this.showSuccess('Wallet Node has successfully been updated');
+                    this.setTabActive(0);
                 },
                 (data) => {
                     console.log('Error: ', data);
@@ -357,6 +418,18 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                   </tbody>
               </table>
           `);
+    }
+
+    showCheckAlert(message) {
+        this._confirmationService.create(
+            '<span>Are you sure?</span>',
+            `<span>${message}</span>`,
+            {confirmText: 'Confirm', declineText: 'Cancel'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                console.log('button confirmation has been pressed (check alert)');
+            }
+        });
     }
 
     showSuccess(message) {
