@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { Location } from '@angular/common';
 import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
@@ -9,6 +8,7 @@ import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SET_NEW_PASSWORD} from '@setl/core-store/index';
 import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -47,8 +47,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
 
     constructor(
         private _ngRedux: NgRedux<any>,
+        private router: Router,
         private toasterService: ToasterService,
-        private location: Location,
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
@@ -135,8 +135,11 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                     this.changePassForm.reset();
                     this.alertsService.create('success', `
                         Your password has been successfully changed!
-                    `);
-                    this.location.back();
+                    `)
+                    .take(1)
+                    .subscribe(() => {
+                        this.router.navigate(['home']);
+                    });
                 },
                 (e) => {
                     this.alertsService.create('warning', `
@@ -174,7 +177,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
             asyncTaskPipe,
             () => {
                 this.toasterService.pop('success', 'Saved changes');
-                this.location.back();
+                this.router.navigate(['home']);
             },
             (data) => {
                 this.toasterService.pop('error', JSON.stringify(data));
@@ -183,7 +186,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     closeUserInformations() {
-        this.location.back();
+        this.router.navigate(['home']);
     }
 
 }
