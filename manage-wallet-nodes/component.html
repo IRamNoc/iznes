@@ -61,7 +61,7 @@
     <!-- Wallet Nodes Add Form -->
     <ng-template #staticAddTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleAddWalletNodes(tabid)" [formGroup]="formControl">
+            <form (ngSubmit)="handleChecks(tabid, 'add')" [formGroup]="formControl">
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label">
@@ -147,7 +147,7 @@
     <!-- Wallet Nodes Edit Form -->
     <ng-template #dynamicEditTab let-formControl="formControl" let-tabid="tabid">
         <div class="user-tab-panel-body panel-body">
-            <form (ngSubmit)="handleEditWalletNodes(tabid)" [formGroup]="formControl">
+            <form (ngSubmit)="handleChecks(tabid, 'edit')" [formGroup]="formControl">
                 <div class="row">
                     <input type="hidden" id="walletNodeId" class="form-control" formControlName="walletNodeId">
                     <div class="form-group col-sm-6">
