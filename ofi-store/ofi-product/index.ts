@@ -57,6 +57,17 @@ import {
 } from './nav';
 
 import {
+    NavAuditDetail,
+    OfiNavAuditState,
+    OfiNavAuditReducer,
+    setRequestedNavAudit,
+    clearRequestedNavAudit,
+    SET_NAV_AUDIT,
+    SET_REQUESTED_NAV_AUDIT,
+    CLEAR_REQUESTED_NAV_AUDIT
+} from './nav-audit';
+
+import {
     OfiFundShareListState,
     OfiFundShareListReducer,
     SET_AM_ALL_FUND_SHARE_LIST,
@@ -146,6 +157,15 @@ export {
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
     getOfiNavLatestCurrentRequest,
+    // AUDIT
+    NavAuditDetail,
+    OfiNavAuditState,
+    OfiNavAuditReducer,
+    setRequestedNavAudit,
+    clearRequestedNavAudit,
+    SET_NAV_AUDIT,
+    SET_REQUESTED_NAV_AUDIT,
+    CLEAR_REQUESTED_NAV_AUDIT,
     // Fund Share List
     OfiFundShareListState,
     OfiFundShareListReducer,
@@ -210,5 +230,6 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiFundShareDocs: OfiFundShareDocsReducer,
     ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,
-    ofiNavLatest: OfiNavLatestReducer
+    ofiNavLatest: OfiNavLatestReducer,
+    ofiNavAudit: OfiNavAuditReducer
 });
