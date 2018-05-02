@@ -37,6 +37,7 @@ import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
 
 /* helper */
 import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
+import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
 
 /* Types. */
 interface SelectedItem {
@@ -171,14 +172,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         mifiidServicesCosts: null,
         mifiidIncidentalCosts: null,
         keyFactOptionalData: {
-            assetClass: null,
             srri: null,
             sri: null,
         },
         decimalization: null,
+        shareClassCode: null
     };
 
     fundShareID = 0;
+    fundShareListObj = {};
 
     userAssetList: Array<any> = [];
     private requestedSearch: any;
@@ -195,7 +197,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
     @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
     @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
-    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) requestFundShareOb;
+    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
+    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ngRedux: NgRedux<any>,
@@ -212,9 +217,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
+                private _ofiFundInvestService: OfiFundInvestService,
                 public _numberConverterService: NumberConverterService) {
 
         this.appConfig = appConfig;
+
+    }
+
+    ngOnInit() {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
@@ -223,49 +233,86 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.myDetails = myDetails;
         }));
 
-        this.createForm();
-        this.setInitialTabs();
-
         this.subscriptions.push(this.walletDirectoryOb.subscribe((walletDirectory) => {
             this.walletDirectory = walletDirectory;
         }));
 
-        if (!this.isInvestorUser) {  // AM side
-            this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
-            this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        } else if (this.isInvestorUser) {  // INV side
-            this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
-            this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
-        }
-        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
-    }
-
-    ngOnInit() {
-        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
-        this.changeDetectorRef.markForCheck();
-    }
-
-    ngAfterViewInit() {
-        /* Do observable subscriptions here. */
-        const state = this.ngRedux.getState();
-
         /* Subscribe for this user's wallets. */
-        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
+        this.subscriptions.push(this.myWalletsOb.subscribe((walletsList) => {
             /* Assign list to a property. */
             this.myWallets = walletsList;
 
             /* Update wallet name. */
             this.updateWalletConnection();
-        });
+        }));
 
         /* Subscribe for this user's connected info. */
-        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+        this.subscriptions.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
             /* Update wallet name. */
             this.updateWalletConnection();
-        });
+        }));
+
+        if (!this.isInvestorUser) {  // AM side
+            this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
+            this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+            this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+            this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
+        } else if (this.isInvestorUser) {  // INV side
+            this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
+            this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
+            this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe(
+                (requested) => this.requestMyFundAccess(requested)));
+            this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
+        }
+        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
+
+        this.subscriptions.push(this.route.params.subscribe(params => {
+            this.orderID = params['tabid'];
+            if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+                const order = this.ordersList.find(elmt => {
+                    if (elmt.orderID.toString() === this.orderID.toString()) {
+                        return elmt;
+                    }
+                });
+                if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                    this.fundShareID = order.fundShareID;
+                    let tabTitle = '';
+                    if (order.orderType === 3) tabTitle += 'Subscription: ';
+                    if (order.orderType === 4) tabTitle += 'Redemption: ';
+                    tabTitle += ' ' + this.getOrderRef(this.orderID);
+
+                    const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
+                    if (tabAlreadyHere === undefined) {
+                        this.tabsControl.push(
+                            {
+                                'title': {
+                                    'icon': 'fa-shopping-basket',
+                                    'text': tabTitle,
+                                },
+                                'orderId': this.orderID,
+                                'active': true,
+                                orderData: order,
+                            }
+                        );
+                    }
+                    this.setTabActive(this.orderID);
+
+                    this.updateCurrentFundShare();
+
+                }
+            }
+        }));
+
+        this.createForm();
+        this.setInitialTabs();
+        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+        this.changeDetectorRef.markForCheck();
+    }
+
+    ngAfterViewInit() {
 
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
@@ -315,8 +362,29 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    requestShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this.ngRedux);
+        }
+    }
+
+    /**
+     * Request my fund access base of the requested state.
+     * @param requested
+     * @return void
+     */
+    requestMyFundAccess(requested): void {
+        if (!requested) {
+            OfiFundInvestService.defaultRequestFunAccessMy(this._ofiFundInvestService, this.ngRedux, this.connectedWalletId);
+        }
+    }
+
     getAmOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
+
+        for (let i in this.ordersList){
+            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderStatus'] = 3;
+        }
 
         this.updateTabs();
         if (this.orderDatagrid) {
@@ -460,18 +528,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getFundShareFromRedux(fundShare) {
-        if (typeof fundShare !== 'undefined' && Object.keys(fundShare).length > 0) {
-            const keyFactOptionalData = JSON.parse(fundShare.keyFactOptionalData);
-            this.fundShare.keyFactOptionalData = keyFactOptionalData;
-            this.fundShare.decimalization = fundShare.maximumNumDecimal;
-            this.fundShare.mifiidChargesOneOff = fundShare.mifiidChargesOneOff;
-            this.fundShare.mifiidChargesOngoing = fundShare.mifiidChargesOngoing;
-            this.fundShare.mifiidTransactionCosts = fundShare.mifiidTransactionCosts;
-            this.fundShare.mifiidServicesCosts = fundShare.mifiidServicesCosts;
-            this.fundShare.mifiidIncidentalCosts = fundShare.mifiidIncidentalCosts;
-            this.changeDetectorRef.markForCheck();
+    updateCurrentFundShare() {
+        console.log('there', this.fundShareListObj);
+
+        const currentFundShare = this.fundShareListObj[this.fundShareID];
+        if (typeof currentFundShare.keyFactOptionalData === 'string') {
+            this.fundShare.keyFactOptionalData = JSON.parse(currentFundShare.keyFactOptionalData);
+        } else {
+            this.fundShare.keyFactOptionalData = currentFundShare.keyFactOptionalData;
         }
+
+        this.fundShare.decimalization = currentFundShare.maximumNumDecimal;
+        this.fundShare.mifiidChargesOneOff = currentFundShare.mifiidChargesOneOff;
+        this.fundShare.mifiidChargesOngoing = currentFundShare.mifiidChargesOngoing;
+        this.fundShare.mifiidTransactionCosts = currentFundShare.mifiidTransactionCosts;
+        this.fundShare.mifiidServicesCosts = currentFundShare.mifiidServicesCosts;
+        this.fundShare.mifiidIncidentalCosts = currentFundShare.mifiidIncidentalCosts;
+        this.fundShare.shareClassCode = currentFundShare.shareClassCode;
+        this.changeDetectorRef.markForCheck();
 
     }
 
@@ -503,44 +577,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.total = this.ordersList[0].totalResult;
             this.lastPage = Math.ceil(this.total / this.itemPerPage);
 
-            this.subscriptions.push(this.route.params.subscribe(params => {
-                this.orderID = params['tabid'];
-                if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
-                    const order = this.ordersList.find(elmt => {
-                        if (elmt.orderID.toString() === this.orderID.toString()) {
-                            return elmt;
-                        }
-                    });
-                    if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
-                        this.fundShareID = order.fundShareID;
-                        let tabTitle = '';
-                        if (order.orderType === 3) tabTitle += 'Subscription: ';
-                        if (order.orderType === 4) tabTitle += 'Redemption: ';
-                        tabTitle += ' ' + this.getOrderRef(this.orderID);
 
-                        const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
-                        if (tabAlreadyHere === undefined) {
-                            this.tabsControl.push(
-                                {
-                                    'title': {
-                                        'icon': 'fa-shopping-basket',
-                                        'text': tabTitle,
-                                    },
-                                    'orderId': this.orderID,
-                                    'active': true,
-                                    orderData: order,
-                                }
-                            );
-                        }
-                        this.setTabActive(this.orderID);
-
-                        this.subscriptions.push(this.requestFundShareOb.subscribe((fundShare) => this.getFundShareFromRedux(fundShare)));
-                        const requestData = getOfiFundShareCurrentRequest(this.ngRedux.getState());
-                        requestData.fundShareID = this.fundShareID;
-                        OfiFundShareService.defaultRequestFundShare(this._ofiFundShareService, this.ngRedux, requestData);
-                    }
-                }
-            }));
         } else {
             this.total = 0;
             this.lastPage = 0;
@@ -841,7 +878,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     buildLink(order, index) {
-        const dest = 'manage-orders/' + order.orderID;
+        let dest = '';
+        if (this.isInvestorUser) {
+            dest = 'order-book/my-orders/' + order.orderID;
+        } else {
+            dest = 'manage-orders/' + order.orderID;
+        }
         this.router.navigateByUrl(dest);
     }
 
