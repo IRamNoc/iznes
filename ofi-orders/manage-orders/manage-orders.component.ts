@@ -382,6 +382,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getAmOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
 
+        for (let i in this.ordersList){
+            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderStatus'] = 3;
+        }
+
         this.updateTabs();
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
