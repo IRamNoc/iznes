@@ -13,22 +13,15 @@
     </form>
     <div class="header-actions">
 
-        <clr-dropdown class="user-profile" id="topBarMenu" appClicked>
-            <div class="user" clrDropdownToggle>
-                <img src="assets/images/male.png">
-                <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">
-                    <span mltag="txt_last">Last</span>
-                    <span>: &nbsp;</span>
-                    <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
-                </div>
+        <div class="user">
+            <img src="assets/images/male.png">
+            <p>{{username}}</p>
+            <div class="last-login">
+                <span mltag="txt_last">Last</span>
+                <span>: &nbsp;</span>
+                <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
             </div>
-
-            <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem
-                   mltag="txt_myaccount">My Account</a>
-            </div>
-        </clr-dropdown>
+        </div>
 
         <div class="wallet">
             <div>
