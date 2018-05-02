@@ -166,6 +166,15 @@ export {
     SET_FUND_SHARE,
     setRequestedFundShare,
     clearRequestedFundShare,
+    // FUND SHARE AUDIT
+    FundShareAuditDetail,
+    OfiFundShareAuditState,
+    OfiFundShareAuditReducer,
+    setRequestedFundShareAudit,
+    clearRequestedFundShareAudit,
+    SET_FUND_SHARE_AUDIT,
+    SET_REQUESTED_FUND_SHARE_AUDIT,
+    CLEAR_REQUESTED_FUND_SHARE_AUDIT
 } from './ofi-product';
 
 export {
