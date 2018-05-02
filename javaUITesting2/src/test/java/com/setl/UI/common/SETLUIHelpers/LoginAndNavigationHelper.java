@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -328,6 +329,13 @@ public class LoginAndNavigationHelper {
         }catch (Exception e){
             fail("FAILED : " + e.getMessage());
         }
+    }
+
+    public static void navigateToNAVPage(String username, String password) throws InterruptedException {
+        loginAndVerifySuccess(username, password);
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-nav");
+        verifyCorrectPageById("Net asset value");
     }
 
 

@@ -103,6 +103,13 @@ public class SetUp {
     //Datagrid Headings - Umbrella Funds
     public static final String[] umbrellaFundsHeadings = new String[]{"Umbrella fund name", "LEI", "Management company", "Country"};
 
+    //Datagrid Headings - NAV
+    public static final String[] NAVHeadings = new String[]{"Share Name", "ISIN", "NAV Date", "NAV\n" +
+        "Pub Date", "Next Valuation Date", "NAV CCY", "NAV", "NAV\n" +
+        "Estimated", "NAV\n" +
+        "Technical", "NAV\n" +
+        "Validated", "Status", "Actions"};
+
 
     public static final String SweetAlert = ".sweet-alert.showSweetAlert.visible p";
     public static final String SweetAlertHeader = ".sweet-alert.showSweetAlert.visible>h2";
