@@ -90,7 +90,6 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         //waitForHomePageToLoad();
@@ -110,7 +109,6 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         //waitForHomePageToLoad();
@@ -121,7 +119,6 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         //waitForHomePageToLoad();
