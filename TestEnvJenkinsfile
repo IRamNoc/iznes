@@ -28,13 +28,21 @@ node {
                             rsync -avhm --stats --exclude \'config.json\' /var/lib/jenkins/Deploy/backend/*  root@139.162.213.130:/var/phpapps/backend'''
         }
 
-
         stage('Deploy French Fund Daemon to Test Environment') {
 
             sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
                             rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/* root@139.162.213.130:/var/phpapps/frenchfunddaemon'''
 
+        }
+
+        stage('Deploy Daemon Node to Test Environment') {
+
+            sh '''
+                            ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/daemon-node/* root@139.162.213.130:/var/phpapps/daemon-node
+                            
+                            '''
         }
 
         stage('Update Dependencies') {

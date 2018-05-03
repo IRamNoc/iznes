@@ -40,6 +40,13 @@ node {
                             rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
             }
 
+        stage('Deploy French Fund Daemon to Staging Environment') {
+
+                sh '''
+                            ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/daemon-node/*  root@172.104.147.135:/var/phpapps/daemon-node'''
+            }
+
 
         stage('Update Dependencies') {
             sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
