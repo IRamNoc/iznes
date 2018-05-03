@@ -35,7 +35,7 @@
     <ng-template #staticOrdersList>
         <div class="panel-body">
 
-            <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form">
+            <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form" (keydown.enter)="$event.preventDefault()">
                 <div class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
@@ -73,55 +73,61 @@
                             </div>
                         </div>
                     </div>
-                    <div class="well mb-1">
-                        <!-- Panel header -->
-                        <div class="row panel-header">
-                            <div class="col-xs-6">
-                                <a href="#" (click)="isOptionalFilters = !isOptionalFilters; $event.preventDefault();">
+                    <div class="row">
+                        <div class="form-group col-sm-9">
+                            <div class="well mb-1">
+                                <!-- Panel header -->
+                                <div class="row panel-header">
+                                    <div class="col-xs-6">
+                                        <a href="#" (click)="isOptionalFilters = !isOptionalFilters; $event.preventDefault();">
 
-                                    <i class="fa fa-chevron-right" [class.rotate]="isOptionalFilters"></i>
-                                    <h2 mltag="txt_optionalfilters">Optional filters</h2>
-                                </a>
+                                            <i class="fa fa-chevron-right" [class.rotate]="isOptionalFilters"></i>
+                                            <h2 mltag="txt_optionalfilters">Optional filters</h2>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <!-- Panel body -->
+                                <div class="row panel-body" [class.hidden]="!isOptionalFilters">
+                                    <div class="form-group col-sm-4">
+                                        <label>
+                                            <span mltag="txt_datetype">Date Type</span>
+                                        </label>
+                                        <div>
+                                            <ng-select id="orders-search-date-types" class="fluid-width" [items]="dateTypes" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['dateType']" placeholder="Type" mltag="txt_type">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="orders-search-from-date">
+                                            <span mltag="txt_fromdate">From date</span>
+                                        </label>
+                                        <div class="input-group date-pick-wrapper">
+                                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label for="orders-search-to-date">
+                                            <span mltag="txt_todate">To date</span>
+                                        </label>
+                                        <div class="input-group date-pick-wrapper">
+                                            <span class="fa fa-calendar" aria-hidden="true"></span>
+                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Panel body -->
-                        <div class="row panel-body" [class.hidden]="!isOptionalFilters">
-                            <div class="form-group col-sm-4">
-                                <label>
-                                    <span mltag="txt_datetype">Date Type</span>
-                                </label>
-                                <div>
-                                    <ng-select id="orders-search-date-types" class="fluid-width" [items]="dateTypes" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['dateType']" placeholder="Type" mltag="txt_type">
-                                    </ng-select>
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label for="orders-search-from-date">
-                                    <span mltag="txt_fromdate">From date</span>
-                                </label>
-                                <div class="input-group date-pick-wrapper">
-                                    <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
-
-                                </div>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label for="orders-search-to-date">
-                                    <span mltag="txt_todate">To date</span>
-                                </label>
-                                <div class="input-group date-pick-wrapper">
-                                    <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
-
-                                </div>
+                        <div class="form-group col-sm-3">
+                            <div class="text-right">
+                                <button class="btn btn-success nomargin" (click)="exportOrders()">
+                                    <i class="fa fa-download"></i> <span mltag="txt_exportorderscsv">Export Orders CSV</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                    <div class="text-right">
-                        <button class="btn btn-success mb-1" (click)="exportOrders()">
-                            <i class="fa fa-download"></i> <span mltag="txt_exportorderscsv">Export Orders CSV</span>
-                        </button>
                     </div>
                 </div>
 
@@ -223,7 +229,8 @@
                             <span *ngIf="order.orderType == 4" mltag="txt_redemption">Redemption</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- investor -->{{showInvestor(order)}}
+                            <!-- investor {{showInvestor(order)}} -->
+                            {{order.investorCompanyName}}
 
                         </clr-dg-cell>
                         <clr-dg-cell>

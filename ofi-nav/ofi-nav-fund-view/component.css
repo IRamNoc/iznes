@@ -7,7 +7,7 @@
     white-space: nowrap !important;
 }
 .col-status { width: 100px !important; }
-.col-date { width: 80px !important; }
+.col-date { width: 100px !important; }
 .col-currency { width: 50px !important; }
 
 .export-nav {
