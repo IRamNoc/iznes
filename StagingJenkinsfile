@@ -36,7 +36,11 @@ node {
 
                 sh '''
                             ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/daemon-node/*  root@172.104.147.135:/var/phpapps/daemon-node'''
+                            rsync -avhm --stats /var/lib/jenkins/Deploy/daemon-node/*  root@172.104.147.135:/var/phpapps/daemon-node
+                            rsync -avhm --stats --exclude \'.env\' /var/lib/jenkins/Deploy/daemon-node/* root@172.104.147.135:/var/phpapps/daemon-node
+                            ssh -t root@172.104.147.135 \'cd /var/phpapps/daemon-node ; bash && sudo npm install                             
+                            ssh -t root@172.104.147.135 \'cd /var/phpapps/daemon-node ; bash && sudo npm run build           
+                            '''
             }
 
 
