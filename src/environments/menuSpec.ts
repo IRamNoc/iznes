@@ -335,13 +335,6 @@ export const menuSpec: MenuSpec = {
         profile: {
             investor: [
                 profileMyInfo,
-                {
-                    label: 'My Company KYC',
-                    label_txt: 'txt_my_company_kyc',
-                    icon_class: '',
-                    element_id: 'top-menu-kyc',
-                    router_link: '/manage-orders/list'
-                },
             ],
             am: [
                 profileMyInfo,
