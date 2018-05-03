@@ -64,67 +64,69 @@
             <form (ngSubmit)="handleChecks(tabid, 'add')" [formGroup]="formControl">
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="walletNodeName">
                             <span class="ml_translated" mltag="txt_nodename">Node Name</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+
                         <input type="text" id="walletNodeName" class="form-control" formControlName="walletNodeName"
                                placeholder="Wallet Node Name" mltag="txt_nodename"/>
-                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">
-                            This field is required
-                        </div>
+                       
+                        <span *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
                     </div>
+
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="nodeAddress">
                             <span class="ml_translated" mltag="txt_nodeaddress">Node Address</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+
                         <input type="text" id="nodeAddress" class="form-control" formControlName="nodeAddress"
                                placeholder="Wallet Node Address" mltag="txt_nodeaddress"/>
-                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                        </div>
+
+                        <span *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label">
                             <span class="ml_translated" mltag="txt_nodepath">Node Path</span>
                         </label>
+
                         <input type="text" id="nodePath" class="form-control" formControlName="nodePath"
                                placeholder="Wallet Node Path" mltag="txt_nodepath"/>
                     </div>
+
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
-                            <span class="ml_translated" mltag="txt_nodeport">Node Port</span>
-                            <div class="mandatory text-danger">*</div>
+                        <label class="control-label required-field" for="nodePort">
+                            <span class="ml_translated" mltag="txt_nodepath">Node Port</span>
                         </label>
+
                         <input type="number" id="nodePort" class="form-control" formControlName="nodePort"
                                placeholder="Wallet Node Port" mltag="txt_nodeport"/>
-                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">This field must be a number less than
-                            12 characters
-                        </div>
+
+                        <span *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field must be a number of less than 12 digits</span>
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="walletNodeChain">
                             <span class="ml_translated" mltag="txt_chain">Chain</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+
                         <div class="ngSelectFix" id="walletNodeChain">
                             <ng-select [items]="chainsListOptions" placeholder="Select" formControlName="chainId"
                                        mltag="txt_select"></ng-select>
-                            <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
-                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                            </div>
-                        </div>
+                            
+                            <span *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
 
+                        </div>
                     </div>
                 </div>
-
 
                 <div class="row">
                     <div class="form-group col-sm-12">
@@ -151,29 +153,32 @@
                 <div class="row">
                     <input type="hidden" id="walletNodeId" class="form-control" formControlName="walletNodeId">
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
+
+                        <label class="control-label required-field" for="walletNodeName">
                             <span class="ml_translated" mltag="txt_nodename">Node Name</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+
                         <input type="text" id="walletNodeName" class="form-control" formControlName="walletNodeName"
                                placeholder="Wallet Node Name" mltag="txt_nodename"/>
-                        <div *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">
-                            This field is required
-                        </div>
+                       
+                        <span *ngIf="!formControl.controls['walletNodeName'].valid && formControl.controls['walletNodeName'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
                     </div>
+
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="nodeAddress">
                             <span class="ml_translated" mltag="txt_nodeaddress">Node Address</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+                       
                         <input type="text" id="nodeAddress" class="form-control" formControlName="nodeAddress"
                                placeholder="Wallet Node Address" mltag="txt_nodeaddress"/>
-                        <div *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                        </div>
+                        
+                        <span *ngIf="!formControl.controls['nodeAddress'].valid && formControl.controls['nodeAddress'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label class="control-label">
@@ -182,33 +187,32 @@
                         <input type="text" id="nodePath" class="form-control" formControlName="nodePath"
                                placeholder="Wallet Node Path" mltag="txt_nodepath"/>
                     </div>
+
                     <div class="form-group col-sm-6">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="nodePort">
                             <span class="ml_translated" mltag="txt_nodeport">Node Port</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
+
                         <input type="number" id="nodePort" class="form-control" formControlName="nodePort"
                                placeholder="Wallet Node Port" mltag="txt_nodeport"/>
-                        <div *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">This field must be a number less than
-                            12 characters
-                        </div>
+                       
+                        <span *ngIf="!formControl.controls['nodePort'].valid && formControl.controls['nodePort'].touched"
+                             class="field-error" mltag="txt_fieldisrequired">Field must be a number of less than 12 digits</span>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <label class="control-label">
+                        <label class="control-label required-field" for="chainId">
                             <span class="ml_translated" mltag="txt_chain">Chain</span>
-                            <div class="mandatory text-danger">*</div>
                         </label>
 
                         <input type="text" id="chainId" class="form-control" formControlName="chainId" disabled>
-                        <div *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
-                             class="text-danger" mltag="txt_thisfieldisrequired">This field is required
-                        </div>
+                        
+                        <span *ngIf="!formControl.controls['chainId'].valid && formControl.controls['chainId'].touched"
+                             class="error-field" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
                 </div>
-
 
                 <div class="row">
                     <div class="form-group col-sm-12">

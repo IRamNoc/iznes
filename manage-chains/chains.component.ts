@@ -215,7 +215,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
             formControl: new FormGroup(
                 {
                     chainId: new FormControl(chain.chainId),
-                    chainName: new FormControl(chain.chainName)
+                    chainName: new FormControl('', Validators.required)
                 }
             ),
             active: false

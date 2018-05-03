@@ -91,7 +91,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArry) {
             subscription.unsubscribe();
         }
@@ -140,7 +139,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     requestManagedMemberList(requestedState: boolean): void {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -155,7 +153,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {}
             ));
-
         }
     }
 
@@ -171,7 +168,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     updateChainList(chainList) {
-
         this.chainListObject = chainList;
 
         const chainListImu = fromJS(chainList);
@@ -233,7 +229,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         const membershipValueImu = fromJS(membershipValue);
 
         const selectedMember = membershipValueImu.reduce((result, item, index) => {
-
             // Excluding specific index.
             if (excludeIndex === index) {
                 return result;
@@ -421,12 +416,10 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -437,10 +430,8 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     showSuccessResponse(message) {
-
         this.alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-success">${message}</td>

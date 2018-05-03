@@ -10,7 +10,7 @@ import {MemberService} from '@setl/core-req-services';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList} from '@setl/core-store';
 import {ConfirmationService, SagaHelper} from '@setl/utils';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -73,15 +73,12 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
             this.requestManagedMemberList(requestedState)));
         this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
-
-
     }
 
     ngOnInit() {
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
@@ -107,7 +104,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     }
 
     requestManagedMemberList(requestedState: boolean): void {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -122,7 +118,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {}
             ));
-
         }
     }
 
@@ -136,7 +131,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleAddMember(tabId: number): void {
         /* If the form is valid... */
         if (this.tabsControl[tabId].formControl.valid) {
-            if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) return;
+            if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) {
+                return;
+            }
 
             /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
@@ -182,7 +179,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
 
-            if (!this.acceptedCharacters(memberName)) return;
+            if (!this.acceptedCharacters(memberName)) {
+                return;
+            }
 
             // Create a saga pipe.
             const asyncTaskPipe = this.memberService.editMember(
@@ -250,8 +249,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleDelete(index: number): void {
-
-
         this.confirmationService.create(
             '<span>Deleting a Member</span>',
             '<span>Are you sure you want to delete this member?</span>'
@@ -311,7 +308,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     }
 
     setTabActive(index: number): void {
-
         const tabControlImu = fromJS(this.tabsControl);
 
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
@@ -319,16 +315,13 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         });
 
         this.tabsControl = newTabControlImu.toJS();
-
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -339,10 +332,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     }
 
     showSuccessResponse(message) {
-
         this.alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-success">${message}</td>
@@ -353,7 +344,6 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     }
 
     showNewMemberUser() {
-
         this.alertsService.create('success', `
         <table class="table grid large">
             <tr>
@@ -391,8 +381,8 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                     </table>
                 `);
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 }

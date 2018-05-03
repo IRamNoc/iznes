@@ -388,7 +388,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -402,7 +401,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
         this.alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-success">${message}</td>
@@ -411,5 +409,4 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                     </table>
                     `);
     }
-
 }

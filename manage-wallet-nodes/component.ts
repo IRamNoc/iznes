@@ -211,7 +211,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             const nodePath = this.tabsControl[tabId]['formControl'].value.nodePath;
             const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
 
-
             // Create a saga pipe
             const asyncTaskPipe = this._adminUsersService.saveWalletNode(
                 {
@@ -234,7 +233,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.log('Error: ', data);
-                    //this.showError(JSON.stringify(data));
+                    // this.showError(JSON.stringify(data));
                     this.showError('Error saving new Wallet Node. Please check that a Wallet Node with this name does not already exist.');
                     this.markForCheck();
                 }
@@ -300,7 +299,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             }
         ));
     }
-
 
     /*HANDLE EDIT CLICK*/
     handleEdit(index: number): void {
@@ -375,7 +373,6 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     }
 
     /* SERVICES */
-
     getLanguage(requested): void {
         // console.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
