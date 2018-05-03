@@ -285,6 +285,8 @@ export class OfiNavService {
             fundShareId: _.get(requestData, 'fundShareId', ''),
             dateFrom: _.get(requestData, 'dateFrom', ''),
             dateTo: _.get(requestData, 'dateTo', ''),
+            offset: _.get(requestData, 'offset', ''),
+            limit: _.get(requestData, 'limit', '')
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

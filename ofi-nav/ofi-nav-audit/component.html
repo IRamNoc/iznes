@@ -43,7 +43,7 @@
                 </div>
             </form>
 
-            <clr-datagrid #dataGrid *ngIf="navAuditData">
+            <clr-datagrid #dataGrid (clrDgRefresh)="dataGridRefresh($event)" *ngIf="navAuditData">
                 <clr-dg-column class="col-action">
                     <span mltag="txt_action">Action</span>
                 </clr-dg-column>
@@ -63,7 +63,7 @@
                     <span mltag="txt_date">Date</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of navAuditData">
+                <clr-dg-row *clrDgItems="let item of navAuditData; let idx = index;">
                     <clr-dg-cell class="col-logtype">
                         <span class="label label-success" *ngIf="isLogTypeInsert(item)" mltag="txt_insert">Insert</span>
                         <span class="label label-warning" *ngIf="isLogTypeUpdate(item)" mltag="txt_update">Update</span>
@@ -81,8 +81,8 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="30"></clr-dg-pagination>
+                    <!-- {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} -->
+                    <clr-dg-pagination #pagination [clrDgPageSize]="gridItemsPerPage" [clrDgLastPage]="gridLastPage"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
 
