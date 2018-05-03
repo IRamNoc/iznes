@@ -342,16 +342,13 @@ public class LoginAndNavigationHelper {
     public static void navigateToDropdown(String dropdownID) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        try {
+
             wait.until(presenceOfElementLocated(By.id(dropdownID)));
             wait.until(visibilityOfElementLocated(By.id(dropdownID)));
             wait.until(elementToBeClickable(By.id(dropdownID)));
         WebElement dropdown = driver.findElement(By.id(dropdownID));
             dropdown.click();
-        } catch (Error e) {
-            System.out.println(dropdownID + "not present");
-            fail();
-        }
+
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {

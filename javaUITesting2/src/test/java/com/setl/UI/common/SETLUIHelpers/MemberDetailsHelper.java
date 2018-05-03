@@ -286,6 +286,11 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
     }
 
+    public static void scrollElementIntoViewByClassName(String className){
+        WebElement element = driver.findElement(By.className(className));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
+    }
+
     public static String generateMemberName()
     {
         String str = RandomStringUtils.randomAlphabetic(12);
