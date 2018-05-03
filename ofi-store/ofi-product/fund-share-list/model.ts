@@ -85,6 +85,7 @@ export interface IznesShareDetail {
     navPeriodForSubscription: number;
     navPeriodForRedemption: number;
     isProduction?: string;
+    amUserId?: number;
 }
 
 export interface OfiFundShareListState {

@@ -151,7 +151,7 @@
                             <!--empty-->
                         </span>
                         <ng-template #col5>
-                            {{data.shareNav}}
+                            {{data.shareNav | moneyValue: 2}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -159,7 +159,7 @@
                             <!--empty-->
                         </span>
                         <ng-template #col6>
-                            {{data.shareUnitNumber | moneyValue:5}}
+                            {{data.shareUnitNumber | moneyValue:4}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -175,7 +175,7 @@
                             <!--empty-->
                         </span>
                         <ng-template #col8>
-                            {{data.shareRatio}}%
+                            {{data.shareRatio | moneyValue:2}}%
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
@@ -254,7 +254,7 @@
                                 <label>
                                     <span><span mltag="txt_aum">AUM</span>:</span>
                                 </label>
-                                <div><span class="readonly-field">€ {{shareData.shareAum}}</span></div>
+                                <div><span class="readonly-field">€ {{shareData.shareAum  | moneyValue:5}}</span></div>
                             </div>
                         </td>
                         <td width="20%">
@@ -263,7 +263,7 @@
                                     <span><span mltag="txt_numberofunits">Number of units</span>:</span>
                                 </label>
                                 <div>
-                                    <span class="readonly-field">{{shareData.shareUnitNumber}}</span>
+                                    <span class="readonly-field">{{shareData.shareUnitNumber  | moneyValue:4}}</span>
                                 </div>
                             </div>
                         </td>
@@ -273,7 +273,7 @@
                                     <span><span mltag="txt_latestnav">Latest NAV</span>:</span>
                                 </label>
                                 <div>
-                                    <span class="readonly-field">{{shareData.shareNav}}</span>
+                                    <span class="readonly-field">{{shareData.shareNav  | moneyValue:2}}</span>
                                 </div>
                             </div>
                         </td>
@@ -316,9 +316,9 @@
                 <clr-dg-row *clrDgItems="let holderItem of holderDetailData">
                     <clr-dg-cell>{{holderItem.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.investorName}}</clr-dg-cell>
-                    <clr-dg-cell>{{holderItem.quantity | moneyValue: 5}}</clr-dg-cell>
-                    <clr-dg-cell>{{holderItem.amount | moneyValue: 4}}</clr-dg-cell>
-                    <clr-dg-cell>{{holderItem.ratio}}%</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.quantity | moneyValue: 4}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.amount | moneyValue: 5}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.ratio | moneyValue:2}}%</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>

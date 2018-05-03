@@ -650,10 +650,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mValuationDate = momentDateValue.clone().add(this.valuationOffset, 'days');
+            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const valuationDateStr = mValuationDate.clone().format('DD/MM/YYYY');
 
-            const mSettlementDate = momentDateValue.clone().add(this.settlementOffset, 'days');
+            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
 
@@ -663,10 +663,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
-            const mCutoffDate = momentDateValue.clone().subtract(this.valuationOffset, 'days');
+
+            const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mSettlementDate = mCutoffDate.clone().add(this.settlementOffset, 'days');
+            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -674,10 +675,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
-            const mCutoffDate = momentDateValue.clone().subtract(this.settlementOffset, 'days');
+            const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
             const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
 
-            const mValuationDate = mCutoffDate.clone().add(this.valuationOffset, 'days');
+            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('DD/MM/YYYY');
 
             beTriggered[0].setValue(cutoffDateStr);
