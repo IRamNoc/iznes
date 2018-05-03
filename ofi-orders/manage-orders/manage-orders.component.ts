@@ -382,6 +382,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ordersList = this.ordersObjectToList(list);
 
         for (let i in this.ordersList) {
+            this.ordersList[i]['orderUnpaid'] = false;
             if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
         }
 
