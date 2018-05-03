@@ -126,6 +126,18 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`product-module/nav-fund-view`);
     }
 
+    isLogTypeInsert(item: NavAuditDetail): boolean {
+        return item.logType === 'Insert';
+    }
+
+    isLogTypeUpdate(item: NavAuditDetail): boolean {
+        return item.logType === 'Update';
+    }
+    
+    isLogTypeRemove(item: NavAuditDetail): boolean {
+        return item.logType === 'Delete';
+    }
+
     ngOnDestroy() {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
