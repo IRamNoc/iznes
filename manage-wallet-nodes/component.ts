@@ -64,7 +64,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
         this.tabsControl = [
             {
-                title: '<i class="fa fa-th-list"></i> List',
+                title: '<i class="fa fa-search"></i> Search',
                 chainId: -1,
                 active: true
             },

@@ -61,7 +61,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                title: '<i class="fa search"></i> Chain Access',
+                title: '<i class="fa fa-search"></i> Search',
                 active: true
             }
         ];
@@ -109,7 +109,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 node: new FormControl(nodeValue, Validators.required),
             })
         );
-
     }
 
     removeMembershipItem(index) {
@@ -135,7 +134,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             });
             return resultList;
         }, []);
-
     }
 
     requestManagedMemberList(requestedState: boolean): void {
@@ -269,7 +267,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             }
             return result;
         }, []);
-
     }
 
     repaintChainMembershipWrapper() {
@@ -305,33 +302,35 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     handleUpdateChainMembership() {
-        const newState = this.ngRedux.getState();
-        const currentChainMembershipListObject = getCurrentChainMembershipList(newState);
+        if (this.membershipForm.valid) {
+            const newState = this.ngRedux.getState();
+            const currentChainMembershipListObject = getCurrentChainMembershipList(newState);
 
-        const chainId = this.membershipForm.value.chain[0]['id'];
-        const toAdd = this.getChainMembershipToAdd(currentChainMembershipListObject);
-        const toDelete = this.getChainMembershipToDelete(currentChainMembershipListObject);
-        const toUpdate = this.getChainMembershipToUpdate(currentChainMembershipListObject);
+            const chainId = this.membershipForm.value.chain[0]['id'];
+            const toAdd = this.getChainMembershipToAdd(currentChainMembershipListObject);
+            const toDelete = this.getChainMembershipToDelete(currentChainMembershipListObject);
+            const toUpdate = this.getChainMembershipToUpdate(currentChainMembershipListObject);
 
-        const asyncTaskPipe = this.adminUsersService.updateMemberChainAccess(
-            {
-                chainId,
-                toUpdate,
-                toAdd,
-                toDelete
-            }
-        );
+            const asyncTaskPipe = this.adminUsersService.updateMemberChainAccess(
+                {
+                    chainId,
+                    toUpdate,
+                    toAdd,
+                    toDelete
+                }
+            );
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                this.showSuccessResponse('Chain Membership is updated');
-            },
-            (data) => {
-                this.showErrorResponse(data);
-                console.log(data);
-            }
-        ));
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                () => {
+                    this.showSuccessResponse('Chain Membership is updated');
+                },
+                (data) => {
+                    this.showErrorResponse(data);
+                    console.log(data);
+                }
+            ));
+        }
     }
 
     /**
