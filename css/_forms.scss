@@ -172,12 +172,11 @@ form, .form {
         display: none;
         height: 0px;
         font-size: 12px;
-        margin-top: -2px !important;
         text-align: right;
         width: 95%;
       }
 
-      &.ng-invalid.ng-touched {
+      &.ng-touched {
         border-color: rgba(255, 0, 0, 0.5);
 
         + .field-error {
