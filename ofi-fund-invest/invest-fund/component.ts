@@ -648,41 +648,76 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = momentDateValue.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
-            const valuationDateStr = mValuationDate.clone().format('DD/MM/YYYY');
+            const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
 
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, this.orderTypeNumber);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
+            const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
 
-            triggering.setValue(cutoffDateStr);
-            beTriggered[0].setValue(valuationDateStr);
-            beTriggered[1].setValue(settlementDateStr);
+            triggering.setValue(cutoffDateStr, {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
+            beTriggered[0].setValue(valuationDateStr, {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
+            beTriggered[1].setValue(settlementDateStr,  {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
 
             const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
 
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
-            const settlementDateStr = mSettlementDate.format('DD/MM/YYYY');
+            const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr);
-            beTriggered[1].setValue(settlementDateStr);
+            beTriggered[0].setValue(cutoffDateStr,  {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
+            beTriggered[1].setValue(settlementDateStr,  {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
             const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('DD/MM/YYYY') + ' ' + cutoffHour;
+            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
-            const valuationStr = mValuationDate.format('DD/MM/YYYY');
+            const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr);
-            beTriggered[1].setValue(valuationStr);
+            beTriggered[0].setValue(cutoffDateStr,  {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
+            beTriggered[1].setValue(valuationStr,  {
+                onlySelf: true,
+                emitEvent: false,
+                emitModelToViewChange: true,
+                emitViewToModelChange: false
+            });
 
             this.dateBy = 'settlement';
         }
