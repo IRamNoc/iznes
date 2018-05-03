@@ -167,22 +167,10 @@ form, .form {
         background: white;
       }
 
-      + .field-error {
-        color: red;
-        display: none;
-        height: 0px;
-        font-size: 12px;
-        text-align: right;
-        width: 95%;
-      }
-
-      &.ng-touched {
+      &.ng-touched.ng-invalid {
         border-color: rgba(255, 0, 0, 0.5);
-
-        + .field-error {
-          display: block;
-        }
       }
+
     }
 
     input[type=text].error, form .form-group input[type=password].error {
@@ -198,11 +186,23 @@ form, .form {
         background-color: #f9f9f9 !important;
       }
     }
+
+    .field-error {
+      color: red;
+      height: 0px;
+      font-size: 12px;
+      text-align: right;
+      width: 95%;
+    }
+
   }
 
   ng-select {
     input {
       margin-top: 0 !important;
+    }
+    + .field-error {
+      width: 360px !important;
     }
   }
 
