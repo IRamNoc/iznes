@@ -582,12 +582,14 @@ export class OrderHelper {
         if (!OrderHelper.isResponseGood(contractData as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(contractData);
         }
+        const walletid =  this.orderType === OrderType.Subscription ? this.investorWalletId : this.amWalletId;
+        const address =  this.orderType === OrderType.Subscription ? this.investorAddress : this.amIssuingAddress;
         return {
             messagetype: 'tx',
             messagebody: {
                 txtype: 'conew',
-                walletid: this.amWalletId,
-                address: this.amIssuingAddress,
+                walletid,
+                address,
                 contractdata: contractData as any
             }
         };
@@ -912,6 +914,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
+            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
             creatorAddress: 'not being used'  // not being used
         };
     }
@@ -1021,6 +1024,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
+            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
             creatorAddress: 'not being used' // not being used
         };
     }
