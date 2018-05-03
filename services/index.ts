@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {NumberConverterService} from './number-converter/service';
 import {BlockchainContractService} from './blockchain-contract/service';
+import {NavHelperService} from './nav/service';
 
 @NgModule({
     declarations: [],
@@ -8,7 +9,8 @@ import {BlockchainContractService} from './blockchain-contract/service';
     imports: [],
     providers: [
         NumberConverterService,
-        BlockchainContractService
+        BlockchainContractService,
+        NavHelperService
     ]
 })
 
