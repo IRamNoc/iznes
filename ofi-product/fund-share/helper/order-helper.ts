@@ -268,8 +268,8 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
 
         // used for testing when validation is turned off
-        this.fakeCuoff = moment().add(30, 'seconds');
-        this.fakeValuation = moment().add(60, 'seconds');
+        this.fakeCuoff = moment().add(60, 'seconds');
+        this.fakeValuation = moment().add(90, 'seconds');
         this.fakeSettlement = moment().add(90, 'seconds');
 
     }
@@ -586,8 +586,8 @@ export class OrderHelper {
             messagetype: 'tx',
             messagebody: {
                 txtype: 'conew',
-                walletid: this.investorWalletId,
-                address: this.investorAddress,
+                walletid: this.amWalletId,
+                address: this.amIssuingAddress,
                 contractdata: contractData as any
             }
         };
@@ -886,7 +886,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            creatorAddress: this.investorAddress
+            creatorAddress: 'not being used'  // not being used
         };
     }
 
@@ -995,7 +995,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            creatorAddress: this.investorAddress
+            creatorAddress: 'not being used' // not being used
         };
     }
 
