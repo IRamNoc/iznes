@@ -532,9 +532,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 shareName: this.baseCentralizationHistory.fundShareName,
                 status: '',
                 orderType: '',
-                dateType: 'navDate',
-                fromDate: navDate,
-                toDate: navDate,
+                dateType: 'settlementDate',
+                fromDate: moment(navDate).format('DD/MM/YYYY'),
+                toDate: moment(navDate).format('DD/MM/YYYY'),
             }
         };
         this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
