@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import * as moment from 'moment';
 
-import * as FundShareEnum from '@ofi/ofi-main/ofi-product/fund-share/FundShareEnum';
+import * as FundShareEnum from '../../../ofi-main/ofi-product/fund-share/FundShareEnum';
 
 @Injectable()
 export class NavHelperService {
