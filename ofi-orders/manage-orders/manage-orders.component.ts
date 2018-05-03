@@ -1,7 +1,13 @@
 /* Core/Angular imports. */
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy,
-    OnInit, ViewChild
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ViewChild
 } from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -10,31 +16,23 @@ import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
-import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, SagaHelper, commonHelper, APP_CONFIG, AppConfig} from '@setl/utils';
+import {APP_CONFIG, AppConfig, commonHelper, ConfirmationService, immutableHelper, SagaHelper} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
-import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 import {NumberConverterService} from '@setl/utils/services/number-converter/service';
-
-
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
 /* Ofi Store stuff. */
 import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
-
 /* Clarity */
 import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
-
 /* helper */
 import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
@@ -383,8 +381,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getAmOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
 
-        for (let i in this.ordersList){
-            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderStatus'] = 3;
+        for (let i in this.ordersList) {
+            this.ordersList[i]['orderUnpaid'] = false;
+            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
         }
 
         this.updateTabs();
@@ -420,7 +419,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: statusFound.text
                         }]);// emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }else{
+                    this.tabsControl[0].searchForm.get('status').patchValue([]);
                 }
+                this.tabsControl[0].searchForm.get('type').patchValue([]);
                 if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
                     const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
                     if (dateTypeFound !== undefined) {
@@ -429,6 +431,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: dateTypeFound.text
                         }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }else{
+                    this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
                 if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
