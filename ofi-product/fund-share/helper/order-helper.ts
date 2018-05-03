@@ -256,7 +256,7 @@ export class OrderHelper {
         this.orderRequest = orderRequest;
         this.fundShare = fundShare;
 
-        this.dateValue = moment(orderRequest.datevalue, 'DD/MM/YYYY HH:mm');
+        this.dateValue = moment(orderRequest.datevalue, 'YYYY-MM-DD HH:mm');
         this.orderType = OrderTypeNumber[orderRequest.ordertype];
         this.orderBy = OrderByNumber[orderRequest.orderby];
         this.orderValue = Number(orderRequest.ordervalue);
