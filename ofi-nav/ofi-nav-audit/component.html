@@ -64,7 +64,11 @@
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navAuditData">
-                    <clr-dg-cell class="col-logtype">{{item.logType}}</clr-dg-cell>
+                    <clr-dg-cell class="col-logtype">
+                        <span class="label label-success" *ngIf="isLogTypeInsert(item)" mltag="txt_insert">Insert</span>
+                        <span class="label label-warning" *ngIf="isLogTypeUpdate(item)" mltag="txt_update">Update</span>
+                        <span class="label label-danger" *ngIf="isLogTypeRemove(item)" mltag="txt_remove">Remove</span>
+                    </clr-dg-cell>
                     <clr-dg-cell class="col-navprevious">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
                     <clr-dg-cell class="col-navnew{{getPriceClass(item)}}">
                         {{navToFrontEndString(item.price)}}

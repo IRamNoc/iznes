@@ -220,7 +220,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickExportCentralizationReport(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getallshareinfocsv&userId=' + this.myDetails.userId;
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getAllShareInfoCsv&userId=' + this.myDetails.userId;
         const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
@@ -279,7 +279,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickDownloadCentralizationHistory(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getsingleshareinfocsv&fundShareID=' + id + '&userId=' + this.myDetails.userId;
+        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + id + '&userId=' + this.myDetails.userId;
         const url = this.generateExportURL(paramUrl, this.appConfig.production);
         window.open(url, '_blank');
     }
