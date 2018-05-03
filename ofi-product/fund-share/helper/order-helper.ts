@@ -268,7 +268,7 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
 
         // used for testing when validation is turned off
-        this.fakeCuoff = moment().add(10, 'minutes');
+        this.fakeCuoff = moment().add(10, 'seconds');
         this.fakeValuation = moment().add(15, 'seconds');
         this.fakeSettlement = moment().add(20, 'seconds');
 
