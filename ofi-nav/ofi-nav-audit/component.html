@@ -1,0 +1,92 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-bars"></i>
+        <span mltag="txt_navaudittrail">NAV Audit Trail</span>
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabNavAuditButton">
+            <span mltag="txt_audit">Audit</span>
+        </button>
+        <clr-tab-content class="outer">
+            <form [formGroup]="searchForm" novalidate>
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label" mltag="txt_datefrom">Date from</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateFrom" name="auditDateFrom" placeholder="Choose a date"
+                                    formControlName="dateFrom"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_chooseadate">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label" mltag="txt_dateto">Date to</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateTo" name="auditDateTo" placeholder="Choose a date"
+                                    formControlName="dateTo"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material"
+                                    mltag="txt_chooseadate">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <clr-datagrid #dataGrid *ngIf="navAuditData">
+                <clr-dg-column class="col-action">
+                    <span mltag="txt_action">Action</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-navprevious">
+                    <span mltag="navprevious">NAV (previous)</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-navnew">
+                    <span mltag="txt_navmodified">NAV (new)</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-navvaldate">
+                    <span mltag="txt_navvaluationdate">NAV Valuation Date</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-modifiedby">
+                    <span mltag="txt_modifiedby">Modified by</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-date">
+                    <span mltag="txt_date">Date</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let item of navAuditData">
+                    <clr-dg-cell class="col-logtype">{{item.logType}}</clr-dg-cell>
+                    <clr-dg-cell class="col-navprevious">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
+                    <clr-dg-cell class="col-navnew{{getPriceClass(item)}}">
+                        {{navToFrontEndString(item.price)}}
+                        <span class="fa fa-sort-asc" [hidden]="!isPriceHigherThanPrevious(item)"></span>
+                        <span class="fa fa-sort-desc" [hidden]="isPriceHigherThanPrevious(item)"></span>
+                    </clr-dg-cell>
+                    <clr-dg-cell class="col-navvaldate">{{getNextValuationDate(item)}}</clr-dg-cell>
+                    <clr-dg-cell class="col-modifiedby">{{item.userName}}</clr-dg-cell>
+                    <clr-dg-cell class="col-date">{{item.dateModified}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="30"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="row actions">
+                <div class="col-sm-12">
+                    <button class="btn btn-default" (click)="returnToNav()">Cancel</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

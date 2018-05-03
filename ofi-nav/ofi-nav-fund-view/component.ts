@@ -1,5 +1,6 @@
 import {Component, OnInit, OnDestroy, ChangeDetectorRef, Inject} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -27,7 +28,7 @@ import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, App
 @Component({
     selector: 'app-nav-fund-view',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiNavFundView implements OnInit, OnDestroy {
 
@@ -68,6 +69,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['user', 'myDetail', 'userId']) userOb;
 
     constructor(private redux: NgRedux<any>,
+                private router: Router,
                 private changeDetectorRef: ChangeDetectorRef,
                 private ofiCorpActionService: OfiCorpActionService,
                 private ofiNavService: OfiNavService,
@@ -334,6 +336,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     addNav(): void {
         this.popupService.open(this.navFund, model.NavPopupMode.ADD);
+    }
+
+    goToAuditTrail(): void {
+        this.router.navigateByUrl(`product-module/nav-fund-view/${this.navFund.shareId}/audit`);
     }
 
     editNav(nav: model.NavInfoModel): void {

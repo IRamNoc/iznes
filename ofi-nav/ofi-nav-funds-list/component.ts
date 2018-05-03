@@ -28,7 +28,7 @@ import {NumberConverterService, MoneyValuePipe, APP_CONFIG, AppConfig} from '@se
 @Component({
     selector: 'app-nav-manage-list',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiNavFundsList implements OnInit, OnDestroy {
 

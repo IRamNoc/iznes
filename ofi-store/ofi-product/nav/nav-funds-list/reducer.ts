@@ -3,7 +3,7 @@ import {Action} from 'redux';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {fromJS} from 'immutable';
-import {immutableHelper} from '@setl/utils';
+import {immutableHelper, NavHelperService} from '@setl/utils';
 import {ValuationFrequencyEnum} from '../../../../ofi-product/fund-share/FundShareEnum';
 
 import {
@@ -67,7 +67,7 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
             const navDate = item.get('navDate', '');
             const navPubDate = item.get('navPublicationDate', '');
             const nextValuationDateRaw = item.get('valuationFrequency', '');
-            const nextValuationDate = getNextValuationDate(nextValuationDateRaw, navDate) || 'N/A';
+            const nextValuationDate = NavHelperService.getNextValuationDate(nextValuationDateRaw, navDate) || 'N/A';
 
             result.push({
                 shareId: item.get('shareId', 0),
@@ -93,51 +93,6 @@ function handleSetOfiNavFundsList(state: OfiNavFundsListState, action: Action): 
     return Object.assign({}, state, {
         navFundsList
     });
-}
-
-function getNextValuationDate(nextValuationDateRaw: number, navDate: string): string {
-    let nextValuationDate;
-    const date = moment(navDate);
-
-    switch (nextValuationDateRaw) {
-        case ValuationFrequencyEnum.Daily:
-            nextValuationDate = date.add(1, 'days');
-            break;
-        case ValuationFrequencyEnum.TwiceAWeek:
-            nextValuationDate = date.add(1, 'days');
-            break;
-        case ValuationFrequencyEnum.Weekly:
-            nextValuationDate = date.add(1, 'weeks');
-            break;
-
-        case ValuationFrequencyEnum.TwiceAMonth:
-            nextValuationDate = date.add(1, 'days');
-            break;
-        // case ValuationFrequencyEnum.Monthly:
-        case ValuationFrequencyEnum.Monthly:
-            nextValuationDate = date.add(1, 'months');
-            break;
-        // case ValuationFrequencyEnum.Quarterly:
-        case ValuationFrequencyEnum.Quarterly:
-            nextValuationDate = date.add(12, 'weeks');
-            break;
-        case ValuationFrequencyEnum.TwiceAYear:
-            nextValuationDate = date.add(26, 'weeks');
-            break;
-        case ValuationFrequencyEnum.Annually:
-            nextValuationDate = date.add(1, 'years');
-            break;
-        case ValuationFrequencyEnum.AtLeastAnnualy:
-            nextValuationDate = date.add(1, 'years');
-            break;
-        case ValuationFrequencyEnum.Other:
-            nextValuationDate = date.add(1, 'days');
-            break;
-        default:
-            nextValuationDate = date.add(1, 'days');
-    }
-
-    return nextValuationDate.format('YYYY-MM-DD');
 }
 
 /**
