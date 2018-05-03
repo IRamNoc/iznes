@@ -31,7 +31,7 @@ export class DynamicFormService {
     private generateControl(model: { [key: string]: FormItem }, index: string, item: FormItem): FormControl {
         let preset;
 
-        if (item.preset) {
+        if (item.preset !== undefined) {
             if (item.type === FormItemType.boolean && (item.preset === "1" || item.preset === "0")) {
                 preset = item.preset === "1" ? true : false;
             } else {
