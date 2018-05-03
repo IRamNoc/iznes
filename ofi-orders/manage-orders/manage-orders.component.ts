@@ -420,7 +420,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: statusFound.text
                         }]);// emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }else{
+                    this.tabsControl[0].searchForm.get('status').patchValue([]);
                 }
+                this.tabsControl[0].searchForm.get('type').patchValue([]);
                 if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
                     const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
                     if (dateTypeFound !== undefined) {
@@ -429,6 +432,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: dateTypeFound.text
                         }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
+                }else{
+                    this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
                 if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
