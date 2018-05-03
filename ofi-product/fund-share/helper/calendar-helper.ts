@@ -356,8 +356,10 @@ export class CalendarHelper {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
+        const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
+
         return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
-            {hour: 23, minute: 59, second: 59}
+            {hour: 23 - timeZoneDiff, minute: 59, second: 59}
         );
     }
 
@@ -365,9 +367,11 @@ export class CalendarHelper {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
+        const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
+
         return cutoffDate.clone().businessAdd(this.settlementOffSet).set(
             {
-                hour: 23,
+                hour: 23 - timeZoneDiff,
                 minute: 59,
                 second: 59
             }
@@ -426,6 +430,13 @@ export function getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment, t
         }
     );
 }
+
+export function getTimeZoneDiff(tradeTimeZone: E.TimezonesEnum) {
+    const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
+    const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
+    return currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
+}
+
 
 export function isNonWorkingDate(dateToCheck) {
     // // check if date is weekend.
