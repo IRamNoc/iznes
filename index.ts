@@ -34,6 +34,7 @@ export {FundComponent} from './ofi-product/fund/component';
 export {OfiNavModule} from './ofi-nav/module';
 export {OfiNavFundsList} from './ofi-nav/ofi-nav-funds-list/component';
 export {OfiNavFundView} from './ofi-nav/ofi-nav-fund-view/component';
+export {OfiNavAuditComponent} from './ofi-nav/ofi-nav-audit/component';
 export {OfiManageNavPopup} from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**

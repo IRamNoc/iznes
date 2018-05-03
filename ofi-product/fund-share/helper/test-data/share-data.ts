@@ -7,10 +7,10 @@ export const FundShareTest = {
     'launchDate': '2018-04-01',
     'minSubsequentSubscriptionInAmount': 1,
     'mifiidTransactionCosts': 1,
-    'navPeriodForSubscription': 1,
+    'navPeriodForSubscription': 2,
     'historicOrForwardPricing': 0,
     'monthlySubscriptionDealingDays': '[{\'termA\':1,\'termB\':1}]',
-    'subscriptionCutOffTimeZone': 9,
+    'subscriptionCutOffTimeZone': 10,
     'numberOfPossibleRedemptionsWithinPeriod': 2,
     'characteristicOptionalData': {
         'portfolioCurrencyHedge': null
@@ -22,7 +22,7 @@ export const FundShareTest = {
     'shareClassCode': 0,
     'subscriptionRedemptionCalendar': '1',
     'freqOfDistributionDeclaration': 0,
-    'subscriptionSettlementPeriod': 2,
+    'subscriptionSettlementPeriod': 3,
     'companyName': 'ollie corp',
     'minSubsequentRedemptionInShare': 1,
     'exitFee': 0,
@@ -160,7 +160,7 @@ export const FundShareTest = {
         'specificRestrictions': '',
         'homeCountryRestrictions': null
     },
-    'subscriptionCutOffTime': '23:00:00',
+    'subscriptionCutOffTime': '12:00',
     'maxRedemptionFee': 1,
     'priipOptionalData': {
         'skewness': null,

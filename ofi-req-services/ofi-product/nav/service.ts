@@ -5,7 +5,8 @@ import {
     RequestNavFundHistoryMessageBody,
     RequestNavFundLatestMessageBody,
     UpdateNavMessageBody,
-    DeleteNavMessageBody
+    DeleteNavMessageBody,
+    RequestNavAuditTrailMessageBody
 } from './model';
 import {SagaHelper, Common} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -26,6 +27,12 @@ import {
     setRequestedNavLatest,
     ofiSetCurrentNavLatestRequest
 } from '../../../ofi-store/ofi-product/nav';
+
+import {
+    SET_NAV_AUDIT,
+    setRequestedNavAudit,
+    clearRequestedNavAudit
+} from '../../../ofi-store/ofi-product/nav-audit';
 
 @Injectable()
 export class OfiNavService {
@@ -156,7 +163,7 @@ export class OfiNavService {
     }
 
     /**
-     * Default static call to update nav, and dispatch default actions, and other
+     * Default static call to delete nav, and dispatch default actions, and other
      * default task.
      *
      * @param ofiNavService
@@ -174,6 +181,33 @@ export class OfiNavService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => successCallback(res),
+            (res) => errorCallback(res)
+        ));
+    }
+
+    /**
+     * Default static call to get nav audit, and dispatch default actions, and other
+     * default task.
+     *
+     * @param ofiNavService
+     * @param ngRedux
+     * @param requestData
+     */
+    static defaultRequestNavAuditTrail(ofiNavService: OfiNavService,
+        ngRedux: NgRedux<any>,
+        requestData: any,
+        successCallback: (res) => void,
+        errorCallback: (res) => void) {
+
+        // Create the request.
+        const asyncTaskPipe = ofiNavService.requestNavAuditTrail(requestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_NAV_AUDIT],
             [],
             asyncTaskPipe,
             {},
@@ -239,6 +273,18 @@ export class OfiNavService {
             shareId: _.get(requestData, 'shareId', ''),
             navDate: _.get(requestData, 'navDate', ''),
             navStatus: _.get(requestData, 'navStatus', '')
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestNavAuditTrail(requestData: any): any {
+        const messageBody: RequestNavAuditTrailMessageBody = {
+            RequestName: 'getnavaudit',
+            token: this.memberSocketService.token,
+            fundShareId: _.get(requestData, 'fundShareId', ''),
+            dateFrom: _.get(requestData, 'dateFrom', ''),
+            dateTo: _.get(requestData, 'dateTo', ''),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

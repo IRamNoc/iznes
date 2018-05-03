@@ -1,0 +1,31 @@
+:host {
+    .actions {
+        border-bottom: none;
+        border-top: 1px dotted #DDD;
+        margin: 20px 0 0;
+        padding: 20px 0 0;
+
+        .btn { margin-top: 0 }
+
+        > div {
+            padding: 0;
+        }
+    }
+
+    .col-navnew {
+        position: relative;
+
+        &.price-higher { color: green; }
+        &.price-lower {
+            color: red;
+
+            .fa { top: 12px; }
+        }
+
+        .fa {
+            margin-left: 4px;
+            position: absolute;
+            top: 17px;
+        }
+    }
+}

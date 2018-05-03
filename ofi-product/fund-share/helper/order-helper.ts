@@ -268,9 +268,9 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
 
         // used for testing when validation is turned off
-        this.fakeCuoff = moment().add(30, 'seconds');
-        this.fakeValuation = moment().add(60, 'seconds');
-        this.fakeSettlement = moment().add(90, 'seconds');
+        this.fakeCuoff = moment().add(10, 'seconds');
+        this.fakeValuation = moment().add(15, 'seconds');
+        this.fakeSettlement = moment().add(20, 'seconds');
 
     }
 
@@ -458,12 +458,12 @@ export class OrderHelper {
         return totalHolding - encumbered;
     }
 
-    static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse){
+    static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse) {
         const walletId = order.amWalletID;
         const namespace = order.isin;
         const instrument = order.fundShareName;
 
-        return 	{
+        return {
             messagetype: 'request',
             messagebody: {
                 topic: 'holders',
@@ -586,21 +586,47 @@ export class OrderHelper {
             messagetype: 'tx',
             messagebody: {
                 txtype: 'conew',
-                walletid: this.investorWalletId,
-                address: this.investorAddress,
+                walletid: this.amWalletId,
+                address: this.amIssuingAddress,
                 contractdata: contractData as any
             }
         };
     }
 
+    getFakeDatesString() {
+
+    }
+
     getOrderDates(): VerifyResponse | OrderDates {
         // the logic is for testing purpose, it will disable all the validation
         if (this.disableValidation) {
-            return {
-                cutoff: this.fakeCuoff,
-                valuation: this.fakeValuation,
-                settlement: this.fakeSettlement
-            };
+            try {
+                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.dateValue.split(';');
+                const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
+                const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
+                const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
+
+                if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
+                    return {
+                        cutoff: moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
+                        valuation: moment(fakeValuationStr, 'YYYY-MM-DD HH:mm'),
+                        settlement: moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
+                    };
+                }else {
+                    return {
+                        cutoff: this.fakeCuoff,
+                        valuation: this.fakeValuation,
+                        settlement: this.fakeSettlement
+                    };
+                }
+
+            } catch (e) {
+                return {
+                    cutoff: this.fakeCuoff,
+                    valuation: this.fakeValuation,
+                    settlement: this.fakeSettlement
+                };
+            }
         }
 
         // depend on order by cutoff, valuation, and settlement date.
@@ -886,7 +912,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            creatorAddress: this.investorAddress
+            creatorAddress: 'not being used'  // not being used
         };
     }
 
@@ -995,7 +1021,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            creatorAddress: this.investorAddress
+            creatorAddress: 'not being used' // not being used
         };
     }
 
