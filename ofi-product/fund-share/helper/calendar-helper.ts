@@ -326,9 +326,8 @@ export class CalendarHelper {
     }
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
-        const dateTimeToCheckCopy = momentToMomentBusiness(dateTimeToChecks);
         // check if the date is working date
-        if (!isWorkingDate(dateTimeToChecks)) {
+        if (!isWorkingDate(momentToMomentBusiness(dateTimeToChecks))) {
             return false;
         }
 
@@ -354,6 +353,7 @@ export class CalendarHelper {
     }
 
     getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+        cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
         return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
@@ -362,6 +362,7 @@ export class CalendarHelper {
     }
 
     getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
+        cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
         return cutoffDate.clone().businessAdd(this.settlementOffSet).set(
@@ -374,12 +375,14 @@ export class CalendarHelper {
     }
 
     getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
+        valuationDate = momentToMomentBusiness(valuationDate);
         this.orderType = orderType;
 
         return valuationDate.clone().businessSubtract(this.valuationOffSet);
     }
 
     getCutoffDateFromSettlement(settlementDate: moment, orderType: OrderType) {
+        settlementDate = momentToMomentBusiness(settlementDate);
         this.orderType = orderType;
 
         return settlementDate.clone().businessSubtract(this.settlementOffSet);
