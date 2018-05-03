@@ -13,7 +13,7 @@
     </form>
     <div class="header-actions">
 
-        <div class="user">
+        <div class="user" *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
             <div class="last-login">
@@ -22,6 +22,24 @@
                 <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
             </div>
         </div>
+
+        <clr-dropdown class="user-profile" id="topBarMenu" appClicked *ngIf="appConfig.platform !== 'IZNES'">
+            <div class="user" clrDropdownToggle>
+                <img src="assets/images/male.png">
+                <p>{{username}} <i class="fa fa-angle-down"></i></p>
+                <div class="last-login">
+                    <span mltag="txt_last">Last</span>
+                    <span>: &nbsp;</span>
+                    <span>{{lastLogin | date: 'MMM d y HH:mm'}}</span>
+                </div>
+            </div>
+
+            <div class="dropdown-menu">
+                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem
+                   mltag="txt_myaccount">My Account</a>
+            </div>
+        </clr-dropdown>
+
 
         <div class="wallet">
             <div>
