@@ -906,7 +906,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.markForCheck();
 
         /* Return. */
         return;
