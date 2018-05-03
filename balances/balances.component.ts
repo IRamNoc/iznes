@@ -1,12 +1,12 @@
-import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
-import { ReportingService } from '@setl/core-balances/reporting.service';
-import { WalletTxHelperModel } from '@setl/utils';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-import { TabControl, Tab } from '../tabs';
-import { select } from '@angular-redux/store';
+import {Component, ViewChild, AfterViewInit, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
+import {ReportingService} from '@setl/core-balances/reporting.service';
+import {WalletTxHelperModel} from '@setl/utils';
+import {ActivatedRoute} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {Subscription} from 'rxjs/Subscription';
+import {TabControl, Tab} from '../tabs';
+import {select} from '@angular-redux/store';
 
 @Component({
     selector: 'setl-balances',
@@ -30,7 +30,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private changeDetector: ChangeDetectorRef) {
 
-            this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
+        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
                 this.closeTabs();
             }
@@ -40,9 +40,12 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     ngOnInit() {
         let previous = null;
         this.balances$ = this.reportingService.getBalances().map(assets => {
+            let result = this.markUpdated([previous, assets]);
             previous = assets;
-            return this.markUpdated([previous, assets]);
+            return result;
         });
+
+        this.initTabUpdates();
 
         this.tabControl = new TabControl({
             title: 'Balances',
@@ -72,6 +75,21 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     ngAfterViewInit() {
         this.myDataGrid.resize();
+    }
+
+    initTabUpdates() {
+        this.balances$.subscribe(balances => {
+            if (this.tabs && this.tabs.length) {
+                this.tabs.filter(tab => tab.data.assetObject).forEach(tab => {
+                    let foundAsset = (balances as Array<any>).find(asset => asset.hash === tab.data.hash);
+
+                    if (foundAsset !== undefined) {
+                        tab.data.assetObject = foundAsset;
+                    }
+                });
+            }
+
+        });
     }
 
     private findAsset(hash: string) {
@@ -176,8 +194,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     private markUpdated([prev, next]) {
         return next.map((asset) => {
-            const updatedAsset = { ...asset, isNew: false, totalChange: false, encumberChange: false, freeChange: false };
-            if (!prev.length) {
+            const updatedAsset = {...asset, isNew: false, totalChange: false, encumberChange: false, freeChange: false};
+            if (!prev || !prev.length) {
                 return updatedAsset;
             }
             const oldAsset = prev.find(oldAsset => oldAsset.asset === asset.asset);
