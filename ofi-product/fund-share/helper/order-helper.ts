@@ -607,7 +607,8 @@ export class OrderHelper {
         // the logic is for testing purpose, it will disable all the validation
         if (this.disableValidation) {
             try {
-                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.dateValue.split(';');
+                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
+
                 const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
                 const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
                 const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
