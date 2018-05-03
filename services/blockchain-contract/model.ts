@@ -67,6 +67,7 @@ export interface ArrangementData {
     creatorAddress: string;
     addEncs?: Array<any>;
     useEncum?: Array<any>;
+    mustSigns?: {[address: string]: boolean};
 }
 
 

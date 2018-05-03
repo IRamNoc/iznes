@@ -186,7 +186,8 @@ export class BlockchainContractService {
         }
 
         // get partiesListData.
-        const partiesListData = constructPartiesListData(partiesData);
+        const mustSignsObj = arrangementData.mustSigns || {};
+        const partiesListData = constructPartiesListData(partiesData, mustSignsObj);
 
         // get authorisations from conditions
         const authorisationsList = getAuthorisationList(arrangementData);
@@ -379,9 +380,10 @@ function handleSendOrIssueActionData(actionData: SendActionData | IssueActionDat
 /**
  *
  * @param partiesData
+ * @param mustSignsObjs
  * @return {Array<number|PartyListEntryData>}
  */
-function constructPartiesListData(partiesData: PartiesData): Array<number | PartyListEntryData> {
+function constructPartiesListData(partiesData: PartiesData, mustSignsObjs: {[address: string]: boolean}): Array<number | PartyListEntryData> {
 
     let partyCount = 0;
 
@@ -392,7 +394,8 @@ function constructPartiesListData(partiesData: PartiesData): Array<number | Part
             const partySignAddress: PartySignAddress = address;
             const partyPub: PartyPublicKey = ''; // optional.
             const signedContractAddr: SignContractAddress = ''; // optional.
-            const mustSign: MustSign = false; // optional.
+            const mustSignDefined = mustSignsObjs[partySignAddress];
+            const mustSign: MustSign =  (typeof mustSignDefined !== 'undefined') ? mustSignDefined : false ; // optional.
 
             // construct pay list
             const partyPayData = partiesData[address].pay;
