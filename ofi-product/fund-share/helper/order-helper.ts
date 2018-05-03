@@ -582,12 +582,14 @@ export class OrderHelper {
         if (!OrderHelper.isResponseGood(contractData as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(contractData);
         }
+        const walletid =  this.orderType === OrderType.Subscription ? this.investorWalletId : this.amWalletId;
+        const address =  this.orderType === OrderType.Subscription ? this.investorAddress : this.amIssuingAddress;
         return {
             messagetype: 'tx',
             messagebody: {
                 txtype: 'conew',
-                walletid: this.amWalletId,
-                address: this.amIssuingAddress,
+                walletid,
+                address,
                 contractdata: contractData as any
             }
         };
