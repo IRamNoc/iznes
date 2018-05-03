@@ -36,6 +36,7 @@ import {
     OfiManageCsvComponent,
     OfiNavFundsList,
     OfiNavFundView,
+    OfiNavAuditComponent,
     OfiPnlReportComponent,
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
@@ -51,7 +52,14 @@ import {
 } from '@setl/core-useradmin';
 /* Product */
 import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
-import {ProductHomeComponent, UmbrellaFundComponent, FundShareComponent, AddNewFundShareComponent, FundComponent} from '@ofi/ofi-main';
+import {
+    ProductHomeComponent,
+    UmbrellaFundComponent,
+    FundShareComponent,
+    AddNewFundShareComponent,
+    FundShareAuditComponent,
+    FundComponent
+} from '@ofi/ofi-main';
 /* Corporate Actions Components */
 import {
     CreateResolutionComponent,
@@ -229,6 +237,11 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
+                        path: 'fund-share/:shareId/audit',
+                        component: FundShareAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
                         path: 'fund-share/:shareId',
                         component: FundShareComponent,
                         canActivate: [LoginGuardService],
@@ -261,6 +274,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'net-asset-value',
                         component: OfiNavFundsList,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'nav-fund-view/:shareId/audit',
+                        component: OfiNavAuditComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
