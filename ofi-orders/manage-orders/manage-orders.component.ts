@@ -419,7 +419,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: statusFound.text
                         }]);// emitEvent = true cause infinite loop (make a valueChange)
                     }
-                }else{
+                } else {
                     this.tabsControl[0].searchForm.get('status').patchValue([]);
                 }
                 this.tabsControl[0].searchForm.get('type').patchValue([]);
@@ -431,7 +431,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                             text: dateTypeFound.text
                         }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
-                }else{
+                } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
                 if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
@@ -451,6 +451,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getInvOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
+
+        for (let i in this.ordersList) {
+            this.ordersList[i]['orderUnpaid'] = false;
+            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
+        }
 
         this.updateTabs();
 
