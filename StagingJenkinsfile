@@ -32,14 +32,6 @@ node {
             }
 
 
-
-        stage('Deploy French Fund Daemon to Staging Environment') {
-
-                sh '''
-                            ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/*  root@172.104.147.135:/var/phpapps/frenchfunddaemon'''
-            }
-
         stage('Deploy French Fund Daemon to Staging Environment') {
 
                 sh '''
