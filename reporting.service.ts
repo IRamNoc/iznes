@@ -9,6 +9,7 @@ import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
+    setRequestedWalletLabel,
     SET_WALLET_ISSUER_LIST,
     SET_ISSUE_HOLDING,
     SET_ALL_TRANSACTIONS,
@@ -62,6 +63,7 @@ export class ReportingService {
         const walletIssuerDetail$ = this.ngRedux.select(['asset', 'myIssuers', 'walletIssuerDetail']);
         const walletList$ = this.ngRedux.select(['wallet', 'walletDirectory', 'walletList']);
         const addressList$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'addressList']);
+        const labelRequested$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'requestedLabel']);
         const issuerList$ = this.ngRedux.select(['asset', 'myIssuers', 'issuerList']);
 
         this.allTransactions$ = this.ngRedux.select(['wallet', 'transactions', 'all']);
@@ -95,8 +97,7 @@ export class ReportingService {
                 this.addressList = subs[4];
 
                 if (!requested) {
-                    InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
-                    MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
+                    this.requestWalletData();
                 }
                 // Increment on first run, after that, only increment when addressList is updated.
                 if (requested === 0 || requested > 0 && trigger === 5) {
@@ -113,14 +114,21 @@ export class ReportingService {
                     initialisedSubject.next(true);
                 }
             });
+
         this.initialised$.filter(init => !!init).first().subscribe(() => {
+
             this.getTransactionsFromWalletNode();
             walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
             walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
-            walletHoldingByAsset$
+            labelRequested$.filter(req => req === false).subscribe(() => { this.requestWalletData() });
+
+            const filtered$ = walletHoldingByAsset$
                 .filter((wallets: MyWalletHoldingState) => {
                     return !!wallets && !isEmpty(wallets.holdingByAsset);
-                }).subscribe((wallets) => {
+                })
+            ;
+            const combined$ = Observable.combineLatest(filtered$, addressList$);
+            combined$.subscribe(([wallets, addresses]) => {
                 if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
                     this.holdingsByAssetSubject.next(
                         Object.getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
@@ -135,10 +143,12 @@ export class ReportingService {
                     );
                 }
             });
+
             connectedWalletId$.subscribe((connectedWalletId: number) => {
                 this.connectedWalletId = connectedWalletId;
                 this.refreshDataSources();
             });
+
             walletIssuerDetail$
                 .subscribe((walletIssuerDetail: WalletIssuerDetail) => {
                     const issues = this.holdingsByAssetSubject.value;
@@ -282,6 +292,11 @@ export class ReportingService {
     private requestWalletHolding() {
         this.ngRedux.dispatch(setRequestedWalletHolding());
         InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+    }
+
+    private requestWalletData(){
+        InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
     }
 
     private requestWalletIssuer() {
