@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Navigation;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -64,7 +65,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore("Page removed for now")
     public void shouldNavigateToFundHoldings() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToPageByID("menu-asset-manager-dashboard");
         verifyCorrectPage("My Account");
     }
@@ -72,7 +72,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         verifyCorrectPage("My Account");
@@ -83,17 +82,14 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-account-module");
         navigateToPage("account/relationships");
         verifyCorrectPage("My Account");
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
         verifyCorrectPage("Management Company");
@@ -103,17 +99,14 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore("Page removed for now")
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-sicav");
         verifyCorrectPage("My Account");
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToFund() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         verifyCorrectPage("Shares / Funds / Umbrella funds");
@@ -121,10 +114,8 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    @Ignore("Awaiting fix for TG-346")
     public void shouldNavigateToNetAssetValue() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
         verifyCorrectPageById("Net asset value");
@@ -134,7 +125,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToCreateResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/create-resolution");
         verifyCorrectPage("");
@@ -144,7 +134,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToIssueResolution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/issue-resolution");
         verifyCorrectPage("");
@@ -154,7 +143,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToDistribution() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage2("corporate-actions/distribution");
         verifyCorrectPage("");
@@ -183,7 +171,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Ignore
     public void shouldNavigateToSplit() throws IOException, InterruptedException {
         loginAndVerifySuccess(adminuser, adminuserPassword);
-        //waitForHomePageToLoad();
         navigateToDropdown("menu-corporate-actions");
         navigateToPage("corporate-actions/split");
         verifyCorrectPage("");

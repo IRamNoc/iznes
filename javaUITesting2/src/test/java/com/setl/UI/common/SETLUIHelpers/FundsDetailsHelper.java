@@ -9,10 +9,14 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.NAVHeadings;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -221,6 +225,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+
+        driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 
     public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
@@ -266,43 +275,26 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
-        System.out.println("before truncation : " + shareNameID);
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-        System.out.println("after truncation : " + shareNameNo);
-
         String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
-        System.out.println("Expected : " + fundNameExpected);
-        System.out.println("Actual   : " + fundName);
         assertTrue(fundName.equals(fundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
-        System.out.println("Expected : " + leiExpected);
-        System.out.println("Actual   : " + leiName);
         assertTrue(leiName.equals(leiExpected));
 
         String fundCurrency = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")).getText();
-        System.out.println("Expected : " + fundCurrencyExpected);
-        System.out.println("Actual   : " + fundCurrency);
         assertTrue(fundCurrency.equals(fundCurrencyExpected));
 
         String managementComp = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println("Expected : " + managementCompExpected);
-        System.out.println("Actual   : " + managementComp);
         assertTrue(managementComp.equals(managementCompExpected));
 
         String domicile = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println("Expected : " + domicileExpected);
-        System.out.println("Actual   : " + domicile);
-        assertTrue(domicile.equals(domicileExpected));
+         assertTrue(domicile.equals(domicileExpected));
 
         String legalForm = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-lawStatus")).getText();
-        System.out.println("Expected : " + legalFormExpected);
-        System.out.println("Actual   : " + legalForm);
         assertTrue(legalForm.equals(legalFormExpected));
 
         String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
-        System.out.println("Expected : " + umbFundExpected);
-        System.out.println("Actual   : " + umbFund);
         assertTrue(umbFund.equals(umbFundExpected));
     }
 
@@ -310,49 +302,39 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
-        String shareNameID = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + rowNo + "-umbrellaFundName")).getAttribute("id");
-        System.out.println("before truncation : " + shareNameID);
+        String shareNameID = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + rowNo )).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-        System.out.println("after truncation : " + shareNameNo);
 
-        String umbFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-umbrellaFundName")).getText();
-        System.out.println("Expected : " + umbFundNameExpected);
-        System.out.println("Actual   : " + umbFundName);
+        String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo )).getText();
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
-        System.out.println("Expected : " + leiExpected);
-        System.out.println("Actual   : " + leiName);
         assertTrue(leiName.equals(leiExpected));
 
         String managementComp = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println("Expected : " + managementCompExpected);
-        System.out.println("Actual   : " + managementComp);
         assertTrue(managementComp.equals(managementCompExpected));
 
         String domicile = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println("Expected : " + domicileExpected);
-        System.out.println("Actual   : " + domicile);
         assertTrue(domicile.equals(domicileExpected));
     }
 
     public static void selectUmbrellaFund() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
-        wait.until(elementToBeClickable(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
-        WebElement uFund = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName"));
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-umbrellaFundID-0")));
+        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        WebElement uFund = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0"));
         uFund.click();
         wait.until(visibilityOfElementLocated(By.id("edit-fund-title")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[1]/div[1]/div/a/h2")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[2]/div[1]/div/a/h2")));
     }
 
     public static void verifyUmbrellaFundOptInfoPageContents() {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[1]/div[1]/div/a/h2"));
         mainInfo.click();
-        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2"));
+        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[2]/div[1]/div/a/h2"));
         optInfo.click();
         wait.until(visibilityOfElementLocated(By.id("uf_giin")));
         wait.until(visibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
@@ -526,6 +508,24 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
     }
 
+    public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).isDisplayed());
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).getText().contentEquals(NAVHeadings[0]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/span/span")).getText().contentEquals(NAVHeadings[1]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/span/span")).getText().contentEquals(NAVHeadings[2]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/span/span")).getText().contentEquals(NAVHeadings[3]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/span/span")).getText().contentEquals(NAVHeadings[4]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/span/span")).getText().contentEquals(NAVHeadings[5]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/span/span")).getText().contentEquals(NAVHeadings[6]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/span/span")).getText().contentEquals(NAVHeadings[7]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[9]/div/span/span")).getText().contentEquals(NAVHeadings[8]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/span/span")).getText().contentEquals(NAVHeadings[9]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[11]/div/span/span")).getText().contentEquals(NAVHeadings[10]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/span/span")).getText().contentEquals(NAVHeadings[11]));
+
+        }
+
     public static void validatePageLayout() {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
@@ -551,6 +551,28 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contains("Add new Umbrella fund"));
+    }
+
+    public static void validateNAVPageLayout() {
+        assertTrue(isElementPresent(By.id("pageTitle")));
+        assertTrue(driver.findElement(By.id("pageTitle")).getText().contains("Net asset value"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
+            "You will have access to the NAV's history of a specific share in clicking on the corresponding row."));
+        assertTrue(isElementPresent(By.id("netAssetValueTab")));
+        //assertTrue(driver.findElement(By.id("netAssetValueTab")).getText().contentEquals("NAVs for all your shares"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")).getText().contentEquals("Search a Share Name or ISIN"));
+        assertTrue(isElementPresent(By.id("navSearch")));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")).getText().contentEquals("Select a Date"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")).getText().contentEquals("NAV Date"));
+        assertTrue(isElementPresent(By.id("navDatePicker")));
+        assertTrue(driver.findElement(By.id("navDatePicker")).getAttribute("value").contentEquals(getTodayDate()));
+        assertTrue(isElementPresent(By.id("exportNavList")));
+        assertTrue(driver.findElement(By.id("exportNavList")).getText().contentEquals("Export List as CSV"));
+
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
@@ -579,4 +601,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
+    public static String getTodayDate() {
+        Date todayDate = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String todayString = formatter.format(todayDate);
+        return todayString;
+    }
 }
