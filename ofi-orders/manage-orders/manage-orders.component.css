@@ -44,3 +44,11 @@
     color: #007cbb;
     cursor: pointer;
 }
+
+.nopadding {
+    padding: 0 !important;
+}
+
+.nomargin {
+    margin: 0 !important;
+}

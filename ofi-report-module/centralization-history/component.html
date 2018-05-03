@@ -192,13 +192,13 @@
                         {{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.aum)) | moneyValue: 4 }}
+                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.aum)) | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{data.netPositionPercentage | moneyValue: 4 }}%
+                        {{data.netPositionPercentage | moneyValue: 2 }}%
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders" (click)="viewOrder(getOnlyDate(data.navDate))">View Orders</button>

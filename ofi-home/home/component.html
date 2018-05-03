@@ -4,19 +4,19 @@
     </h1>
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 36">
-        <app-counter-tile name="actions" icon="align-left" [count]="" color="red" route="kyc-am-documents">KYC Documents</app-counter-tile>
-        <app-counter-tile name="connections" icon="industry" [count]="" color="green" route="product-module/home">Product Module</app-counter-tile>
+        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders/list">Order Book</app-counter-tile>
+        <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">Holders List</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="ellipsis-h" [count]="" color="orange" route="product-module/net-asset-value">Net Asset Value</app-counter-tile>
-        <app-counter-tile name="contracts" icon="envelope" [count]="" color="blue" route="messages">New Messages</app-counter-tile>
+        <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralization">Centralization Report</app-counter-tile>
+        <app-counter-tile name="contracts" icon="ellipsis-h" [count]="" color="blue" route="product-module/net-asset-value">Net Asset Value</app-counter-tile>
     </app-dashboard>
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 46">
         <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0">Place Order</app-counter-tile>
-        <app-counter-tile name="connections" icon="user" [count]="" color="green" route="profile/my-information">My Information</app-counter-tile>
+        <app-counter-tile name="connections" icon="book" [count]="" color="green" route="order-book/my-orders/list">My Orders</app-counter-tile>
 
         <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio">Sub-portfolio</app-counter-tile>
-        <app-counter-tile name="contracts" icon="envelope" [count]="" color="blue" route="messages">New Messages</app-counter-tile>
+        <app-counter-tile name="contracts" icon="user" [count]="" color="blue" route="profile/my-information">My Information</app-counter-tile>
     </app-dashboard>
 
 </div>

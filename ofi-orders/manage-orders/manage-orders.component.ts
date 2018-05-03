@@ -267,7 +267,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 (requested) => this.requestMyFundAccess(requested)));
             this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
         }
-        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
 
         this.subscriptions.push(this.route.params.subscribe(params => {
             this.orderID = params['tabid'];
@@ -308,6 +307,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.createForm();
         this.setInitialTabs();
+
+        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
         this.changeDetectorRef.markForCheck();
     }
@@ -395,57 +396,54 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAmOrdersFiltersFromRedux(filters) {
         this.filtersFromRedux = filters;
-        // this.applyFilters();
+
+        console.log(this.filtersFromRedux);
+        this.applyFilters();
         this.changeDetectorRef.markForCheck();
     }
 
-    // applyFilters() {
-    //     if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-    //         if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
-    //             if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
-    //                 this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin, {emitEvent: false});
-    //                 this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //             }
-    //             if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
-    //                 this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName, {emitEvent: false});
-    //                 this.tabsControl[0].searchForm.get('sharename').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //             }
-    //             if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
-    //                 const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
-    //                 if (statusFound !== undefined) {
-    //                     this.tabsControl[0].searchForm.get('status').patchValue([{
-    //                         id: statusFound.id,
-    //                         text: statusFound.text
-    //                     }], {emitEvent: false});
-    //                     this.tabsControl[0].searchForm.get('status').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //                 }
-    //             }
-    //             if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
-    //                 const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
-    //                 if (dateTypeFound !== undefined) {
-    //                     this.tabsControl[0].searchForm.get('dateType').patchValue([{
-    //                         id: dateTypeFound.id,
-    //                         text: dateTypeFound.text
-    //                     }], {emitEvent: false});
-    //                     this.tabsControl[0].searchForm.get('dateType').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //                 }
-    //             }
-    //             if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
-    //                 this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate, {emitEvent: false});
-    //                 this.tabsControl[0].searchForm.get('fromDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //             }
-    //             if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
-    //                 this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate, {emitEvent: false});
-    //                 this.tabsControl[0].searchForm.get('toDate').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
-    //             }
-    //
-    //             // remove filters from redux
-    //             this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
-    //             this.filtersApplied = true;
-    //             this.requestSearch(this.tabsControl[0].searchForm);
-    //         }
-    //     }
-    // }
+    applyFilters() {
+        if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
+            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
+                if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
+                    this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin); // , {emitEvent: false}
+                    //this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
+                    this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
+                    const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
+                    if (statusFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('status').patchValue([{
+                            id: statusFound.id,
+                            text: statusFound.text
+                        }]);// emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                }
+                if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
+                    const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
+                    if (dateTypeFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('dateType').patchValue([{
+                            id: dateTypeFound.id,
+                            text: dateTypeFound.text
+                        }]); // emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                }
+                if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
+                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
+                    this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+
+                // remove filters from redux
+                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
+                this.filtersApplied = true;
+                this.requestSearch();
+            }
+        }
+    }
 
     getInvOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
@@ -1052,12 +1050,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        for (let key in this.subscriptions) {
-            this.subscriptions[key].unsubscribe();
-        }
+        // this.changeDetectorRef.detach();
+        //
+        // /* Unsunscribe Observables. */
+        // for (let key in this.subscriptions) {
+        //     this.subscriptions[key].unsubscribe();
+        // }
 
         this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
     }
