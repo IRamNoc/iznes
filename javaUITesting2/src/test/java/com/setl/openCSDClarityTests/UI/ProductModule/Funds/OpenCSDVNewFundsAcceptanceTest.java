@@ -79,10 +79,6 @@ public class OpenCSDVNewFundsAcceptanceTest {
 
         String[] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep2(uFundDetails[0]);
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
-        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
-        driver.findElement(By.id("fund-submitfund-btn")).click();
 
         try {
             String popup = driver.findElement(By.className("toast-title")).getText();
