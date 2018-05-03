@@ -683,7 +683,7 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(settlement, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
