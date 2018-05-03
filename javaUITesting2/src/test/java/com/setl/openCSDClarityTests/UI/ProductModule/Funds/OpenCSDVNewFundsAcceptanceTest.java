@@ -21,6 +21,7 @@ import java.sql.*;
 
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.submitUmbrellaFund;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -81,6 +82,8 @@ public class OpenCSDVNewFundsAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0]);
 
         try {
+
+            scrollElementIntoViewByClassName("toast-title");
             String popup = driver.findElement(By.className("toast-title")).getText();
             System.out.println(popup);
             assertTrue(popup.equals(uFundDetails[0] + " has been successfully created."));
@@ -90,6 +93,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
         getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
         validateDatabaseFundExists(1, uFundDetails[0]);
     }
+
 
     @Test
     public void shouldDisplayCorrectTitle() throws InterruptedException, IOException {
