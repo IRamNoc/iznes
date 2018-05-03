@@ -912,6 +912,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
+            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
             creatorAddress: 'not being used'  // not being used
         };
     }
@@ -1021,6 +1022,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
+            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
             creatorAddress: 'not being used' // not being used
         };
     }
