@@ -256,7 +256,7 @@ export class OrderHelper {
         this.orderRequest = orderRequest;
         this.fundShare = fundShare;
 
-        this.dateValue = moment(orderRequest.datevalue, 'DD/MM/YYYY HH:mm');
+        this.dateValue = moment(orderRequest.datevalue, 'YYYY-MM-DD HH:mm');
         this.orderType = OrderTypeNumber[orderRequest.ordertype];
         this.orderBy = OrderByNumber[orderRequest.orderby];
         this.orderValue = Number(orderRequest.ordervalue);
@@ -683,7 +683,7 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(settlement, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
