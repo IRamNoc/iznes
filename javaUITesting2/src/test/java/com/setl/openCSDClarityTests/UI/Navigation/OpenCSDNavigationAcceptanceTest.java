@@ -91,7 +91,6 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-management-company");
         verifyCorrectPage("Management Company");
     }

@@ -191,6 +191,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("My Account functionality removed")
     public void shouldDisplayFirstnameInMyInformationScreen() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         waitForHomePageToLoad();
