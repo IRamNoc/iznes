@@ -5,13 +5,22 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.NAVHeadings;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
@@ -21,30 +30,31 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     public static String[] generateRandomUmbrellaFundsDetails() {
         String str = randomAlphabetic(5);
         String umbrellaFundName = "Test_Umbrella_Fund_" + str;
-        return new String[] {umbrellaFundName};
+        return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomFundsDetails() {
         String str = randomAlphabetic(5);
         String umbrellaFundName = "Test_Fund_" + str;
-        return new String[] {umbrellaFundName};
+        return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomDetails() {
         String str = randomAlphabetic(5);
-        String umbrellaFundName = str;
-        return new String[] {umbrellaFundName};
+        String random = str;
+        return new String[]{random};
     }
 
-    public static void selectAddUmbrellaFund(){
+    public static void selectAddUmbrellaFund() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
-        try{
+        try {
+            wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
             assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
     }
@@ -65,29 +75,33 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     public static void submitUmbrellaFund() throws InterruptedException {
         try {
             driver.findElement(By.id("mcBtnSubmitForm")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("Save button was not clicked. " + e.getMessage());
         }
     }
 
-    public static void selectTopDropdown(String dropdownID) throws InterruptedException {
-
-            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
+    public static void selectTopDropdown(String dropdownID) {
+        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
+        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
 
     }
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
-        driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
-        driver.findElement(By.id(dropdownID)).sendKeys(search);
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")));
+            wait.until(elementToBeClickable(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")));
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[2]/span/span")).click();
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")));
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")).sendKeys(search);
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
     }
-    public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) throws InterruptedException {
+
+    public static void searchAndSelectTopDropdownXpath(String dropdownID, String search) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div")).click();
@@ -98,8 +112,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"uf_domicile\"]/div/div[3]/div/input")).sendKeys(search);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
     }
@@ -115,8 +129,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")).sendKeys(search);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
     }
@@ -132,8 +146,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/div/input")).sendKeys(search);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
     }
@@ -162,28 +176,24 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")).sendKeys(search);
         try {
-            driver.findElement(By.xpath("//*[@id=\'"+ dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
-        }catch (Exception e){
+            driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li[1]/div/a")).click();
+        } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
     }
 
-    public static void selectFund() {
+    public static void selectFund(int fundCount) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-fundID-0")));
-        wait.until(elementToBeClickable(By.id("product-dashboard-link-fundID-0")));
-        WebElement fund = driver.findElement(By.id("product-dashboard-link-fundID-0"));
 
+        String fundId = "product-dashboard-link-fundID-" + fundCount;
+        wait.until(visibilityOfElementLocated(By.id(fundId)));
+        wait.until(elementToBeClickable(By.id(fundId)));
+        WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[2]/div[1]/div/a/h2")));
-
-
     }
 
-    public static void shouldFillOutFundDetailsStep2(String fundName) {
+    public static void fillOutFundDetailsStep2(String fundName) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -206,6 +216,54 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a"))));
+        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
+        driver.findElement(By.id("openOrCloseEnded2")).click();
+        driver.findElement(By.id("isFundOfFund2")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("isDedicatedFund1")).click();
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+    }
+
+    public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
+        driver.findElement(By.id("new-fund-btn")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        driver.findElement(By.id("isFundStructure1")).isDisplayed();
+        driver.findElement(By.id("fundName")).sendKeys(fundName);
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("isEuDirective2")).click();
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("fundManagers")).sendKeys("testManager");
+        scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
+        driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
@@ -215,94 +273,70 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("isDedicatedFund1")).click();
     }
 
-    public static void getFundTableRow(int rowNo, String fundNameExpected , String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected){
+    public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
-        System.out.println("before truncation : " + shareNameID);
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-        System.out.println("after truncation : " + shareNameNo);
-
         String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
-        System.out.println("Expected : " + fundNameExpected);
-        System.out.println("Actual   : " + fundName);
         assertTrue(fundName.equals(fundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
-        System.out.println("Expected : " + leiExpected);
-        System.out.println("Actual   : " + leiName);
         assertTrue(leiName.equals(leiExpected));
 
         String fundCurrency = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")).getText();
-        System.out.println("Expected : " + fundCurrencyExpected);
-        System.out.println("Actual   : " + fundCurrency);
         assertTrue(fundCurrency.equals(fundCurrencyExpected));
 
         String managementComp = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println("Expected : " + managementCompExpected);
-        System.out.println("Actual   : " + managementComp);
         assertTrue(managementComp.equals(managementCompExpected));
 
         String domicile = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println("Expected : " + domicileExpected);
-        System.out.println("Actual   : " + domicile);
-        assertTrue(domicile.equals(domicileExpected));
+         assertTrue(domicile.equals(domicileExpected));
 
         String legalForm = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-lawStatus")).getText();
-        System.out.println("Expected : " + legalFormExpected);
-        System.out.println("Actual   : " + legalForm);
         assertTrue(legalForm.equals(legalFormExpected));
 
         String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
-        System.out.println("Expected : " + umbFundExpected);
-        System.out.println("Actual   : " + umbFund);
         assertTrue(umbFund.equals(umbFundExpected));
     }
 
-    public static void getUmbrellaTableRow(int rowNo, String umbFundNameExpected , String leiExpected, String managementCompExpected, String domicileExpected){
-        String shareNameID = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + rowNo + "-umbrellaFundName")).getAttribute("id");
-        System.out.println("before truncation : " + shareNameID);
+    public static void getUmbrellaTableRow(int rowNo, String umbFundNameExpected, String leiExpected, String managementCompExpected, String domicileExpected) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
+        String shareNameID = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + rowNo )).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-        System.out.println("after truncation : " + shareNameNo);
 
-        String umbFundName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-umbrellaFundName")).getText();
-        System.out.println("Expected : " + umbFundNameExpected);
-        System.out.println("Actual   : " + umbFundName);
+        String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
+        System.out.println(umbFundName);
+        System.out.println(umbFundNameExpected);
+
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
-        System.out.println("Expected : " + leiExpected);
-        System.out.println("Actual   : " + leiName);
         assertTrue(leiName.equals(leiExpected));
 
         String managementComp = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println("Expected : " + managementCompExpected);
-        System.out.println("Actual   : " + managementComp);
         assertTrue(managementComp.equals(managementCompExpected));
 
         String domicile = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println("Expected : " + domicileExpected);
-        System.out.println("Actual   : " + domicile);
         assertTrue(domicile.equals(domicileExpected));
     }
 
-   public static void selectUmbrellaFund() {
+    public static void selectUmbrellaFund() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
-        wait.until(elementToBeClickable(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
-        WebElement uFund = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName"));
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-link-umbrellaFundID-0")));
+        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        WebElement uFund = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0"));
         uFund.click();
-
         wait.until(visibilityOfElementLocated(By.id("edit-fund-title")));
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
     }
-
     public static void verifyUmbrellaFundOptInfoPageContents() {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[1]/div[1]/div/a/h2"));
         mainInfo.click();
-        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2"));
+        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[2]/div[1]/div/a/h2"));
         optInfo.click();
         wait.until(visibilityOfElementLocated(By.id("uf_giin")));
         wait.until(visibilityOfElementLocated(By.id("uf_delegatedManagementCompany")));
@@ -343,7 +377,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("uf_managementCompany")));
         wait.until(visibilityOfElementLocated(By.id("uf_fundAdministrator")));
         wait.until(visibilityOfElementLocated(By.id("uf_custodian")));
-        wait.until(visibilityOfElementLocated(By.id("uf_investmentManager")));
         wait.until(visibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
         mainInfo.click();
@@ -357,11 +390,221 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_managementCompany")));
         wait.until(invisibilityOfElementLocated(By.id("uf_fundAdministrator")));
         wait.until(invisibilityOfElementLocated(By.id("uf_custodian")));
-        wait.until(invisibilityOfElementLocated(By.id("uf_investmentManager")));
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
+    }
 
+    public static void verifyFundMainInfoPageContents() {
+
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2"));
+
+        mainInfo.click();
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")).getText().equals("Main information"));
+        wait.until(visibilityOfElementLocated(By.id("fundName")));
+        assertTrue(isElementPresent(By.id("isFundStructure1")));
+        assertTrue(isElementPresent(By.id("isFundStructure2")));
+
+
+        wait.until(visibilityOfElementLocated(By.id("legalEntityIdentifier")));
+        wait.until(visibilityOfElementLocated(By.id("registerOffice")));
+        wait.until(visibilityOfElementLocated(By.id("registerOfficeAddress")));
+        wait.until(visibilityOfElementLocated(By.id("domicile")));
+        assertTrue(isElementPresent(By.id("isEuDirective1")));
+        assertTrue(isElementPresent(By.id("isEuDirective2")));
+        wait.until(visibilityOfElementLocated(By.id("legalForm")));
+        wait.until(visibilityOfElementLocated(By.id("nationalNomenclatureOfLegalForm")));
+        wait.until(visibilityOfElementLocated(By.id("fundCreationDate")));
+        wait.until(visibilityOfElementLocated(By.id("fundLaunchate")));
+        wait.until(visibilityOfElementLocated(By.id("fundCurrency")));
+
+        assertTrue(isElementPresent(By.id("openOrCloseEnded1")));
+        assertTrue(isElementPresent(By.id("openOrCloseEnded2")));
+        wait.until(visibilityOfElementLocated(By.id("fiscalYearEnd")));
+        assertTrue(isElementPresent(By.id("isFundOfFund1")));
+        assertTrue(isElementPresent(By.id("isFundOfFund2")));
+        wait.until(visibilityOfElementLocated(By.id("managementCompanyID")));
+        wait.until(visibilityOfElementLocated(By.id("fundAdministrator")));
+        wait.until(visibilityOfElementLocated(By.id("custodianBank")));
+        wait.until(visibilityOfElementLocated(By.id("investmentManager")));
+        wait.until(visibilityOfElementLocated(By.id("principalPromoter")));
+        wait.until(visibilityOfElementLocated(By.id("payingAgent")));
+        wait.until(visibilityOfElementLocated(By.id("fundManagers")));
+        assertTrue(isElementPresent(By.id("isDedicatedFund1")));
+        assertTrue(isElementPresent(By.id("isDedicatedFund2")));
+        wait.until(visibilityOfElementLocated(By.id("portfolioCurrencyHedge")));
+        wait.until(visibilityOfElementLocated(By.id("investmentObjective")));
+        mainInfo.click();
+
+        wait.until(invisibilityOfElementLocated(By.id("fundName")));
+
+        wait.until(invisibilityOfElementLocated(By.id("legalEntityIdentifier")));
+        wait.until(invisibilityOfElementLocated(By.id("registerOffice")));
+        wait.until(invisibilityOfElementLocated(By.id("registerOfficeAddress")));
+        wait.until(invisibilityOfElementLocated(By.id("domicile")));
+
+        wait.until(invisibilityOfElementLocated(By.id("legalForm")));
+        wait.until(invisibilityOfElementLocated(By.id("nationalNomenclatureOfLegalForm")));
+        wait.until(invisibilityOfElementLocated(By.id("fundCreationDate")));
+        wait.until(invisibilityOfElementLocated(By.id("fundLaunchate")));
+        wait.until(invisibilityOfElementLocated(By.id("fundCurrency")));
+
+        wait.until(invisibilityOfElementLocated(By.id("fiscalYearEnd")));
+
+        wait.until(invisibilityOfElementLocated(By.id("managementCompanyID")));
+        wait.until(invisibilityOfElementLocated(By.id("fundAdministrator")));
+        wait.until(invisibilityOfElementLocated(By.id("custodianBank")));
+        wait.until(invisibilityOfElementLocated(By.id("investmentManager")));
+        wait.until(invisibilityOfElementLocated(By.id("principalPromoter")));
+        wait.until(invisibilityOfElementLocated(By.id("payingAgent")));
+        wait.until(invisibilityOfElementLocated(By.id("fundManagers")));
+
+        wait.until(invisibilityOfElementLocated(By.id("portfolioCurrencyHedge")));
+        wait.until(invisibilityOfElementLocated(By.id("investmentObjective")));
+    }
+
+    public static void fillOutFundDetailsStep1(String umbFundName) {
+        driver.findElement(By.id("new-fund-btn")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(umbFundName);
+        driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div/div[3]/div/input")).sendKeys(Keys.ENTER);
+
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        try {
+            driver.findElement(By.id("isFundStructure1")).isDisplayed();
+        } catch (Error e) {
+            fail(e.getMessage());
+        }
+    }
+
+
+    public static void verifyFundDropdownElements(int fundCount) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        System.out.println(fundCount);
+        fundCount = fundCount-1;
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")));
+        //assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText().contentEquals("No Umbrella Fund"));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        //assertTrue(driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")).getText().contentEquals("Fund: Test"));
 
     }
 
+    public static void validateUmbrellaFundsDataGridHeadings(String[] umbrellaFundsHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div")).isDisplayed());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText().contentEquals(umbrellaFundsHeadings[0]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText().contentEquals(umbrellaFundsHeadings[1]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
+    }
+
+    public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
+        assertTrue(isElementPresent(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).isDisplayed());
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).getText().contentEquals(NAVHeadings[0]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/span/span")).getText().contentEquals(NAVHeadings[1]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/span/span")).getText().contentEquals(NAVHeadings[2]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/span/span")).getText().contentEquals(NAVHeadings[3]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/span/span")).getText().contentEquals(NAVHeadings[4]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/span/span")).getText().contentEquals(NAVHeadings[5]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/span/span")).getText().contentEquals(NAVHeadings[6]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/span/span")).getText().contentEquals(NAVHeadings[7]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[9]/div/span/span")).getText().contentEquals(NAVHeadings[8]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/span/span")).getText().contentEquals(NAVHeadings[9]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[11]/div/span/span")).getText().contentEquals(NAVHeadings[10]));
+        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/span/span")).getText().contentEquals(NAVHeadings[11]));
+
+        }
+
+    public static void validatePageLayout() {
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
+        assertTrue(isElementPresent(By.id("am-product-home")));
+        assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[1]/h1/span")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
+        assertTrue(isElementPresent(By.id("switchActiveShares")));
+        assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contains("Add new Share"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contains("Funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contains("Add new Fund"));
+
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella funds"));
+        assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
+        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
+        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contains("Add new Umbrella fund"));
+    }
+
+    public static void validateNAVPageLayout() {
+        assertTrue(isElementPresent(By.id("pageTitle")));
+        assertTrue(driver.findElement(By.id("pageTitle")).getText().contains("Net asset value"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
+            "You will have access to the NAV's history of a specific share in clicking on the corresponding row."));
+        assertTrue(isElementPresent(By.id("netAssetValueTab")));
+        //assertTrue(driver.findElement(By.id("netAssetValueTab")).getText().contentEquals("NAVs for all your shares"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")).getText().contentEquals("Search a Share Name or ISIN"));
+        assertTrue(isElementPresent(By.id("navSearch")));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")).getText().contentEquals("Select a Date"));
+        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")));
+        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")).getText().contentEquals("NAV Date"));
+        assertTrue(isElementPresent(By.id("navDatePicker")));
+        assertTrue(driver.findElement(By.id("navDatePicker")).getAttribute("value").contentEquals(getTodayDate()));
+        assertTrue(isElementPresent(By.id("exportNavList")));
+        assertTrue(driver.findElement(By.id("exportNavList")).getText().contentEquals("Export List as CSV"));
+
+    }
+
+    public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
+        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
+        Thread.sleep(750);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage());
+        }
+    }
+
+    public static void assertClassRequiredIsPresent(String tabID) throws SQLException, InterruptedException {
+        try {
+            assertTrue(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span")).isDisplayed());
+        } catch (Exception e) {
+            fail("Asterisk was present " + e.getMessage());
+        }
+    }
+
+    public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
+        try {
+            assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
+        } catch (Exception e) {
+            fail("Asterisk was present " + e.getMessage());
+        }
+    }
+
+    public static String getTodayDate() {
+        Date todayDate = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String todayString = formatter.format(todayDate);
+        return todayString;
+    }
 }

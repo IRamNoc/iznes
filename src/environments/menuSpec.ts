@@ -75,8 +75,8 @@ const reportsCollectsArchives = {
     label: 'Holders Lists',
     label_txt: 'txt_holderslist',
     icon_class: 'fa fa-book',
-    element_id: 'menu-am-reports-section-collective-archives',
-    router_link: '/am-reports-section/collects-archive'
+    element_id: 'holders-list',
+    router_link: '/reports/holders-list/list'
 };
 const reportsCentralization = {
     label: 'Centralization',
@@ -335,13 +335,6 @@ export const menuSpec: MenuSpec = {
         profile: {
             investor: [
                 profileMyInfo,
-                {
-                    label: 'My Company KYC',
-                    label_txt: 'txt_my_company_kyc',
-                    icon_class: '',
-                    element_id: 'top-menu-kyc',
-                    router_link: '/manage-orders/list'
-                },
             ],
             am: [
                 profileMyInfo,

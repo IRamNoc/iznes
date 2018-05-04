@@ -104,6 +104,46 @@ public class PageHelper extends LoginAndNavigationHelper {
 
     }
 
+    public static void verifyFundOptInfoPageContents() {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
+        WebElement fundInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2"));
+        fundInfo.click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2")));
+        WebElement fundMainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2"));
+        fundMainInfo.click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[2]/div[1]/div/a/h2")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[2]/div[1]/div/a/h2")));
+
+        WebElement optInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[2]/div/div/div[2]/div[1]/div/a/h2"));
+        optInfo.click();
+        wait.until(visibilityOfElementLocated(By.id("globalItermediaryIdentification")));
+        wait.until(visibilityOfElementLocated(By.id("delegatedManagementCompany")));
+        wait.until(visibilityOfElementLocated(By.id("investmentAdvisor")));
+        wait.until(visibilityOfElementLocated(By.id("auditor")));
+        wait.until(visibilityOfElementLocated(By.id("taxAuditor")));
+        wait.until(visibilityOfElementLocated(By.id("legalAdvisor")));
+        wait.until(visibilityOfElementLocated(By.id("directors")));
+        wait.until(visibilityOfElementLocated(By.id("internalReference")));
+        wait.until(visibilityOfElementLocated(By.id("additionnalNotes")));
+        optInfo.click();
+
+
+        wait.until(invisibilityOfElementLocated(By.id("globalItermediaryIdentification")));
+        wait.until(invisibilityOfElementLocated(By.id("delegatedManagementCompany")));
+        wait.until(invisibilityOfElementLocated(By.id("investmentAdvisor")));
+        wait.until(invisibilityOfElementLocated(By.id("auditor")));
+        wait.until(invisibilityOfElementLocated(By.id("taxAuditor")));
+        wait.until(invisibilityOfElementLocated(By.id("legalAdvisor")));
+        wait.until(invisibilityOfElementLocated(By.id("directors")));
+        wait.until(invisibilityOfElementLocated(By.id("internalReference")));
+        wait.until(invisibilityOfElementLocated(By.id("additionnalNotes")));
+
+    }
+
     public static void verifyMainInfoPageContents() {
 
         WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));

@@ -64,11 +64,10 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
+        inviteAnInvestor("testops096@setl.io", "Jordan", "Miller", "Success!");
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-346")
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
@@ -120,7 +119,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops082@setl.io", "", "Miller", "Success!");
+        inviteAnInvestor("testops081@setl.io", "", "Miller", "Success!");
     }
 
     @Test

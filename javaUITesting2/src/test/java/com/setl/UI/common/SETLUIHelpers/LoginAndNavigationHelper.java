@@ -6,6 +6,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -202,8 +203,8 @@ public class LoginAndNavigationHelper {
     public static void waitForHomePageToLoad() {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            WebElement topBar = driver.findElement(By.id("topBarMenu"));
-            wait.until(visibilityOf(topBar));
+
+            wait.until(visibilityOfElementLocated(By.id("topBarMenu")));
 
         } catch (Exception e) {
             fail("Page heading was not present " + e.getMessage());
@@ -330,20 +331,24 @@ public class LoginAndNavigationHelper {
         }
     }
 
+    public static void navigateToNAVPage(String username, String password) throws InterruptedException {
+        loginAndVerifySuccess(username, password);
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-nav");
+        verifyCorrectPageById("Net asset value");
+    }
+
 
     public static void navigateToDropdown(String dropdownID) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        try {
+
             wait.until(presenceOfElementLocated(By.id(dropdownID)));
             wait.until(visibilityOfElementLocated(By.id(dropdownID)));
             wait.until(elementToBeClickable(By.id(dropdownID)));
         WebElement dropdown = driver.findElement(By.id(dropdownID));
             dropdown.click();
-        } catch (Error e) {
-            System.out.println(dropdownID + "not present");
-            fail();
-        }
+
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {

@@ -6,14 +6,12 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -62,13 +60,12 @@ public class OpenCSDGeneralAcceptanceTest {
         String userName = userDetails[0];
         String email = userDetails[1];
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
-        waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         enterUsername(userName);
         enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
-        navigateToPageByID("topBarMyAccount");
+        //navigateToPageByID("topBarMyAccount");
         navigateToPageByID("menu-user-admin-users");
 
         driver.findElement(By.id("user-tab-1")).click();
@@ -92,18 +89,18 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("My Account functionality removed")
     public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check title is not displayed inside text field
     }
 
     @Test
+    @Ignore("My Account functionality removed")
     public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         navigateToDropdown("topBarMenu");
         navigateToPageByID("topBarMyAccount");
         //Manually check asterisks are displayed next to title
@@ -112,7 +109,6 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         driver.navigate().refresh();
         checkAlert();
     }
@@ -120,14 +116,12 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         assertTrue(driver.findElement(By.id("topBarMenu")).isDisplayed());
     }
 
     @Test
     public void shouldTakeUserToFirstTabWhenNavItemSelected() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
-        waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         navigateToAddNewMemberTab();
@@ -143,7 +137,6 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldCheckWorkflowMessagesIsNotPresent() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         navigateToPage("messages");
         assertButtonIsNotPresent("messagesworkflow");
     }
@@ -172,7 +165,6 @@ public class OpenCSDGeneralAcceptanceTest {
     @Test
     public void shouldPopupWarningIfValidatedIsSelectedOnNAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
     }
@@ -199,6 +191,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("My Account functionality removed")
     public void shouldDisplayFirstnameInMyInformationScreen() throws IOException, InterruptedException {
         loginAndVerifySuccessAdmin(adminuser, adminuserPassword);
         waitForHomePageToLoad();
@@ -359,23 +352,16 @@ public class OpenCSDGeneralAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_language_0")).click();
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
-        }catch (Exception e){
-            fail("dropdown not selected. " + e.getMessage());
-        }
+
+        driver.findElement(By.cssSelector("div > ul > li:nth-child(2) > div > a")).click();
+
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
-        try {
-            driver.findElement(By.id("btnKycSubmit")).click();
-        } catch (Exception e) {
-            fail("FAILED : " + e.getMessage());
-        }
-        try {
-               wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
-        } catch (Error e) {
-            fail(e.getMessage());
-        }
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(Keys.ENTER);
+
+
+            wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
             assertTrue(success.equals(expectedResult));
@@ -434,13 +420,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWallet(String recipient, String subject, String message, String toasterMessage) throws InterruptedException {
-        try{
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
-
-        }catch (Exception e){
-            fail("couldnt navigate to messages " + e.getMessage());
-        }
+        String xpath = "//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a";
+        clickElementByXpath(xpath);
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
         driver.findElement(By.id("messagescompose")).click();
         driver.findElement(By.id("messagesRecipients")).click();
@@ -457,6 +438,20 @@ public class OpenCSDGeneralAcceptanceTest {
         } catch (Error e) {
             fail("toaster message did not match");
         }
+    }
+
+    private static void clickElementByXpath(String xpath) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath(xpath)));
+        wait.until(elementToBeClickable(By.xpath(xpath)));
+        driver.findElement(By.xpath(xpath)).click();
+    }
+
+    private static void clickElementById(String id) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id(id)));
+        wait.until(elementToBeClickable(By.id(id)));
+        driver.findElement(By.id(id)).click();
     }
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
@@ -514,9 +509,10 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWalletWithoutRecipient(String subject, String message, String toasterMessage) throws InterruptedException {
-        try{
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
-        }catch (Exception e){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a")).click();
+        } catch (Exception e) {
             fail("couldnt navigate to messages " + e.getMessage());
         }
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
@@ -525,20 +521,16 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
         driver.findElement(By.id("messagesSendMessage")).click();
-        Thread.sleep(750);
+        wait.until(visibilityOfElementLocated(By.className("toast-title")));
         String JasperoModel = driver.findElement(By.className("toast-title")).getText();
-        try {
-            assertTrue(JasperoModel.equals(toasterMessage));
-        } catch (Error e) {
-            fail("toaster message did not match");
-        }
+        assertTrue(JasperoModel.equals(toasterMessage));
     }
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
         waitForHomePageToLoad();
         try{
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a")).click();
         }catch (Exception e){
             fail("couldnt navigate to messages " + e.getMessage());
         }
@@ -572,7 +564,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public void checkAlert() {
-            WebDriverWait wait = new WebDriverWait(driver, 3);
+            WebDriverWait wait = new WebDriverWait(driver, 10);
             wait.until(ExpectedConditions.alertIsPresent());
         try {
             Alert alert = driver.switchTo().alert();
