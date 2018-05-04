@@ -34,7 +34,7 @@
             <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
             <clr-dg-column mltag="txt_actions" class="right" style="min-width: 160px;">Actions</clr-dg-column>
 
-            <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
+            <clr-dg-row *clrDgItems="let asset of balances" [class.flash]="asset.isNew">
                 <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
                 <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
                 <clr-dg-cell class="right" [class.flash]="asset.totalChange">
