@@ -509,9 +509,10 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void sendMessageToSelectedWalletWithoutRecipient(String subject, String message, String toasterMessage) throws InterruptedException {
-        try{
-            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/a")).click();
-        }catch (Exception e){
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a")).click();
+        } catch (Exception e) {
             fail("couldnt navigate to messages " + e.getMessage());
         }
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
@@ -520,13 +521,9 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).click();
         driver.findElement(By.xpath("//*[@id=\"messagesBody\"]/div[2]/div[1]")).sendKeys(message);
         driver.findElement(By.id("messagesSendMessage")).click();
-        Thread.sleep(750);
+        wait.until(visibilityOfElementLocated(By.className("toast-title")));
         String JasperoModel = driver.findElement(By.className("toast-title")).getText();
-        try {
-            assertTrue(JasperoModel.equals(toasterMessage));
-        } catch (Error e) {
-            fail("toaster message did not match");
-        }
+        assertTrue(JasperoModel.equals(toasterMessage));
     }
 
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
