@@ -11,10 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -359,13 +356,11 @@ public class OpenCSDGeneralAcceptanceTest {
 
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
-        clickElementById("btnKycSubmit");
+        driver.findElement(By.id("kyc_lastName_0")).sendKeys(Keys.ENTER);
 
-        try {
+
             wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
-        } catch (Error e) {
-            fail(e.getMessage());
-        }
+
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
             assertTrue(success.equals(expectedResult));

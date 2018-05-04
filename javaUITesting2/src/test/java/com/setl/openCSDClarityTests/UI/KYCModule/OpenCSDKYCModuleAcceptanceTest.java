@@ -49,7 +49,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(300000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -64,11 +64,10 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToInviteInvestorPage();
-        inviteAnInvestor("testops081@setl.io", "Jordan", "Miller", "Success!");
+        inviteAnInvestor("testops096@setl.io", "Jordan", "Miller", "Success!");
     }
 
     @Test
-    @Ignore("Awaiting Code Fix For TG-346")
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
