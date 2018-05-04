@@ -90,7 +90,7 @@ public class OpenCSDSprint4AcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/div/h1")));
 
-        String [] updateChars = generateRandomFundsDetails();
+        String [] updateChars = generateRandomDetails();
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(updateChars);
         driver.findElement(By.id("uf_lei")).sendKeys(updateChars);
@@ -111,7 +111,7 @@ public class OpenCSDSprint4AcceptanceTest {
 
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
 
-        getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars, "testLei" + updateChars, "Management Company", "Albania");
+        getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "testLei" + updateChars[0], "Management Company", "Albania");
 
     }
 

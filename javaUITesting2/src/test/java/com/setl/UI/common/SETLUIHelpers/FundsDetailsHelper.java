@@ -41,8 +41,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static String[] generateRandomDetails() {
         String str = randomAlphabetic(5);
-        String umbrellaFundName = str;
-        return new String[]{umbrellaFundName};
+        String random = str;
+        return new String[]{random};
     }
 
     public static void selectAddUmbrellaFund() {
@@ -305,7 +305,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String shareNameID = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + rowNo )).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
-        String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo )).getText();
+        String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
+        System.out.println(umbFundName);
+        System.out.println(umbFundNameExpected);
+
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
@@ -325,10 +328,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebElement uFund = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0"));
         uFund.click();
         wait.until(visibilityOfElementLocated(By.id("edit-fund-title")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[1]/div[1]/div/a/h2")));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/section/div[2]/div[1]/div/a/h2")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
     }
-
     public static void verifyUmbrellaFundOptInfoPageContents() {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -375,7 +377,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("uf_managementCompany")));
         wait.until(visibilityOfElementLocated(By.id("uf_fundAdministrator")));
         wait.until(visibilityOfElementLocated(By.id("uf_custodian")));
-        wait.until(visibilityOfElementLocated(By.id("uf_investmentManager")));
         wait.until(visibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
         mainInfo.click();
@@ -389,7 +390,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_managementCompany")));
         wait.until(invisibilityOfElementLocated(By.id("uf_fundAdministrator")));
         wait.until(invisibilityOfElementLocated(By.id("uf_custodian")));
-        wait.until(invisibilityOfElementLocated(By.id("uf_investmentManager")));
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
     }
