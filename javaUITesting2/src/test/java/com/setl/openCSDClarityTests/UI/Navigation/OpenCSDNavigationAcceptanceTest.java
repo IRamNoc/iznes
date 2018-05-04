@@ -70,6 +70,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore("My Account functionality removed")
     public void shouldNavigateToMyAccount() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("topBarMenu");
