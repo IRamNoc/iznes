@@ -105,7 +105,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], "testops082@setl.io", "asdasd");
-        Thread.sleep(500);
         logout();
         clickForgottenPassword("testops082@setl.io");
         LoginToOutlook("test@setl.io", "Sphericals1057!");
@@ -119,7 +118,6 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        Thread.sleep(500);
         logout();
         loginAndVerifySuccess(userDetails[0], "alex01");
         logout();
