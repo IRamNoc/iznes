@@ -96,7 +96,7 @@
     <clr-tab>
         <button id="add-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-plus"></i>
-            <span>Add a connection</span>
+            <span>Add Connection</span>
         </button>
 
         <clr-tab-content>
@@ -115,7 +115,7 @@
                             </ng-select>
                           
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">Field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -131,14 +131,13 @@
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
-                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="field-error" mltag="txt_thisfieldisrequired">Field is required</span>
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <button id="add-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                            <i class="fa fa-plus"></i>
-                            <span class="ml_translated">Add</span>
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
                     </div>
                 </section>
@@ -150,7 +149,7 @@
     <clr-tab *ngIf="isEditTabDisplayed">
         <button id="edit-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-pencil"></i>
-            <span>Edit a connection</span>
+            <span>Edit Connection</span>
         </button>
 
         <clr-tab-content *clrIfActive="isEditTabDisplayed">
@@ -170,7 +169,7 @@
                             </ng-select>
                             
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">Field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -187,14 +186,13 @@
                             </ng-select>
                            
                             <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                 class="field-error" mltag="txt_thisfieldisrequired">Field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <button id="edit-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                            <i class="fa fa-pencil"></i>
-                            <span class="ml_translated">Edit</span>
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
                     </div>
                 </section>
