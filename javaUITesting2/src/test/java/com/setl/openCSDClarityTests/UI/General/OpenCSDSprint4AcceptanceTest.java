@@ -209,11 +209,15 @@ public class OpenCSDSprint4AcceptanceTest {
 
     @Test
     public void shouldAssertThatFundsHas3ExpandableFields() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver,timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
         int fundCount = createFund();
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
         driver.findElement(By.id("fund-submitfund-btn")).click();
         selectFund(fundCount);
         verifyFundDropdownElements(fundCount);
@@ -271,8 +275,4 @@ public class OpenCSDSprint4AcceptanceTest {
     @Test
     public void shouldUpdateFundShareAndCheckDatabase(){
     }
-
-
-
-
 }
