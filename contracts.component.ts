@@ -174,7 +174,9 @@ export class ContractsComponent implements OnInit, OnChanges {
             });
             this.contractFields = [];
             for (const prop in this.contract) {
-                this.contractFields.push(prop);
+                if (prop) {
+                    this.contractFields.push(prop);
+                }
             }
             this.changeDetectorRef.markForCheck();
         }));
@@ -286,8 +288,8 @@ export class ContractsComponent implements OnInit, OnChanges {
 
         /* Push the edit tab into the array. */
         this.tabControl.new({
-            title: '<i class="fa fa-th-list"></i> ' + contract.name,
-            icon: 'th-list',
+            title: contract.name,
+            icon: 'search',
             active: false,
             data: {
                 contract: contract,
@@ -324,8 +326,8 @@ export class ContractsComponent implements OnInit, OnChanges {
 
     public ngOnInit() {
         this.tabControl = new TabControl({
-            title: 'Contracts',
-            icon: 'th-list',
+            title: 'Search',
+            icon: 'search',
             active: false,
             data: {
                 template: 'contractsListTab'
