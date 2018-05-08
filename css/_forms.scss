@@ -197,12 +197,22 @@ form, .form {
 
   }
 
-  ng-select {
+  ng-select, various-address-select {
     input {
       margin-top: 0 !important;
     }
     + .field-error {
       width: 360px !important;
+    }
+  }
+  various-address-select {
+    width: 100%;
+    input[type=text] {
+      width: 360px !important;
+    }
+    + .field-error {
+      width: 360px !important;
+      margin-top: -14px !important;
     }
   }
 
