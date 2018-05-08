@@ -1,18 +1,15 @@
-package com.setl.openCSDClarityTests.UI.ProductModule.Funds;
+package com.setl.openCSDClarityTests.UI.MyProduct.Funds;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -24,19 +21,17 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.submitUmbrellaFund;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
 
-public class OpenCSDVNewFundsAcceptanceTest {
+public class OpenCSD2FundsAcceptanceTest {
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
@@ -60,6 +55,79 @@ public class OpenCSDVNewFundsAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+    }
+
+    @Test
+    public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException {
+
+        //Login and navigate to Product Module
+
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPage("product-module");
+
+        //Create umbrella fund for later use
+
+        selectAddUmbrellaFund();
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+
+        //Store title number count for Funds
+
+        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+        System.out.println(fundCount + " funds are displayed in the funds table");
+
+        //Navigate to fund creation and create a fund with umbFund
+
+        String [] uFundDetails = generateRandomFundsDetails();
+
+        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0]);
+
+        //Assert fund table displays the information for the fund created previously, including umbFund
+
+        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+
+        //Navigate to the fund previously created
+
+        driver.findElement(By.id("product-dashboard-link-fundID-" + fundCount)).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
+
+        //Update all fund information with random chars at the end
+
+        String [] updateChars = generateRandomDetails();
+
+        driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
+        driver.findElement(By.id("legalEntityIdentifier")).clear();
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys("92345678901234567890");
+
+        driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[2]/span/a")).click();
+
+        searchAndSelectFundDropdown("domicile", "Albania");
+        searchAndSelectLegalFormDropdown("legalForm", "Unit Trust");
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[2]/div/a")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
+        searchAndSelectFundsDropdown("nationalNomenclatureOfLegalForm", "GB Authorised unit trust (AUT)");
+
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+
+        driver.findElement(By.id("fund-submitfund-btn")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("am-product-home")));
+
+        //Assert that table displays the fund details with random chars at the end.
+
+        getFundTableRow(fundCount, uFundDetails[0] + updateChars[0], "92345678901234567890", "USD US Dollar", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
+
     }
 
     @Test
