@@ -28,7 +28,7 @@ timestamps {
                 sh '''rm -f target/test-attachments/*.jpg &&
                     cd ~/workspace/IznesUIAcceptanceTests/javaUITesting2
                     export DISPLAY=:10
-                    ./gradlew clean build'''
+                    ./gradlew clean build -x test --parallel && ./gradlew build'''
 
 
             } catch (err) {
