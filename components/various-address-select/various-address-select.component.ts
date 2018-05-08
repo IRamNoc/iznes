@@ -22,7 +22,6 @@ const noop = () => {
     }]
 })
 export class VariousAddressSelectComponent implements ControlValueAccessor {
-
     @Input() ownWalletAddressArray = [
         {id: 1, text: '2 Connection'},
         {id: 2, text: 'Owned Address'},
@@ -62,6 +61,11 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
 
     setSelectedAddressType($event) {
         this.selectedAddressType = $event.id;
+    }
+
+    // Clear value when field is cleared
+    onClearValue() {
+        this.writeValue('');
     }
 
     // From ControlValueAccessor interface
