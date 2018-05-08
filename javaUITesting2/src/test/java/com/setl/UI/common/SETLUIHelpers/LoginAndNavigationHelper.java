@@ -335,10 +335,11 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToDropdown(String dropdownID) {
-
-        new WebDriverWait(driver, timeoutInSeconds).ignoring(StaleElementReferenceException.class).until(elementToBeClickable(By.id(dropdownID)));
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
         WebElement dropdown = driver.findElement(By.id(dropdownID));
         dropdown.click();
+
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
