@@ -96,7 +96,7 @@
     <clr-tab>
         <button id="add-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-plus"></i>
-            <span>Add a connection</span>
+            <span>Add Connection</span>
         </button>
 
         <clr-tab-content>
@@ -104,7 +104,7 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field">Connection</label>
+                            <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
 
                             <ng-select
                                     id="add-connection-select"
@@ -115,13 +115,14 @@
                             </ng-select>
                           
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field">Sub-portfolio</label>
+                            <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_subportfolio">Sub-portfolio</label>
+
                             <ng-select
                                     id="add-subportfolio-select"
                                     [items]="addressList"
@@ -130,14 +131,13 @@
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
-                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <button id="add-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                            <i class="fa fa-plus"></i>
-                            <span class="ml_translated">Add</span>
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
                     </div>
                 </section>
@@ -149,7 +149,7 @@
     <clr-tab *ngIf="isEditTabDisplayed">
         <button id="edit-connection-tab" clrTabLink (click)="resetForm()">
             <i class="fa fa-pencil"></i>
-            <span>Edit a connection</span>
+            <span>Edit Connection</span>
         </button>
 
         <clr-tab-content *clrIfActive="isEditTabDisplayed">
@@ -157,7 +157,7 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field">Connection</label>
+                            <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
 
                             <ng-select
                                     id="edit-connection-select"
@@ -169,13 +169,13 @@
                             </ng-select>
                             
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field">Sub-portfolio</label>
+                            <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_subportfolio">Sub-portfolio</label>
 
                             <ng-select
                                     id="edit-subportfolio-select"
@@ -186,14 +186,13 @@
                             </ng-select>
                            
                             <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                 class="text-danger" mltag="txt_thisfieldisrequired">This field is required</span>
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <button id="edit-connection-button" class="btn btn-primary" [disabled]="formGroup.invalid">
-                            <i class="fa fa-pencil"></i>
-                            <span class="ml_translated">Edit</span>
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                         </button>
                     </div>
                 </section>
@@ -226,6 +225,7 @@
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
     <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
     <div class="modal-body">
+        <label class="control-label required-field" for="accept-subportfolio-addr-link" mltag="txt_subportfolio">Sub-portfolio</label>       
         <ng-select
                 id="accept-subportfolio-addr-link"
                 [items]="addressList"
@@ -233,10 +233,9 @@
                 placeholder="Select a sub-portfolio"
                 [formControl]="formGroup.controls['sub-portfolio']">
         </ng-select>
-        <span class="mandatory-field">*</span>
-        <div *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-             class="text-danger">This field is required
-        </div>
+       
+        <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+             class="field-required">Field is required</span>
     </div>
 
     <div class="modal-footer">
