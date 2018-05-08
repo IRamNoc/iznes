@@ -308,31 +308,34 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundList = listImu.reduce((result, item) => {
 
             result.push({
+                // required on save
                 umbrellaFundID: item.get('umbrellaFundID', '0'),
                 umbrellaFundName: item.get('umbrellaFundName', ''),
+                legalEntityIdentifier: item.get('legalEntityIdentifier', '0'),
                 registerOffice: item.get('registerOffice', ''),
                 registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                legalEntityIdentifier: item.get('legalEntityIdentifier', '0'),
                 domicile: item.get('domicile', '0'),
                 umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
                 managementCompanyID: item.get('managementCompanyID', '0'),
                 fundAdministratorID: item.get('fundAdministratorID', '0'),
                 custodianBankID: item.get('custodianBankID', '0'),
-                investmentAdvisorID: item.get('investmentAdvisorID', '0'),
-                payingAgentID: item.get('payingAgentID', '0'),
-                transferAgentID: item.get('transferAgentID', '0'),
-                centralisingAgentID: item.get('centralisingAgentID', '0'),
-                transferAgent: item.get('transferAgentID', '0'),
-                centralizingAgent: item.get('centralisingAgentID', '0'),
-                giin: item.get('giin', 0),
-                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID', '0'),
-                auditorID: item.get('auditorID', '0'),
-                taxAuditorID: item.get('taxAuditorID', '0'),
-                principlePromoterID: item.get('principlePromoterID', '0'),
-                legalAdvisorID: item.get('legalAdvisorID', '0'),
-                directors: item.get('directors', ''),
-                internalReference: item.get('internalReference', ''),
-                additionnalNotes: item.get('additionnalNotes', ''),
+
+                // optional on save
+                investmentAdvisorID: item.get('investmentAdvisorID') || '0',
+                payingAgentID: item.get('payingAgentID') || '0',
+                transferAgentID: item.get('transferAgentID') || '0',
+                centralisingAgentID: item.get('centralisingAgentID') || '0',
+                transferAgent: item.get('transferAgentID') || '0',
+                centralizingAgent: item.get('centralisingAgentID') || '0',
+                giin: item.get('giin'),
+                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID') || '0',
+                auditorID: item.get('auditorID') || '0',
+                taxAuditorID: item.get('taxAuditorID') || '0',
+                principlePromoterID: item.get('principlePromoterID') || '0',
+                legalAdvisorID: item.get('legalAdvisorID') || '0',
+                directors: item.get('directors') || '',
+                internalReference: item.get('internalReference') || '',
+                additionnalNotes: item.get('additionnalNotes') || '',
             });
 
             return result;
@@ -410,7 +413,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, {emitEvent: false});
         this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, {emitEvent: false});
         this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, {emitEvent: false});
-        const delegatedManagementCompany = this.managementCompanyList.filter(element => element.id.toString() === this.umbrellaFund[0].delegatedManagementCompanyID.toString());
+        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].delegatedManagementCompanyID.toString(), this.managementCompanyList);
         if (delegatedManagementCompany.length > 0) {
             this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, {emitEvent: false});
         }

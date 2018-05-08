@@ -256,7 +256,7 @@ export class OrderHelper {
         this.orderRequest = orderRequest;
         this.fundShare = fundShare;
 
-        this.dateValue = moment(orderRequest.datevalue, 'DD/MM/YYYY HH:mm');
+        this.dateValue = moment(orderRequest.datevalue, 'YYYY-MM-DD HH:mm');
         this.orderType = OrderTypeNumber[orderRequest.ordertype];
         this.orderBy = OrderByNumber[orderRequest.orderby];
         this.orderValue = Number(orderRequest.ordervalue);
@@ -268,9 +268,13 @@ export class OrderHelper {
         this.investorWalletId = Number(orderRequest.portfolioid);
 
         // used for testing when validation is turned off
-        this.fakeCuoff = moment().add(10, 'seconds');
-        this.fakeValuation = moment().add(15, 'seconds');
-        this.fakeSettlement = moment().add(20, 'seconds');
+        // this.fakeCuoff = moment().add(10, 'seconds');
+        // this.fakeValuation = moment().add(15, 'seconds');
+        // this.fakeSettlement = moment().add(20, 'seconds');
+
+        this.fakeCuoff = moment().add(5, 'minutes');
+        this.fakeValuation = moment().add(10, 'minutes');
+        this.fakeSettlement = moment().add(15, 'minutes');
 
     }
 
@@ -603,7 +607,8 @@ export class OrderHelper {
         // the logic is for testing purpose, it will disable all the validation
         if (this.disableValidation) {
             try {
-                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.dateValue.split(';');
+                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
+
                 const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
                 const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
                 const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
@@ -678,7 +683,7 @@ export class OrderHelper {
                 }
 
                 cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(settlement, this.orderType);
+                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
                 valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
                 settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
