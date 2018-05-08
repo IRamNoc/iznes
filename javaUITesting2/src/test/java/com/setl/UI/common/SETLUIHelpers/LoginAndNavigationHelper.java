@@ -56,16 +56,9 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPageByID(String pageID) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        try {
-        WebElement page = driver.findElement(By.id(pageID));
-            wait.until(visibilityOfElementLocated(By.id(pageID)));
-            wait.until(elementToBeClickable(By.id(pageID)));
-            page.click();
-
-        } catch (Error e) {
-            fail(pageID + "page not present");
-        }
+       new WebDriverWait(driver, timeoutInSeconds).ignoring(StaleElementReferenceException.class).until(elementToBeClickable(By.id(pageID)));
+       WebElement page = driver.findElement(By.id(pageID));
+       page.click();
     }
 
 
@@ -339,17 +332,11 @@ public class LoginAndNavigationHelper {
         verifyCorrectPageById("Net asset value");
     }
 
-
     public static void navigateToDropdown(String dropdownID) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-
-            wait.until(presenceOfElementLocated(By.id(dropdownID)));
-            wait.until(visibilityOfElementLocated(By.id(dropdownID)));
-            wait.until(elementToBeClickable(By.id(dropdownID)));
+        new WebDriverWait(driver, timeoutInSeconds).ignoring(StaleElementReferenceException.class).until(elementToBeClickable(By.id(dropdownID)));
         WebElement dropdown = driver.findElement(By.id(dropdownID));
-            dropdown.click();
-
+        dropdown.click();
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
