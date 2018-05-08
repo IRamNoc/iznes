@@ -19,14 +19,16 @@
 
                 <!-- User add tab. -->
                 <ng-container *ngIf="id === 1">
-                    <ng-container *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    <ng-container
+                            *ngTemplateOutlet="staticUserAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
 
                     </ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
-                    <ng-container *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    <ng-container
+                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
 
                     </ng-container>
                 </ng-container>
@@ -50,15 +52,19 @@
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="user.accountLocked == 0" class="label label-success" mltag="txt_enabled">Enabled</span>
-                        <span *ngIf="user.accountLocked != 0" class="label label-warning" mltag="txt_disabled">Disabled</span>
+                        <span *ngIf="user.accountLocked == 0" class="label label-success"
+                              mltag="txt_enabled">Enabled</span>
+                        <span *ngIf="user.accountLocked != 0" class="label label-warning"
+                              mltag="txt_disabled">Disabled</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="right">
-                        <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)" class="btn btn-success btn-sm">
+                        <button id="edit-{{user.userID}}" (click)="handleEdit(user.userID)"
+                                class="btn btn-success btn-sm">
                             <i class="fa fa-pencil-square-o"></i>
                             <span mltag="txt_edit">Edit</span>
                         </button>
-                        <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)" class="btn btn-danger btn-sm">
+                        <button id="delete-{{user.userID}}" (click)="handleDelete(user.userID)"
+                                class="btn btn-danger btn-sm">
                             <i class="fa fa-trash-o"></i>
                             <span mltag="txt_delete">Delete</span>
                         </button>
@@ -80,35 +86,34 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
-                            </label>
-                            <div>
-                                <input id="new-user-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" mltag="txt_username">
-                                <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched" class="text-danger">
-                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
-                                </div>
+                            <label class="control-label required-field" mltag="txt_username">Username</label>
+                            <input id="new-user-username" type="text" formControlName="username"
+                                   placeholder="Username" class="form-control username mlp_translated"
+                                   mltag="txt_username">
+                            <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div>
-                                <input id="new-user-email" type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
-                                <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="text-danger">
-                                    <span mltag="txt_thisfieldisrequired">This field is required</span>
-                                </div>
+                            <label class="control-label required-field"
+                                   mltag="txt_email">Email</label>
+                            <input id="new-user-email" type="email" formControlName="email" name="email"
+                                   placeholder="Enter email..."
+                                   class="form-control email mlp_translated"
+                                   mltag="txt_enteremail">
+                            <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
+                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
+                                 class="field-error">Invalid email format
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_account">Account</span>
-                            </label>
+                            <label class="control-label required-field" mltag="txt_account">Account</label>
                             <ng-select
                                     id="new-user-account-select"
                                     [items]="accountTypes"
@@ -118,14 +123,15 @@
                                     (selected)="setFormAccountId( tabid, $event )"
                                     mltag="txt_selecttype"
                             ></ng-select>
+                            <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
+                            <label class="control-label required-field" mltag="txt_usertype">User Type</label>
                             <ng-select
                                     id="new-user-usertype-select"
                                     [items]="userTypes"
@@ -134,27 +140,37 @@
                                     [formControl]="formControl.controls['userType']"
                                     mltag="txt_selecttype"
                             ></ng-select>
+                            <div *ngIf="formControl.controls.userType.hasError('required') && formControl.controls.userType.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_password">Password</span>
-                            </label>
-                            <div>
-                                <input id="new-user-password" type="password" formControlName="password" name="password" autocomplete="off" placeholder="Password" class="form-control password1 mlp_translated" mltag="txt_password">
-                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passworddoesnotmatch">Password does not match</div>
+                            <label class="control-label required-field" mltag="txt_password">Password</label>
+                            <input id="new-user-password" type="password" formControlName="password" name="password"
+                                   autocomplete="off" placeholder="Password"
+                                   class="form-control password1 mlp_translated" mltag="txt_password">
+                            <div *ngIf="formControl.controls.password.hasError('required') && formControl.controls.password.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
+                            <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine"
+                                 class="field-error" mltag="txt_passworddoesnotmatch">Password does not match
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_repeatpassword">Repeat Password</span>
-                            </label>
-                            <div>
-                                <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm" autocomplete="off" placeholder="Repeat Password" class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
-                                <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine" class="text-danger" mltag="txt_passworddoesnotmatch">Password does not match</div>
+                            <label class="control-label required-field" mltag="txt_repeatpassword">Repeat
+                                Password</label>
+                            <input id="new-user-password-repeat" type="password" formControlName="passwordConfirm"
+                                   autocomplete="off" placeholder="Repeat Password"
+                                   class="form-control password2 mlp_translated" mltag="txt_repeatpassword">
+                            <div *ngIf="formControl.controls.passwordConfirm.hasError('required') && formControl.controls.passwordConfirm.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
+                            <div *ngIf="formControl.hasError('mismatch') && formControl.controls['password'].valid && !formControl.controls['passwordConfirm'].pristine"
+                                 class="field-error" mltag="txt_passworddoesnotmatch">Password does not match
                             </div>
                         </div>
                     </div>
@@ -165,14 +181,16 @@
                                 <span class="ml" mltag="txt_accs">Access</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                <ng-container
+                                        *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button id="new-user-submit" type="submit" class="btn btn-primary">
+                            <button id="new-user-submit" type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
                         </div>
@@ -189,29 +207,32 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_username">Username</span>
-                            </label>
-                            <div>
-                                <input id="edit-user{{tabid}}-username" type="text" formControlName="username" placeholder="Username" class="form-control username mlp_translated" readonly="readonly" mltag="txt_username">
+                            <label class="control-label required-field" mltag="txt_username">Username</label>
+                            <input id="edit-user{{tabid}}-username" type="text" formControlName="username"
+                                   placeholder="Username" class="form-control username mlp_translated"
+                                   readonly="readonly" mltag="txt_username">
+                            <div *ngIf="formControl.controls.username.hasError('required') && formControl.controls.username.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_email">Email</span>
-                            </label>
-                            <div>
-                                <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail">
+                            <label class="control-label required-field" mltag="txt_email">Email</label>
+                            <input id="edit-user{{tabid}}-email" type="email" formControlName="email" name="email"
+                                   placeholder="Enter email..." class="form-control email mlp_translated"
+                                   mltag="txt_enteremail">
+                            <div *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
+                            <div *ngIf="!formControl.controls.email.valid && formControl.controls.email.touched && !formControl.controls.email.hasError('required')"
+                                 class="field-error">Invalid email format
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_account">Account</span>
-                            </label>
+                            <label class="control-label required-field" mltag="txt_account">Account</label>
                             <ng-select
                                     id="edit-user{{tabid}}-account-select"
                                     [items]="accountTypes"
@@ -221,14 +242,15 @@
                                     (selected)="setFormAccountId( tabid, $event )"
                                     mltag="txt_selecttype"
                             ></ng-select>
+                            <div *ngIf="formControl.controls.accountType.hasError('required') && formControl.controls.accountType.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_usertype">User Type</span>
-                            </label>
+                            <label class="control-label required-field" mltag="txt_usertype">User Type</label>
                             <ng-select
                                     id="edit-user{{tabid}}-usertype-select"
                                     [items]="userTypes"
@@ -246,14 +268,16 @@
                                 <span class="ml" mltag="txt_accs">Access</span>
                             </label>
                             <div>
-                                <ng-container *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
+                                <ng-container
+                                        *ngTemplateOutlet="accessAdminTabs; context: {'formControl': formControl, 'tabid': tabid}"></ng-container>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.controls.username.valid || !formControl.controls.email.valid || !formControl.controls.accountType.valid || !formControl.controls.userType.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
                             <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">

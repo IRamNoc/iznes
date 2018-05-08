@@ -6,8 +6,14 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button *ngIf="tabdata.groupId < 0" clrTabLink id="testlink{{id}}" [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
-            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="testlink{{id}}" (click)="handleEdit(tabdata.groupIndex)"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</button>
+            <button *ngIf="tabdata.groupId < 0" clrTabLink id="testlink{{id}}"
+                    [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i>
+                {{tabdata.title.text}}
+            </button>
+            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="testlink{{id}}"
+                    (click)="handleEdit(tabdata.groupIndex)"><i class="fa {{tabdata.title.icon}}"></i>
+                {{tabdata.title.text}}
+            </button>
             <clr-tab-content *clrIfActive="tabdata.active">
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
@@ -18,14 +24,16 @@
 
                 <!-- User add tab. -->
                 <ng-container *ngIf="id === 1">
-                    <ng-container *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                    <ng-container
+                            *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
 
                     </ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
-                    <ng-container *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
+                    <ng-container
+                            *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
 
                     </ng-container>
                 </ng-container>
@@ -42,7 +50,7 @@
                 <clr-dg-column>
                     <span mltag="txt_grouptype">Group Type</span>
                     <clr-dg-string-filter [clrDgStringFilter]="typeFilter">
-                    </clr-dg-string-filter>                    
+                    </clr-dg-string-filter>
                 </clr-dg-column>
                 <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
@@ -76,31 +84,32 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_groupname">Group Name</span>
-                            </label>
-                            <div>
-                                <input type="text" formControlName="name" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
+                            <input type="text" formControlName="name" placeholder="Group Name"
+                                   class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_groupdescription">Group Description</span>
-                            </label>
-                            <div>
-                                <input type="text" formControlName="description" name="description" placeholder="Group Description" class="form-control groupdescription mlp_translated" mltag="txt_groupdescription">
+                            <label class="control-label required-field" mltag="txt_groupdescription">Group
+                                Description</label>
+                            <input type="text" formControlName="description" name="description"
+                                   placeholder="Group Description"
+                                   class="form-control groupdescription mlp_translated"
+                                   mltag="txt_groupdescription">
+                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_grouptype">Group Type</span>
-                            </label>
+                            <label class="control-label required-field" mltag="txt_grouptype">Group Type</label>
                             <ng-select
                                     [items]="groupTypes"
                                     [allowClear]="true"
@@ -108,6 +117,9 @@
                                     [formControl]="formControl.controls['type']"
                                     mltag="txt_choosegrouptag"
                             ></ng-select>
+                            <div *ngIf="formControl.controls.type.hasError('required') && formControl.controls.type.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
+                            </div>
                         </div>
                     </div>
 
@@ -115,7 +127,6 @@
                         Permissions grids,
                         1 - group or 2 - transactional.
                     -->
-
 
 
                     <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
@@ -138,7 +149,7 @@
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
                             <button
@@ -156,37 +167,39 @@
     </ng-template>
 
     <!-- User Edit Form. -->
-    <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid" let-permissionsEmitter="permissionsEmitter">
+    <ng-template #dynamicGroupEditTab let-formControl="formControl" let-tabid="tabid"
+                 let-permissionsEmitter="permissionsEmitter">
         <div class="user-tab-panel-body panel-body">
             <form (ngSubmit)="handleEditGroup(tabid)" [formGroup]="formControl">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_groupname">Group Name</span>
-                            </label>
-                            <div>
-                                <input type="text" formControlName="name" placeholder="Group Name" class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
+                            <input type="text" formControlName="name" placeholder="Group Name"
+                                   class="form-control groupname mlp_translated" mltag="txt_groupname">
+                            <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span class="ml_translated" mltag="txt_groupdescription">Group Description</span>
-                            </label>
-                            <div>
-                                <input type="text" formControlName="description" name="description" placeholder="Group Description" class="form-control groupdescription mlp_translated" mltag="txt_groupdescription">
+                            <label class="control-label required-field" mltag="txt_groupdescription">Group
+                                Description</label>
+                            <input type="text" formControlName="description" name="description"
+                                   placeholder="Group Description"
+                                   class="form-control groupdescription mlp_translated"
+                                   mltag="txt_groupdescription">
+                            <div *ngIf="formControl.controls.description.hasError('required') && formControl.controls.description.touched"
+                                 class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_grouptype">Group Type</span>
-                            </label>
+                            <label class="control-label" mltag="txt_grouptype">Group Type</label>
                             <!--
                                 Disabled is added to this select by it's form
                                 control in the handleEdit function.
@@ -228,11 +241,12 @@
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
                             <button (click)="closeTab(tabid)" class="btn btn-secondary">
-                                <i class="fa fa-cancel"></i> <span class="ml_translated" mltag="txt_cancel">Cancel</span>
+                                <i class="fa fa-cancel"></i> <span class="ml_translated"
+                                                                   mltag="txt_cancel">Cancel</span>
                             </button>
                         </div>
                     </div>
@@ -245,7 +259,8 @@
     <ng-template #accessAdminTabs>
         <clr-tabs>
             <clr-tab>
-                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span></button>
+                <button clrTabLink><i class="fa fa-users"></i> <span mltag="txt_administrative">Administrative</span>
+                </button>
                 <clr-tab-content *clrIfActive="true">
                     <div class="panel-body">
                         <span mltag="txt_administrative">Administrative</span>
@@ -255,7 +270,8 @@
             </clr-tab>
 
             <clr-tab>
-                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span></button>
+                <button clrTabLink><i class="fa fa-user"></i> <span mltag="txt_transactional">Transactional</span>
+                </button>
                 <clr-tab-content *clrIfActive>
                     <div class="panel-body">
                         <span mltag="txt_transactional">Transactional</span>
