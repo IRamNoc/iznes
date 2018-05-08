@@ -109,7 +109,6 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         verifyCorrectPage("Shares / Funds / Umbrella funds");
-
     }
 
     @Test

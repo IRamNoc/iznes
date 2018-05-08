@@ -58,9 +58,14 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToPageByID(String pageID) {
        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-       wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
-       WebElement page = driver.findElement(By.id(pageID));
-       page.click();
+       try {
+           wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
+           wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
+           WebElement page = driver.findElement(By.id(pageID));
+           page.click();
+       }catch (WebDriverException wde) {
+           fail(wde.getMessage());
+       }
     }
 
 
@@ -336,9 +341,14 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToDropdown(String dropdownID) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
-        WebElement dropdown = driver.findElement(By.id(dropdownID));
-        dropdown.click();
+        try {
+            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(dropdownID))));
+            wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
+            WebElement dropdown = driver.findElement(By.id(dropdownID));
+            dropdown.click();
+        }catch (WebDriverException wde) {
+            fail(wde.getMessage());
+        }
 
     }
 
