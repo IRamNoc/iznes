@@ -4,6 +4,7 @@ import {
     ControlValueAccessor,
     NG_VALUE_ACCESSOR,
     NG_VALIDATORS,
+    Validators
 } from '@angular/forms';
 import * as _ from 'lodash';
 
@@ -41,10 +42,10 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
 
     selectedAddressType = 1;
 
-    addressTypeSelect = new FormControl([{id: 1, text: 'Connection'}]);
-    relationshipSelect = new FormControl();
-    owndAddressSelect = new FormControl();
-    otherAddress = new FormControl();
+    addressTypeSelect = new FormControl([{ id: 1, text: 'Connection' }]);
+    relationshipSelect = new FormControl('', Validators.required);
+    owndAddressSelect = new FormControl('', Validators.required);
+    otherAddress = new FormControl('', Validators.required);
 
     // The internal data model
     private innerValue: any = '';
