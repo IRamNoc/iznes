@@ -78,7 +78,6 @@ public class OpenCSDNavigationAcceptanceTest {
         verifyCorrectPage("My Account");
     }
 
-
     @Test
     @Ignore
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
@@ -175,5 +174,4 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPage("corporate-actions/split");
         verifyCorrectPage("");
     }
-
 }
