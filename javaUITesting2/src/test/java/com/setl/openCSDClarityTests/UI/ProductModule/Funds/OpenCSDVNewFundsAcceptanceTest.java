@@ -13,6 +13,7 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -255,6 +256,7 @@ public class OpenCSDVNewFundsAcceptanceTest {
     }
 
     @Test
+    @Repeat
     public void shouldUpdateFund() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -266,11 +268,16 @@ public class OpenCSDVNewFundsAcceptanceTest {
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        scrollElementIntoViewById("fund-submitfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-        WebElement submit = driver.findElement(By.id("fund-submitfund-btn"));
-        submit.click();
+        try {
+            scrollElementIntoViewById("fund-submitfund-btn");
+            wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+            wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+            WebElement submit = driver.findElement(By.id("fund-submitfund-btn"));
+            submit.click();
+        }catch (WebDriverException w){
+            fail(w.getMessage());
+        }
+
         assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
         assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
 

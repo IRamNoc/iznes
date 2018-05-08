@@ -26,7 +26,7 @@ public class LoginAndNavigationHelper {
 
     }
 
-    public static void navigateToPage2(String pageHref) throws InterruptedException {
+    public static void navigateToPage2(String pageHref) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
         try {
@@ -40,20 +40,7 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToPageByID(String pageID) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        try {
-            wait.until(visibilityOfElementLocated(By.id(pageID)));
-            wait.until(elementToBeClickable(By.id(pageID)));
-        WebElement page = driver.findElement(By.id(pageID));
-            page.click();
-
-        } catch (Error e) {
-            fail(pageID + "page not present");
-        }
-    }
-
-    public static void navigateToPage(String pageHref) throws InterruptedException {
+    public static void navigateToPage(String pageHref) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -67,6 +54,20 @@ public class LoginAndNavigationHelper {
             fail(pageHref + "page not present");
         }
     }
+
+    public static void navigateToPageByID(String pageID) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+        WebElement page = driver.findElement(By.id(pageID));
+            wait.until(visibilityOfElementLocated(By.id(pageID)));
+            wait.until(elementToBeClickable(By.id(pageID)));
+            page.click();
+
+        } catch (Error e) {
+            fail(pageID + "page not present");
+        }
+    }
+
 
     public static void navigateToPageXpath(String pageHref) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
