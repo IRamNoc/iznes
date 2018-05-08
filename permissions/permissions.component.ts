@@ -4,9 +4,9 @@ import {
     OnInit
 } from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
-import {FormControl, FormGroup} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ToasterService} from 'angular2-toaster';
-import {ClrDatagridStringFilterInterface} from "@clr/angular";
+import {ClrDatagridStringFilterInterface} from '@clr/angular';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {ConfirmationService, immutableHelper} from '@setl/utils';
 import * as _ from 'lodash';
@@ -17,7 +17,7 @@ import {UserAdminService} from '../useradmin.service';
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Persist service. */
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 class TypeFilter implements ClrDatagridStringFilterInterface<any> {
     accepts(group: any, search: string): boolean {
@@ -155,21 +155,21 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    "title": {
-                        "icon": "fa-search",
-                        "text": "Search"
+                    'title': {
+                        'icon': 'fa-search',
+                        'text': 'Search'
                     },
-                    "groupId": -1,
-                    "active": true
+                    'groupId': -1,
+                    'active': true
                 },
                 {
-                    "title": {
-                        "icon": "fa-plus",
-                        "text": "Add New Group"
+                    'title': {
+                        'icon': 'fa-plus',
+                        'text': 'Add New Group'
                     },
-                    "groupId": -1,
-                    "formControl": this.newAddGroupFormgroup(),
-                    "active": false
+                    'groupId': -1,
+                    'formControl': this.newAddGroupFormgroup(),
+                    'active': false
                 }
             ];
             return true;
@@ -191,10 +191,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Create the group. */
         const group = new FormGroup(
             {
-                "name": new FormControl(''),
-                "description": new FormControl(''),
-                "type": new FormControl([]),
-                "permissions": new FormControl([])
+                'name': new FormControl('', [Validators.required]),
+                'description': new FormControl('', [Validators.required]),
+                'type': new FormControl([], [Validators.required]),
+                'permissions': new FormControl([])
             }
         );
 
@@ -216,7 +216,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     private filterAreaLists(): void {
         /* Let's do admin areas first. */
         if (Array.isArray(this.adminPermAreasList)) {
-            this.filteredAdminAreaList = this.adminPermAreasList.map(this.extractArea)
+            this.filteredAdminAreaList = this.adminPermAreasList.map(this.extractArea);
         }
 
         /* Then let's do the tx areas. */
@@ -334,28 +334,28 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
         let group = this.allGroupList[index];
 
-        if(!foundTabId){
+        if (!foundTabId) {
             /* And also prefill the form... let's sort some of the data out. */
             this.tabsControl.push({
-                "title": {
-                    "icon": "fa-pencil",
-                    "text": this.allGroupList[index].groupName,
+                'title': {
+                    'icon': 'fa-pencil',
+                    'text': this.allGroupList[index].groupName,
                 },
-                "groupIndex" : index,
-                "groupId": group.groupId,
-                "formControl": new FormGroup(
+                'groupIndex': index,
+                'groupId': group.groupId,
+                'formControl': new FormGroup(
                     {
-                        "name": new FormControl(group.groupName),
-                        "description": new FormControl(group.groupDescription),
-                        "type": new FormControl({value: group.category, disabled: false}),
-                        "permissions": new FormControl([])
+                        'name': new FormControl(group.groupName, [Validators.required]),
+                        'description': new FormControl(group.groupDescription, [Validators.required]),
+                        'type': new FormControl({value: group.category, disabled: false}),
+                        'permissions': new FormControl([])
                     }
                 ),
-                "permissionsEmitter": new EventEmitter(), // This will be used to pass permissions in.
-                "active": false // this.editFormControls
+                'permissionsEmitter': new EventEmitter(), // This will be used to pass permissions in.
+                'active': false // this.editFormControls
             });
             newTabId = this.tabsControl.length - 1;
-        } else{
+        } else {
             newTabId = foundTabId;
         }
 
@@ -463,7 +463,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
             this.showError('Failed to update this permission group.');
-            console.log("Failed to create new group.", error);
+            console.log('Failed to create new group.', error);
         });
 
         /* Return. */
@@ -530,14 +530,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 /* Lastly, make the old permissions the new ones so the user can revert them and have differences to send. */
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
-                console.warn("Failed to update the group permissions.", error);
+                console.warn('Failed to update the group permissions.', error);
             });
 
             /* Success message. */
             this.showSuccess('Successfully updated this permission group');
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
-            console.warn("Failed to update the group.", response);
+            console.warn('Failed to update the group.', response);
             this.showSuccess('Failed to update this permission group');
         });
 

@@ -289,7 +289,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             return {
                 id: group.groupId,
                 text: group.groupName
-            }
+            };
         });
 
         /* Let's set that nice filtered list to the bound property for the list. */
@@ -379,25 +379,25 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* So let's figure out if they've added duplicate wallets... */
         setTimeout(() => {
-            for (i in controls["walletsFull"].value) {
-                for (j in controls["walletsRead"].value) {
+            for (i in controls['walletsFull'].value) {
+                for (j in controls['walletsRead'].value) {
                     /* If we have a duplicate wallet... */
-                    if (controls["walletsRead"].value[j] != undefined && controls["walletsFull"].value[i] != undefined) {
-                        if (controls["walletsRead"].value[j].id == controls["walletsFull"].value[i].id) {
+                    if (controls['walletsRead'].value[j] != undefined && controls['walletsFull'].value[i] != undefined) {
+                        if (controls['walletsRead'].value[j].id == controls['walletsFull'].value[i].id) {
                             /* ...then we should remove it from the other select and tell the user. */
                             if (fullAccess) {
-                                delete controls["walletsRead"].value[j];
-                                controls["walletsRead"].patchValue(
-                                    controls["walletsRead"].value.filter(thing => !!thing)
+                                delete controls['walletsRead'].value[j];
+                                controls['walletsRead'].patchValue(
+                                    controls['walletsRead'].value.filter(thing => !!thing)
                                 );
-                                this.showWarning('You changed access to \'' + controls["walletsFull"].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
+                                this.showWarning('You changed access to \'' + controls['walletsFull'].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.');
                             } else {
-                                delete controls["walletsFull"].value[i];
-                                controls["walletsFull"].patchValue(
-                                    controls["walletsFull"].value.filter(thing => !!thing)
+                                delete controls['walletsFull'].value[i];
+                                controls['walletsFull'].patchValue(
+                                    controls['walletsFull'].value.filter(thing => !!thing)
                                 );
 
-                                this.showWarning('You changed access to \'' + controls["walletsRead"].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
+                                this.showWarning('You changed access to \'' + controls['walletsRead'].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.');
                             }
                         }
                     }
@@ -430,25 +430,25 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* So let's figure out if they've added duplicate wallets... */
         setTimeout(() => {
-            for (i in controls["groupWalletsFull"].value) {
-                for (j in controls["groupWalletsRead"].value) {
+            for (i in controls['groupWalletsFull'].value) {
+                for (j in controls['groupWalletsRead'].value) {
                     /* If we have a duplicate wallet... */
-                    if (controls["groupWalletsRead"].value[j] != undefined && controls["groupWalletsFull"].value[i] != undefined) {
-                        if (controls["groupWalletsRead"].value[j].id == controls["groupWalletsFull"].value[i].id) {
+                    if (controls['groupWalletsRead'].value[j] != undefined && controls['groupWalletsFull'].value[i] != undefined) {
+                        if (controls['groupWalletsRead'].value[j].id == controls['groupWalletsFull'].value[i].id) {
                             /* ...then we should remove it from the other select and tell the user. */
                             if (fullAccess) {
-                                delete controls["groupWalletsRead"].value[j];
-                                controls["groupWalletsRead"].patchValue(
-                                    controls["groupWalletsRead"].value.filter(thing => !!thing)
+                                delete controls['groupWalletsRead'].value[j];
+                                controls['groupWalletsRead'].patchValue(
+                                    controls['groupWalletsRead'].value.filter(thing => !!thing)
                                 );
-                                this.showWarning('You changed access to \'' + controls["groupWalletsFull"].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.')
+                                this.showWarning('You changed access to \'' + controls['groupWalletsFull'].value[i].text + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i> <b>Full access</b>.');
                             } else {
-                                delete controls["groupWalletsFull"].value[i];
-                                controls["groupWalletsFull"].patchValue(
-                                    controls["groupWalletsFull"].value.filter(thing => !!thing)
+                                delete controls['groupWalletsFull'].value[i];
+                                controls['groupWalletsFull'].patchValue(
+                                    controls['groupWalletsFull'].value.filter(thing => !!thing)
                                 );
 
-                                this.showWarning('You changed access to \'' + controls["groupWalletsRead"].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.')
+                                this.showWarning('You changed access to \'' + controls['groupWalletsRead'].value[j].text + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.');
                             }
                         }
                     }
@@ -569,8 +569,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showError('Failed to update this user\'s administrative groups.');
-            })
+                this.showError('Failed to save this user\'s administrative groups.');
+            });
 
             /* Save tx group access. */
             this.userAdminService.updateUserGroups({
@@ -582,7 +582,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showError('Failed to update this user\'s transactional groups.');
+                this.showError('Failed to save this user\'s transactional groups.');
             });
 
             /* Save wallet access. */
@@ -593,7 +593,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showError('Failed to update this user\'s wallet permissions.');
+                this.showError('Failed to save this user\'s wallet permissions.');
             });
 
             /* Save wallet access. */
@@ -606,7 +606,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showError('Failed to update this user\'s group wallet permissions.');
+                this.showError('Failed to save this user\'s group wallet permissions.');
             });
 
             /* Save the chain access. */
@@ -618,7 +618,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 /* Stub. */
             }).catch((error) => {
                 /* Handle Error. */
-                this.showError('Failed to update this user\'s chain access.');
+                this.showError('Failed to save this user\'s chain access.');
             });
 
             /* Clear the form. */
@@ -632,8 +632,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         }).catch((error) => {
             /* Handle error. */
-            this.showError('Failed to update this user.');
-            console.warn('Failed to update this user: ', error);
+            this.showError('Failed to save this user.');
+            console.warn('Failed to save this user: ', error);
         });
 
         /* Return. */
@@ -680,7 +680,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }).catch((error) => {
                 console.log('error updating user admin groups.', error);
                 this.showError('Failed to update this user\'s administrative groups.');
-            })
+            });
 
             /* Save tx group access. */
             this.userAdminService.updateUserGroups({
@@ -693,7 +693,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }).catch((error) => {
                 console.log('error updating user tx groups.', error);
                 this.showError('Failed to update this user\'s transactional groups.');
-            })
+            });
 
             /* Save wallet access, first diff, then set the new ones to the old ones. */
             let
@@ -754,7 +754,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     return {
                         id: chain.chainId,
                         text: chain.chainName
-                    }
+                    };
                 });
                 console.log('updated user chain access: ', response);
             }).catch((error) => {
@@ -783,10 +783,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             oldAccess = {},
             newAccess = {};
         oldAccessArr.map && oldAccessArr.map(chain => {
-            oldAccess[chain.id] = chain
+            oldAccess[chain.id] = chain;
         });
         newAccessArr.map && newAccessArr.map(chain => {
-            newAccess[chain.chainId] = chain
+            newAccess[chain.chainId] = chain;
         });
 
         /* Variables. */
@@ -795,7 +795,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             differences = {
                 toAdd: [],
                 toDelete: []
-            }
+            };
 
         /* First, let's see what's new. */
         for (i in newAccess) {
@@ -1080,7 +1080,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tabsControl[newTabId]['oldAdminGroups'] = userAdminPermissions;
         }).catch((error) => {
             /* handle the error message */
-            console.log("Editing user, admin permissions error: ", error);
+            console.log('Editing user, admin permissions error: ', error);
             this.showError('Failed to fetch this user\'s administrative permissions.');
         });
 
@@ -1100,7 +1100,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.setFormChainId(newTabId, 0);
         }).catch((error) => {
             /* Handle the error message */
-            console.log("Editing user, tx permissions error: ", error);
+            console.log('Editing user, tx permissions error: ', error);
             this.showError('Failed to fetch this user\'s transactional permissions.');
         });
 
@@ -1134,7 +1134,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
-                    }
+                    };
                 });
             this.tabsControl[newTabId].formControl.controls['walletsRead'].patchValue(readAccessWallets);
 
@@ -1146,13 +1146,13 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     return {
                         id: wallet.walletId,
                         text: wallet.walletName
-                    }
+                    };
                 });
             this.tabsControl[newTabId].formControl.controls['walletsFull'].patchValue(fullAccessWallets);
 
         }).catch((error) => {
             /* Handle the error message */
-            console.log("Editing user, wallet permission error: ", error);
+            console.log('Editing user, wallet permission error: ', error);
             this.showError('Failed to fetch this user\'s wallet permissions.');
         });
 
@@ -1229,7 +1229,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             console.log('update value', this.tabsControl);
         }).catch((error) => {
             /* Handle the error message */
-            console.log("Failed to fetch user's chain access: ", error);
+            console.log('Failed to fetch user\'s chain access: ', error);
             this.showError('Failed to fetch this user\'s chain access.');
         });
 
@@ -1252,7 +1252,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 newArr.push({
                     id: resolution.groupId,
                     text: resolution.groupName,
-                })
+                });
             }
         }
 
@@ -1355,16 +1355,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Declare the group. */
         const group = new FormGroup(
             {
-                'username': new FormControl('', [
-                    Validators.required
-                ]),
-                'email': new FormControl('', [
-                    Validators.required
-                ]),
-                'accountType': new FormControl([]),
-                'userType': new FormControl([]),
-                'password': new FormControl(''),
-                'passwordConfirm': new FormControl(''),
+                'username': new FormControl('', [Validators.required]),
+                'email': new FormControl('', [Validators.required, Validators.email]),
+                'accountType': new FormControl('', [Validators.required]),
+                'userType': new FormControl('', [Validators.required]),
+                'password': new FormControl('', [Validators.required]),
+                'passwordConfirm': new FormControl('', [Validators.required]),
                 'adminGroups': new FormControl([]),
                 'txGroups': new FormControl([]),
                 'walletsFull': new FormControl([]),
