@@ -49,11 +49,11 @@ export class FundShareTestData {
         model.fees.mandatory.maxManagementFee.preset = 1;
         model.fees.mandatory.maxRedemptionFee.preset = 1;
         model.fees.mandatory.maxSubscriptionFee.preset = 1;
-        model.fees.mandatory.miFIDIIAncillaryCharges.preset = 1;
-        model.fees.mandatory.miFIDIIIncidentalCosts.preset = 1;
-        model.fees.mandatory.miFIDIIOneOffCharges.preset = 1;
-        model.fees.mandatory.miFIDIIOngoingCharges.preset = 1;
-        model.fees.mandatory.miFIDIITransactionsCosts.preset = 1;
+        model.fees.mandatory.mifiidServicesCosts.preset = 1;
+        model.fees.mandatory.mifiidIncidentalCosts.preset = 1;
+        model.fees.mandatory.mifiidChargesOneOff.preset = 1;
+        model.fees.mandatory.mifiidChargesOngoing.preset = 1;
+        model.fees.mandatory.mifiidTransactionCosts.preset = 1;
 
         (model.profile.mandatory.investorProfile.preset as any) = [{id: E.InvestorProfileEnum.AllInvestors, text: 'All Investors' }];
 

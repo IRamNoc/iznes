@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
@@ -8,6 +8,7 @@ import {fromJS} from 'immutable';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, MoneyValuePipe, NavHelperService} from '@setl/utils';
+import {Datagrid} from '@clr/angular';
 
 import {OfiNavAuditService} from './service';
 import {OfiNavService} from '@ofi/ofi-main/ofi-req-services/ofi-product/nav/service';
@@ -37,6 +38,13 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: null
     };
+    /* Datagrid server driven */
+    auditDataItemsLen: number;
+    gridItemsPerPage = 10;
+    gridRowOffSet = 0;
+    gridLastPage: number = 0;
+
+    @ViewChild('dataGrid') datagrid: Datagrid;
 
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'requestedNavAudit']) navAuditRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'navAudit']) navAuditOb: Observable<any>;
@@ -89,7 +97,9 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
             {
                 fundShareId: this.fundShareId,
                 dateFrom: this.searchForm.value.dateFrom ? this.searchForm.value.dateFrom : '',
-                dateTo: this.searchForm.value.dateTo ? this.searchForm.value.dateTo : ''
+                dateTo: this.searchForm.value.dateTo ? this.searchForm.value.dateTo : '',
+                offset: (this.gridRowOffSet * this.gridItemsPerPage),
+                limit: this.gridItemsPerPage
             },
             () => {},
             () => {});
@@ -98,11 +108,23 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     private updateNavAudit(navAudit): void {
         if(navAudit && navAudit[this.fundShareId]) {
             this.navAuditData = navAudit[this.fundShareId];
+            this.auditDataItemsLen = this.navAuditData[0].total;
         } else {
             this.navAuditData = [];
+            this.auditDataItemsLen = 0;
         }
 
+        this.gridLastPage = Math.ceil(this.auditDataItemsLen / this.gridItemsPerPage);
+        if(this.datagrid) this.datagrid.resize();
+        
         this.redux.dispatch(setRequestedNavAudit());
+        this.changeDetectorRef.markForCheck();
+    }
+
+    dataGridRefresh(state): void {
+        this.gridRowOffSet = (state.page.from / this.gridItemsPerPage);
+
+        this.redux.dispatch(clearRequestedNavAudit());
         this.changeDetectorRef.markForCheck();
     }
 

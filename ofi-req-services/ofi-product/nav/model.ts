@@ -52,4 +52,6 @@ export interface RequestNavAuditTrailMessageBody extends MemberNodeMessageBody {
     fundShareId: number;
     dateTo: string;
     dateFrom: string;
+    offset: number;
+    limit: number;
 }
