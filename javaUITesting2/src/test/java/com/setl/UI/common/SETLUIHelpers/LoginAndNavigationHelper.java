@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -56,7 +57,8 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToPageByID(String pageID) {
-       new WebDriverWait(driver, timeoutInSeconds).ignoring(StaleElementReferenceException.class).until(elementToBeClickable(By.id(pageID)));
+       final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+       wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
        WebElement page = driver.findElement(By.id(pageID));
        page.click();
     }
