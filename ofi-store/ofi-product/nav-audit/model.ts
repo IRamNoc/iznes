@@ -6,6 +6,7 @@ export interface NavAuditDetail {
     price: number;
     userName: string;
     valuationFrequency: number;
+    total: number;
 }
 
 export interface OfiNavAuditState {

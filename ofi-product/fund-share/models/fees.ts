@@ -20,31 +20,31 @@ export class ShareFeesMandatory extends DynamicFormsValidator {
         required: true,
         mltag: 'txt_fundshare_maxredfee'
     }
-    miFIDIIOngoingCharges: FormItem = {
+    mifiidChargesOngoing: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Ongoing Charges',
         required: true,
         mltag: 'txt_fundshare_mifidoncharges'
     }
-    miFIDIIOneOffCharges: FormItem = {
+    mifiidChargesOneOff: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - One-off Charges',
         required: true,
         mltag: 'txt_fundshare_mifidoneoffcharges'
     }
-    miFIDIITransactionsCosts: FormItem = {
+    mifiidTransactionCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Costs related to transactions initiated',
         required: true,
         mltag: 'txt_fundshare_mifidtranscosts'
     }
-    miFIDIIAncillaryCharges: FormItem = {
+    mifiidServicesCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Charges related to ancillary services',
         required: true,
         mltag: 'txt_fundshare_mifidanccharges'
     }
-    miFIDIIIncidentalCosts: FormItem = {
+    mifiidIncidentalCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Incidental Costs',
         required: true,

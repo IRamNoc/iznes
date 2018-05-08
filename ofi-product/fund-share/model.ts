@@ -123,11 +123,11 @@ export class FundShare {
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
             investorProfile: this.getSelectValue(this.profile.mandatory.investorProfile),
-            mifiidChargesOngoing: this.fees.mandatory.miFIDIIOngoingCharges.value(),
-            mifiidChargesOneOff: this.fees.mandatory.miFIDIIOneOffCharges.value(),
-            mifiidTransactionCosts: this.fees.mandatory.miFIDIITransactionsCosts.value(),
-            mifiidServicesCosts: this.fees.mandatory.miFIDIIAncillaryCharges.value(),
-            mifiidIncidentalCosts: this.fees.mandatory.miFIDIIIncidentalCosts.value(),
+            mifiidChargesOngoing: this.fees.mandatory.mifiidChargesOngoing.value(),
+            mifiidChargesOneOff: this.fees.mandatory.mifiidChargesOneOff.value(),
+            mifiidTransactionCosts: this.fees.mandatory.mifiidTransactionCosts.value(),
+            mifiidServicesCosts: this.fees.mandatory.mifiidServicesCosts.value(),
+            mifiidIncidentalCosts: this.fees.mandatory.mifiidIncidentalCosts.value(),
             subscriptionTradeCyclePeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -191,11 +191,11 @@ export class FundShare {
         this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
         this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
         this.setListItemPreset(this.profile.mandatory.investorProfile, fundShare.investorProfile);
-        this.fees.mandatory.miFIDIIOngoingCharges.preset = fundShare.mifiidChargesOngoing;
-        this.fees.mandatory.miFIDIIOneOffCharges.preset = fundShare.mifiidChargesOneOff;
-        this.fees.mandatory.miFIDIITransactionsCosts.preset = fundShare.mifiidTransactionCosts;
-        this.fees.mandatory.miFIDIIAncillaryCharges.preset = fundShare.mifiidServicesCosts;
-        this.fees.mandatory.miFIDIIIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
+        this.fees.mandatory.mifiidChargesOngoing.preset = fundShare.mifiidChargesOngoing;
+        this.fees.mandatory.mifiidChargesOneOff.preset = fundShare.mifiidChargesOneOff;
+        this.fees.mandatory.mifiidTransactionCosts.preset = fundShare.mifiidTransactionCosts;
+        this.fees.mandatory.mifiidServicesCosts.preset = fundShare.mifiidServicesCosts;
+        this.fees.mandatory.mifiidIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
         
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
