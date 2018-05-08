@@ -21,6 +21,7 @@
       placeholder="Select Connection"
       (selected)="writeValue($event.id)"
       (blur)="onBlur()"
+      (removed)="onRemoved($event)"
       [formControl]="relationshipSelect"
     >
     </ng-select>
@@ -32,8 +33,11 @@
       [items]="ownWalletAddressArray"
       [allowClear]="true"
       placeholder="Select Owned Address"
-      (selected)="writeValue($event.id)"
+      (selected)="writeValue($event.id)" 
       (blur)="onBlur()"
+      (removed)="onRemoved($event)"
+      (change)="writeValue($event.target.value)"
+      (blur)="onBlur()"      
       [formControl]="owndAddressSelect"
     >
     </ng-select>
