@@ -63,8 +63,8 @@ export class VariousAddressSelectComponent implements ControlValueAccessor {
         this.selectedAddressType = $event.id;
     }
 
-    // Empty value when field is cleared
-    onRemoved() {
+    // Clear value when field is cleared
+    onClearValue() {
         this.writeValue('');
     }
 
