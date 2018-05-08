@@ -140,7 +140,12 @@
 
             <div class="row">
                 <div class="form-group offset-sm-9 col-sm-3 text-right export-nav">
-                    <button class="btn btn-primary" id="exportNavList" (click)="exportCSV()" mltag="txt_exportlistascsv">Export List as CSV</button>
+                    <button class="btn btn-primary" id="exportNavList"
+                        (click)="exportCSV()"
+                        [disabled]="navListItems.length === 0"
+                        mltag="txt_exportlistascsv">
+                        Export List as CSV
+                    </button>
                 </div>
             </div>
         </clr-tab-content>

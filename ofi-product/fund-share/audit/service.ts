@@ -35,12 +35,20 @@ export class FundShareAuditService {
 
     private getRealFieldName(item: FundShareAuditDetail): void {
         _.forEach(FundShareAuditService.modelsArr, (model) => {
-            if(model[item.field]) {
-                item.mltag = model[item.field].mltag;
-                item.field = model[item.field].label;
+            let found = false;
 
-                return false;
-            }
+            _.forEach(Object.keys(model), (key: string) => {
+                if(key.toLowerCase() == item.field.toLowerCase()) {
+                    item.mltag = model[item.field].mltag;
+                    item.field = model[item.field].label;
+
+                    found = true;
+
+                    return false;
+                }
+            });
+            
+            if(found) return false;
         });
     }
 }
