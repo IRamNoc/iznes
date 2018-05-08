@@ -38,7 +38,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
-    tabDetail: any;
+    tabDetail: Array<object>;
 
     connectedWalletId: number;
     requestedWalletAddress: boolean;
@@ -58,12 +58,20 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef) {
 
         /* tab meta */
-        this.tabDetail = {
+        this.tabDetail = [{
             title: {
                 text: 'Manage sub-portfolio',
-                icon: '<i class="fa fa-id-badge">'
-            }
-        };
+                icon: 'fa-id-badge'
+            },
+            formControl: new FormGroup(
+                {
+                    'subPortfolioName': new FormControl('', [Validators.required]),
+                    'subPortfolioIban': new FormControl('', [Validators.required])
+                }
+            )
+        }];
+
+        console.log('(ch) tabDetail.title : ', this.tabDetail[0]['title'].icon);
 
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
