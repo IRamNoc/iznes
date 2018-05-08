@@ -1,9 +1,8 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-member"><i class="fa fa-users"></i> <span mltag="txt_managemember">Manage Member</span></h1>
+    <h1 id="manage-member"><i class="fa fa-address-card"></i> <span mltag="txt_managemember">Manage Member</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
-
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}" [innerHTML]="tabdata.title"></button>
@@ -67,36 +66,36 @@
                     <div class="form-horizontal">
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label class="control-label">
+                                <label class="control-label required-field" for="new-member-name">
                                     <span class="ml_translated" mltag="txt_membername">Member Name</span>
                                 </label>
-                                <div>
-                                    <input type="text" formControlName="memberName" placeholder="Member Name"
-                                           id="new-member-name" class="form-control mlp_translated"
-                                           mltag="txt_membername" maxlength="100"/>
-                                </div>
-                            </div>
+                                
+                                <input type="text" formControlName="memberName" placeholder="Member Name"
+                                        id="new-member-name" class="form-control mlp_translated"
+                                        mltag="txt_membername" maxlength="100"/>
 
+                                <span *ngIf="formControl.controls.memberName.hasError('required') && formControl.controls.memberName.touched" class="field-error"
+                                    mltag="txt_fieldisrequired">Field is required</span>
+                            </div>
                         </div>
 
                         <div class="row">
 
                             <div class="form-group col-sm-6">
-                                <label class="control-label">
+                                <label class="control-label required-field" for="new-member-email">
                                     <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
                                 </label>
-                                <div>
-                                    <input type="email" formControlName="email" name="email"
-                                           placeholder="Enter email..." class="form-control email mlp_translated"
-                                           mltag="txt_enteremail" id="new-member-email"/>
-                                </div>
+                                
+                                <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail" id="new-member-email"/>
+
+                                <span *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="field-error"
+                                    mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
                         <div class="form-group button-group">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save"
-                                                                     id="new-member-save">Save</span>
+                                <button type="submit" class="btn btn-primary" [disabled]="formControl.invalid">
+                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
                                 </button>
                             </div>
                         </div>
@@ -113,7 +112,7 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
+                            <label class="control-label required-field" for="memberName">
                                 <span class="ml_translated" mltag="txt_membername">Member Name</span>
                             </label>
                             <div>
@@ -141,6 +140,4 @@
             </form>
         </div>
     </ng-template>
-
 </div>
-

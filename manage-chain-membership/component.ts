@@ -61,7 +61,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                title: '<i class="fa search"></i> Chain Access',
+                title: '<i class="fa fa-search"></i> Search',
                 active: true
             }
         ];
@@ -91,7 +91,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
         for (const subscription of this.subscriptionsArry) {
             subscription.unsubscribe();
         }
@@ -110,7 +109,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 node: new FormControl(nodeValue, Validators.required),
             })
         );
-
     }
 
     removeMembershipItem(index) {
@@ -136,11 +134,9 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             });
             return resultList;
         }, []);
-
     }
 
     requestManagedMemberList(requestedState: boolean): void {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -155,7 +151,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {}
             ));
-
         }
     }
 
@@ -171,7 +166,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     updateChainList(chainList) {
-
         this.chainListObject = chainList;
 
         const chainListImu = fromJS(chainList);
@@ -233,7 +227,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
         const membershipValueImu = fromJS(membershipValue);
 
         const selectedMember = membershipValueImu.reduce((result, item, index) => {
-
             // Excluding specific index.
             if (excludeIndex === index) {
                 return result;
@@ -274,7 +267,6 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
             }
             return result;
         }, []);
-
     }
 
     repaintChainMembershipWrapper() {
@@ -310,33 +302,35 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     handleUpdateChainMembership() {
-        const newState = this.ngRedux.getState();
-        const currentChainMembershipListObject = getCurrentChainMembershipList(newState);
+        if (this.membershipForm.valid) {
+            const newState = this.ngRedux.getState();
+            const currentChainMembershipListObject = getCurrentChainMembershipList(newState);
 
-        const chainId = this.membershipForm.value.chain[0]['id'];
-        const toAdd = this.getChainMembershipToAdd(currentChainMembershipListObject);
-        const toDelete = this.getChainMembershipToDelete(currentChainMembershipListObject);
-        const toUpdate = this.getChainMembershipToUpdate(currentChainMembershipListObject);
+            const chainId = this.membershipForm.value.chain[0]['id'];
+            const toAdd = this.getChainMembershipToAdd(currentChainMembershipListObject);
+            const toDelete = this.getChainMembershipToDelete(currentChainMembershipListObject);
+            const toUpdate = this.getChainMembershipToUpdate(currentChainMembershipListObject);
 
-        const asyncTaskPipe = this.adminUsersService.updateMemberChainAccess(
-            {
-                chainId,
-                toUpdate,
-                toAdd,
-                toDelete
-            }
-        );
+            const asyncTaskPipe = this.adminUsersService.updateMemberChainAccess(
+                {
+                    chainId,
+                    toUpdate,
+                    toAdd,
+                    toDelete
+                }
+            );
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            () => {
-                this.showSuccessResponse('Chain Membership is updated');
-            },
-            (data) => {
-                this.showErrorResponse(data);
-                console.log(data);
-            }
-        ));
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                () => {
+                    this.showSuccessResponse('Chain Membership is updated');
+                },
+                (data) => {
+                    this.showErrorResponse(data);
+                    console.log(data);
+                }
+            ));
+        }
     }
 
     /**
@@ -421,12 +415,10 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     showErrorResponse(response) {
-
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-danger">${message}</td>
@@ -437,10 +429,8 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
     }
 
     showSuccessResponse(message) {
-
         this.alertsService.create('success', `
                     <table class="table grid">
-
                         <tbody>
                             <tr>
                                 <td class="text-center text-success">${message}</td>

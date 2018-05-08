@@ -42,7 +42,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.tabsControl = [
             {
-                title: '<i class="fa fa-chain"></i> Chains',
+                title: '<i class="fa fa-search"></i> Search',
                 chainId: -1,
                 active: true
             },
@@ -215,7 +215,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
             formControl: new FormGroup(
                 {
                     chainId: new FormControl(chain.chainId),
-                    chainName: new FormControl(chain.chainName)
+                    chainName: new FormControl('', Validators.required)
                 }
             ),
             active: false
