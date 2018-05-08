@@ -71,8 +71,6 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             )
         }];
 
-        console.log('(ch) tabDetail.title : ', this.tabDetail[0]['title'].icon);
-
         this.connectedWalletId = 0;
         this.requestedWalletAddress = false;
 
