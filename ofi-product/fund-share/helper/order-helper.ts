@@ -586,8 +586,8 @@ export class OrderHelper {
         if (!OrderHelper.isResponseGood(contractData as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(contractData);
         }
-        const walletid =  this.orderType === OrderType.Subscription ? this.investorWalletId : this.amWalletId;
-        const address =  this.orderType === OrderType.Subscription ? this.investorAddress : this.amIssuingAddress;
+        const walletid = this.amWalletId;
+        const address = this.amIssuingAddress;
         return {
             messagetype: 'tx',
             messagebody: {
@@ -600,40 +600,40 @@ export class OrderHelper {
     }
 
     getFakeDatesString() {
+        try {
+            const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
 
-    }
+            const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
 
-    getOrderDates(): VerifyResponse | OrderDates {
-        // the logic is for testing purpose, it will disable all the validation
-        if (this.disableValidation) {
-            try {
-                const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
-
-                const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
-                const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
-                const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
-
-                if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
-                    return {
-                        cutoff: moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
-                        valuation: moment(fakeValuationStr, 'YYYY-MM-DD HH:mm'),
-                        settlement: moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
-                    };
-                }else {
-                    return {
-                        cutoff: this.fakeCuoff,
-                        valuation: this.fakeValuation,
-                        settlement: this.fakeSettlement
-                    };
-                }
-
-            } catch (e) {
+            if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
+                return {
+                    cutoff: moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
+                    valuation: moment(fakeValuationStr, 'YYYY-MM-DD HH:mm'),
+                    settlement: moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
+                };
+            }else {
                 return {
                     cutoff: this.fakeCuoff,
                     valuation: this.fakeValuation,
                     settlement: this.fakeSettlement
                 };
             }
+
+        } catch (e) {
+            return {
+                cutoff: this.fakeCuoff,
+                valuation: this.fakeValuation,
+                settlement: this.fakeSettlement
+            };
+        }
+    }
+
+    getOrderDates(): VerifyResponse | OrderDates {
+        // the logic is for testing purpose, it will disable all the validation
+        if (this.disableValidation) {
+            return this.getFakeDatesString();
         }
 
         // depend on order by cutoff, valuation, and settlement date.
