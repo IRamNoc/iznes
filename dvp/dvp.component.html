@@ -1,72 +1,108 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_contracts_dvp">DVP</h1>
+    <h1>
+        <i class="fa fa-file-text-o"></i> 
+        <span mltag="txt_contracts_dvp">DVP</span>
+    </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink clrTabLinkId="link1">
-            <i class="fa fa-contracts"></i>
+            <i class="fa fa-file-text-o"></i>
             <span mltag="txt_contracts_create_dvp">DVP</span>
         </button>
 
-        <clr-tab-content *clrIfActive>
+        <clr-tab-content *clrIfActive>           
             <form [formGroup]="createContractForm" (ngSubmit)="createContract()">
-                <section class="form-block">
+                <section class="form-block">               
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="contract_creator" mltag="txt_contract_creator">Contract Creator Address</label>
+                        <label class="control-label required-field" for="contract_creator">
+                            <span class="ml_translated" mltag="txt_contract_creator">Contract Creator Address</span>
+                        </label>
+
                         <ng-select id="contract_creator"
                             [items]="addressList"
-                            [allowClear]="false"
+                            [allowClear]="true"
                             placeholder="Select Creator Address"
                             [formControl]="createContractForm.controls['creator']"
                         >
                         </ng-select>
+
+                       <span *ngIf="createContractForm.controls['creator'].hasError('required') && createContractForm.controls['creator'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
                     
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="contract_expiry_date" mltag="txt_contract_expiry_date">Expiry Date</label>
+                        <label class="control-label required-field" for="contract_expiry_date">
+                            <span class="ml_translated" mltag="txt_contract_expiry_date">Expiry Date</span>
+                        </label>
+                        
                         <input type="date" formControlName="expireDate" name="contract_expiry_date" id="contract_expiry_date" placeholder="DD-MM-YYYY" required />
+
+                        <span *ngIf="createContractForm.controls['expireDate'].hasError('required') && createContractForm.controls['expireDate'].touched"
+                            class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
                     
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="contract_expiry_time" mltag="txt_contract_expiry_time">Expiry Time</label>
+                        <label class="control-label required-field" for="contract_expiry_time">
+                            <span class="ml_translated" mltag="txt_contract_expiry_time">Expiry Time</span>
+                        </label>
+
                         <input type="time" formControlName="expireTime" name="contract_expiry_time" id="contract_expiry_time" placeholder="HH:MM" required />
+
+                        <span *ngIf="createContractForm.controls['expireTime'].hasError('required') && createContractForm.controls['expireTime'].touched"
+                            class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
-                </section>
+                </section>               
 
                 <div class="contract-party-container row">
                     <section formGroupName="{{party.id}}" class="form-block contract-party col-md-6" *ngFor="let party of parties; let idx = index;">
                         <span class="text-badge">{{party.title}}</span>
-
+                        
                         <div class="form-group col-sm-6">
-                            <various-address-select [formControl]="createContractForm.controls[party.id].controls['address']"
+                            <various-address-select 
+                                [formControl]="createContractForm.controls[party.id].controls['address']"
                                 [relationshipArray]="toRelationshipSelectItems"
                                 [ownWalletAddressArray]="addressList"
                                 [class.error]="!createContractForm.controls[party.id].controls['address'].valid &&
-                                    createContractForm.controls[party.id].controls['address'].touched">
+                                    createContractForm.controls[party.id].controls['address'].touched"
+                                 [required]="true">
                             </various-address-select>
                         </div>
 
                         <div class="form-group col-sm-6 toggle-asset" *ngIf="party.toggleAssetReturn">
-                            <label>
-                                <input type="checkbox" name="{{party.id}}_return_asset" id="{{party.id}}_return_asset" formControlName="return_asset"> Send Asset in Return?
+                            <label class="control-label required-field" for="{{party.id}}_return_asset">
+                                <input type="checkbox" name="{{party.id}}_return_asset" id="{{party.id}}_return_asset" formControlName="return_asset" required> Send Asset in Return?
                             </label>
+
+                            <span *ngIf="createContractForm.controls[party.id].controls['return_asset'].hasError('required') && createContractForm.controls[party.id].controls['return_asset'].touched"
+                                class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                         
                         <div *ngIf="isReturnAssetEnabled(party)">
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="{{party.id}}_asset" mltag="txt_contract_asset">Asset</label>
+                                <label class="control-label required-field" for="{{party.id}}_asset">
+                                    <span class="ml_translated" mltag="txt_contract_asset">Asset</span>
+                                </label>
+                                
                                 <ng-select id="{{party.id}}_asset"
                                     [items]="allInstrumentList"
-                                    [allowClear]="false"
+                                    [allowClear]="true"
                                     placeholder="Select Issuer"
                                     [formControl]="createContractForm.controls[party.id].controls['asset']">
                                 </ng-select>
-                            </div>                    
+
+                                <span *ngIf="createContractForm.controls[party.id].controls['asset'].hasError('required') && createContractForm.controls[party.id].controls['asset'].touched"
+                                    class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            </div>
                             
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="{{party.id}}_amount" mltag="txt_contract_amount">Amount</label>
-                                <input type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" formControlName="amount" />
+                                <label class="control-label required-field" for="{{party.id}}_amount">
+                                    <span class="ml_translated" mltag="txt_contract_amount">Amount</span>
+                                </label>
+
+                                <input formControlName="amount" type="number" name="{{party.id}}_amount" id="{{party.id}}_amount" required />  
+
+                               <span *ngIf="createContractForm.controls[party.id].controls['amount'].hasError('required') && createContractForm.controls[party.id].controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
                     </section>
@@ -86,7 +122,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            </form>         
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

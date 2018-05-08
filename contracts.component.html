@@ -1,10 +1,11 @@
 <div class="header-breadcrumbs">
-    <h1 mltag="txt_contracts"><i class="fa fa-book"></i>Contracts &raquo; Manage</h1>
+    <h1 mltag="txt_contracts"><i class="fa fa-book"></i>Manage Contracts</h1>
 </div>
 
 <clr-tabs *ngIf="tabs.length">
     <clr-tab *ngFor="let tab of tabs; let id = index">
-        <button clrTabLink id="tablink{{id}}" [innerHTML]="tab.title"></button>
+        <button clrTabLink id="tablink{{id}}" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
+        
         <clr-tab-content *clrIfActive="tab.active">
             <section>
                 <ng-container *ngIf="id === 0">

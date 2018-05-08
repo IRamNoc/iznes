@@ -26,7 +26,6 @@ import {ContractService} from '../services';
     styleUrls: ['dvp.component.css']
 })
 export class ContractsDvpComponent implements OnInit {
-
     createContractForm: FormGroup;
     parties: [DvpParty, DvpParty];
 
@@ -58,7 +57,6 @@ export class ContractsDvpComponent implements OnInit {
                 private alertsService: AlertsService,
                 private dvpService: DVPContractService,
                 private contractService: ContractService) {
-
     }
 
     ngOnInit() {
@@ -66,7 +64,6 @@ export class ContractsDvpComponent implements OnInit {
         this.initParties();
         this.initCreateContractForm();
     }
-
 
     /**
      * Redux
@@ -91,9 +88,13 @@ export class ContractsDvpComponent implements OnInit {
             this.requestAddressList(requested);
             this.changeDetectorRef.markForCheck();
         }));
+
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
 
-        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requested) => this.requestWalletToRelationship(requested)));
+        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requested) => {
+            this.requestWalletToRelationship(requested);
+        }));
+
         this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
             this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(toRelationshipList, this.walletDirectoryList);
             this.changeDetectorRef.markForCheck();
@@ -132,7 +133,6 @@ export class ContractsDvpComponent implements OnInit {
             InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
-
 
     /**
      * UI
@@ -239,7 +239,6 @@ export class ContractsDvpComponent implements OnInit {
             this.createContractForm.controls[field].touched;
     }
 
-
     /**
      * Create Contract
      */
@@ -259,13 +258,13 @@ export class ContractsDvpComponent implements OnInit {
     }
 
     showResponseModal(createContractResponse) {
-        //const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
+        // const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
         const expiryDate = 'Broken, Check Code';
 
         this.alertsService.create('success', `
             <table class="table grid">
                 <tbody>
-                <tr>
+                    <tr>
                         <td class="left"><b>Contract:</b></td>
                         <td>${createContractResponse.contractaddress}</td>
                     </tr>
