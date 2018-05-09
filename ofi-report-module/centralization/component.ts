@@ -20,6 +20,7 @@ import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* store */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import * as moment from 'moment';
 
 /* Types. */
 interface SelectedItem {
@@ -72,8 +73,6 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     private myDetails: any = {};
     private appConfig: any = {};
     private subscriptions: Array<any> = [];
-    private reduxUnsubscribe: Unsubscribe;
-    unsubscribe = new Subject();
 
     dataListForSearch: Array<any> = [];
 
@@ -101,11 +100,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
         /* Subscribe for this user's details. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
-            /* Assign list to a property. */
-            this.myDetails = myDetails;
-        });
-
+        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.myDetails = myDetails));
         this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
         this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
     }
@@ -239,6 +234,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                     shareName: obj.fundShareName,
                     status: 1,
                     orderType: '',
+                    dateType: 'navDate',
+                    fromDate: moment(obj.settlementDate).format('DD/MM/YYYY'),
+                    toDate: moment(obj.settlementDate).format('DD/MM/YYYY')
                 }
             };
 
@@ -290,7 +288,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.unsubscribe.next();
-        this.unsubscribe.complete();
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }

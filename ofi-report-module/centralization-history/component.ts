@@ -148,10 +148,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.OfiCentralizationHistoryObj.subscribe((requested) => this.getCentralizationHistoryFromRedux(requested)));
 
         /* Subscribe for this user's details. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((myDetails) => {
-            /* Assign list to a property. */
-            this.myDetails = myDetails;
-        });
+        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {this.myDetails = myDetails;}));
 
         this.createsearchForm();
         this.createFilterForm();
@@ -532,9 +529,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 shareName: this.baseCentralizationHistory.fundShareName,
                 status: '',
                 orderType: '',
-                dateType: 'settlementDate',
+                dateType: 'navDate',
                 fromDate: moment(navDate).format('DD/MM/YYYY'),
-                toDate: moment(navDate).format('DD/MM/YYYY'),
+                toDate: moment(navDate).format('DD/MM/YYYY')
             }
         };
         this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
@@ -583,12 +580,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     }
 
     ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this.changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        for (let key in this.subscriptions) {
-            this.subscriptions[key].unsubscribe();
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
         }
     }
 
