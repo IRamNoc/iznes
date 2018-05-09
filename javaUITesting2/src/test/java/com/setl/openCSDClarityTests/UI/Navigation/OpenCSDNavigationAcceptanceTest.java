@@ -78,7 +78,6 @@ public class OpenCSDNavigationAcceptanceTest {
         verifyCorrectPage("My Account");
     }
 
-
     @Test
     @Ignore
     public void shouldNavigateToRelationships() throws IOException, InterruptedException {
@@ -110,7 +109,6 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         verifyCorrectPage("Shares / Funds / Umbrella funds");
-
     }
 
     @Test
@@ -175,5 +173,4 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPage("corporate-actions/split");
         verifyCorrectPage("");
     }
-
 }

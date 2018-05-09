@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ public class LoginAndNavigationHelper {
 
     }
 
-    public static void navigateToPage2(String pageHref) throws InterruptedException {
+    public static void navigateToPage2(String pageHref) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement page2 = driver.findElement(By.xpath("//a[@href='#/" + pageHref + "']"));
         try {
@@ -40,20 +41,7 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToPageByID(String pageID) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        try {
-            wait.until(visibilityOfElementLocated(By.id(pageID)));
-            wait.until(elementToBeClickable(By.id(pageID)));
-        WebElement page = driver.findElement(By.id(pageID));
-            page.click();
-
-        } catch (Error e) {
-            fail(pageID + "page not present");
-        }
-    }
-
-    public static void navigateToPage(String pageHref) throws InterruptedException {
+    public static void navigateToPage(String pageHref) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -67,6 +55,19 @@ public class LoginAndNavigationHelper {
             fail(pageHref + "page not present");
         }
     }
+
+    public static void navigateToPageByID(String pageID) {
+       final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+       try {
+           wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
+           wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
+           WebElement page = driver.findElement(By.id(pageID));
+           page.click();
+       }catch (WebDriverException wde) {
+           fail(wde.getMessage());
+       }
+    }
+
 
     public static void navigateToPageXpath(String pageHref) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -334,21 +335,23 @@ public class LoginAndNavigationHelper {
     public static void navigateToNAVPage(String username, String password) throws InterruptedException {
         loginAndVerifySuccess(username, password);
         navigateToDropdown("menu-my-products");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
+        wait.until(elementToBeClickable(By.id("menu-nav")));
         navigateToPageByID("menu-nav");
         verifyCorrectPageById("Net asset value");
     }
 
-
     public static void navigateToDropdown(String dropdownID) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
-
-            wait.until(presenceOfElementLocated(By.id(dropdownID)));
-            wait.until(visibilityOfElementLocated(By.id(dropdownID)));
-            wait.until(elementToBeClickable(By.id(dropdownID)));
-        WebElement dropdown = driver.findElement(By.id(dropdownID));
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        try {
+            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(dropdownID))));
+            wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
+            WebElement dropdown = driver.findElement(By.id(dropdownID));
             dropdown.click();
-
+        }catch (WebDriverException wde) {
+            fail(wde.getMessage());
+        }
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {

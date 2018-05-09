@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.ProductModule.Funds;
+package com.setl.openCSDClarityTests.UI.MyProduct.Funds;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -8,12 +8,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestRule;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
@@ -23,7 +21,6 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewFundShareTitle;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -38,7 +35,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 
 
 
-public class OpenCSDZSharesAcceptanceTest {
+public class OpenCSD3SharesAcceptanceTest {
 
     @Rule
     public ScreenshotRule screenshotRule = new ScreenshotRule();
