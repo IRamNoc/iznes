@@ -422,6 +422,14 @@
                                 <span class="readonly-field">{{orderData.investorCompanyName}}</span>
                             </div>
                         </div>
+                        <div class="form-group col-sm-6">
+                            <label>
+                                <span mltag="txt_investor">Investor</span>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{showInvestor(orderData)}}</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="well ml-1">
                         <!-- Panel header -->
@@ -481,14 +489,6 @@
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.amCompanyName}}</span>
-                            </div>
-                        </div>
-                        <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_investor">Investor</span>
-                            </label>
-                            <div>
-                                <span class="readonly-field">{{showInvestor(orderData)}}</span>
                             </div>
                         </div>
                     </div>
