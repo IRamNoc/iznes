@@ -359,7 +359,7 @@ export class CalendarHelper {
         const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
 
         return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
-            {hour: 23 - timeZoneDiff, minute: 59, second: 59}
+            {hour: 7 - timeZoneDiff, minute: 0, second: 0}
         );
     }
 
@@ -369,14 +369,21 @@ export class CalendarHelper {
 
         const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
 
-        return cutoffDate.clone().businessAdd(this.settlementOffSet).set(
+        const settlementDate = cutoffDate.clone().businessAdd(this.settlementOffSet).set(
             {
-                hour: 23 - timeZoneDiff,
-                minute: 59,
-                second: 59
+                hour: 7 - timeZoneDiff,
+                minute: 0,
+                second: 1
             }
         );
+
+        if (settlementDate.isSame(moment(), 'day')) {
+            return moment().add(2, 'minute');
+        }
+
+        return settlementDate;
     }
+
 
     getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
         valuationDate = momentToMomentBusiness(valuationDate);
