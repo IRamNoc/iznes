@@ -89,7 +89,7 @@ export class FundShare {
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value(),
             shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.mandatory.shareClassInvestmentStatus),
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
-            launchDate: this.keyFacts.mandatory.launchDate.value(),
+            launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
@@ -158,7 +158,7 @@ export class FundShare {
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
-        this.keyFacts.mandatory.launchDate.preset = fundShare.launchDate;
+        this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);

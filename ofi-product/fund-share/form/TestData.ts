@@ -13,7 +13,7 @@ export class FundShareTestData {
         model.keyFacts.mandatory.hasCoupon.preset = true;
         (model.keyFacts.mandatory.historicOrForwardPricing.preset as any) = [{id: E.PricingTypeEnum.Historic, text: 'Historic' }];
         model.keyFacts.mandatory.isin.preset = moment().unix().toString();
-        model.keyFacts.mandatory.launchDate.preset = '2018-04-01';
+        model.keyFacts.mandatory.shareLaunchDate.preset = '2018-04-01';
         model.keyFacts.mandatory.shareClassCode.preset = 'Class A';
         (model.keyFacts.mandatory.shareClassCurrency.preset as any) = [{id: E.CurrencyEnum.EUR, text: 'EUR' }];
         (model.keyFacts.mandatory.shareClassInvestmentStatus.preset as any) = [{id: E.InvestmentStatusEnum.Open, text: 'Open' }];
