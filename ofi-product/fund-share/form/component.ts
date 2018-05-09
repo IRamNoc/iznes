@@ -70,6 +70,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb: Observable<any>;
+    @select(['user', 'siteSettings', 'production']) productionOb;
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -177,7 +178,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.fundShareDocsOb.take(2),
                 this.fundListOb.first(),
                 this.shareListObs.first(),
-                this.umbrellaFundListOb.first()
+                this.umbrellaFundListOb.first(),
+                this.productionOb.first()
             ]);
         } else {
             fork = Observable.forkJoin([
@@ -185,7 +187,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.managementCompanyAccessListOb.first(),
                 this.fundListOb.first(),
                 this.shareListObs.first(),
-                this.umbrellaFundListOb.first()
+                this.umbrellaFundListOb.first(),
+                this.productionOb.first()
             ]);
         }
 
@@ -223,6 +226,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.markForCheck();
                 this.changeDetectorRef.detectChanges();
             });
+
+        this.subscriptionsArray.push(this.productionOb.subscribe(production => this.model.isProduction = production));
     }
 
     private generateListItems(fundShareList): any[] {
