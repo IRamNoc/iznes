@@ -283,6 +283,16 @@ form, .form {
 
 }
 
+.login-container form {
+  input[type] {
+    margin: 0 0 10px 0 !important;
+  }
+  .field-error {
+    width: 100% !important;
+    margin-top: -10px;
+  }
+}
+
 .select {
   select {
     border: 1px solid #b9b9b9;
