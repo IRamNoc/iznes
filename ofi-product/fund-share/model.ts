@@ -26,6 +26,7 @@ export class FundShare {
     umbrellaFundID: number;
     fundShareId: number;
     accountId: number;
+    isProduction: boolean;
 
     fund = new ShareFund();
     umbrella = new ShareUmbrellaFund();
@@ -327,6 +328,8 @@ export class FundShare {
             hash: arr[1],
             name: arr[2]
         }
+
+        if(!this.isProduction) formItem.required = false;
     }
 
     private generateJSONString(model): string {
