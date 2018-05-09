@@ -15,18 +15,12 @@ import * as _ from 'lodash';
 // import {ChainInterface} from './interface';
 // import {ChainModel} from './model';
 
-/* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
-// Internal
 import {Subscription} from 'rxjs/Subscription';
 import {Unsubscribe} from 'redux';
-
-// Services
 import {WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
 import {MultilingualService} from '@setl/multilingual';
 
-// Store
 import {
     getWalletToRelationshipList,
     getWalletDirectoryList,
@@ -44,7 +38,6 @@ import {
 })
 
 export class EncumberAssetsComponent implements OnInit, OnDestroy {
-
     language = 'en';
 
     encumberAssetsForm: FormGroup;
@@ -104,8 +97,12 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => {
+            this.requestWalletInstruments(requestedState);
+        }));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList);
+        }));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
     }
@@ -209,8 +206,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     getAddressList(addresses: Array<any>) {
-
-        let data = [];
+        const data = [];
 
         Object.keys(addresses).map((key) => {
             data.push({
@@ -220,12 +216,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         });
 
         this.fromAddressListOption = data;
-
         this.markForCheck();
     }
 
     requestWalletAddressList(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -236,7 +230,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     requestWalletInstruments(requestedInstrumentState) {
-
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
 
@@ -248,7 +241,6 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     requestWalletLabel(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
@@ -272,7 +264,9 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     save(formValues) {
-        if (!this.encumberAssetsForm.valid) return;
+        if (!this.encumberAssetsForm.valid) {
+            return;
+        }
 
         const StartUTC_Secs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
         const EndUTC_Secs = (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ? new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;

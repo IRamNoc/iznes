@@ -9,7 +9,7 @@ import {
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 @Component({
     selector: 'app-register-asset',
@@ -82,7 +82,6 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     }
 
     requestWalletIssuer() {
-
         const walletId = this.connectedWalletId;
 
         // Set request wallet issuers flag to true, to indicate that we have already requested wallet issuer.
@@ -130,7 +129,6 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 {}
             ));
-
         }
     }
 
@@ -139,10 +137,8 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     }
 
     showResponseModal(currentRegisterInstrumentRequest) {
-
         this.alertsService.create('success', `
             <table class="table grid">
-
                 <tbody>
                     <tr>
                         <td class="left"><b>Issuer:</b></td>
@@ -163,7 +159,5 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                 </tbody>
             </table>
         `);
-
     }
-
 }

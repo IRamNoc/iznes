@@ -14,7 +14,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 @Component({
     selector: 'app-issue-asset',
@@ -33,14 +33,10 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     };
 
     walletInstrumentsSelectItems: Array<any>;
-
     walletAddressSelectItems: any;
-
     toRelationshipSelectItems: Array<any> = [];
-
     toRelationshipList = {};
     walletDirectoryList = {};
-
 
     // List of redux observable
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -78,15 +74,19 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
-            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label')
+            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
         }));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => this.requestWalletInstruments(requestedState)));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => {
+            this.requestWalletInstruments(requestedState);
+        }));
         this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
             this.walletInstrumentsSelectItems = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
-        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requestedState) => this.requestWalletToRelationship(requestedState)));
+        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requestedState) => {
+            this.requestWalletToRelationship(requestedState);
+        }));
         this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
             this.toRelationshipList = toRelationshipList;
             this.changeDetectorRef.markForCheck();
@@ -98,11 +98,12 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             // this.updateToRelationship();
         }));
 
-        this.subscriptionsArray.push(this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => this.showResponseModal(newIssueAssetRequest)));
+        this.subscriptionsArray.push(this.newIssuerAssetRequest.subscribe((newIssueAssetRequest) => {
+            this.showResponseModal(newIssueAssetRequest);
+        }));
     }
 
     ngOnInit() {
-
     }
 
     updateToRelationship() {
@@ -110,12 +111,11 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  Request wallet address list.
+     * Request wallet address list.
      *
      * @param requestedState
      */
     requestWalletAddressList(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -133,7 +133,6 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     requestWalletInstruments(requestedInstrumentState) {
-
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
 
@@ -145,7 +144,6 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     requestWalletToRelationship(requestedInstrumentState) {
-
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
 
@@ -189,7 +187,6 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 }
             ));
         }
-
     }
 
     ngOnDestroy() {
@@ -202,7 +199,6 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         if (issuerAssetResponse.needNotify) {
             this.alertsService.create('success', `
             <table class="table grid">
-
                 <tbody>
                     <tr>
                         <td class="left"><b>Issuer:</b></td>
@@ -239,6 +235,4 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(finishIssueAssetNotification());
         }
     }
-
 }
-

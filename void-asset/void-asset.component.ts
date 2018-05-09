@@ -20,6 +20,7 @@ import {PersistService} from '@setl/core-persist';
     templateUrl: './void-asset.component.html',
     styleUrls: ['./void-asset.component.css']
 })
+
 export class VoidAssetComponent implements OnInit, OnDestroy {
     // Observable subscription array.
     subscriptionsArray: Array<Subscription> = [];
