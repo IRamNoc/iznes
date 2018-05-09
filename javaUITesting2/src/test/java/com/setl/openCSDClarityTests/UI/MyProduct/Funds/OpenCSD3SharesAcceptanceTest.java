@@ -11,16 +11,19 @@ import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.security.Key;
 import java.sql.SQLException;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewFundShareTitle;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -28,6 +31,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -70,21 +74,23 @@ public class OpenCSD3SharesAcceptanceTest {
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
         selectFundBtn.click();
         try {
-            assertTrue(driver.findElement(By.id("saveFundShareTop")).isDisplayed());
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
         }catch (Exception e){
             fail("not present");
         }
         driver.findElement(By.id("fundShareName")).sendKeys("TestShareName1");
-        driver.findElement(By.id("isin")).sendKeys("6116");
+        driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
+        driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("launchDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("aumClass")).sendKeys("2");
-        driver.findElement(By.id("nosClass")).sendKeys("2");
-        driver.findElement(By.id("valuationNAV")).sendKeys("2");
-        driver.findElement(By.id("aumClassDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("nosClassDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("valuationNAVDate")).sendKeys("2019-04-10");
-        openDropdownAndSelectOption("shareClassCode", 1);
+        driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
+        driver.findElement(By.id("isin")).sendKeys("6116");
+        //driver.findElement(By.id("aumClass")).sendKeys("2");
+        //driver.findElement(By.id("nosClass")).sendKeys("2");
+        //driver.findElement(By.id("valuationNAV")).sendKeys("2");
+        //driver.findElement(By.id("aumClassDate")).sendKeys("2019-04-10");
+        //driver.findElement(By.id("nosClassDate")).sendKeys("2019-04-10");
+        //driver.findElement(By.id("valuationNAVDate")).sendKeys("2019-04-10");
+        driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
         openDropdownAndSelectOption("status", 1);
@@ -123,25 +129,25 @@ public class OpenCSD3SharesAcceptanceTest {
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys("testRedemption");
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
-        openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
-        openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
-        assertClassRequiredIsPresent("tabCalendarButton");
+        //openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
+        //openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
+        //assertClassRequiredIsPresent("tabCalendarButton");
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
         assertHiddenAttributeIsPresent("tabCalendarButton");
         //FEES
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleFeesMandatory")).isDisplayed());
+        //assertTrue(driver.findElement(By.id("toggleFeesMandatory")).isDisplayed());
         driver.findElement(By.id("maxManagementFee")).sendKeys("1");
         driver.findElement(By.id("maxSubscriptionFee")).sendKeys("1");
         driver.findElement(By.id("maxRedemptionFee")).sendKeys("1");
-        driver.findElement(By.id("miFIDIIOngoingCharges")).sendKeys("1");
-        driver.findElement(By.id("miFIDIIOneOffCharges")).sendKeys("1");
-        driver.findElement(By.id("miFIDIITransactionsCosts")).sendKeys("1");
-        driver.findElement(By.id("miFIDIIAncillaryCharges")).sendKeys("1");
+        //driver.findElement(By.id("miFIDIIOngoingCharges")).sendKeys("1");
+        //driver.findElement(By.id("miFIDIIOneOffCharges")).sendKeys("1");
+        //driver.findElement(By.id("miFIDIITransactionsCosts")).sendKeys("1");
+        //driver.findElement(By.id("miFIDIIAncillaryCharges")).sendKeys("1");
         assertClassRequiredIsPresent("tabFeesButton");
-        driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
+        //driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
         //PROFILE
         try {
@@ -152,21 +158,19 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("investorProfile", 1);
         assertHiddenAttributeIsPresent("tabProfileButton");
         //DOCUMENTS
+        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
         try {
-            driver.findElement(By.id("tabDocumentsButton")).click();
-        }catch(Exception e){
-            fail(e.getMessage());
-        }
-        assertTrue(driver.findElement(By.id("toggleDocumentsMandatory")).isDisplayed());
-        try {
-            //driver.setFileDetector(new LocalFileDetector());
-            driver.findElement(By.cssSelector("#prospectus")).sendKeys("/Users/jordanmiller/Downloads/121212.jpg");
-            //driver.findElement(By.xpath("//*[@id=\"prospectus\"]")).sendKeys("/Users/jordanmiller/Downloads/121212.jpg");
+            scrollElementIntoViewById("saveFundShareBottom");
+            waits.until(visibilityOfElementLocated(By.id("saveFundShareBottom")));
+            waits.until(elementToBeClickable(driver.findElement(By.id("saveFundShareBottom"))));
+            driver.findElement(By.id("saveFundShareBottom")).click();
         }catch (Exception e){
-            fail(e.getMessage());
+            System.out.println(e.getMessage());
         }
-
-
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
+        assertTrue(popupSubheading.contains("info"));
+        waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
     }
 
 }
