@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {AbstractControl, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {
     InitialisationService, MyWalletsService, WalletNodeRequestService,
     WalletnodeTxService
@@ -14,7 +14,7 @@ import {
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import {Subscription} from 'rxjs/Subscription';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 @Component({
     selector: 'app-register-issuer',
@@ -25,11 +25,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     // Observable subscription array.
     subscriptionsArray: Array<Subscription> = [];
 
-    walletAddressSelectItems: any;
-
     registerIssuerForm: FormGroup;
-    issuerIdentifier: AbstractControl;
-    issuerAddress: AbstractControl;
+    walletAddressSelectItems: any;
     private connectedWalletId: number;
 
     // List of redux observable
@@ -44,7 +41,6 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
                 private _changeDetectorRef: ChangeDetectorRef,
-                private fb: FormBuilder,
                 private myWalletService: MyWalletsService,
                 private _persistService: PersistService) {
 
@@ -52,26 +48,21 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
         this.updateState();
 
         /**
-         * Form control setup
+         * Register Issuer form
          */
-        const formGroup = fb.group({
-            'issueIdentifier': ['', Validators.required],
-            'issuerAddress': ['', Validators.required]
+        const formGroup = new FormGroup({
+            issueIdentifier: new FormControl('', Validators.required),
+            issuerAddress: new FormControl('', Validators.required)
         });
 
         this.registerIssuerForm = this._persistService.watchForm('assetServicing/registerIssuer', formGroup);
-
-        this.issuerIdentifier = this.registerIssuerForm.controls['issueIdentifier'];
-        this.issuerAddress = this.registerIssuerForm.controls['issuerAddress'];
 
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
     }
 
-
     ngOnInit() {
-
     }
 
     updateState() {
@@ -98,7 +89,6 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     }
 
     requestWalletAddressList(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -115,14 +105,12 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
         }
     }
 
-    registerIssuer(formValue) {
+    registerIssuer() {
         if (this.registerIssuerForm.valid) {
-            const issuerIdentifier = formValue.issueIdentifier;
-            const issuerAddressSelectedArr = formValue.issuerAddress;
+            const issuerIdentifier = this.registerIssuerForm.value.issueIdentifier;
+            const issuerAddressSelectedArr = this.registerIssuerForm.value.issuerAddress;
             const issuerAddress = issuerAddressSelectedArr[0].id;
             const walletId = this.connectedWalletId;
-
-            // Send register issuer request.
 
             // Create a saga pipe.
             const asyncTaskPipe = this.walletnodeTxService.registerIssuer({
@@ -141,9 +129,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 [REGISTER_ISSUER_SUCCESS],
                 [REGISTER_ISSUER_FAIL],
                 asyncTaskPipe, {}));
-
         }
-        return false;
     }
 
     ngOnDestroy() {
@@ -155,10 +141,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
     }
 
     showResponseModal(currentRegisterIssuerRequest) {
-
         this.alertsService.create('success', `
             <table class="table grid">
-
                 <tbody>
                     <tr>
                         <td class="left"><b>Issuer:</b></td>
@@ -172,11 +156,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                         <td class="left"><b>Tx hash:</b></td>
                         <td>${currentRegisterIssuerRequest.txHash.substring(0, 10)}...</td>
                     </tr>
-
                 </tbody>
             </table>
         `);
-
     }
-
 }

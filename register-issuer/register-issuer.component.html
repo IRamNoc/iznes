@@ -7,25 +7,35 @@
         <button clrTabLink id="testlinkreg">
             <i class="fa fa-plus-circle"></i> <span mltag="txt_newissuer">New Issuer</span></button>
         <clr-tab-content *clrIfActive>
-            <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer(registerIssuerForm.value)">
+            <form [formGroup]="registerIssuerForm" (ngSubmit)="registerIssuer()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <label for="issuer-identifier" mltag="txt_issueridentifier">Issuer Identifier</label>
-                        <input type="text" id="issuer-identifier" placeholder="Issuer Identifier" size="45"
-                               [formControl]="issuerIdentifier" mltag="txt_issueridentifier"/>
+                        <label class="control-label required-field" for="issuer-identifier" mltag="txt_issueridentifier">Issuer Identifier</label>
+                        <input type="text" 
+                                id="issuer-identifier" 
+                                placeholder="Issuer Identifier" 
+                                size="45"
+                                [formControl]="registerIssuerForm.controls['issueIdentifier']" 
+                                [class.error]="!registerIssuerForm.controls['issueIdentifier'].valid && registerIssuerForm.controls['issueIdentifier'].touched"
+                                mltag="txt_issueridentifier" />
+                        
+                        <span *ngIf="registerIssuerForm.controls['issueIdentifier'].hasError('required') && registerIssuerForm.controls['issueIdentifier'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
+
                     <div class="form-group">
-                        <label class="control-label" mltag="txt_issueraddress">Issuer Address</label>
+                        <label class="control-label required-field" mltag="txt_issueraddress">Issuer Address</label>
                         <ng-select
                                 [items]="walletAddressSelectItems"
                                 [allowClear]="true"
                                 placeholder="Select Issuer Address"
-                                [formControl]="issuerAddress"
-
+                                [formControl]="registerIssuerForm.controls['issuerAddress']"
                                 mltag="txt_selectissueraddress">
                         </ng-select>
+
+                        <span *ngIf="registerIssuerForm.controls['issuerAddress'].hasError('required') && registerIssuerForm.controls['issuerAddress'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
-                    <button type="submit" class="btn btn-primary" mltag="txt_registerissuer">Register Issuer</button>
+
+                    <button type="submit" class="btn btn-primary" mltag="txt_registerissuer" [disabled]="registerIssuerForm.invalid">Register Issuer</button>
                 </section>
             </form>
         </clr-tab-content>

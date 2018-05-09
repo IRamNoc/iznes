@@ -10,32 +10,33 @@
         <clr-tab-content *clrIfActive="">
             <!-- FORM -->
             <form [formGroup]="unencumberAssetsForm" novalidate (ngSubmit)="save(unencumberAssetsForm.value)">
-                <section class="form-block">                    
+                <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="asset" mltag="txt_asset">Asset</label>
+                            <label class="control-label required-field" for="asset" mltag="txt_asset">Asset</label>
                             <ng-select id="asset"
-                                       [items]="assetListOption"
-                                       formControlName="asset"
-                                       placeholder="Select"
-                                       mltag="txt_select">
+                                        [items]="assetListOption"
+                                        [allowClear]="true"
+                                        formControlName="asset"
+                                        placeholder="Select"
+                                        mltag="txt_select">
                             </ng-select>
                             <span *ngIf="unencumberAssetsForm.controls.asset.hasError('required') && unencumberAssetsForm.controls.asset.touched"
-                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="fromAddress" mltag="txt_asset">From Address</label>
+                            <label class="control-label required-field" for="fromAddress" mltag="txt_asset">From Address</label>
                             <ng-select id="fromAddress"
-                                       [items]="fromAddressListOption"
-                                       formControlName="fromAddress"
-                                       placeholder="Select"
-                                       mltag="txt_select">
+                                        [items]="fromAddressListOption"
+                                        [allowClear]="true"
+                                        formControlName="fromAddress"
+                                        placeholder="Select"
+                                        mltag="txt_select">
                             </ng-select>
-                            <span *ngIf="unencumberAssetsForm.controls.fromAddress.hasError('required') && unencumberAssetsForm.controls.fromAddress.touched"
-                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>                          
+                            <span *ngIf="unencumberAssetsForm.controls.fromAddress.hasError('required') && unencumberAssetsForm.controls.fromAddress.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -43,20 +44,20 @@
 
                     <div class="row">
                         <div class="col-sm-6 pull-left">
-                            <div class="text-badge" for="toAddress" mltag="txt_beneficiary">Beneficiary</div>                           
+                            <div class="text-badge" for="toAddress" mltag="txt_beneficiary">Beneficiary</div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-sm-6">
+                        <div class="form-group">
                             <various-address-select [formControl]="unencumberAssetsForm.controls['toAddress']"
                                                     [relationshipArray]="toRelationshipSelectItems"
                                                     [ownWalletAddressArray]="fromAddressListOption"
                                                     [class.error]="!unencumberAssetsForm.controls['toAddress'].valid && unencumberAssetsForm.controls['toAddress'].touched"
                                                     [required]="true">
-                            </various-address-select>
-                            <span *ngIf="unencumberAssetsForm.controls.toAddress.hasError('required') && unencumberAssetsForm.controls.toAddress.touched"
-                                  class="text-danger" mltag="txt_thisfieldisrequired">Field is required</span>                          
+                            </various-address-select>                            
+                            <span *ngIf="unencumberAssetsForm.controls.toAddress.hasError('required') && !unencumberAssetsForm.controls.toAddress.pristine"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -64,13 +65,15 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="required-field" for="amount">Amount</label>
-                            <input type="number" id="amount" class="form-control" formControlName="amount"
-                                   placeholder="Amount" mltag="txt_amount">
-                            <div *ngIf="unencumberAssetsForm.controls.amount.hasError('required') && unencumberAssetsForm.controls.amount.touched"
-                                 class="text-danger">
-                                <span mltag="txt_thisfieldisrequired">This field is required</span>
-                            </div>
+                            <label class="control-label required-field" for="amount">Amount</label>
+                            <input type="number" 
+                                    id="amount" 
+                                    class="form-control" 
+                                    formControlName="amount"
+                                    placeholder="Amount" 
+                                    mltag="txt_amount">
+                            <span *ngIf="unencumberAssetsForm.controls.amount.hasError('required') && unencumberAssetsForm.controls.amount.touched"
+                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -79,8 +82,10 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="reference">Reference</label>
-                            <input type="text" id="reference" class="form-control" formControlName="reference"
-                                   placeholder="Reference" mltag="txt_reference">
+                            <input type="text" id="reference" 
+                                    class="form-control" 
+                                    formControlName="reference"
+                                    placeholder="Reference" mltag="txt_reference">
                         </div>
                     </div>
 
@@ -88,9 +93,9 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary">
+                            <button id="unencumberAssetsBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="unencumberAssetsForm.invalid">
                                 <span mltag="txt_unencumberassets">Unencumber Assets</span>
-                            </button>                           
+                            </button>
                         </div>
                     </div>
                 </section>

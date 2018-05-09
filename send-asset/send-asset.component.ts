@@ -14,7 +14,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
-import {PersistService} from "@setl/core-persist";
+import {PersistService} from '@setl/core-persist';
 
 @Component({
     selector: 'app-send-asset',
@@ -22,11 +22,8 @@ import {PersistService} from "@setl/core-persist";
     styleUrls: ['./send-asset.component.css']
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
-
     sendAssetForm: FormGroup;
-
     subscriptionsArray: Array<Subscription> = [];
-
     connectedWalletId: number;
     allInstrumentList: Array<any>;
     addressList: any;
@@ -90,7 +87,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
 
-        this.subscriptionsArray.push(this.newSendAssetRequest.subscribe(newSendAssetRequest => this.showResponseModal(newSendAssetRequest)));
+        this.subscriptionsArray.push(this.newSendAssetRequest.subscribe(newSendAssetRequest => {
+            this.showResponseModal(newSendAssetRequest);
+        }));
     }
 
     ngOnInit() {
@@ -231,37 +230,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         return dropdownItems;
     }
 
-    getError(): any {
-        if (this.fieldHasError('asset')) {
-            return {
-                mltag: 'txt_assetisrequired',
-                text: 'Asset is Required'
-            }
-        } else if (this.fieldHasError('assetAddress')) {
-            return {
-                mltag: 'txt_assetisrequired',
-                text: 'Asset Address is Required'
-            }
-        } else if (this.fieldHasError('recipient')) {
-            return {
-                mltag: 'txt_recipientisrequired',
-                text: 'Recipient is Required'
-            }
-        } else if (this.fieldHasError('amount')) {
-            return {
-                mltag: 'txt_amountisrequired',
-                text: 'Amount is Required'
-            }
-        } else {
-            return false;
-        }
-    }
-
-    fieldHasError(field: string): boolean {
-        return !this.sendAssetForm.controls[field].valid &&
-            this.sendAssetForm.controls[field].touched;
-    }
-
     ngOnDestroy() {
         this.reduxUnsubscribe();
 
@@ -269,5 +237,4 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
     }
-
 }

@@ -12,8 +12,8 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
 import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs';
-import {PersistService} from "@setl/core-persist";
+import {Observable} from 'rxjs/Observable';
+import {PersistService} from '@setl/core-persist';
 
 @Component({
     selector: 'app-request-asset',
@@ -21,18 +21,13 @@ import {PersistService} from "@setl/core-persist";
     styleUrls: ['./request-asset.component.css']
 })
 export class RequestAssetComponent implements OnInit, OnDestroy {
-
-    requestAssetForm: FormGroup;
-
     subscriptionsArray: Array<Subscription> = [];
 
     connectedWalletId: number;
-
+    requestAssetForm: FormGroup;
     allInstrumentList: Array<any>;
-
     walletAddressList: Array<any>;
     walletRelationshipType: Array<any>;
-
     requestType: number;
     fromRelationship: number;
     walletFrom: number;
@@ -74,7 +69,9 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     private initAssetSubscriptions(): void {
         this.subscriptionsArray.push(
             this.requestedAllInstrumentOb.subscribe((requested) => {
-                if (!requested) InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
+                if (!requested) {
+                    InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
+                }
             }),
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
@@ -107,7 +104,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
         const namespace = fullAssetIdSplit.issuer;
         const instrument = fullAssetIdSplit.instrument;
-
         const amount = this.requestAssetForm.get('amount').value;
 
         const actionConfig: MessageActionsConfig = new MessageActionsConfig();
@@ -115,10 +111,10 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
 
         // Add the action button that will apear on the email
         actionConfig.actions.push({
-            text: "Transfer Asset",
-            text_mltag: "txt_transferasset",
-            styleClasses: "btn-primary",
-            messageType: "tx",
+            text: 'Transfer Asset',
+            text_mltag: 'txt_transferasset',
+            styleClasses: 'btn-primary',
+            messageType: 'tx',
             payload: {
                 topic: 'astra',
                 walletid: this.connectedWalletId,
@@ -167,7 +163,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>`);
-            console.log("transfer request email failed", e);
+            console.log('transfer request email failed', e);
         });
     }
 
@@ -176,5 +172,4 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
     }
-
 }

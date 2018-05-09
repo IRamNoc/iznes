@@ -15,18 +15,12 @@ import * as _ from 'lodash';
 // import {ChainInterface} from './interface';
 // import {ChainModel} from './model';
 
-/* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-
-// Internal
 import {Subscription} from 'rxjs/Subscription';
 import {Unsubscribe} from 'redux';
-
-// Services
 import {WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
 import {MultilingualService} from '@setl/multilingual';
 
-// Store
 import {
     getWalletToRelationshipList,
     getWalletDirectoryList,
@@ -44,12 +38,10 @@ import {
 })
 
 export class UnencumberAssetsComponent implements OnInit, OnDestroy {
-
     language = 'en';
 
     unencumberAssetsForm: FormGroup;
     isUnencumberEnd = false;
-
     assetListOption = [];
     fromAddressListOption = [];
     toAddressListOption = [];
@@ -171,7 +163,6 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     getAddressList(addresses: Array<any>) {
-
         const data = [];
 
         Object.keys(addresses).map((key) => {
@@ -182,12 +173,10 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         });
 
         this.fromAddressListOption = data;
-
         this.markForCheck();
     }
 
     requestWalletAddressList(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
@@ -198,7 +187,6 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     requestWalletInstruments(requestedInstrumentState) {
-
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
 
@@ -210,7 +198,6 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     requestWalletLabel(requestedState: boolean) {
-
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
