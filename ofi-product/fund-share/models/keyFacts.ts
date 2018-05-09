@@ -38,7 +38,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_substartdate'
     }
-    launchDate: FormItem = {
+    shareLaunchDate: FormItem = {
         type: FormItemType.date,
         label: 'Share Class Launch Date',
         required: true,
