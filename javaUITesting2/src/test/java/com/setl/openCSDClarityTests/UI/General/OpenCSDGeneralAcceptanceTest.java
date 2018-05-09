@@ -197,10 +197,10 @@ public class OpenCSDGeneralAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
-        String userDetails [] = generateUserDetails();
+        String userDetails[] = generateUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "password");
         logout();
-        loginAndUpdateMyAccount(userDetails[0],"password", "Jordan", "Miller");
+        loginAndUpdateMyAccount(userDetails[0], "password", "Jordan", "Miller");
         logout();
         loginAndAssertMyInformation(userDetails[0], "password", "Jordan", "Miller");
     }
@@ -215,29 +215,29 @@ public class OpenCSDGeneralAcceptanceTest {
 
         try {
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-            WebElement login =  driver.findElement(By.id("login-submit"));
+            WebElement login = driver.findElement(By.id("login-submit"));
             wait.until(visibilityOf(login));
             wait.until(elementToBeClickable(login));
 
 
         } catch (Exception e) {
-            fail("Login button not available " +  e.getMessage());
+            fail("Login button not available " + e.getMessage());
         }
 
         loginAndVerifySuccessAdmin(username, password);
 
 
-           try {
-               WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
-               WebElement topBarAcc = driver.findElement(By.id("topBarMyAccount"));
-               wait1.until(visibilityOf(topBarAcc));
-               wait1.until(elementToBeClickable(topBarAcc));
-               topBarAcc.click();
+        try {
+            WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
+            WebElement topBarAcc = driver.findElement(By.id("topBarMyAccount"));
+            wait1.until(visibilityOf(topBarAcc));
+            wait1.until(elementToBeClickable(topBarAcc));
+            topBarAcc.click();
 
-            }catch (Exception e1) {
-               fail("My Account not available" + e1.getMessage());
+        } catch (Exception e1) {
+            fail("My Account not available" + e1.getMessage());
 
-               }
+        }
 
 
         driver.findElement(By.id("udDisplayName")).clear();
@@ -271,9 +271,9 @@ public class OpenCSDGeneralAcceptanceTest {
         loginAndVerifySuccessAdmin(username, password);
         waitForHomePageToLoad();
         driver.findElement(By.id("dropdown-user")).click();
-        try{
+        try {
             driver.findElement(By.id("top-menu-my-info")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
         String firstnameMyInfo = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
@@ -342,7 +342,7 @@ public class OpenCSDGeneralAcceptanceTest {
         try {
             driver.findElement(By.id("top-menu-invite-investor")).click();
 
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
         wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
@@ -360,7 +360,7 @@ public class OpenCSDGeneralAcceptanceTest {
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(Keys.ENTER);
 
 
-            wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
+        wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
 
         try {
             String success = driver.findElement(By.className("jaspero__dialog-title")).getText();
@@ -406,9 +406,9 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public static void clickForgottenPassword(String email) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement forgottenPassword = driver.findElement(By.id("forgotten-password-link"));
-        wait.until(visibilityOf(forgottenPassword));
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("forgotten-password-link")));
+        wait.until(elementToBeClickable(By.id("forgotten-password-link")));
         try {
             driver.findElement(By.id("forgotten-password-link")).click();
             driver.findElement(By.xpath("//*[@id=\"forgotten-password-link\"]")).click();
@@ -458,9 +458,9 @@ public class OpenCSDGeneralAcceptanceTest {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
         try {
-        wait.until(visibilityOf(accountTypeCaret));
-        wait.until(elementToBeClickable(accountTypeCaret));
-        accountTypeCaret.click();
+            wait.until(visibilityOf(accountTypeCaret));
+            wait.until(elementToBeClickable(accountTypeCaret));
+            accountTypeCaret.click();
 
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
@@ -488,10 +488,10 @@ public class OpenCSDGeneralAcceptanceTest {
         Thread.sleep(1500);
         try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/div/input")).sendKeys("investor");
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
-            try {
+        try {
             driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
@@ -529,9 +529,9 @@ public class OpenCSDGeneralAcceptanceTest {
     public static void verifyMessageHasBeenReceived(String recipientUsername, String recipientPassword, String subject) throws InterruptedException, IOException {
         loginAndVerifySuccess(recipientUsername, recipientPassword);
         waitForHomePageToLoad();
-        try{
+        try {
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("couldnt navigate to messages " + e.getMessage());
         }
         assertTrue(driver.findElement(By.id("messagescompose")).isDisplayed());
@@ -564,8 +564,8 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     public void checkAlert() {
-            WebDriverWait wait = new WebDriverWait(driver, 10);
-            wait.until(ExpectedConditions.alertIsPresent());
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.alertIsPresent());
         try {
             Alert alert = driver.switchTo().alert();
             alert.accept();
