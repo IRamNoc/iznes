@@ -3,7 +3,7 @@ import {NgRedux} from '@angular-redux/store';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-wallet-holding';
 import {Observable} from 'rxjs/Observable';
-import {isEmpty} from 'lodash';
+import {isEmpty, isArray, some} from 'lodash';
 import {InitialisationService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
 import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
 import {
@@ -19,6 +19,7 @@ import {WalletIssuerDetail} from '@setl/core-store/assets/my-issuers';
 import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/distinctUntilChanged';
 import {Transaction} from '@setl/core-store/wallet/transactions/model';
 import {TransactionsByAsset} from '@setl/core-store/wallet/transactions';
 
@@ -49,22 +50,37 @@ export class ReportingService {
 
     initialised$: Observable<any>;
 
+    private walletHoldingRequested$;
+    private walletIssuerRequested$;
+    private labelRequested$;
+    private addressesRequested$;
+    private connectedWalletId$;
+    private connectedChain$;
+    private myChainAccess$;
+    private walletHoldingByAsset$: Observable<MyWalletHoldingState>;
+    private walletIssuerDetail$;
+    private walletList$;
+    private addressList$;
+    private issuerList$;
+
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private myWalletService: MyWalletsService
     ) {
-        const connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
-        const connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
-        const myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
-        const walletHoldingRequested$ = this.ngRedux.select(['wallet', 'myWalletHolding', 'requested']);
-        const walletHoldingByAsset$: Observable<MyWalletHoldingState> = this.ngRedux.select(['wallet', 'myWalletHolding']);
+        this.connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
+        this.connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
+        this.myChainAccess$ = this.ngRedux.select(['chain', 'myChainAccess', 'myChainAccess']);
+        this.walletHoldingByAsset$ = this.ngRedux.select(['wallet', 'myWalletHolding']);
 
-        const walletIssuerRequested$ = this.ngRedux.select(['asset', 'myIssuers', 'requestedWalletIssuer']);
-        const walletIssuerDetail$ = this.ngRedux.select(['asset', 'myIssuers', 'walletIssuerDetail']);
-        const walletList$ = this.ngRedux.select(['wallet', 'walletDirectory', 'walletList']);
-        const addressList$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'addressList']);
-        const labelRequested$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'requestedLabel']);
-        const issuerList$ = this.ngRedux.select(['asset', 'myIssuers', 'issuerList']);
+        this.walletIssuerDetail$ = this.ngRedux.select(['asset', 'myIssuers', 'walletIssuerDetail']);
+        this.walletList$ = this.ngRedux.select(['wallet', 'walletDirectory', 'walletList']);
+        this.addressList$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'addressList']);
+        this.issuerList$ = this.ngRedux.select(['asset', 'myIssuers', 'issuerList']);
+
+        this.walletHoldingRequested$ = this.ngRedux.select(['wallet', 'myWalletHolding', 'requested']);
+        this.walletIssuerRequested$ = this.ngRedux.select(['asset', 'myIssuers', 'requestedWalletIssuer']);
+        this.labelRequested$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'requestedLabel']);
+        this.addressesRequested$ = this.ngRedux.select(['wallet', 'myWalletAddress', 'requestedCompleteAddresses']);
 
         this.allTransactions$ = this.ngRedux.select(['wallet', 'transactions', 'all']);
         this.transactionsByAsset$ = this.ngRedux.select(['wallet', 'transactions', 'byAsset']);
@@ -76,98 +92,115 @@ export class ReportingService {
 
         this.initialised$ = initialisedSubject.asObservable();
 
-        let trigger = 0; // Used to determine which observer has triggered CombineLatest()
-
         this.onLoad$ = [
-            connectedWalletId$.filter(id => id > 0).do(() => trigger = 1),
-            connectedChain$.filter(id => id > 0).do(() => trigger = 2),
-            myChainAccess$.filter(chainAccess => !isEmpty(chainAccess)).do(() => trigger = 3),
-            walletList$.do(() => trigger = 4),
-            addressList$.do(() => trigger = 5)
+            this.myChainAccess$.filter(chainAccess => !isEmpty(chainAccess)),
+            this.walletList$,
+            this.addressList$
         ];
 
-        let requested = 0;
+        const idStream$ = Observable
+            .combineLatest(
+                [
+                    this.connectedWalletId$.filter(id => id > 0).distinctUntilChanged(),
+                    this.connectedChain$.filter(id => id > 0).distinctUntilChanged()
+                ]
+            )
+            .do(([connectedWalletId, connectedChainId]) => {
+                this.connectedWalletId = connectedWalletId;
+                this.connectedChainId = connectedChainId;
+                this.requestWalletData();
+            })
 
-        Observable.combineLatest(this.onLoad$)
-            .subscribe((subs) => {
-                this.connectedWalletId = subs[0];
-                this.connectedChainId = subs[1];
-                this.myChainAccess = subs[2][this.connectedChainId];
-                this.walletInfo = subs[3][this.connectedWalletId];
-                this.addressList = subs[4];
+        const dataStream$ = Observable
+            .combineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
+                return [...ids, ...rest];
+            })
+            .filter(([a,b,c,d, addressList]) => !isEmpty(addressList))
+        ;
+        dataStream$.subscribe(([connectedWalletId, connectedChainId, chainAccess, walletList, addressList]) => {
+            this.myChainAccess = chainAccess[this.connectedChainId];
+            this.walletInfo = walletList[this.connectedWalletId];
+            this.addressList = addressList;
 
-                if (!requested) {
-                    this.requestWalletData();
-                }
-                // Increment on first run, after that, only increment when addressList is updated.
-                if (requested === 0 || requested > 0 && trigger === 5) {
-                    requested++;
-                }
-                if (
-                    (this.addressList.length === 0 && requested > 1)
-                    || (this.addressList.constructor !== Array
-                    && Object.keys(this.addressList).length
-                    && Object.keys(this.addressList)[0] in this.addressList
-                    && 'label' in this.addressList[Object.keys(this.addressList)[0]])
-                ) {
-                    // Only initialise after we have address labels (or there are no address labels after requesting them...)
-                    initialisedSubject.next(true);
-                }
-            });
+            initialisedSubject.next(true);
+        });
+
+        const requestedStream$ = Observable
+            .combineLatest(idStream$, this.labelRequested$, this.addressesRequested$)
+            .filter(([ids, labelRequested, addressesRequested]) => labelRequested && addressesRequested)
+            .subscribe(() => {
+                initialisedSubject.next(true);
+            })
+        ;
 
         this.initialised$.filter(init => !!init).first().subscribe(() => {
-
             this.getTransactionsFromWalletNode();
-            walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
-            walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
-            labelRequested$.filter(req => req === false).subscribe(() => { this.requestWalletData() });
+            this.initRefetchData();
+            this.initSubscriptions();
+        });
+    }
 
-            const filtered$ = walletHoldingByAsset$
-                .filter((wallets: MyWalletHoldingState) => {
-                    return !!wallets && !isEmpty(wallets.holdingByAsset);
+    private initRefetchData() {
+        this.walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
+        this.walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
+        this.labelRequested$.filter(req => req === false).subscribe(() => this.requestWalletData());
+    }
+
+    public initSubscriptions(){
+        const filteredWalletHolding$ = this.walletHoldingByAsset$
+            .filter((wallets: MyWalletHoldingState) => {
+                return !!wallets && !isEmpty(wallets.holdingByAsset);
+            })
+        ;
+        const combined$ = Observable.combineLatest(filteredWalletHolding$, this.addressList$);
+        combined$.subscribe(([wallets, addresses]) => {
+            this.getBreakdownData(wallets, addresses);
+        });
+
+        this.connectedWalletId$.subscribe((connectedWalletId: number) => {
+            this.connectedWalletId = connectedWalletId;
+            this.refreshDataSources();
+        });
+
+        const combinedWallet$ = Observable.combineLatest(this.walletIssuerDetail$, this.holdingsByAssetSubject);
+        combinedWallet$.subscribe(([walletIssuerDetail, holdingsByAsset]) => this.handleWalletIssuerDetail(<WalletIssuerDetail>walletIssuerDetail, holdingsByAsset));
+    }
+
+    private handleWalletIssuerDetail(walletIssuerDetail: WalletIssuerDetail, holdingsByAsset) {
+        const issues = holdingsByAsset;
+        const formatted = issues
+            .filter((issue) => {
+                return issue.asset.split('|')[0] === walletIssuerDetail.walletIssuer;
+            })
+            .map((issue) => {
+                return {
+                    asset: issue.asset,
+                    total: -issue.breakdown[0].free,
+                    encumbered: issue.totalencumbered,
+                    free: issue.total - issue.totalencumbered
+                };
+            });
+
+        this.walletIssuerDetailSubject.next(formatted);
+
+    }
+
+    private getBreakdownData(wallets, addresses) {
+        if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
+            let next = Object
+                .getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
+                .map((key) => {
+                    const asset = wallets.holdingByAsset[this.connectedWalletId][key];
+
+                    // Merge in address labels
+                    asset.breakdown = asset.breakdown.map(breakdown => ({...breakdown, ...addresses[breakdown.addr]}));
+
+                    return asset;
                 })
             ;
-            const combined$ = Observable.combineLatest(filtered$, addressList$);
-            combined$.subscribe(([wallets, addresses]) => {
-                if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
-                    this.holdingsByAssetSubject.next(
-                        Object.getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
-                            .map((key) => {
-                                const asset = wallets.holdingByAsset[this.connectedWalletId][key];
+            this.holdingsByAssetSubject.next(next);
+        }
 
-                                // Merge in address labels
-                                asset.breakdown = asset.breakdown.map(b => ({...b, ...this.addressList[b.addr]}));
-
-                                return asset;
-                            })
-                    );
-                }
-            });
-
-            connectedWalletId$.subscribe((connectedWalletId: number) => {
-                this.connectedWalletId = connectedWalletId;
-                this.refreshDataSources();
-            });
-
-            walletIssuerDetail$
-                .subscribe((walletIssuerDetail: WalletIssuerDetail) => {
-                    const issues = this.holdingsByAssetSubject.value;
-                    const formatted = issues
-                        .filter((issue) => {
-                            return issue.asset.split('|')[0] === walletIssuerDetail.walletIssuer;
-                        })
-                        .map((issue) => {
-                            return {
-                                asset: issue.asset,
-                                total: -issue.breakdown[0].free,
-                                encumbered: issue.totalencumbered,
-                                free: issue.total - issue.totalencumbered
-                            };
-                        });
-
-                    this.walletIssuerDetailSubject.next(formatted);
-                });
-        });
     }
 
     private refreshDataSources() {
@@ -294,7 +327,7 @@ export class ReportingService {
         InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
     }
 
-    private requestWalletData(){
+    private requestWalletData() {
         InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
     }

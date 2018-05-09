@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 import {TabControl, Tab} from '../tabs';
 import {select} from '@angular-redux/store';
+import {isEqual} from 'lodash';
 
 @Component({
     selector: 'setl-balances',
@@ -16,6 +17,7 @@ import {select} from '@angular-redux/store';
 export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     balances$: Observable<HoldingByAsset>;
+    balances: HoldingByAsset
 
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
@@ -29,21 +31,31 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     constructor(private reportingService: ReportingService,
                 private route: ActivatedRoute,
                 private changeDetector: ChangeDetectorRef) {
+    }
+
+    ngOnInit() {
+        let previous = [];
+        this.balances$ = this.reportingService
+            .getBalances()
+            .distinctUntilChanged((oldAssets, newAssets) => isEqual(oldAssets, newAssets))
+            .map(assets => {
+                let result = this.markUpdated([previous, assets]);
+                previous = assets;
+                return result;
+            })
+            .share()
+        ;
+
+        this.balances$.subscribe(balances => {
+            this.balances = balances;
+        });
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
                 this.closeTabs();
+                previous = [];
             }
         ));
-    }
-
-    ngOnInit() {
-        let previous = null;
-        this.balances$ = this.reportingService.getBalances().map(assets => {
-            let result = this.markUpdated([previous, assets]);
-            previous = assets;
-            return result;
-        });
 
         this.initTabUpdates();
 
@@ -195,21 +207,24 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     private markUpdated([prev, next]) {
         return next.map((asset) => {
             const updatedAsset = {...asset, isNew: false, totalChange: false, encumberChange: false, freeChange: false};
-            if (!prev || !prev.length) {
+            if (!prev.length) {
                 return updatedAsset;
             }
             const oldAsset = prev.find(oldAsset => oldAsset.asset === asset.asset);
+
             if (!oldAsset) {
                 updatedAsset.isNew = true;
             }
-            if (oldAsset.total !== asset.total) {
-                updatedAsset.totalChange = true;
-            }
-            if (oldAsset.encumbered !== asset.encumbered) {
-                updatedAsset.encumberChange = true;
-            }
-            if (oldAsset.free !== asset.free) {
-                updatedAsset.freeChange = true;
+            if (oldAsset) {
+                if (oldAsset.total !== asset.total) {
+                    updatedAsset.totalChange = true;
+                }
+                if (oldAsset.encumbered !== asset.encumbered) {
+                    updatedAsset.encumberChange = true;
+                }
+                if (oldAsset.free !== asset.free) {
+                    updatedAsset.freeChange = true;
+                }
             }
 
             return updatedAsset;
