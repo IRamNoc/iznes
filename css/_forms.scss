@@ -169,12 +169,16 @@ form, .form {
 
       &.ng-touched.ng-invalid {
         border-color: rgba(255, 0, 0, 0.5);
-      }
 
+        + .field-error {
+          display: block;
+        }
+
+      }
     }
 
     input[type=text].error, form .form-group input[type=password].error {
-      border: 1px solid #ebafa6;
+      border: 1px solid rgba(255, 0, 0, 0.5);
     }
 
     input[readonly] {
@@ -193,6 +197,7 @@ form, .form {
       font-size: 12px;
       text-align: right;
       width: 95%;
+      display: none;
     }
 
   }
@@ -204,7 +209,19 @@ form, .form {
     + .field-error {
       width: 360px !important;
     }
+    &.ng-touched.ng-invalid {
+      .ui-select-toggle.btn-secondary, .ui-select-choices {
+        border-color: rgba(255, 0, 0, 0.5) !important;
+      }
+      .ui-select-container[_ngcontent-c9]:hover .ui-select-choices {
+        border-color: #a4c4fa !important;
+      }
+      + .field-error {
+        display: block;
+      }
+    }
   }
+
   various-address-select {
     width: 100%;
     input[type=text] {
@@ -258,7 +275,7 @@ form, .form {
     }
 
     input[type=text].error, form .form-group input[type=password].error {
-      border: 1px solid #ebafa6;
+      border: 1px solid rgba(255, 0, 0, 0.5);
     }
 
     input[readonly] {
@@ -286,6 +303,9 @@ form, .form {
 .login-container form {
   input[type] {
     margin: 0 0 10px 0 !important;
+    &.ng-touched.ng-invalid {
+      border-color: rgba(255, 0, 0, 0.5) !important;
+    }
   }
   .field-error {
     width: 100% !important;
