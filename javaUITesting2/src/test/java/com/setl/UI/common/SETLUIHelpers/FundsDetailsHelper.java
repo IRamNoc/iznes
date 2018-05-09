@@ -46,7 +46,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void selectAddUmbrellaFund() {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
@@ -274,26 +274,34 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundName")));
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
         String fundName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getText();
         assertTrue(fundName.equals(fundNameExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")));
         String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
         assertTrue(leiName.equals(leiExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")));
         String fundCurrency = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")).getText();
         assertTrue(fundCurrency.equals(fundCurrencyExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-managementCompany")));
         String managementComp = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-managementCompany")).getText();
         assertTrue(managementComp.equals(managementCompExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-domicile")));
         String domicile = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-domicile")).getText();
-         assertTrue(domicile.equals(domicileExpected));
+        assertTrue(domicile.equals(domicileExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-lawStatus")));
         String legalForm = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-lawStatus")).getText();
         assertTrue(legalForm.equals(legalFormExpected));
 
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-umbrellaFundName")));
         String umbFund = driver.findElement(By.id("product-dashboard-fundID-" + shareNameNo + "-umbrellaFundName")).getText();
         assertTrue(umbFund.equals(umbFundExpected));
     }
