@@ -227,8 +227,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get dateValue() {
         return {
             cutoff: this.cutoffDate.value,
-            valuation: this.valuationDate.value,
-            settlement: this.settlementDate.value
+            valuation: this.valuationDate.value + ' 00:00',
+            settlement: this.settlementDate.value + ' 00:00'
         }[this.dateBy];
     }
 
