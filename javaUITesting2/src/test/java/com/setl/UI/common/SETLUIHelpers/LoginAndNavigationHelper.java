@@ -335,6 +335,9 @@ public class LoginAndNavigationHelper {
     public static void navigateToNAVPage(String username, String password) throws InterruptedException {
         loginAndVerifySuccess(username, password);
         navigateToDropdown("menu-my-products");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
+        wait.until(elementToBeClickable(By.id("menu-nav")));
         navigateToPageByID("menu-nav");
         verifyCorrectPageById("Net asset value");
     }
@@ -349,7 +352,6 @@ public class LoginAndNavigationHelper {
         }catch (WebDriverException wde) {
             fail(wde.getMessage());
         }
-
     }
 
     public static void navigateToDropdownXpath(String dropdownXpath) throws InterruptedException {
