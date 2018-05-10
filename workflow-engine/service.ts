@@ -76,11 +76,11 @@ export class CoreWorkflowEngineService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestTemplateList(): any {
+    requestTemplateList(data = {}): any {
         const messageBody = {
             RequestName: 'wfe-edit-list',
             token: this.memberSocketService.token,
-            data: {}
+            data: data
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
