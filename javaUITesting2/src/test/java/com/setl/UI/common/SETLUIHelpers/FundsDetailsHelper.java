@@ -237,6 +237,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
 
+        scrollElementIntoViewById("fund-submitfund-btn");
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 

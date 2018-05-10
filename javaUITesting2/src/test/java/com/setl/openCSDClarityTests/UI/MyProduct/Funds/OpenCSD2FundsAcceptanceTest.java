@@ -58,7 +58,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException {
+    public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException, SQLException {
 
         //Login and navigate to Product Module
 
@@ -124,9 +124,11 @@ public class OpenCSD2FundsAcceptanceTest {
 
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
 
-        //Assert that table displays the fund details with random chars at the end.
 
+        //Assert that table displays the fund details with random chars at the end.
         getFundTableRow(fundCount, uFundDetails[0] + updateChars[0], "92345678901234567890", "USD US Dollar", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
+        validateDatabaseFundExists(0, uFundDetails[0]);
+        validateDatabaseFundExists(1, uFundDetails[0] + updateChars[0]);
 
     }
 
