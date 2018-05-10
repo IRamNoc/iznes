@@ -120,6 +120,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 metaData: {}
             });
 
+            console.log('asyncTaskPipe: ', asyncTaskPipe);
+
             // Send a saga action.
             // Actions to dispatch, when request success:  LOGIN_SUCCESS.
             // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
@@ -130,6 +132,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 [REGISTER_ISSUER_FAIL],
                 asyncTaskPipe, {}));
         }
+
+        return false;
     }
 
     ngOnDestroy() {
