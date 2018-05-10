@@ -9,6 +9,17 @@
             <form [formGroup]="registerAssetForm" (ngSubmit)="registerAsset()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="issuer-identifier" mltag="txt_issueridentifier">Issuer Identifier</label>
+                        <input type="text" 
+                                id="issuer-identifier" 
+                                placeholder="Issuer Identifier" 
+                                size="45" 
+                                [formControl]="registerAssetForm.controls['issuerIdentifier']"
+                                [class.error]="!registerAssetForm.controls['issuerIdentifier'].valid &&
+                                           registerAssetForm.controls['issuerIdentifier'].touched" [readonly]="true" mltag="txt_issueridentifier"/>
+
+                        <span *ngIf="!registerAssetForm.controls['issuerIdentifier'].valid && registerAssetForm.controls['issuerIdentifier'].touched"  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
                         <label class="control-label required-field" for="instrument-identifier" mltag="txt_instrument">Instrument</label>
                         <input type="text" 
                                 id="instrument-identifier" 

@@ -130,6 +130,8 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 [REGISTER_ISSUER_FAIL],
                 asyncTaskPipe, {}));
         }
+
+        return false;
     }
 
     ngOnDestroy() {
