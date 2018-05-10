@@ -267,11 +267,6 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'management-company',
-                        component: OfiManagementCompanyComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
                         path: 'net-asset-value',
                         component: OfiNavFundsList,
                         canActivate: [LoginGuardService],
@@ -287,6 +282,11 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     }
                 ]
+            },
+            {
+                path: 'management-company',
+                component: OfiManagementCompanyComponent,
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'ui-elements',
