@@ -94,7 +94,13 @@
                                             <span mltag="txt_datetype">Date Type</span>
                                         </label>
                                         <div>
-                                            <ng-select id="orders-search-date-types" class="fluid-width" [items]="dateTypes" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['dateType']" placeholder="Type" mltag="txt_type">
+                                            <ng-select id="orders-search-date-types" class="fluid-width"
+                                                [active]="[dateTypes[2]]"
+                                                [items]="dateTypes"
+                                                [allowClear]="false"
+                                                [formControl]="tabsControl[0].searchForm.controls['dateType']"
+                                                placeholder="Type"
+                                                mltag="txt_type">
                                             </ng-select>
                                         </div>
                                     </div>

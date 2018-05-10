@@ -30,7 +30,7 @@ import {NumberConverterService} from '@setl/utils/services/number-converter/serv
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
-import {ofiManageOrderActions, ofiMyOrderActions} from '../../ofi-store';
+import {ofiManageOrderActions, ofiMyOrderActions, ofiClearRequestedMyOrder} from '../../ofi-store';
 /* Clarity */
 import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
 /* helper */
@@ -308,6 +308,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+
+        this.ngRedux.dispatch(ofiClearRequestedMyOrder());
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -334,7 +337,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 '',
             ],
             dateType: [
-                '',
+                [this.dateTypes[2]],
             ],
             fromDate: [
                 '',
