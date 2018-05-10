@@ -221,6 +221,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     }));
                 }
 
+                if(!this.model.isProduction) {
+                    this.model.documents.mandatory.kiid.required = false;
+                    this.model.documents.mandatory.prospectus.required = false;
+                }
                 this.isReady = true;
 
                 this.changeDetectorRef.markForCheck();

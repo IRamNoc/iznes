@@ -15,7 +15,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <p mltag="txt_sharedesc">Please fill in the following information to create a new Share.</p>
-                    <button class="btn btn-default btn-audit-trail" (click)="goToAuditTrail()">Share Audit Trail</button>
+                    <button class="btn btn-default btn-audit-trail"
+                        (click)="goToAuditTrail()"
+                        [hidden]="isCreate()">Share Audit Trail</button>
                 </div>
             </div>
             <div class="well" *ngIf="hasUmbrellaFund()">

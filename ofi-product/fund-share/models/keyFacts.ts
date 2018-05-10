@@ -38,7 +38,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_substartdate'
     }
-    launchDate: FormItem = {
+    shareLaunchDate: FormItem = {
         type: FormItemType.date,
         label: 'Share Class Launch Date',
         required: true,
@@ -80,7 +80,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         listItems: [],
         mltag: 'txt_fundshare_feeder'
     }
-    portfolioCurrencyHedge: FormItem = {
+    sharePortfolioCurrencyHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Currency Hedge',
         required: true,
@@ -140,7 +140,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.CouponTypeEnum.InterestCapitalGain, text: 'Interest & Capital gain' }
         ],
         hidden: () => {
-            return this.hasCoupon.value() === false;
+            return this.hasCoupon.value() === false || this.hasCoupon.value() === 0;
         },
         mltag: 'txt_fundshare_coupontype'
     }
@@ -159,7 +159,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.FrequencyOfDistributionDeclarationEnum.Annually, text: 'Annually' }
         ],
         hidden: () => {
-            return this.hasCoupon.value() === false;
+            return this.hasCoupon.value() === false || this.hasCoupon.value() === 0;
         },
         mltag: 'txt_fundshare_freqdistdeclare'
     }

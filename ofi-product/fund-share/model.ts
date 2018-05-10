@@ -89,7 +89,7 @@ export class FundShare {
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value(),
             shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.mandatory.shareClassInvestmentStatus),
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
-            launchDate: this.keyFacts.mandatory.launchDate.value(),
+            launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
@@ -112,7 +112,7 @@ export class FundShare {
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
-            portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.portfolioCurrencyHedge),
+            portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge),
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.subscriptionSettlementPeriod),
@@ -158,7 +158,7 @@ export class FundShare {
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
-        this.keyFacts.mandatory.launchDate.preset = fundShare.launchDate;
+        this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
@@ -180,7 +180,7 @@ export class FundShare {
         this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
-        this.setListItemPreset(this.keyFacts.mandatory.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+        this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
         this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);
