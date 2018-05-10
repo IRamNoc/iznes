@@ -275,7 +275,7 @@ const productsManagementCompany = {
     label_txt: 'txt_managementcompany',
     icon_class: 'fa fa-university',
     element_id: 'menu-management-company',
-    router_link: '/product-module/management-company'
+    router_link: '/management-company'
 };
 const productsSicav = {
     label: 'SICAV',
