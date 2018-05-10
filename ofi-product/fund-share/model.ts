@@ -112,7 +112,7 @@ export class FundShare {
             minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
-            portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.portfolioCurrencyHedge),
+            portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge),
             subscriptionCutOffTime: this.calendar.mandatory.subscriptionCutOffTime.value(),
             subscriptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.subscriptionCutOffTimeZone),
             subscriptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.subscriptionSettlementPeriod),
@@ -180,7 +180,7 @@ export class FundShare {
         this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
-        this.setListItemPreset(this.keyFacts.mandatory.portfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+        this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
         this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);
