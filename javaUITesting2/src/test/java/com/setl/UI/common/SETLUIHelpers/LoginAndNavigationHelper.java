@@ -344,6 +344,7 @@ public class LoginAndNavigationHelper {
 
     public static void navigateToDropdown(String dropdownID) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id(dropdownID));
         try {
             wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(dropdownID))));
             wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
