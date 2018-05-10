@@ -58,7 +58,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateUmbrellaFund() throws InterruptedException {
+    public void shouldCreateUmbrellaFund() throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -72,10 +72,11 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         getUmbrellaTableRow(umbFundCount, uFundDetails[0], "testLei", "Management Company", "Jordan");
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
 
     @Test
-    public void shouldUpdateUmbrellaFund() throws InterruptedException {
+    public void shouldUpdateUmbrellaFund() throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -92,6 +93,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
 
         getUmbrellaTableRow(umbFundCount, uFundDetails[0], "testLei", "Management Company", "Afghanistan");
+
+        validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + umbFundCount)).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -119,6 +122,10 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
 
         getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "testLei" + updateChars[0], "Management Company", "Albania");
+        //check updated Umbrella fund name is stored
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0] + updateChars[0]);
+        //check old Umbrella fund name no longer exists
+        validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
 
     }
 
