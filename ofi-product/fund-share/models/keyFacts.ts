@@ -80,7 +80,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         listItems: [],
         mltag: 'txt_fundshare_feeder'
     }
-    portfolioCurrencyHedge: FormItem = {
+    sharePortfolioCurrencyHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Currency Hedge',
         required: true,
