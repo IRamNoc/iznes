@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Random;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
@@ -37,6 +38,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String str = randomAlphabetic(5);
         String umbrellaFundName = "Test_Fund_" + str;
         return new String[]{umbrellaFundName};
+    }
+
+    public static String[] generateRandomISIN() {
+        Random rand = new Random();
+        int n = rand.nextInt(250) + 1;
+        String randomISIN = "1661" + n;
+        return new String[]{randomISIN};
     }
 
     public static String[] generateRandomDetails() {

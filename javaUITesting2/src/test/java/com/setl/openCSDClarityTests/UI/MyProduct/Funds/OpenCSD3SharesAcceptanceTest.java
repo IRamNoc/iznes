@@ -4,10 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -19,10 +16,9 @@ import java.io.IOException;
 import java.security.Key;
 import java.sql.SQLException;
 
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewFundShareTitle;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
@@ -46,7 +42,7 @@ public class OpenCSD3SharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(60000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -55,16 +51,25 @@ public class OpenCSD3SharesAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         testSetUp();
-
         screenshotRule.setDriver(driver);
+        setDBToProdOff();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        setDBToProdOn();
     }
 
     @Test
-    @Ignore("Wont work until we have a solution for documents fields")
+    //@Ignore("Wont work until we have a solution for documents fields")
     public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
+
+        String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
+
         waitForNewShareButton();
         waitForNewFundShareTitle();
         openDropdownAndSelectOption("selectFund", 1);
@@ -78,18 +83,16 @@ public class OpenCSD3SharesAcceptanceTest {
         }catch (Exception e){
             fail("not present");
         }
-        driver.findElement(By.id("fundShareName")).sendKeys("TestShareName1");
+
+        String[] uFundDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+
+        driver.findElement(By.id("fundShareName")).sendKeys(uFundDetails[0]);
         driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
-        driver.findElement(By.id("isin")).sendKeys("6116");
-        //driver.findElement(By.id("aumClass")).sendKeys("2");
-        //driver.findElement(By.id("nosClass")).sendKeys("2");
-        //driver.findElement(By.id("valuationNAV")).sendKeys("2");
-        //driver.findElement(By.id("aumClassDate")).sendKeys("2019-04-10");
-        //driver.findElement(By.id("nosClassDate")).sendKeys("2019-04-10");
-        //driver.findElement(By.id("valuationNAVDate")).sendKeys("2019-04-10");
+        driver.findElement(By.id("isin")).sendKeys(uIsin[0]);
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
@@ -101,6 +104,7 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
+        openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
         //CHARACTERISTICS
         try {
@@ -123,15 +127,15 @@ public class OpenCSD3SharesAcceptanceTest {
         assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("testSubscription");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("1212");
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("testRedemption");
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("1313");
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
-        //openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
-        //openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
-        //assertClassRequiredIsPresent("tabCalendarButton");
+        openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
+        openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
+        assertClassRequiredIsPresent("tabCalendarButton");
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
         assertHiddenAttributeIsPresent("tabCalendarButton");
         //FEES
@@ -142,12 +146,12 @@ public class OpenCSD3SharesAcceptanceTest {
         driver.findElement(By.id("maxManagementFee")).sendKeys("1");
         driver.findElement(By.id("maxSubscriptionFee")).sendKeys("1");
         driver.findElement(By.id("maxRedemptionFee")).sendKeys("1");
-        //driver.findElement(By.id("miFIDIIOngoingCharges")).sendKeys("1");
-        //driver.findElement(By.id("miFIDIIOneOffCharges")).sendKeys("1");
-        //driver.findElement(By.id("miFIDIITransactionsCosts")).sendKeys("1");
-        //driver.findElement(By.id("miFIDIIAncillaryCharges")).sendKeys("1");
+        driver.findElement(By.id("mifiidChargesOngoing")).sendKeys("1");
+        driver.findElement(By.id("mifiidChargesOneOff")).sendKeys("1");
+        driver.findElement(By.id("mifiidTransactionCosts")).sendKeys("1");
+        driver.findElement(By.id("mifiidServicesCosts")).sendKeys("1");
         assertClassRequiredIsPresent("tabFeesButton");
-        //driver.findElement(By.id("miFIDIIIncidentalCosts")).sendKeys("1");
+        driver.findElement(By.id("mifiidIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
         //PROFILE
         try {
@@ -169,8 +173,17 @@ public class OpenCSD3SharesAcceptanceTest {
         }
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(popupSubheading.contains("info"));
+        System.out.println(popupSubheading);
+        assertTrue(popupSubheading.equals("Info!"));
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+
+        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
+        System.out.println(shareCountPre + " Shares are in the listings before");
+        System.out.println(shareCountPost + " Shares are in the listings after");
+
+        assertTrue(shareCountPost == shareCountPre + 1);
+
     }
 
 }
