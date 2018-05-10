@@ -26,6 +26,7 @@ import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 import * as moment from 'moment';
+import {mDateHelper} from '@setl/utils';
 
 /* Types. */
 interface SelectedItem {
@@ -281,15 +282,15 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             result.push({
                 walletID: item.get('walletID'),
                 latestNav: item.get('latestNav'),
-                navDate: item.get('navDate'),
+                navDate: (item.get('navDate') == null) ? '' : mDateHelper.convertToLocal(item.get('navDate'),'YYYY-MM-DD'),
                 latestNavBackup: item.get('latestNavBackup'),
                 navDateBackup: item.get('navDateBackup'),
-                settlementDate: item.get('settlementDate'),
+                settlementDate: mDateHelper.convertToLocal(item.get('settlementDate'),'YYYY-MM-DD'),
                 subQuantity: item.get('subQuantity'),
                 subAmount: item.get('subAmount'),
                 redQuantity: item.get('redQuantity'),
                 redAmount: item.get('redAmount'),
-                cutoffDate: item.get('cutoffDate'),
+                cutoffDate: mDateHelper.convertToLocal(item.get('cutoffDate'),'YYYY-MM-DD HH:mm:ss'),
                 aum: item.get('aum'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),
