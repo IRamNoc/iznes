@@ -12,7 +12,7 @@ import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/servi
 import {Subscription} from 'rxjs/Subscription';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
-import {ofiListOfFundsComponentActions} from '@ofi/ofi-main/ofi-store';
+import {ofiListOfFundsComponentActions, clearRequestedFundAccessMy} from '@ofi/ofi-main/ofi-store';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
@@ -92,6 +92,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
         }));
 
+        this._ngRedux.dispatch(clearRequestedFundAccessMy());
     }
 
     setInitialTabs() {
