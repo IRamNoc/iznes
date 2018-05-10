@@ -22,6 +22,8 @@ import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import {APP_CONFIG, AppConfig} from "@setl/utils/index";
 import * as moment from 'moment';
 
+import {mDateHelper} from '@setl/utils';
+
 /* Types. */
 interface SelectedItem {
     id: any;
@@ -137,17 +139,17 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
             result.push({
                 aum: item.get('aum'),
-                cutoffDate: (item.get('cutoffDate') == null) ? '-' : item.get('cutoffDate'),
+                cutoffDate: mDateHelper.convertToLocal(item.get('cutoffDate'),'YYYY-MM-DD HH:mm:ss'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
                 latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-                navDate: item.get('navDate'),
+                navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'),'YYYY-MM-DD'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
                 redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
-                settlementDate: item.get('settlementDate'),
+                settlementDate: mDateHelper.convertToLocal(item.get('settlementDate'),'YYYY-MM-DD'),
                 shareClassCurrency: item.get('shareClassCurrency'),
                 subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
                 subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
