@@ -44,7 +44,7 @@ public class OpenCSDGeneralAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (30000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -84,7 +84,7 @@ public class OpenCSDGeneralAcceptanceTest {
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
         createUserAndVerifySuccess(userDetails[0], userDetails[1], "alex01");
-        validateDatabaseUsersFormdataTable(0, "1" , "8");
+        validateDatabaseUsersFormdataTable(0, "1", "8");
         deleteFormdataFromDatabase("8", "1");
     }
 
@@ -208,7 +208,7 @@ public class OpenCSDGeneralAcceptanceTest {
     public static String[] generateUserDetails() {
         String userName = "Test_User_064";
         String emailAddress = "testops064@setl.io";
-        return new String[] {userName, emailAddress};
+        return new String[]{userName, emailAddress};
     }
 
     public static void loginAndUpdateMyAccount(String username, String password, String firstname, String lastname) throws IOException, InterruptedException {
@@ -407,11 +407,12 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void clickForgottenPassword(String email) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("forgotten-password-link"));
         wait.until(visibilityOfElementLocated(By.id("forgotten-password-link")));
         wait.until(elementToBeClickable(By.id("forgotten-password-link")));
         try {
             driver.findElement(By.id("forgotten-password-link")).click();
-            driver.findElement(By.xpath("//*[@id=\"forgotten-password-link\"]")).click();
+
         } catch (Exception e) {
             fail("could not click forgotten password link " + e.getMessage());
         }
