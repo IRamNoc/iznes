@@ -585,7 +585,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
         driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
-        Thread.sleep(750);
+
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(" + childNo + ") > div > a")).click();
         } catch (Exception e) {
