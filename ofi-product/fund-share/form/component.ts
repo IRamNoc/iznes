@@ -9,7 +9,7 @@ import 'rxjs/add/operator/take';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterService} from 'angular2-toaster';
-import {ConfirmationService} from '@setl/utils';
+import {ConfirmationService, NumberConverterService} from '@setl/utils';
 
 import {setRequestedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund';
 import {setRequestedUmbrellaFund} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund';
@@ -79,6 +79,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 private alerts: AlertsService,
                 private toaster: ToasterService,
                 private confirmationService: ConfirmationService,
+                private numberConverterService: NumberConverterService,
                 private ofiFundShareService: OfiFundShareService,
                 private ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
@@ -358,7 +359,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.fundShareData = fundShare;
+        this.fundShareData = this.convertNumbers(fundShare, (num: number) => this.numberConverterService.toFrontEnd(num));
 
         this.changeDetectorRef.detectChanges();
     }
@@ -427,6 +428,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     saveFundShare(): void {
+        let request = this.convertNumbers(this.model.getRequest(), (num: number) => this.numberConverterService.toBlockchain(num));
+
         if (this.mode === FundShareMode.Create) {
             this.alerts.create('info', `
                 <table class="table grid">
@@ -443,13 +446,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
                 this.redux,
-                this.model.getRequest(),
+                request,
                 (data) => this.onCreateSuccess(data[1].Data),
                 (e) => this.onCreateError(e[1].Data[0]));
         } else {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
                 this.redux,
-                this.model.getRequest(),
+                request,
                 (data) => this.onUpdateSuccess(data[1].Data),
                 (e) => this.onUpdateError(e[1].Data[0]));
         }
@@ -539,6 +542,27 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     goToAuditTrail(): void {
         this.router.navigateByUrl(`product-module/fund-share/${this.fundShareId}/audit`);
+    }
+
+    private convertNumbers(request: OfiFundShare, method: (num: number) => number): OfiFundShare {
+        request.minInitialRedemptionInAmount = method(request.minInitialRedemptionInAmount);
+        request.minInitialRedemptionInShare = method(request.minInitialRedemptionInShare);
+        request.minInitialSubscriptionInAmount = method(request.minInitialSubscriptionInAmount);
+        request.minInitialSubscriptionInShare = method(request.minInitialSubscriptionInShare);
+        request.minSubsequentRedemptionInAmount = method(request.minSubsequentRedemptionInAmount);
+        request.minSubsequentRedemptionInShare = method(request.minSubsequentRedemptionInShare);
+        request.minSubsequentSubscriptionInAmount = method(request.minSubsequentSubscriptionInAmount);
+        request.minSubsequentSubscriptionInShare = method(request.minSubsequentSubscriptionInShare);
+        request.maxManagementFee = method(request.maxManagementFee);
+        request.maxSubscriptionFee = method(request.maxSubscriptionFee);
+        request.maxRedemptionFee = method(request.maxRedemptionFee);
+        request.mifiidChargesOneOff = method(request.mifiidChargesOneOff);
+        request.mifiidChargesOngoing = method(request.mifiidChargesOngoing);
+        request.mifiidIncidentalCosts = method(request.mifiidIncidentalCosts);
+        request.mifiidServicesCosts = method(request.mifiidServicesCosts);
+        request.mifiidTransactionCosts = method(request.mifiidTransactionCosts);
+
+        return request;
     }
 
     ngOnDestroy() {
