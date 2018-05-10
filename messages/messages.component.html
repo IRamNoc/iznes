@@ -136,7 +136,7 @@
         </div>
 
         <div class="message_view_menu">
-            <button *ngIf="currentMessage.senderId != connectedWalletId" id="messagesReply" (click)="replyMessage()"><i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
+            <button *ngIf="currentMessage.senderId != connectedWalletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()"><i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
             <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i> <span mltag="txt_close">Close</span></button>
             <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type" (click)="showDeleteModal = true">
                 <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
