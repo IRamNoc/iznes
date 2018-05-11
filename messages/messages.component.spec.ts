@@ -133,7 +133,7 @@ describe('SetlMessagesComponent', () => {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
-                {provide: LogService, useValue: LogServiceMock}
+                {provide: LogService, useClass: LogServiceMock}
             ]
         }).compileComponents();
         MockNgRedux.reset();
