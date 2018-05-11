@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
+import {SagaHelper, Common, LogService} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
     BasicRequestBody,
@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class T2sService {
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private logService: LogService,) {
         /* Stub. */
     }
 
@@ -68,7 +68,7 @@ export class T2sService {
 
     public newMessage(messageData: any): any {
         /* Setup the message body. */
-        console.log(' | T2S sending: ', messageData.message ? messageData.message : messageData);
+        this.logService.log(' | T2S sending: ', messageData.message ? messageData.message : messageData);
         const messageBody: NewMessageBody = {
             RequestName: 't2sNew',
             token: this.memberSocketService.token,

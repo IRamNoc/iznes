@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
+import {SagaHelper, Common, LogService} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {
     RequestAdminUsersMessageBody,
@@ -74,7 +74,7 @@ interface WalletNodeData {
 @Injectable()
 export class AdminUsersService {
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private logService: LogService,) {
         /* Stub. */
     }
 
@@ -227,7 +227,7 @@ export class AdminUsersService {
             walletAccess: data.walletAccess
         };
 
-        console.log('SENDING nuwa: ', messageBody);
+        this.logService.log('SENDING nuwa: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -244,7 +244,7 @@ export class AdminUsersService {
             toDelete: data.toDelete,
         };
 
-        console.log('SENDING uduwp: ', messageBody);
+        this.logService.log('SENDING uduwp: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -260,7 +260,7 @@ export class AdminUsersService {
             toDelete: data.toDelete
         };
 
-        console.log('SENDING uduca: ', messageBody);
+        this.logService.log('SENDING uduca: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -274,7 +274,7 @@ export class AdminUsersService {
             userId: data.userId
         };
 
-        console.log('SENDING guca: ', messageBody);
+        this.logService.log('SENDING guca: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -335,7 +335,7 @@ export class AdminUsersService {
             groupType: data.type
         };
 
-        console.log('SENDING UDG: ', messageBody);
+        this.logService.log('SENDING UDG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -349,7 +349,7 @@ export class AdminUsersService {
             groupId: data.groupId
         };
 
-        console.log('SENDING UDG: ', messageBody);
+        this.logService.log('SENDING UDG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -368,7 +368,7 @@ export class AdminUsersService {
             isAdmin: data.isAdmin
         };
 
-        console.log('SENDING UDAP: ', messageBody);
+        this.logService.log('SENDING UDAP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -376,7 +376,7 @@ export class AdminUsersService {
 
     public updateTxPermissions(data): any {
         /* Setup the message body. */
-        console.log(data);
+        this.logService.log(data);
         const messageBody: UpdateTxPermissionsBody = {
             RequestName: 'udtp',
             token: this.memberSocketService.token,
@@ -390,7 +390,7 @@ export class AdminUsersService {
 
         };
 
-        console.log('SENDING UDTP: ', messageBody);
+        this.logService.log('SENDING UDTP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -411,7 +411,7 @@ export class AdminUsersService {
             includeGroup: entity.includeGroup
         };
 
-        console.log('SENDING GP: ', messageBody);
+        this.logService.log('SENDING GP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -429,7 +429,7 @@ export class AdminUsersService {
             includeGroup: entity.includeGroup
         };
 
-        console.log('SENDING GTP: ', messageBody);
+        this.logService.log('SENDING GTP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -473,7 +473,7 @@ export class AdminUsersService {
             token: this.memberSocketService.token
         };
 
-        // console.log('REQUESTING WALLET NODE LIST');
+        // this.logService.log('REQUESTING WALLET NODE LIST');
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -553,7 +553,7 @@ export class AdminUsersService {
             isTx: entity.isTx ? 1 : 0,
         };
 
-        console.log('SENDING GUG: ', messageBody);
+        this.logService.log('SENDING GUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -570,7 +570,7 @@ export class AdminUsersService {
             chainId: entity.chainId
         };
 
-        console.log('SENDING UDUG: ', messageBody);
+        this.logService.log('SENDING UDUG: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -679,7 +679,7 @@ export class AdminUsersService {
             };
         }
 
-        console.log('SENDING NW: ', messageBody);
+        this.logService.log('SENDING NW: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -779,7 +779,7 @@ export class AdminUsersService {
             };
         }
 
-        console.log('SENDING UDW: ', messageBody);
+        this.logService.log('SENDING UDW: ', messageBody);
 
         /* Return the new member node saga requests. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -793,7 +793,7 @@ export class AdminUsersService {
             walletId: data.walletId
         };
 
-        console.log('SENDING DW: ', messageBody);
+        this.logService.log('SENDING DW: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

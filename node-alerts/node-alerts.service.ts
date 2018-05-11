@@ -4,7 +4,9 @@ import {ToasterService} from 'angular2-toaster';
 import {NgRedux} from '@angular-redux/store';
 
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {MyUserService, WalletnodeChannelService} from '@setl/core-req-services';
+
+import {MyUserService} from '../my-user/my-user.service';
+import {WalletnodeChannelService} from '../walletnode-channel/service';
 
 
 @Injectable()

@@ -160,8 +160,6 @@ export class WalletNodeRequestService {
             contractaddress: _.get(requestData, 'contractaddress', 0),
         };
 
-        console.log('Message Body:', messageBody);
-
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 

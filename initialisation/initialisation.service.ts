@@ -18,7 +18,7 @@ import {
 } from '@setl/core-store';
 import * as _ from 'lodash';
 
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import {MemberSocketService} from '@setl/websocket-service';
 
 @Injectable()
@@ -26,7 +26,7 @@ export class InitialisationService {
 
     channelUpdateCallbacks: Array<(data: string) => void>;
 
-    constructor() {
+    constructor(private logService: LogService,) {
         this.channelUpdateCallbacks = [];
     }
 
@@ -130,12 +130,12 @@ export class InitialisationService {
             {},
             function (data) {
                 const test = data;
-                console.log(test);
+                this.logService.log(test);
             },
 
             function (data) {
                 const test = data;
-                console.log(test);
+                this.logService.log(test);
             }
         ));
 
@@ -222,7 +222,7 @@ export class InitialisationService {
             [],
             asyncTaskPipes, {},
             () => {
-                console.log('language set!');
+                // console.log('language set!');
             }));
 
         return true;
