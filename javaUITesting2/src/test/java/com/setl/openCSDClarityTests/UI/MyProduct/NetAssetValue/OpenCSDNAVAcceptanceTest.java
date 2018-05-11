@@ -41,7 +41,9 @@ public class OpenCSDNAVAcceptanceTest {
 
     @Test
     public void shouldDisplayCorrectFieldsOnNAVPageTG204() throws InterruptedException {
-        navigateToNAVPage("am", "alex01");
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToNAVPage();
         validateNAVPageLayout();
         validateNAVDataGridHeadings(NAVHeadings);
     }
