@@ -68,7 +68,6 @@ function handleUpdateContract(state: MyWalletContractState, action: any):  MyWal
 }
 
 function handleSetUpdatedContractList(state: MyWalletContractState, action: any): MyWalletContractState  {
-    console.log('UPDATED CONTRACT ACTION CALLED:', action);
     let updatedContractList = _.get(action, 'updatedContracts.Data.contracts', []);
     return Object.assign({}, state, {
         updatedContractList
