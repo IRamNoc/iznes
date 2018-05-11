@@ -331,10 +331,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 '',
             ],
             status: [
-                '',
+                [this.orderStatuses[0]],
             ],
             type: [
-                '',
+                [this.orderTypes[0]],
             ],
             dateType: [
                 [this.dateTypes[2]],

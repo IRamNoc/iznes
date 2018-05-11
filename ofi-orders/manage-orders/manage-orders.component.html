@@ -59,7 +59,12 @@
                                 <span mltag="txt_status">Status</span>
                             </label>
                             <div>
-                                <ng-select id="orders-search-status" class="fluid-width" [items]="orderStatuses" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['status']" placeholder="Status" mltag="txt_status">
+                                <ng-select id="orders-search-status" class="fluid-width"
+                                    [active]="[orderStatuses[0]]"
+                                    [items]="orderStatuses"
+                                    [formControl]="tabsControl[0].searchForm.controls['status']"
+                                    placeholder="Status"
+                                    mltag="txt_status">
                                 </ng-select>
                             </div>
                         </div>
@@ -68,7 +73,12 @@
                                 <span mltag="txt_ordertype">Order type</span>
                             </label>
                             <div>
-                                <ng-select id="orders-search-type" class="fluid-width" [items]="orderTypes" [allowClear]="true" [formControl]="tabsControl[0].searchForm.controls['type']" placeholder="Type" mltag="txt_type">
+                                <ng-select id="orders-search-type" class="fluid-width"
+                                    [active]="[orderTypes[0]]"    
+                                    [items]="orderTypes"
+                                    [formControl]="tabsControl[0].searchForm.controls['type']"
+                                    placeholder="Type"
+                                    mltag="txt_type">
                                 </ng-select>
                             </div>
                         </div>
