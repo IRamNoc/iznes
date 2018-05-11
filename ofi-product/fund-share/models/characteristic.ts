@@ -46,7 +46,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubinshare'
+        mltag: 'txt_fundshare_minsubinshare',
+        isBlockchainValue: true
     }
     minInitialSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -56,7 +57,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubinamount'
+        mltag: 'txt_fundshare_minsubinamount',
+        isBlockchainValue: true
     }
     minSubsequentSubscriptionInShare: FormItem = {
         type: FormItemType.number,
@@ -66,7 +68,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubsubinshare'
+        mltag: 'txt_fundshare_minsubsubinshare',
+        isBlockchainValue: true
     }
     minSubsequentSubscriptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -76,7 +79,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.subscriptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubsubinamount'
+        mltag: 'txt_fundshare_minsubsubinamount',
+        isBlockchainValue: true
     }
     redemptionCategory: FormItem = {
         type: FormItemType.list,
@@ -114,7 +118,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minredinshare'
+        mltag: 'txt_fundshare_minredinshare',
+        isBlockchainValue: true
     }
     minInitialRedemptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -124,7 +129,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minredinamount'
+        mltag: 'txt_fundshare_minredinamount',
+        isBlockchainValue: true
     }
     minSubsequentRedemptionInShare: FormItem = {
         type: FormItemType.number,
@@ -134,7 +140,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubredinshare'
+        mltag: 'txt_fundshare_minsubredinshare',
+        isBlockchainValue: true
     }
     minSubsequentRedemptionInAmount: FormItem = {
         type: FormItemType.number,
@@ -144,6 +151,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
-        mltag: 'txt_fundshare_minsubredinamount'
+        mltag: 'txt_fundshare_minsubredinamount',
+        isBlockchainValue: true
     }
 }
