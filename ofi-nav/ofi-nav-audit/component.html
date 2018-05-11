@@ -63,14 +63,14 @@
                     <span mltag="txt_date">Date</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of navAuditData; let idx = index;">
-                    <clr-dg-cell class="col-logtype">
+                <clr-dg-row *clrDgItems="let item of navAuditData; let idx = index;" id="{{'product-nav-audit-row' + i}}">
+                    <clr-dg-cell class="col-logtype" id="{{'nav-audit-row'+idx+'-col-logtype'}}">
                         <span class="label label-success" *ngIf="isLogTypeInsert(item)" mltag="txt_insert">Insert</span>
                         <span class="label label-warning" *ngIf="isLogTypeUpdate(item)" mltag="txt_update">Update</span>
                         <span class="label label-danger" *ngIf="isLogTypeRemove(item)" mltag="txt_remove">Remove</span>
                     </clr-dg-cell>
-                    <clr-dg-cell class="col-navprevious">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
-                    <clr-dg-cell class="col-navnew{{getPriceClass(item)}}">
+                    <clr-dg-cell class="col-navprevious" id="{{'nav-audit-row'+idx+'-col-prev-price'}}">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
+                    <clr-dg-cell class="col-navnew{{getPriceClass(item)}}" id="{{'nav-audit-row'+idx+'-col-new-price'}}">
                         {{navToFrontEndString(item.price)}}
                         <span class="fa fa-sort-asc" [hidden]="!isPriceHigherThanPrevious(item)"></span>
                         <span class="fa fa-sort-desc" [hidden]="isPriceHigherThanPrevious(item)"></span>
