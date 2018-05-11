@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, NumberConverterService} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
@@ -35,7 +35,7 @@ export interface RequestInvestorFundAccessData {
 @Injectable()
 export class OfiFundShareService {
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private numberService: NumberConverterService) {
     }
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
@@ -134,6 +134,7 @@ export class OfiFundShareService {
             token: this.memberSocketService.token
         }
 
+        this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -196,6 +197,7 @@ export class OfiFundShareService {
             token: this.memberSocketService.token
         }
 
+        this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -327,6 +329,27 @@ export class OfiFundShareService {
         messageBody = Object.assign(requestData, messageBody);
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    private convertNumbersForBlockchain(request: any): void {
+        request.minInitialRedemptionInAmount = this.numberService.toBlockchain(request.minInitialRedemptionInAmount);
+        request.minInitialRedemptionInShare = this.numberService.toBlockchain(request.minInitialRedemptionInShare);
+        request.minInitialSubscriptionInAmount = this.numberService.toBlockchain(request.minInitialSubscriptionInAmount);
+        request.minInitialSubscriptionInShare = this.numberService.toBlockchain(request.minInitialSubscriptionInShare);
+        request.minSubsequentRedemptionInAmount = this.numberService.toBlockchain(request.minSubsequentRedemptionInAmount);
+        request.minSubsequentRedemptionInShare = this.numberService.toBlockchain(request.minSubsequentRedemptionInShare);
+        request.minSubsequentSubscriptionInAmount = this.numberService.toBlockchain(request.minSubsequentSubscriptionInAmount);
+        request.minSubsequentSubscriptionInShare = this.numberService.toBlockchain(request.minSubsequentSubscriptionInShare);
+        request.maxManagementFee = this.numberService.toBlockchain(request.maxManagementFee);
+        request.maxSubscriptionFee = this.numberService.toBlockchain(request.maxSubscriptionFee);
+        request.maxRedemptionFee = this.numberService.toBlockchain(request.maxRedemptionFee);
+        request.mifiidChargesOneOff = this.numberService.toBlockchain(request.mifiidChargesOneOff);
+        request.mifiidChargesOngoing = this.numberService.toBlockchain(request.mifiidChargesOngoing);
+        request.mifiidIncidentalCosts = this.numberService.toBlockchain(request.mifiidIncidentalCosts);
+        request.mifiidServicesCosts = this.numberService.toBlockchain(request.mifiidServicesCosts);
+        request.mifiidTransactionCosts = this.numberService.toBlockchain(request.mifiidTransactionCosts);
+
+        return request;
     }
 
 }

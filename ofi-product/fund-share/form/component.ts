@@ -427,6 +427,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     saveFundShare(): void {
+        let request = this.model.getRequest();
+
         if (this.mode === FundShareMode.Create) {
             this.alerts.create('info', `
                 <table class="table grid">
@@ -443,13 +445,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
                 this.redux,
-                this.model.getRequest(),
+                request,
                 (data) => this.onCreateSuccess(data[1].Data),
                 (e) => this.onCreateError(e[1].Data[0]));
         } else {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
                 this.redux,
-                this.model.getRequest(),
+                request,
                 (data) => this.onUpdateSuccess(data[1].Data),
                 (e) => this.onUpdateError(e[1].Data[0]));
         }
