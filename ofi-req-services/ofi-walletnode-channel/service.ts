@@ -1,14 +1,13 @@
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
-
+import {LogService} from '@setl/utils';
 import {OfiInitialisationService} from '../initialisation/initialisation.service';
-
 
 @Injectable()
 export class OfiWalletnodeChannelService {
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
     }
 
     /**
@@ -19,9 +18,9 @@ export class OfiWalletnodeChannelService {
      * @param userData
      */
     resolveChannelMessage(id, message, userData) {
-        console.log(this.ngRedux);
-        console.log('-------ofi received update from wallet node-------');
-        console.log(id, message, userData);
+        this.logService.log(this.ngRedux);
+        this.logService.log('-------ofi received update from wallet node-------');
+        this.logService.log(id, message, userData);
 
 
         const updateType = _.get(message, 'MessageType', '');
@@ -53,7 +52,7 @@ export class OfiWalletnodeChannelService {
 
 
     handleStateViewUpdate(data) {
-        console.log('---ofi handle state view update---');
+        this.logService.log('---ofi handle state view update---');
         /**
          * Has all balance view, we can update redux balance state here.
          */
@@ -66,7 +65,7 @@ export class OfiWalletnodeChannelService {
         /**
          * if contracts relate to current wallet has change.
          */
-        console.log('---ofi handle block update---');
+        this.logService.log('---ofi handle block update---');
         OfiInitialisationService.clearMemberNodeRequestedStatesOnNewBlock(this.ngRedux);
     }
 

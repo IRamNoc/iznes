@@ -250,8 +250,6 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     onClickDownloadCorrespondingOrders(id) {
         let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
-        console.log(this.centralizationReportsList, id);
-
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
             const params = {

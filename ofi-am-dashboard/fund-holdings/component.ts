@@ -30,7 +30,8 @@ import {WalletNodeRequestService, InitialisationService, MyWalletsService} from 
 /* Utils. */
 import {
     NumberConverterService,
-    commonHelper
+    commonHelper,
+    LogService
 } from '@setl/utils';
 import * as math from 'mathjs';
 
@@ -78,6 +79,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 private ofiNavService: OfiNavService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _numberConverterService: NumberConverterService,
+                private logService: LogService
                 ) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
@@ -167,7 +169,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     requestAddressList(requestedState) {
         this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -181,7 +183,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     requestWalletLabel(requestedState) {
 
-        console.log('checking requested', this.requestedWalletAddress);
+        this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
@@ -197,19 +199,19 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleFundSelection(form): void {
-        console.log(' |---- Handle Fund Selection');
+        this.logService.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
         let
             fund: any = false,
             fundShareFormValue = this.fundShareForm.value;
 
         /* Fail safely if nothing was select. */
-        console.log(' | fundShareFormValue:', fundShareFormValue);
+        this.logService.log(' | fundShareFormValue:', fundShareFormValue);
         if (!fundShareFormValue.selectFund.length) return;
 
         /* Ok, so let's get the fund information. */
         fund = this.getFundById(fundShareFormValue.selectFund[0].id);
-        console.log(' | fund:', fund);
+        this.logService.log(' | fund:', fund);
 
         /* Fail if we didn't find it. */
         if (!fund) return;
@@ -221,11 +223,11 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.showStats = true;
         this.fundStats.isin = fund.isin;
         this.fundStats.company = fund.companyName;
-        console.log(' | fundStats:', this.fundStats);
+        this.logService.log(' | fundStats:', this.fundStats);
 
         /* Now, let's request all the other information needed. */
         this.getFundDashboardData(fund).then((data) => {
-            console.log(' | dashboardData:', data);
+            this.logService.log(' | dashboardData:', data);
             /* Now let's set the extras we asked for... */
             this.fundStats.navPrice = data.nav.price;
             this.fundStats.navDate = data.nav.navDate;
@@ -240,7 +242,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Detect changes. */
             this.changeDetectorRef.detectChanges();
         }).catch((error) => {
-            console.log(' | dashboardData Error:', error)
+            this.logService.log(' | dashboardData Error:', error)
         });
 
         /* Detect changes. */
@@ -280,7 +282,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                 pagenum: 0,
                 pagesize: 1
             };
-            console.log(' |--- Get Fund Dash Data');
+            this.logService.log(' |--- Get Fund Dash Data');
 
             /* Return data. */
             let oReturn: any = {};
@@ -289,14 +291,14 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ofiAmDashboardService.buildRequest({
                 'taskPipe': this.ofiNavService.requestNav(navRequest)
             }).then((response) => {
-                console.log(' | success: ', response);
+                this.logService.log(' | success: ', response);
 
                 /* Success, let's set the NAV. */
                 oReturn.nav = this.getNavForAsset(fund.asset, response[1].Data);
                 delete oReturn.nav.Status;
                 oReturn.nav.navDate = oReturn.nav.navDate.split(' ')[0];
 
-                console.log(' | fund: ', fund.asset);
+                this.logService.log(' | fund: ', fund.asset);
                 /* Split asset name... */
                 let assetParts = fund.asset.split('|');
 
@@ -312,11 +314,11 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     /* Request all the wallet IDs of these addresses. */
                     this.ofiAmDashboardService.getWalletIdsByAddresses(addresses).then((response) => {
-                        console.log(' | > getWalletIdsByAddresses response: ', response);
+                        this.logService.log(' | > getWalletIdsByAddresses response: ', response);
                         let walletIdList = response[1].Data;
 
                         /* Now let's map the holders to wallets. */
-                        console.log(' | ~ map: ', this.walletDirectoryList, walletIdList);
+                        this.logService.log(' | ~ map: ', this.walletDirectoryList, walletIdList);
                         let
                             key,
                             id,
@@ -372,13 +374,13 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
                         /* Resolve the original promise. */
                         resolve(oReturn);
                     }).catch((error) => {
-                        console.log(' | > getWalletIdsByAddresses error: ', error);
+                        this.logService.log(' | > getWalletIdsByAddresses error: ', error);
                     })
-                    console.log(" | holdersList: ", holdersList);
+                    this.logService.log(" | holdersList: ", holdersList);
 
 
                 }).catch((error) => {
-                    console.log(" | error: ", error);
+                    this.logService.log(" | error: ", error);
                 });
             }).catch((error) => {
                 /* Handle error. */
@@ -418,7 +420,7 @@ export class FundHoldingsComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletHolding());
-            console.log(InitialisationService.requestWalletHolding);
+            this.logService.log(InitialisationService.requestWalletHolding);
 
             InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }

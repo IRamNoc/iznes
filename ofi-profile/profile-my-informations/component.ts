@@ -117,7 +117,6 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     changePass(formValues) {
-        // console.log(formValues);
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
             oldPassword: formValues.oldPassword,

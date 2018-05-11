@@ -156,8 +156,6 @@ export class OfiSicavService {
 
     updateSicav(sicavData: UpdateSicavData, ngRedux: NgRedux<any>): any {
 
-        // console.log('updateSicav', sicavData);
-
         const messageBody: UpdateSicavRequestBody = {       // where is the companyID ?
             RequestName: 'updateSicav',
             token: this.memberSocketService.token,

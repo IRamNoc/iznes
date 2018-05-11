@@ -48,7 +48,7 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
 function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
     const accessData = _.get(action, 'payload[1].Data', []);
     const accessDataImu = fromJS(accessData);
-    console.log(accessData);
+
     const accessDataList = accessDataImu.reduce((result, item) => {
         const fundId = item.get('fundID', 0);
         if (!result.fundAccessList.hasOwnProperty(fundId)) {

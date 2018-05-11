@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
@@ -35,7 +35,7 @@ export interface RequestInvestorFundAccessData {
 @Injectable()
 export class OfiFundShareService {
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService, private logService: LogService,) {
     }
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
@@ -101,7 +101,7 @@ export class OfiFundShareService {
             token: this.memberSocketService.token,
             investorWalletId: requestData.investorWalletId
         };
-        console.log('this is the request', messageBody);
+        this.logService.log('this is the request', messageBody);
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }

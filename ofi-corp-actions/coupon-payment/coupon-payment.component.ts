@@ -30,7 +30,7 @@ import {
     getOfiUserIssuedAssets
 } from '../../ofi-store';
 
-import {immutableHelper} from '@setl/utils';
+import {immutableHelper, LogService} from '@setl/utils';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import * as _ from 'lodash';
 import {ofiCouponActions} from '@ofi/ofi-main/ofi-store';
@@ -80,6 +80,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 private route: ActivatedRoute,
                 private router: Router,
                 private walletNodeRequestService: WalletNodeRequestService,
+                private logService: LogService,
                 private _confirmationService: ConfirmationService,) {
     }
 
@@ -109,7 +110,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
 
         /* Subscribe for wallet holdings by address. */
         this.subscriptions['wallet-holdings-by-address'] = this.walletHoldingsByAddressOb.subscribe((holdingByAddress) => {
-            console.log('holdingByAddress: ', holdingByAddress);
+            this.logService.log('holdingByAddress: ', holdingByAddress);
             /* Assign list to a property. */
             this.walletHoldingsByAddress = holdingByAddress;
         });

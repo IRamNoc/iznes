@@ -19,13 +19,14 @@ import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-
 
 import {resetHomepage} from '@setl/core-store';
 import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
+import {LogService} from "@setl/utils";
 
 /* Service class. */
 @Injectable()
 export class OfiMemberNodeChannelService {
 
     /* Constructor. */
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
         /* Stub. */
     }
 
@@ -42,9 +43,9 @@ export class OfiMemberNodeChannelService {
         data = JSON.parse(data);
 
         /* Switch the request. */
-        console.log(' |--- Resolving Ofi channel brodcast.');
-        console.log(' | name: ', data.Request);
-        console.log(' | data: ', data);
+        this.logService.log(' |--- Resolving Ofi channel brodcast.');
+        this.logService.log(' | name: ', data.Request);
+        this.logService.log(' | data: ', data);
         switch (data.Request) {
             /* Coupon requests. */
             case 'newcoupon':
@@ -61,7 +62,7 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'newmanagementcompany':
-                console.log(' | Update managment company list: ', data);
+                this.logService.log(' | Update managment company list: ', data);
 
                 /* TODO - Dispatch the event to update the management company list. */
                 // this.ngRedux.dispatch({
@@ -83,7 +84,7 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'iznesupdateorder':
-                console.log('got the broadcast order');
+                this.logService.log('got the broadcast order');
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 this.ngRedux.dispatch(ofiClearRequestedManageOrder());
                 this.ngRedux.dispatch(ofiClearRequestedCentralizationReports());

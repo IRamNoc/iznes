@@ -12,7 +12,7 @@ import {SET_CLIENT_TX_LIST, setRequestedClientTxList} from '../../ofi-store/ofi-
 
 @Injectable()
 export class OfiClientTxService {
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(private memberSocketService: MemberSocketService,) {
     }
 
     /**
@@ -36,7 +36,7 @@ export class OfiClientTxService {
             asyncTaskPipe,
             {},
             (data) => {
-                console.log(data);
+                // console.log(data);
             }
         ));
     }

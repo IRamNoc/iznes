@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
-import {immutableHelper, NumberConverterService, mDateHelper, commonHelper} from '@setl/utils';
+import {immutableHelper, NumberConverterService, mDateHelper, commonHelper, LogService} from '@setl/utils';
 import {PnlHelper} from '../pnlHelper/class';
 import * as _ from 'lodash';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
@@ -83,6 +83,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 private _ofiFundInvestService: OfiFundInvestService,
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
+                private logService: LogService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 
@@ -279,7 +280,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
     requestAddressList(requestedState) {
         this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -293,7 +294,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
     requestWalletLabel(requestedState) {
 
-        console.log('checking requested', this.requestedWalletAddress);
+        this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
@@ -328,7 +329,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
 
         if (this.addressList.length > 0) {
             if (!this.addressSelected || hasSelectedAddressInList.length === 0) {
-                console.log('selecting', this.addressList[0]);
+                this.logService.log('selecting', this.addressList[0]);
                 this.address.setValue([this.addressList[0]], {
                     onlySelf: true,
                     emitEvent: true,

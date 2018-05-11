@@ -32,7 +32,8 @@ import {WalletNodeRequestService, MyWalletsService, InitialisationService} from 
 import {
     NumberConverterService,
     immutableHelper,
-    commonHelper
+    commonHelper,
+    LogService
 } from '@setl/utils';
 import * as math from 'mathjs';
 
@@ -81,6 +82,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private _numberConverterService: NumberConverterService,
+                private logService: LogService,
                 private _myWalletService: MyWalletsService) {
         /* Assign the fund share form. */
         this.fundShareForm = new FormGroup({
@@ -131,14 +133,14 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         /* TODO - Store this data in redux and subscribe for it. */
         this.ofiAmDashboardService.getFundManagerAssets().then((response) => {
             /* Ok, let's save and filter the list. */
-            console.log(' |--- getFundManagerAssets: ', response);
+            this.logService.log(' |--- getFundManagerAssets: ', response);
             let
                 fundAssetList = response[1].Data,
                 sortedByCompany = {};
 
             /* Check it's there.... */
             if (fundAssetList) {
-                console.log(' | fundAssetList: ', fundAssetList);
+                this.logService.log(' | fundAssetList: ', fundAssetList);
                 /* Let's sort the data by company name. */
                 for (const asset of fundAssetList) {
                     /* Check the company has a object. */
@@ -174,11 +176,11 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
                     }
                 }
 
-                console.log(' | sortedByCompany: ', sortedByCompany);
+                this.logService.log(' | sortedByCompany: ', sortedByCompany);
             }
         }).catch((error) => {
             /* Handle error */
-            console.log('failed to getFundManagerAssets: ', error);
+            this.logService.log('failed to getFundManagerAssets: ', error);
         });
 
         this.subscriptions['requested-address-list'] = this.requestedAddressListOb.subscribe(requested => {
@@ -213,7 +215,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     requestWalletLabel(requestedState) {
 
-        console.log('checking requested', this.requestedWalletAddress);
+        this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
@@ -223,7 +225,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     updateAddressList(addressList) {
-        console.log(" | UPDATED ADDRESSES: ", addressList);
+        this.logService.log(" | UPDATED ADDRESSES: ", addressList);
         this.addressList = addressList;
 
         // Update the lable in fundStat in there is any.
@@ -232,7 +234,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
     requestAddressList(requestedState) {
         this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -252,16 +254,16 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleCompanySelection(): void {
-        console.log(' |---- Handle Fund Selection');
+        this.logService.log(' |---- Handle Fund Selection');
         /* Ok... get the selected form. */
         let fundShareFormValue = this.fundShareForm.value;
 
         /* Fail safely if nothing was select. */
         if (!fundShareFormValue.selectFund.length) return;
-        console.log(' | fundShareFormValue:', fundShareFormValue);
+        this.logService.log(' | fundShareFormValue:', fundShareFormValue);
 
         /* Ok, let's get shares under this company. */
-        console.log(' | id: ', fundShareFormValue.selectFund[0].text);
+        this.logService.log(' | id: ', fundShareFormValue.selectFund[0].text);
         const
             assets: any = this.getAssetsByCompanyName(fundShareFormValue.selectFund[0].text);
 
@@ -278,13 +280,13 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /*  Get holdings. */
             const holdings = this.walletHoldingsByAsset[this.connectedWalletId][asset];
-            console.log(' | holdings: ', holdings);
-            console.log(' | asset: ', assets[asset]);
+            this.logService.log(' | holdings: ', holdings);
+            this.logService.log(' | asset: ', assets[asset]);
 
             if (holdings) {
                 let address, addresses = [];
-                console.log(' | holdings.breakdown: ', holdings.breakdown);
-                console.log(' | this.addressList: ', this.addressList);
+                this.logService.log(' | holdings.breakdown: ', holdings.breakdown);
+                this.logService.log(' | this.addressList: ', this.addressList);
                 for (address of Object.keys(holdings.breakdown)) {
                     const thisAddressBalance = holdings.breakdown[address][0];
 
@@ -427,7 +429,7 @@ export class MyDashboardComponent implements OnInit, AfterViewInit, OnDestroy {
         if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
             this._ngRedux.dispatch(setRequestedWalletHolding());
-            console.log('this.connectedWalletId', this.connectedWalletId);
+            this.logService.log('this.connectedWalletId', this.connectedWalletId);
             InitialisationService.requestWalletHolding(this._ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }

@@ -131,8 +131,6 @@ export class OfiManagementCompanyService {
 
     updateManagementCompany(mcData: ManagementCompanyData, ngRedux: NgRedux<any>): any {
 
-        console.log('updateManagementCompany', mcData);
-
         const messageBody: UpdateManagementCompanyRequestBody = {       // where is the companyID ?
             RequestName: 'updatemanagementcompany',
             token: this.memberSocketService.token,

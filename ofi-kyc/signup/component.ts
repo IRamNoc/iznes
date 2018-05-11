@@ -170,7 +170,6 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     }
 
     getLanguage(requested): void {
-        // console.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
             switch (requested) {
                 case 'fra':
@@ -429,7 +428,6 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 }
             },
             (data) => {
-                // console.log('error: ', data);
                 this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
                 this.closeFPModal();
             })
@@ -456,7 +454,6 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     //             this.showModal = true;
     //         },
     //         (data) => {
-    //             // console.log('error: ', data);
     //             this.isTokenExpired = true;
     //             this.showModal = true;
     //         })
@@ -486,7 +483,6 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 }
             },
             (data) => {
-                // console.log('error: ', data);
                 this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
                 this.closeFPModal();
             })
