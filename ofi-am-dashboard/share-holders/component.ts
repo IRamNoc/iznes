@@ -164,11 +164,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.changeDetectorRef.detach();
-
-        this.subscriptions.map((subscription: Subscription) => {
-            return subscription.unsubscribe();
-        });
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 
     /**
@@ -298,12 +296,30 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
     }
 
+    getShareNameByShareId(shareId): string {
+
+        let selectedShareName: string;
+
+        try {
+            selectedShareName = this.dataListForSearch.filter((item) => Number(item.id) === Number(shareId))[0].text;
+        } catch (e) {
+            selectedShareName = '';
+        }
+
+        return selectedShareName;
+    }
+
     openShareId(shareId) {
         this.holderDetailData = [];
         const payload = {
             shareId,
             selectedFilter: this.holderFilters[0].id
         };
+
+        const selectedShareName = this.getShareNameByShareId(shareId);
+
+        this.searchListForm.get('search').patchValue([{id: shareId, text: selectedShareName}], {emitEvent: false});
+
         OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
 
         OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
