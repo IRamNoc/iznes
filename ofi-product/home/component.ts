@@ -158,7 +158,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 icon: 'plus',
                 type: 'ufund',
             },
-            link: '/product-module/umbrella-fund/',
+            link: '/product-module/product/umbrella-fund/',
             linkIdent: 'umbrellaFundID',
             open: true,
             data: this.umbrellaFundList,
@@ -182,7 +182,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 icon: 'plus',
                 type: 'fund',
             },
-            link: '/product-module/fund/',
+            link: '/product-module/product/fund/',
             linkIdent: 'fundID',
             open: true,
             data: this.fundList,
@@ -207,7 +207,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 icon: 'plus',
                 type: 'share',
             },
-            link: '/product-module/fund-share/',
+            link: '/product-module/product/fund-share/',
             linkIdent: 'fundShareID',
             open: true,
             data: this.shareList,
@@ -416,13 +416,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     addForm(type) {
         switch (type) {
             case 'share':
-                this._router.navigateByUrl('/product-module/fund-share/new');
+                this._router.navigateByUrl('/product-module/product/fund-share/new');
                 break;
             case 'fund':
-                this._router.navigateByUrl('/product-module/fund/new');
+                this._router.navigateByUrl('/product-module/product/fund/new');
                 break;
             case 'ufund':
-                this._router.navigateByUrl('/product-module/umbrella-fund/0');
+                this._router.navigateByUrl('/product-module/product/umbrella-fund/0');
                 break;
         }
     }

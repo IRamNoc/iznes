@@ -560,7 +560,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.viewMode = 'FUND';
                     return;
                 } else {
-                    this.router.navigate(['product-module', 'fund', 'new']);
+                    this.router.navigate(['product-module', 'product', 'fund', 'new']);
                     return;
                 }
             });
