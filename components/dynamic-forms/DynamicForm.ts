@@ -2,19 +2,21 @@ import { FormControl, ValidatorFn } from '@angular/forms';
 import {FilePermission} from '@setl/core-filedrop/drophandler/drophandler.component';
 
 export interface FormItem {
-    type: FormItemType;
+    cssClass?: string;
     control?: FormControl;
     label: string;
     mltag?: string;
-    required: boolean;
-    style?: FormItemStyle[];
     preset?: string | number | boolean;
+    style?: FormItemStyle[];
+    type: FormItemType;
     validator?: ValidatorFn;
-    hidden?: () => boolean;
-    disabled?: boolean;
     value?: () => any;
+
+    disabled?: boolean;
+    hidden?: () => boolean;
+    isBlockchainValue?: boolean;
     isValid?: () => boolean;
-    cssClass?: string;
+    required: boolean;
 
     listItems?: {
         id: string | number;
@@ -26,7 +28,6 @@ export interface FormItem {
     timeOptions?: { [key: string]: any };
 
     fileData?: any;
-
     filePermission?: FilePermission;
 }
 
