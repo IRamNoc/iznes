@@ -27,7 +27,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 public class OpenCSDCouponPaymentAcceptanceTest {
 
-    public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
     static String username = "root";
