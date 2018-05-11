@@ -5,7 +5,7 @@ import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-w
 import {Observable} from 'rxjs/Observable';
 import {isEmpty, isArray, some} from 'lodash';
 import {InitialisationService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
-import {SagaHelper, WalletTxHelper, WalletTxHelperModel} from '@setl/utils';
+import {SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService} from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
@@ -65,6 +65,7 @@ export class ReportingService {
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
+                private logService: LogService,
                 private myWalletService: MyWalletsService
     ) {
         this.connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
@@ -289,7 +290,7 @@ export class ReportingService {
                 this.getTransactionsFromReportingNode(data, {...payload, asset: asset});
             },
             (data) => {
-                console.log('get transaction history error:', data);
+                this.logService.log('get transaction history error:', data);
             }
         ));
     }
@@ -315,10 +316,10 @@ export class ReportingService {
                     this.ngRedux.dispatch(action);
                 }
             }, (e) => {
-                console.log('reporting node error', e);
+                this.logService.log('reporting node error', e);
             });
         } else {
-            console.log('invalid signature request');
+            this.logService.log('invalid signature request');
         }
     }
 
