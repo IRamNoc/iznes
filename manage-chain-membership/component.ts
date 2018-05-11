@@ -12,7 +12,7 @@ import {
     getCurrentChainMembershipList, SET_CHAIN_MEMBERSHIP_LIST, SET_MANAGE_MEMBER_LIST,
     setRequestedManageMemberList
 } from '@setl/core-store';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-manage-chain-membership',
@@ -57,6 +57,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private memberService: MemberService,
                 private adminUsersService: AdminUsersService,
+                private logService: LogService,
                 private changeDetectorRef: ChangeDetectorRef) {
         /* Default tabs. */
         this.tabsControl = [
@@ -327,7 +328,7 @@ export class ManageChainMembershipComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     this.showErrorResponse(data);
-                    console.log(data);
+                    this.logService.log(data);
                 }
             ));
         }

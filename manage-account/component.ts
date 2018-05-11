@@ -11,7 +11,7 @@ import {
     setRequestedManageMemberList
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import * as _ from 'lodash';
 import {PersistService} from '@setl/core-persist';
 
@@ -61,6 +61,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 private accountService: AccountsService,
                 private memberService: MemberService,
                 private changeDetectorRef: ChangeDetectorRef,
+                private logService: LogService,
                 private _persistService: PersistService) {
         /* Default tabs. */
         this.tabsControl = [
@@ -197,7 +198,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      */
     handleAddAccount(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
-            console.log(this.tabsControl[tabId].formControl.value);
+            this.logService.log(this.tabsControl[tabId].formControl.value);
 
             const formValue = this.tabsControl[tabId].formControl.value;
             const accountName = formValue.accountName;
@@ -235,7 +236,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      */
     handleEditAccount(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
-            console.log(this.tabsControl[tabId].formControl.value);
+            this.logService.log(this.tabsControl[tabId].formControl.value);
 
 
             const formValue = this.tabsControl[tabId].formControl.value;
@@ -258,11 +259,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     this.showSuccessResponse('Account is updated');
-                    console.log(data);
+                    this.logService.log(data);
                 },
                 (data) => {
                     this.showErrorResponse(data);
-                    console.log(data);
+                    this.logService.log(data);
                 }
             ));
         }
@@ -335,11 +336,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             asyncTaskPipe,
             (data) => {
                 this.showSuccessResponse('Account is deleted');
-                console.log(data);
+                this.logService.log(data);
             },
             (data) => {
                 this.showErrorResponse(data);
-                console.log(data);
+                this.logService.log(data);
             }
         ));
     }
