@@ -1,6 +1,6 @@
 import * as math from 'mathjs';
 
-import {CalendarHelper} from './calendar-helper';
+import {CalendarHelper, getTimeZoneDiff} from './calendar-helper';
 import {IznesShareDetail} from '../../../ofi-store/ofi-product/fund-share-list/model';
 import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
@@ -225,12 +225,12 @@ export class OrderHelper {
     get initialMinFig() {
         return ({
             [OrderType.Subscription]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInAmount || 0),
-                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialSubscriptionInShare || 0),
+                [OrderByType.Amount]: (this.fundShare.minInitialSubscriptionInAmount || 0),
+                [OrderByType.Quantity]: (this.fundShare.minInitialSubscriptionInShare || 0),
             },
             [OrderType.Redemption]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInAmount || 0),
-                [OrderByType.Quantity]: convertToBlockChainNumber(this.fundShare.minInitialRedemptionInShare || 0),
+                [OrderByType.Amount]: (this.fundShare.minInitialRedemptionInAmount || 0),
+                [OrderByType.Quantity]: (this.fundShare.minInitialRedemptionInShare || 0),
             }
         }[this.orderType] || {})[this.orderBy] || 0;
     }
@@ -273,7 +273,7 @@ export class OrderHelper {
         // this.fakeSettlement = moment().add(20, 'seconds');
 
         this.fakeCuoff = moment().add(5, 'minutes');
-        this.fakeValuation = moment().add(10, 'minutes');
+        this.fakeValuation = this.fakeCuoff.clone().utc().set({hour: 0, minute: 0, second: 1});
         this.fakeSettlement = moment().add(15, 'minutes');
 
     }
@@ -347,12 +347,12 @@ export class OrderHelper {
     static getSubsequentMinFig(fundShareData, orderType, orderByType) {
         return ({
             [OrderType.Subscription]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInAmount || 0),
-                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentSubscriptionInShare || 0),
+                [OrderByType.Amount]: (fundShareData.minSubsequentSubscriptionInAmount || 0),
+                [OrderByType.Quantity]: (fundShareData.minSubsequentSubscriptionInShare || 0),
             },
             [OrderType.Redemption]: {
-                [OrderByType.Amount]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInAmount || 0),
-                [OrderByType.Quantity]: convertToBlockChainNumber(fundShareData.minSubsequentRedemptionInShare || 0),
+                [OrderByType.Amount]: (fundShareData.minSubsequentRedemptionInAmount || 0),
+                [OrderByType.Quantity]: (fundShareData.minSubsequentRedemptionInShare || 0),
             },
         }[orderType] || {})[orderByType] || 0;
     }
@@ -603,15 +603,15 @@ export class OrderHelper {
         try {
             const [fakeCutoffStr, fakeValuationStr, fakeSettelmentStr] = this.orderRequest.datevalue.split(';');
 
-            const validFakeCutoffStr = moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeValuationStr = moment(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
-            const validFakeSettelmentStr = moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeCutoffStr = moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeValuationStr = moment.utc(fakeValuationStr, 'YYYY-MM-DD HH:mm')._isValid;
+            const validFakeSettelmentStr = moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')._isValid;
 
             if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
                 return {
-                    cutoff: moment(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
-                    valuation: moment(fakeValuationStr, 'YYYY-MM-DD HH:mm'),
-                    settlement: moment(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
+                    cutoff: moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
+                    valuation: moment.utc(fakeValuationStr, 'YYYY-MM-DD').set({hour: 0, minute: 0, second: 1}),
+                    settlement: moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
                 };
             }else {
                 return {
