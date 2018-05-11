@@ -61,13 +61,14 @@ public class PageHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void waitForNewShareButton() {
+    public static void waitForNewShareButton() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             wait.until(visibilityOfElementLocated((By.id("new-share-btn"))));
             wait.until(elementToBeClickable(By.id("new-share-btn")));
             scrollElementIntoViewById("new-share-btn");
             WebElement newShare = driver.findElement(By.id("new-share-btn"));
+            wait.until(invisibilityOfElementLocated(By.className("toast-title")));
             newShare.click();
         }catch (Error e){
             fail(e.getMessage());
