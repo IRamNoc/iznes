@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-ui-layouts-layout1',
@@ -31,7 +32,7 @@ export class UiLayout1Component {
     // mock data
     mockDataGridItems: any[];
 
-    constructor() {
+    constructor(private logService: LogService,) {
         this.initMocks();
     }
 
@@ -78,10 +79,10 @@ export class UiLayout1Component {
 
     // datagrid-expand
     dataGridEdit(): void {
-        console.log('Edit data grid item function here');
+        this.logService.log('Edit data grid item function here');
     }
 
     dataGridDelete(): void {
-        console.log('Delete data grid item function here');
+        this.logService.log('Delete data grid item function here');
     }
 }
