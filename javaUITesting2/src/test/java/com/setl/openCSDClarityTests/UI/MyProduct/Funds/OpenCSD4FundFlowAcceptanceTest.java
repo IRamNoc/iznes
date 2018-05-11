@@ -63,62 +63,47 @@ public class OpenCSD4FundFlowAcceptanceTest {
     public void shouldTestEntireFundFlow() throws InterruptedException, SQLException {
 
         //Login and navigate to Product Module
-
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPage("product-module");
 
         //Create umbrella fund for later use
-
         selectAddUmbrellaFund();
-
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
-
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
         //Store title number count for Funds
-
         String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-        System.out.println(fundCount + " funds are displayed in the funds table");
 
         //Navigate to fund creation and create a fund with umbFund
-
         String [] uFundDetails = generateRandomFundsDetails();
-
         fillOutFundDetailsStep1(umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0]);
 
         //Assert fund table displays the information for the fund created previously, including umbFund
-
         getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         //Store the number of shares created.
-
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
 
         //Navigate to create a new share.
-
         waitForNewShareButton();
-        //waitForNewFundShareTitle();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
         driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
         driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(uFundDetails[0]);
-
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage());
         }
-
 
         WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
         waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
@@ -134,12 +119,30 @@ public class OpenCSD4FundFlowAcceptanceTest {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
 
-        driver.findElement(By.id("fundShareName")).sendKeys(uShareDetails[0]);
+        shareCreationKeyFacts(uShareDetails[0],uIsin[0]);
+        shareCreationCharacteristics();
+        shareCreationCalendar();
+        shareCreationFees();
+        shareCreationProfile();
+        shareCreationSubmit();
+
+        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
+        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
+        assertTrue(shareCountPost == shareCountPre + 1);
+        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
+        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
+
+        getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
+    }
+
+    public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("fundShareName")).sendKeys(shareName);
         driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
-        driver.findElement(By.id("isin")).sendKeys(uIsin[0]);
+        driver.findElement(By.id("isin")).sendKeys(isin);
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
@@ -156,8 +159,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
         openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
+    }
 
-        //CHARACTERISTICS
+    public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabCharacteristicsButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -172,7 +177,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         driver.findElement(By.id("minSubsequentRedemptionInShare")).sendKeys("5");
         assertHiddenAttributeIsPresent("tabCharacteristicsButton");
 
-        //CALENDAR
+    }
+
+    public static void shareCreationCalendar() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -191,7 +199,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
         assertHiddenAttributeIsPresent("tabCalendarButton");
 
-        //FEES
+    }
+
+    public static void shareCreationFees() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -206,7 +217,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         driver.findElement(By.id("mifiidIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
 
-        //PROFILE
+    }
+
+    public static void shareCreationProfile() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -215,7 +229,9 @@ public class OpenCSD4FundFlowAcceptanceTest {
         openDropdownAndSelectOption("investorProfile", 1);
         assertHiddenAttributeIsPresent("tabProfileButton");
 
-        //DOCUMENTS
+    }
+
+    public static void shareCreationSubmit() {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -231,18 +247,6 @@ public class OpenCSD4FundFlowAcceptanceTest {
         System.out.println(popupSubheading);
         assertTrue(popupSubheading.equals("Info!"));
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
-
-        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        System.out.println(shareCountPre + " Shares are in the listings before");
-        System.out.println(shareCountPost + " Shares are in the listings after");
-
-        assertTrue(shareCountPost == shareCountPre + 1);
-
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-
-        getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
     }
 
 }
