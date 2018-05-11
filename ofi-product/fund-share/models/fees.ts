@@ -6,49 +6,57 @@ export class ShareFeesMandatory extends DynamicFormsValidator {
         label: 'Management Fee Maximum',
         required: true,
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_manfeemax'
+        mltag: 'txt_fundshare_manfeemax',
+        isBlockchainValue: true
     }
     maxSubscriptionFee: FormItem = {
         type: FormItemType.number,
         label: 'Subscription Fee Maximum',
         required: true,
-        mltag: 'txt_fundshare_subfeemax'
+        mltag: 'txt_fundshare_subfeemax',
+        isBlockchainValue: true
     }
     maxRedemptionFee: FormItem = {
         type: FormItemType.number,
         label: 'Redemption Fee Maximum',
         required: true,
-        mltag: 'txt_fundshare_maxredfee'
+        mltag: 'txt_fundshare_maxredfee',
+        isBlockchainValue: true
     }
     mifiidChargesOngoing: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Ongoing Charges',
         required: true,
-        mltag: 'txt_fundshare_mifidoncharges'
+        mltag: 'txt_fundshare_mifidoncharges',
+        isBlockchainValue: true
     }
     mifiidChargesOneOff: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - One-off Charges',
         required: true,
-        mltag: 'txt_fundshare_mifidoneoffcharges'
+        mltag: 'txt_fundshare_mifidoneoffcharges',
+        isBlockchainValue: true
     }
     mifiidTransactionCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Costs related to transactions initiated',
         required: true,
-        mltag: 'txt_fundshare_mifidtranscosts'
+        mltag: 'txt_fundshare_mifidtranscosts',
+        isBlockchainValue: true
     }
     mifiidServicesCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Charges related to ancillary services',
         required: true,
-        mltag: 'txt_fundshare_mifidanccharges'
+        mltag: 'txt_fundshare_mifidanccharges',
+        isBlockchainValue: true
     }
     mifiidIncidentalCosts: FormItem = {
         type: FormItemType.number,
         label: 'MiFID II - Incidental Costs',
         required: true,
-        mltag: 'txt_fundshare_mifidincidentcosts'
+        mltag: 'txt_fundshare_mifidincidentcosts',
+        isBlockchainValue: true
     }
 }
 
