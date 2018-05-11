@@ -78,16 +78,16 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 maximumNumDecimal: item.get('maximumNumDecimal', ''),
                 subscriptionCategory: item.get('subscriptionCategory', ''),
                 subscriptionCurrency: item.get('subscriptionCurrency', ''),
-                minInitialSubscriptionInShare: item.get('minInitialSubscriptionInShare', ''),
-                minInitialSubscriptionInAmount: item.get('minInitialSubscriptionInAmount', ''),
-                minSubsequentSubscriptionInShare: item.get('minSubsequentSubscriptionInShare', ''),
-                minSubsequentSubscriptionInAmount: item.get('minSubsequentSubscriptionInAmount', ''),
+                minInitialSubscriptionInShare: convertBlockchainNumber(item.get('minInitialSubscriptionInShare', '')),
+                minInitialSubscriptionInAmount: convertBlockchainNumber(item.get('minInitialSubscriptionInAmount', '')),
+                minSubsequentSubscriptionInShare: convertBlockchainNumber(item.get('minSubsequentSubscriptionInShare', '')),
+                minSubsequentSubscriptionInAmount: convertBlockchainNumber(item.get('minSubsequentSubscriptionInAmount', '')),
                 redemptionCategory: item.get('redemptionCategory', ''),
                 redemptionCurrency: item.get('redemptionCurrency', ''),
-                minInitialRedemptionInShare: item.get('minInitialRedemptionInShare', ''),
-                minInitialRedemptionInAmount: item.get('minInitialRedemptionInAmount', ''),
-                minSubsequentRedemptionInShare: item.get('minSubsequentRedemptionInShare', ''),
-                minSubsequentRedemptionInAmount: item.get('minSubsequentRedemptionInAmount', ''),
+                minInitialRedemptionInShare: convertBlockchainNumber(item.get('minInitialRedemptionInShare', '')),
+                minInitialRedemptionInAmount: convertBlockchainNumber(item.get('minInitialRedemptionInAmount', '')),
+                minSubsequentRedemptionInShare: convertBlockchainNumber(item.get('minSubsequentRedemptionInShare', '')),
+                minSubsequentRedemptionInAmount: convertBlockchainNumber(item.get('minSubsequentRedemptionInAmount', '')),
                 subscriptionTradeCyclePeriod: item.get('subscriptionTradeCyclePeriod', ''),
                 numberOfPossibleSubscriptionsWithinPeriod: item.get('numberOfPossibleSubscriptionsWithinPeriod', ''),
                 weeklySubscriptionDealingDays: item.get('weeklySubscriptionDealingDays', ''),
@@ -108,15 +108,15 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 redemptionCutOffTimeZone: item.get('redemptionCutOffTimeZone', ''),
                 redemptionSettlementPeriod: item.get('redemptionSettlementPeriod', ''),
                 subscriptionRedemptionCalendar: item.get('subscriptionRedemptionCalendar', ''),
-                maxManagementFee: item.get('maxManagementFee', ''),
-                maxSubscriptionFee: item.get('maxSubscriptionFee', ''),
-                maxRedemptionFee: item.get('maxRedemptionFee', ''),
+                maxManagementFee: convertBlockchainNumber(item.get('maxManagementFee', '')),
+                maxSubscriptionFee: convertBlockchainNumber(item.get('maxSubscriptionFee', '')),
+                maxRedemptionFee: convertBlockchainNumber(item.get('maxRedemptionFee', '')),
                 investorProfile: item.get('investorProfile', ''),
-                mifiidChargesOngoing: item.get('mifiidChargesOngoing', ''),
-                mifiidChargesOneOff: item.get('mifiidChargesOneOff', ''),
-                mifiidTransactionCosts: item.get('mifiidTransactionCosts', ''),
-                mifiidServicesCosts: item.get('mifiidServicesCosts', ''),
-                mifiidIncidentalCosts: item.get('mifiidIncidentalCosts', ''),
+                mifiidChargesOngoing: convertBlockchainNumber(item.get('mifiidChargesOngoing', '')),
+                mifiidChargesOneOff: convertBlockchainNumber(item.get('mifiidChargesOneOff', '')),
+                mifiidTransactionCosts: convertBlockchainNumber(item.get('mifiidTransactionCosts', '')),
+                mifiidServicesCosts: convertBlockchainNumber(item.get('mifiidServicesCosts', '')),
+                mifiidIncidentalCosts: convertBlockchainNumber(item.get('mifiidIncidentalCosts', '')),
                 keyFactOptionalData: item.get('keyFactOptionalData', ''),
                 profileOptionalData: item.get('profileOptionalData', ''),
                 priipOptionalData: item.get('priipOptionalData', ''),
@@ -160,4 +160,10 @@ function handleSetCurrentRequest(state: OfiFundShareState, action: Action): OfiF
     return Object.assign({}, state, {
         currentRequest
     });
+}
+
+function convertBlockchainNumber(number: any): number {
+    // TODO:    we need a better way of getting the divisible number,
+    //          could not think of one at time of writing. pz.
+    return parseInt(number) / 100000;
 }

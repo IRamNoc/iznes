@@ -163,11 +163,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.type === 'subscribe' ? this.shareData.subscriptionCutOffTime : this.shareData.redemptionCutOffTime;
     }
 
-    get currency(): number {
-        return {
-            subscribe: FundShareValue.CurrencyValue[this.shareData['subscriptionCurrency']],
-            redeem: FundShareValue.CurrencyValue[this.shareData['redemptionCurrency']]
-        }[this.type];
+    get currency(): string {
+        return FundShareValue.CurrencyValue[this.shareData['shareClassCurrency']];
     }
 
     get today(): string {
