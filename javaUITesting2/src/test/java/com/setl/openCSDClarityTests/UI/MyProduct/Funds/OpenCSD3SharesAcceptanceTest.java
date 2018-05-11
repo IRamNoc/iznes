@@ -66,13 +66,34 @@ public class OpenCSD3SharesAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
 
+        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+
+        String [] unFundDetails = generateRandomFundsDetails();
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(unFundDetails[0]);
+
+        //Assert fund table displays the information for the fund created previously, including umbFund
+        getFundTableRow(fundCount, unFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", "");
+
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
 
         waitForNewShareButton();
         //waitForNewFundShareTitle();
-        openDropdownAndSelectOption("selectFund", 1);
+
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(unFundDetails[0]);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage());
+        }
+
         wait.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
         wait.until(elementToBeClickable(By.id("buttonSelectFund")));
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
@@ -99,6 +120,9 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
+        scrollElementIntoViewById("cancelFundShareBottom");
+        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
+        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         assertClassRequiredIsPresent("tabKeyFactsButton");
@@ -185,7 +209,7 @@ public class OpenCSD3SharesAcceptanceTest {
         String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
-        getShareTableRow(shareNameNo, uFundDetails[0], uIsin[0], "Test_Fund_QtsgTUpdatedOpenCSD3SharesAcceptanceTest", "EUR Euro", "Management Company", "", "share class", "Open" );
+        getShareTableRow(shareNameNo, uFundDetails[0], uIsin[0], unFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
     }
 
 }
