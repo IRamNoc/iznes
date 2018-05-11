@@ -23,12 +23,11 @@ import {MockMailHelper} from './mockMailHelper';
 import {ActivatedRoute, RouterModule} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {APP_BASE_HREF} from '@angular/common';
-import {APP_CONFIG} from '@setl/utils';
+import {APP_CONFIG, LogServiceMock, LogService} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { ToasterService } from 'angular2-toaster';
-import {MailHelper} from './mailHelper';
 
 const routes = [
     {
@@ -133,7 +132,8 @@ describe('SetlMessagesComponent', () => {
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
-                }
+                },
+                {provide: LogService, useValue: LogServiceMock}
             ]
         }).compileComponents();
         MockNgRedux.reset();
