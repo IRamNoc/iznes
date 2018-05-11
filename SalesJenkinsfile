@@ -27,12 +27,14 @@ node {
             }
         }
 
-        stage('Deploy French Fund Daemon to Sales Environment') {
-            node {
-                sh '''
-                            ssh root@sales.iznes.io rsync -avzhm --stats /var/phpapps/frenchfunddaemon /var/ofi_backups/frenchfunddaemon &&
-                            rsync -avhm --stats /var/lib/jenkins/Deploy/ffdaemon/* root@sales.iznes.io:/var/phpapps/frenchfunddaemon'''
-            }
+        stage('Deploy Daemon Node to Sales Environment') {
+
+            sh '''
+                            ssh root@sales.iznes.io rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
+                            rsync -avhm --stats --exclude \'.env\' /var/lib/jenkins/Deploy/daemon-node/* root@sales.iznes.io:/var/phpapps/daemon-node
+                            ssh -t root@sales.iznes.io \'cd /var/phpapps/daemon-node ; bash && npm install \'                            
+                            ssh -t root@sales.iznes.io \'cd /var/phpapps/daemon-node ; bash && npm run build \'                            
+                            '''
         }
 
         stage('Update Dependencies') {
