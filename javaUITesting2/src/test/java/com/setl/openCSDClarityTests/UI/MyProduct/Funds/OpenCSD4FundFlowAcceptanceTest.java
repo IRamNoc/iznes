@@ -147,6 +147,9 @@ public class OpenCSD4FundFlowAcceptanceTest {
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
+        scrollElementIntoViewById("couponType");
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("couponType")));
+        wait.until(elementToBeClickable(By.id("couponType")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         assertClassRequiredIsPresent("tabKeyFactsButton");
