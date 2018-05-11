@@ -3,14 +3,14 @@ import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {InitialisationService} from '../initialisation/initialisation.service';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 
 @Injectable()
 export class WalletnodeChannelService {
 
-    constructor(private ngRedux: NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
     }
 
     /**
@@ -21,9 +21,9 @@ export class WalletnodeChannelService {
      * @param userData
      */
     resolveChannelMessage(id, message, userData) {
-        console.log(this.ngRedux);
-        console.log('-------received update from wallet node-------');
-        console.log(id, message, userData);
+        this.logService.log(this.ngRedux);
+        this.logService.log('-------received update from wallet node-------');
+        this.logService.log(id, message, userData);
 
 
         const updateType = _.get(message, 'MessageType', '');
@@ -51,13 +51,13 @@ export class WalletnodeChannelService {
          * Effective transactions,
          * and etc.
          */
-        console.log('---handle block update---');
+        this.logService.log('---handle block update---');
         InitialisationService.updatedWalletNodeTxStateWithBlock(this.ngRedux, data);
     }
 
 
     handleStateViewUpdate(data) {
-        console.log('---handle state view update---');
+        this.logService.log('---handle state view update---');
         /**
          * Has all balance view, we can update redux balance state here.
          */
@@ -68,7 +68,7 @@ export class WalletnodeChannelService {
         /**
          * if contracts relate to current wallet has change.
          */
-        console.log('---handle block update---');
+        this.logService.log('---handle block update---');
         InitialisationService.clearWalletNodeRequestedStates(this.ngRedux);
         InitialisationService.updatedWalletNodeTxStateWithBlockChange(this.ngRedux, data);
     }

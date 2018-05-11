@@ -114,7 +114,6 @@ export class PdfService {
     //             '&token=' + this.token +
     //             '&fileHash=' + fileHash;
 	//
-    //         console.log('Serving from path:' + path);
     //     }
     // }
 }

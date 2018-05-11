@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import {ToasterService} from 'angular2-toaster';
 
 import {
@@ -39,6 +39,7 @@ export class ChannelService {
     constructor(private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private myWalletsService: MyWalletsService,
+                private logService: LogService,
                 private chainService: ChainService) {
         this.checkChangedPassword.subscribe(
             (data) => {
@@ -62,15 +63,15 @@ export class ChannelService {
         data = JSON.parse(data);
 
         // The Hench Switch Statement of Channels.
-        console.log(' |--- Resolving Core channel broadcast.');
-        console.log(' | name: ', data.Request);
-        console.log(' | data: ', data);
+        this.logService.log(' |--- Resolving Core channel broadcast.');
+        this.logService.log(' | name: ', data.Request);
+        this.logService.log(' | data: ', data);
         switch (data.Request) {
             case 'nu': // new user
             case 'udu': // update user
             case 'du': // delete user
                 /* Let's get the new user object. */
-                console.log(' | NEW USERS LIST: ', data);
+                this.logService.log(' | NEW USERS LIST: ', data);
 
                 /* Let's now dispatch the append acion. */
                 this.ngRedux.dispatch(
@@ -83,7 +84,7 @@ export class ChannelService {
                 break;
 
             case 'ud': // update details
-                console.log(' | UPDATE USERDETAILS: ', data);
+                this.logService.log(' | UPDATE USERDETAILS: ', data);
 
                 /* Let's now dispatch the append acion. */
                 this.ngRedux.dispatch(
@@ -95,8 +96,8 @@ export class ChannelService {
                 break;
 
             case 'setpassword': // guess...
-                console.log(' | UPDATE USER PASSWORD: ', data);
-                console.log(this.changedPassword);
+                this.logService.log(' | UPDATE USER PASSWORD: ', data);
+                this.logService.log(this.changedPassword);
                 if (this.changedPassword !== true) {
                     document.location.reload(true);
                 }
@@ -106,7 +107,7 @@ export class ChannelService {
             case 'ng': // new group
             case 'upg': // update permissions group
             case 'dpg': // delete permissions group
-                console.log(' | UPDATE PERMISSION GROUPS: ', data);
+                this.logService.log(' | UPDATE PERMISSION GROUPS: ', data);
 
                 /* Let's now dispatch the admin acion. */
                 this.ngRedux.dispatch(
@@ -128,7 +129,7 @@ export class ChannelService {
             case 'nw': // new wallet
             case 'udw': // update wallet
             case 'dw': // delete wallet
-                console.log(' | UPDATE MANAGE WALLET LIST: ', data);
+                this.logService.log(' | UPDATE MANAGE WALLET LIST: ', data);
 
                 /* ...and dispatch the update action. */
                 this.ngRedux.dispatch(
@@ -143,7 +144,7 @@ export class ChannelService {
             case 'nm': // new member
             case 'udm': // update member
             case 'dm': // delete member
-                console.log(' | Update Manage Member list: ', data);
+                this.logService.log(' | Update Manage Member list: ', data);
 
                 /* ...and dispatch the update action. */
                 this.ngRedux.dispatch(
@@ -157,7 +158,7 @@ export class ChannelService {
             case 'na': // new account (group)
             case 'uda': // update account (group)
             case 'da': // delete account (group)
-                console.log(' | Update Account (Group) list: ', data);
+                this.logService.log(' | Update Account (Group) list: ', data);
 
                 /* ...and dispatch the update action. */
                 this.ngRedux.dispatch(
@@ -169,7 +170,7 @@ export class ChannelService {
                 break;
 
             case 'uduwp': // update user wallet permissions
-                console.log(' | UPDATE USER WALLET PERMISSION: ');
+                this.logService.log(' | UPDATE USER WALLET PERMISSION: ');
 
                 const asyncTaskPipesDirectory = this.myWalletsService.requestWalletDirectory();
 
