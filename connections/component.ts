@@ -1,7 +1,8 @@
 // Vendor
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-
+import {get as getValue} from 'lodash';
+import {ClrTabs} from '@clr/angular';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 // Internal
@@ -47,6 +48,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     isDeleteModalDisplayed: boolean;
     isEditTabDisplayed: boolean;
     isAcceptModalDisplayed: boolean;
+    isEditTabClosed: boolean;
     connectionToBind: any;
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
@@ -76,6 +78,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.requestedWalletAddress = false;
         this.isDeleteModalDisplayed = false;
         this.isEditTabDisplayed = false;
+        this.isEditTabClosed = true;
         this.isAcceptedTabDisplayed = false;
         this.isAcceptModalDisplayed = false;
 
@@ -318,14 +321,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     handleEditButtonClick(connection) {
-        const selectedSubPortfolio = connection.subPortfolio;
         const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
+        const selectedSubPortfolio = connection.subPortfolio;
+        const connectionFormControl = this.formGroup.controls['connection'];
 
-        this.formGroup.controls['connection'].patchValue([selectedConnection]);
-        this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
+        if(getValue(connectionFormControl, ['value', '0', 'id']) !== selectedConnection.id){
+            this.formGroup.controls['connection'].patchValue([selectedConnection]);
+            this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
+        }
 
         this.isAcceptedTabDisplayed = false;
         this.isEditTabDisplayed = true;
+        this.isEditTabClosed = false;
     }
 
     handleDeleteButtonClick(connection) {
@@ -357,6 +364,17 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 console.error('error on reject connection: ', error);
             })
         );
+    }
+
+    handleCloseButtonClick(){
+        this.formGroup.patchValue({
+            'connection' : [],
+            'sub-portfolio' : []
+        });
+
+        this.isEditTabDisplayed = false;
+        this.isEditTabClosed = true;
+        this.isAcceptedTabDisplayed = true;
     }
 
     onAcceptConnection(isOk: boolean) {
@@ -468,7 +486,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.connectionToBind = null;
 
         this.isAcceptedTabDisplayed = false;
-        // this.isEditTabDisplayed = false;
+        this.isEditTabClosed = true;
         this.isAcceptModalDisplayed = false;
         this.isDeleteModalDisplayed = false;
 
