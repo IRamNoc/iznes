@@ -70,7 +70,7 @@ public class OpenCSD3SharesAcceptanceTest {
         int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
 
         waitForNewShareButton();
-        waitForNewFundShareTitle();
+        //waitForNewFundShareTitle();
         openDropdownAndSelectOption("selectFund", 1);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
