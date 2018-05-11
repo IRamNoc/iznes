@@ -81,7 +81,7 @@ describe('SetlLoginComComponent', () => {
                     useValue: environment,
                 },
                 LoginGuardService,
-                {provide: LogService, useValue: LogServiceMock}
+                {provide: LogService, useClass: LogServiceMock}
             ]
         })
             .compileComponents();
