@@ -73,7 +73,6 @@ function formatFundDataResponse(rawFundData: Array<any>): Array<FundDetail> {
 }
 
 function formatFundshareDataResponse(rawFundShareData: Array<any>): Array<FundDetail> {
-    // console.log('reducer fundShare', rawFundShareData);
     const rawFundShareDataList = fromJS(rawFundShareData);
 
     const fundShareDetailList = Map(rawFundShareDataList.reduce(

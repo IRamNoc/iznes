@@ -22,7 +22,7 @@ import {ToasterService} from 'angular2-toaster';
 import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 /* Utils. */
-import {SagaHelper, NumberConverterService} from '@setl/utils';
+import {SagaHelper, NumberConverterService, LogService} from '@setl/utils';
 import {FundComponent} from '../fund/component';
 
 @Component({
@@ -109,6 +109,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _toasterService: ToasterService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
         private _ofiManagementCompanyService: OfiManagementCompanyService,
+        private logService: LogService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -481,13 +482,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    // console.log('save success new fund', data); // success
+                    // this.logService.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
                     this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
                     this._location.back();
                 },
                 (data) => {
-                    console.log('Error: ', data);
+                    this.logService.log('Error: ', data);
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
@@ -504,13 +505,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    // console.log('save success new fund', data); // success
+                    // this.logService.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
                     this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully created!');
                     this._location.back();
                 },
                 (data) => {
-                    console.log('Error: ', data);
+                    this.logService.log('Error: ', data);
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;

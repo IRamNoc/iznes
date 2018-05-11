@@ -16,7 +16,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
-import {APP_CONFIG, AppConfig, commonHelper, ConfirmationService, immutableHelper, SagaHelper} from '@setl/utils';
+import {APP_CONFIG, AppConfig, commonHelper, ConfirmationService, immutableHelper, SagaHelper, LogService} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -216,6 +216,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private _ofiFundInvestService: OfiFundInvestService,
+                private logService: LogService,
                 public _numberConverterService: NumberConverterService) {
 
         this.appConfig = appConfig;
@@ -399,7 +400,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getAmOrdersFiltersFromRedux(filters) {
         this.filtersFromRedux = filters;
 
-        console.log(this.filtersFromRedux);
+        this.logService.log(this.filtersFromRedux);
         this.applyFilters();
         this.changeDetectorRef.markForCheck();
     }
@@ -539,7 +540,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     updateCurrentFundShare() {
-        console.log('there', this.fundShareListObj);
+        this.logService.log('there', this.fundShareListObj);
 
         const currentFundShare = this.fundShareListObj[this.fundShareID];
         if (typeof currentFundShare.keyFactOptionalData === 'string') {
@@ -645,11 +646,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 // this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
                 // this.handleClose();
                 // this._router.navigateByUrl('/order-book/my-orders/list');
-                console.log(data);
+                this.logService.log(data);
             }).catch((data) => {
                 const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
                 // this._toaster.pop('warning', errorMessage);
-                console.log(data);
+                this.logService.log(data);
             });
         }
     }
@@ -676,12 +677,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        console.log('cancel order success', data); // success
+                        this.logService.log('cancel order success', data); // success
                         this.loading = true;
                         this.getOrdersList();
                     },
                     (data) => {
-                        console.log('Error: ', data);
+                        this.logService.log('Error: ', data);
                     })
                 );
             }

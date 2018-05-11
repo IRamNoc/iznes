@@ -10,6 +10,7 @@ import {APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterS
 import {OfiOrdersService} from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
 import {ofiSetRequestedHomeOrder} from '@ofi/ofi-main/ofi-store';
 import * as math from 'mathjs';
+import {LogService} from "@setl/utils";
 
 @Component({
     styleUrls: ['./component.css'],
@@ -48,9 +49,11 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         private _fb: FormBuilder,
         private _router: Router,
         private multilingualService: MultilingualService,
-        @Inject(APP_CONFIG) appConfig: AppConfig,
+        private logService: LogService,
+        @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
+
     }
 
     ngAfterViewInit() {

@@ -11,7 +11,7 @@ import {OfiNavService} from '../ofi-req-services/ofi-product/nav/service';
 import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
 import {WalletnodeTxService} from '@setl/core-req-services/walletnode-tx/walletnode-tx.service';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, commonHelper} from '@setl/utils';
+import {SagaHelper, commonHelper, LogService} from '@setl/utils';
 import {clearContractNeedHandle, clearRegisterIssuerNeedHandle} from '@setl/core-store';
 import {setLastCreatedRegisterIssuerDetail} from '@setl/core-store/assets/my-issuers/actions';
 import * as moment from 'moment';
@@ -30,6 +30,7 @@ export class OfiPostTxService implements OnDestroy {
                 private walletnodeTxService: WalletnodeTxService,
                 private _adminUsersService: AdminUsersService,
                 private _ofiNavService: OfiNavService,
+                private logService: LogService,
                 private _alertsService: AlertsService) {
         this.subscriptionsArray.push(
             this.lastCreatedContractOb.subscribe(lastCreated => this.handleLastCreatedContract(lastCreated)),
@@ -46,18 +47,18 @@ export class OfiPostTxService implements OnDestroy {
 
     handleLastCreatedIssuer(lastCreated) {
 
-        console.log('blockchain output lastCreated: ', lastCreated);
+        this.logService.log('blockchain output lastCreated: ', lastCreated);
 
         const needHandle = lastCreated.needHandle;
         const inBlockchain = lastCreated.inBlockchain;
-        // console.log('needHandle', needHandle);
-        // console.log('inBlockchain', inBlockchain);
+        // this.logService.log('needHandle', needHandle);
+        // this.logService.log('inBlockchain', inBlockchain);
 
         const actionType = _.get(lastCreated, 'metaData.actionType');
-        // console.log('actionType', actionType);
+        // this.logService.log('actionType', actionType);
 
         if (actionType === 'ofi-create-new-share') {
-            // console.log('handleLastCreatedIssuer', lastCreated);
+            // this.logService.log('handleLastCreatedIssuer', lastCreated);
             const currentStep = _.get(lastCreated, 'metaData.arrangementData.currentStep');
             if (needHandle && inBlockchain) {
                 if (currentStep === 'saveRegisterAsset') {
@@ -75,7 +76,7 @@ export class OfiPostTxService implements OnDestroy {
     }
 
     handleLastCreatedContract(lastCreated) {
-        console.log('ok:', lastCreated);
+        this.logService.log('ok:', lastCreated);
         const needHandle = lastCreated.needHandle;
         const inBlockchain = lastCreated.inBlockchain;
 
@@ -90,7 +91,7 @@ export class OfiPostTxService implements OnDestroy {
     }
 
     createArrangement(requestData): void {
-        console.log('creating arrangement');
+        this.logService.log('creating arrangement');
         const arrangementData = _.get(requestData, 'metaData.arrangementData', {});
 
         // save arrangement
@@ -126,7 +127,7 @@ export class OfiPostTxService implements OnDestroy {
                 this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     addMapAsyncPipe,
                     (addMapResponse) => {
-                        console.log('success----------------');
+                        this.logService.log('success----------------');
                     },
                     (addMapResponse) => {
                         this.showErrorResponse(addMapResponse);
@@ -179,13 +180,13 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('1) saveNewWallet : success', data); // success
+                // this.logService.log('1) saveNewWallet : success', data); // success
                 const walletID = data[1].Data[0].walletID;
                 requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].walletID = walletID;
                 this.saveNewWalletPermission(requestData);
             },
             (data) => {
-                console.log('saveNewWallet Error: ', data);
+                this.logService.log('saveNewWallet Error: ', data);
             })
         );
     }
@@ -204,13 +205,13 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('2) saveNewWalletPermission : success', data); // success
+                // this.logService.log('2) saveNewWalletPermission : success', data); // success
                 setTimeout(() => {
                     this.saveNewAddress(requestData);
                 }, 2000);
             },
             (data) => {
-                console.log('saveNewWalletPermission Error: ', data);
+                this.logService.log('saveNewWalletPermission Error: ', data);
             })
         );
     }
@@ -225,13 +226,13 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('3) saveNewAddress : success', data); // success
+                // this.logService.log('3) saveNewAddress : success', data); // success
                 const address = data[1].data.address;
                 requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].address = address;
                 this.saveRegisterIssuer(requestData);
             },
             (data) => {
-                console.log('saveNewAddress Error: ', data);
+                this.logService.log('saveNewAddress Error: ', data);
             })
         );
     }
@@ -249,7 +250,7 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('4) saveRegisterIssuer : success', data); // success
+                // this.logService.log('4) saveRegisterIssuer : success', data); // success
                 this._ngRedux.dispatch(setLastCreatedRegisterIssuerDetail(data, {
                     actionType: 'ofi-create-new-share',
                     arrangementData: {
@@ -262,7 +263,7 @@ export class OfiPostTxService implements OnDestroy {
                 }));
             },
             (data) => {
-                console.log('saveRegisterIssuer Error: ', data);
+                this.logService.log('saveRegisterIssuer Error: ', data);
             })
         );
     }
@@ -284,11 +285,11 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('5) saveRegisterAsset : success', data); // success
+                // this.logService.log('5) saveRegisterAsset : success', data); // success
                 this.saveCoupon(requestData);
             },
             (data) => {
-                console.log('saveRegisterAsset Error: ', data);
+                this.logService.log('saveRegisterAsset Error: ', data);
             })
         );
     }
@@ -309,11 +310,11 @@ export class OfiPostTxService implements OnDestroy {
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('6) saveCoupon : success', data); // success
+                // this.logService.log('6) saveCoupon : success', data); // success
                 this.saveIssueAssetMap(requestData);
             },
             (data) => {
-                console.log('saveCoupon Error: ', data);
+                this.logService.log('saveCoupon Error: ', data);
             })
         );
     }
@@ -336,7 +337,7 @@ export class OfiPostTxService implements OnDestroy {
                 const estimatedNav = requestData.metaData.arrangementData.sharesList[requestData.metaData.arrangementData.currentShare].initialEstimatedNav;
                 this.saveFundShareEstimatedNav(asset, estimatedNav);
 
-                // console.log('7) saveIssueAssetMap : success', data); // success
+                // this.logService.log('7) saveIssueAssetMap : success', data); // success
                 const nbShares = requestData.metaData.arrangementData.sharesList.length;
                 if (requestData.metaData.arrangementData.currentShare < (nbShares - 1)) {
                     requestData.metaData.arrangementData.currentShare++;
@@ -368,13 +369,13 @@ export class OfiPostTxService implements OnDestroy {
                 }
             },
             (data) => {
-                console.log('saveIssueAssetMap Error: ', data);
+                this.logService.log('saveIssueAssetMap Error: ', data);
             })
         );
     }
 
     saveFundShareEstimatedNav(fundShare: string, estimatedNav: number) {
-        console.log('saving nav', fundShare, estimatedNav);
+        this.logService.log('saving nav', fundShare, estimatedNav);
         const asyncTaskPipe = this._ofiNavService.updateNav({
             fundName: fundShare,
             fundDate: moment().format('YYYY-MM-DD'),

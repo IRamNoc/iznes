@@ -4,6 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
+import {LogService} from '@setl/utils';
 
 @Component({
     templateUrl: './place-orders.component.html',
@@ -53,6 +54,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private kycService: OfiKycService,
                 private redux: NgRedux<any>,
+                private logService: LogService,
                 private route: ActivatedRoute) {
 
         console.clear();
@@ -230,12 +232,12 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
     }
 
     handleModalConfirmButtonClick() {
-        console.log('investment portfolio: ', this.placeOrdersFormGroup.controls['investmentPortfolio'].value);
-        console.log('share name: ', this.placeOrdersFormGroup.controls['shareName'].value);
-        console.log('ISIN: ', this.placeOrdersFormGroup.controls['isin'].value);
-        console.log('currency: ', this.placeOrdersFormGroup.controls['currency'].value);
-        console.log('quantity: ', this.placeOrdersFormGroup.controls['quantity'].value);
-        console.log('amount: ', this.placeOrdersFormGroup.controls['amount'].value);
-        console.log('settlement date: ', this.placeOrdersFormGroup.controls['settlementDate'].value);
+        this.logService.log('investment portfolio: ', this.placeOrdersFormGroup.controls['investmentPortfolio'].value);
+        this.logService.log('share name: ', this.placeOrdersFormGroup.controls['shareName'].value);
+        this.logService.log('ISIN: ', this.placeOrdersFormGroup.controls['isin'].value);
+        this.logService.log('currency: ', this.placeOrdersFormGroup.controls['currency'].value);
+        this.logService.log('quantity: ', this.placeOrdersFormGroup.controls['quantity'].value);
+        this.logService.log('amount: ', this.placeOrdersFormGroup.controls['amount'].value);
+        this.logService.log('settlement date: ', this.placeOrdersFormGroup.controls['settlementDate'].value);
     }
 }

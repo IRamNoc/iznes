@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { Subpanel } from './models';
 import { MockKYCDocumentsService } from './documents.mock.service';
+import { LogService} from "@setl/utils";
 
 @Component({
     selector: 'app-invite-investors',
@@ -22,6 +23,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
         private _fb: FormBuilder,
         private _changeDetectorRef: ChangeDetectorRef,
         private service: MockKYCDocumentsService,
+        private logService: LogService,
     ) {
 
     }
@@ -208,15 +210,15 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
     }
 
     addShare() {
-        console.log('add new share!');
+        this.logService.log('add new share!');
     }
 
     addFund() {
-        console.log('add new fund!');
+        this.logService.log('add new fund!');
     }
 
     addUmbreallaFund() {
-        console.log('add umbrealla fund!');
+        this.logService.log('add umbrealla fund!');
     }
 
     /* On Destroy. */

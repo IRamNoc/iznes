@@ -11,7 +11,7 @@ import {InvestorModel} from './model';
 import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
 import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
-import {ConfirmationService} from '@setl/utils';
+import {ConfirmationService, LogService} from '@setl/utils';
 
 enum Statuses {
     waitingApproval = 1,
@@ -75,6 +75,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private toast: ToasterService,
                 private _router: Router,
                 private walletsService: MyWalletsService,
+                private logService: LogService,
                 private messagesService: MessagesService) {
 
         this.isRejectModalDisplayed = false;
@@ -351,9 +352,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             '',
             actionConfig
         ).then((result) => {
-            console.log('on message success: ', result);
+            this.logService.log('on message success: ', result);
         }).catch((error) => {
-            console.log('on message fail: ', error);
+            this.logService.log('on message fail: ', error);
         });
     }
 

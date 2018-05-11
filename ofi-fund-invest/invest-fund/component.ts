@@ -34,6 +34,7 @@ import {OrderHelper, OrderRequest} from '../../ofi-product/fund-share/helper/ord
 import {OrderByType} from '../../ofi-orders/order.model';
 import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
+import {LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-invest-fund',
@@ -309,6 +310,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _toaster: ToasterService,
                 private _router: Router,
+                private logService: LogService,
                 private _ngRedux: NgRedux<any>) {
     }
 
@@ -474,7 +476,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     requestAddressList(requestedState) {
         this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -536,7 +538,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     handleSubmit() {
         const request = this.buildOrderRequest();
 
-        console.log('place an order', request);
+        this.logService.log('place an order', request);
 
         if (this.isRedeemTooMuch) {
             return false;

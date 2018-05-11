@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
 import {fromJS} from 'immutable';
-import {ConfirmationService, immutableHelper, NumberConverterService, commonHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, NumberConverterService, commonHelper, LogService} from '@setl/utils';
 
 /* Services. */
 import {WalletNodeRequestService} from '@setl/core-req-services';
@@ -164,6 +164,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         private _confirmationService: ConfirmationService,
         private route: ActivatedRoute,
         private router: Router,
+        private logService: LogService,
         public _numberConverterService: NumberConverterService
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -184,7 +185,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Subscribe for the order filter. */
         this.subscriptions['order-filter'] = this.orderFilterOb.subscribe((filter) => {
             /* Check if we have a filter set. */
-            console.log(' | preset filter: ', filter);
+            this.logService.log(' | preset filter: ', filter);
             this.handlePresetFilter(filter);
 
             /* Detect changes. */
@@ -321,7 +322,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private handlePresetFilter(filter: string): void {
         if (filter != '') {
             /* If we do, then let's patch the form value... */
-            console.log(' | preset filter: ', filter);
+            this.logService.log(' | preset filter: ', filter);
             this.tabsControl[0].searchForm.controls['status'].patchValue(
                 this.getStatusByName(filter) // resolve the status
             );
@@ -361,7 +362,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Return. */
-        console.log(finds);
+        this.logService.log(finds);
         return finds;
     }
 
@@ -568,7 +569,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        console.log(" | Search form: ", searchForm);
+        this.logService.log(" | Search form: ", searchForm);
 
         /* Build the rest of it. */
         request['status'] = searchForm.status[0].id;
