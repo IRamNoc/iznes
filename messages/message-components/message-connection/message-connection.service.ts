@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {NgRedux} from '@angular-redux/store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Common, SagaHelper} from '@setl/utils';
+import {Common, SagaHelper, LogService} from '@setl/utils';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 
 import {MessagesService} from '../../../messages.service';
@@ -13,6 +13,7 @@ export class SetlMessageConnectionService {
                 private memberSocketService: MemberSocketService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private messageService: MessagesService,
+                private logService: LogService,
                 private alertsService: AlertsService) {
     }
 
@@ -41,7 +42,7 @@ export class SetlMessageConnectionService {
         this.messageService.markMessageAsActed(walletId, mailId, '').then((res) => {
             this.alertsService.create('success', 'The connection has successfully been accepted');
         }).catch((e) => {
-            console.log('mark mail as acted error', e);
+            this.logService.log('mark mail as acted error', e);
         });
     }
 
