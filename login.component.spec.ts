@@ -19,7 +19,7 @@ import {
     PermissionGroupServiceMock,
     RouterMock
 } from '@setl/core-test-util';
-import {APP_CONFIG} from '@setl/utils';
+import {APP_CONFIG, LogServiceMock, LogService} from '@setl/utils';
 import {
     MyUserService,
     MyWalletsService,
@@ -80,7 +80,8 @@ describe('SetlLoginComComponent', () => {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
-                LoginGuardService
+                LoginGuardService,
+                {provide: LogService, useValue: LogServiceMock}
             ]
         })
             .compileComponents();
