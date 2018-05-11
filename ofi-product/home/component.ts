@@ -197,7 +197,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this.columns['fundName'],
                 this.columns['shareCurrency'],
                 this.columns['managementCompany'],
-                this.columns['uFundName'],
+                // this.columns['uFundName'],
                 this.columns['shareClass'],
                 this.columns['status']
             ],
