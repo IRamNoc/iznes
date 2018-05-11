@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, LogService} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
 import {PersistService} from '@setl/core-persist';
@@ -60,6 +60,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 private _alertsService: AlertsService,
                 private _confirmationService: ConfirmationService,
                 private multilingualService: MultilingualService,
+                private logService: LogService,
                 private _persistService: PersistService) {
 
         this.tabsControl = [
@@ -232,7 +233,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     this.setTabActive(0);
                 },
                 (data) => {
-                    console.log('Error: ', data);
+                    this.logService.log('Error: ', data);
                     // this.showError(JSON.stringify(data));
                     this.showError('Error saving new Wallet Node. Please check that a Wallet Node with this name does not already exist.');
                     this.markForCheck();
@@ -270,7 +271,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     this.setTabActive(0);
                 },
                 (data) => {
-                    console.log('Error: ', data);
+                    this.logService.log('Error: ', data);
                     this.showError(JSON.stringify(data));
                     this.markForCheck();
                 }
@@ -294,7 +295,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 this.showSuccess('Wallet Node has been deleted');
             },
             (data) => {
-                console.log('error: ', data);
+                this.logService.log('error: ', data);
                 this.showError(JSON.stringify(data));
             }
         ));
@@ -374,7 +375,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
     /* SERVICES */
     getLanguage(requested): void {
-        // console.log('Language changed from ' + this.language + ' to ' + requested);
+        // this.logService.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
             switch (requested) {
                 case 'fra':
@@ -424,7 +425,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             {confirmText: 'Confirm', declineText: 'Cancel'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                console.log('button confirmation has been pressed (check alert)');
+                this.logService.log('button confirmation has been pressed (check alert)');
             }
         });
     }
