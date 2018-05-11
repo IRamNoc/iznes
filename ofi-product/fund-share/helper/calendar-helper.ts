@@ -356,26 +356,26 @@ export class CalendarHelper {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
+        const cutoffHour = this.cutoffTime.hours();
 
-        return cutoffDate.clone().businessAdd(this.valuationOffSet).set(
-            {hour: 7 - timeZoneDiff, minute: 0, second: 0}
-        );
+        return cutoffDate.clone().businessAdd(this.valuationOffSet).utc().set({
+            hour: 0,
+            minute: 0,
+            second: 1
+        });
     }
 
     getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const timeZoneDiff = getTimeZoneDiff(this.tradeTimeZone);
+        const cutoffHour = this.cutoffTime.hours();
 
-        const settlementDate = cutoffDate.clone().businessAdd(this.settlementOffSet).set(
-            {
-                hour: 7 - timeZoneDiff,
-                minute: 0,
-                second: 1
-            }
-        );
+        const settlementDate = cutoffDate.clone().businessAdd(this.settlementOffSet).utc().set({
+            hour: 0,
+            minute: 0,
+            second: 1
+        });
 
         if (settlementDate.isSame(moment(), 'day')) {
             return moment().add(2, 'minute');
