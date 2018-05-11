@@ -51,7 +51,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
-        // console.log(this.menuShown);
 
         /* Subscribe to the menu shown value in redux. */
         this.subscriptionsArray.push(this.menuShowOb.subscribe(

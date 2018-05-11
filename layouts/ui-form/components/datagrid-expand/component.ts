@@ -4,6 +4,7 @@ import {ConfirmationService, SagaHelper} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
 import * as _ from 'lodash';
+import {LogService} from '@setl/utils';
 
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
@@ -318,6 +319,7 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
     constructor(private _fb: FormBuilder,
                 private ngRedux: NgRedux<any>,
                 private _changeDetectorRef: ChangeDetectorRef,
+                private logService: LogService,
                 private _alertsService: AlertsService,
     ) {
         this.searchForm = this._fb.group({
@@ -386,10 +388,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         console.clear();
         // AGE
         if (this.searchForm.get('age').value !== '') {
-            console.log('AGE FILTER');
+            this.logService.log('AGE FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                // console.log(this.filteredDatas[i].age.toString(), this.searchForm.get('age').value.toString());
+                // this.logService.log(this.filteredDatas[i].age.toString(), this.searchForm.get('age').value.toString());
                 if (this.filteredDatas[i].age.toString() !== this.searchForm.get('age').value.toString()) {
                     idList.push(i);
                 }
@@ -402,10 +404,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         }
         // Genders
         if (this.searchForm.get('genders').value.length > 0) {
-            console.log('GENDERS FILTER');
+            this.logService.log('GENDERS FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                // console.log(this.filteredDatas[i].gender.toString(), this.searchForm.get('genders').value[0].id.toString());
+                // this.logService.log(this.filteredDatas[i].gender.toString(), this.searchForm.get('genders').value[0].id.toString());
                 if (this.filteredDatas[i].gender.toString() !== this.searchForm.get('genders').value[0].id.toString()) {
                     idList.push(i);
                 }
@@ -418,10 +420,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         }
         // Currencies
         if (this.searchForm.get('currencies').value.length > 0) {
-            console.log('CURRENCIES FILTER');
+            this.logService.log('CURRENCIES FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                // console.log(this.filteredDatas[i].currency.toString(), this.searchForm.get('currencies').value[0].id.toString());
+                // this.logService.log(this.filteredDatas[i].currency.toString(), this.searchForm.get('currencies').value[0].id.toString());
                 if (this.filteredDatas[i].currency.toString() !== this.searchForm.get('currencies').value[0].id.toString()) {
                     idList.push(i);
                 }
@@ -434,10 +436,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         }
         // Available
         if (this.searchForm.get('available').value.length > 0) {
-            console.log('AVAILABLE FILTER');
+            this.logService.log('AVAILABLE FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                console.log(this.filteredDatas[i].available.toString(), this.searchForm.get('available').value[0].id.toString());
+                this.logService.log(this.filteredDatas[i].available.toString(), this.searchForm.get('available').value[0].id.toString());
                 if (this.filteredDatas[i].available.toString() !== this.searchForm.get('available').value[0].id.toString()) {
                     idList.push(i);
                 }
@@ -450,10 +452,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         }
         // Startdate
         if (this.searchForm.get('startDate').value !== '') {
-            console.log('STARTDATE FILTER');
+            this.logService.log('STARTDATE FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                console.log(this.filteredDatas[i].startDate.toString(), this.searchForm.get('startDate').value.toString());
+                this.logService.log(this.filteredDatas[i].startDate.toString(), this.searchForm.get('startDate').value.toString());
                 const d1 = new Date(this.filteredDatas[i].startDate.toString());
                 const d2 = new Date(this.searchForm.get('startDate').value.toString());
                 if (d1 < d2) {
@@ -468,10 +470,10 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
         }
         // EndDate
         if (this.searchForm.get('endDate').value !== '') {
-            console.log('ENDDATE FILTER');
+            this.logService.log('ENDDATE FILTER');
             idList = [];
             for (let i = 0; i < this.filteredDatas.length; i++) {
-                console.log(this.filteredDatas[i].endDate.toString(), this.searchForm.get('endDate').value.toString());
+                this.logService.log(this.filteredDatas[i].endDate.toString(), this.searchForm.get('endDate').value.toString());
                 const d1 = new Date(this.filteredDatas[i].endDate.toString());
                 const d2 = new Date(this.searchForm.get('endDate').value.toString());
                 if (d1 > d2) {

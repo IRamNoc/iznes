@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
+import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
 
@@ -27,6 +27,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private multilingualService: MultilingualService,
+                private logService: LogService,
                 private ngRedux: NgRedux<any>) {
     }
 
@@ -58,7 +59,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 console.warn('Navigation Render: Missing user type!');
             }
 
-            console.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
+            this.logService.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
             /* Translate the menu. */
             this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
             if (!this.menuJson) {

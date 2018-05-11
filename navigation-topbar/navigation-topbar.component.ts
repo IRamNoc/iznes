@@ -9,7 +9,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
-import {APP_CONFIG, AppConfig, MenuItem, SagaHelper} from '@setl/utils';
+import {APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import {
     addWalletNodeInitialSnapshot,
@@ -94,6 +94,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
                 private initialisationService: InitialisationService,
+                private logService: LogService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -154,7 +155,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                             emitModelToViewChange: true,
                             emitViewToModelChange: true
                         });
-                        console.log(this.walletSelectItems[0]);
+                        this.logService.log(this.walletSelectItems[0]);
                         this.selected(this.walletSelectItems[0]);
 
                         /* set the chain id as the connected one in redux store */
@@ -249,7 +250,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             }
         ));
 
-        console.log(window.innerWidth);
+        this.logService.log(window.innerWidth);
 
         this.ngRedux.dispatch(setMenuShown(true));
     }
@@ -282,8 +283,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public selected(value: any): void {
-        console.log('Selected value is: ', value);
-        console.log(this.selectedWalletId);
+        this.logService.log('Selected value is: ', value);
+        this.logService.log(this.selectedWalletId);
 
         // Set connected wallet in redux state.
         this.ngRedux.dispatch(setConnectedWallet(value.id));
@@ -307,7 +308,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     public removed(value: any): void {
-        console.log('Removed value is: ', value);
+        this.logService.log('Removed value is: ', value);
     }
 
     logout() {
@@ -315,7 +316,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     controlMenu() {
-        console.log('menu pressed');
+        this.logService.log('menu pressed');
 
         if (this.menuState) {
             this.ngRedux.dispatch(setMenuShown(false));
@@ -325,8 +326,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     menuHasChanged() {
-        console.log('menu has changed');
-        console.log(this.menuState);
+        this.logService.log('menu has changed');
+        this.logService.log(this.menuState);
     }
 
     requestMailInitialCounts(requestedState: boolean): void {
