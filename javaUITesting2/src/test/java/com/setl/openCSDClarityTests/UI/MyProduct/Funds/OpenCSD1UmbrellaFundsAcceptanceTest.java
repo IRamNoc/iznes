@@ -62,7 +62,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         String umbFundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[1]/div[1]/a/h2")).getText();
         int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
         System.out.println(umbFundCount);
@@ -80,7 +80,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
 
         String umbFundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[1]/div[1]/a/h2")).getText();
         int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
@@ -152,7 +152,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectFieldsOnSharesFundsUmbrellaFundsPage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         validatePageLayout();
     }
 
@@ -160,7 +160,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldSeeCorrectHeadingsForUmbrellaFunds() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         validateUmbrellaFundsDataGridHeadings(umbrellaFundsHeadings);
     }
 
@@ -169,7 +169,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldCreateAnUmbrellaFundAndCheckDataBase() throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -196,7 +196,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfFranceIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -208,7 +208,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfLuxembourgIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -220,7 +220,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldShowTransferAgentIfIrelandIsSelected() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0]);
@@ -232,7 +232,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldIncreaseTitleNumberWhenUmbrellaFundIsCreated() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
         System.out.println(i);
@@ -256,7 +256,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     public void shouldUpdateUmbrellaFunds() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();

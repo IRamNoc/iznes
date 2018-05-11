@@ -59,7 +59,7 @@ public class OpenCSDSprint4AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectUmbrellaFund();
         verifyOptInfoPageContents();
         verifyUmbrellaFundMainInfoPageContents();
@@ -71,7 +71,7 @@ public class OpenCSDSprint4AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         int fundCount = createFund();
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));

@@ -72,7 +72,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
 
         //Create umbrella fund for later use
         selectAddUmbrellaFund();
