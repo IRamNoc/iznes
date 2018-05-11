@@ -6,7 +6,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {LoginGuardService} from "./login-guard.service";
 import * as _ from 'lodash';
 // Internals
-import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils';
+import {APP_CONFIG, AppConfig, SagaHelper, LogService} from '@setl/utils';
 import {
     AccountsService,
     ChainService,
@@ -88,6 +88,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
                 private loginGuardService: LoginGuardService,
+                private logService: LogService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -158,7 +159,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         window.onbeforeunload = null;
 
-        console.log(this.router);
+        this.logService.log(this.router);
 
     }
 
