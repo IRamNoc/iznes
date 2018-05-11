@@ -268,7 +268,7 @@ const ofiProductHome = {
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
-    router_link: '/product-module'
+    router_link: '/product-module/product'
 };
 const productsManagementCompany = {
     label: 'Management Company',
