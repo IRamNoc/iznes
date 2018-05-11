@@ -81,7 +81,6 @@ export class MessagesService {
         const currentWallet = _.find(this.walletDirectory, (obj) => {
             return obj.walletID === parseInt(this.connectedWallet, 10);
         });
-        console.log('Current Wallet contents: ', currentWallet);
         senderPub = currentWallet.commuPub;
 
         return this.sendMessageRequest(subject, body, this.connectedWallet, senderPub, recipients);

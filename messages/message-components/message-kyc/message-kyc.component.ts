@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MessageKycConfig} from './message-kyc.model';
 import {Router} from '@angular/router';
 import {kycMessages} from './message-kyc';
+import {LogService} from '@setl/utils';
 
 @Component({
     selector: 'setl-message-kyc',
@@ -16,7 +17,8 @@ export class SetlMessageKycComponent implements OnInit {
     @Input() config: MessageKycConfig;
     messageBody: Object;
 
-    constructor(private router: Router) {
+    constructor(private router: Router,
+                private logService: LogService,) {
         this.messageBody = null;
     }
 
@@ -35,7 +37,7 @@ export class SetlMessageKycComponent implements OnInit {
                 break;
         }
 
-        console.log('messageBody: ', this.messageBody);
+        this.logService.log('messageBody: ', this.messageBody);
     }
 
     replaceMessageValue(data) {

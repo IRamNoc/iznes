@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Common, SagaHelper} from '@setl/utils';
+import {Common, SagaHelper, LogService} from '@setl/utils';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 
 import {MessagesService} from '../../../messages.service';
@@ -14,6 +14,7 @@ export class SetlMessageFormActionService {
     constructor(private ngRedux: NgRedux<any>,
         private walletNodeSocketService: WalletNodeSocketService,
         private alertsService: AlertsService,
+                private logService: LogService,
         private messagesService: MessagesService) {}
 
     doAction(action: MessageAction, walletId: number, mailId: number) {
@@ -25,12 +26,12 @@ export class SetlMessageFormActionService {
             request,
             {},
             (data) => {
-                console.log('message action success:', data);
+                this.logService.log('message action success:', data);
 
                 this.onActionSuccess(data, walletId, mailId);
             },
             (data) => {
-                console.log('message action failed:', data);
+                this.logService.log('message action failed:', data);
 
                 this.onActionError(data);
             }
@@ -52,7 +53,7 @@ export class SetlMessageFormActionService {
 
             this.alertsService.create('success', message);
         }).catch((e) => {
-            console.log("mark mail as acted error", e);
+            this.logService.log("mark mail as acted error", e);
         });
     }
 

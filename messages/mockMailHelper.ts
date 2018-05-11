@@ -1,10 +1,11 @@
 import {MailHelper} from './mailHelper';
 import {NgRedux} from '@angular-redux/store';
 import {MyMessagesService} from '@setl/core-req-services/my-messages/my-messages.service';
+import {LogService} from '@setl/utils';
 
 export class MockMailHelper extends MailHelper {
 
-    constructor(ngRedux: any, myMessageService: any) {
+    constructor(ngRedux: any, myMessageService: any, private logService: LogService,) {
         super(ngRedux, myMessageService);
     }
 
@@ -23,7 +24,7 @@ export class MockMailHelper extends MailHelper {
         return new Promise((resolve, reject) => {
             message.isDecrypted = true;
             message.content = 'Decrypted Message';
-            console.log('calling this one');
+            this.logService.log('calling this one');
             resolve(message);
         });
     }

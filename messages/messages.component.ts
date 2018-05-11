@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig, immutableHelper} from '@setl/utils';
+import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
 import {setRequestedMailList} from '@setl/core-store';
 import {MyMessagesService} from '@setl/core-req-services';
 import {MessagesService} from "../messages.service";
@@ -93,6 +93,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private toaster: ToasterService,
+                private logService: LogService,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -292,7 +293,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     checkedPutBack() {
-        console.log('put back');
+        this.logService.log('put back');
     }
 
     getPadding(category) {
