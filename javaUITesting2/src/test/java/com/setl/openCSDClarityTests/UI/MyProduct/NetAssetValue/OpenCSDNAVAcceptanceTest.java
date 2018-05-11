@@ -116,5 +116,7 @@ public class OpenCSDNAVAcceptanceTest {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
+        navigateToNAVPage();
+
     }
 }
