@@ -1,9 +1,22 @@
 .mono {
-    font-family: monospace;
+  font-family: monospace;
 }
+
 .click {
-    display: block;
-    margin-top: 5px!important;
-    cursor: pointer;
-    width: 65px;
+  display: block;
+  margin-top: 5px !important;
+  cursor: pointer;
+  width: 65px;
+}
+
+.no-gutter {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.show-hide {
+  margin: 30px 0 0 0;
+  font-size: 18px;
+  color: grey;
+  cursor: pointer;
 }

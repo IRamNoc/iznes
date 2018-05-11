@@ -23,6 +23,7 @@ import {
     getMyDetail,
     SET_NEW_PASSWORD
 } from '@setl/core-store';
+import {MemberSocketService} from '@setl/websocket-service';
 
 interface TabState {
     detail: boolean;
@@ -330,6 +331,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private ngRedux: NgRedux<any>,
+                private memberSocketService: MemberSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private myUserService: MyUserService) {
         ngRedux.subscribe(() => this.updateState());
@@ -504,7 +506,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     changePass(formValues) {
-        // console.log(formValues);
+        //console.log(formValues);
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
             oldPassword: formValues.oldPassword,
@@ -527,10 +529,17 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                     this.alertsService.create('success', `
                         Your password has been successfully changed!
                     `);
+                    const token = _.get(data, '[1].Data[0].Token', '');
+                    this.memberSocketService.token = token;
                 },
-                {} // fail
+                (data) => {
+                    this.alertsService.create('error', `
+                        Password could not be changed. Please check and try again.
+                    `);
+                } // fail
             )
-        );
+        )
+        ;
 
     }
 
@@ -609,7 +618,7 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     handleCopyApiKey(event) {
-        var textArea = document.createElement('textarea');
+        let textArea = document.createElement('textarea');
         textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
         document.body.appendChild(textArea);
         textArea.value = this.apiKey;
