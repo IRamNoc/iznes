@@ -8,7 +8,7 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {ToasterService} from 'angular2-toaster';
 import {ClrDatagridStringFilterInterface} from '@clr/angular';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {ConfirmationService, immutableHelper} from '@setl/utils';
+import {ConfirmationService, immutableHelper, LogService} from '@setl/utils';
 import * as _ from 'lodash';
 import {permissionGroupActions} from '@setl/core-store';
 /* User Admin Service. */
@@ -91,6 +91,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 private router: Router,
                 private ngRedux: NgRedux<any>,
                 private _confirmationService: ConfirmationService,
+                private logService: LogService,
                 private _persistService: PersistService) {
         /* Stub. */
     }
@@ -303,7 +304,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                     }).catch((error) => {
                         /* Handle error. */
                         this.showError('failed to delete permission group');
-                        console.log('Failed to delet permission group: ', error);
+                        this.logService.log('Failed to delet permission group: ', error);
                     });
                 }
             });
@@ -449,10 +450,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Then send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
 
-                console.log('Set new group permissions.', response);
+                this.logService.log('Set new group permissions.', response);
             }).catch((error) => {
 
-                console.log('Failed to set new group permissions.', error);
+                this.logService.log('Failed to set new group permissions.', error);
             });
 
             /* Clear the form. */
@@ -463,7 +464,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
             this.showError('Failed to update this permission group.');
-            console.log('Failed to create new group.', error);
+            this.logService.log('Failed to create new group.', error);
         });
 
         /* Return. */

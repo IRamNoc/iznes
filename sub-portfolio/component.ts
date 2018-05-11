@@ -23,7 +23,7 @@ import {
     clearRequestedWalletAddresses
 } from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, immutableHelper} from '@setl/utils';
+import {SagaHelper, immutableHelper, LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-manage-sub-portfolio',
@@ -55,6 +55,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 private _memberService: MemberService,
                 private _walletnodeTxService: WalletnodeTxService,
                 private _walletNodeRequestService: WalletNodeRequestService,
+                private logService: LogService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
         /* tab meta */
@@ -91,7 +92,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     updateAddressList(addressList) {
-        console.log('addressList: ', addressList);
+        this.logService.log('addressList: ', addressList);
         this.addressObject = addressList;
         // const
 
@@ -117,7 +118,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
 
     requestAddressList(requestedState) {
         this.requestedWalletAddress = requestedState;
-        console.log('requested wallet address', this.requestedWalletAddress);
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
 
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -131,7 +132,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
 
     requestWalletLabel(requestedState) {
 
-        console.log('checking requested', this.requestedWalletAddress);
+        this.logService.log('checking requested', this.requestedWalletAddress);
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 

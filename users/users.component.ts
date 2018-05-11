@@ -16,6 +16,7 @@ import {UserAdminService} from '../useradmin.service';
 import {Subscription} from 'rxjs/Subscription';
 import {PersistService} from '@setl/core-persist';
 import {userAdminActions} from '@setl/core-store';
+import {LogService} from '@setl/utils';
 
 /* Decorator. */
 @Component({
@@ -78,6 +79,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private _persistService: PersistService,
+                private logService: LogService,
                 private _confirmationService: ConfirmationService) {
         /* Stub. */
     }
@@ -627,7 +629,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Handle success. */
             this.updateUserList(() => {
                 /* Handle success message & update users list */
-                console.log('Successfully created user.', response);
+                this.logService.log('Successfully created user.', response);
                 this.showSuccess('Successfully created user.');
             });
         }).catch((error) => {
@@ -676,9 +678,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 toDelete: adminGroupChanges.toDelete,
                 chainId: '0'
             }).then((response) => {
-                console.log('updated user admin groups.', response);
+                this.logService.log('updated user admin groups.', response);
             }).catch((error) => {
-                console.log('error updating user admin groups.', error);
+                this.logService.log('error updating user admin groups.', error);
                 this.showError('Failed to update this user\'s administrative groups.');
             });
 
@@ -689,9 +691,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 toDelete: txGroupChanges.toDelete,
                 chainId: thisTab['selectedChain']
             }).then((response) => {
-                console.log('updated user tx groups.', response);
+                this.logService.log('updated user tx groups.', response);
             }).catch((error) => {
-                console.log('error updating user tx groups.', error);
+                this.logService.log('error updating user tx groups.', error);
                 this.showError('Failed to update this user\'s transactional groups.');
             });
 
@@ -709,10 +711,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 toDelete: diffWalletAccess.toDelete,
             }).then((response) => {
                 /* Overwrite the old permissions, to allow diffing. */
-                console.log('updated user wallet permissions.', response);
+                this.logService.log('updated user wallet permissions.', response);
                 thisTab['oldWalletAccess'] = newWalletAccess;
             }).catch((error) => {
-                console.log('error updating user wallet permissions.', error);
+                this.logService.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
@@ -730,10 +732,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 toDelete: diffGroupWalletAccess.toDelete,
             }).then((response) => {
                 /* Overwrite the old permissions, to allow diffing. */
-                console.log('updated user group wallet permissions.', response);
+                this.logService.log('updated user group wallet permissions.', response);
                 thisTab['oldGroupWalletAccess'] = newGroupWalletAccess;
             }).catch((error) => {
-                console.log('error updating user group wallet permissions.', error);
+                this.logService.log('error updating user group wallet permissions.', error);
                 this.showError('Failed to update this user\'s group wallet permissions.');
             });
 
@@ -756,20 +758,20 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                         text: chain.chainName
                     };
                 });
-                console.log('updated user chain access: ', response);
+                this.logService.log('updated user chain access: ', response);
             }).catch((error) => {
-                console.log('error updating user wallet permissions.', error);
+                this.logService.log('error updating user wallet permissions.', error);
                 this.showError('Failed to update this user\'s wallet permissions.');
             });
 
             this.updateUserList(() => {
                 /* Handle success message & update users list */
-                console.log('Successfully edited user.', response);
+                this.logService.log('Successfully edited user.', response);
                 this.showSuccess('Successfully updated user details.');
             });
         }).catch((error) => {
             /* Handle error message. */
-            console.log('Failed to edit user.', error);
+            this.logService.log('Failed to edit user.', error);
             this.showError('Failed to update user details.');
         });
 
@@ -1080,7 +1082,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tabsControl[newTabId]['oldAdminGroups'] = userAdminPermissions;
         }).catch((error) => {
             /* handle the error message */
-            console.log('Editing user, admin permissions error: ', error);
+            this.logService.log('Editing user, admin permissions error: ', error);
             this.showError('Failed to fetch this user\'s administrative permissions.');
         });
 
@@ -1100,7 +1102,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.setFormChainId(newTabId, 0);
         }).catch((error) => {
             /* Handle the error message */
-            console.log('Editing user, tx permissions error: ', error);
+            this.logService.log('Editing user, tx permissions error: ', error);
             this.showError('Failed to fetch this user\'s transactional permissions.');
         });
 
@@ -1110,7 +1112,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* So now, we have access to the data in redux. */
             const userWalletPermissions = this.usersWalletPermissions[user.userID] || {};
             this.tabsControl[newTabId]['oldWalletAccess'] = {};
-            console.log('Got user wallet permission: ', userWalletPermissions);
+            this.logService.log('Got user wallet permission: ', userWalletPermissions);
 
             /* So first let's set the account ID on the tab... */
             this.setFormAccountId(newTabId, accountType[0]);
@@ -1152,7 +1154,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         }).catch((error) => {
             /* Handle the error message */
-            console.log('Editing user, wallet permission error: ', error);
+            this.logService.log('Editing user, wallet permission error: ', error);
             this.showError('Failed to fetch this user\'s wallet permissions.');
         });
 
@@ -1163,7 +1165,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             const userGroupWalletPermission = _.get(response, '[1].Data', []);
 
             this.tabsControl[newTabId]['oldGroupWalletAccess'] = {};
-            console.log('Got user group wallet permission: ', userGroupWalletPermission);
+            this.logService.log('Got user group wallet permission: ', userGroupWalletPermission);
 
             /* If this user has no wallet permissions... bail. */
             if (!Object.keys(userGroupWalletPermission).length) {
@@ -1199,7 +1201,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tabsControl[newTabId].formControl.controls['groupWalletsFull'].patchValue(fullAccessGroupWallets);
         }).catch((error) => {
             /* Handle the error message */
-            console.log('Editing user, group wallet permission error: ', error);
+            this.logService.log('Editing user, group wallet permission error: ', error);
             this.showError('Failed to fetch this user\'s group wallet permissions.');
         });
 
@@ -1207,14 +1209,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userAdminService.requestUserChainAccess({
             userId: user.userID
         }).then((response) => {
-            console.log('got chain access: ', response);
+            this.logService.log('got chain access: ', response);
             /* So we've requested the data, now we can access it. */
             let resolution, userChainAccess = this.usersChainAccess[user.userID] || [];
 
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
                 resolution = this.getChainById(chain.chainID);
-                console.log(resolution);
+                this.logService.log(resolution);
                 return {
                     id: resolution.chainId,
                     text: resolution.chainName,
@@ -1226,10 +1228,10 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Set the past access and the form control value. */
             this.tabsControl[newTabId]['oldChainAccess'] = userChainAccess;
             this.tabsControl[newTabId].formControl.controls['chainAccess'].patchValue(userChainAccess);
-            console.log('update value', this.tabsControl);
+            this.logService.log('update value', this.tabsControl);
         }).catch((error) => {
             /* Handle the error message */
-            console.log('Failed to fetch user\'s chain access: ', error);
+            this.logService.log('Failed to fetch user\'s chain access: ', error);
             this.showError('Failed to fetch this user\'s chain access.');
         });
 
