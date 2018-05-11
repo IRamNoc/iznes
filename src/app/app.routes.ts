@@ -222,37 +222,37 @@ export const ROUTES: Routes = [
                 path: 'product-module',
                 children: [
                     {
-                        path: '',
+                        path: 'product',
                         component: ProductHomeComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'umbrella-fund/:id',
+                        path: 'product/umbrella-fund/:id',
                         component: UmbrellaFundComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'fund-share/new',
+                        path: 'product/fund-share/new',
                         component: AddNewFundShareComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'fund-share/:shareId/audit',
+                        path: 'product/fund-share/:shareId/audit',
                         component: FundShareAuditComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'fund-share/:shareId',
+                        path: 'product/fund-share/:shareId',
                         component: FundShareComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'fund-share',
+                        path: 'product/fund-share',
                         component: FundShareComponent,
                         canActivate: [LoginGuardService]
                     },
                     {
-                        path: 'fund/:id',
+                        path: 'product/fund/:id',
                         component: FundComponent,
                         canActivate: [LoginGuardService]
                     },
