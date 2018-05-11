@@ -114,25 +114,22 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     /**
      * Active Route
      * Returns true if the route tested is matching the url
-     * Takes account of route params
+     * Takes account of route params / children routes
      * @param  {string}  route - the route being tested
      * @return {boolean} active - true if the route tested is matching the url
      */
-    public activeRoute(route: string, isChild: boolean = false): boolean {
-        if(isChild) {
-            return route === this.router.url;
-        } else {
-            const routeRegex = new RegExp(`^${route}(\/\S+)?`);
-            return routeRegex.test(this.router.url);
-        }
+    public activeRoute(route: string): boolean {
+        const routeRegex = new RegExp(`^${route}(\/\S+)?`);
+        return routeRegex.test(this.router.url);
     }
+
     public activeChildRoute(children){
         let routerUrl = this.router.url;
         let active = false;
 
         children.forEach(child => {
             let route = child.router_link;
-            let routeRegex = new RegExp(`^${route}(\/\S+)*`);
+            let routeRegex = new RegExp(`^${route}(\/\S+)?`);
 
             active = active || routeRegex.test(routerUrl);
         });

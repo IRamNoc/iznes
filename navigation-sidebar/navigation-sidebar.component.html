@@ -19,7 +19,7 @@
             <span class="sidenav-label" [attr.mltag]="childMenuJson.label_txt">{{childMenuJson.label}}</span></label>
         <ul class="nav-list">
             <li *ngFor="let innerChild of childMenuJson.children">
-                <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link, true)}" class="nav-link" appHighlight>
+                <a [attr.id]="innerChild.element_id" [routerLink]="[innerChild.router_link]" [ngClass]="{active: activeRoute(innerChild.router_link)}" class="nav-link" appHighlight>
                     <i class="{{innerChild.icon_class}}" aria-hidden="true"></i>
                     <span [attr.mltag]="innerChild.label_txt">{{innerChild.label}}</span>
                 </a>
