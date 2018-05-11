@@ -333,12 +333,12 @@ public class LoginAndNavigationHelper {
     }
 
     public static void navigateToNAVPage() {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("menu-my-products")));
-        wait.until(elementToBeClickable(By.id("menu-my-products")));
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id("menu-my-products"))));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id("menu-my-products"))));
         driver.findElement(By.id("menu-my-products")).click();
-        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
-        wait.until(elementToBeClickable(By.id("menu-nav")));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id("menu-nav"))));
+        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id("menu-nav"))));
 
         try {
             driver.findElement(By.id("menu-nav")).click();
@@ -347,16 +347,6 @@ public class LoginAndNavigationHelper {
             fail("FAILED : " + e.getMessage());
         }
     }
-
-   /* public static void navigateToNAVPage(String username, String password) throws InterruptedException {
-        loginAndVerifySuccess(username, password);
-        navigateToDropdown("menu-my-products");
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
-        wait.until(elementToBeClickable(By.id("menu-nav")));
-        navigateToPageByID("menu-nav");
-        verifyCorrectPageById("Net asset value");
-    }*/
 
     public static void navigateToDropdown(String dropdownID) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
