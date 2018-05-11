@@ -66,7 +66,7 @@ public class OpenCSDNAVAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0]);

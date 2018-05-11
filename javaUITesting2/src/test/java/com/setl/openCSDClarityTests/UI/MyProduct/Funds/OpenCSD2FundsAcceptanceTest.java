@@ -65,7 +65,7 @@ public class OpenCSD2FundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
 
         //Create umbrella fund for later use
 
@@ -330,7 +330,7 @@ public class OpenCSD2FundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
-        navigateToPage("product-module");
+        navigateToPageByID("menu-product-home");
         createFund();
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
         driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
