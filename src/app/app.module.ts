@@ -54,6 +54,7 @@ import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 import {CoreWorkflowEngineModule} from '@setl/core-wfe';
 import {SetlLayoutModule} from '@setl/core-layout';
+import {LogService} from'@setl/utils';
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
 import {OfiMainModule} from '@ofi/ofi-main';
@@ -167,7 +168,8 @@ export function memberSocketServiceFactory() {
         InitialisationService,
         FileService,
         PdfService,
-        LoginGuardService
+        LoginGuardService,
+        LogService
     ],
     bootstrap: [AppComponent]
 })
