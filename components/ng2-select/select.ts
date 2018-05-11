@@ -55,8 +55,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                 text: item[this.textField],
                 children: item[this.childrenField]
             })));
-            // console.log('item:', value);
-            // console.log('item:', this.itemObjects);
         }
 
         // this.changeDetectorRef.markForCheck();
@@ -274,7 +272,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     protected matchClick(e: any): void {
-        console.log('main click');
         if (this._disabled === true) {
             return;
         }
@@ -347,7 +344,6 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             this.behavior.first();
         }
         this.optionsOpened = true;
-        console.log('option', this.options);
         this.changeDetectorRef.markForCheck();
 
     }

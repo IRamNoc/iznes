@@ -58,7 +58,6 @@ export class MoneyValuePipe implements PipeTransform {
             value = 0;
         }
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
-            // console.log('transform', value, fractionSize);
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
                 ? this.roundUp(value, fractionSize)
                 : value;
@@ -84,7 +83,6 @@ export class MoneyValuePipe implements PipeTransform {
     parse(value: any, fractionSize: number = 2): any {
         let returnValue;
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
-            // console.log('parse', value, fractionSize);
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
                 ? this.roundUp(value, fractionSize).toString()
                 : value.toString();
