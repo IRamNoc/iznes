@@ -3,6 +3,7 @@ import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 import {LogService} from '@setl/utils';
 import {OfiInitialisationService} from '../initialisation/initialisation.service';
+import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
 
 @Injectable()
 export class OfiWalletnodeChannelService {
@@ -67,6 +68,8 @@ export class OfiWalletnodeChannelService {
          */
         this.logService.log('---ofi handle block update---');
         OfiInitialisationService.clearMemberNodeRequestedStatesOnNewBlock(this.ngRedux);
+        this.ngRedux.dispatch(ofiClearRequestedAmHolders());
+        this.ngRedux.dispatch(ofiClearHolderDetailRequested());
     }
 
     updateWalletBalance(data) {
