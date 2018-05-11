@@ -47,7 +47,6 @@ function toStandardReduxAction(action) {
  * @return {Promise<any>} Return the result in synchronous fashion( Still asynchronous).
  */
 const runAsyncTask = async (descriptor, args) => {
-    // console.log('hit run task');
     const fn = pipeP(...descriptor.pipe);
     try {
         const result = await fn(...args);
@@ -68,7 +67,6 @@ const runAsyncTask = async (descriptor, args) => {
  * @param failureCallback: callback on failure.
  */
 function* doRunAsyncTask(successTypes, failureTypes, descriptor, args, successCallback, failureCallback) {
-    // console.log('hit do run task');
     const {resolved, rejected} = yield call(runAsyncTask, descriptor, args)
     if (resolved) {
         for (const successType of successTypes) {
@@ -90,10 +88,7 @@ function* doRunAsyncTask(successTypes, failureTypes, descriptor, args, successCa
  * Watch all our async call task
  */
 function* watchRunAsyncTasks() {
-    // console.log('start watcher');
-    // console.log(RUN_ASYNC_TASK)
     while (true) {
-        // console.log('hit watch!');
 
         const {
             successTypes

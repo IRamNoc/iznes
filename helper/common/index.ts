@@ -89,7 +89,7 @@ export function safeJsonParse(jsonStr: string): object {
     try {
        returnVal = JSON.parse(jsonStr);
     } catch (e) {
-        console.log(e);
+        //console.log(e);
     }
 
     return returnVal;
