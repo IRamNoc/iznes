@@ -89,16 +89,16 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             maximumNumDecimal: item.get('maximumNumDecimal', 0),
             subscriptionCategory: item.get('subscriptionCategory', 0),
             subscriptionCurrency: item.get('subscriptionCurrency', 0),
-            minInitialSubscriptionInShare: item.get('minInitialSubscriptionInShare', 0),
-            minInitialSubscriptionInAmount: item.get('minInitialSubscriptionInAmount', 0),
-            minSubsequentSubscriptionInShare: item.get('minSubsequentSubscriptionInShare', 0),
-            minSubsequentSubscriptionInAmount: item.get('minSubsequentSubscriptionInAmount', 0),
+            minInitialSubscriptionInShare: convertBlockchainNumber(item.get('minInitialSubscriptionInShare', '')),
+            minInitialSubscriptionInAmount: convertBlockchainNumber(item.get('minInitialSubscriptionInAmount', '')),
+            minSubsequentSubscriptionInShare: convertBlockchainNumber(item.get('minSubsequentSubscriptionInShare', '')),
+            minSubsequentSubscriptionInAmount: convertBlockchainNumber(item.get('minSubsequentSubscriptionInAmount', '')),
             redemptionCategory: item.get('redemptionCategory', 0),
             redemptionCurrency: item.get('redemptionCurrency', 0),
-            minInitialRedemptionInShare: item.get('minInitialRedemptionInShare', 0),
-            minInitialRedemptionInAmount: item.get('minInitialRedemptionInAmount', 0),
-            minSubsequentRedemptionInShare: item.get('minSubsequentRedemptionInShare', 0),
-            minSubsequentRedemptionInAmount: item.get('minSubsequentRedemptionInAmount', 0),
+            minInitialRedemptionInShare: convertBlockchainNumber(item.get('minInitialRedemptionInShare', '')),
+            minInitialRedemptionInAmount: convertBlockchainNumber(item.get('minInitialRedemptionInAmount', '')),
+            minSubsequentRedemptionInShare: convertBlockchainNumber(item.get('minSubsequentRedemptionInShare', '')),
+            minSubsequentRedemptionInAmount: convertBlockchainNumber(item.get('minSubsequentRedemptionInAmount', '')),
             portfolioCurrencyHedge: item.get('portfolioCurrencyHedge', 0),
             subscriptionCutOffTime: item.get('subscriptionCutOffTime', 0),
             subscriptionCutOffTimeZone: item.get('subscriptionCutOffTimeZone', 0),
@@ -107,9 +107,9 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             redemptionCutOffTimeZone: item.get('redemptionCutOffTimeZone', 0),
             redemptionSettlementPeriod: item.get('redemptionSettlementPeriod', 0),
             subscriptionRedemptionCalendar: item.get('subscriptionRedemptionCalendar', 0),
-            maxManagementFee: item.get('maxManagementFee', 0),
-            maxSubscriptionFee: item.get('maxSubscriptionFee', 0),
-            maxRedemptionFee: item.get('maxRedemptionFee', 0),
+            maxManagementFee: convertBlockchainNumber(item.get('maxManagementFee', '')),
+            maxSubscriptionFee: convertBlockchainNumber(item.get('maxSubscriptionFee', '')),
+            maxRedemptionFee: convertBlockchainNumber(item.get('maxRedemptionFee', '')),
             investorProfile: item.get('investorProfile', 0),
             keyFactOptionalData,
             profileOptionalData,
@@ -127,11 +127,11 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             subscriptionStartDate: item.get('subscriptionStartDate', 0),
             launchDate: item.get('launchDate', 0),
             fundShareStatus: item.get('fundShareStatus', 0),
-            mifiidChargesOngoing: item.get('mifiidChargesOngoing', 0),
-            mifiidChargesOneOff: item.get('mifiidChargesOneOff', 0),
-            mifiidTransactionCosts: item.get('mifiidTransactionCosts', 0),
-            mifiidServicesCosts: item.get('mifiidServicesCosts', 0),
-            mifiidIncidentalCosts: item.get('mifiidIncidentalCosts', 0),
+            mifiidChargesOngoing: convertBlockchainNumber(item.get('mifiidChargesOngoing', '')),
+            mifiidChargesOneOff: convertBlockchainNumber(item.get('mifiidChargesOneOff', '')),
+            mifiidTransactionCosts: convertBlockchainNumber(item.get('mifiidTransactionCosts', '')),
+            mifiidServicesCosts: convertBlockchainNumber(item.get('mifiidServicesCosts', '')),
+            mifiidIncidentalCosts: convertBlockchainNumber(item.get('mifiidIncidentalCosts', '')),
             subscriptionTradeCyclePeriod: item.get('subscriptionTradeCyclePeriod', 0),
             numberOfPossibleSubscriptionsWithinPeriod: item.get('numberOfPossibleSubscriptionsWithinPeriod', 0),
             weeklySubscriptionDealingDays: item.get('weeklySubscriptionDealingDays', 0),
@@ -145,9 +145,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             navPeriodForSubscription: item.get('navPeriodForSubscription', 0),
             navPeriodForRedemption: item.get('navPeriodForRedemption', 0),
             kiid: item.get('kiid', ''),
-            prospectus: item.get('prospectus', ''),
-
-
+            prospectus: item.get('prospectus', '')
         };
 
         return result;
@@ -194,7 +192,8 @@ function handleClearRequestedFundAccessMy(state: OfiFundAccessMyState, action: A
     });
 }
 
-
-
-
-
+function convertBlockchainNumber(number: any): number {
+    // TODO:    we need a better way of getting the divisible number,
+    //          could not think of one at time of writing. pz.
+    return parseInt(number) / 100000;
+}
