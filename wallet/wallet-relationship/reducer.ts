@@ -17,8 +17,6 @@ export const WalletRelationshipReducer = function (state: WalletRelationshipStat
 
     switch (action.type) {
         case WalletRelationshipActions.SET_WALLET_TO_RELATIONSHIP:
-            console.log('reach to relationship action');
-            console.log(action);
             const walletToRelationshipData = _.get(action, 'payload[1].Data', []);
 
             toRelationshipList = formatWalletToRelationshipDataResponse(walletToRelationshipData);
@@ -30,19 +28,15 @@ export const WalletRelationshipReducer = function (state: WalletRelationshipStat
             return newState;
 
         case WalletRelationshipActions.SET_REQUESTED_WALLET_TO_RELATIONSHIP:
-            console.log(action)
             requestedToRelationship = true;
 
             newState = Object.assign({}, state, {
                 requestedToRelationship
             });
 
-            console.log('new state ', newState);
-
             return newState;
 
         case WalletRelationshipActions.CLEAR_REQUESTED_WALLET_TO_RELATIONSHIP:
-            console.log(action)
             requestedToRelationship = false;
 
             newState = Object.assign({}, state, {

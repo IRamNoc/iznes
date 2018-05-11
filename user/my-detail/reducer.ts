@@ -56,8 +56,6 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
 
             const userDetailsData = _.get(action, 'payload[1].Data[0]', {});
 
-            console.log('userDetailsData: ', userDetailsData);
-
             const displayName = _.get(userDetailsData, 'displayName', '');
             const firstName = _.get(userDetailsData, 'firstName', '');
             const lastName = _.get(userDetailsData, 'lastName', '');

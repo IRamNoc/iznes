@@ -184,27 +184,20 @@ function handleSetLastCreatedRegisterIssuerDetail(state: MyIssuersState, action:
 }
 
 function updateLastCreatedRegisterIssuerDetail(state: MyIssuersState, action: any): MyIssuersState {
-    console.log('---handling action update register issuer');
-    console.log('action', action);
     // find all updated contract.
     const registerIssuerTx = _.get(action, 'data', []);
-    console.log('tx', registerIssuerTx);
 
     // the last created tx hash.
     const lastCreatedTxHash = state.lastCreated.txHash;
-    console.log('old hash', lastCreatedTxHash);
 
     // the hash of transaction to check.
     const registerIssuerTxHash = _.get(registerIssuerTx, '[3]', '');
-    console.log('new hash', registerIssuerTxHash);
 
     const inBlockchain = lastCreatedTxHash === registerIssuerTxHash;
     const oldLastCreated = state.lastCreated;
     const lastCreated = Object.assign({}, oldLastCreated, {
         inBlockchain
     });
-    console.log('new last created', lastCreated);
-    console.log('---done handling action update register issuer');
 
     return Object.assign({}, state, {
         lastCreated

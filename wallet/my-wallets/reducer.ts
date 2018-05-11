@@ -14,8 +14,6 @@ export const MyWalletsReducer = function (state: MyWalletsState = initialState,
         case MyWalletActions.SET_OWN_WALLETS:
             const walletsData = _.get(action, 'payload[1].Data', []);
 
-            console.log(walletsData[0]);
-
             const walletList = formatWalletsDataResponse(walletsData);
 
             const newState = Object.assign({}, state, {
