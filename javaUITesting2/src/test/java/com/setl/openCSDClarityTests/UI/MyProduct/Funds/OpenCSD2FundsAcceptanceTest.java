@@ -38,13 +38,13 @@ public class OpenCSD2FundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(300000);
+    public Timeout globalTimeout = new Timeout(30000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
     static Connection conn = null;
 
-    public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
     static String DBUsername = "root";

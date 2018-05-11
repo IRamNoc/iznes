@@ -1,97 +1,35 @@
-package com.setl.openCSDClarityTests.UI.MyProduct.Funds;
+package com.setl.UI.common.SETLUIHelpers;
 
-import com.setl.UI.common.SETLUtils.RepeatRule;
-import com.setl.UI.common.SETLUtils.ScreenshotRule;
-import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
-import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.*;
-import org.junit.rules.Timeout;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
-import java.security.Key;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Random;
 
-import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
-import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewFundShareTitle;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
+import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
+import static org.junit.Assert.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
+public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelper {
 
-@RunWith(OrderedJUnit4ClassRunner.class)
-
-
-
-public class OpenCSD3SharesAcceptanceTest {
-
-    @Rule
-    public ScreenshotRule screenshotRule = new ScreenshotRule();
-    @Rule
-    public RepeatRule repeatRule = new RepeatRule();
-    @Rule
-    public Timeout globalTimeout = new Timeout(60000);
-    @Rule
-    public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
-
-
-
-    @Before
-    public void setUp() throws Exception {
-        testSetUp();
-        screenshotRule.setDriver(driver);
-        setDBToProdOff();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        setDBToProdOn();
-    }
-
-    @Test
-    public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
-        loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("menu-my-products");
-        navigateToPageByID("menu-product-home");
-
-        String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
-
-        waitForNewShareButton();
-        //waitForNewFundShareTitle();
-        openDropdownAndSelectOption("selectFund", 1);
+    public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
-        wait.until(elementToBeClickable(By.id("buttonSelectFund")));
-        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
-        selectFundBtn.click();
-        try {
-            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
-        }catch (Exception e){
-            fail("not present");
-        }
-
-        String[] uFundDetails = generateRandomFundsDetails();
-        String[] uIsin = generateRandomISIN();
-
-        driver.findElement(By.id("fundShareName")).sendKeys(uFundDetails[0]);
+        driver.findElement(By.id("fundShareName")).sendKeys(shareName);
         driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
-        driver.findElement(By.id("isin")).sendKeys(uIsin[0]);
+        driver.findElement(By.id("isin")).sendKeys(isin);
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
@@ -99,13 +37,19 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
+        scrollElementIntoViewById("couponType");
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("couponType")));
+        wait.until(elementToBeClickable(By.id("couponType")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
         openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
         assertHiddenAttributeIsPresent("tabKeyFactsButton");
-        //CHARACTERISTICS
+    }
+
+    public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabCharacteristicsButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -119,7 +63,11 @@ public class OpenCSD3SharesAcceptanceTest {
         assertClassRequiredIsPresent("tabCharacteristicsButton");
         driver.findElement(By.id("minSubsequentRedemptionInShare")).sendKeys("5");
         assertHiddenAttributeIsPresent("tabCharacteristicsButton");
-        //CALENDAR
+
+    }
+
+    public static void shareCreationCalendar() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -137,7 +85,11 @@ public class OpenCSD3SharesAcceptanceTest {
         assertClassRequiredIsPresent("tabCalendarButton");
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
         assertHiddenAttributeIsPresent("tabCalendarButton");
-        //FEES
+
+    }
+
+    public static void shareCreationFees() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -151,7 +103,11 @@ public class OpenCSD3SharesAcceptanceTest {
         assertClassRequiredIsPresent("tabFeesButton");
         driver.findElement(By.id("mifiidIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
-        //PROFILE
+
+    }
+
+    public static void shareCreationProfile() throws SQLException, InterruptedException {
+
         try {
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
@@ -159,33 +115,25 @@ public class OpenCSD3SharesAcceptanceTest {
         assertClassRequiredIsPresent("tabProfileButton");
         openDropdownAndSelectOption("investorProfile", 1);
         assertHiddenAttributeIsPresent("tabProfileButton");
-        //DOCUMENTS
+
+    }
+
+    public static void shareCreationSubmit() {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
             scrollElementIntoViewById("saveFundShareBottom");
             waits.until(visibilityOfElementLocated(By.id("saveFundShareBottom")));
             waits.until(elementToBeClickable(driver.findElement(By.id("saveFundShareBottom"))));
             driver.findElement(By.id("saveFundShareBottom")).click();
         }catch (Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("fail " + e.getMessage());
         }
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
         System.out.println(popupSubheading);
         assertTrue(popupSubheading.equals("Info!"));
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
-
-        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        System.out.println(shareCountPre + " Shares are in the listings before");
-        System.out.println(shareCountPost + " Shares are in the listings after");
-
-        assertTrue(shareCountPost == shareCountPre + 1);
-
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-
-        getShareTableRow(shareNameNo, uFundDetails[0], uIsin[0], "Test_Fund_QtsgTUpdatedOpenCSD3SharesAcceptanceTest", "EUR Euro", "Management Company", "", "share class", "Open" );
     }
 
 }

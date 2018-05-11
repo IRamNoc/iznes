@@ -45,7 +45,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
     static Connection conn = null;
 
-    public static String connectionString = "jdbc:mysql://localhost:9999/setlnet?nullNamePatternMatchesAll=true";
+    public static String connectionString = "jdbc:mysql://localhost:9998/setlnet?nullNamePatternMatchesAll=true";
 
     // Defines username and password to connect to database server.
     static String DBUsername = "root";
@@ -94,7 +94,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         getUmbrellaTableRow(umbFundCount, uFundDetails[0], "testLei", "Management Company", "Afghanistan");
 
-        validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + umbFundCount)).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

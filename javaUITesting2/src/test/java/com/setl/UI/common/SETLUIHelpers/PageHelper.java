@@ -5,6 +5,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.assertTrue;
@@ -51,8 +52,8 @@ public class PageHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
-            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")));
-            String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/h3")).getText();
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-1\"]/h3/span")));
+            String shareTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/h3/span")).getText();
 
             assertTrue(shareTitle.equals("Please enter following information to create a new Fund Share"));
         }catch (Error e){
@@ -60,12 +61,14 @@ public class PageHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void waitForNewShareButton() {
+    public static void waitForNewShareButton() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             wait.until(visibilityOfElementLocated((By.id("new-share-btn"))));
             wait.until(elementToBeClickable(By.id("new-share-btn")));
+            scrollElementIntoViewById("new-share-btn");
             WebElement newShare = driver.findElement(By.id("new-share-btn"));
+            wait.until(invisibilityOfElementLocated(By.className("toast-title")));
             newShare.click();
         }catch (Error e){
             fail(e.getMessage());
