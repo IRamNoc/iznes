@@ -132,7 +132,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(selectedFundId));
 
-        this.router.navigateByUrl('product-module/fund-share');
+        this.router.navigateByUrl('product-module/product/fund-share');
     }
 
     isValid(): boolean {

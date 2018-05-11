@@ -238,7 +238,7 @@ describe('FundComponent', () => {
 
             anchorEl.triggerEventHandler('click', null);
 
-            expect(routerLinks[0].navigatedTo).toEqual('/product-module/umbrella-fund/0');
+            expect(routerLinks[0].navigatedTo).toEqual('/product-module/product/umbrella-fund/0');
         });
 
         it('should enable the next button', fakeAsync(() => {

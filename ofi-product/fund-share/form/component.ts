@@ -197,7 +197,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             },
             (err) => {
                 this.toaster.pop('error', 'An error occured.');
-                this.router.navigateByUrl(`product-module`);
+                this.router.navigateByUrl(`product-module/product`);
             }, () => {
                 if (this.mode === FundShareMode.Update) {
                     if (this.fundShareData) this.model.setFundShare(this.fundShareData);
@@ -257,7 +257,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
 
             if (this.model.fundID == undefined) {
-                this.router.navigateByUrl(`product-module/fund-share/new`);
+                this.router.navigateByUrl(`product-module/product/fund-share/new`);
             }
         }
     }
@@ -468,7 +468,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.getDocumentsRequest(data.fundShareID),
             (docsData) => {
                 this.toaster.pop('success', data.fundShareName + ' has been successfully created');
-                this.router.navigateByUrl(`product-module`);
+                this.router.navigateByUrl(`product-module/product`);
             },
             (e) => this.onCreateError(e[1].Data[0]));
     }
@@ -513,7 +513,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             {confirmText: 'Confirm', declineText: 'Cancel'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                this.router.navigateByUrl('product-module');
+                this.router.navigateByUrl('product-module/product');
             }
         });
     }
@@ -540,7 +540,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     goToAuditTrail(): void {
-        this.router.navigateByUrl(`product-module/fund-share/${this.fundShareId}/audit`);
+        this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}/audit`);
     }
 
     ngOnDestroy() {
