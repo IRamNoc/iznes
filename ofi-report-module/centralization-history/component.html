@@ -201,10 +201,10 @@
                         {{data.netPositionPercentage | moneyValue: 2 }}%
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders" (click)="viewOrder(getOnlyDate(data.navDate))">View Orders</button>
+                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders" (click)="viewOrder(getOnlyDate(data.cutoffDate))">View Orders</button>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" mltag="txt_downloadorders" (click)="exportHistory(data.navDate)">Download Orders</button>
+                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" mltag="txt_downloadorders" (click)="exportHistory(data)">Download Orders</button>
                     </clr-dg-cell>
                     <clr-dg-row-detail *clrIfExpanded>
                         <div class="additionalInfos">

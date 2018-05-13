@@ -16,7 +16,15 @@ import {MemberSocketService} from '@setl/websocket-service';
 
 import {NgRedux, select} from '@angular-redux/store';
 import {Unsubscribe} from 'redux';
-import {APP_CONFIG, AppConfig, commonHelper, ConfirmationService, immutableHelper, SagaHelper, LogService} from '@setl/utils';
+import {
+    APP_CONFIG,
+    AppConfig,
+    commonHelper,
+    ConfirmationService,
+    immutableHelper,
+    SagaHelper,
+    LogService
+} from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -85,7 +93,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     // Datepicker config
     configDate = {
         firstDayOfWeek: 'mo',
-        format: 'DD/MM/YYYY',
+        format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
         locale: this.language
@@ -409,15 +417,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     applyFilters() {
         if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (this.filtersFromRedux.isin || this.filtersFromRedux.shareName || this.filtersFromRedux.status || this.filtersFromRedux.orderType || this.filtersFromRedux.dateType || this.filtersFromRedux.fromDate || this.filtersFromRedux.toDate) {
-                if (this.filtersFromRedux.isin && this.filtersFromRedux.isin !== '') {
+            if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.shareName !== 'undefined' ||
+                typeof this.filtersFromRedux.status !== 'undefined' || typeof this.filtersFromRedux.orderType !== 'undefined' ||
+                typeof this.filtersFromRedux.dateType !== 'undefined' || typeof this.filtersFromRedux.fromDate !== 'undefined' ||
+                typeof  this.filtersFromRedux.toDate !== 'undefined') {
+
+                if (typeof this.filtersFromRedux.isin !== 'undefined' && this.filtersFromRedux.isin !== '') {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin); // , {emitEvent: false}
                     //this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
-                if (this.filtersFromRedux.shareName && this.filtersFromRedux.shareName !== '') {
+                if (typeof this.filtersFromRedux.shareName !== 'undefined' && this.filtersFromRedux.shareName !== '') {
                     this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName); // emitEvent = true cause infinite loop (make a valueChange)
                 }
-                if (this.filtersFromRedux.status && this.filtersFromRedux.status !== '') {
+                if (typeof this.filtersFromRedux.status !== 'undefined' && this.filtersFromRedux.status !== '') {
                     const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
@@ -428,8 +440,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                     this.tabsControl[0].searchForm.get('status').patchValue([]);
                 }
-                this.tabsControl[0].searchForm.get('type').patchValue([]);
-                if (this.filtersFromRedux.dateType && this.filtersFromRedux.dateType !== '') {
+
+                if (typeof this.filtersFromRedux.orderType !== 'undefined' && this.filtersFromRedux.orderType !== '') {
+                    const orderTypeFound = this.orderTypes.find(o => o.id.toString() === this.filtersFromRedux.orderType.toString());
+                    if (orderTypeFound !== undefined) {
+                        this.tabsControl[0].searchForm.get('type').patchValue([{
+                            id: orderTypeFound.id,
+                            text: orderTypeFound.text
+                        }]);// emitEvent = true cause infinite loop (make a valueChange)
+                    }
+                } else {
+                    this.tabsControl[0].searchForm.get('type').patchValue([]);
+                }
+                if (typeof this.filtersFromRedux.dateType !== 'undefined' && this.filtersFromRedux.dateType !== '') {
                     const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
                     if (dateTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('dateType').patchValue([{
@@ -440,10 +463,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
-                if (this.filtersFromRedux.fromDate && this.filtersFromRedux.fromDate !== '') {
+                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
                 }
-                if (this.filtersFromRedux.toDate && this.filtersFromRedux.toDate !== '') {
+                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
                 }
 
@@ -739,8 +762,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dataGridParams.orderType = orderType === 0 ? null : orderType;
         // date filters
         this.dataGridParams.dateSearchField = _.get(searchValues, ['dateType', '0', 'id'], false);
-        const fromDate = moment(_.get(searchValues, ['fromDate'], null), 'DD/MM/YYYY');
-        const toDate = moment(_.get(searchValues, ['toDate'], null), 'DD/MM/YYYY').add(1, 'days').subtract(1, 'minutes');
+        const fromDate = moment(_.get(searchValues, ['fromDate'], null), 'YYYY-MM-DD');
+        const toDate = moment(_.get(searchValues, ['toDate'], null), 'YYYY-MM-DD').add(1, 'days').subtract(1, 'minutes');
 
         this.dataGridParams.fromDate = fromDate.format('YYYY-MM-DD HH:mm');
         this.dataGridParams.toDate = toDate.format('YYYY-MM-DD HH:mm');

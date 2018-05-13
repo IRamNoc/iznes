@@ -1083,6 +1083,7 @@ export class OrderHelper {
             namespace: this.fundShare.isin,
             instrument: this.fundShare.fundShareName,
             amount: quantity,
+            iscumulative: true,
             beneficiaries: [[this.amIssuingAddress, 0, 0]],
             administrators: [[this.amIssuingAddress, 0, 0]],
             protocol: '',

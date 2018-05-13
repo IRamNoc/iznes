@@ -234,11 +234,11 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 filters: {
                     isin: obj.isin,
                     shareName: obj.fundShareName,
-                    status: 1,
-                    orderType: '',
-                    dateType: 'navDate',
-                    fromDate: moment(obj.settlementDate).format('DD/MM/YYYY'),
-                    toDate: moment(obj.settlementDate).format('DD/MM/YYYY')
+                    status: -3,
+                    orderType: 0,
+                    dateType: 'cutOffDate',
+                    fromDate: moment(obj.cutoffDate).format('YYYY-MM-DD'),
+                    toDate: moment(obj.cutoffDate).format('YYYY-MM-DD')
                 }
             };
 
@@ -252,6 +252,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
+            const cutoffDate = moment(obj.cutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: obj.fundShareName,
                 isin: obj.isin,
@@ -261,9 +262,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 rowOffSet: 0,
                 sortByField: 'userEntered',
                 sortOrder: 'desc',
-                dateSearchField: null,
-                fromDate: null,
-                toDate: null,
+                dateSearchField: 'cutoffDate',
+                fromDate: cutoffDate,
+                toDate: cutoffDate + ' 23:59',
             };
             for (let filter in params) {
                 if (params.hasOwnProperty(filter)) {
