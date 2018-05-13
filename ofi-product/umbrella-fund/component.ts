@@ -492,7 +492,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
-                    this.showError(JSON.stringify(data));
+                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    this._toasterService.pop('error', 'Failed to update the umbrella fund. ' + errMsg);
                     this._changeDetectorRef.markForCheck();
                 })
             );
@@ -515,7 +516,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalTitle = 'Error';
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
-                    this.showError(JSON.stringify(data));
+                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    this._toasterService.pop('error', 'Failed to create the umbrella fund. ' + errMsg);
                     this._changeDetectorRef.markForCheck();
                 })
             );
