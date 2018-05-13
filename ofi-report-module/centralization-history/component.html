@@ -189,13 +189,13 @@
                         {{getOnlyDate(data.settlementDate)}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2}}
+                        {{data.latestNav | moneyValue: 2}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.aum)) | moneyValue: 5 }}
+                        {{data.aum | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5 }}
+                        {{data.netPosition | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         {{data.netPositionPercentage | moneyValue: 2 }}%
@@ -222,14 +222,14 @@
                                         <tbody>
                                         <tr>
                                             <td><b>Subscriptions</b></td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.subQuantity) | moneyValue: 4 }}</td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.subAmount) | moneyValue: 5 }}</td>
+                                            <td>{{data.subQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.subAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Redemptions</b></td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.redQuantity) | moneyValue: 4 }}</td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.redAmount) | moneyValue: 5 }}</td>
+                                            <td>{{data.redQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.redAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
                                         </tr>
                                         </tbody>

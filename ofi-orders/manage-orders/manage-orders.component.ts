@@ -36,6 +36,7 @@ import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
 /* helper */
 import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
+import {ofiClearRequestedManageOrder} from '../../ofi-store/ofi-orders/manage-orders';
 
 /* Types. */
 interface SelectedItem {
@@ -311,6 +312,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
 
         this.ngRedux.dispatch(ofiClearRequestedMyOrder());
+        this.ngRedux.dispatch(ofiClearRequestedManageOrder());
 
         this.changeDetectorRef.markForCheck();
     }
