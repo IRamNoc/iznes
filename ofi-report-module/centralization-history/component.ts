@@ -95,7 +95,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         {id: 'week', text: 'Last week'},
         {id: 'month', text: 'Last month'},
         {id: 'quarter', text: 'Last quarter'},
-        {id: 'semestewr', text: 'Last semester'},
+        {id: 'semester', text: 'Last semester'},
         {id: 'year', text: 'Last year'},
     ];
 
