@@ -95,7 +95,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         {id: 'week', text: 'Last week'},
         {id: 'month', text: 'Last month'},
         {id: 'quarter', text: 'Last quarter'},
-        {id: 'semester', text: 'Last semester'},
+        {id: 'semestewr', text: 'Last semester'},
         {id: 'year', text: 'Last year'},
     ];
 
@@ -449,7 +449,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                     break;
                 case 'semester':
                     this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(6, 'months'));
+                    this.dateFrom = this.reformatDate(moment(today).subtract(15, 'weeks'));
                     break;
                 case 'year':
                     this.dateTo = this.reformatDate(today);
