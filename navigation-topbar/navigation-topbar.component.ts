@@ -78,7 +78,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public responsesService = <any>[];
     showMissingTranslations = false;
 
-    nbMaxTranslationsToProcess = 2;
+    nbMaxTranslationsToProcess = 60;
 
     isSaving = false;
 
@@ -98,7 +98,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private _myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private multilingualService: MultilingualService,
+                private _translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
                 private initialisationService: InitialisationService,
@@ -185,7 +185,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-        this.subscriptionsArray.push(this.multilingualService.getLanguage.subscribe((data) => {
+        this.subscriptionsArray.push(this._translate.getLanguage.subscribe((data) => {
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
             const userType = currentUserDetails.userType;
@@ -268,7 +268,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.missingTranslations = [];
         this.responsesService = [];
         // get translatation
-        const tr = this.multilingualService.getTranslations();
+        const tr = this._translate.getTranslations();
         // clone
         this.missingTranslations = _.clone(tr);
         this.showMissingTranslations = true;
@@ -317,7 +317,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             if (nbMax1 > 0) {
                 for (let i = 0; i < nbMax1; i++) {
                     this.responsesService.push({
-                        response: await this.multilingualService.addNewTranslation({
+                        response: await this._translate.addNewTranslation({
                             mltag: this.missingTranslations[i].mltag,
                             value: this.missingTranslations[i].original,
                             location: this.missingTranslations[i].from

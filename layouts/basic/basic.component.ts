@@ -50,7 +50,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
-                private multilingualService: MultilingualService,
+                private _translate: MultilingualService,
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
@@ -108,7 +108,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             'fr-Latn'
         ];
 
-        this.multilingualService.updateLanguage(lang);
+        this._translate.updateLanguage(lang);
 
         //save language in db
         let asyncTaskPipe = this.myUserService.setLanguage({lang: lang});

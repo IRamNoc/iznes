@@ -16,9 +16,9 @@
         <div class="user" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
-            <div class="last-login">Last
+            <div class="last-login">{{'Last' | translate}}
                 : &nbsp;
-                {{lastLogin | date: \'MMM d y HH:mm\'}}
+                {{lastLogin | date: 'MMM d y HH:mm'}}
 
 
 
@@ -29,9 +29,9 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">Last
+                <div class="last-login">{{'Last' | translate}}
                     : &nbsp;
-                    {{lastLogin | date: \'MMM d y HH:mm\'}}
+                    {{lastLogin | date: 'MMM d y HH:mm'}}
 
 
 
@@ -47,8 +47,6 @@
         <div class="wallet">
             <div>
                 <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="_translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
-
-
                 </ng-select>
             </div>
         </div>
@@ -134,7 +132,7 @@
             </div>
         </div>
         <ng-template #noNeedTranslation>
-            <h3 class="text-center mb-1">{{'Need to translate' | translate}}</h3>- {{\'Nothing\' | translate}}
+            <h3 class="text-center mb-1">{{'Need to translate' | translate}}</h3> - {{'Nothing' | translate}}
 
         </ng-template>
         <div *ngIf="responsesService.length > 0">
@@ -143,8 +141,8 @@
             <div *ngFor="let item of responsesService; let i = index">
                 <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">{{'@i + 1@.' | translate: {'i + 1': i + 1} }}
 
-                    <span *ngIf="item.response.ok" style="font-weight: bold;">({{\'OK\' | translate}}) - </span>
-                    <span *ngIf="!item.response.ok" style="font-weight: bold;">({{\'FAILED - @item.response.statusText@\' | translate: {\'item.response.statusText\': item.response.statusText} }}) - </span>{{item.translation.translation}}
+                    <span *ngIf="item.response.ok" style="font-weight: bold;">({{'OK' | translate}}) - </span>
+                    <span *ngIf="!item.response.ok" style="font-weight: bold;">({{'FAILED - @item.response.statusText@' | translate: {'item.response.statusText': item.response.statusText} }}) - </span>{{item.translation.translation}}
 
 
                 </span>
