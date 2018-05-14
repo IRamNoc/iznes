@@ -28,8 +28,8 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         listItems: [
             { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' }
+            { id: E.CurrencyEnum.USD, text: 'USD' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' }
         ],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
