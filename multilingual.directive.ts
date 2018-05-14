@@ -34,7 +34,8 @@ export class MultilingualDirective implements AfterViewInit {
          * moment, they're in a object export as a constant in `translations.ts`.
          */
 
-        this.translate();
+        // temp commented for new translation system
+        // this.translate();
     }
 
     public translate() {

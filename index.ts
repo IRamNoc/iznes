@@ -6,3 +6,4 @@ export {MultilingualService} from './multilingual.service';
 
 /* Directive. */
 export {MultilingualDirective} from './multilingual.directive';
+export {TranslateDirective} from './translate.directive';
