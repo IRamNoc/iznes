@@ -7,8 +7,8 @@ export enum ClassCodeEnum {
 }
 export enum CurrencyEnum {
     EUR,
+    USD,
     GBP,
-    USD
 }
 export enum InvestmentStatusEnum {
     Open,
