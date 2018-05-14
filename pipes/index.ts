@@ -2,6 +2,30 @@ import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {pad} from '../helper/common';
 import * as moment from 'moment';
 
+import { MultilingualService } from '@setl/multilingual';
+
+@Pipe({
+    name: 'translate',
+    pure: false // add in this line, update value when we change language
+})
+export class TranslatePipe implements PipeTransform {
+
+    constructor(
+        private _translate: MultilingualService
+    ) {
+
+    }
+
+    transform(value: any, params: any): any {
+        if (value !== '' && value !== undefined) {
+            // console.log('PIPE TRANSLATE FOR ' + value);
+            return this._translate.translate(value, params);
+        } else {
+            return value;
+        }
+    }
+}
+
 @Pipe({
     name: 'truncate'
 })
@@ -159,6 +183,7 @@ export class PercentagePipe implements PipeTransform {
 
 @NgModule({
     declarations: [
+        TranslatePipe,
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,
@@ -168,6 +193,7 @@ export class PercentagePipe implements PipeTransform {
         PercentagePipe
     ],
     exports: [
+        TranslatePipe,
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,
