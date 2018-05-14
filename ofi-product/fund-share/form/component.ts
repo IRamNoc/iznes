@@ -192,6 +192,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
             ]);
         }
 
+        this.subscriptionsArray.push(this.productionOb.subscribe(production => this.model.isProduction = production));
+
         fork.subscribe(data => {
                 // nothing to do here
             },
@@ -231,7 +233,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.detectChanges();
             });
 
-        this.subscriptionsArray.push(this.productionOb.subscribe(production => this.model.isProduction = production));
     }
 
     private generateListItems(fundShareList): any[] {
