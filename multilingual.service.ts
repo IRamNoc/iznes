@@ -53,8 +53,7 @@ export class MultilingualService {
             Translations &&
             Translations['core'] &&
             Translations['core'][this.language] &&
-            Translations['core'][this.language][mlcode] &&
-            Translations['core'][this.language][mlcode] !== ''
+            Translations['core'][this.language][mlcode] !== undefined
         ) {
             /* ...and return it, if we have it. */
             return Translations['core'][this.language][mlcode];
@@ -87,8 +86,7 @@ export class MultilingualService {
                 Translations &&
                 Translations['core'] &&
                 Translations['core'][this.language] &&
-                Translations['core'][this.language][mlcode] &&
-                Translations['core'][this.language][mlcode] !== ''
+                Translations['core'][this.language][mlcode]
             ) {
                 /* ...and return it, if we have it. */
                 return Translations['core'][this.language][mlcode];
@@ -112,9 +110,8 @@ export class MultilingualService {
             }
 
             const foundTag = this.getTranslation(mltag);
-            // console.log('foundTag ' + mltag + ' FOR ' + value + ' = ' + foundTag + ' IN ' + this.language);
             // mltag not found or empty return original value
-            str = (foundTag) ? foundTag : value;
+            str = (foundTag && foundTag !== '') ? foundTag : value;
 
             // replace placeholders in dynamic strings by values in params
             if (params !== undefined) {
@@ -142,8 +139,8 @@ export class MultilingualService {
             // }
 
             const inTranslationArray = this.translations.find((item) => item.original === value);
-            if (!inTranslationArray && !foundTag) { // only not found
-            // if (!inTranslationArray) { // all
+
+            if (!inTranslationArray && foundTag === false) { // only not found
                 this.translations.push(
                     {from: this.router.url, original: value, mltag: mltag, translation: str, found: (foundTag) ? true : foundTag}
                 );
@@ -205,7 +202,8 @@ export class MultilingualService {
 
     async addNewTranslation(formData): Promise<any> {
         // return {ok: true};
-        this.apiUrl = 'http://10.0.25.87:8000'; // debug on D.D
+        // this.apiUrl = 'http://10.0.25.87:8000'; // debug on D.D
+        this.apiUrl = 'http://10.0.2.72:8000'; // prod
         try {
             const myHeaders = new Headers();
             myHeaders.append('Content-Type', 'application/json');
