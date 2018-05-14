@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-caret-down"></i> Dropdowns (Select)</h1>
+    <h1><i class="fa fa-caret-down"></i> {{'Dropdowns (Select)' | translate}}</h1>
 </div>
 
 <div class="padding">
@@ -10,14 +10,14 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="basicselect">
-            <i class="fa fa-bars"></i> Basic Select
+            <i class="fa fa-bars"></i> {{'Basic Select' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" placeholder="Select">
+                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" [placeholder]="_translate.translate('Select')">
 
 
 
@@ -31,7 +31,7 @@
 
     <clr-tab>
         <button clrTabLink id="addressselect">
-            <i class="fa fa-bars"></i> Address Select
+            <i class="fa fa-bars"></i> {{'Address Select' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>

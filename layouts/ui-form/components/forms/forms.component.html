@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-wpforms"></i> Forms</h1>
+    <h1><i class="fa fa-wpforms"></i> {{'Forms' | translate}}</h1>
 </div>
 
 <div class="padding">
@@ -10,27 +10,27 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> Standard Form
+            <i class="fa fa-bars"></i> {{'Standard Form' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
             <form [formGroup]="basicForm" (ngSubmit)="submitForm()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="input">Input field</label>
+                        <label class="control-label" for="input">{{'Input field' | translate}}</label>
                         <input type="text" name="input" id="input" formControlName="input">
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="inputRequired">Input field (required)</label>
+                        <label class="control-label required-field" for="inputRequired">{{'Input field (required)' | translate}}</label>
                         <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired">
-                        <span class="field-error">Field is required</span>
+                        <span class="field-error">{{'Field is required' | translate}}</span>
                         <br>
                         <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Add \'required-field\' class to the \'label\' or the \'.form-group\' to show the asterix.'"></app-ui-info-pane>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="inputIcon">Input icon</label>
+                        <label class="control-label" for="inputIcon">{{'Input icon' | translate}}</label>
                         <div class="input-group">
                             <span class="fa fa-calendar"></span>
                             <input name="inputIcon" id="inputIcon" formControlName="inputIcon">
@@ -38,8 +38,8 @@
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="select">Dropdown</label>
-                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" placeholder="Select" [formControl]="basicForm.controls['select']">
+                        <label class="control-label" for="select">{{'Dropdown' | translate}}</label>
+                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="basicForm.controls['select']">
 
 
 
@@ -49,7 +49,7 @@
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <button id="submit" type="submit" class="btn btn-primary">Submit Button</button>
+                        <button id="submit" type="submit" class="btn btn-primary">{{'Submit Button' | translate}}</button>
                     </div>
 
                     <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Form fields should be 50% of the width of their container. This can be achieved with the \'col-sm-6\' class.'"></app-ui-info-pane>
@@ -60,7 +60,7 @@
 
     <clr-tab>
         <button clrTabLink id="longform">
-            <i class="fa fa-bars"></i> Long Form
+            <i class="fa fa-bars"></i> {{'Long Form' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
@@ -68,47 +68,47 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
-                            <label class="control-label" for="firstName">First name</label>
+                            <label class="control-label" for="firstName">{{'First name' | translate}}</label>
                             <input type="text" name="firstName" id="firstName" formControlName="firstName">
-                            <span class="field-error">Field is required</span>
+                            <span class="field-error">{{'Field is required' | translate}}</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="lastName">Last name</label>
+                            <label class="control-label required-field" for="lastName">{{'Last name' | translate}}</label>
                             <input type="text" name="lastName" id="lastName" formControlName="lastName">
-                            <span class="field-error">Field is required</span>
+                            <span class="field-error">{{'Field is required' | translate}}</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="password">Password</label>
+                            <label class="control-label required-field" for="password">{{'Password' | translate}}</label>
                             <input type="password" name="password" id="password" formControlName="password">
-                            <span class="field-error">Field is required</span>
+                            <span class="field-error">{{'Field is required' | translate}}</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="passwordConfirm">Confirm password</label>
+                            <label class="control-label required-field" for="passwordConfirm">{{'Confirm password' | translate}}</label>
                             <input type="password" name="passwordConfirm" id="passwordConfirm" formControlName="passwordConfirm">
-                            <span class="field-error">Field is required</span>
+                            <span class="field-error">{{'Field is required' | translate}}</span>
                         </div>
 
                         <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Simply wrap 2 \'form-group col-sm-6\' in a \'row\' class to achieve side-by-side fields.'"></app-ui-info-pane>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="input">Input field</label>
+                        <label class="control-label" for="input">{{'Input field' | translate}}</label>
                         <input type="text" name="input" id="input" formControlName="input">
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="inputRequired">Input field (required)</label>
+                        <label class="control-label required-field" for="inputRequired">{{'Input field (required)' | translate}}</label>
                         <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired">
-                        <span class="field-error">Field is required</span>
+                        <span class="field-error">{{'Field is required' | translate}}</span>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="inputIcon">Input icon</label>
+                        <label class="control-label" for="inputIcon">{{'Input icon' | translate}}</label>
                         <div class="input-group">
                             <span class="fa fa-calendar"></span>
                             <input name="inputIcon" id="inputIcon" formControlName="inputIcon">
@@ -118,8 +118,8 @@
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="select">Dropdown</label>
-                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" placeholder="Select" [formControl]="longForm.controls['select']">
+                        <label class="control-label" for="select">{{'Dropdown' | translate}}</label>
+                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="longForm.controls['select']">
 
 
 
@@ -129,7 +129,7 @@
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <button id="submit" type="submit" class="btn btn-primary">Submit Button</button>
+                        <button id="submit" type="submit" class="btn btn-primary">{{'Submit Button' | translate}}</button>
                     </div>
                 </section>
             </form>

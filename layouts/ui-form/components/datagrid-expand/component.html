@@ -1,13 +1,13 @@
 <div class="header-breadcrumbs">
     <h1>
-        <clr-icon shape="happy-face" class="is-solid"></clr-icon>
-        Data Grid Expand</h1>
+        <clr-icon shape="happy-face" class="is-solid"></clr-icon>{{'Data Grid Expand' | translate}}
+    </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button id="demoOptimisedDatagridBtn" clrTabLink>
-            <i class="fa fa-th-list"></i> Optimised Datagrid Demo
+            <i class="fa fa-th-list"></i> {{'Optimised Datagrid Demo' | translate}}
         </button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
@@ -15,34 +15,34 @@
                 <form [formGroup]="searchForm" id="searchForm">
                     <div class="row bordered form-group">
                         <div class="col-sm-4">
-                            <label>
-                                Âge
+                            <label>{{'Âge' | translate}}
+
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-fundname" formControlName="age" name="search-fundname" type="text" placeholder="Âge">
+                                <input id="orders-search-fundname" formControlName="age" name="search-fundname" type="text" [placeholder]="_translate.translate('Âge')">
 
                                 <button (click)="requestSearch()" style="margin-top: 0;"><i class="fa fa-search"></i>
                                 </button>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>
-                                Start date
+                            <label>{{'Start date' | translate}}
+
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="startDateID" formControlName="startDate" placeholder="Choose a date" mode="day" theme="dp-material">
+                                <input id="startDateID" formControlName="startDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
 
 
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>
-                                End date
+                            <label>{{'End date' | translate}}
+
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input id="endDateID" formControlName="endDate" placeholder="Choose a date" mode="day" theme="dp-material">
+                                <input id="endDateID" formControlName="endDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
 
 
                             </div>
@@ -50,11 +50,11 @@
                     </div>
                     <div class="row bordered form-group">
                         <div class="col-sm-4">
-                            <label>
-                                Genders
+                            <label>{{'Genders' | translate}}
+
                             </label>
                             <div>
-                                <ng-select class="fluid-width" [items]="genderOptions" [allowClear]="true" [formControl]="searchForm.controls['genders']" placeholder="Status">
+                                <ng-select class="fluid-width" [items]="genderOptions" [allowClear]="true" [formControl]="searchForm.controls['genders']" [placeholder]="_translate.translate('Status')">
 
 
 
@@ -63,11 +63,11 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>
-                                Currencies
+                            <label>{{'Currencies' | translate}}
+
                             </label>
                             <div>
-                                <ng-select class="fluid-width" [items]="currencyOptions" [allowClear]="true" [formControl]="searchForm.controls['currencies']" placeholder="Status">
+                                <ng-select class="fluid-width" [items]="currencyOptions" [allowClear]="true" [formControl]="searchForm.controls['currencies']" [placeholder]="_translate.translate('Status')">
 
 
 
@@ -76,11 +76,11 @@
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label>
-                                Available
+                            <label>{{'Available' | translate}}
+
                             </label>
                             <div>
-                                <ng-select class="fluid-width" [items]="availableOptions" [allowClear]="true" [formControl]="searchForm.controls['available']" placeholder="Type">
+                                <ng-select class="fluid-width" [items]="availableOptions" [allowClear]="true" [formControl]="searchForm.controls['available']" [placeholder]="_translate.translate('Type')">
 
 
 
@@ -95,82 +95,82 @@
 
                 <clr-datagrid class="expandable">
                     <clr-dg-column [clrDgField]="'id'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            ID
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ID' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'name'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Name
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Name' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'age'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Age
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Age' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'startDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Start Date
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Start Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'endDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            End Date
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'End Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'animal'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Animals
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Animals' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'sport'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Sports
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Sports' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'color'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Colors
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Colors' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'gender'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Genders
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Genders' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'amount'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Amount
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Amount' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'currency'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Currency
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Currency' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'codeBank'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Code Bank
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Code Bank' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'password'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Password
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Password' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'available'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            Available
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Available' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'country'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            Countries
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Countries' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column>Delete</clr-dg-column>
-                    <clr-dg-column>Edit</clr-dg-column>
+                    <clr-dg-column>{{'Delete' | translate}}</clr-dg-column>
+                    <clr-dg-column>{{'Edit' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of filteredDatas" [clrDgItem]="data">
                         <clr-dg-cell>{{data.id}}</clr-dg-cell>
@@ -189,12 +189,12 @@
                         <clr-dg-cell>{{data.available}}</clr-dg-cell>
                         <clr-dg-cell>{{data.country}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> 
-                                    Delete</button>
+                            <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i>{{'Delete' | translate}}
+                            </button>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> 
-                                    Edit</button>
+                            <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i>{{'Edit' | translate}}
+                            </button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -202,15 +202,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Age</b></td>
+                                                <td><b>{{'Age' | translate}}</b></td>
                                                 <td>{{data.age}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Start Date</b></td>
+                                                <td><b>{{'Start Date' | translate}}</b></td>
                                                 <td>{{data.startDate}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>End Date</b></td>
+                                                <td><b>{{'End Date' | translate}}</b></td>
                                                 <td>{{data.endDate}}</td>
                                             </tr>
                                         </table>
@@ -219,15 +219,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Gender</b></td>
+                                                <td><b>{{'Gender' | translate}}</b></td>
                                                 <td>{{data.gender}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Currency</b></td>
+                                                <td><b>{{'Currency' | translate}}</b></td>
                                                 <td>{{data.currency}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Available</b></td>
+                                                <td><b>{{'Available' | translate}}</b></td>
                                                 <td>{{data.available}}</td>
                                             </tr>
                                         </table>
@@ -236,15 +236,15 @@
                                     <div class="form-group col-sm-4">
                                         <table>
                                             <tr>
-                                                <td><b>Age</b></td>
+                                                <td><b>{{'Age' | translate}}</b></td>
                                                 <td>{{data.age}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Start Date</b></td>
+                                                <td><b>{{'Start Date' | translate}}</b></td>
                                                 <td>{{data.startDate}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>End Date</b></td>
+                                                <td><b>{{'End Date' | translate}}</b></td>
                                                 <td>{{data.endDate}}</td>
                                             </tr>
                                         </table>
@@ -257,7 +257,7 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>Show/hide fields:</clr-dg-column-toggle-title>
+                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
                             <!--Select All-->

@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th"></i> Tabs</h1>
+    <h1><i class="fa fa-th"></i> {{'Tabs' | translate}}</h1>
 </div>
 
 <div class="padding">
@@ -14,6 +14,8 @@
         -->
 
 
+
+
         <button clrTabLink id="tab-button-{{id}}">
             <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
         </button>
@@ -25,6 +27,9 @@
 
 
 
+
+
+
         <clr-tab-content *clrIfActive="tabdata.active">
             <!--
                 Tabs can be filtered by a numeric ID, or a string one.
@@ -32,6 +37,11 @@
                 In this case, we're using numbers, but you could simple use a
                 message type or user type etc.
             -->
+
+
+
+
+
 
 
 
@@ -60,6 +70,14 @@
 
 
 
+
+
+
+
+
+
+
+
             <ng-container *ngIf="id === 1">
                 <ng-container *ngTemplateOutlet="dynamicTab2; context: {'tabdata': tabdata}">
 
@@ -72,9 +90,9 @@
 <!-- Tab 1 content. -->
 <ng-template #dynamicTab1>
     <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This is the first tab, the component defaults this to be the active one by default in the tabsControl object.'"></app-ui-info-pane>
-    <p>This button programatically moves to the second tab.
+    <p>{{'This button programatically moves to the second tab.' | translate}}
 
-        <button (click)="setTabActive(1); $event.preventDefault()">Go.</button>
+        <button (click)="setTabActive(1); $event.preventDefault()">{{'Go.' | translate}}</button>
     </p>
 </ng-template>
 

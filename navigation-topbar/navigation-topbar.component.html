@@ -16,10 +16,12 @@
         <div class="user" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
-            <div class="last-login">
-                Last
+            <div class="last-login">Last
                 : &nbsp;
-                {{lastLogin | date: 'MMM d y HH:mm'}}
+                {{lastLogin | date: \'MMM d y HH:mm\'}}
+
+
+
             </div>
         </div>
 
@@ -27,22 +29,24 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">
-                    Last
+                <div class="last-login">Last
                     : &nbsp;
-                    {{lastLogin | date: 'MMM d y HH:mm'}}
+                    {{lastLogin | date: \'MMM d y HH:mm\'}}
+
+
+
                 </div>
             </div>
 
             <div class="dropdown-menu">
-                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem>My Account</a>
+                <a [routerLink]="['/account/my-account/detail']" id="topBarMyAccount" clrDropdownItem>{{'My Account' | translate}}</a>
             </div>
         </clr-dropdown>
 
 
         <div class="wallet">
             <div>
-                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" placeholder="No wallet selected" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
+                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="_translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
 
 
                 </ng-select>
@@ -53,13 +57,13 @@
             <div class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
                     <clr-icon shape="warning-standard" class="icon text-danger"></clr-icon>
-                    <p class="text-danger">Translations</p>
+                    <p class="text-danger">{{'Translations' | translate}}</p>
                 </a>
             </div>
             <div class="dropdown">
                 <a [routerLink]="['/messages']" class="nav-button dropdown-toggle messages-icon">
                     <clr-icon shape="email" class="icon" [ngClass]="hasMail"></clr-icon>
-                    <p>Messages</p>
+                    <p>{{'Messages' | translate}}</p>
 
                     <span *ngIf="unreadMessageCount > 0">{{unreadMessageCount}}</span>
                 </a>
@@ -68,7 +72,7 @@
             <clr-dropdown id="dropdown-user" appClicked appHighlight>
                 <div class="nav-button" clrDropdownToggle>
                     <clr-icon shape="user" class="icon"></clr-icon>
-                    <p>Profile</p>
+                    <p>{{'Profile' | translate}}</p>
                 </div>
 
                 <div class="dropdown-menu">
@@ -79,18 +83,19 @@
             <clr-dropdown class="bottom-right" appClicked>
                 <a class="nav-button" clrDropdownToggle id="dropdown-settings">
                     <clr-icon shape="cog" class="icon"></clr-icon>
-                    <p>Settings</p>
+                    <p>{{'Settings' | translate}}</p>
                 </a>
                 <div class="dropdown-menu" style="margin-right: 10px">
-                    <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang">Language</a>
-                    <a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout">Log
-                        out</a>
+                    <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang">{{'Language' | translate}}</a>
+                    <a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout">{{'Log
+                        out' | translate}}
+                    </a>
                 </div>
             </clr-dropdown>
         </div>
 
         <button class="header-overflow-trigger" type="button">
-            
+
         </button>
     </div>
 </header>
@@ -99,22 +104,22 @@
     <div class="modal-title">
         <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
         <h4 class="modal-title-text">
-            <span class="ml_translated">Session expiring soon</span></h4>
+            <span class="ml_translated">{{'Session expiring soon' | translate}}</span></h4>
     </div>
     <div class="modal-body">
-        <p>Your session will expire in <span class="text-warning">{{remainingSecond && remainingSecond}}</span>
-            seconds.
+        <p>{{'Your session will expire in' | translate}} <span class="text-warning">{{remainingSecond && remainingSecond}}</span>{{'seconds.' | translate}}
+
         </p>
-        <p>Press <span class="text-primary font-weight-bold ml_translated">continue</span>
-            to continue using this site.
+        <p>{{'Press' | translate}} <span class="text-primary font-weight-bold ml_translated">{{'continue' | translate}}</span>{{'to continue using this site.' | translate}}
+
         </p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
-            <span class="ml_translated">Continue</span>
+            <span class="ml_translated">{{'Continue' | translate}}</span>
         </button>
         <button type="button" class="btn btn-outline" (click)="showCountdownModal = false">
-            <span class="ml_translated">Close</span>
+            <span class="ml_translated">{{'Close' | translate}}</span>
         </button>
     </div>
 </clr-modal>
@@ -129,26 +134,26 @@
             </div>
         </div>
         <ng-template #noNeedTranslation>
-            <h3 class="text-center mb-1">{{'Need to translate' | translate}}</h3>
-            - {{'Nothing' | translate}}
+            <h3 class="text-center mb-1">{{'Need to translate' | translate}}</h3>- {{\'Nothing\' | translate}}
+
         </ng-template>
         <div *ngIf="responsesService.length > 0">
             <div *ngIf="missingTranslations.length > 0" class="hr-line-dashed"></div>
             <h3 class="text-center mb-1" [ngClass]="{'mt-1': missingTranslations.length > 0}">{{'Translations report' | translate}}</h3>
             <div *ngFor="let item of responsesService; let i = index">
-                <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">
-                    {{i + 1}}.
-                    <span *ngIf="item.response.ok" style="font-weight: bold;"> ({{'OK' | translate}}) - </span>
-                    <span *ngIf="!item.response.ok" style="font-weight: bold;"> ({{'FAILED - @item.response.statusText@' | translate: {'item.response.statusText': item.response.statusText} }}) - </span>
-                    {{item.translation.translation}}
+                <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">{{'@i + 1@.' | translate: {'i + 1': i + 1} }}
+
+                    <span *ngIf="item.response.ok" style="font-weight: bold;">({{\'OK\' | translate}}) - </span>
+                    <span *ngIf="!item.response.ok" style="font-weight: bold;">({{\'FAILED - @item.response.statusText@\' | translate: {\'item.response.statusText\': item.response.statusText} }}) - </span>{{item.translation.translation}}
+
 
                 </span>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button *ngIf="missingTranslations.length > 0" type="button" class="btn btn-success" [disabled]="isSaving" (click)="isSaving = true; generateTranslations()">
-            {{'Generate translations (max @nbMaxTranslationsToProcess@ per click)' | translate: {'nbMaxTranslationsToProcess': nbMaxTranslationsToProcess} }}
+        <button *ngIf="missingTranslations.length > 0" type="button" class="btn btn-success" [disabled]="isSaving" (click)="isSaving = true; generateTranslations()">{{'Generate translations (max @nbMaxTranslationsToProcess@ per click)' | translate: {'nbMaxTranslationsToProcess': nbMaxTranslationsToProcess} }}
+
         </button>
         <button type="button" class="btn btn-primary" (click)="showMissingTranslations = false">{{'Close' | translate}}</button>
     </div>
