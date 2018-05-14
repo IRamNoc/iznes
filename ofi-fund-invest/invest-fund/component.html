@@ -47,26 +47,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="ml_translated">{{metadata.feeLabel}} fee</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control mlp_translated" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="well">
                         <!-- Panel header -->
                         <div class="row panel-header">
                             <div class="col-sm-12" style="margin-bottom:15px;">
                                 <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
                                     <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
-                                    <h2 mltag="txt_mifidiicostscharges">MiFID II Costs & Charges</h2>
+                                    <h2>Costs & Charges</h2>
                                 </a>
                             </div>
                         </div>
@@ -130,6 +117,17 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label class="control-label">
+                                            <span class="ml_translated">{{metadata.feeLabel}} fee</span>
+                                        </label>
+                                        <div>
+                                            <input type="text" class="form-control mlp_translated" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -151,6 +149,29 @@
 
             <!-- Panel body -->
             <div class="panel-body" [class.hidden]="!panels[3]">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="" mltag="txt_nav">NAV</span>
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span class="" mltag="txt_lastnavdate">Last NAV Date</span>
+                            </label>
+                            <div>
+                                <input type="text" class="form-control" [value]="getDate(shareData.priceDate)" [readonly]="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
@@ -213,28 +234,6 @@
                             </label>
                             <div>
                                 <input type="text" class="form-control" [value]="currency" [readonly]="true">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="" mltag="txt_nav">NAV</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control" [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="" mltag="txt_lastnavdate">Last NAV Date</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control" [value]="getDate(shareData.priceDate)" [readonly]="true">
                             </div>
                         </div>
                     </div>

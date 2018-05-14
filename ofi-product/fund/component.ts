@@ -608,8 +608,9 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.location.back();
                     return;
                 })
-                .catch(() => {
-                    this.toasterService.pop('error', 'Failed to create the fund.');
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to create the fund. ' + errMsg);
                     return;
                 });
         } else {
@@ -620,8 +621,9 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.location.back();
                     return;
                 })
-                .catch(() => {
-                    this.toasterService.pop('error', 'Failed to update the fund.');
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to update the fund. ' + errMsg);
                     return;
                 });
         }

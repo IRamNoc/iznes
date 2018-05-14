@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1 id="manage-orders"><i class="fa fa-calendar"></i>
-        <span>Centralization History</span>
+        <span>Precentralisation History</span>
         <span *ngIf="baseCentralizationHistory.length > 0">{{baseCentralizationHistory.fundShareName}} - {{baseCentralizationHistory.isin}}</span>
     </h1>
 </div>
@@ -19,7 +19,7 @@
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label style="margin: 10px 0;">
-                                    <h3>Please find below the Centralization history for {{baseCentralizationHistory.fundShareName}}</h3>
+                                    <h3>Please find below the Precentralisation history for {{baseCentralizationHistory.fundShareName}}</h3>
                                 </label>
                                 <br>
                                 <div class="input-button-group">
@@ -94,7 +94,7 @@
                 </table>
 
                 <h3 class="mb-1">
-                    <span mltag="txt_pleasechoosethenavdatesforwhic448538d4f6">Please choose the NAV dates for which you would like  to see this share's centralization history</span>
+                    <span>Please choose the NAV dates for which you would like  to see this share's precentralisation history</span>
                 </h3>
 
                 <table style="width: 100%;" class="tableShareDetails">
@@ -141,7 +141,7 @@
                         </td>
                         <td>
                             <div class="text-right">
-                                <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportAllHistory()" mltag="txt_exportcentralizationhistoryforbf39cb18b5">Export Centralization history for these dates</button>
+                                <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportAllHistory()">Export Precentralisation history for these dates</button>
                             </div>
                         </td>
                     </tr>
@@ -189,22 +189,22 @@
                         {{getOnlyDate(data.settlementDate)}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2}}
+                        {{data.latestNav | moneyValue: 2}}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.aum)) | moneyValue: 5 }}
+                        {{data.aum | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        {{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5 }}
+                        {{data.netPosition | moneyValue: 5 }}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         {{data.netPositionPercentage | moneyValue: 2 }}%
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders" (click)="viewOrder(getOnlyDate(data.navDate))">View Orders</button>
+                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" mltag="txt_vieworders" (click)="viewOrder(getOnlyDate(data.cutoffDate))">View Orders</button>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" mltag="txt_downloadorders" (click)="exportHistory(data.navDate)">Download Orders</button>
+                        <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" mltag="txt_downloadorders" (click)="exportHistory(data)">Download Orders</button>
                     </clr-dg-cell>
                     <clr-dg-row-detail *clrIfExpanded>
                         <div class="additionalInfos">
@@ -222,14 +222,14 @@
                                         <tbody>
                                         <tr>
                                             <td><b>Subscriptions</b></td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.subQuantity) | moneyValue: 4 }}</td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.subAmount) | moneyValue: 5 }}</td>
+                                            <td>{{data.subQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.subAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Redemptions</b></td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.redQuantity) | moneyValue: 4 }}</td>
-                                            <td>{{this._numberConverterService.toFrontEnd(data.redAmount) | moneyValue: 5 }}</td>
+                                            <td>{{data.redQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.redAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
                                         </tr>
                                         </tbody>
@@ -248,7 +248,7 @@
             </clr-datagrid>
 
             <div class="text-center mt-1">
-                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization']" mltag="txt_backtocentralization">Back to Centralization</button>
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/centralization']">Back to Precentralisation</button>
             </div>
         </div>
     </ng-template>

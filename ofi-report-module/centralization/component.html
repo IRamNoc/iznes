@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1>
-        <span>Centralization Report: All Shares</span>
+        <span>Precentralisation Report: All Shares</span>
     </h1>
 </div>
 
@@ -18,12 +18,12 @@
                         <tr>
                             <td>
                                 <h3 style="margin-bottom: 3px;">
-                                    <span mltag="">Please find below the centralization reports by Share</span>:
+                                    <span mltag="">Please find below the precentralisation reports by Share</span>:
                                 </h3>
-                                <span mltag="">You can see centralization report</span>
+                                <span mltag="">You can see precentralisation report</span>
                             </td>
                             <td class="text-right" valign="middle">
-                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="" (click)="onClickExportCentralizationReport()">Export centralization report</button>
+                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="" (click)="onClickExportCentralizationReport()">Export precentralisation report</button>
                             </td>
                         </tr>
                         </tbody>
@@ -86,9 +86,9 @@
                         <clr-dg-cell>{{data.navDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
                         <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(data.latestNav) | moneyValue: 2 }}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.aum)) | moneyValue: 5}}</clr-dg-cell>
-                        <clr-dg-cell>{{this._numberConverterService.toFrontEnd(this._numberConverterService.toFrontEnd(data.netPosition)) | moneyValue: 5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.latestNav | moneyValue: 2 }}</clr-dg-cell>
+                        <clr-dg-cell>{{data.aum | moneyValue: 5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netPosition | moneyValue: 5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netPositionPercentage | moneyValue: 2}}%</clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
@@ -106,14 +106,14 @@
                                             <tbody>
                                             <tr>
                                                 <td><b>Subscriptions</b></td>
-                                                <td>{{this._numberConverterService.toFrontEnd(data.subQuantity) | moneyValue: 4 }}</td>
-                                                <td>{{this._numberConverterService.toFrontEnd(data.subAmount) | moneyValue: 5 }}</td>
+                                                <td>{{data.subQuantity | moneyValue: 4 }}</td>
+                                                <td>{{data.subAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.cutoffDate}}</td>
                                             </tr>
                                             <tr>
                                                 <td><b>Redemptions</b></td>
-                                                <td>{{this._numberConverterService.toFrontEnd(data.redQuantity) | moneyValue: 4 }}</td>
-                                                <td>{{this._numberConverterService.toFrontEnd(data.redAmount) | moneyValue: 5 }}</td>
+                                                <td>{{data.redQuantity | moneyValue: 4 }}</td>
+                                                <td>{{data.redAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.cutoffDate}}</td>
                                             </tr>
                                             </tbody>
@@ -127,7 +127,7 @@
                                                 <i class="fa fa-download"></i></button>
                                         </div>
                                         <div class="flex-container-row">
-                                            <button class="btn btn-primary" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View centralization history</button>
+                                            <button class="btn btn-primary" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View precentralsation history</button>
                                             <button class="btn btn-default" type="button" (click)="onClickDownloadCentralizationHistory(data.fundShareID)">
                                                 <i class="fa fa-download"></i></button>
                                         </div>

@@ -449,7 +449,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                     break;
                 case 'semester':
                     this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(6, 'months'));
+                    this.dateFrom = this.reformatDate(moment(today).subtract(15, 'weeks'));
                     break;
                 case 'year':
                     this.dateTo = this.reformatDate(today);
@@ -512,10 +512,33 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         window.open(url, '_blank');
     }
 
-    exportHistory(navDate): void {
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + this.shareID + '&dateFrom=' + navDate + '&dateTo=' + navDate + '&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
+    exportHistory(historyRow): void {
+        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
+
+        if (historyRow !== undefined) {
+            const cutoffDate = moment(historyRow.cutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const params = {
+                shareName: this.centralizationReportsList[0].text,
+                isin: null,
+                status: null,
+                orderType: null,
+                pageSize: 1000,
+                rowOffSet: 0,
+                sortByField: 'userEntered',
+                sortOrder: 'desc',
+                dateSearchField: 'cutoffDate',
+                fromDate: cutoffDate,
+                toDate: cutoffDate + ' 23:59',
+            };
+            for (let filter in params) {
+                if (params.hasOwnProperty(filter)) {
+                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
+                }
+            }
+            const url = this.generateExportURL(paramUrl, this.appConfig.production);
+            // console.log(url);
+            window.open(url, '_blank');
+        }
     }
 
     generateExportURL(url: string, isProd: boolean = true): string {
@@ -523,16 +546,16 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             `http://${window.location.hostname}:9788/${url}`;
     }
 
-    viewOrder(navDate) {
+    viewOrder(cutoffDate) {
         const orderFilters = {
             filters: {
                 isin: this.baseCentralizationHistory.isin,
                 shareName: this.baseCentralizationHistory.fundShareName,
-                status: '',
-                orderType: '',
-                dateType: 'navDate',
-                fromDate: moment(navDate).format('DD/MM/YYYY'),
-                toDate: moment(navDate).format('DD/MM/YYYY')
+                status: -3,
+                orderType: 0,
+                dateType: 'cutOffDate',
+                fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
+                toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
         };
         this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
