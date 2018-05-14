@@ -22,6 +22,8 @@ export {BlockchainContractService} from './services/blockchain-contract/service'
 export {NavHelperService} from './services/nav/service';
 export {ConditionType, ArrangementActionType} from './services/blockchain-contract/model';
 export {SetlServicesModule} from './services';
+export {LogService} from './services/log/service';
+export {LogServiceMock} from './services/log/service-mock';
 
 export {walletHelper, WalletTxHelper, immutableHelper, mDateHelper, commonHelper, WalletTxHelperModel} from './helper';
 

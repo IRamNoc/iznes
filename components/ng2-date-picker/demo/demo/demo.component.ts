@@ -249,11 +249,11 @@ export class DemoComponent {
   }
 
   opened() {
-    console.log('opened');
+    // console.log('opened');
   }
 
   closed() {
-    console.log('closed');
+    // console.log('closed');
   }
 
   isValidConfig(key: string): boolean {
@@ -335,7 +335,7 @@ export class DemoComponent {
   }
 
   log(item) {
-    console.log(item);
+    // console.log(item);
   }
 
   donateClicked() {

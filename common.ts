@@ -44,7 +44,6 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
         const response = await new Promise((resolve, reject) => {
             thisConnection.sendRequest(request, (messageId, data, userData) => {
                 const status = _.get(data, 'Status', 'Fail');
-                console.log('membernode response: ', data);
                 // status is ok -> success.
                 if (status === 'OK') {
                     // success
@@ -80,7 +79,6 @@ export function createMemberNodeRequest(thisConnection, messageBody: MemberNodeM
     return new Promise((resolve, reject) => {
         thisConnection.sendRequest(request, (messageId, data, userData) => {
             const status = _.get(data, 'Status', 'Fail');
-            console.log('membernode response: ', data);
             // status is ok -> success.
             if (status === 'OK') {
                 // success
@@ -129,7 +127,6 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
             thisConnection.sendRequest(request, (errorCode, data) => {
                 const status = _.get(data, 'status', 'Fail');
                 // No error code and status is ok -> success.
-                console.log('walletnode response: ', data);
                 if (status === 'OK') {
                     // success
                     resolve([errorCode, data]);
@@ -166,7 +163,6 @@ export function createWalletNodeRequest(thisConnection, messageType: string, mes
         thisConnection.sendRequest(request, (errorCode, data) => {
             const status = _.get(data, 'status', 'Fail');
             // No error code and status is ok -> success.
-            console.log('walletnode response: ', data);
             if (status === 'OK') {
                 // success
                 resolve([errorCode, data]);
