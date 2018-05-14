@@ -42,7 +42,7 @@ public class OpenCSD3SharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(60000);
+    public Timeout globalTimeout = new Timeout(6000000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -184,25 +184,24 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("investorProfile", 1);
         assertHiddenAttributeIsPresent("tabProfileButton");
         //DOCUMENTS
-        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
             scrollElementIntoViewById("saveFundShareBottom");
-            waits.until(visibilityOfElementLocated(By.id("saveFundShareBottom")));
-            waits.until(elementToBeClickable(driver.findElement(By.id("saveFundShareBottom"))));
+            wait.until(visibilityOfElementLocated(By.id("saveFundShareBottom")));
+            wait.until(elementToBeClickable(driver.findElement(By.id("saveFundShareBottom"))));
             driver.findElement(By.id("saveFundShareBottom")).click();
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
-        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        System.out.println(popupSubheading);
         assertTrue(popupSubheading.equals("Info!"));
+
+        WebDriverWait waits = new WebDriverWait(driver, 30);
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
 
         String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        System.out.println(shareCountPre + " Shares are in the listings before");
-        System.out.println(shareCountPost + " Shares are in the listings after");
 
         assertTrue(shareCountPost == shareCountPre + 1);
 
