@@ -553,7 +553,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 shareName: this.baseCentralizationHistory.fundShareName,
                 status: -3,
                 orderType: 0,
-                dateType: 'cutoffDate',
+                dateType: 'cutOffDate',
                 fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
                 toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
