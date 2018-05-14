@@ -79,8 +79,8 @@ const reportsCollectsArchives = {
     router_link: '/reports/holders-list/list'
 };
 const reportsCentralization = {
-    label: 'Centralization',
-    label_txt: 'txt_centralization',
+    label: 'Precentralisation',
+    label_txt: 'txt_precentralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralization',
     router_link: '/reports/centralization'
@@ -369,7 +369,7 @@ export const menuSpec: MenuSpec = {
         investor: [
             home,
             orderBook,
-            dashboard,
+            // dashboard,
             subPortfolio,
             // messages,
             // {
