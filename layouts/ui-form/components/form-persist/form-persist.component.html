@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-save"></i> <span mltag="txt_formpersist">Form Persist</span>
+        <i class="fa fa-save"></i> Form Persist
     </h1>
 </div>
 
@@ -14,7 +14,7 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="modal">
-            <i class="fa fa-bars"></i> <span mltag="txt_exampleform">Example Form</span>
+            <i class="fa fa-bars"></i> Example Form
         </button>
 
         <clr-tab-content *clrIfActive="true">
@@ -27,47 +27,47 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
-                            <label class="control-label" for="firstName" mltag="txt_firstname">First name</label>
+                            <label class="control-label" for="firstName">First name</label>
                             <input type="text" name="firstName" id="firstName" formControlName="firstName">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="lastName" mltag="txt_lastname">Last name</label>
+                            <label class="control-label required-field" for="lastName">Last name</label>
                             <input type="text" name="lastName" id="lastName" formControlName="lastName">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="password" mltag="txt_password">Password</label>
+                            <label class="control-label required-field" for="password">Password</label>
                             <input type="password" name="password" id="password" formControlName="password">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="passwordConfirm" mltag="txt_confirmpassword">Confirm password</label>
+                            <label class="control-label required-field" for="passwordConfirm">Confirm password</label>
                             <input type="password" name="passwordConfirm" id="passwordConfirm" formControlName="passwordConfirm">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
 
                         <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Simply wrap 2 \'form-group col-sm-6\' in a \'row\' class to achieve side-by-side fields.'"></app-ui-info-pane>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="input" mltag="txt_inputfield">Input field</label>
+                        <label class="control-label" for="input">Input field</label>
                         <input type="text" name="input" id="input" formControlName="input">
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label required-field" for="inputRequired" mltag="txt_inputfieldrequired">Input field (required)</label>
+                        <label class="control-label required-field" for="inputRequired">Input field (required)</label>
                         <input type="text" name="inputRequired" id="inputRequired" formControlName="inputRequired">
-                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span class="field-error">Field is required</span>
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="inputIcon" mltag="txt_inputicon">Input icon</label>
+                        <label class="control-label" for="inputIcon">Input icon</label>
                         <div class="input-group">
                             <span class="fa fa-calendar"></span>
                             <input name="inputIcon" id="inputIcon" formControlName="inputIcon">
@@ -77,8 +77,8 @@
                     </div>
 
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="select" mltag="txt_dropdown">Dropdown</label>
-                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" placeholder="Select" [formControl]="longForm.controls['select']" mltag="txt_select">
+                        <label class="control-label" for="select">Dropdown</label>
+                        <ng-select id="select" [items]="mockSelectItems" [allowClear]="true" placeholder="Select" [formControl]="longForm.controls['select']">
 
 
 
@@ -101,7 +101,7 @@
 
 
 
-                        <button id="submit" type="submit" class="btn btn-primary" mltag="txt_submitbutton">Submit Button</button>
+                        <button id="submit" type="submit" class="btn btn-primary">Submit Button</button>
 
                         <!--
                             The clear button below calls a clear function in the
@@ -114,7 +114,7 @@
 
 
 
-                        <button id="clear" (click)="clearLongForm(); $event.preventDefault()" class="btn btn-primary" mltag="txt_clearbutton">Clear Button</button>
+                        <button id="clear" (click)="clearLongForm(); $event.preventDefault()" class="btn btn-primary">Clear Button</button>
                     </div>
                 </section>
             </form>

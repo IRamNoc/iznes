@@ -74,6 +74,14 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
+    public missingTranslations = [];
+    public responsesService = <any>[];
+    showMissingTranslations = false;
+
+    nbMaxTranslationsToProcess = 2;
+
+    isSaving = false;
+
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
     @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
@@ -252,6 +260,96 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         console.log(window.innerWidth);
 
         this.ngRedux.dispatch(setMenuShown(true));
+    }
+
+    public getMissingTranslations() {
+        // reset
+        this.missingTranslations = [];
+        this.responsesService = [];
+        // get translatation
+        const tr = this.multilingualService.getTranslations();
+        // clone
+        this.missingTranslations = _.clone(tr);
+        this.showMissingTranslations = true;
+
+        this.highlightMissingTranslations();
+
+        // this.changeDetectorRef.markForCheck();
+        // this.changeDetectorRef.detectChanges();
+    }
+
+    highlightMissingTranslations(){
+        for (let tr of this.missingTranslations) {
+            this.replaceMissingTranslations(tr.translation);
+        }
+    }
+
+    removeHighlightMissingTranslations(){
+
+    }
+
+    replaceMissingTranslations(str) {
+        const elements = document.getElementsByTagName('*');
+        const excludes = 'html,head,style,title,link,meta,script,object,iframe';
+        for (let i = 0; i < elements.length; i++) {
+            let element = elements[i];
+            if ((excludes + ',').indexOf(element.nodeName.toLowerCase() + ',') === -1) {
+                for (let j = 0; j < element.childNodes.length; j++) {
+                    let node = element.childNodes[j];
+                    if (node.nodeType === 3) {
+                        let text = node.nodeValue;
+                        let regex = new RegExp(str, 'gi');
+                        let replacedText = text.replace(regex, 'STRFOUND');
+                        if (replacedText !== text) {
+                            element.classList.add('highlighMissingTranslations');
+                            element.classList.add('blink_bg');
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    async generateTranslations() {
+        if (this.missingTranslations.length > 0) {
+            const nbMax1 = (this.missingTranslations.length > this.nbMaxTranslationsToProcess) ? this.nbMaxTranslationsToProcess : this.missingTranslations.length;
+            if (nbMax1 > 0) {
+                for (let i = 0; i < nbMax1; i++) {
+                    this.responsesService.push({
+                        response: await this.multilingualService.addNewTranslation({
+                            mltag: this.missingTranslations[i].mltag,
+                            value: this.missingTranslations[i].original,
+                            location: this.missingTranslations[i].from
+                        }),
+                        translation: this.missingTranslations[i],
+                    });
+                }
+                const nbMax2 = this.responsesService.length;
+                if (nbMax2 > 0) {
+                    let idList = [];
+                    let trFound = undefined;
+                    let ix = -1;
+                    for (let i = 0; i < nbMax2; i++) {
+                        if (this.responsesService[i].response.ok) {
+                            trFound = this.missingTranslations.find((item) => item.original === this.responsesService[i].translation.original);
+                            if (trFound !== undefined) {
+                                ix = this.missingTranslations.indexOf(trFound);
+                                if (ix !== -1 && ix !== undefined) {
+                                    idList.push(ix);
+                                }
+                            }
+                        }
+                    }
+                    if (idList.length > 0) {
+                        for (let i = 0; i < idList.length; i++) {
+                            this.missingTranslations.splice(idList[i] - i, 1);
+                        }
+                    }
+                }
+            }
+        }
+        this.isSaving = false;
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy() {

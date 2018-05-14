@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th"></i> <span mltag="txt_tabs">Tabs</span></h1>
+    <h1><i class="fa fa-th"></i> Tabs</h1>
 </div>
 
 <div class="padding">
@@ -72,9 +72,9 @@
 <!-- Tab 1 content. -->
 <ng-template #dynamicTab1>
     <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This is the first tab, the component defaults this to be the active one by default in the tabsControl object.'"></app-ui-info-pane>
-    <p><span mltag="txt_thisbuttonprogramaticallymoves4362c9d758">This button programatically moves to the second tab.</span>
+    <p>This button programatically moves to the second tab.
 
-        <button (click)="setTabActive(1); $event.preventDefault()" mltag="txt_go">Go.</button>
+        <button (click)="setTabActive(1); $event.preventDefault()">Go.</button>
     </p>
 </ng-template>
 

@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-archive"></i> <span mltag="txt_modal">Modal
-        </span></h1>
+    <h1><i class="fa fa-archive"></i> Modal
+        </h1>
 </div>
 
 <div class="padding">
@@ -14,35 +14,35 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="modal">
-            <i class="fa fa-bars"></i> <span mltag="txt_modal">Modal</span>
+            <i class="fa fa-bars"></i> Modal
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
                 <section class="form-block">
-                    <p><span mltag="txt_for">For</span><b mltag="txt_confirmationalerts">Confirmation Alerts</b><span mltag="txt_ayesornoanswerusealertsontheleb3364e591e">, a Yes or No answer use Alerts on the left menu. Only use
-                        modals for forms and including other components</span>
+                    <p>For<b>Confirmation Alerts</b>, a Yes or No answer use Alerts on the left menu. Only use
+                        modals for forms and including other components
                     </p>
 
                     <div class="form-group col-sm-12">
-                        <button id="showSmallAlert" class="btn btn-primary" (click)="showSmallModal()" mltag="txt_showsmallmodal">Show Small Modal
+                        <button id="showSmallAlert" class="btn btn-primary" (click)="showSmallModal()">Show Small Modal
                         </button>
-                        <button id="showMediumModal" class="btn btn-primary" (click)="showMediumModal()" mltag="txt_showmediummodal">Show Medium
+                        <button id="showMediumModal" class="btn btn-primary" (click)="showMediumModal()">Show Medium
                             Modal
 
                         </button>
-                        <button id="showLargeModal" class="btn btn-primary" (click)="showLargeModal()" mltag="txt_showlargemodal">Show Large Modal
+                        <button id="showLargeModal" class="btn btn-primary" (click)="showLargeModal()">Show Large Modal
                         </button>
                     </div>
                 </section>
 
                 <section class="form-block">
                     <div class="form-group col-sm-12">
-                        <button id="showMediumModalForm" class="btn btn-primary" (click)="showSmallModalForm()" mltag="txt_showsmallmodalform">Show
+                        <button id="showMediumModalForm" class="btn btn-primary" (click)="showSmallModalForm()">Show
                             Small Modal Form
 
                         </button>
-                        <button id="showLargeModalForm" class="btn btn-primary" (click)="showMediumModalForm()" mltag="txt_showmediummodalform">Show
+                        <button id="showLargeModalForm" class="btn btn-primary" (click)="showMediumModalForm()">Show
                             Medium Modal Form
 
                         </button>
@@ -55,93 +55,93 @@
 
 
 <clr-modal [(clrModalOpen)]="smallModal" [clrModalSize]="'sm'">
-    <h3 class=" modal-title" mltag="txt_nicesmalltitle">nice small title</h3>
+    <h3 class=" modal-title">nice small title</h3>
     <div class="modal-body">
-        <p mltag="txt_exampleofsmallmodalreplacethisbf35dd2ee7">Example of Small Modal, replace this with an component like a form or something else</p>
+        <p>Example of Small Modal, replace this with an component like a form or something else</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="smallModal = false" mltag="txt_cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="smallModal = false" mltag="txt_ok">Ok</button>
+        <button type="button" class="btn btn-outline" (click)="smallModal = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="smallModal = false">Ok</button>
     </div>
 </clr-modal>
 
 <clr-modal [(clrModalOpen)]="mediumModal">
-    <h3 class="modal-title" mltag="txt_ihaveanicemediumtitle">I have a nice medium title</h3>
+    <h3 class="modal-title">I have a nice medium title</h3>
     <div class="modal-body">
-        <p mltag="txt_exampleofmediummodalreplacethi1abe8c08e5">Example of Medium Modal, replace this with an component like a form or something else</p>
+        <p>Example of Medium Modal, replace this with an component like a form or something else</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="mediumModal = false" mltag="txt_cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="mediumModal = false" mltag="txt_ok">Ok</button>
+        <button type="button" class="btn btn-outline" (click)="mediumModal = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="mediumModal = false">Ok</button>
     </div>
 </clr-modal>
 
 <clr-modal [(clrModalOpen)]="largeModal" [clrModalSize]="'lg'">
-    <h3 class=" modal-title" mltag="txt_ihaveanicelargetitle">I have a nice large title</h3>
+    <h3 class=" modal-title">I have a nice large title</h3>
     <div class="modal-body">
-        <p mltag="txt_exampleofmediummodalreplacethi1abe8c08e5">Example of Medium Modal, replace this with an component like a form or something else</p>
+        <p>Example of Medium Modal, replace this with an component like a form or something else</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="largeModal = false" mltag="txt_cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="largeModal = false" mltag="txt_ok">Ok</button>
+        <button type="button" class="btn btn-outline" (click)="largeModal = false">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="largeModal = false">Ok</button>
     </div>
 </clr-modal>
 
 <clr-modal [(clrModalOpen)]="smallModalForm" [clrModalSize]="'sm'">
-    <h3 class="modal-title" mltag="txt_editname">Edit Name</h3>
+    <h3 class="modal-title">Edit Name</h3>
     <div class="modal-body">
         <form>
             <section class="form-block">
                 <div class="form-group col-sm-12">
-                    <label class="control-label" for="firstname" mltag="txt_firstname">Firstname</label>
+                    <label class="control-label" for="firstname">Firstname</label>
                     <input type="text" name="input" id="firstname">
                 </div>
                 <div class="form-group col-sm-12">
-                    <label class="control-label" for="lastname" mltag="txt_lastname">Lastname</label>
+                    <label class="control-label" for="lastname">Lastname</label>
                     <input type="text" name="input" id="lastname">
                 </div>
             </section>
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="smallModalForm = false" mltag="txt_cancel">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="smallModalForm = false" mltag="txt_save">Save</button>
+        <button type="button" class="btn btn-outline" (click)="smallModalForm = false">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="smallModalForm = false">Save</button>
     </div>
 </clr-modal>
 
 <clr-modal [(clrModalOpen)]="mediumModalForm">
-    <h3 class="modal-title" mltag="txt_editnamewithmore">Edit Name with More</h3>
+    <h3 class="modal-title">Edit Name with More</h3>
     <div class="modal-body">
         <form>
             <section class="form-block">
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="firstname" mltag="txt_firstname">Firstname</label>
+                        <label class="control-label" for="firstname">Firstname</label>
                         <input type="text" name="input" id="firstname">
                     </div>
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="lastname" mltag="txt_lastname">Lastname</label>
+                        <label class="control-label" for="lastname">Lastname</label>
                         <input type="text" name="input" id="lastname">
                     </div>
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="age" mltag="txt_age">Age</label>
+                        <label class="control-label" for="age">Age</label>
                         <input type="text" name="input" id="age">
                     </div>
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="team" mltag="txt_team">Team</label>
+                        <label class="control-label" for="team">Team</label>
                         <input type="text" name="input" id="team">
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="fruit" mltag="txt_fruit">Fruit</label>
+                        <label class="control-label" for="fruit">Fruit</label>
                         <input type="text" name="input" id="fruit">
                     </div>
                     <div class="form-group col-sm-6">
-                        <label class="control-label" for="phone" mltag="txt_phone">Phone</label>
+                        <label class="control-label" for="phone">Phone</label>
                         <input type="text" name="input" id="phone">
                     </div>
                 </div>
@@ -149,7 +149,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="mediumModalForm = false" mltag="txt_cancel">Cancel</button>
-        <button type="button" class="btn btn-success" (click)="mediumModalForm = false" mltag="txt_save">Save</button>
+        <button type="button" class="btn btn-outline" (click)="mediumModalForm = false">Cancel</button>
+        <button type="button" class="btn btn-success" (click)="mediumModalForm = false">Save</button>
     </div>
 </clr-modal>

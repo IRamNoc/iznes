@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-th"></i> <span mltag="txt_layoutone">Layout One
-        </span></h1>
+    <h1><i class="fa fa-th"></i> Layout One
+        </h1>
 </div>
 
 <div class="padding">
@@ -14,64 +14,64 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> <span mltag="txt_layoutone">Layout One</span>
+            <i class="fa fa-bars"></i> Layout One
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
-                <p mltag="txt_letsaddsometextatthetopifitreqac5c958790">Lets add some text at the top if it required. No problems lots of space here</p>
-                <h2><i class="fa fa-list"></i> <span mltag="txt_formarea">Form Area</span></h2>
+                <p>Lets add some text at the top if it required. No problems lots of space here</p>
+                <h2><i class="fa fa-list"></i> Form Area</h2>
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
-                            <label class="control-label" for="firstName" mltag="txt_firstname">First name</label>
+                            <label class="control-label" for="firstName">First name</label>
                             <input type="text" name="firstName" id="firstName">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="lastName" mltag="txt_lastname">Last
+                            <label class="control-label required-field" for="lastName">Last
                                 name
                             </label>
                             <input type="text" name="lastName" id="lastName">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="password" mltag="txt_password">
+                            <label class="control-label required-field" for="password">
                                 Password</label>
                             <input type="password" name="password" id="password">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
 
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="passwordConfirm" mltag="txt_confirmpassword">
+                            <label class="control-label required-field" for="passwordConfirm">
                                 Confirm password</label>
                             <input type="password" name="passwordConfirm" id="passwordConfirm">
-                            <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span class="field-error">Field is required</span>
                         </div>
                     </div>
                 </section>
                 <div class="hr-line-dashed"></div>
 
-                <h2><i class="fa fa-info-circle"></i> <span mltag="txt_textinfoarea">Text & Info Area</span></h2>
+                <h2><i class="fa fa-info-circle"></i> Text & Info Area</h2>
                 <section class="form-block">
-                    <p><b mltag="txt_pleaseconfirmthatyouvalidateyo8dea877350">Please confirm that you validate your client's KYC documents</b></p>
-                    <p mltag="txt_doestheassetmanagementcompanyodbcb15fcf8">Does the Asset Management company OFI AM, confirm that the client OFI AM has successfully filled
+                    <p><b>Please confirm that you validate your client's KYC documents</b></p>
+                    <p>Does the Asset Management company OFI AM, confirm that the client OFI AM has successfully filled
                         up the KYC documents, and that you wish to authorise this client to place orders on IZNES?
                     </p>
-                    <p mltag="txt_canaddmoregreatthingsinheresucae538ff244">Can add more great things in here such as checkboxes</p>
+                    <p>Can add more great things in here such as checkboxes</p>
                 </section>
                 <div class="hr-line-dashed"></div>
 
-                <h2><i class="fa fa-table"></i> <span mltag="txt_datagridarea">Datagrid Area</span></h2>
+                <h2><i class="fa fa-table"></i> Datagrid Area</h2>
                 <section class="form-block">
                     <clr-datagrid #dataGrid>
-                        <clr-dg-column mltag="txt_column1">Column 1</clr-dg-column>
-                        <clr-dg-column mltag="txt_column2">Column 2</clr-dg-column>
-                        <clr-dg-column class="actions" mltag="txt_actions">Actions</clr-dg-column>
+                        <clr-dg-column>Column 1</clr-dg-column>
+                        <clr-dg-column>Column 2</clr-dg-column>
+                        <clr-dg-column class="actions">Actions</clr-dg-column>
 
                         <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
                             <clr-dg-cell>{{item.value1}}</clr-dg-cell>
@@ -79,11 +79,11 @@
                             <clr-dg-cell class="actions">
                                 <div class="btn-group btn-sm">
                                     <button id="edit" (click)="dataGridEdit()" class="btn">
-                                        <i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">Edit</span>
+                                        <i class="fa fa-pencil-square-o"></i> Edit
                                     </button>
 
                                     <button id="delete" (click)="dataGridDelete()" class="btn">
-                                        <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
+                                        <i class="fa fa-trash-o"></i> Delete
                                     </button>
                                 </div>
                             </clr-dg-cell>
@@ -99,7 +99,7 @@
 
                 <section class="form-block">
                     <div class="form-group col-sm-6">
-                        <button id="submit" type="submit" class="btn btn-primary" mltag="txt_submitbutton">Submit
+                        <button id="submit" type="submit" class="btn btn-primary">Submit
                             Button
 
                         </button>

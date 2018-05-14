@@ -925,3 +925,30 @@ dp-date-picker div {
     padding-right: 5px;
     min-width: 20px;
 }
+
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.blink_bg {
+  animation: blinkerBg 1s linear infinite;
+}
+
+@keyframes blinkerBg {
+  50% {
+    background-color: rgba(255, 255, 85, 0.4);
+  }
+}
+
+.highlighMissingTranslations {
+  background-color: rgba(255, 255, 85, 1) !important;
+  padding: 4px !important;
+  margin: 4px 0 !important;
+  color: red !important;
+}
