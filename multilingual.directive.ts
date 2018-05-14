@@ -47,8 +47,6 @@ export class MultilingualDirective implements AfterViewInit {
         let
             hadAttribute = true;
 
-        // console.log('looking up translation: ', mltag);
-
         /* First, check that the tag was translated... */
         if (translation) {
             /* ...let's check for any attributes that differ the way we'll refect the translation... */

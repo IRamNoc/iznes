@@ -3,9 +3,7 @@ import {Injectable} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {select} from '@angular-redux/store';
 import {Http, Headers, Response, RequestOptions} from '@angular/http';
-
 import {ActivatedRoute, Router} from '@angular/router';
-
 import {Translations} from './translations';
 
 /* Service Class. */
@@ -85,7 +83,6 @@ export class MultilingualService {
                 mlcode = mlcode.substring(0, 34) + hash.substring(10, 20);
             }
             /* Look for translation... */
-            // console.log('multilingual service to found', this.language, mlcode, Translations['core'][this.language][mlcode]);
             if (
                 Translations &&
                 Translations['core'] &&
@@ -94,15 +91,7 @@ export class MultilingualService {
                 Translations['core'][this.language][mlcode] !== ''
             ) {
                 /* ...and return it, if we have it. */
-                // console.log('multilingual service found', this.language, mlcode, Translations['core'][this.language][mlcode]);
                 return Translations['core'][this.language][mlcode];
-            } else {
-                console.log('*******************************************');
-                console.log('TranslationByString NOT FOUND : ');
-                console.log('Language : ' + this.language);
-                console.log('String : ' + str);
-                console.log('Mltag generated : ' + mlcode);
-                console.log('*******************************************');
             }
         }
 
