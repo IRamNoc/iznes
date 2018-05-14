@@ -49,7 +49,7 @@
 
                     <div class="form-group col-sm-2">
                         <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
-                        <input type="text" id="nav" name="nav" value="{{ navFund.nav ? navToFrontEndString(navFund.nav) : 'Pending'}}" readonly>
+                        <input type="text" id="nav" name="nav" value="{{ navFund.nav !== null ? navToFrontEndString(navFund.nav) : 'Pending'}}" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">

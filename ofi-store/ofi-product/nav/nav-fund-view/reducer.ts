@@ -62,18 +62,32 @@ function handleSetOfiNavFundView(state: OfiNavFundViewState, action: Action): Of
     try {
         navFundView = immutableHelper.reduce(navFundViewData, (result: NavDetail[], item) => {
 
-            result.push({
+            const navDetail = {
                 shareId: item.get('shareId', 0),
                 fundId: item.get('fundId', 0),
                 fundShareName: item.get('fundShareName', ''),
                 isin: item.get('isin', 0),
                 currency: item.get('shareClassCurrency', ''),
-                nav: item.get('nav', 0),
+                nav: null,
                 navDate: item.get('navDate', ''),
                 navPubDate: item.get('navPublicationDate', ''),
                 status: item.get('navStatus', 0),
                 asm: item.get('asm', '')
-            });
+            };
+
+            switch (item.get('navStatus')) {
+                case -1:
+                    navDetail['nav'] = item.get('priceValidated');
+                    break;
+                case 1:
+                    navDetail['nav'] = item.get('priceEstimated');
+                    break;
+                case 2:
+                    navDetail['nav'] = item.get('priceTechnical');
+                    break;
+            }
+
+            result.push(navDetail);
             return result;
         }, []);
     } catch (e) {
