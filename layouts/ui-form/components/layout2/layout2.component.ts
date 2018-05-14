@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Subpanel} from './models';
 import {MockFundService} from './fund.mock.service';
+import {LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-ui-layouts-layout2',
@@ -32,7 +33,7 @@ export class UiLayout2Component {
 
     public panelDefs: Subpanel[];
 
-    constructor(private service: MockFundService) {
+    constructor(private service: MockFundService, private logService: LogService,) {
     }
 
     toggleInfoPanes(event: Event): void {
@@ -186,15 +187,15 @@ export class UiLayout2Component {
     }
 
     addShare() {
-        console.log('add new share!');
+        this.logService.log('add new share!');
     }
 
     addFund() {
-        console.log('add new fund!');
+        this.logService.log('add new fund!');
     }
 
     addUmbreallaFund() {
-        console.log('add umbrealla fund!');
+        this.logService.log('add umbrealla fund!');
     }
 
 }

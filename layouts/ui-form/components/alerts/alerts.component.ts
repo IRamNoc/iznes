@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
+import {ConfirmationService, LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-ui-layouts-alerts',
@@ -32,7 +32,7 @@ export class UiAlertsComponent {
 
     showInfoPanes: boolean = true;
 
-    constructor(private alerts: AlertsService, private _confirmationService: ConfirmationService) {
+    constructor(private alerts: AlertsService, private _confirmationService: ConfirmationService, private logService: LogService,) {
     }
 
     toggleInfoPanes(event: Event): void {
@@ -122,7 +122,7 @@ export class UiAlertsComponent {
             {confirmText: 'Confirm', declineText: 'Cancel'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                console.log('button confirmation has been pressed (check alert)');
+                this.logService.log('button confirmation has been pressed (check alert)');
             }
         });
     }
@@ -134,7 +134,7 @@ export class UiAlertsComponent {
             {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'success'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                console.log('button confirmation has been pressed (confirmation alert)');
+                this.logService.log('button confirmation has been pressed (confirmation alert)');
             }
         });
     }
@@ -147,7 +147,7 @@ export class UiAlertsComponent {
             {confirmText: 'Remove', declineText: 'Cancel', btnClass: 'error'}
         ).subscribe((ans) => {
             if (ans.resolved) {
-                console.log('button remove has been pressed');
+                this.logService.log('button remove has been pressed');
             }
         });
     }

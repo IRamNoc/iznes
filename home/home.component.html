@@ -1,115 +1,144 @@
-<div class="p-1">
-    <h1><i class="fa fa-tachometer"></i> Dashboard</h1>
+<h3 class="pt-1 pl-1">
+    <b>Welcome {{username}}</b>
+    <span *ngIf="lastLogin">
+            <small>Last login: {{lastLogin | date: 'MMM d y HH:mm'}}</small>
+        </span>
+</h3>
 
-    <h3><b>Welcome {{username}}</b><span *ngIf="lastLogin"> <small>Last login: {{lastLogin | date: 'MMM d y HH:mm'}}</small></span>
-    </h3>
+<clr-tabs class="mt-2">
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-tachometer"></i>
+            Dashboard
+        </button>
 
-    <app-dashboard [rows]="2" [columns]="4">
-        <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">
-            Actions
-        </app-counter-tile>
-        <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">
-            Connections
-        </app-counter-tile>
-        <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">New
-            messages
-        </app-counter-tile>
-        <app-counter-tile name="contracts" icon="plug" count="0" color="blue">Contracts</app-counter-tile>
-        <app-basic-tile name="asset1" color="green">
-            <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
-        </app-basic-tile>
-        <app-basic-tile name="asset2" color="orange">
-            <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]} || {}"></ng-container>
-        </app-basic-tile>
-        <app-basic-tile name="search" color="blue">
-            <h1 class="tile-heading">Search</h1>
-            <div class="input-group">
-                <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" placeholder="Search by Tx ID, Contract Address, Instruments or Address">
-                <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i class="fa fa-search"></i></button>
+        <clr-tab-content *clrIfActive>
+            <app-dashboard [rows]="2" [columns]="4">
+                <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">
+                    Actions
+                </app-counter-tile>
+                <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">
+                    Connections
+                </app-counter-tile>
+                <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">New
+                    messages
+                </app-counter-tile>
+                <app-counter-tile name="contracts" icon="plug" count="0" color="blue">Contracts</app-counter-tile>
+                <app-basic-tile name="asset1" color="green">
+                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
+                </app-basic-tile>
+                <app-basic-tile name="asset2" color="orange">
+                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]} || {}"></ng-container>
+                </app-basic-tile>
+                <app-basic-tile name="search" color="blue">
+                    <h1 class="tile-heading">Search</h1>
+                    <div class="input-group">
+                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" placeholder="Search by Tx ID, Contract Address, Instruments or Address">
+                        <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i class="fa fa-search"></i></button>
+                    </div>
+
+                </app-basic-tile>
+            </app-dashboard>
+        </clr-tab-content>
+    </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-th-list"></i>
+            Balances
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <!-- Balances -->
+            <div class="balances-grid">
+                <clr-datagrid #myDataGrid>
+                    <clr-dg-column style="min-width: 160px;">Actions</clr-dg-column>
+                    <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
+                    <clr-dg-column style="min-width: 170px;">Asset</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;">Total</clr-dg-column>
+                    <clr-dg-column>Encumbered</clr-dg-column>
+                    <clr-dg-column>Free</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let asset of holdingByAsset$ | async" [class.flash]="asset.isNew">
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/breakdown'">
+                                    <i class="fa fa-search"></i>View</a>
+                                <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/history'"><i class="fa fa-history"></i>History</a>
+                            </div>
+                        </clr-dg-cell>
+                        <!--<clr-dg-cell>{{asset.identifier}}</clr-dg-cell>-->
+                        <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
+                        <clr-dg-cell [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
+
+                        </clr-dg-cell>
+                        <clr-dg-cell [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
+
+                        </clr-dg-cell>
+                        <clr-dg-cell [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
+
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </clr-datagrid>
             </div>
+        </clr-tab-content>
+    </clr-tab>
 
-        </app-basic-tile>
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-key"></i>
+            Transactions
+        </button>
 
-        <!-- Balances -->
-        <div class="balances-grid">
-            <h1><i class="fa fa-th-list"></i> Balances</h1>
-            <clr-datagrid #myDataGrid>
-                <clr-dg-column style="min-width: 160px;">Actions</clr-dg-column>
-                <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                <clr-dg-column style="min-width: 170px;">Asset</clr-dg-column>
-                <clr-dg-column style="min-width: 170px;">Total</clr-dg-column>
-                <clr-dg-column>Encumbered</clr-dg-column>
-                <clr-dg-column>Free</clr-dg-column>
-
-                <clr-dg-row *clrDgItems="let asset of holdingByAsset$ | async" [class.flash]="asset.isNew">
-                    <clr-dg-cell>
-                        <div class="btn-group btn-sm">
-                            <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/breakdown'">
-                                <i class="fa fa-search"></i>View</a>
-                            <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/history'"><i class="fa fa-history"></i>History</a>
-                        </div>
-                    </clr-dg-cell>
-                    <!--<clr-dg-cell>{{asset.identifier}}</clr-dg-cell>-->
-                    <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
-
-                    </clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
-
-                    </clr-dg-cell>
-                    <clr-dg-cell [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
-
-                    </clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
-        </div>
-
-        <!-- Transactions -->
-        <div class="transactions-grid">
-            <h1><i class="fa fa-key"></i> Transactions</h1>
-            <clr-datagrid #myDataGrid>
-                <clr-dg-column style="min-width: 160px;">Actions</clr-dg-column>
-                <clr-dg-column style="min-width: 150px;">Tx ID</clr-dg-column>
-                <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                <clr-dg-column style="min-width: 170px;">Asset</clr-dg-column>
-                <clr-dg-column style="min-width: 170px;">Time (UTC)</clr-dg-column>
-                <clr-dg-column>Type</clr-dg-column>
+        <clr-tab-content *clrIfActive>
+            <!-- Transactions -->
+            <div class="transactions-grid">
+                <clr-datagrid #myDataGrid>
+                    <clr-dg-column style="min-width: 160px;">Actions</clr-dg-column>
+                    <clr-dg-column style="min-width: 150px;">Tx ID</clr-dg-column>
+                    <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
+                    <clr-dg-column style="min-width: 170px;">Asset</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;">Time (UTC)</clr-dg-column>
+                    <clr-dg-column>Type</clr-dg-column>
 
 
-                <clr-dg-row *clrDgItems="let transaction of transactions$ | async;">
-                    <clr-dg-cell class="col-actions">
-                        <div class="btn-group btn-sm">
-                            <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
-                                <i class="fa fa-search"></i>View
-                            </a>
-                        </div>
-                    </clr-dg-cell>
-                    <clr-dg-cell class="col-txid">{{transaction.hash | truncate:8}}</clr-dg-cell>
-                    <!--<clr-dg-cell class="col-identifier"></clr-dg-cell>-->
-                    <clr-dg-cell class="col-asset">{{transaction.issuer}} | {{transaction.instrument}}</clr-dg-cell>
-                    <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
-                    <clr-dg-cell class="col-type"><span class="label label-success">{{transaction.txType}}</span>
-                    </clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
-        </div>
-    </app-dashboard>
-
-    <ng-template #assetTile let-asset="asset">
-        <div class="container-fluid" style="margin:0;" *ngIf="asset.asset">
-            <h1 class="tile-heading">{{ asset.total | moneyValue }}</h1>
-            <div class="row">
-                <div class="col-xs-12">
-                    <span class="asset-id" title="asset.identifier" [innerHtml]="asset.asset | truncate:10"></span>
-                </div>
+                    <clr-dg-row *clrDgItems="let transaction of transactions$ | async;">
+                        <clr-dg-cell class="col-actions">
+                            <div class="btn-group btn-sm">
+                                <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
+                                    <i class="fa fa-search"></i>View
+                                </a>
+                            </div>
+                        </clr-dg-cell>
+                        <clr-dg-cell class="col-txid">{{transaction.hash | truncate:8}}</clr-dg-cell>
+                        <!--<clr-dg-cell class="col-identifier"></clr-dg-cell>-->
+                        <clr-dg-cell class="col-asset">{{transaction.issuer}} | {{transaction.instrument}}</clr-dg-cell>
+                        <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
+                        <clr-dg-cell class="col-type">
+                            <span class="label label-success">{{transaction.txType}}</span>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </clr-datagrid>
             </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-transparent"><i class="fa fa-history"></i></a>
-                </div>
+        </clr-tab-content>
+    </clr-tab>
+
+</clr-tabs>
+
+<ng-template #assetTile let-asset="asset">
+    <div class="container-fluid" style="margin:0;" *ngIf="asset.asset">
+        <h1 class="tile-heading">{{ asset.total | moneyValue }}</h1>
+        <div class="row">
+            <div class="col-xs-12">
+                <span class="asset-id" title="asset.identifier" [innerHtml]="asset.asset | truncate:10"></span>
             </div>
         </div>
-    </ng-template>
+        <div class="row">
+            <div class="col-xs-12">
+                <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-transparent"><i class="fa fa-history"></i></a>
+            </div>
+        </div>
+    </div>
+</ng-template>
 
-    <div class="hSep"></div>
-</div>
+<div class="hSep"></div>

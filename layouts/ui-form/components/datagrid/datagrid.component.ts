@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {LogService} from '@setl/utils';
 
 @Component({
     selector: 'app-ui-layouts-datagrid',
@@ -24,7 +25,7 @@ export class UiDataGridComponent {
     // mock data
     mockDataGridItems: any[];
 
-    constructor() {
+    constructor(private logService: LogService,) {
         this.initMocks();
     }
 
@@ -71,11 +72,11 @@ export class UiDataGridComponent {
 
     // datagrid-expand
     dataGridEdit(): void {
-        console.log('Edit data grid item function here');
+        this.logService.log('Edit data grid item function here');
     }
 
     dataGridDelete(): void {
-        console.log('Delete data grid item function here');
+        this.logService.log('Delete data grid item function here');
     }
 
 }
