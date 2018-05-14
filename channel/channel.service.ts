@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper, LogService} from '@setl/utils';
 import {ToasterService} from 'angular2-toaster';
+import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 import {
     /* Useradmin */
@@ -36,7 +37,8 @@ export class ChannelService {
 
     changedPassword = false;
 
-    constructor(private ngRedux: NgRedux<any>,
+    constructor(private alertsService: AlertsService,
+                private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private myWalletsService: MyWalletsService,
                 private logService: LogService,
@@ -99,7 +101,11 @@ export class ChannelService {
                 this.logService.log(' | UPDATE USER PASSWORD: ', data);
                 this.logService.log(this.changedPassword);
                 if (this.changedPassword !== true) {
-                    document.location.reload(true);
+                    this.alertsService.create('warning', `
+                        The password for this account has been changed! Logging out in 5 seconds.`);
+                    setTimeout(function () {
+                        document.location.reload(true);
+                    }, 5000);
                 }
                 break;
 
