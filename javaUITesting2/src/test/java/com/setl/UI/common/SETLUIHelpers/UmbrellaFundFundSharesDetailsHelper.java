@@ -68,18 +68,25 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
 
     public static void shareCreationCalendar() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
         assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("1212");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("1313");
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("12");
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
+        scrollElementIntoViewById("cancelFundShareBottom");
+        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
+        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
         openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
         assertClassRequiredIsPresent("tabCalendarButton");

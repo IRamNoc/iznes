@@ -3,6 +3,7 @@ package com.setl.UI.common.SETLUIHelpers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.DriverManager;
@@ -58,6 +59,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
+        wait.until(invisibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
@@ -191,11 +193,12 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void selectFund(int fundCount) {
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
+        scrollElementIntoViewById("new-share-btn");
         String fundId = "product-dashboard-link-fundID-" + fundCount;
-        wait.until(visibilityOfElementLocated(By.id(fundId)));
-        wait.until(elementToBeClickable(By.id(fundId)));
+        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id(fundId))));
+        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id(fundId))));
         WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
@@ -242,6 +245,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id("new-fund-btn"))));
+        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id("new-fund-btn"))));
+
+
         driver.findElement(By.id("new-fund-btn")).click();
 
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -266,7 +274,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         scrollElementIntoViewById("fund-cancelfund-btn");
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
@@ -283,6 +290,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
+        scrollElementIntoViewById("new-share-btn");
+
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundName")));
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
@@ -351,17 +360,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         System.out.println(managementCompExpected);
         assertTrue(managementComp.equals(managementCompExpected));
 
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-umbrellaFundName")));
-        String umbFund = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-umbrellaFundName")).getText();
-        System.out.println(umbFund);
-        System.out.println(umbFundExpected);
-        assertTrue(umbFund.equals(umbFundExpected));
-
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
+/*        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
         String shareClass = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")).getText();
         System.out.println(shareClass);
         System.out.println(shareClassExpected);
-        assertTrue(shareClass.equals(shareClassExpected));
+        assertTrue(shareClass.equals(shareClassExpected));*/
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));
         String status = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-status")).getText();
@@ -374,7 +377,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
-        String shareNameID = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + rowNo )).getAttribute("id");
+        String shareNameID = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + rowNo)).getAttribute("id");
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
@@ -401,6 +404,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[2]/div[1]/div/a/h2")));
     }
+
     public static void verifyUmbrellaFundOptInfoPageContents() {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -554,7 +558,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     public static void verifyFundDropdownElements(int fundCount) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         System.out.println(fundCount);
-        fundCount = fundCount-1;
+        fundCount = fundCount - 1;
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")));
         driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[2]/div[1]/div/a/h2")).click();
@@ -594,7 +598,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[11]/div/span/span")).getText().contentEquals(NAVHeadings[10]));
         assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/span/span")).getText().contentEquals(NAVHeadings[11]));
 
-        }
+    }
 
     public static void validatePageLayout() {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
@@ -663,12 +667,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
-        try {
+    public static void assertHiddenAttributeIsPresent(String tabID) {
+            final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")));
             assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
-        } catch (Exception e) {
-            fail("Asterisk was present " + e.getMessage());
-        }
+
     }
 
     public static String getTodayDate() {
