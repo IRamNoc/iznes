@@ -58,6 +58,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
+        wait.until(invisibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
