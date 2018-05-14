@@ -290,6 +290,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {
+        scrollElementIntoViewById("new-share-btn");
+
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundName")));
         String shareNameID = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-fundName")).getAttribute("id");
@@ -358,17 +360,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         System.out.println(managementCompExpected);
         assertTrue(managementComp.equals(managementCompExpected));
 
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-umbrellaFundName")));
-        String umbFund = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-umbrellaFundName")).getText();
-        System.out.println(umbFund);
-        System.out.println(umbFundExpected);
-        assertTrue(umbFund.equals(umbFundExpected));
-
-        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
+/*        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
         String shareClass = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")).getText();
         System.out.println(shareClass);
         System.out.println(shareClassExpected);
-        assertTrue(shareClass.equals(shareClassExpected));
+        assertTrue(shareClass.equals(shareClassExpected));*/
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));
         String status = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-status")).getText();
@@ -671,12 +667,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void assertHiddenAttributeIsPresent(String tabID) throws SQLException, InterruptedException {
-        try {
+    public static void assertHiddenAttributeIsPresent(String tabID) {
+            final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+            wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")));
             assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
-        } catch (Exception e) {
-            fail("Asterisk was present " + e.getMessage());
-        }
+
     }
 
     public static String getTodayDate() {
