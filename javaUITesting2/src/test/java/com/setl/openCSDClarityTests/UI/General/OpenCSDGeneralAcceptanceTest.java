@@ -309,11 +309,12 @@ public class OpenCSDGeneralAcceptanceTest {
         } catch (Exception e3) {
             fail(e3.getMessage());
         }
-        Thread.sleep(850);
 
+        wait.until(visibilityOfElementLocated(By.id("ShellMail_link")));
+        wait.until(elementToBeClickable(By.id("ShellMail_link")));
         WebElement shellMail = driver.findElement(By.id("ShellMail_link"));
-        wait.until(visibilityOf(shellMail));
-        wait.until(elementToBeClickable(shellMail));
+        wait.until(ExpectedConditions.refreshed(visibilityOf(shellMail)));
+        wait.until(ExpectedConditions.refreshed(elementToBeClickable(shellMail)));
         shellMail.click();
 
     }
