@@ -612,19 +612,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")).getText().contains("Add new Share"));
+        assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")).getText().contains("Funds"));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[2]")).getText().contains("Add new Fund"));
+        assertTrue(driver.findElement(By.id("new-fund-btn")).getText().contains("Add new Fund"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[1]")).getText().contains("Umbrella funds"));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[1]/div[2]")).getText().contains("Add new Umbrella fund"));
+        assertTrue(driver.findElement(By.id("new-umbrella-fund-btn")).getText().contains("Add new Umbrella fund"));
     }
 
     public static void validateNAVPageLayout() {
@@ -646,7 +646,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.id("navDatePicker")).getAttribute("value").contentEquals(getTodayDate()));
         assertTrue(isElementPresent(By.id("exportNavList")));
         assertTrue(driver.findElement(By.id("exportNavList")).getText().contentEquals("Export List as CSV"));
-
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
@@ -671,7 +670,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
             final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")));
             assertFalse(driver.findElement(By.xpath("//*[@id=\'" + tabID + "\']/span/span[2]")).isDisplayed());
-
     }
 
     public static String getTodayDate() {
