@@ -494,6 +494,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             (docsData) => {
                 this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
                     ' has been successfully updated');
+                this.router.navigateByUrl(`product-module/product`);
             },
             (e) => this.onUpdateError(e[1].Data[0]));
     }
