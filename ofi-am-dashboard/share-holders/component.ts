@@ -309,6 +309,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         return selectedShareName;
     }
 
+    handleClickShare(data){
+        if(!data.isFund && data.shareId){
+            this.openShareId(data.shareId);
+        }
+    }
+
     openShareId(shareId) {
         this.holderDetailData = [];
         const payload = {
