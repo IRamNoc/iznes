@@ -30,7 +30,9 @@
 
       .datagrid-cell {
         min-width: $column-min-width;
-        overflow-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         &.actions, &.right {
           text-align: right;
         }
