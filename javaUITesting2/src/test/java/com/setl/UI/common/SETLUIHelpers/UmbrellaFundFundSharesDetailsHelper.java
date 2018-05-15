@@ -77,12 +77,12 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys("12");
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("15");
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
         wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
