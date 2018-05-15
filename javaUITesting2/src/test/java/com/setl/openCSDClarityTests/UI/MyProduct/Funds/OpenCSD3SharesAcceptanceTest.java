@@ -150,16 +150,18 @@ public class OpenCSD3SharesAcceptanceTest {
         assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
+/*        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);*/
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.TAB);
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
+/*
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13");
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.RIGHT);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13");
+*/
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13:13");
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
