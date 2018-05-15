@@ -109,9 +109,9 @@ public class OpenCSD3SharesAcceptanceTest {
 
         driver.findElement(By.id("fundShareName")).sendKeys(uFundDetails[0]);
         driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
+        driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ENTER);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
-        driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
+        driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ENTER);
         driver.findElement(By.id("isin")).sendKeys(uIsin[0]);
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
@@ -153,6 +153,7 @@ public class OpenCSD3SharesAcceptanceTest {
 /*        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);*/
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.TAB);
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
@@ -162,7 +163,8 @@ public class OpenCSD3SharesAcceptanceTest {
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.RIGHT);
 */
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13:13");
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.ESCAPE);
+            driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
