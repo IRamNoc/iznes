@@ -24,6 +24,7 @@ import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-f
 /* Utils. */
 import {SagaHelper, NumberConverterService, LogService} from '@setl/utils';
 import {FundComponent} from '../fund/component';
+import {validators} from "../productConfig";
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -162,7 +163,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 '',
                 Validators.compose([
                     Validators.required,
-                    productConfig.lei,
+                    productConfig.validators.lei,
                 ])
             ],
             domicile: [

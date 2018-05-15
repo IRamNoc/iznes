@@ -48,9 +48,10 @@
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_lei" class="control-label" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
                                 <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
-
-                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_incorrectlei">Incorrect LEI</div>
+                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
+                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')" mltag="txt_thisfieldisrequired">This field is required</span>
+                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')" mltag="txt_incorrectlei">Incorrect LEI</span>
+                                </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
