@@ -604,6 +604,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             ];
         } else {
             this.tabsControl = openedTabs;
+
+            let searchForm = _.get(openedTabs, ['0', 'searchForm']);
+            if(searchForm){
+                this.searchForm = searchForm;
+            }
         }
     }
 
@@ -1090,10 +1095,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Detach the change detector on destroy. */
         // this.changeDetectorRef.detach();
         //
-        // /* Unsunscribe Observables. */
-        // for (let key in this.subscriptions) {
-        //     this.subscriptions[key].unsubscribe();
-        // }
+        /* Unsunscribe Observables. */
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
 
         this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
     }
