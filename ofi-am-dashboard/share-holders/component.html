@@ -113,7 +113,7 @@
                     <span mltag="txt_numberofholders">Number of holders</span>
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let data of holdersList" (click)="openShareId(data.shareId)">
+                <clr-dg-row *clrDgItems="let data of holdersList" (click)="handleClickShare(data)">
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col1">
                             {{data.fundName}}
