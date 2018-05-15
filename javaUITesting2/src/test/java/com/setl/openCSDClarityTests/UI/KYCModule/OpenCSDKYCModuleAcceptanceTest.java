@@ -139,15 +139,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldShowKYCLandingPageOnFirstLoginAsInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        //assert title equals Welcome To Iznes
-        //assert subtitle equals Lets start with KYC
-    }
+     }
 
     @Test
     public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
-        assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("", "07956701992");
         verifySaveButtonIsDisabled();
@@ -156,8 +152,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
-        assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "");
         verifySaveButtonIsDisabled();
@@ -166,8 +160,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops004@setl.io", "asdasd", "additionnal");
-        String header = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
-        assertTrue(header.equals("Welcome to IZNES"));
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();

@@ -259,6 +259,7 @@ public class LoginAndNavigationHelper {
         } catch (Exception e) {
             fail("Page heading was not present " + e.getMessage());
         }
+        assertTrue(driver.findElement(By.id("ofi-welcome-" + headingID)).getText().contentEquals("Welcome to IZNES"));
     }
 
     public static void loginCompleteKYC(String username, String password) throws InterruptedException, IOException {
