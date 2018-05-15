@@ -86,10 +86,11 @@ function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<Cen
                 netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: item.get('redAmount'),
                 redQuantity: item.get('redQuantity'),
-                settlementDate: item.get('settlementDate'),
+                redSettlementDate: item.get('redSettlementDate'),
                 shareClassCurrency: item.get('shareClassCurrency'),
                 subAmount: item.get('subAmount'),
                 subQuantity: item.get('subQuantity'),
+                subSettlementDate: item.get('subSettlementDate'),
             };
             i++;
             return result;
@@ -134,11 +135,12 @@ function formatCentralizationHistoryDataResponse(rawData: Array<any>): Array<Cen
                 navDate: item.get('navDate'),
                 latestNavBackup: item.get('latestNavBackup'),
                 navDateBackup: item.get('navDateBackup'),
-                settlementDate: item.get('settlementDate'),
                 subQuantity: item.get('subQuantity'),
                 subAmount: item.get('subAmount'),
+                subSettlementDate: item.get('subSettlementDate'),
                 redQuantity: item.get('redQuantity'),
                 redAmount: item.get('redAmount'),
+                redSettlementDate: item.get('redSettlementDate'),
                 cutoffDate: item.get('cutoffDate'),
                 aum: item.get('aum'),
                 netPosition: item.get('netPosition'),

@@ -161,9 +161,6 @@
                 <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>
                     <span mltag="txt_navdate">NAV date</span> <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_settlementdate">Settlement date</span> <span class="column-label"></span>
-                </clr-dg-column>
                 <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>
                     <span mltag="txt_nav">NAV</span> <span class="column-label"></span>
                 </clr-dg-column>
@@ -184,9 +181,6 @@
                 <clr-dg-row *clrDgItems="let data of centralizationHistory">
                     <clr-dg-cell>
                         {{getOnlyDate(data.navDate)}}
-                    </clr-dg-cell>
-                    <clr-dg-cell>
-                        {{getOnlyDate(data.settlementDate)}}
                     </clr-dg-cell>
                     <clr-dg-cell>
                         {{data.latestNav | moneyValue: 2}}
@@ -217,6 +211,7 @@
                                             <th>Quantity</th>
                                             <th>Amount</th>
                                             <th>Cut-off Date</th>
+                                            <th>Settlement Date</th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -225,12 +220,14 @@
                                             <td>{{data.subQuantity | moneyValue: 4 }}</td>
                                             <td>{{data.subAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
+                                            <td>{{data.subSettlementDate}}</td>
                                         </tr>
                                         <tr>
                                             <td><b>Redemptions</b></td>
                                             <td>{{data.redQuantity | moneyValue: 4 }}</td>
                                             <td>{{data.redAmount | moneyValue: 5 }}</td>
                                             <td>{{data.cutoffDate}}</td>
+                                            <td>{{data.redSettlementDate}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
