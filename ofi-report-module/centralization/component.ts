@@ -149,10 +149,11 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
                 redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
-                settlementDate: mDateHelper.convertToLocal(item.get('settlementDate'),'YYYY-MM-DD'),
+                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'),'YYYY-MM-DD'),
                 shareClassCurrency: item.get('shareClassCurrency'),
                 subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
                 subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
+                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'),'YYYY-MM-DD'),
             });
 
             return result;

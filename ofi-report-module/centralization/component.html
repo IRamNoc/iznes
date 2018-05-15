@@ -48,11 +48,6 @@
                             <span>NAV Date</span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Settlement Date</span>
-                        </ng-container>
-                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             <span>Share Currency</span>
@@ -84,7 +79,6 @@
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.navDate}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.settlementDate}}</clr-dg-cell>
                         <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
                         <clr-dg-cell>{{data.latestNav | moneyValue: 2 }}</clr-dg-cell>
                         <clr-dg-cell>{{data.aum | moneyValue: 5}}</clr-dg-cell>
@@ -101,6 +95,7 @@
                                                 <th>Quantity</th>
                                                 <th>Amount</th>
                                                 <th>Cut-off Date</th>
+                                                <th>Settlement Date</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -109,12 +104,14 @@
                                                 <td>{{data.subQuantity | moneyValue: 4 }}</td>
                                                 <td>{{data.subAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.cutoffDate}}</td>
+                                                <td>{{data.subSettlementDate}}</td>
                                             </tr>
                                             <tr>
                                                 <td><b>Redemptions</b></td>
                                                 <td>{{data.redQuantity | moneyValue: 4 }}</td>
                                                 <td>{{data.redAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.cutoffDate}}</td>
+                                                <td>{{data.redSettlementDate}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
