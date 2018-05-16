@@ -10,7 +10,7 @@ import {SET_CONTRACT_LIST} from '@setl/core-store/wallet/my-wallet-contract/acti
 @Injectable()
 export class WalletnodeChannelService {
 
-    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
+    constructor(private ngRedux: NgRedux<any>, private logService: LogService) {
     }
 
     /**

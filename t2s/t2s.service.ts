@@ -21,7 +21,7 @@ import * as _ from 'lodash';
 @Injectable()
 export class T2sService {
 
-    constructor(private memberSocketService: MemberSocketService, private logService: LogService,) {
+    constructor(private memberSocketService: MemberSocketService, private logService: LogService) {
         /* Stub. */
     }
 

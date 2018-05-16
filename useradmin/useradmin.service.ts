@@ -74,7 +74,7 @@ interface WalletNodeData {
 @Injectable()
 export class AdminUsersService {
 
-    constructor(private memberSocketService: MemberSocketService, private logService: LogService,) {
+    constructor(private memberSocketService: MemberSocketService, private logService: LogService) {
         /* Stub. */
     }
 
