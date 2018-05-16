@@ -73,6 +73,7 @@ public class OpenCSDSprint4AcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         int fundCount = createFund();
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
