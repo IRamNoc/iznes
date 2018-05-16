@@ -3,7 +3,7 @@ import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, On
 /* Redux */
 import {NgRedux, select} from '@angular-redux/store';
 
-import { fromJS } from 'immutable';
+import {fromJS} from 'immutable';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 
@@ -67,8 +67,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
                 @Inject('endpoints') endpoints,
-                @Inject(APP_CONFIG) appConfig: AppConfig,
-    ) {
+                @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
         this.userType = '46';
@@ -81,7 +80,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions['kyc-my-informations'] = this.kycMyInformations.subscribe((d) => {
             /* Assign list to a property. */
             this.userInfo = d;
-            this._changeDetectorRef.detectChanges();
+            this._changeDetectorRef.markForCheck();
         });
 
         /* fetch backend for existing data to pre fill the form */
@@ -158,8 +157,6 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     /* On Destroy. */
     ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
 
         /* Unsunscribe Observables. */
         for (let key of this.subscriptions) {
