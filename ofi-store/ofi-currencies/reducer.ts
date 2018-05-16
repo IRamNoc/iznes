@@ -1,7 +1,7 @@
 import {List, Map} from 'immutable';
 import {Action, Reducer} from 'redux';
 import * as currencyActions from './actions';
-import {CurrencyState} from './model';
+import {CurrencyType, CurrencyState} from './model';
 
 const initialState: CurrencyState = {
     isRequested: false,
@@ -22,10 +22,10 @@ const handleGetCurrencies = (state, action) => {
 
     if (response.length > 0) {
         response.map((currencyItem) => {
-            const currency = Map({
+            const currency: CurrencyType = {
                 code: currencyItem.currencyCode,
                 name: currencyItem.currencyTag,
-            });
+            };
 
             currencies.push(currency);
         });
