@@ -25,7 +25,7 @@ export class UiDataGridComponent {
     // mock data
     mockDataGridItems: any[];
 
-    constructor(private logService: LogService,) {
+    constructor(private logService: LogService) {
         this.initMocks();
     }
 
