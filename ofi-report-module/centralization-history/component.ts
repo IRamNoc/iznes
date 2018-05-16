@@ -518,7 +518,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
         if (historyRow !== undefined) {
-            const cutoffDate = moment(historyRow.cutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: this.centralizationReportsList[0].text,
                 isin: null,
