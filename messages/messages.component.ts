@@ -272,7 +272,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     deleteMessage() {
         this.closeMessage();
-        this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage);
+        this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage, 1);
         this.refreshMailbox(this.currentPage);
     }
 
@@ -288,12 +288,13 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Deleted - Multiselect
      */
     checkedDeleted() {
-        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message,1));
         this.refreshMailbox();
     }
 
     checkedPutBack() {
-        this.logService.log('put back');
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message,0));
+        this.refreshMailbox();
     }
 
     getPadding(category) {
