@@ -32,7 +32,7 @@ export class UiLayout1Component {
     // mock data
     mockDataGridItems: any[];
 
-    constructor(private logService: LogService,) {
+    constructor(private logService: LogService) {
         this.initMocks();
     }
 

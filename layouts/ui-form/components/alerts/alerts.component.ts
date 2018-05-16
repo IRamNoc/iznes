@@ -32,7 +32,7 @@ export class UiAlertsComponent {
 
     showInfoPanes: boolean = true;
 
-    constructor(private alerts: AlertsService, private _confirmationService: ConfirmationService, private logService: LogService,) {
+    constructor(private alerts: AlertsService, private _confirmationService: ConfirmationService, private logService: LogService) {
     }
 
     toggleInfoPanes(event: Event): void {

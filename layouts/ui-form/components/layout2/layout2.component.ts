@@ -33,7 +33,7 @@ export class UiLayout2Component {
 
     public panelDefs: Subpanel[];
 
-    constructor(private service: MockFundService, private logService: LogService,) {
+    constructor(private service: MockFundService, private logService: LogService) {
     }
 
     toggleInfoPanes(event: Event): void {
