@@ -18,7 +18,7 @@ export class SetlMessageKycComponent implements OnInit {
     messageBody: Object;
 
     constructor(private router: Router,
-                private logService: LogService,) {
+                private logService: LogService) {
         this.messageBody = null;
     }
 
