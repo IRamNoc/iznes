@@ -178,7 +178,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             const phoneNumber = (kyc.investorPhoneCode && kyc.investorPhoneNumber)
                 ? `${kyc.investorPhoneCode} ${kyc.investorPhoneNumber}` : '';
 
-            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD hh:mm:ss');
+            const approvalDateRequestTs = mDateHelper.dateStrToUnixTimestamp(kyc.lastUpdated, 'YYYY-MM-DD HH:mm:ss');
             const approvalDateRequest = mDateHelper.unixTimestampToDateStr(approvalDateRequestTs, 'DD / MM / YYYY');
 
             this.investor = {

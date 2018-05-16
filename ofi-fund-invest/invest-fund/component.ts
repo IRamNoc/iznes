@@ -643,7 +643,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }[type];
 
         const momentDateValue = $event[0];
-        const cutoffHour = moment(this.cutoffTime, 'hh:mm:ss').format('hh:mm');
+        const cutoffHour = moment(this.cutoffTime, 'HH:mm').format('HH:mm');
 
         if (type === 'cutoff') {
 
@@ -668,7 +668,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 emitModelToViewChange: true,
                 emitViewToModelChange: false
             });
-            beTriggered[1].setValue(settlementDateStr,  {
+            beTriggered[1].setValue(settlementDateStr, {
                 onlySelf: true,
                 emitEvent: false,
                 emitModelToViewChange: true,
@@ -684,13 +684,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr,  {
+            beTriggered[0].setValue(cutoffDateStr, {
                 onlySelf: true,
                 emitEvent: false,
                 emitModelToViewChange: true,
                 emitViewToModelChange: false
             });
-            beTriggered[1].setValue(settlementDateStr,  {
+            beTriggered[1].setValue(settlementDateStr, {
                 onlySelf: true,
                 emitEvent: false,
                 emitModelToViewChange: true,
@@ -705,13 +705,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr,  {
+            beTriggered[0].setValue(cutoffDateStr, {
                 onlySelf: true,
                 emitEvent: false,
                 emitModelToViewChange: true,
                 emitViewToModelChange: false
             });
-            beTriggered[1].setValue(valuationStr,  {
+            beTriggered[1].setValue(valuationStr, {
                 onlySelf: true,
                 emitEvent: false,
                 emitModelToViewChange: true,
