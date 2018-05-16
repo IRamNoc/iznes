@@ -26,7 +26,7 @@ export class InitialisationService {
 
     channelUpdateCallbacks: Array<(data: string) => void>;
 
-    constructor(private logService: LogService,) {
+    constructor(private logService: LogService) {
         this.channelUpdateCallbacks = [];
     }
 
