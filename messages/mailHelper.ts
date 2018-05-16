@@ -116,11 +116,11 @@ export class MailHelper {
         });
     }
 
-    public deleteMessage(walletId, message) {
+    public deleteMessage(walletId, message, deleteMessages) {
         const asyncTaskPipe = this.myMessageService.deleteMessage(
             walletId,
             [message.mailId],
-            1
+            deleteMessages
         );
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe, () => {}, () => {}));
     }
