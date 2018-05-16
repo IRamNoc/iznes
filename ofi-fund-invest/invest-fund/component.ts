@@ -643,6 +643,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }[type];
 
         const momentDateValue = $event[0];
+
+        // if select the same date again. That mean, no changes in $event. momentDateValue is undefined.
+        if (typeof momentDateValue === 'undefined') {
+            return true;
+        }
+
         const cutoffHour = moment(this.cutoffTime, 'HH:mm').format('HH:mm');
 
         if (type === 'cutoff') {
