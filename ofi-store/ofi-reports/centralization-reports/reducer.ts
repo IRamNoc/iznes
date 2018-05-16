@@ -76,7 +76,8 @@ function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<Cen
         function (result, item) {
             result[i] = {
                 aum: item.get('aum'),
-                cutoffDate: item.get('cutoffDate'),
+                subCutoffDate: item.get('subCutoffDate'),
+                redCutoffDate: item.get('redCutoffDate'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
@@ -141,7 +142,8 @@ function formatCentralizationHistoryDataResponse(rawData: Array<any>): Array<Cen
                 redQuantity: item.get('redQuantity'),
                 redAmount: item.get('redAmount'),
                 redSettlementDate: item.get('redSettlementDate'),
-                cutoffDate: item.get('cutoffDate'),
+                subCutoffDate: item.get('subCutoffDate'),
+                redCutoffDate: item.get('redCutoffDate'),
                 aum: item.get('aum'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),

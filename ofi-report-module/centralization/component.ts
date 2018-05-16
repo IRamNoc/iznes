@@ -139,7 +139,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
             result.push({
                 aum: item.get('aum'),
-                cutoffDate: mDateHelper.convertToLocal(item.get('cutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
