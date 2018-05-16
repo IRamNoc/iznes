@@ -152,7 +152,10 @@ public class OpenCSD3SharesAcceptanceTest {
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 /*        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);*/
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12:00");
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
+
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);
+        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("00");
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.TAB);
 
@@ -162,7 +165,7 @@ public class OpenCSD3SharesAcceptanceTest {
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13");
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.RIGHT);
 */
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13:13:00");
+        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13:13");
         driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.ESCAPE);
             driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);

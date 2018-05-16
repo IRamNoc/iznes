@@ -5,11 +5,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,10 +15,10 @@ import java.util.Random;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.NAVHeadings;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
@@ -71,7 +68,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillUmbrellaDetailsNotCountry(String fundName) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        driver.findElement(By.id("uf_lei")).sendKeys("testLei");
+        String LEI = generateRandomLEI();
+        driver.findElement(By.id("uf_lei")).sendKeys(LEI);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
@@ -80,6 +78,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
+    }
+
+    private static String generateRandomLEI() {
+        String str = randomAlphabetic(2);
+        String num = randomNumeric(18);
+        String LEI = str + num;
+        return LEI;
     }
 
     public static void submitUmbrellaFund() throws InterruptedException {
