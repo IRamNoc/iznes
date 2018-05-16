@@ -479,7 +479,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">There was an issue creating a Fund Share.<br />
+                        <td class="text-center text-danger">There was an issue creating the Fund Share.<br />
                         ${e.Message}</td>
                     </tr>
                 </tbody>
