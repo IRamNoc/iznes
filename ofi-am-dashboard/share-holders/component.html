@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
-        <span><span mltag="txt_holderslist">Holders list</span>:</span>
+        <span><span mltag="txt_recordkeeping">Recordkeeping</span>:</span>
         <span *ngIf="shareID === 0" mltag="txt_allshares">All Shares</span>
         <span *ngIf="shareID > 0">{{shareTabTitle}}</span>
     </h1>
@@ -23,7 +23,7 @@
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label style="margin: 10px 0;">
-                                    <b><span *ngIf="!tabdata.shareData"><span mltag="txt_searchforaholderslistforaspecib00a426e95">Search for a holders list for a specific Share</span>:</span></b>
+                                    <b><span *ngIf="!tabdata.shareData"><span mltag="txt_searchforarecordkeepingforaspe5bccfda4e6">Search for a recordkeeping for a specific Share</span>:</span></b>
                                     <span *ngIf="tabdata.shareData">Share name:</span>
                                 </label>
 
@@ -73,10 +73,10 @@
                         <h3 style="margin-bottom: 3px;">
                             <span mltag="txt_pleasefindalistofallthesharesb681c697503">Please find a list of all the shares below</span>:
                         </h3>
-                        <span mltag="txt_youcanaccesstheholderslistfora65f367141e">You can access the holders list for a specific Share by clicking on a line in this table.</span>
+                        <span mltag="txt_youcanaccesstherecordkeepingfo0dc0cd7c3c">You can access the recordkeeping for a specific Share by clicking on a line in this table.</span>
                     </td>
                     <td class="text-right" valign="middle">
-                        <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisholderslistforallthef4ca32ae77" (click)="handleHoldersExportButtonClick()">Export this holders list for all these Funds & Shares below</button>
+                        <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisrecordkeepingforallt709b50bef3" (click)="handleHoldersExportButtonClick()">Export this recordkeeping for all these Funds & Shares below</button>
                     </td>
                 </tr>
                 </tbody>
@@ -229,7 +229,7 @@
                                         style="max-width: none !important"
                                         mltag="txt_exportholderslistforthisdate"
                                         (click)="handleHolderDetailExportButtonClick()">
-                                    Export holders list for this date
+                                    Export recordkeeping for this date
                                 </button>
                             </div>
                         </div>
