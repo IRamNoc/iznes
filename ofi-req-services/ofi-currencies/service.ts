@@ -32,15 +32,27 @@ export class OfiCurrenciesService {
     static defaultRequestCurrencyList(ofiCurrenciesService: OfiCurrenciesService, ngRedux: NgRedux<any>) {
         ngRedux.dispatch(CurrencyActions.loadCurrencies());
 
-        const messageBody: OfiCurrenciesRequestBody = {
-            RequestName: 'getcurrencyList',
-            token: memberSocketService.token,
-        };
+        const asyncTaskPipe = ofiCurrenciesService.requestCurrenciesList();
+
         ngRedux.dispatch(SagaHelper.runAsync(
             [CurrencyActions.getCurrencies()],
             [],
-            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            asyncTaskPipe,
             {},
         ));
+    }
+
+    /**
+     * Request the list of currencies
+     *
+     * @return {any}
+     */
+    requestCurrenciesList() {
+        const messageBody: OfiCurrenciesRequestBody = {
+            RequestName: 'getcurrencyList',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
