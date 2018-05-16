@@ -79,14 +79,17 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 
 
-        WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
+        driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys("12:12");
+        driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys(Keys.ENTER);
+
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
 
-        WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
+        driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys("12:12");
+        driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys(Keys.ENTER);
+
+
 
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
