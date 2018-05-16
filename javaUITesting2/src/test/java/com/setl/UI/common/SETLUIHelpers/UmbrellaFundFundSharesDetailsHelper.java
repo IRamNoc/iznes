@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -76,18 +77,29 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
-        Thread.sleep(750);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.TAB);
-        Thread.sleep(750);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("15");
+
+
+        /*driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys("12:12");
+        driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys(Keys.ENTER);
+*/
+        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys(Keys.CLEAR);
+        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys("12:12");
+        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys(Keys.ENTER);
+
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("12");
-        Thread.sleep(750);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
-        Thread.sleep(750);
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("15");
+
+        /*driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys("12:12");
+        driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys(Keys.ENTER);
+        */
+        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys(Keys.CLEAR);
+        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys("12:12");
+        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys(Keys.ENTER);
+
+
+
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");

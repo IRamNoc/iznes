@@ -201,11 +201,15 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         scrollElementIntoViewById("new-share-btn");
+        if(fundCount > 10){
+            fundCount = fundCount - 10;
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[3]/button")).click();
         String fundId = "product-dashboard-link-fundID-" + fundCount;
         wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id(fundId))));
         wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id(fundId))));
         WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
+        }
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
     }
 
@@ -292,6 +296,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
     }
 
     public static void getFundTableRow(int rowNo, String fundNameExpected, String leiExpected, String fundCurrencyExpected, String managementCompExpected, String domicileExpected, String legalFormExpected, String umbFundExpected) {

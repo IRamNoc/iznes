@@ -8,6 +8,7 @@ import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -150,24 +151,17 @@ public class OpenCSD3SharesAcceptanceTest {
         assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-/*        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12:12");
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);*/
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("12");
 
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.RIGHT);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys("00");
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.ESCAPE);
-        driver.findElement(By.id("subscriptionCutOffTime")).sendKeys(Keys.TAB);
+        WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
+
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-/*
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13");
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.RIGHT);
-*/
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys("13:13");
-        driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.ESCAPE);
-            driver.findElement(By.id("redemptionCutOffTime")).sendKeys(Keys.TAB);
+
+        WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
+
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
