@@ -356,7 +356,6 @@ public class LoginAndNavigationHelper {
             wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(dropdownID))));
             wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(dropdownID))));
             WebElement dropdown = driver.findElement(By.id(dropdownID));
-            System.out.println("DropdownID = " + dropdownID);
             dropdown.click();
         }catch (WebDriverException wde) {
             fail(wde.getMessage());
