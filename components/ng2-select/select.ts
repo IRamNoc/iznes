@@ -3,12 +3,12 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef, ViewChild
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {SelectItem} from './select-item';
 import {stripTags} from './select-pipes';
 import {OptionsBehavior} from './select-interfaces';
 import {escapeRegexp} from './common';
 import {MultilingualService} from '@setl/multilingual';
+import * as xss from 'xss';
 
 const changeDetection = ChangeDetectionStrategy.OnPush;
 
@@ -124,15 +124,15 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private _disabled = false;
     private _active: Array<SelectItem> = [];
 
-    public constructor(element: ElementRef, private sanitizer: DomSanitizer,
+    public constructor(element: ElementRef,
                        private changeDetectorRef: ChangeDetectorRef, private multilingualService: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
 
     }
 
-    public sanitize(html: string): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(html);
+    public sanitize(html: string): string {
+        return xss(html);
     }
 
     public inputEvent(e: any, isUpMode: boolean = false): void {
