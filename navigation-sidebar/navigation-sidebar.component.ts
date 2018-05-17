@@ -16,7 +16,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     menuJson: any;
     menuParent = [];
     menuParentOpen: string;
-    disableMenu: boolean;
+    disableMenu: boolean = false;
 
     private subscription: any;
 
@@ -82,7 +82,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         );
         this.defaultHomePage.subscribe(
             (homePage) => {
+                let oldMenu = this.disableMenu;
                 this.disableMenu = (homePage != null && homePage != '/home');
+
+                if (oldMenu && !this.disableMenu) this.router.navigateByUrl('/home');
+
                 this._changeDetectorRef.markForCheck();
             }
         );
