@@ -362,8 +362,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
 /*        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
         String shareClass = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")).getText();
-        System.out.println(shareClass);
-        System.out.println(shareClassExpected);
         assertTrue(shareClass.equals(shareClassExpected));*/
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));

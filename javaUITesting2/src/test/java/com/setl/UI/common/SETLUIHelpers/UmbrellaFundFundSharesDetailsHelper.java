@@ -16,6 +16,7 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassReq
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
@@ -78,20 +79,13 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 
-
-        WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
-        subscriptionCutOffTime.sendKeys(Keys.ARROW_UP);
+        setTime("12:12", "subscriptionCutOffTime");
 
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
 
-        WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
-        redemptionCutOffTime.sendKeys(Keys.ARROW_DOWN);
-
-
+        setTime("13:13", "redemptionCutOffTime");
 
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
