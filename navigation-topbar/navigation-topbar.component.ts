@@ -77,7 +77,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
-
+    showHighlightTranslations = true;
     nbMaxTranslationsToProcess = 60;
 
     isSaving = false;
@@ -273,10 +273,18 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.missingTranslations = _.clone(tr);
         this.showMissingTranslations = true;
 
-        this.highlightMissingTranslations();
+        this.doHighlight();
 
         // this.changeDetectorRef.markForCheck();
         // this.changeDetectorRef.detectChanges();
+    }
+
+    doHighlight() {
+        if (this.showHighlightTranslations) {
+            this.highlightMissingTranslations();
+        } else {
+            this.removeHighlightMissingTranslations();
+        }
     }
 
     highlightMissingTranslations(){
@@ -285,7 +293,12 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         }
     }
 
-    removeHighlightMissingTranslations(){
+    removeHighlightMissingTranslations() {
+        const allHighlighted = document.getElementsByClassName('highlighMissingTranslations');
+        Array.from(document.getElementsByClassName('highlighMissingTranslations')).forEach((v) => {
+            v.classList.remove('highlighMissingTranslations');
+            v.classList.remove('blink_bg');
+        });
 
     }
 

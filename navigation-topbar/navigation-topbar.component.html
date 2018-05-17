@@ -125,6 +125,13 @@
 <clr-modal [(clrModalOpen)]="showMissingTranslations" [clrModalSize]="'lg'">
     <h3 class="modal-title">{{'Translations' | translate}}</h3>
     <div class="modal-body" style="overflow: auto; padding: 30px 50px;">
+        <div class="switch-container">
+            {{'Highlight' | translate}}:
+            <label class="switch">
+                <input type="checkbox" id="showHighlightTranslations" [(ngModel)]="showHighlightTranslations" (change)="doHighlight()">
+                <span class="slider round"></span>
+            </label>
+        </div>
         <div *ngIf="missingTranslations.length > 0; else noNeedTranslation">
             <h3 class="text-center mb-1">{{'Need to translate' | translate}}</h3>
             <div *ngFor="let item of missingTranslations; let i = index">
@@ -140,11 +147,8 @@
             <h3 class="text-center mb-1" [ngClass]="{'mt-1': missingTranslations.length > 0}">{{'Translations report' | translate}}</h3>
             <div *ngFor="let item of responsesService; let i = index">
                 <span [ngClass]="item.response.ok ? 'text-success' : 'text-danger'">{{'@i + 1@.' | translate: {'i + 1': i + 1} }}
-
                     <span *ngIf="item.response.ok" style="font-weight: bold;">({{'OK' | translate}}) - </span>
                     <span *ngIf="!item.response.ok" style="font-weight: bold;">({{'FAILED - @item.response.statusText@' | translate: {'item.response.statusText': item.response.statusText} }}) - </span>{{item.translation.translation}}
-
-
                 </span>
             </div>
         </div>
