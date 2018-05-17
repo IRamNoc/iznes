@@ -154,6 +154,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
         WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
+        subscriptionCutOffTime.sendKeys(Keys.ARROW_UP);
 
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
@@ -161,6 +162,7 @@ public class OpenCSD3SharesAcceptanceTest {
 
         WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
+        redemptionCutOffTime.sendKeys(Keys.ARROW_DOWN);
 
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
