@@ -21,7 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
-public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelper {
+public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -149,7 +149,6 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         }
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        System.out.println(popupSubheading);
         assertTrue(popupSubheading.equals("Info!"));
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
     }
