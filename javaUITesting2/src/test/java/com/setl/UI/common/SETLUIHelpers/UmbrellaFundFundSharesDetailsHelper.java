@@ -79,24 +79,17 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 
 
-        /*driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys("12:12");
-        driver.findElement(By.cssSelector("input[name='subscriptionCutOffTime']")).sendKeys(Keys.ENTER);
-*/
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).click();
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys(Keys.CLEAR);
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys("12:12");
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys(Keys.ENTER);
+        WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
+        subscriptionCutOffTime.sendKeys(Keys.ARROW_UP);
+
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
 
-        /*driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys("12:12");
-        driver.findElement(By.cssSelector("input[name='redemptionCutOffTime']")).sendKeys(Keys.ENTER);
-        */
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).click();
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys(Keys.CLEAR);
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys("12:12");
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys(Keys.ENTER);
+        WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
+        redemptionCutOffTime.sendKeys(Keys.ARROW_DOWN);
 
 
 
