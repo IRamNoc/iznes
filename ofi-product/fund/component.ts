@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {Subject} from 'rxjs/Subject';
@@ -13,7 +13,7 @@ import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {typeOfEuDirective} from '../productConfig';
+import {OfiCurrenciesService} from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -121,6 +121,7 @@ export class FundComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundList$;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessList$;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
 
     unSubscribe: Subject<any> = new Subject();
 
@@ -131,6 +132,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private fundService: OfiFundService,
         private umbrellaService: OfiUmbrellaFundService,
         private ofiManagementCompanyService: OfiManagementCompanyService,
+        private ofiCurrenciesService: OfiCurrenciesService,
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private route: ActivatedRoute,
@@ -140,6 +142,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
         OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
+        OfiCurrenciesService.defaultRequestCurrencyList(this.ofiCurrenciesService, this.ngRedux);
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -150,7 +153,6 @@ export class FundComponent implements OnInit, OnDestroy {
         this.typeOfEuDirectiveItems = this.fundItems.typeOfEuDirectiveItems;
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
-        this.fundCurrencyItems = this.fundItems.fundCurrencyItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
         this.investmentAdvisorItems = this.fundItems.investmentAdvisorItems;
         this.auditorItems = this.fundItems.auditorItems;
@@ -422,7 +424,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaFundList$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                const values =  _.values(d);
+                const values = _.values(d);
                 if (!values.length) {
                     return [];
                 }
@@ -449,7 +451,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.managementCompanyAccessList$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                const values =  _.values(d);
+                const values = _.values(d);
                 if (!values.length) {
                     return [];
                 }
@@ -459,6 +461,18 @@ export class FundComponent implements OnInit, OnDestroy {
                         text: item.companyName,
                     };
                 });
+            });
+
+        this.currencyList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                const data = d.toJS();
+
+                if (!data.length) {
+                    return [];
+                }
+
+                this.fundCurrencyItems = data;
             });
     }
 
@@ -472,7 +486,7 @@ export class FundComponent implements OnInit, OnDestroy {
             return [];
         }
 
-        const item = _.find(list, { id: value });
+        const item = _.find(list, {id: value});
         if (!item) {
             return [];
         }
@@ -592,9 +606,9 @@ export class FundComponent implements OnInit, OnDestroy {
             investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
             principalPromoter: _.get(this.fundForm.controls['principalPromoter'].value, ['0', 'id'], null),
             payingAgent: _.get(this.fundForm.controls['payingAgent'].value, ['0', 'id'], null),
-            managementCompanyID:  _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
-            delegatedManagementCompany:  _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
-            umbrellaFundID:  _.get(this.umbrellaControl.value, ['0', 'id'], null),
+            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
+            umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
