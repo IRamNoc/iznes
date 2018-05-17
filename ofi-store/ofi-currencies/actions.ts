@@ -1,9 +1,9 @@
-const name = 'currencies';
+const NAME = 'currencies';
 
 /* Actions */
-export const LOAD_CURRENCIES = `${name}/LOAD_CURRENCIES`;
-export const RESET_CURRENCIES = `${name}/RESET_CURRENCIES`;
-export const GET_CURRENCIES = `${name}/GET_CURRENCIES`;
+export const LOAD_CURRENCIES = `${NAME}/LOAD_CURRENCIES`;
+export const RESET_CURRENCIES = `${NAME}/RESET_CURRENCIES`;
+export const GET_CURRENCIES = `${NAME}/GET_CURRENCIES`;
 
 /* Action creators */
 export const loadCurrencies = () => {
@@ -15,11 +15,5 @@ export const loadCurrencies = () => {
 export const resetCurrencies = () => {
     return {
         type: RESET_CURRENCIES
-    };
-};
-
-export const getCurrencies = () => {
-    return {
-        type: GET_CURRENCIES
     };
 };
