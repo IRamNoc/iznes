@@ -322,15 +322,23 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.ngRedux.dispatch(ofiClearRequestedMyOrder());
         this.ngRedux.dispatch(ofiClearRequestedManageOrder());
 
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     ngAfterViewInit() {
+        this.resizeDataGrid();
+    }
 
+    resizeDataGrid(){
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
         }
+    }
 
+    detectChanges(){
+        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
+        this.resizeDataGrid();
     }
 
     createForm() {
@@ -401,10 +409,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.updateTabs();
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     getAmOrdersFiltersFromRedux(filters) {
@@ -412,7 +417,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.logService.log(this.filtersFromRedux);
         this.applyFilters();
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     applyFilters() {
@@ -488,10 +493,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.updateTabs();
 
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     ordersObjectToList(list) {
@@ -549,7 +551,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.loading = true;
             this.getOrdersList();
-            this.changeDetectorRef.markForCheck();
+            this.detectChanges();
         }
     }
 
@@ -560,7 +562,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.loading = true;
             this.getOrdersList();
-            this.changeDetectorRef.markForCheck();
+            this.detectChanges();
         }
     }
 
@@ -581,7 +583,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.fundShare.mifiidServicesCosts = currentFundShare.mifiidServicesCosts;
         this.fundShare.mifiidIncidentalCosts = currentFundShare.mifiidIncidentalCosts;
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
 
     }
 
@@ -859,7 +861,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getOrdersList();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     getOrdersList() {
@@ -949,7 +951,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
 
         /* Return. */
         return;
@@ -1019,7 +1021,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         for (const i in this.tabsControl) {
             this.tabsControl[i].active = (Number(this.tabsControl[i].orderId) === Number(orderID));
         }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     /**

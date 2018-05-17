@@ -291,7 +291,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 redQuantity: item.get('redQuantity'),
                 redAmount: item.get('redAmount'),
                 redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'),'YYYY-MM-DD'),
-                cutoffDate: mDateHelper.convertToLocal(item.get('cutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
                 aum: item.get('aum'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),
@@ -517,7 +518,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
         if (historyRow !== undefined) {
-            const cutoffDate = moment(historyRow.cutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: this.centralizationReportsList[0].text,
                 isin: null,

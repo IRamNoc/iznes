@@ -139,7 +139,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
             result.push({
                 aum: item.get('aum'),
-                cutoffDate: mDateHelper.convertToLocal(item.get('cutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
@@ -238,8 +239,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                     status: -3,
                     orderType: 0,
                     dateType: 'cutOffDate',
-                    fromDate: moment(obj.cutoffDate).format('YYYY-MM-DD'),
-                    toDate: moment(obj.cutoffDate).format('YYYY-MM-DD')
+                    fromDate: moment(obj.subCutoffDate).format('YYYY-MM-DD'),
+                    toDate: moment(obj.subCutoffDate).format('YYYY-MM-DD')
                 }
             };
 
@@ -253,7 +254,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
-            const cutoffDate = moment(obj.cutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const cutoffDate = moment(obj.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: obj.fundShareName,
                 isin: obj.isin,
