@@ -26,9 +26,7 @@ import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelp
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationFees;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationProfile;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationSubmit;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -75,22 +73,10 @@ public class OpenCSDNAVAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
-        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
-        submitUmbrellaFund();
-
-        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
-        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
 
         String [] uFundDetails = generateRandomFundsDetails();
-        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0]);
-        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
-
-        String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
 
         waitForNewShareButton();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -106,7 +92,6 @@ public class OpenCSDNAVAcceptanceTest {
         selectFundBtn.click();
         assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
 
-
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
 
@@ -117,14 +102,11 @@ public class OpenCSDNAVAcceptanceTest {
         shareCreationProfile();
         shareCreationSubmit();
 
-        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        assertTrue(shareCountPost == shareCountPre + 1);
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-
-        getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
         navigateToNAVPage();
+//        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
+//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
+//        driver.findElement(By.id("//*[@id=\"product-nav-rowundefined-btn-add\"]")).click();
+
 
     }
 }
