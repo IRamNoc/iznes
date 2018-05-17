@@ -16,12 +16,13 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassReq
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
-public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelper {
+public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -78,20 +79,13 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys("12");
-        Thread.sleep(750);
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys(Keys.TAB);
-        Thread.sleep(750);
-        driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTime\"]")).sendKeys("12");
+        setTime("12:12", "subscriptionCutOffTime");
+
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
 
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys("12");
-        Thread.sleep(750);
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys(Keys.TAB);
-        Thread.sleep(750);
-        driver.findElement(By.xpath("//*[@id=\"redemptionCutOffTime\"]")).sendKeys("12");
+        setTime("13:13", "redemptionCutOffTime");
 
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
@@ -149,7 +143,6 @@ public class UmbrellaFundFundSharesDetailsHelper extends LoginAndNavigationHelpe
         }
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        System.out.println(popupSubheading);
         assertTrue(popupSubheading.equals("Info!"));
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
     }

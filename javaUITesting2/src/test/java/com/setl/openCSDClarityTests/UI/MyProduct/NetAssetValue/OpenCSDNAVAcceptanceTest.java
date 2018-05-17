@@ -3,6 +3,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.sql.SQLException;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -46,8 +49,13 @@ public class OpenCSDNAVAcceptanceTest {
     @Before
     public void setUp() throws Exception {
         testSetUp();
-
         screenshotRule.setDriver(driver);
+        setDBToProdOff();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        setDBToProdOn();
     }
 
     @Test

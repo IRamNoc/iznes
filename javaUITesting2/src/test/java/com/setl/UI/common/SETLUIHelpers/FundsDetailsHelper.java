@@ -342,44 +342,30 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         //String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareName")).getAttribute("id");
         //int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
         String shareName = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareName")).getText();
-        System.out.println(shareName);
-        System.out.println(shareNameExpected);
         assertTrue(shareName.equals(shareNameExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-isin")));
         String isinName = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-isin")).getText();
-        System.out.println(isinName);
-        System.out.println(isinExpected);
         assertTrue(isinName.equals(isinExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-fundName")));
         String fundName = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-fundName")).getText();
-        System.out.println(fundName);
-        System.out.println(fundNameExpected);
         assertTrue(fundName.equals(fundNameExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareCurrency")));
         String shareCurrency = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareCurrency")).getText();
-        System.out.println(shareCurrency);
-        System.out.println(shareCurrencyExpected);
         assertTrue(shareCurrency.equals(shareCurrencyExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-managementCompany")));
         String managementComp = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-managementCompany")).getText();
-        System.out.println(managementComp);
-        System.out.println(managementCompExpected);
         assertTrue(managementComp.equals(managementCompExpected));
 
 /*        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
         String shareClass = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")).getText();
-        System.out.println(shareClass);
-        System.out.println(shareClassExpected);
         assertTrue(shareClass.equals(shareClassExpected));*/
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));
         String status = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-status")).getText();
-        System.out.println(status);
-        System.out.println(statusExpected);
         assertTrue(status.equals(statusExpected));
     }
 
