@@ -35,7 +35,7 @@ export class OfiCurrenciesService {
         const asyncTaskPipe = ofiCurrenciesService.requestCurrenciesList();
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [CurrencyActions.getCurrencies()],
+            [CurrencyActions.GET_CURRENCIES],
             [],
             asyncTaskPipe,
             {},
@@ -49,7 +49,7 @@ export class OfiCurrenciesService {
      */
     requestCurrenciesList() {
         const messageBody: OfiCurrenciesRequestBody = {
-            RequestName: 'getcurrencyList',
+            RequestName: 'getcurrencylist',
             token: this.memberSocketService.token,
         };
 
