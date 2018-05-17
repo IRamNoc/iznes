@@ -1,48 +1,48 @@
 import {List, Map} from 'immutable';
 import {Action, Reducer} from 'redux';
-import * as currencyActions from './actions';
-import {CurrencyType, CurrencyState} from './model';
+import * as CurrencyActions from './actions';
+import {CurrencyState, CurrencyType} from './model';
 
 const initialState: CurrencyState = {
     isRequested: false,
-    currencies: List()
+    currencies: List<CurrencyType>()
 };
 
 const handleLoadCurrencies = (state) => {
-    return state.set('isRequested', true);
+    return Object.assign({}, state, {isRequested: true});
 };
 
 const handleResetCurrencies = (state) => {
-    return state.set('isRequested', false);
+    return Object.assign({}, state, {isRequested: false});
 };
 
 const handleGetCurrencies = (state, action) => {
     const response = action.payload[1].Data;
-    const currencies = List();
+    let currencies = List();
 
     if (response.length > 0) {
         response.map((currencyItem) => {
-            const currency: CurrencyType = {
-                code: currencyItem.currencyCode,
-                name: currencyItem.currencyTag,
-            };
+            const currency = Map({
+                id: currencyItem.currencyID,
+                text: currencyItem.currencyCode,
+            });
 
-            currencies.push(currency);
+            currencies = currencies.push(currency);
         });
     }
 
-    return state.set('currencies', currencies);
+    return Object.assign({}, state, {currencies});
 };
 
 export const CurrencyReducer: Reducer<CurrencyState> = (state = initialState, action: Action) => {
     switch (action.type) {
-        case currencyActions.LOAD_CURRENCIES:
-            return this.handleLoadCurrencies(state);
+        case CurrencyActions.LOAD_CURRENCIES:
+            return handleLoadCurrencies(state);
 
-        case currencyActions.RESET_CURRENCIES:
+        case CurrencyActions.RESET_CURRENCIES:
             return handleResetCurrencies(state);
 
-        case currencyActions.GET_CURRENCIES:
+        case CurrencyActions.GET_CURRENCIES:
             return handleGetCurrencies(state, action);
 
         default:
