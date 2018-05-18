@@ -27,6 +27,7 @@ import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelp
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationProfile;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationSubmit;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
@@ -87,6 +88,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
 
         wait.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+
         wait.until(elementToBeClickable(By.id("buttonSelectFund")));
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
         selectFundBtn.click();
@@ -103,10 +105,19 @@ public class OpenCSDNAVAcceptanceTest {
         shareCreationSubmit();
 
         navigateToNAVPageFromFunds();
-//        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
-//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
-//        driver.findElement(By.id("//*[@id=\"product-nav-rowundefined-btn-add\"]")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-row1-btn-add\"]")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"product-nav-row1-btn-add\"]")));
+        driver.findElement(By.id("product-nav-row1-btn-add")).click();
 
-
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")));
+        String NAVpopupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")).getText();
+        assertTrue(NAVpopupTitle.equals("Add New NAV"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).clear();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("12");
+        searchAndSelectTopDropdown("status", "Validated");
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[3]/button[2]")).click();
+        String TableNav = driver.findElement(By.xpath("//*[@id=\"product-nav-row0\"]/div/clr-dg-cell[7]/span[1]")).getText();
+        assertTrue(TableNav.equals("12.00"));
     }
 }
