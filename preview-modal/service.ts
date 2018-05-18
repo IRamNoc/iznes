@@ -8,12 +8,14 @@ export class FileViewerPreviewService {
     openEmitter: Subject<PreviewModalModel> = new Subject();
     closeEmitter: Subject<void> = new Subject();
 
-    constructor() {}
+    constructor() {
+    }
 
     open(model: PreviewModalModel): void {
+
         this.openEmitter.next(model);
     }
-    
+
     close(): void {
         this.closeEmitter.next();
     }

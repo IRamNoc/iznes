@@ -1,4 +1,4 @@
 export class PreviewModalModel {
     name: string;
-    url: string;
+    url: any;
 }
