@@ -66,10 +66,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void fillUmbrellaDetailsNotCountry(String fundName) throws InterruptedException {
+    public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
         String LEI = generateRandomLEI();
-        driver.findElement(By.id("uf_lei")).sendKeys(LEI);
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
