@@ -349,11 +349,12 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToNAVPage() {
+    public static void navigateToNAVPage() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("menu-my-products")));
         wait.until(elementToBeClickable(By.id("menu-my-products")));
         driver.findElement(By.id("menu-my-products")).click();
+        Thread.sleep(500);
         wait.until(visibilityOfElementLocated(By.id("menu-nav")));
         wait.until(elementToBeClickable(By.id("menu-nav")));
 
