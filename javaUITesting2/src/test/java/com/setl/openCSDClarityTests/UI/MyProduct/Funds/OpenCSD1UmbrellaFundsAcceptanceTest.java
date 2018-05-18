@@ -119,7 +119,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
-        getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "testLei" + updateChars[0], "Management Company", "Albania");
+        getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "16616758475934857431" + updateChars[0], "Management Company", "Albania");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0] + updateChars[0]);
         validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
 
