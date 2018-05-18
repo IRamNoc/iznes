@@ -77,7 +77,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         //Create umbrella fund for later use
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
@@ -91,7 +91,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0]);
 
         //Assert fund table displays the information for the fund created previously, including umbFund
-        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(fundCount, uFundDetails[0], "16616758475934857531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         //Store the number of shares created.
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();

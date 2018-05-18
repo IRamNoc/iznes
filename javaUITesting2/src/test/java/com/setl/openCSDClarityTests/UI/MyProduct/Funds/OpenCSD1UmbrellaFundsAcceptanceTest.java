@@ -96,13 +96,11 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
 
         getUmbrellaTableRow(umbFundCount, uFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
-
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + umbFundCount)).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/div/h1")));
-
         String [] updateChars = generateRandomDetails();
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(updateChars);
@@ -115,19 +113,14 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
         searchAndSelectTopDropdownXpath("uf_domicile", "Albania");
-
         scrollElementIntoViewById("mcBtnSubmitForm");
         wait.until(visibilityOfElementLocated(By.id("mcBtnSubmitForm")));
         wait.until(elementToBeClickable(driver.findElement(By.id("mcBtnSubmitForm"))));
 
         driver.findElement(By.id("mcBtnSubmitForm")).click();
-
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
-
         getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "testLei" + updateChars[0], "Management Company", "Albania");
-        //check updated Umbrella fund name is stored
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0] + updateChars[0]);
-        //check old Umbrella fund name no longer exists
         validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
 
     }

@@ -71,7 +71,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0]);
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934858531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
@@ -90,7 +90,7 @@ public class OpenCSD2FundsAcceptanceTest {
 
         //Assert fund table displays the information for the fund created previously, including umbFund
 
-        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(fundCount, uFundDetails[0], "16616758475934858531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         //Navigate to the fund previously created
 
@@ -225,7 +225,7 @@ public class OpenCSD2FundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0]);
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857451");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -249,7 +249,7 @@ public class OpenCSD2FundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0]);
+        fillUmbrellaDetailsNotCountry(uFundDetails[0],"16616758475934857441");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
