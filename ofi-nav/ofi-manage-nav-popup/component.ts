@@ -19,7 +19,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-add',
@@ -64,7 +64,9 @@ export class OfiManageNavPopup implements OnInit {
                 private alertsService: AlertsService,
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
-                private popupService: OfiManageNavPopupService) {
+                private popupService: OfiManageNavPopupService,
+                private moneyValuePipe: MoneyValuePipe
+                ) {
 
         this.initStatusData();
         this.initSubscriptions();
@@ -137,7 +139,10 @@ export class OfiManageNavPopup implements OnInit {
 
         this.navForm = new FormGroup({
             nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
-            price: new FormControl(this.navLatest, Validators.required),
+            price: new FormControl(this.navLatest, Validators.compose([
+                Validators.required,
+                Validators.pattern(/^[0-9]+([.,][0-9]{1,2})?$/)
+            ])),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             status: new FormControl(statusObj, Validators.required)
@@ -165,6 +170,12 @@ export class OfiManageNavPopup implements OnInit {
         });
 
         this.changeDetectorRef.markForCheck();
+    }
+
+    transformAndValidate(control){
+        let value = this.moneyValuePipe.transform(control.value, 2);
+        control.patchValue(value);
+        control.updateValueAndValidity();
     }
 
     private checkIfNavExceedsThreshold(nav: number): void {
