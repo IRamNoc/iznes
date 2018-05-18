@@ -24,7 +24,7 @@ node {
                         cd ../ '''
 
                 stage('Build Prod') {
-                    sh 'yarn build-prod -op iznes_release_dist '
+                    sh 'yarn build-prod -op iznes_release_dist/$(< VERSION)'
                 }
 
                 stage('Copy code to deployment folder') {
