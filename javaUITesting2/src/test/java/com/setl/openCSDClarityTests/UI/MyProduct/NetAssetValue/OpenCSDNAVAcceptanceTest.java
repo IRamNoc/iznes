@@ -76,7 +76,7 @@ public class OpenCSDNAVAcceptanceTest {
 
         String [] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16614748475934158531");
 
         waitForNewShareButton();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);

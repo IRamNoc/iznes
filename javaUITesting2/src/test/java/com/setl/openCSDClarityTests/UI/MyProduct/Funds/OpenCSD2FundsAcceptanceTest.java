@@ -86,7 +86,7 @@ public class OpenCSD2FundsAcceptanceTest {
         String [] uFundDetails = generateRandomFundsDetails();
 
         fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16616758475934858531");
 
         //Assert fund table displays the information for the fund created previously, including umbFund
 
@@ -150,7 +150,7 @@ public class OpenCSD2FundsAcceptanceTest {
         driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
         String[] uFundDetails = generateRandomFundsDetails();
-        fillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934858531");
 
         try {
 
@@ -161,7 +161,7 @@ public class OpenCSD2FundsAcceptanceTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
-        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+        getFundTableRow(fundCount, uFundDetails[0], "16615748475934858531", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
         validateDatabaseFundExists(1, uFundDetails[0]);
     }
 
@@ -371,7 +371,7 @@ public class OpenCSD2FundsAcceptanceTest {
             driver.findElement(By.id("isFundStructure1")).isDisplayed();
 
             String[] uFundDetails = generateRandomFundsDetails();
-            fillOutFundDetailsStep2(uFundDetails[0]);
+            fillOutFundDetailsStep2(uFundDetails[0], "16616748475934858531");
 
             try {
 
@@ -382,7 +382,7 @@ public class OpenCSD2FundsAcceptanceTest {
             } catch (Exception e) {
                 fail(e.getMessage());
             }
-            getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+            getFundTableRow(fundCount, uFundDetails[0], "16616748475934858531", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
 
 
         }

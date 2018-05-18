@@ -213,10 +213,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
     }
 
-    public static void fillOutFundDetailsStep2(String fundName) throws InterruptedException {
+    public static void fillOutFundDetailsStep2(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(lei);
         driver.findElement(By.id("isEuDirective2")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();

@@ -88,10 +88,10 @@ public class OpenCSD4FundFlowAcceptanceTest {
         //Navigate to fund creation and create a fund with umbFund
         String [] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
 
         //Assert fund table displays the information for the fund created previously, including umbFund
-        getFundTableRow(fundCount, uFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(fundCount, uFundDetails[0], "16615748475934658531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         //Store the number of shares created.
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
