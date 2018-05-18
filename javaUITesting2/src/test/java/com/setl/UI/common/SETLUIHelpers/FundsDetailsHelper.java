@@ -377,24 +377,15 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
-
-        System.out.println(umbFundName);
-        System.out.println(umbFundNameExpected);
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
-        System.out.println(leiName);
-        System.out.println(leiExpected);
         assertTrue(leiName.equals(leiExpected));
 
         String managementComp = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-managementCompany")).getText();
-        System.out.println(managementComp);
-        System.out.println(managementCompExpected);
         assertTrue(managementComp.equals(managementCompExpected));
 
         String domicile = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-domicile")).getText();
-        System.out.println(domicile);
-        System.out.println(domicileExpected);
         assertTrue(domicile.equals(domicileExpected));
     }
 
