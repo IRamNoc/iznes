@@ -102,7 +102,7 @@ public class OpenCSDNAVAcceptanceTest {
         shareCreationProfile();
         shareCreationSubmit();
 
-        navigateToNAVPage();
+        navigateToNAVPageFromFunds();
 //        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
 //        wait.until(elementToBeClickable(By.xpath("//*[@id=\"product-nav-rowundefined-btn-add\"]")));
 //        driver.findElement(By.id("//*[@id=\"product-nav-rowundefined-btn-add\"]")).click();
