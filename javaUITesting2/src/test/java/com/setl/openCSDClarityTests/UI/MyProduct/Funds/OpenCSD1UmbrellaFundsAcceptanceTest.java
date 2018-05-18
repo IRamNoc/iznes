@@ -90,13 +90,13 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         System.out.println(umbFundCount);
 
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857431");
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857431");
         searchAndSelectTopDropdownXpath("uf_domicile", "Afghanistan");
         submitUmbrellaFund();
 
-        getUmbrellaTableRow(umbFundCount, uFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
-        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
+        getUmbrellaTableRow(umbFundCount, umbFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
+        validateDatabaseUmbrellaFundExists(1, umbFundDetails[0]);
 
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + umbFundCount)).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -104,7 +104,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         String [] updateChars = generateRandomDetails();
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(updateChars);
-        driver.findElement(By.id("uf_lei")).sendKeys(updateChars);
+        driver.findElement(By.id("uf_lei")).clear();
+        driver.findElement(By.id("uf_lei")).sendKeys("16616758475934857600");
         driver.findElement(By.id("uf_registerOffice")).sendKeys(updateChars);
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(updateChars);
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).clear();
@@ -119,9 +120,10 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
-        getUmbrellaTableRow(umbFundCount, uFundDetails[0] + updateChars[0], "16616758475934857431" + updateChars[0], "Management Company", "Albania");
-        validateDatabaseUmbrellaFundExists(1, uFundDetails[0] + updateChars[0]);
-        validateDatabaseUmbrellaFundExists(0, uFundDetails[0]);
+        getUmbrellaTableRow(umbFundCount, umbFundDetails[0] + updateChars[0], "16616758475934857600", "Management Company", "Albania");
+
+        validateDatabaseUmbrellaFundExists(1, umbFundDetails[0] + updateChars[0]);
+        validateDatabaseUmbrellaFundExists(0, umbFundDetails[0]);
 
     }
 

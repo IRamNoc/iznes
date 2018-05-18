@@ -377,7 +377,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
-
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
