@@ -68,10 +68,10 @@ public class OpenCSD3SharesAcceptanceTest {
 
         String [] unFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep1("none");
-        fillOutFundDetailsStep2(unFundDetails[0]);
+        fillOutFundDetailsStep2(unFundDetails[0], "16614748475934658531");
 
         //Assert fund table displays the information for the fund created previously, including umbFund
-        getFundTableRow(fundCount, unFundDetails[0], "", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", "");
+        getFundTableRow(fundCount, unFundDetails[0], "16614748475934658531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", "");
 
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
