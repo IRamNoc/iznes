@@ -32,11 +32,13 @@
 
                 <div class="form-group col-sm-12" *ngIf="!isDeleteMode()">
                     <label class="control-label" for="Set-nav-field" mltag="txt_nav">NAV</label>
-                    <input type="text" id="Set-nav-field" name="nav" formControlName="price" appNumberFormatter [fractionSize]="2">
-
-                    <span class="text-danger" [hidden]="!navExceedsThreshold" mltag="txt_cautionthenavisbeingmodifiedby7cc5550a2e">Caution: the NAV is being modified by more than 10%.
-
-                    </span>
+                    <input id="Set-nav-field" type="text" name="nav" (blur)="transformAndValidate(navForm.controls['price'])" formControlName="price">
+                    <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('pattern')">
+                        <span>
+                            Incorrect value
+                        </span>
+                    </div>
+                    <span id="Set-nav-caution" class="text-danger" [hidden]="!navExceedsThreshold" mltag="txt_cautionthenavisbeingmodifiedby7cc5550a2e">Caution: the NAV is being modified by more than 10%.</span>
                 </div>
 
                 <div class="form-group col-sm-6">
