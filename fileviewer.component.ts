@@ -12,9 +12,9 @@ import {createMemberNodeRequest} from '@setl/utils/common';
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {APP_CONFIG} from '@setl/utils/appConfig/appConfig';
 import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
-import {FileDownloader} from '@setl/utils';
+import {FileDownloader} from '@setl/utils/services/file-downloader/service';
 
-import {ValidateFileMessageBody} from "./fileviewer.module";
+import {ValidateFileMessageBody} from "./fileviewer.model";
 import {FileViewerPreviewService} from './preview-modal/service';
 
 enum ViewType {
