@@ -746,6 +746,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             <table class="table grid">
                 <tbody>
                     <tr>
+                        <td class="left"><b>Order Type:</b></td>
+                        <td>${this.orderTypeLabel}</td>
+                    </tr>
+                    <tr>
                         <td class="left"><b>Investment SubPortfolio:</b></td>
                         <td>${subPortfolioName}</td>
                     </tr>
@@ -768,6 +772,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     <tr>
                         <td class="left"><b>Amount:</b></td>
                         <td>${amountStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>NAV Date:</b></td>
+                        <td>${this.valuationDate.value}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Settlement Date:</b></td>
