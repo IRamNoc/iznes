@@ -12,7 +12,8 @@ import {FileViewerPreviewService} from './preview-modal/service';
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {PdfMockService} from '@setl/core-req-services/pdf/pdf.mock.service';
 import {SecurityContext} from "@angular/core";
-import {SagaHelper, FileDownloader} from '@setl/utils';
+import {SagaHelper, FileDownloader, SetlServicesModule} from '@setl/utils';
+import {HttpClientModule} from '@angular/common/http';
 
 let origRunAsync;
 
@@ -32,7 +33,7 @@ describe('FileViewerComponent', () => {
     beforeEach(() => {
 
         TestBed.configureTestingModule({
-            imports: [ClarityModule],
+            imports: [ClarityModule, HttpClientModule],
             declarations: [FileViewerComponent, FileViewerPreviewComponent],
             providers: [
                 AlertsService,
@@ -49,7 +50,8 @@ describe('FileViewerComponent', () => {
                         }
                     }
                 },
-                FileDownloader
+                FileDownloader,
+                SetlServicesModule
             ]
         });
 
