@@ -23,7 +23,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, AppConfig} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, AppConfig, FileDownloader} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -76,6 +76,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 
@@ -363,9 +364,14 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     exportCSV(): void {
         const requestData = this.getNavRequestData();
 
-        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundHistory&shareId=${requestData.shareId}&navDateFrom=${encodeURIComponent(requestData.navDateFrom)}&navDateTo=${encodeURIComponent(requestData.navDateTo)}`, this.appConfig.production);
-
-        window.open(url, '_blank');
+        this._fileDownloader.downLoaderFile({
+            method: 'exportNavFundHistory',
+            token: this.socketToken,
+            shareId: requestData.shareId,
+            navDateFrom: encodeURIComponent(requestData.navDateFrom),
+            navDateTo: encodeURIComponent(requestData.navDateTo),
+            userId: this.userId
+        });
     }
 
     private generateExportURL(url: string, isProd: boolean = true): string {

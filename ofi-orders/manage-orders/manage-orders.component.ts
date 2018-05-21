@@ -23,7 +23,8 @@ import {
     ConfirmationService,
     immutableHelper,
     SagaHelper,
-    LogService
+    LogService,
+    FileDownloader
 } from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import * as _ from 'lodash';
@@ -226,6 +227,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private _ofiFundInvestService: OfiFundInvestService,
                 private logService: LogService,
+                private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService) {
 
         this.appConfig = appConfig;
@@ -727,19 +729,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             methodName = 'exportInvestorOrders';
         }
 
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&userId=' + this.myDetails.userId;
-        for (let filter in this.dataGridParams) {
-            if (this.dataGridParams.hasOwnProperty(filter)) {
-                paramUrl += '&' + filter + '=' + encodeURIComponent(this.dataGridParams[filter]);
-            }
-        }
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
-    }
-
-    generateExportURL(url: string, isProd: boolean = true): string {
-        return isProd ? `https://${window.location.hostname}/mn/${url}` :
-            `http://${window.location.hostname}:9788/${url}`;
+        this._fileDownloader.downLoaderFile({
+            method: methodName,
+            token: this.memberSocketService.token,
+            userId: this.myDetails.userId,
+            ...this.dataGridParams
+        });
     }
 
     requestSearch() {
