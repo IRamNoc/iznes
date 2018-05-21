@@ -240,10 +240,10 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
             const orderFilters = {
                 filters: {
                     isin: obj.isin,
-                    shareName: obj.fundShareName,
-                    status: -3,
-                    orderType: 0,
-                    dateType: 'cutOffDate',
+                    sharename: obj.fundShareName,
+                    status: {id : -3},
+                    type: {id : 0},
+                    dateType: {id : 'cutOffDate'},
                     fromDate: moment(obj.subCutoffDate).format('YYYY-MM-DD'),
                     toDate: moment(obj.subCutoffDate).format('YYYY-MM-DD')
                 }

@@ -27,6 +27,8 @@ import {
     FileDownloader
 } from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 /* Services. */
@@ -265,13 +267,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.updateWalletConnection();
         }));
 
+        let orderStream$;
         if (!this.isInvestorUser) {  // AM side
-            this.subscriptions.push(this.requestedOfiAmOrdersOb.subscribe((requested) => this.getAmOrdersNewOrder(requested)));
+            orderStream$ = this.requestedOfiAmOrdersOb;
             this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
             this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
             this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
         } else if (this.isInvestorUser) {  // INV side
-            this.subscriptions.push(this.requestedOfiInvOrdersOb.subscribe((requested) => this.getInvOrdersNewOrder(requested)));
+            orderStream$ = this.requestedOfiInvOrdersOb;
             this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
             this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe(
                 (requested) => this.requestMyFundAccess(requested)));
@@ -318,21 +321,46 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        this.subscriptions.push(this.OfiAmOrdersFiltersOb.subscribe((filters) => this.getAmOrdersFiltersFromRedux(filters)));
+        let filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
+        let combined$ = orderStream$.combineLatest(filterStream$);
+
+        let combinedSubscription = combined$.subscribe(([requested, filters]) => {
+            if(_.isEmpty(filters)){
+                if(!this.isInvestorUser){
+                    this.getAmOrdersNewOrder(requested);
+                } else{
+                    this.getInvOrdersNewOrder(requested);
+                }
+            } else{
+                this.getAmOrdersFiltersFromRedux(filters);
+            }
+        });
+
+        this.subscriptions.push(combinedSubscription);
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
 
         this.ngRedux.dispatch(ofiClearRequestedMyOrder());
-        this.ngRedux.dispatch(ofiClearRequestedManageOrder());
+        // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
 
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     ngAfterViewInit() {
+        this.resizeDataGrid();
+    }
 
+    resizeDataGrid(){
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
         }
+    }
 
+    detectChanges(detect?){
+        this.changeDetectorRef.markForCheck();
+        if(detect){
+            this.changeDetectorRef.detectChanges();
+        }
+        this.resizeDataGrid();
     }
 
     createForm() {
@@ -358,6 +386,18 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             toDate: [
                 '',
             ],
+        });
+    }
+
+    clearForm(){
+        this.searchForm.patchValue({
+            sharename: '',
+            isin: '',
+            status: [this.orderStatuses[0]],
+            type: [this.orderTypes[0]],
+            dateType: [this.dateTypes[2]],
+            fromDate: '',
+            toDate: '',
         });
     }
 
@@ -403,10 +443,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.updateTabs();
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges(true);
     }
 
     getAmOrdersFiltersFromRedux(filters) {
@@ -414,12 +451,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.logService.log(this.filtersFromRedux);
         this.applyFilters();
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     applyFilters() {
         if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
-            if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.shareName !== 'undefined' ||
+            if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.sharename !== 'undefined' ||
                 typeof this.filtersFromRedux.status !== 'undefined' || typeof this.filtersFromRedux.orderType !== 'undefined' ||
                 typeof this.filtersFromRedux.dateType !== 'undefined' || typeof this.filtersFromRedux.fromDate !== 'undefined' ||
                 typeof  this.filtersFromRedux.toDate !== 'undefined') {
@@ -428,11 +465,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin); // , {emitEvent: false}
                     //this.tabsControl[0].searchForm.get('isin').updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
                 }
-                if (typeof this.filtersFromRedux.shareName !== 'undefined' && this.filtersFromRedux.shareName !== '') {
-                    this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.shareName); // emitEvent = true cause infinite loop (make a valueChange)
+                if (typeof this.filtersFromRedux.sharename !== 'undefined' && this.filtersFromRedux.sharename !== '') {
+                    this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.sharename); // emitEvent = true cause infinite loop (make a valueChange)
                 }
                 if (typeof this.filtersFromRedux.status !== 'undefined' && this.filtersFromRedux.status !== '') {
-                    const statusFound = this.orderStatuses.find(o => o.id.toString() === this.filtersFromRedux.status.toString());
+                    const statusId = _.get(this.filtersFromRedux, ['status', '0', 'id']) ;
+                    const statusFound = _.find(this.orderStatuses, ['id', statusId]);
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
                             id: statusFound.id,
@@ -443,8 +481,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('status').patchValue([]);
                 }
 
-                if (typeof this.filtersFromRedux.orderType !== 'undefined' && this.filtersFromRedux.orderType !== '') {
-                    const orderTypeFound = this.orderTypes.find(o => o.id.toString() === this.filtersFromRedux.orderType.toString());
+                // Order types
+                if (typeof this.filtersFromRedux.type !== 'undefined' && this.filtersFromRedux.type !== '') {
+                    const orderTypeId = _.get(this.filtersFromRedux, ['type', '0', 'id']) ;
+                    const orderTypeFound = _.find(this.orderTypes, ['id', orderTypeId]);
                     if (orderTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('type').patchValue([{
                             id: orderTypeFound.id,
@@ -455,7 +495,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('type').patchValue([]);
                 }
                 if (typeof this.filtersFromRedux.dateType !== 'undefined' && this.filtersFromRedux.dateType !== '') {
-                    const dateTypeFound = this.dateTypes.find(o => o.id.toString() === this.filtersFromRedux.dateType.toString());
+                    const dateTypeId = _.get(this.filtersFromRedux, ['dateType', '0', 'id']) ;
+                    const dateTypeFound = _.find(this.dateTypes, ['id', dateTypeId]);
                     if (dateTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('dateType').patchValue([{
                             id: dateTypeFound.id,
@@ -467,17 +508,24 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
+                    this.isOptionalFilters = true;
                 }
                 if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
+                    this.isOptionalFilters = true;
                 }
 
                 // remove filters from redux
                 this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
-                this.filtersApplied = true;
                 this.requestSearch();
             }
         }
+    }
+
+    setOrdersFilters(){
+        let searchForm = this.tabsControl[0].searchForm;
+        let filters = {filters : searchForm.value};
+        this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters' : filters});
     }
 
     getInvOrdersListFromRedux(list) {
@@ -490,10 +538,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.updateTabs();
 
-        if (this.orderDatagrid) {
-            this.orderDatagrid.resize();
-        }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     ordersObjectToList(list) {
@@ -551,7 +596,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.loading = true;
             this.getOrdersList();
-            this.changeDetectorRef.markForCheck();
+            this.detectChanges();
         }
     }
 
@@ -562,7 +607,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             this.loading = true;
             this.getOrdersList();
-            this.changeDetectorRef.markForCheck();
+            this.detectChanges();
         }
     }
 
@@ -583,7 +628,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.fundShare.mifiidServicesCosts = currentFundShare.mifiidServicesCosts;
         this.fundShare.mifiidIncidentalCosts = currentFundShare.mifiidIncidentalCosts;
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
 
     }
 
@@ -591,26 +636,22 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // Get opened tabs from redux store.
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
-        if (openedTabs.length === 0) {
-            /* Default tabs. */
-            this.tabsControl = [
-                {
-                    'title': {
-                        'icon': 'fa fa-th-list',
-                        'text': 'List'
-                    },
-                    'orderId': -1,
-                    'searchForm': this.searchForm,
-                    'active': true
-                }
-            ];
-        } else {
-            this.tabsControl = openedTabs;
-
-            let searchForm = _.get(openedTabs, ['0', 'searchForm']);
-            if(searchForm){
-                this.searchForm = searchForm;
+        /* Default tabs. */
+        this.tabsControl = [
+            {
+                'title': {
+                    'icon': 'fa fa-th-list',
+                    'text': 'List'
+                },
+                'orderId': -1,
+                'searchForm': this.searchForm,
+                'active': true
             }
+        ];
+
+        if(openedTabs.length !== 0) {
+            this.tabsControl[0].active = openedTabs[0].active;
+            this.tabsControl = this.tabsControl.concat(openedTabs.slice(1));
         }
     }
 
@@ -854,7 +895,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getOrdersList();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     getOrdersList() {
@@ -944,7 +985,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         /* Detect changes. */
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
 
         /* Return. */
         return;
@@ -1014,7 +1055,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         for (const i in this.tabsControl) {
             this.tabsControl[i].active = (Number(this.tabsControl[i].orderId) === Number(orderID));
         }
-        this.changeDetectorRef.markForCheck();
+        this.detectChanges();
     }
 
     /**
@@ -1093,6 +1134,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Unsunscribe Observables. */
         this.subscriptions.forEach(subscription => subscription.unsubscribe());
 
+        this.setOrdersFilters();
         this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
     }
 

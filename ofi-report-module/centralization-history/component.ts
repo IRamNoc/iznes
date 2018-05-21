@@ -552,10 +552,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         const orderFilters = {
             filters: {
                 isin: this.baseCentralizationHistory.isin,
-                shareName: this.baseCentralizationHistory.fundShareName,
-                status: -3,
-                orderType: 0,
-                dateType: 'cutOffDate',
+                sharename: this.baseCentralizationHistory.fundShareName,
+                status: {id : -3},
+                type: {id : 0},
+                dateType: {id : 'cutOffDate'},
                 fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
                 toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
