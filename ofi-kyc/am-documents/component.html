@@ -12,7 +12,7 @@
     <!-- Panel header -->
     <div class="row panel-header">
         <div class="col-xs-6">
-            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+            <a id="{{panel.id + '-Expandable-KYC'}}" href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i> <h2>{{panel.title}} ({{(panel.data).length}})</h2>
             </a>
         </div>
@@ -24,9 +24,9 @@
             <clr-datagrid #myDataGrid>
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-row *clrDgItems="let row of panel.data">
-                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
-                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">{{row[dataCol.dataSource]}}
-
+                    <clr-dg-cell id="{{panel.id + '-' + dataCol.id + '-KYC-' + row.id}}" *ngFor="let dataCol of panel.columns">
+                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">
+                            {{row[dataCol.dataSource]}}
                         </a>
                         <span *ngIf="!dataCol.hasLink">{{row[dataCol.dataSource]}}
                             <ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
