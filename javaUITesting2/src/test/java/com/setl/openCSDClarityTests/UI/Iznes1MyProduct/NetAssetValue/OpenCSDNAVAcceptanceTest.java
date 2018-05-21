@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.MyProduct.NetAssetValue;
+package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.NetAssetValue;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
