@@ -384,7 +384,7 @@ export class OrderHelper {
         let subject;
 
         if (orderType === OrderType.Subscription) {
-            subject = 'SOUSCRIPTION ' + orderReference + ' - <span class="ml" mltag="txt_demon_completed">Shares</span>';
+            subject = 'Certification of Book Entry - SOUSCRIPTION ' + orderReference;
         } else {
             subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
         }
