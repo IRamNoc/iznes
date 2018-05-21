@@ -12,7 +12,7 @@ import {FileViewerPreviewService} from './preview-modal/service';
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {PdfMockService} from '@setl/core-req-services/pdf/pdf.mock.service';
 import {SecurityContext} from "@angular/core";
-import {SagaHelper} from '@setl/utils';
+import {SagaHelper, FileDownloader} from '@setl/utils';
 
 let origRunAsync;
 
@@ -48,7 +48,8 @@ describe('FileViewerComponent', () => {
                             port: 443
                         }
                     }
-                }
+                },
+                FileDownloader
             ]
         });
 
@@ -71,44 +72,4 @@ describe('FileViewerComponent', () => {
         expect(buttons.length).toBe(1);
     });
 
-    it('should create a valid file download URL given a fileHash', () => {
-        component.token = 'token';
-        component.userId = 'userId';
-        component.walletId = 'walletId';
-        component.fileHash = 'fileHash';
-        const expectedFileUrl = component.sanitizer.bypassSecurityTrustResourceUrl(
-            component.baseUrl +
-            '/mn/file?method=retrieve&downloadId=downloadId&walletId=walletId'
-        ).toString();
-        component.openFileModal().then(() => {
-                fixture.detectChanges();
-                expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-                expect(component.sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
-            },
-            () => {
-            });
-    });
-
-    it('should create a valid file download URL given a pdfId', () => {
-        component.token = 'token';
-        component.userId = 'userId';
-        component.walletId = 'walletId';
-        component.pdfId = 'pdfId';
-        component.fileHash = 'fileHash';
-        const expectedFileUrl = component.sanitizer.bypassSecurityTrustResourceUrl(
-            component.baseUrl +
-            '/mn/file?method=retrieve&downloadId=downloadId&walletId=walletId'
-        ).toString();
-        spyOn(pdfMockService, 'getPdf').and.callThrough();
-        component.openFileModal().then(() => {
-                fixture.detectChanges();
-                expect(pdfMockService.getPdf).toHaveBeenCalled();
-                expect(typeof component.fileUrl === 'undefined').toBeFalsy();
-                expect(component.fileUrl === '' || component.fileUrl === null).toBeFalsy();
-                expect(component.sanitizer.sanitize(SecurityContext.RESOURCE_URL, component.fileUrl)).toBe(expectedFileUrl);
-            },
-            () => {
-            });
-
-    });
 });
