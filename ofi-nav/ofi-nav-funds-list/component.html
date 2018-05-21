@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1 id="pageTitle">
         <i class="fa fa-ellipsis-h"></i>
-        <span mltag="txt_netassetvalue">Net asset value</span>
+        <span id="NAV-Title" mltag="txt_netassetvalue">Net asset value</span>
     </h1>
 
     <span mltag="txt_navdescription">Please select a date type and a date to access to the available NAVs.<br />
@@ -12,7 +12,7 @@
     <clr-tab>
         <button id="netAssetValueTab" clrTabLink>
             <i class="fa fa-th-list"></i>
-            <span mltag="txt_list">List</span>
+            <span id="NAV-List" mltag="txt_list">List</span>
         </button>
 
         <clr-tab-content *clrIfActive="true">
@@ -20,12 +20,12 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" for="navSearch" mltag="txt_searchasharenameorisin">Search a Share Name or ISIN</label>
-                            <input type="text" id="navSearch" name="navSearch" formControlName="shareName">
+                            <label class="control-label" for="Search-field" mltag="txt_searchasharenameorisin">Search a Share Name or ISIN</label>
+                            <input type="text" id="Search-field" name="navSearch" formControlName="shareName">
                         </div>
                         <div class="form-group col-sm-4" *ngIf="dateTypes && searchForm">
-                            <label class="control-label" for="selectDateType" mltag="txt_selectadate">Select a Date</label>
-                            <ng-select id="selectDateType" class="fluid-width"
+                            <label class="control-label" for="NAV-Date-Filter" mltag="txt_selectadate">Select a Date</label>
+                            <ng-select id="NAV-Date-Filter" class="fluid-width"
                                 [items]="dateTypes"
                                 formControlName="dateType"
                                 placeholder="Select Date type"
@@ -37,7 +37,7 @@
                             <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDatePicker" name="searchDate" placeholder="Choose a date"
+                                <input id="Date-filter" name="searchDate" placeholder="Choose a date"
                                     formControlName="date"
                                     [dpDayPicker]="dateConfig"
                                     mode="day"
@@ -51,81 +51,80 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column class="col-fundsharename">
-                    <span mltag="txt_sharename">Share name</span>
+                    <span id="NAV-CN-Share-Name" mltag="txt_sharename">Share name</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_isin">ISIN</span>
+                    <span id="NAV-CN-ISIN" mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span mltag="txt_navdate">NAV Date</span>
+                    <span id="NAV-CN-NAV-Date" mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span mltag="txt_navpubdate">NAV<br />Pub Date</span>
+                    <span id="NAV-CN-NAV-Pub-Date" mltag="txt_navpubdate">NAV<br />Pub Date</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-date">
-                    <span mltag="txt_navnextvaluation">Next Valuation Date</span>
+                    <span id="NAV-CN-Next-Valuation-Date" mltag="txt_navnextvaluation">Next Valuation Date</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-currency">
-                    <span mltag="txt_navccy">NAV CCY</span>
+                    <span id="NAV-CN-NAV-CCY" mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_nav">NAV</span>
+                    <span id="NAV-CN-NAV" mltag="txt_nav">NAV</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navestimated">NAV<br />Estimated</span>
+                    <span id="NAV-CN-NAV-Estimated" mltag="txt_navestimated">NAV<br />Estimated</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navtechnical">NAV<br />Technical</span>
+                    <span id="NAV-CN-NAV-Technical" mltag="txt_navtechnical">NAV<br />Technical</span>
                 </clr-dg-column>
                 <clr-dg-column>
-                    <span mltag="txt_navvalidated">NAV<br />Validated</span>
+                    <span id="NAV-CN-NAV-Validated" mltag="txt_navvalidated">NAV<br />Validated</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
-                    <span mltag="txt_status">Status</span>
+                    <span id="NAV-CN-Status" mltag="txt_status">Status</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
-                    <span mltag="txt_actions">Actions</span>
+                    <span id="NAV-CN-Actions" mltag="txt_actions">Actions</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navListItems; let idx = index;" id="{{'product-nav-row' + idx}}">
-                    <clr-dg-cell id="{{'nav-row'+idx+'-col-name'}}" class="col-fundsharename" (click)="navigateToShare(item.shareId)" title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'nav-row'+idx+'-col-isin'}}" (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
-                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
-                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
-                    <clr-dg-cell class="col-currency" (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell id="{{'NAV-Share-Name-'+idx}}" class="col-fundsharename" (click)="navigateToShare(item.shareId)" title="{{item.fundShareName}}">{{item.fundShareName}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-ISIN-'+idx}}" (click)="navigateToShare(item.shareId)">{{item.isin}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-NAV-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-Pub-Date-'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)">{{item.navPubDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-Val-Date'+idx}}" class="col-date" (click)="navigateToShare(item.shareId)" class="{{getNextValuationClass(item.nextValuationDate)}}">{{item.nextValuationDate}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'NAV-CCY-'+ (item.currency==0?'EURO-':(item.currency==1?'USD-':'GBP-')) +idx}}" class="col-currency" (click)="navigateToShare(item.shareId)">
                         {{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})
                     </clr-dg-cell>
                     <clr-dg-cell (click)="navigateToShare(item.shareId)">
-                        <span [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
-                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                        <span id="{{'NAV-Value-'+idx}}" [hidden]="isNavNull(item.nav)">{{ navToFrontEndString(item.nav)}}</span>
+                        <span id="{{'NAV-Status-'+idx}}" [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
                     </clr-dg-cell>
-                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell id="{{'NAV-EstValue-'+idx}}" class="nav-status-price" [class.not-set]="!item.navEstimated" (click)="navigateToShare(item.shareId)">
                         {{item.navEstimated ? navToFrontEndString(item.navEstimated) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell id="{{'NAV-Tech-Value-'+idx}}" class="nav-status-price" [class.not-set]="!item.navTechnical" (click)="navigateToShare(item.shareId)">
                         {{item.navTechnical ? navToFrontEndString(item.navTechnical) : 'N/A'}}
                     </clr-dg-cell>
-                    <clr-dg-cell class="nav-status-price" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">
+                    <clr-dg-cell id="{{'NAV-Val-Value-'+idx}}" class="nav-status-price" [class.not-set]="!item.navValidated" (click)="navigateToShare(item.shareId)">
                         {{item.navValidated ? navToFrontEndString(item.navValidated) : 'N/A'}}
                     </clr-dg-cell>
                     <clr-dg-cell class="col-status" (click)="navigateToShare(item.shareId)">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span class="label label-success" mltag="txt_validated">Validated</span>
+                                <span id="{{'NAV-Status-Validated-'+idx}}" class="label label-success" mltag="txt_validated">Validated</span>
                             </span>
                             <span *ngSwitchCase="1">
-                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                                <span id="{{'NAV-Status-Estimated-'+idx}}" class="label label-warning" mltag="txt_estimated">Estimated</span>
                             </span>
-
                             <span *ngSwitchCase="2">
-                                <span class="label label-warning" mltag="txt_technical">Technical</span>
+                                <span id="{{'NAV-Status-Technical'+idx}}" class="label label-warning" mltag="txt_technical">Technical</span>
                             </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm" [hidden]="!isNavNull(item.nav)">
-                            <button id="{{'product-nav-row'+idx+'-btn-add'}}" (click)="addNav(item)" class="btn btn-success btn-sm">
+                            <button id="{{'Btn-AddNewNAV-'+idx}}" (click)="addNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-plus"></i> <span mltag="txt_addnewnav">Add new NAV</span>
                             </button>
                         </div>
@@ -140,7 +139,7 @@
 
             <div class="row">
                 <div class="form-group offset-sm-9 col-sm-3 text-right export-nav">
-                    <button class="btn btn-primary" id="exportNavList"
+                    <button class="btn btn-primary" id="NAV-Export-CSV"
                         (click)="exportCSV()"
                         [disabled]="(!navListItems) || navListItems.length === 0"
                         mltag="txt_exportlistascsv">
