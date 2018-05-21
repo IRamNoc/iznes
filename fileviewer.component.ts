@@ -133,8 +133,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     walletId: this.walletId,
                     downloadId: downloadId
 
-                }).subscribe((downloadUrl) => {
-                    console.log(downloadUrl);
+                }).subscribe((downloadData) => {
+                    const downloadUrl = downloadData.url;
                     this.previewModalService.open({
                         name: fileName,
                         url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl)
