@@ -356,9 +356,8 @@ export class CalendarHelper {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const cutoffHour = this.cutoffTime.hours();
-
-        return cutoffDate.clone().businessAdd(this.valuationOffSet).utc().set({
+        const valuationDateStr = cutoffDate.clone().businessAdd(this.valuationOffSet).format('YYYY-MM-DD');
+        return moment.utc(valuationDateStr).set({
             hour: 0,
             minute: 0,
             second: 1
@@ -369,9 +368,8 @@ export class CalendarHelper {
         cutoffDate = momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const cutoffHour = this.cutoffTime.hours();
-
-        const settlementDate = cutoffDate.clone().businessAdd(this.settlementOffSet).utc().set({
+        const settlementDateStr = cutoffDate.clone().businessAdd(this.settlementOffSet).format('YYYY-MM-DD');
+        const settlementDate = moment.utc(settlementDateStr).set({
             hour: 0,
             minute: 0,
             second: 1

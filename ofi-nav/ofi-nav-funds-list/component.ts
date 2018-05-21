@@ -23,7 +23,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService, MoneyValuePipe, APP_CONFIG, AppConfig} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe, APP_CONFIG, AppConfig, FileDownloader} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-manage-list',
@@ -66,6 +66,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 
@@ -248,14 +249,15 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     exportCSV(): void {
         const requestData = this.getRequestNavListData();
 
-        const url = this.generateExportURL(`file?token=${this.socketToken}&userId=${this.userId}&method=exportNavFundShares&shareId=null&fundName=${encodeURIComponent(requestData.fundName)}&navDateField=${requestData.navDateField}&navDate=${encodeURIComponent(requestData.navDate)}`, this.appConfig.production);
-
-        window.open(url, '_blank');
-    }
-
-    private generateExportURL(url: string, isProd: boolean = true): string {
-        return isProd ? `https://${window.location.hostname}/mn/${url}` :
-            `http://${window.location.hostname}:9788/${url}`;
+        this._fileDownloader.downLoaderFile({
+            method: 'exportNavFundShares',
+            token: this.socketToken,
+            shareId: null,
+            fundName: encodeURIComponent(requestData.fundName),
+            navDateField: requestData.navDateField,
+            navDate: encodeURIComponent(requestData.navDate),
+            userId: this.userId
+        });
     }
 
     clearRequestedList(): void {

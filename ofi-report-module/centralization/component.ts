@@ -19,7 +19,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* store */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
-import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import * as moment from 'moment';
 
 import {mDateHelper} from '@setl/utils';
@@ -33,7 +33,7 @@ interface SelectedItem {
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CentralizationReportComponent implements OnInit, OnDestroy {
 
@@ -95,6 +95,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 private alerts: AlertsService,
                 private _confirmationService: ConfirmationService,
                 private _numberConverterService: NumberConverterService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.createsearchForm();
@@ -139,22 +140,22 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
             result.push({
                 aum: item.get('aum'),
-                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
-                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
+                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
                 fundShareID: item.get('fundShareID'),
                 fundShareName: item.get('fundShareName'),
                 isin: item.get('isin'),
                 latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-                navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'),'YYYY-MM-DD'),
+                navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'), 'YYYY-MM-DD'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),
                 redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
                 redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
-                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'),'YYYY-MM-DD'),
+                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'), 'YYYY-MM-DD'),
                 shareClassCurrency: item.get('shareClassCurrency'),
                 subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
                 subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
-                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'),'YYYY-MM-DD'),
+                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'), 'YYYY-MM-DD'),
             });
 
             return result;
@@ -219,9 +220,13 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickExportCentralizationReport(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getAllShareInfoCsv&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
+
+        this._fileDownloader.downLoaderFile({
+            method: 'getAllShareInfoCsv',
+            token: this.memberSocketService.token,
+            userId: this.myDetails.userId
+        });
+
     }
 
 
@@ -250,7 +255,6 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickDownloadCorrespondingOrders(id) {
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
@@ -268,26 +272,23 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 fromDate: cutoffDate,
                 toDate: cutoffDate + ' 23:59',
             };
-            for (let filter in params) {
-                if (params.hasOwnProperty(filter)) {
-                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
-                }
-            }
-            const url = this.generateExportURL(paramUrl, this.appConfig.production);
-            // console.log(url);
-            window.open(url, '_blank');
+
+            this._fileDownloader.downLoaderFile({
+                method: 'exportAssetManagerOrders',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+                ...params
+            });
         }
     }
 
     onClickDownloadCentralizationHistory(id) {
-        const paramUrl = 'file?token=' + this.memberSocketService.token + '&method=getSingleShareInfoCsv&fundShareID=' + id + '&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
-    }
-
-    generateExportURL(url: string, isProd: boolean = true): string {
-        return isProd ? `https://${window.location.hostname}/mn/${url}` :
-            `http://${window.location.hostname}:9788/${url}`;
+        this._fileDownloader.downLoaderFile({
+            method: 'getSingleShareInfoCsv',
+            token: this.memberSocketService.token,
+            fundShareID: id,
+            userId: this.myDetails.userId
+        });
     }
 
     ngOnDestroy() {
