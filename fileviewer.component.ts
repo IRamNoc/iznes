@@ -1,14 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges} from '@angular/core';
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges,
+    SecurityContext
+} from '@angular/core';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {NgRedux, select} from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
 import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import {createMemberNodeRequest} from '@setl/utils/common';
 
 import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
 import {APP_CONFIG} from '@setl/utils/appConfig/appConfig';
 import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
+import {FileDownloader} from '@setl/utils';
 
 import {ValidateFileMessageBody} from "./fileviewer.module";
 import {FileViewerPreviewService} from './preview-modal/service';
@@ -51,6 +55,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
                        private changeDetectorRef: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
                        private previewModalService: FileViewerPreviewService,
+                       private fileDownloader: FileDownloader,
                        @Inject(APP_CONFIG) private appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.baseUrl = 'http';
@@ -85,43 +90,24 @@ export class FileViewerComponent implements OnInit, OnChanges {
     }
 
     public setFileHash() {
-        if (this.pdfId !== null && this.fileUrl == null) {
-            return new Promise((resolve) => {
+        return new Promise((resolve) => {
+            if (this.pdfId !== null && this.fileUrl == null) {
                 this.pdfService.getPdf(this.pdfId).then(
                     (fileHash) => {
                         this.fileHash = fileHash;
-                        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-                            this.baseUrl +
-                            '/mn/file?' +
-                            'method=retrieve' +
-                            '&downloadId=' + this.downloadId
-                        );
                         resolve();
                     }
                 );
-            });
-        }
-        return new Promise((resolve) => {
-            this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-                this.baseUrl +
-                '/mn/file?' +
-                'method=retrieve' +
-                '&downloadId=' + this.downloadId
-            );
-            resolve();
+            } else {
+                resolve();
+            }
         });
+
     }
 
     public openFileModal() {
-        return new Promise((resolve, reject) => {
-            this.setFileHash().then(() => {
-                this.validateFileExists().then(() => {
-                    resolve();
-                }, (error) => {
-                    console.log('Error occurred!' + error);
-                    reject();
-                });
-            });
+        this.setFileHash().then(() => {
+            this.validateFileExists();
         });
     }
 
@@ -133,44 +119,28 @@ export class FileViewerComponent implements OnInit, OnChanges {
             fileHash: this.fileHash
         };
 
-        return new Promise((resolve, reject) => {
-            const asyncTaskPipes = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [],
-                [],
-                asyncTaskPipes,
-                {},
-                (result) => {
-                    const data = result[1].Data;
-                    if (data.error) {
-                        this.previewModalService.close();
-                        this.fileName = null;
-                        this.fileType = null;
-                        this.showAlert('Unable to view file', 'error');
-                    } else {
-                        this.fileName = data.filename;
-                        this.fileType = data.mimeType;
-                        this.fileUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-                            this.baseUrl +
-                            '/mn/file?' +
-                            'method=retrieve' +
-                            '&fileHash=' + this.fileHash +
-                            '&downloadId=' + data.downloadId +
-                            '&walletId=' + this.walletId
-                        );
-                        this.previewModalService.open({
-                            name: this.fileName,
-                            url: this.fileUrl as string
-                        });
-                    }
-                    this.changeDetectorRef.markForCheck();
-                    resolve();
-                },
-                (err) => {
-                    this.showAlert(err, 'error');
-                    reject();
-                }
-            ));
+        createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
+            const data = result[1].Data;
+            if (data.error) {
+                this.previewModalService.close();
+                this.showAlert('Unable to view file', 'error');
+            } else {
+                const fileName = data.filename;
+                const downloadId = data.downloadId;
+
+                this.fileDownloader.getDownLoaderUrl({
+                    method: 'retrieve',
+                    walletId: this.walletId,
+                    downloadId: downloadId
+
+                }).subscribe((downloadUrl) => {
+                    console.log(downloadUrl);
+                    this.previewModalService.open({
+                        name: fileName,
+                        url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl)
+                    });
+                });
+            }
         });
     }
 
