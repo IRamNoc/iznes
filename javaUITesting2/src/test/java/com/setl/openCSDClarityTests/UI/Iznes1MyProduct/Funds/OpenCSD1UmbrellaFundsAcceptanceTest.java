@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.MyProduct.Funds;
+package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
