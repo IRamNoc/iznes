@@ -37,8 +37,6 @@ export class FileViewerComponent implements OnInit, OnChanges {
     public userId: string = null;
     public walletId: string = null;
     public fileUrl: SafeResourceUrl = null;
-    public fileName: string = null;
-    public fileType: string = null;
     public baseUrl = '';
     public downloadId: string = null;
 
@@ -133,8 +131,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     walletId: this.walletId,
                     downloadId: downloadId
 
-                }).subscribe((downloadUrl) => {
-                    console.log(downloadUrl);
+                }).subscribe((downloadData) => {
+                    const downloadUrl = downloadData.url;
                     this.previewModalService.open({
                         name: fileName,
                         url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl)
