@@ -313,8 +313,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
             fail(e.getMessage());
         }
 
-
-
     }
 
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
