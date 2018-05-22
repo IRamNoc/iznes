@@ -214,6 +214,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillOutFundDetailsStep2(String fundName, String lei) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -230,9 +231,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
         scrollElementIntoViewById("fund-cancelfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
