@@ -1,21 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {MemberSocketService} from '@setl/websocket-service';
 import {NgRedux, select} from '@angular-redux/store';
-import {ConfirmationService, NumberConverterService} from '@setl/utils';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import 'rxjs/add/operator/takeUntil';
-import {ActivatedRoute, Router} from '@angular/router';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
-import {ActivatedRoute, Router} from '@angular/router';
-
-
-/* Types. */
-interface SelectedItem {
-    id: any;
-    text: number | string;
-}
+import {Router} from '@angular/router';
 
 @Component({
     styleUrls: ['./component.scss'],
