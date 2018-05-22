@@ -75,7 +75,7 @@
                         <span class="fa fa-sort-asc" [hidden]="!isPriceHigherThanPrevious(item)"></span>
                         <span class="fa fa-sort-desc" [hidden]="isPriceHigherThanPrevious(item)"></span>
                     </clr-dg-cell>
-                    <clr-dg-cell class="col-navvaldate">{{getNextValuationDate(item)}}</clr-dg-cell>
+                    <clr-dg-cell class="col-navvaldate">{{onlyDate(item.navDate)}}</clr-dg-cell>
                     <clr-dg-cell class="col-modifiedby">{{item.userName}}</clr-dg-cell>
                     <clr-dg-cell class="col-date">{{item.dateModified}}</clr-dg-cell>
                 </clr-dg-row>
