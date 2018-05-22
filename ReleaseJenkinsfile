@@ -7,28 +7,28 @@ node {
 
         stage('Check Out Application Code') {
 
-            checkout([$class                           : 'GitSCM', branches: [[name: '*/release']],
-                      doGenerateSubmoduleConfigurations: false, extensions: [],
-                      submoduleCfg                     : [], userRemoteConfigs:
-                          [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
-                            url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
-        }
+                checkout([$class                           : 'GitSCM', branches: [[name: '*/release']],
+                          doGenerateSubmoduleConfigurations: false, extensions: [],
+                          submoduleCfg                     : [], userRemoteConfigs:
+                              [[credentialsId: '6afd5a8d-023a-49f6-ba58-4f6b35cf3023',
+                                url          : 'git@si-nexus01.dev.setl.io:opencsd-rewrite/opencsd-frontend-clarity.git']]])
+            }
 
-        stage('Build & Unit Test') {
+            stage('Build & Unit Test') {
 
-            sh '''rm -f yarn.lock &&
+                sh '''rm -f yarn.lock &&
                         yarn install &&
                         yarn upgrade &&
                         cd src &&
                         sass styles.scss:styles.css &&
                         cd ../ '''
 
-            stage('Build Prod') {
-                sh 'yarn build-prod -op iznes_release_dist '
-            }
+                stage('Build Prod') {
+                    sh 'yarn build-prod -op iznes_release_dist/$(< VERSION)'
+                }
 
-            stage('Copy code to deployment folder') {
-                sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
+                stage('Copy code to deployment folder') {
+                    sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
                         rm -rf /var/lib/jenkins/Deploy/iznes_release_dist &&
                         rsync -a ./iznes_release_dist /var/lib/jenkins/Deploy/'''
 
