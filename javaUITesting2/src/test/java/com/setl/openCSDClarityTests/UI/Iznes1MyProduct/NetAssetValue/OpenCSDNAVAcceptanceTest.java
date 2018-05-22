@@ -105,7 +105,7 @@ public class OpenCSDNAVAcceptanceTest {
         shareCreationProfile();
         shareCreationSubmit();
 
-        int rowNo = 0;
+        int rowNo = 1;
 
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-row" + rowNo + "-btn-add\"]")));
