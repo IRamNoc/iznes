@@ -15,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
 import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.*;
@@ -22,6 +24,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -269,6 +272,47 @@ public class OpenCSDKYCModuleAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
 
         driver.findElement(By.id("checkbox")).click();
+
+        try{
+            wait.until(elementToBeClickable(By.id("submitButton")));
+            driver.findElement(By.id("submitButton")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/h2")));
+        try{
+            String grantFundTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/h2")).getText();
+            assertTrue(grantFundTitle.equals("Funds' Share Access Authorisation"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]");
+        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+
+        driver.findElement(By.xpath("//*[@id=\"166110-access\"]")).click();
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
+
+        try{
+            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+
+        try {
+            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
+            assertTrue(permissionToaster.equals("Share Permissions Saved"));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+
 
 
     }
