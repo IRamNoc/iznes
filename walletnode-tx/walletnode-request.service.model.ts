@@ -70,6 +70,7 @@ export interface EncumberMessageBody extends WalletNodeMessageBody {
     administrators: any;
     protocol: number;
     metadata: number;
+    iscumulative: boolean;
 }
 
 export interface UnencumberMessageBody extends WalletNodeMessageBody {
