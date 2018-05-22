@@ -68,6 +68,7 @@ interface Encumber {
     administrators: any;
     protocol: string;
     metadata: string;
+    iscumulative: boolean;
 }
 
 interface Unencumber {
@@ -116,7 +117,8 @@ export class WalletnodeTxService {
             beneficiaries: _.get(requestData, 'beneficiaries', []),
             administrators: _.get(requestData, 'administrators', []),
             protocol: _.get(requestData, 'protocol', ''),
-            metadata: _.get(requestData, 'metadata', {})
+            metadata: _.get(requestData, 'metadata', {}),
+            iscumulative: _get(requestData, 'iscumulative', false),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
