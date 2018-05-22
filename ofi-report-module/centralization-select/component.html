@@ -1,0 +1,26 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <span><i class="fa fa-book"></i> Centralisation History</span>
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="demoOptimisedDatagridBtn" clrTabLink>
+            <i class="fa fa-book"></i> <span>History</span>
+        </button>
+        <clr-tab-content>
+
+            <b>Search for the centralisation history for a specific share:</b>
+
+            <ng-select [items]="shareList"
+                       [allowClear]="true"
+                       placeholder="Type a Share name or ISIN"
+                       mltag="centralizationHistorySearch"
+                       (selected)="loadHistory($event)"
+                       >
+            </ng-select>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
