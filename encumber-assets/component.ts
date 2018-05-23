@@ -289,6 +289,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 ],
                 protocol: '',
                 metadata: '',
+                iscumulative: false,
             });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
