@@ -60,7 +60,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add new Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
@@ -635,15 +635,16 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         //assertTrue(driver.findElement(By.id("netAssetValueTab")).getText().contentEquals("NAVs for all your shares"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")).getText().contentEquals("Search a Share Name or ISIN"));
-        assertTrue(isElementPresent(By.id("navSearch")));
+        assertTrue(isElementPresent(By.id("Search-field")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")).getText().contentEquals("Select a Date"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")).getText().contentEquals("NAV Date"));
-        assertTrue(isElementPresent(By.id("navDatePicker")));
-        assertTrue(driver.findElement(By.id("navDatePicker")).getAttribute("value").contentEquals(getTodayDate()));
-        assertTrue(isElementPresent(By.id("exportNavList")));
-        assertTrue(driver.findElement(By.id("exportNavList")).getText().contentEquals("Export List as CSV"));
+        assertTrue(isElementPresent(By.id("Date-filter")));
+        assertTrue(driver.findElement(By.id("Date-filter")).getAttribute("value").contentEquals(getTodayDate()));
+        assertTrue(isElementPresent(By.id("NAV-Date-Filter")));
+        assertTrue(isElementPresent(By.id("NAV-Export-CSV")));
+        assertTrue(driver.findElement(By.id("NAV-Export-CSV")).getText().contentEquals("Export List as CSV"));
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {
