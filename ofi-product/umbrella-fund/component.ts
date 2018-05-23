@@ -456,13 +456,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     cancel() {
-        if(this.currentRoute.fromShare){
-            this._router.navigate(['/product-module/product/fund-share/new']);
-        } else if(this.currentRoute.fromFund){
-            this.redirectToFund();
-        } else{
-            this._router.navigateByUrl('/product-module/product');
-        }
+        this._router.navigateByUrl('/product-module/product');
     }
 
     save(formValues) {

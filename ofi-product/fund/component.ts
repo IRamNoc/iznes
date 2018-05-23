@@ -709,11 +709,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     onClickBack() {
-        if(this.currentRoute.fromShare){
-            this.redirectToShare();
-        } else{
-            this.router.navigateByUrl('/product-module/product');
-        }
+        this.router.navigateByUrl('/product-module/product');
     }
 
     ngOnDestroy() {
