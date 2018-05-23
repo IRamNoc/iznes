@@ -118,7 +118,7 @@ export class WalletnodeTxService {
             administrators: _.get(requestData, 'administrators', []),
             protocol: _.get(requestData, 'protocol', ''),
             metadata: _.get(requestData, 'metadata', {}),
-            iscumulative: _get(requestData, 'iscumulative', false),
+            iscumulative: _.get(requestData, 'iscumulative', false),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
