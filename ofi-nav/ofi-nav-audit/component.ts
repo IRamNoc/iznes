@@ -126,7 +126,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
-    private updateNavFund(navFund: model.NavInfoModel[]): void {
+    private updateNavFund(navFund): void {
         this.navFund = navFund ? navFund[0] : undefined;
         this.changeDetectorRef.markForCheck();
     }
