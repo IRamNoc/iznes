@@ -52,14 +52,15 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
-        private route: ActivatedRoute,
-        private router: Router,
-        private changeDetectorRef: ChangeDetectorRef,
-        private service: OfiNavAuditService,
-        private numberConverterService: NumberConverterService,
-        private moneyPipe: MoneyValuePipe,
-        private ofiNavService: OfiNavService) { }
-        
+                private route: ActivatedRoute,
+                private router: Router,
+                private changeDetectorRef: ChangeDetectorRef,
+                private service: OfiNavAuditService,
+                private numberConverterService: NumberConverterService,
+                private moneyPipe: MoneyValuePipe,
+                private ofiNavService: OfiNavService) {
+    }
+
     ngOnInit() {
         this.initSearchForm();
         this.initSubscriptions();
@@ -106,12 +107,14 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
                 offset: (this.gridRowOffSet * this.gridItemsPerPage),
                 limit: this.gridItemsPerPage
             },
-            () => {},
-            () => {});
+            () => {
+            },
+            () => {
+            });
     }
 
     private updateNavAudit(navAudit): void {
-        if(navAudit && navAudit[this.fundShareId]) {
+        if (navAudit && navAudit[this.fundShareId]) {
             this.navAuditData = navAudit[this.fundShareId];
             this.auditDataItemsLen = this.navAuditData[0].total;
         } else {
@@ -120,8 +123,8 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         }
 
         this.gridLastPage = Math.ceil(this.auditDataItemsLen / this.gridItemsPerPage);
-        if(this.datagrid) this.datagrid.resize();
-        
+        if (this.datagrid) this.datagrid.resize();
+
         this.redux.dispatch(setRequestedNavAudit());
         this.changeDetectorRef.markForCheck();
     }
@@ -165,7 +168,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     isLogTypeUpdate(item: NavAuditDetail): boolean {
         return item.logType === 'Update';
     }
-    
+
     isLogTypeRemove(item: NavAuditDetail): boolean {
         return item.logType === 'Delete';
     }
@@ -174,6 +177,10 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+    }
+
+    onlyDate(dateTimeString: string): string {
+        return dateTimeString.split(' ')[0];
     }
 
 }
