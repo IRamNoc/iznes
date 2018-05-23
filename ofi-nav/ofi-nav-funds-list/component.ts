@@ -253,10 +253,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
             method: 'exportNavFundShares',
             token: this.socketToken,
             shareId: null,
-            fundName: encodeURIComponent(requestData.fundName),
+            fundName: requestData.fundName,
             navDateField: requestData.navDateField,
-            navDate: encodeURIComponent(requestData.navDate),
-            userId: this.userId
+            navDate: requestData.navDate,
+            userId: this.userId,
         });
     }
 
