@@ -122,25 +122,25 @@
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column class="col-date">
+                <clr-dg-column [clrDgField]="'navDate'" class="col-date">
                     <span mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-date">
+                <clr-dg-column [clrDgField]="'navPubDate'" class="col-date">
                     <span mltag="txt_publicationdate">Publication Date</span>
                 </clr-dg-column>
                 <!--<clr-dg-column>-->
                 <!--<span>Use</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column class="col-currency">
+                <clr-dg-column [clrDgField]="'currency'" class="col-currency">
                     <span mltag="txt_fundcurrency">NAV CCY</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'nav'">
                     <span mltag="txt_nav">NAV</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'numberOfShares'">
                     <span mltag="txt_numberofshares">Number of Shares</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'shareAum'">
                     <span mltag="txt_shareaum">Share AUM</span>
                 </clr-dg-column>                
                 <!--<clr-dg-column>-->
@@ -149,10 +149,10 @@
                 <!--<clr-dg-column>-->
                 <!--<span>Fund AUM</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'coupons'">
                     <span mltag="txt_coupons">Coupons</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-status">
+                <clr-dg-column [clrDgField]="'status'" class="col-status">
                     <span mltag="txt_status">Status</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
