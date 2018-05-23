@@ -190,7 +190,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
 
-        this.filterForm.controls['period'].setValue([this.periodList[1]]);
+        this.filterForm.controls['period'].setValue([this.periodList[0]]);
+        
+        this.dateTo = this.reformatDate(moment().add(1, 'weeks'));
+        this.dateFrom = this.reformatDate(moment().subtract(1, 'weeks'));
 
         this.changeDetectorRef.markForCheck();
     }
