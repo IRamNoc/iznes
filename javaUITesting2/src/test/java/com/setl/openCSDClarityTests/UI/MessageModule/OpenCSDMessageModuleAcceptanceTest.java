@@ -17,9 +17,9 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAnd
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.logout;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWallet;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWalletWithoutRecipient;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.verifyMessageHasBeenReceived;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWallet;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.sendMessageToSelectedWalletWithoutRecipient;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.verifyMessageHasBeenReceived;
 import static org.junit.Assert.fail;
 
 

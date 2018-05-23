@@ -7,12 +7,8 @@ import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.omg.PortableServer.THREAD_POLICY_ID;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.io.IOException;
@@ -22,12 +18,11 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.isElementPresent;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.LoginToOutlook;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.clickForgottenPassword;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.LoginToOutlook;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.clickForgottenPassword;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.createUserAndVerifySuccess;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)

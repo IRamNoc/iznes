@@ -1,6 +1,5 @@
-package com.setl.openCSDClarityTests.UI.Navigation;
+package com.setl.openCSDClarityTests.UI.Iznes0Navigation;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -11,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.IOException;

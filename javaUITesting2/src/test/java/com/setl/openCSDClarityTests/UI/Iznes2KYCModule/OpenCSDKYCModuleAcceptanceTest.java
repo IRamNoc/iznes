@@ -15,11 +15,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.*;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
