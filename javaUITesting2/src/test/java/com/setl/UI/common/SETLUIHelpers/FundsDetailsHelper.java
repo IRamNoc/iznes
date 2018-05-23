@@ -60,7 +60,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
-            assertTrue(pageHeading.equals("Add new Umbrella Fund"));
+            assertTrue(pageHeading.equals("Add a new Umbrella Fund"));
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
