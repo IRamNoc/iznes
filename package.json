@@ -59,7 +59,6 @@
         "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git",
         "@webcomponents/custom-elements": "^1.0.8",
         "angular2-toaster": "^4.0.2",
-        "base64url": "^3.0.0",
         "core-js": "^2.5.3",
         "immutable": "^3.8.1",
         "karma-headless-chrome-launcher": "0.0.6",
