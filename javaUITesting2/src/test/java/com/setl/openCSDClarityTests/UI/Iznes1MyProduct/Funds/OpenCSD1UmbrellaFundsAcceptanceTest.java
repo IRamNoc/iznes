@@ -255,6 +255,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();
