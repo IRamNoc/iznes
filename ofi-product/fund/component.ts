@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
@@ -7,6 +7,7 @@ import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
 import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
+import {ConfirmationService} from '@setl/utils';
 
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
@@ -124,6 +125,10 @@ export class FundComponent implements OnInit, OnDestroy {
 
     unSubscribe: Subject<any> = new Subject();
 
+    currentRoute: {
+        fromShare? : boolean
+    } = {};
+
     constructor(
         private router: Router,
         private location: Location,
@@ -134,6 +139,8 @@ export class FundComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private route: ActivatedRoute,
+        private changeDetectorRef : ChangeDetectorRef,
+        private confirmationService : ConfirmationService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -509,6 +516,15 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.route.queryParams.subscribe(params => {
+            if(params.fromShare){
+                this.currentRoute.fromShare = true;
+            }
+            if(params.umbrella){
+                this.waitForCurrentUmbrella(params.umbrella);
+            }
+        });
+
         this.route.params
             .takeUntil(this.unSubscribe)
             .subscribe((params) => {
@@ -566,6 +582,28 @@ export class FundComponent implements OnInit, OnDestroy {
             });
     }
 
+    waitForCurrentUmbrella(umbrellaID) {
+        this.umbrellaFundList$
+            .filter(umbrellas => umbrellas[umbrellaID])
+            .take(1)
+            .subscribe(umbrellas => {
+                this.setCurrentUmbrella(umbrellas[umbrellaID])
+            });
+    }
+
+    setCurrentUmbrella(umbrella){
+        this.umbrellaControl.setValue([{
+            id : umbrella.umbrellaFundID,
+            text : umbrella.umbrellaFundName
+        }]);
+        let newUrl = this.router.createUrlTree([], {
+            queryParams: { umbrella: null },
+            queryParamsHandling: "merge"
+        });
+        this.location.replaceState(this.router.serializeUrl(newUrl));
+
+        this.changeDetectorRef.markForCheck();
+    }
     // forms
     submitUmbrellaForm(): void {
         this.viewMode = 'FUND';
@@ -601,11 +639,22 @@ export class FundComponent implements OnInit, OnDestroy {
         };
 
         if (this.param === 'new') {
+
             this.fundService.iznCreateFund(payload)
-                .then(() => {
-                    this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully created.`);
+                .then(fund => {
+                    let fundID = _.get(fund, ['1', 'Data', '0', 'fundID']);
+                    let fundName = _.get(fund, ['1', 'Data', '0', 'fundName']);
+
+                    if(!_.isUndefined(fundID)){
+                        if(this.currentRoute.fromShare){
+                            this.redirectToShare(fundID);
+                        } else{
+                            this.displaySharePopup(fundName, fundID);
+                        }
+                    } else{
+                        this.creationSuccess(fundName);
+                    }
                     OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
-                    this.location.back();
                     return;
                 })
                 .catch((err) => {
@@ -629,8 +678,42 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    redirectToShare(fundID?){
+        let query = {};
+        if(fundID){
+            query = { fund: fundID };
+        }
+        this.router.navigate(['/product-module/product/fund-share/new'], { queryParams: query });
+    }
+
+    displaySharePopup(fundName, fundID){
+        const message = `<span>By clicking "Yes", you will be able to create a share directly linked to ${fundName}.</span>`;
+
+        this.confirmationService.create(
+            '<span>Do you want to create a share?</span>',
+            message,
+            {confirmText: 'Yes', declineText: 'No'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.redirectToShare(fundID);
+
+            } else{
+                this.creationSuccess(fundName);
+            }
+        });
+    }
+
+    creationSuccess(fundName){
+        this.toasterService.pop('success', `${fundName} has been successfully created.`);
+        this.router.navigateByUrl('/product-module/product');
+    }
+
     onClickBack() {
-        this.location.back();
+        if(this.currentRoute.fromShare){
+            this.redirectToShare();
+        } else{
+            this.router.navigateByUrl('/product-module/product');
+        }
     }
 
     ngOnDestroy() {

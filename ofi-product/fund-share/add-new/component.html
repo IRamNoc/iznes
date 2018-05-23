@@ -30,7 +30,7 @@
                             <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
                             <div>
                                 <span mltag="txt_or">or</span>
-                                <a href="/#/product-module/product/fund/new" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund" mltag="txt_addanewfund">
+                                <a [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund" mltag="txt_addanewfund">
                                     Add a new Fund
                                 </a>
                             </div>
