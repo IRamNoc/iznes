@@ -243,9 +243,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                     sharename: obj.fundShareName,
                     status: {id : -3},
                     type: {id : 0},
-                    dateType: {id : 'cutOffDate'},
-                    fromDate: moment(obj.subCutoffDate).format('YYYY-MM-DD'),
-                    toDate: moment(obj.subCutoffDate).format('YYYY-MM-DD')
+                    dateType: {id : 'navDate'},
+                    fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
+                    toDate: moment(obj.navDate).format('YYYY-MM-DD')
                 }
             };
 
@@ -258,7 +258,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
         const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
-            const cutoffDate = moment(obj.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const navDate = moment(obj.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: obj.fundShareName,
                 isin: obj.isin,
@@ -268,9 +268,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 rowOffSet: 0,
                 sortByField: 'userEntered',
                 sortOrder: 'desc',
-                dateSearchField: 'cutoffDate',
-                fromDate: cutoffDate,
-                toDate: cutoffDate + ' 23:59',
+                dateSearchField: 'navDate',
+                fromDate: navDate,
+                toDate: navDate + ' 23:59',
             };
 
             this._fileDownloader.downLoaderFile({
