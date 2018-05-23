@@ -1,10 +1,11 @@
-package com.setl.openCSDClarityTests.UI.CouponPayment;
+package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -20,8 +21,6 @@ import java.sql.SQLException;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomISIN;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.getShareTableRow;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
@@ -245,6 +244,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldTestEntireFundFlow2() throws InterruptedException, SQLException, IOException {
 
         loginAndVerifySuccess("am", "alex01");

@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.General;
+package com.setl.openCSDClarityTests.UI.Iznes4General;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -16,7 +16,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
-import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToPage;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
