@@ -368,9 +368,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             method: 'exportNavFundHistory',
             token: this.socketToken,
             shareId: requestData.shareId,
-            navDateFrom: encodeURIComponent(requestData.navDateFrom),
-            navDateTo: encodeURIComponent(requestData.navDateTo),
-            userId: this.userId
+            navDateFrom: requestData.navDateFrom,
+            navDateTo: requestData.navDateTo,
+            userId: this.userId,
         });
     }
 
