@@ -108,9 +108,9 @@ public class OpenCSDNAVAcceptanceTest {
         int rowNo = 1;
 
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"product-nav-row" + rowNo + "-btn-add\"]")));
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"product-nav-row" + rowNo + "-btn-add\"]")));
-        driver.findElement(By.id("product-nav-row" + rowNo + "-btn-add")).click();
+        wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo)));
+        wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-" + rowNo)));
+        driver.findElement(By.id("Btn-AddNewNAV-" + rowNo)).click();
 
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")));
         String NAVpopupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")).getText();
@@ -118,7 +118,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).clear();
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("12");
-        searchAndSelectTopDropdown("status", "Validated");
+        searchAndSelectTopDropdown("Status-nav-btn", "Validated");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[3]/button[2]")).click();
 
         wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
@@ -130,7 +130,7 @@ public class OpenCSDNAVAcceptanceTest {
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
 
         try {
-            String TableNav = driver.findElement(By.xpath("//*[@id=\"product-nav-row" + rowNo + "\"]/div/clr-dg-cell[7]/span[1]w")).getText();
+            String TableNav = driver.findElement(By.id("NAV-Value-" + rowNo)).getText();
             assertTrue(TableNav.equals("12.00"));
         }catch (Error e){
             fail(e.getMessage());
