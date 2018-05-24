@@ -544,11 +544,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
+        // show waiting pop up until create order response come back.
+        this._alertsService.create('info', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-info">Creating order.<br />This may take a few moments.</td>
+                        </tr>
+                    </tbody>
+                </table>
+        `, {showCloseButton: false, overlayClickToClose: false});
+
         this._ofiOrdersService.addNewOrder(request).then((data) => {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
             const orderRef = commonHelper.pad(orderId, 8, '0');
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
             this.handleClose();
+
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');

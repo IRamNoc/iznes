@@ -86,7 +86,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         toDate: null,
     };
     filtersFromRedux: any;
-    filtersApplied = false;
     lastPage: number;
     loading = true;
 
@@ -181,6 +180,39 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     isAmConfirmModalDisplayed: boolean;
     amConfirmModal = {};
     cancelModalMessage: string;
+
+    private defaultFilters = {
+        sharename: [
+            '',
+        ],
+        isin: [
+            '',
+        ],
+        status: [
+            [this.orderStatuses[0]],
+        ],
+        type: [
+            [this.orderTypes[0]],
+        ],
+        dateType: [
+            [this.dateTypes[2]],
+        ],
+        fromDate: [
+            '',
+        ],
+        toDate: [
+            '',
+        ],
+    };
+    private defaultEmptyForm = {
+        sharename: '',
+        isin: '',
+        status: [this.orderStatuses[0]],
+        type: [this.orderTypes[0]],
+        dateType: [this.dateTypes[2]],
+        fromDate: '',
+        toDate: '',
+    };
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -340,9 +372,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(combinedSubscription);
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
 
-        this.ngRedux.dispatch(ofiClearRequestedMyOrder());
-        // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-
         this.detectChanges();
     }
 
@@ -376,29 +405,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     createForm() {
-        this.searchForm = this._fb.group({
-            sharename: [
-                '',
-            ],
-            isin: [
-                '',
-            ],
-            status: [
-                [this.orderStatuses[0]],
-            ],
-            type: [
-                [this.orderTypes[0]],
-            ],
-            dateType: [
-                [this.dateTypes[2]],
-            ],
-            fromDate: [
-                '',
-            ],
-            toDate: [
-                '',
-            ],
-        });
+        this.searchForm = this._fb.group(this.defaultFilters);
     }
 
     clearForm() {
@@ -462,7 +469,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     applyFilters() {
-        if (!this.filtersApplied && this.tabsControl[0] && this.tabsControl[0].searchForm) {
+        if (this.tabsControl[0] && this.tabsControl[0].searchForm) {
             if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.sharename !== 'undefined' ||
                 typeof this.filtersFromRedux.status !== 'undefined' || typeof this.filtersFromRedux.orderType !== 'undefined' ||
                 typeof this.filtersFromRedux.dateType !== 'undefined' || typeof this.filtersFromRedux.fromDate !== 'undefined' ||
@@ -525,14 +532,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 // remove filters from redux
                 this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: { filters: {} } });
                 this.requestSearch();
+                this.setRequested();
             }
         }
     }
 
-    setOrdersFilters() {
-        let searchForm = this.tabsControl[0].searchForm;
-        let filters = { filters: searchForm.value };
-        this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters': filters });
+    setOrdersFilters(){
+        const formValue = this.tabsControl[0].searchForm.value;
+        const haveFiltersChanged = !_.isEqual(formValue, this.defaultEmptyForm);
+
+        if(haveFiltersChanged){
+            let filters = {filters : formValue};
+            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters' : filters});
+        }
     }
 
     getInvOrdersListFromRedux(list) {
@@ -598,8 +610,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAmOrdersNewOrder(requested): void {
         if (!requested) {
-            // set flag to true, so we don't request the order again.
-            this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
+            this.setRequested();
 
             this.loading = true;
             this.getOrdersList();
@@ -609,12 +620,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getInvOrdersNewOrder(requested): void {
         if (!requested) {
-            // set flag to true, so we don't request the order again.
-            this.ngRedux.dispatch(ofiMyOrderActions.ofiSetRequestedMyOrder());
+            this.setRequested();
 
             this.loading = true;
             this.getOrdersList();
             this.detectChanges();
+        }
+    }
+
+    setRequested(){
+        if(this.isInvestorUser){
+            this.ngRedux.dispatch(ofiMyOrderActions.ofiSetRequestedMyOrder());
+        } else{
+            this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
         }
     }
 
@@ -819,9 +837,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.dataGridParams.toDate = null;
         }
 
-        if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
-            this.getOrdersList();
-        }
+        this.getOrdersList();
+
     }
 
     refresh(state: ClrDatagridStateInterface) {
@@ -903,7 +920,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getOrdersList() {
-        if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 36) {  // AM side
+        if (!this.isInvestorUser) {  // AM side
             const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -912,7 +929,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 asyncTaskPipe,
                 {},
             ));
-        } else if (this.myDetails && this.myDetails.userType && this.myDetails.userType === 46) {  // INV side
+        } else if (this.isInvestorUser) {  // INV side
             const asyncTaskPipe = this.ofiOrdersService.requestInvestorOrdersList(this.dataGridParams);
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
