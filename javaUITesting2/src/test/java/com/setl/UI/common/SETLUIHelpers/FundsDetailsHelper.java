@@ -581,20 +581,20 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).isDisplayed());
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).getText().contentEquals(NAVHeadings[0]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/span/span")).getText().contentEquals(NAVHeadings[1]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/span/span")).getText().contentEquals(NAVHeadings[2]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/span/span")).getText().contentEquals(NAVHeadings[3]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/span/span")).getText().contentEquals(NAVHeadings[4]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/span/span")).getText().contentEquals(NAVHeadings[5]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/span/span")).getText().contentEquals(NAVHeadings[6]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/span/span")).getText().contentEquals(NAVHeadings[7]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[9]/div/span/span")).getText().contentEquals(NAVHeadings[8]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/span/span")).getText().contentEquals(NAVHeadings[9]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[11]/div/span/span")).getText().contentEquals(NAVHeadings[10]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/span/span")).getText().contentEquals(NAVHeadings[11]));
+        assertTrue(isElementPresent(By.id("NAV-Title")));
+        assertTrue(driver.findElement(By.id("NAV-Title")).isDisplayed());
+        assertTrue(driver.findElement(By.id("NAV-CN-Share-Name")).getText().contentEquals(NAVHeadings[0]));
+        assertTrue(driver.findElement(By.id("NAV-CN-ISIN")).getText().contentEquals(NAVHeadings[1]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Date")).getText().contentEquals(NAVHeadings[2]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Pub-Date")).getText().contentEquals(NAVHeadings[3]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Next-Valuation-Date")).getText().contentEquals(NAVHeadings[4]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-CCY")).getText().contentEquals(NAVHeadings[5]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV")).getText().contentEquals(NAVHeadings[6]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Estimated")).getText().contentEquals(NAVHeadings[7]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Technical")).getText().contentEquals(NAVHeadings[8]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Validated")).getText().contentEquals(NAVHeadings[9]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Status")).getText().contentEquals(NAVHeadings[10]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Actions")).getText().contentEquals(NAVHeadings[11]));
 
     }
 
