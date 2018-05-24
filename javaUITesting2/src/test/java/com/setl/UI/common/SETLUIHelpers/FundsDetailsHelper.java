@@ -248,11 +248,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
+        scrollElementIntoViewById("standardform");
+        wait.until(visibilityOfElementLocated(By.id("standardform")));
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-
-        scrollElementIntoViewById("fund-submitfund-btn");
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 
