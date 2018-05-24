@@ -230,15 +230,15 @@ public class OpenCSDEntireFlowAcceptanceTest {
 //        }catch (Exception e){
 //            fail("FAILED : " + e.getMessage());
 //        }
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-
-        try {
-            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
-            assertTrue(permissionToaster.equals("Share Permissions Saved"));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
+//
+//        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+//
+//        try {
+//            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
+//            assertTrue(permissionToaster.equals("Share Permissions Saved"));
+//        } catch (Exception e) {
+//            fail(e.getMessage());
+//        }
 
 
     }
