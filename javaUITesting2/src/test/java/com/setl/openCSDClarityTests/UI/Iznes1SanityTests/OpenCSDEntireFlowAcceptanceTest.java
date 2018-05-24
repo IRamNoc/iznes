@@ -143,11 +143,6 @@ public class OpenCSDEntireFlowAcceptanceTest {
         int rowNo = 0;
         int setNav = 14;
 
-//        loginAndVerifySuccess("am", "alex01");
-//        waitForHomePageToLoad();
-//        navigateToDropdown("menu-my-products");
-//        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo)));
         wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-" + rowNo)));
