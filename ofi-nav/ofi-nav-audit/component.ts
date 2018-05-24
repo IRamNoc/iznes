@@ -43,11 +43,13 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
     gridItemsPerPage = 10;
     gridRowOffSet = 0;
     gridLastPage: number = 0;
+    navFund: any;
 
     @ViewChild('dataGrid') datagrid: Datagrid;
 
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'requestedNavAudit']) navAuditRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiNavAudit', 'navAudit']) navAuditOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
                 private route: ActivatedRoute,
@@ -76,6 +78,9 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.navAuditOb.subscribe(navAudit => {
             this.updateNavAudit(navAudit);
+        }));
+        this.subscriptionsArray.push(this.navFundOb.subscribe(navFund => {
+            this.updateNavFund(navFund);
         }));
     }
 
@@ -121,6 +126,11 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
         if (this.datagrid) this.datagrid.resize();
 
         this.redux.dispatch(setRequestedNavAudit());
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private updateNavFund(navFund): void {
+        this.navFund = navFund ? navFund[0] : undefined;
         this.changeDetectorRef.markForCheck();
     }
 
