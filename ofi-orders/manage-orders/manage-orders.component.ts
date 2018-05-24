@@ -9,22 +9,22 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {MemberSocketService} from '@setl/websocket-service';
+import { MemberSocketService } from '@setl/websocket-service';
 
-import {NgRedux, select} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
+import { NgRedux, select } from '@angular-redux/store';
+import { Unsubscribe } from 'redux';
 import {
     APP_CONFIG,
     AppConfig,
     commonHelper,
     ConfirmationService,
+    FileDownloader,
     immutableHelper,
-    SagaHelper,
     LogService,
-    FileDownloader
+    SagaHelper
 } from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/combineLatest';
@@ -32,22 +32,22 @@ import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 /* Services. */
-import {WalletNodeRequestService} from '@setl/core-req-services';
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
-import {NumberConverterService} from '@setl/utils/services/number-converter/service';
+import { WalletNodeRequestService } from '@setl/core-req-services';
+import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { NumberConverterService } from '@setl/utils/services/number-converter/service';
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
-import {ofiManageOrderActions, ofiMyOrderActions, ofiClearRequestedMyOrder} from '../../ofi-store';
+import { ofiClearRequestedMyOrder, ofiManageOrderActions, ofiMyOrderActions } from '../../ofi-store';
 /* Clarity */
-import {ClrDatagridStateInterface, Datagrid} from '@clr/angular';
+import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
-import {getOrderFigures} from '../../ofi-product/fund-share/helper/order-view-helper';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {ofiClearRequestedManageOrder} from '../../ofi-store/ofi-orders/manage-orders';
+import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-helper';
+import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 
 /* Types. */
 interface SelectedItem {
@@ -117,64 +117,51 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     orderInformation = true;
 
     orderStatuses: Array<SelectedItem> = [
-        {id: -3, text: 'All'},
-        {id: -1, text: 'Settled'},
-        {id: 0, text: 'Cancelled'}, // estimatedPrice
-        {id: 1, text: 'Initiated'},
-        {id: 2, text: 'Waiting NAV'},
-        {id: 3, text: 'Waiting Settlement'},
-        {id: 4, text: 'Unpaid'},
+        { id: -3, text: 'All' },
+        { id: -1, text: 'Settled' },
+        { id: 0, text: 'Cancelled' }, // estimatedPrice
+        { id: 1, text: 'Initiated' },
+        { id: 2, text: 'Waiting NAV' },
+        { id: 3, text: 'Waiting Settlement' },
+        { id: 4, text: 'Unpaid' },
     ];
 
     orderTypes: Array<SelectedItem> = [
-        {id: 0, text: 'All'},
-        {id: 3, text: 'Subscription'},
-        {id: 4, text: 'Redemption'},
+        { id: 0, text: 'All' },
+        { id: 3, text: 'Subscription' },
+        { id: 4, text: 'Redemption' },
     ];
 
     dateTypes: Array<SelectedItem> = [
-        {id: 'orderDate', text: 'Order Date'},
-        {id: 'cutOffDate', text: 'Cut-off Date'},
-        {id: 'navDate', text: 'NAV Date'},
-        {id: 'settlementDate', text: 'Settlement Date'},
+        { id: 'orderDate', text: 'Order Date' },
+        { id: 'cutOffDate', text: 'Cut-off Date' },
+        { id: 'navDate', text: 'NAV Date' },
+        { id: 'settlementDate', text: 'Settlement Date' },
     ];
 
     currencyList = [
-        {id: 0, text: 'EUR'},
-        {id: 1, text: 'USD'},
-        {id: 2, text: 'GBP'},
-        {id: 3, text: 'CHF'},
-        {id: 4, text: 'JPY'},
-        {id: 5, text: 'AUD'},
-        {id: 6, text: 'NOK'},
-        {id: 7, text: 'SEK'},
-        {id: 8, text: 'ZAR'},
-        {id: 9, text: 'RUB'},
-        {id: 10, text: 'SGD'},
-        {id: 11, text: 'AED'},
-        {id: 12, text: 'CNY'},
-        {id: 13, text: 'PLN'},
+        { id: 0, text: 'EUR' },
+        { id: 1, text: 'USD' },
+        { id: 2, text: 'GBP' },
+        { id: 3, text: 'CHF' },
+        { id: 4, text: 'JPY' },
+        { id: 5, text: 'AUD' },
+        { id: 6, text: 'NOK' },
+        { id: 7, text: 'SEK' },
+        { id: 8, text: 'ZAR' },
+        { id: 9, text: 'RUB' },
+        { id: 10, text: 'SGD' },
+        { id: 11, text: 'AED' },
+        { id: 12, text: 'CNY' },
+        { id: 13, text: 'PLN' },
     ];
 
     appConfig: AppConfig;
 
     @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
-
-    get isInvestorUser() {
-        return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
-    }
-
     /* Public Properties */
     public connectedWalletName = '';
-
-    /* Private Properties. */
-    private subscriptions: Array<any> = [];
-    private reduxUnsubscribe: Unsubscribe;
     ordersList: Array<any> = [];
-    private myDetails: any = {};
-    private myWallets: any = [];
-    private walletDirectory: any = [];
-    private connectedWalletId: any = 0;
     fundShare = {
         mifiidChargesOneOff: null,
         mifiidChargesOngoing: null,
@@ -188,13 +175,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         decimalization: null,
         shareClassCode: null
     };
-
     fundShareID = 0;
     fundShareListObj = {};
-
     userAssetList: Array<any> = [];
-    private requestedSearch: any;
-    private sort: { name: string, direction: string } = {name: 'dateEntered', direction: 'ASC'}; // default search.
+    isAmConfirmModalDisplayed: boolean;
+    amConfirmModal = {};
+    cancelModalMessage: string;
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -211,6 +197,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+    /* Private Properties. */
+    private subscriptions: Array<any> = [];
+    private reduxUnsubscribe: Unsubscribe;
+    private myDetails: any = {};
+    private myWallets: any = [];
+    private walletDirectory: any = [];
+    private connectedWalletId: any = 0;
+    private requestedSearch: any;
+    private sort: { name: string, direction: string } = { name: 'dateEntered', direction: 'ASC' }; // default search.
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ngRedux: NgRedux<any>,
@@ -230,10 +225,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private _ofiFundInvestService: OfiFundInvestService,
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
-                public _numberConverterService: NumberConverterService) {
+                public _numberConverterService: NumberConverterService,
+                private messagesService: MessagesService) {
 
         this.appConfig = appConfig;
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
+    }
 
+    get isInvestorUser() {
+        return Boolean(this.myDetails && this.myDetails.userType && this.myDetails.userType === 46);
     }
 
     ngOnInit() {
@@ -325,13 +326,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let combined$ = orderStream$.combineLatest(filterStream$);
 
         let combinedSubscription = combined$.subscribe(([requested, filters]) => {
-            if(_.isEmpty(filters)){
-                if(!this.isInvestorUser){
+            if (_.isEmpty(filters)) {
+                if (!this.isInvestorUser) {
                     this.getAmOrdersNewOrder(requested);
-                } else{
+                } else {
                     this.getInvOrdersNewOrder(requested);
                 }
-            } else{
+            } else {
                 this.getAmOrdersFiltersFromRedux(filters);
             }
         });
@@ -349,15 +350,26 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.resizeDataGrid();
     }
 
-    resizeDataGrid(){
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        // this.changeDetectorRef.detach();
+        //
+        /* Unsunscribe Observables. */
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+
+        this.setOrdersFilters();
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+    }
+
+    resizeDataGrid() {
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
         }
     }
 
-    detectChanges(detect?){
+    detectChanges(detect?) {
         this.changeDetectorRef.markForCheck();
-        if(detect){
+        if (detect) {
             this.changeDetectorRef.detectChanges();
         }
         this.resizeDataGrid();
@@ -389,7 +401,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    clearForm(){
+    clearForm() {
         this.searchForm.patchValue({
             sharename: '',
             isin: '',
@@ -401,19 +413,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    getLanguage(requested): void {
-        if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
+    getLanguage(language): void {
+        if (language) {
+            this.language = language;
+
+            this.configDate = {
+                ...this.configDate,
+                locale: this.language.substr(0, 2),
+            };
         }
     }
 
@@ -469,7 +476,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.sharename); // emitEvent = true cause infinite loop (make a valueChange)
                 }
                 if (typeof this.filtersFromRedux.status !== 'undefined' && this.filtersFromRedux.status !== '') {
-                    const statusId = _.get(this.filtersFromRedux, ['status', '0', 'id']) ;
+                    const statusId = _.get(this.filtersFromRedux, ['status', '0', 'id']);
                     const statusFound = _.find(this.orderStatuses, ['id', statusId]);
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
@@ -483,7 +490,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                 // Order types
                 if (typeof this.filtersFromRedux.type !== 'undefined' && this.filtersFromRedux.type !== '') {
-                    const orderTypeId = _.get(this.filtersFromRedux, ['type', '0', 'id']) ;
+                    const orderTypeId = _.get(this.filtersFromRedux, ['type', '0', 'id']);
                     const orderTypeFound = _.find(this.orderTypes, ['id', orderTypeId]);
                     if (orderTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('type').patchValue([{
@@ -495,7 +502,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.tabsControl[0].searchForm.get('type').patchValue([]);
                 }
                 if (typeof this.filtersFromRedux.dateType !== 'undefined' && this.filtersFromRedux.dateType !== '') {
-                    const dateTypeId = _.get(this.filtersFromRedux, ['dateType', '0', 'id']) ;
+                    const dateTypeId = _.get(this.filtersFromRedux, ['dateType', '0', 'id']);
                     const dateTypeFound = _.find(this.dateTypes, ['id', dateTypeId]);
                     if (dateTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('dateType').patchValue([{
@@ -516,16 +523,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
 
                 // remove filters from redux
-                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: {filters: {}}});
+                this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: { filters: {} } });
                 this.requestSearch();
             }
         }
     }
 
-    setOrdersFilters(){
+    setOrdersFilters() {
         let searchForm = this.tabsControl[0].searchForm;
-        let filters = {filters : searchForm.value};
-        this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters' : filters});
+        let filters = { filters: searchForm.value };
+        this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters': filters });
     }
 
     getInvOrdersListFromRedux(list) {
@@ -649,7 +656,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         ];
 
-        if(openedTabs.length !== 0) {
+        if (openedTabs.length !== 0) {
             this.tabsControl[0].active = openedTabs[0].active;
             this.tabsControl = this.tabsControl.concat(openedTabs.slice(1));
         }
@@ -669,15 +676,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     cancelOrder(index) {
-        let confMessage = '';
-        if (this.ordersList[index].orderType === 3) {
-            confMessage += 'Subscription ';
+        const orderId = this.getOrderRef(this.ordersList[index].orderID);
+        const message = (this.ordersList[index].orderType === 3) ? `Subscription ${orderId}` : `Redemption ${orderId}`;
+
+        if (this.isInvestorUser) {
+            this.showConfirmationAlert(message, index);
+        } else {
+            this.isAmConfirmModalDisplayed = true;
+            this.amConfirmModal = {
+                targetedOrder: this.ordersList[index],
+                title: `Cancel - ${message}`,
+                body: `Are you sure you want to cancel the ${message}?`,
+                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
+            };
         }
-        if (this.ordersList[index].orderType === 4) {
-            confMessage += 'Redemption ';
-        }
-        confMessage += this.getOrderRef(this.ordersList[index].orderID);
-        this.showConfirmationAlert(confMessage, index);
     }
 
     settleOrder(index) {
@@ -701,7 +713,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want settle the ' + confMessage + '?</span>',
-            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'info'}
+            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.sendSettleOrderRequest(index);
@@ -713,7 +725,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (!this.isInvestorUser) {
             const orderId = this.ordersList[index].orderID;
-            this.ofiOrdersService.markOrderSettle({orderId}).then((data) => {
+            this.ofiOrdersService.markOrderSettle({ orderId }).then((data) => {
                 // const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
                 // const orderRef = commonHelper.pad(orderId, 11, '0');
                 // this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
@@ -728,24 +740,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
-            {confirmText: 'Confirm', declineText: 'Back', btnClass: 'error'}
+            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'error' }
         ).subscribe((ans) => {
             if (ans.resolved) {
-                let asyncTaskPipe;
-                if (this.isInvestorUser) {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                } else {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                }
+                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
+                    orderID: this.ordersList[index].orderID,
+                });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
@@ -824,7 +828,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let filters: { [prop: string]: any[] } = {};
         if (state.filters) {
             for (const filter of state.filters) {
-                const {property, value} = <{ property: string, value: string }>filter;
+                const { property, value } = <{ property: string, value: string }>filter;
                 filters[property] = [value];
             }
         }
@@ -964,33 +968,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.router.navigateByUrl(dest);
     }
 
-
-    /**
-     * Update Wallet Connection
-     * ------------------------
-     * Updates the view depending on what wallet we're using.
-     *
-     * @return {void}
-     */
-    private updateWalletConnection(): void {
-        /* Loop over my wallets, and find the one we're connected to. */
-        let wallet;
-        if (this.connectedWalletId && Object.keys(this.myWallets).length) {
-            for (wallet in this.myWallets) {
-                if (wallet.toString() === this.connectedWalletId.toString()) {
-                    this.connectedWalletName = this.myWallets[wallet].walletName;
-                    break;
-                }
-            }
-        }
-
-        /* Detect changes. */
-        this.detectChanges();
-
-        /* Return. */
-        return;
-    }
-
     /**
      * Get Order Date
      *
@@ -1004,12 +981,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getDateTime(dateString): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').local().format('YYYY-MM-DD HH:mm');
     }
-
-    /**
-     * =============
-     * Tab Functions
-     * =============
-     */
 
     /**
      * Close Tab
@@ -1042,6 +1013,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * =============
+     * Tab Functions
+     * =============
+     */
+
+    /**
      * Set Tab Active
      * --------------
      * Sets all tabs to inactive other than the given index, this means the
@@ -1058,84 +1035,144 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges();
     }
 
-    /**
-     * ===============
-     * Alert Functions
-     * ===============
-     */
+    handleAmModalBackButtonClick() {
+        this.resetAmConfirmModalValue();
+    }
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
+     * Cancel an investor's order by an asset manager
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param targetedOrder
+     */
+    handleAmModalConfirmButtonClick(targetedOrder) {
+        const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+            orderID: targetedOrder.orderID,
+        });
+
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                this.logService.log('cancel order success', data); // success
+                this.loading = true;
+                this.getOrdersList();
+                this.sendMessageToInvestor(targetedOrder);
+                this.resetAmConfirmModalValue();
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.resetAmConfirmModalValue();
+            }),
+        );
+    }
+
+    sendMessageToInvestor(targetedOrder) {
+        const orderRef = this.getOrderRef(targetedOrder.orderID);
+        const orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
+        const amCompanyName = targetedOrder.amCompanyName;
+        let subject = '';
+        let dateFormat = '';
+
+        switch (this.language) {
+            case 'fr-Latn':
+                subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
+                dateFormat = 'DD/MM/YYYY hh:mm:ss';
+                break;
+
+            default:
+                subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
+                dateFormat = 'YYYY-MM-DD hh:mm:ss';
+                break;
+        }
+
+        const actionConfig = new MessageCancelOrderConfig();
+        actionConfig.lang = this.language;
+        actionConfig.orderType = orderType;
+        actionConfig.orderRef = orderRef;
+        actionConfig.orderDate = this.formatDate(dateFormat, new Date(targetedOrder.orderDate));
+        actionConfig.amCompanyName = amCompanyName;
+        actionConfig.cancelMessage = this.cancelModalMessage;
+
+        this.messagesService.sendMessage(
+            [targetedOrder.investorWalletID],
+            subject,
+            '',
+            actionConfig,
+        ).then((result) => {
+            this.logService.log('on message success: ', result);
+        }).catch((error) => {
+            this.logService.log('on message fail: ', error);
+        });
+    }
+
+    /**
+     * Reset values of asset manager confirm modal
+     */
+    resetAmConfirmModalValue() {
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
+        this.amConfirmModal = {};
+    }
+
+    /**
+     * Format Date
+     * -----------
+     * Formats a date to a string.
+     * YYYY - 4 character year
+     * YY - 2 character year
+     * MM - 2 character month
+     * DD - 2 character date
+     * hh - 2 character hour (24 hour)
+     * hH - 2 character hour (12 hour)
+     * mm - 2 character minute
+     * ss - 2 character seconds
+     *
+     * @param  {string} formatString [description]
+     * @param  {Date}   dateObj      [description]
+     * @return {string}              [description]
+     */
+    private formatDate(formatString: string, dateObj: Date): string {
+        if (!formatString || !dateObj) {
+            return '';
+        }
+
+        const numPad = (number) => {
+            return number < 10 ? '0' + number : number;
+        };
+
+        return formatString
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', numPad(dateObj.getDate().toString()))
+            .replace('hh', numPad(dateObj.getHours()))
+            .replace('hH', numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', numPad(dateObj.getMinutes()))
+            .replace('ss', numPad(dateObj.getSeconds()));
+    }
+
+    /**
+     * Update Wallet Connection
+     * ------------------------
+     * Updates the view depending on what wallet we're using.
+     *
      * @return {void}
      */
-    private showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    private updateWalletConnection(): void {
+        /* Loop over my wallets, and find the one we're connected to. */
+        let wallet;
+        if (this.connectedWalletId && Object.keys(this.myWallets).length) {
+            for (wallet in this.myWallets) {
+                if (wallet.toString() === this.connectedWalletId.toString()) {
+                    this.connectedWalletName = this.myWallets[wallet].walletName;
+                    break;
+                }
+            }
+        }
+
+        /* Detect changes. */
+        this.detectChanges();
+
+        /* Return. */
+        return;
     }
-
-    /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    private showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        // this.changeDetectorRef.detach();
-        //
-        /* Unsunscribe Observables. */
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
-
-        this.setOrdersFilters();
-        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
-    }
-
 }
