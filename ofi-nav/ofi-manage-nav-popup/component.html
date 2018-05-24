@@ -32,8 +32,8 @@
 
                 <div class="form-group col-sm-12" *ngIf="!isDeleteMode()">
                     <label class="control-label" for="Set-nav-field" mltag="txt_nav">NAV</label>
-                    <input id="Set-nav-field" type="text" name="nav" (blur)="transformAndValidate(navForm.controls['price'])" formControlName="price">
-                    <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('pattern')">
+                    <input id="Set-nav-field" type="text" name="nav" formControlName="price">
+                    <div class="field-error" *ngIf="navForm.controls['price'].dirty && navForm.controls['price'].hasError('invalidNumber')">
                         <span>
                             Incorrect value
                         </span>
