@@ -31,6 +31,7 @@ import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { ToasterService } from 'angular2-toaster';
 /* Services. */
 import { WalletNodeRequestService } from '@setl/core-req-services';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
@@ -41,7 +42,7 @@ import { NumberConverterService } from '@setl/utils/services/number-converter/se
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
-import { ofiClearRequestedMyOrder, ofiManageOrderActions, ofiMyOrderActions } from '../../ofi-store';
+import { ofiManageOrderActions, ofiMyOrderActions } from '../../ofi-store';
 /* Clarity */
 import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
@@ -180,7 +181,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     isAmConfirmModalDisplayed: boolean;
     amConfirmModal = {};
     cancelModalMessage: string;
-
+    /* Observables. */
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
+    @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersOb;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListOb;
+    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
+    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
+    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
+    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     private defaultFilters = {
         sharename: [
             '',
@@ -213,22 +228,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         fromDate: '',
         toDate: '',
     };
-
-    /* Observables. */
-    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
-    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
-    @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersOb;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListOb;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
-    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
-    @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
-    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
     /* Private Properties. */
     private subscriptions: Array<any> = [];
     private reduxUnsubscribe: Unsubscribe;
@@ -258,7 +257,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
-                private messagesService: MessagesService) {
+                private messagesService: MessagesService,
+                private toasterService: ToasterService,) {
 
         this.appConfig = appConfig;
         this.isAmConfirmModalDisplayed = false;
@@ -537,13 +537,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    setOrdersFilters(){
+    setOrdersFilters() {
         const formValue = this.tabsControl[0].searchForm.value;
         const haveFiltersChanged = !_.isEqual(formValue, this.defaultEmptyForm);
 
-        if(haveFiltersChanged){
-            let filters = {filters : formValue};
-            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters' : filters});
+        if (haveFiltersChanged) {
+            let filters = { filters: formValue };
+            this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters': filters });
         }
     }
 
@@ -628,10 +628,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    setRequested(){
-        if(this.isInvestorUser){
+    setRequested() {
+        if (this.isInvestorUser) {
             this.ngRedux.dispatch(ofiMyOrderActions.ofiSetRequestedMyOrder());
-        } else{
+        } else {
             this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
         }
     }
@@ -1084,18 +1084,30 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     sendMessageToInvestor(targetedOrder) {
         const orderRef = this.getOrderRef(targetedOrder.orderID);
-        const orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
         const amCompanyName = targetedOrder.amCompanyName;
+        let orderType = '';
         let subject = '';
         let dateFormat = '';
+        const toasterMessages = {
+            success: {
+                'fr-Latn': `Le message a été envoyé avec succès à ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+                'en-Latn': `The message has been successfully sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+            fail: {
+                'fr-Latn': `L'envoi du message à ${targetedOrder.firstName} ${targetedOrder.lastName} a échoué`,
+                'en-Latn': `The message has failed to be sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+        };
 
         switch (this.language) {
             case 'fr-Latn':
+                orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
                 subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
                 dateFormat = 'DD/MM/YYYY hh:mm:ss';
                 break;
 
             default:
+                orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
                 subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
                 dateFormat = 'YYYY-MM-DD hh:mm:ss';
                 break;
@@ -1116,8 +1128,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             actionConfig,
         ).then((result) => {
             this.logService.log('on message success: ', result);
+            this.toasterService.pop('success', toasterMessages.success[this.language]);
         }).catch((error) => {
             this.logService.log('on message fail: ', error);
+            this.toasterService.pop('error', toasterMessages.fail[this.language]);
         });
     }
 
