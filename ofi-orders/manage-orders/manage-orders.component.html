@@ -60,11 +60,11 @@
                             </label>
                             <div>
                                 <ng-select id="orders-search-status" class="fluid-width"
-                                    [active]="[orderStatuses[0]]"
-                                    [items]="orderStatuses"
-                                    [formControl]="tabsControl[0].searchForm.controls['status']"
-                                    placeholder="Status"
-                                    mltag="txt_status">
+                                           [active]="[orderStatuses[0]]"
+                                           [items]="orderStatuses"
+                                           [formControl]="tabsControl[0].searchForm.controls['status']"
+                                           placeholder="Status"
+                                           mltag="txt_status">
                                 </ng-select>
                             </div>
                         </div>
@@ -74,11 +74,11 @@
                             </label>
                             <div>
                                 <ng-select id="orders-search-type" class="fluid-width"
-                                    [active]="[orderTypes[0]]"    
-                                    [items]="orderTypes"
-                                    [formControl]="tabsControl[0].searchForm.controls['type']"
-                                    placeholder="Type"
-                                    mltag="txt_type">
+                                           [active]="[orderTypes[0]]"
+                                           [items]="orderTypes"
+                                           [formControl]="tabsControl[0].searchForm.controls['type']"
+                                           placeholder="Type"
+                                           mltag="txt_type">
                                 </ng-select>
                             </div>
                         </div>
@@ -105,12 +105,12 @@
                                         </label>
                                         <div>
                                             <ng-select id="orders-search-date-types" class="fluid-width"
-                                                [active]="[dateTypes[2]]"
-                                                [items]="dateTypes"
-                                                [allowClear]="false"
-                                                [formControl]="tabsControl[0].searchForm.controls['dateType']"
-                                                placeholder="Type"
-                                                mltag="txt_type">
+                                                       [active]="[dateTypes[2]]"
+                                                       [items]="dateTypes"
+                                                       [allowClear]="false"
+                                                       [formControl]="tabsControl[0].searchForm.controls['dateType']"
+                                                       placeholder="Type"
+                                                       mltag="txt_type">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -143,7 +143,8 @@
                                     <i class="fa fa-trash"></i> <span>Clear filters</span>
                                 </button>
                                 <button class="btn btn-success nomargin" (click)="exportOrders()">
-                                    <i class="fa fa-download"></i> <span mltag="txt_exportorderscsv">Export Orders CSV</span>
+                                    <i class="fa fa-download"></i>
+                                    <span mltag="txt_exportorderscsv">Export Orders CSV</span>
                                 </button>
                             </div>
                         </div>
@@ -816,5 +817,53 @@
             </div>
         </div>
     </ng-template>
-
 </div>
+
+<!-- Asset manager order cancel modal -->
+<clr-modal [(clrModalOpen)]="isAmConfirmModalDisplayed" [clrModalClosable]="false">
+    <h3 class="modal-title">{{amConfirmModal.title}}</h3>
+
+    <div class="modal-body">
+        <div class="jaspero__dialog-icon">
+            <div class="f-modal-alert">
+                <div class="f-modal-icon f-modal-info-error scaleWarning">
+                    <span class="f-modal-body pulseWarningInsRed"></span>
+                    <span class="f-modal-dot pulseWarningInsRed"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="jaspero__dialog-content" [innerHtml]="amConfirmModal.body"></div>
+
+        <form>
+            <section class="form-block">
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <textarea id="cancelModalTextArea"
+                                  style="min-height: 80px"
+                                  placeholder="{{amConfirmModal.placeholder}}"
+                                  [(ngModel)]="cancelModalMessage"
+                                  [ngModelOptions]="{standalone: true}">
+                        </textarea>
+                    </div>
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button id='cancelModalBackButton'
+                type="button"
+                class="btn btn-outline"
+                (click)="handleAmModalBackButtonClick()">
+            Back
+        </button>
+
+        <button id='cancelModalConfirmButton'
+                type="button"
+                class="btn btn-danger cancel-modal-confirm-btn"
+                (click)="handleAmModalConfirmButtonClick(amConfirmModal.targetedOrder)">
+            Confirm
+        </button>
+    </div>
+</clr-modal>
