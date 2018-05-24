@@ -61,6 +61,70 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("Needs to be revisited in the future")
+    public void shouldFillKYCAndGrantFundAccess() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops005@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops005@setl.io", "FundFlow", "Testing");
+        fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("yes");
+        logout();
+
+        //Login as AM and accept KYC
+        loginAndVerifySuccess("am", "alex01");
+        navigateToKYCPage();
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/h2")));
+        driver.findElement(By.xpath("//*[@id=\"Waiting-Expandable-KYC\"]/i")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("Waiting-Status-KYC-0")));
+        driver.findElement(By.xpath("//*[@id=\"Waiting-Status-KYC-0\"]/a")).click();
+
+//        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
+//        String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
+//        System.out.println(reviewedByColumn);
+//        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
+//        System.out.println(clientRowNo);
+//        driver.findElement(By.id("AllClients-Status-KYC-" + clientRowNo)).click();
+//        wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
+        driver.findElement(By.id("checkbox")).click();
+
+        try{
+            wait.until(elementToBeClickable(By.id("submitButton")));
+            driver.findElement(By.id("submitButton")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        wait.until(visibilityOfElementLocated(By.id("am-fund-holdings-tab")));
+//        scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]");
+//        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+//        String isin = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getAttribute("value");
+//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/div/label")).click();
+//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
+//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
+//        try{
+//            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+//            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+//            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
+//        }catch (Exception e){
+//            fail(e.getMessage());
+//        }
+//
+//        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+//
+//        try {
+//            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
+//            assertTrue(permissionToaster.equals("Share Permissions Saved"));
+//        } catch (Exception e) {
+//            fail(e.getMessage());
+//        }
+
+    }
+
+    @Test
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -239,82 +303,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldTakeAMToFundAuthPageAfterAcceptingKYC() throws IOException, InterruptedException {
-
-    }
-
-    @Test
-    public void shouldFillKYCAndGrantFundAccess() throws IOException, InterruptedException {
-
-        //Fill out KYC process as test ops 004
-        loginAndVerifySuccessKYC("testops005@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops005@setl.io", "FundFlow", "Testing");
-        fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
-        selectOptionAndSubmitKYC("yes");
-        logout();
-
-        //Login as AM and accept KYC
-        loginAndVerifySuccess("am", "alex01");
-        navigateToKYCPage();
-
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/h2")));
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/i")).click();
-
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
-        String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
-        System.out.println(reviewedByColumn);
-        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
-        System.out.println(clientRowNo);
-        driver.findElement(By.id("AllClients-Status-KYC-" + clientRowNo)).click();
-        wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
-
-        driver.findElement(By.id("Asdasdasda")).getAttribute("value");
-
-
-        driver.findElement(By.id("checkbox")).click();
-
-        try{
-            wait.until(elementToBeClickable(By.id("submitButton")));
-            driver.findElement(By.id("submitButton")).click();
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/h2")));
-        try{
-            String grantFundTitle = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/h2")).getText();
-            assertTrue(grantFundTitle.equals("Funds' Share Access Authorisation"));
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-
-        scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]");
-        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
-
-        driver.findElement(By.xpath("//*[@id=\"166110-access\"]")).click();
-        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
-
-        try{
-            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-
-        try {
-            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
-            assertTrue(permissionToaster.equals("Share Permissions Saved"));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
 
     }
 
