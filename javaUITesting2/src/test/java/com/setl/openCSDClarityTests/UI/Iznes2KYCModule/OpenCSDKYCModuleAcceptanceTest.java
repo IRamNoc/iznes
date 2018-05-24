@@ -50,7 +50,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000000);
+    public Timeout globalTimeout = new Timeout(45000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -172,6 +172,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
         loginKYCConfirmationScreen("testops005@setl.io", "asdasd");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -245,8 +246,8 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldFillKYCAndGrantFundAccess() throws IOException, InterruptedException {
 
         //Fill out KYC process as test ops 004
-        loginAndVerifySuccessKYC("testops004@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops004@setl.io", "FundFlow", "Testing");
+        loginAndVerifySuccessKYC("testops005@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops005@setl.io", "FundFlow", "Testing");
         fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");
@@ -269,6 +270,9 @@ public class OpenCSDKYCModuleAcceptanceTest {
         System.out.println(clientRowNo);
         driver.findElement(By.id("AllClients-Status-KYC-" + clientRowNo)).click();
         wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
+
+        driver.findElement(By.id("Asdasdasda")).getAttribute("value");
+
 
         driver.findElement(By.id("checkbox")).click();
 
