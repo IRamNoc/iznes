@@ -59,8 +59,8 @@ public class LoginAndNavigationHelper {
     public static void navigateToPageByID(String pageID) {
        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
        try {
-           wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
-           wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
+           wait.until(visibilityOfElementLocated(By.id(pageID)));
+           wait.until(elementToBeClickable(By.id(pageID)));
            WebElement page = driver.findElement(By.id(pageID));
            page.click();
        }catch (WebDriverException wde) {
