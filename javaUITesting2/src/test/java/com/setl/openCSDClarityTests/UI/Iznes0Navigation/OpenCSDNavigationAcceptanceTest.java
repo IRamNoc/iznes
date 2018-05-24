@@ -1,6 +1,5 @@
-package com.setl.openCSDClarityTests.UI.Navigation;
+package com.setl.openCSDClarityTests.UI.Iznes0Navigation;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -11,7 +10,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.IOException;
@@ -51,7 +49,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(55000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -88,19 +86,21 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
-    public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        navigateToPageByID("menu-management-company");
-        verifyCorrectPage("Management Company");
-    }
-
-    @Test
     @Ignore("Page removed for now")
     public void shouldNavigateToSICAV() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-sicav");
         verifyCorrectPage("My Account");
+    }
+
+    @Test
+    public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
+        //test thread.sleep to see if not having time to connect to the wallet node is causing issues.
+        Thread.sleep(45000);
+        loginAndVerifySuccess("am", "alex01");
+        navigateToPageByID("menu-management-company");
+        verifyCorrectPage("Management Company");
     }
 
     @Test

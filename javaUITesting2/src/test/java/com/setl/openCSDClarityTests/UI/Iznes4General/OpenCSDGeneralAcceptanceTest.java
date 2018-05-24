@@ -1,6 +1,5 @@
-package com.setl.openCSDClarityTests.UI.General;
+package com.setl.openCSDClarityTests.UI.Iznes4General;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -460,13 +459,15 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectManageUserAccountDropdown() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[2]/span/i[2]"));
+        WebElement accountTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div"));
         try {
             wait.until(visibilityOf(accountTypeCaret));
             wait.until(elementToBeClickable(accountTypeCaret));
             accountTypeCaret.click();
 
-            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a")).click();
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a/div")));
+            wait.until(elementToBeClickable(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a/div")));
+            driver.findElement(By.xpath("//*[@id=\"new-user-account-select\"]/div/div[3]/ul/li[1]/div/a/div")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
@@ -474,13 +475,16 @@ public class OpenCSDGeneralAcceptanceTest {
 
     public static void selectManageUserUserDropdown() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[2]/span/i[2]"));
+        WebElement userTypeCaret = driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div"));
 
         try {
             wait.until(visibilityOf(userTypeCaret));
             wait.until(elementToBeClickable(userTypeCaret));
             userTypeCaret.click();
-            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[8]/div/a")).click();
+
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")));
+            wait.until(elementToBeClickable(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")));
+            driver.findElement(By.xpath("//*[@id=\"new-user-usertype-select\"]/div/div[3]/ul/li[1]/div/a")).click();
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
