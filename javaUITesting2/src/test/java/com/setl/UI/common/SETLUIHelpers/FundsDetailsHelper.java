@@ -600,6 +600,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validatePageLayout() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
         assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
@@ -611,6 +612,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        scrollElementIntoViewById("new-share-btn");
+        wait.until(visibilityOfElementLocated(By.xpath("new-share-btn")));
+        wait.until(elementToBeClickable(By.xpath("new-share-btn")));
         assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));

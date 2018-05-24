@@ -195,7 +195,7 @@ public class OpenCSDNAVAcceptanceTest {
         //Check along row that Add New Nav button exists using QA_Id, does not interact with button, just checks for buttons is displayed
         assertTrue(driver.findElement(By.id("Btn-AddNewNAV-0")).isDisplayed());
         String NavDate = driver.findElement(By.id("NAV-NAV-Date-0")).getText();
-        assertTrue(NavDate.equals(uShareDetails[0]));
+        assertTrue(NavDate.equals(getTodayDate()));
     }
 
     @Test
