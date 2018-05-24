@@ -50,37 +50,37 @@
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column class="col-fundsharename">
+                <clr-dg-column [clrDgField]="'fundShareName'" class="col-fundsharename">
                     <span id="NAV-CN-Share-Name" mltag="txt_sharename">Share name</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'isin'">
                     <span id="NAV-CN-ISIN" mltag="txt_isin">ISIN</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-date">
+                <clr-dg-column [clrDgField]="'navDate'" class="col-date">
                     <span id="NAV-CN-NAV-Date" mltag="txt_navdate">NAV Date</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-date">
+                <clr-dg-column [clrDgField]="'navPubDate'" class="col-date">
                     <span id="NAV-CN-NAV-Pub-Date" mltag="txt_navpubdate">NAV<br />Pub Date</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-date">
+                <clr-dg-column [clrDgField]="'nextValuationDate'" class="col-date">
                     <span id="NAV-CN-Next-Valuation-Date" mltag="txt_navnextvaluation">Next Valuation Date</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-currency">
+                <clr-dg-column [clrDgField]="'shareId'" class="col-currency">
                     <span id="NAV-CN-NAV-CCY" mltag="txt_navccy">NAV CCY</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'currency'">
                     <span id="NAV-CN-NAV" mltag="txt_nav">NAV</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'navEstimated'">
                     <span id="NAV-CN-NAV-Estimated" mltag="txt_navestimated">NAV<br />Estimated</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'navTechnical'">
                     <span id="NAV-CN-NAV-Technical" mltag="txt_navtechnical">NAV<br />Technical</span>
                 </clr-dg-column>
-                <clr-dg-column>
+                <clr-dg-column [clrDgField]="'navValidated'">
                     <span id="NAV-CN-NAV-Validated" mltag="txt_navvalidated">NAV<br />Validated</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-status">
+                <clr-dg-column [clrDgField]="'status'" class="col-status">
                     <span id="NAV-CN-Status" mltag="txt_status">Status</span>
                 </clr-dg-column>
                 <clr-dg-column class="actions">
