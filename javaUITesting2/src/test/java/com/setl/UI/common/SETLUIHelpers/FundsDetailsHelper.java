@@ -613,8 +613,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
         scrollElementIntoViewById("new-share-btn");
-        wait.until(visibilityOfElementLocated(By.xpath("new-share-btn")));
-        wait.until(elementToBeClickable(By.xpath("new-share-btn")));
+        wait.until(visibilityOfElementLocated(By.id("new-share-btn")));
+        wait.until(elementToBeClickable(By.id("new-share-btn")));
         assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
