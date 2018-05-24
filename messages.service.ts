@@ -61,13 +61,11 @@ export class MessagesService {
      */
     public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | MessageCancelOrderConfig = null) {
         const bodyObj = {
-            // general: btoa(bodyStr),
             general: commonHelper.b64EncodeUnicode(bodyStr),
-            action: JSON.stringify(action)
+            action: JSON.stringify(action),
         };
 
         const body = JSON.stringify(bodyObj);
-        // const subject = btoa(subjectStr);
         const subject = commonHelper.b64EncodeUnicode(subjectStr);
 
         const recipients = {};
