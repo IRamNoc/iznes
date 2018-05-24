@@ -133,6 +133,10 @@
 
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'amCancelOrder'">
+                <setl-message-cancel-order [config]="currentMessage.action"></setl-message-cancel-order>
+            </p>
         </div>
 
         <div class="message_view_menu">
