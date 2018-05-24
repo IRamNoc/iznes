@@ -102,7 +102,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         createUserAndVerifySuccess(userDetails[0], "testops082@setl.io", "asdasd");
         logout();
         clickForgottenPassword("testops082@setl.io");
-        LoginToOutlook("test@setl.io", "Sphericals1057!");
+        //LoginToOutlook("test@setl.io", "Sphericals1057!");
         //Manually assert that email has been received
     }
 

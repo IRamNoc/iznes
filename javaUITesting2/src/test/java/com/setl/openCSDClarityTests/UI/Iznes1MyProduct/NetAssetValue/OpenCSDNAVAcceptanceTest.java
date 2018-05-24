@@ -136,4 +136,65 @@ public class OpenCSDNAVAcceptanceTest {
             fail(e.getMessage());
         }
     }
+
+    @Test
+    public void shouldReceiveShareDataInNAVTableTG205() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        selectAddUmbrellaFund();
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        String [] uFundDetails = generateRandomFundsDetails();
+        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        waitForNewShareButton();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(uFundDetails[0]);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        shareCreationKeyFacts(uShareDetails[0],uIsin[0]);
+        shareCreationCharacteristics();
+        shareCreationCalendar();
+        shareCreationFees();
+        shareCreationProfile();
+        shareCreationSubmit();
+        navigateToNAVPageFromFunds();
+        //Wait Added to allow data grid to load on NAV page (Takes about 1-2 seconds)
+        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        //Once data grid is loaded, select search field via QA_Id and send keys (type in) from uShareDetails the name of the share
+        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
+        //Wait added to make sure the second row become invisible = search completed, will select via QA_Id
+        wait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
+        //Find NAV via share name using QA_Id
+        String shareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
+        //Check row to make sure share name matches share created from uShareDetails
+        assertTrue(shareName.equals(uShareDetails[0]));
+        //Locate ISIN number via QA_Id
+        String ISIN = driver.findElement(By.id("NAV-ISIN-0")).getText();
+        //Check column for ISIN and check TRUE that ISIN matches what was created in uIsin method during share creation
+        assertTrue(ISIN.equals(uIsin[0]));
+        //Check along row that Add New Nav button exists using QA_Id, does not interact with button, just checks for buttons is displayed
+        assertTrue(driver.findElement(By.id("Btn-AddNewNAV-0")).isDisplayed());
+        String NavDate = driver.findElement(By.id("NAV-NAV-Date-0")).getText();
+        assertTrue(NavDate.equals(uShareDetails[0]));
+    }
 }
