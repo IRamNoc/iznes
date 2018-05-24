@@ -499,6 +499,7 @@ export const menuSpec: MenuSpec = {
             },
         ],
         system_admin: [
+            home,
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
