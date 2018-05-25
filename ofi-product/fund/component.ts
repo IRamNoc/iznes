@@ -1,19 +1,19 @@
-import {Component, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Location} from '@angular/common';
-import {Subject} from 'rxjs/Subject';
+import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import * as _ from 'lodash';
-import {NgRedux, select} from '@angular-redux/store';
-import {ToasterService} from 'angular2-toaster';
+import { NgRedux, select } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
 
-import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
-import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
-import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
-import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {OfiCurrenciesService} from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -142,7 +142,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
         OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
-        OfiCurrenciesService.defaultRequestCurrencyList(this.ofiCurrenciesService, this.ngRedux);
+        this.ofiCurrenciesService.getCurrencyList();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -182,42 +182,42 @@ export class FundComponent implements OnInit, OnDestroy {
             });
 
         this.umbrellaForm = fb.group({
-            'umbrellaFundName': {value: 'nem', disabled: true},
-            'umbrellaLei': {value: 'lei', disabled: true},
-            'umbrellaFundDomicile': {value: 'dom', disabled: true},
+            'umbrellaFundName': { value: 'nem', disabled: true },
+            'umbrellaLei': { value: 'lei', disabled: true },
+            'umbrellaFundDomicile': { value: 'dom', disabled: true },
         });
 
         this.umbrellaEditForm = fb.group({
-            'umbrellaEditLei': {value: '', disabled: true},
-            'umbrellaEditFundDomicile': {value: '', disabled: true},
-            'auditorID': {value: '', disabled: true},
-            'centralisingAgentID': {value: '', disabled: true},
-            'custodianBankID': {value: '', disabled: true},
-            'delegatedManagementCompanyID': {value: '', disabled: true},
-            'directors': {value: '', disabled: true},
-            'domicile': {value: '', disabled: true},
-            'fundAdministratorID': {value: '', disabled: true},
-            'giin': {value: '', disabled: true},
-            'investmentAdvisorID': {value: '', disabled: true},
-            'legalAdvisorID': {value: '', disabled: true},
-            'legalEntityIdentifier': {value: '', disabled: true},
-            'managementCompanyID': {value: '', disabled: true},
-            'payingAgentID': {value: '', disabled: true},
-            'principlePromoterID': {value: '', disabled: true},
-            'registerOffice': {value: '', disabled: true},
-            'registerOfficeAddress': {value: '', disabled: true},
-            'taxAuditorID': {value: '', disabled: true},
-            'transferAgentID': {value: '', disabled: true},
-            'umbrellaFundCreationDate': {value: '', disabled: true},
-            'umbrellaFundID': {value: '', disabled: true},
-            'umbrellaFundName': {value: '', disabled: true},
-            'internalReference': {value: '', disabled: true},
-            'additionnalNotes': {value: '', disabled: true},
+            'umbrellaEditLei': { value: '', disabled: true },
+            'umbrellaEditFundDomicile': { value: '', disabled: true },
+            'auditorID': { value: '', disabled: true },
+            'centralisingAgentID': { value: '', disabled: true },
+            'custodianBankID': { value: '', disabled: true },
+            'delegatedManagementCompanyID': { value: '', disabled: true },
+            'directors': { value: '', disabled: true },
+            'domicile': { value: '', disabled: true },
+            'fundAdministratorID': { value: '', disabled: true },
+            'giin': { value: '', disabled: true },
+            'investmentAdvisorID': { value: '', disabled: true },
+            'legalAdvisorID': { value: '', disabled: true },
+            'legalEntityIdentifier': { value: '', disabled: true },
+            'managementCompanyID': { value: '', disabled: true },
+            'payingAgentID': { value: '', disabled: true },
+            'principlePromoterID': { value: '', disabled: true },
+            'registerOffice': { value: '', disabled: true },
+            'registerOfficeAddress': { value: '', disabled: true },
+            'taxAuditorID': { value: '', disabled: true },
+            'transferAgentID': { value: '', disabled: true },
+            'umbrellaFundCreationDate': { value: '', disabled: true },
+            'umbrellaFundID': { value: '', disabled: true },
+            'umbrellaFundName': { value: '', disabled: true },
+            'internalReference': { value: '', disabled: true },
+            'additionnalNotes': { value: '', disabled: true },
 
         });
 
         this.fundForm = fb.group({
-            'isFundStructure': {value: '', disabled: true},
+            'isFundStructure': { value: '', disabled: true },
             'fundName': [null, Validators.compose([Validators.required, this.validators.alphanumeric])],
             'legalEntityIdentifier': [null, this.validators.lei],
             'registerOffice': [null, Validators.compose([this.validators.alphanumeric])],
@@ -486,7 +486,7 @@ export class FundComponent implements OnInit, OnDestroy {
             return [];
         }
 
-        const item = _.find(list, {id: value});
+        const item = _.find(list, { id: value });
         if (!item) {
             return [];
         }
