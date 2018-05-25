@@ -5,6 +5,7 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
@@ -242,16 +243,11 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplayNoUmbrellaFundWhenNoUmbrellaFundIsSelected() throws InterruptedException, IOException {
+    public void shouldDisplayNoUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        selectAddUmbrellaFund();
-        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0],"16616758475934857441");
-        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
-        submitUmbrellaFund();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-fund-btn")));
@@ -260,7 +256,7 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundName = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText();
+        String fundName = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")).getText();
         assertTrue(fundName.equals("No Umbrella Fund"));
     }
 
@@ -323,6 +319,27 @@ public class OpenCSD2FundsAcceptanceTest {
     @Test
     public void shouldQueryDatabaseForFunds() throws InterruptedException, IOException {
 
+    }
+
+    @Test
+    @Ignore("WAITING FOR ORDERING TO BE FIXED")
+    public void shouldDisplayCorrectHeadingIfUmbrellaFundIsNotSelectedTG445() throws InterruptedException, IOException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        String fundCounts = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
+        int fundCounter = Integer.parseInt(fundCounts.replaceAll("[\\D]", ""));
+        String [] uFundDetails = generateRandomFundsDetails();
+        int fundCount = fundCounter - 1;
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658999");
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + "0" + "-umbrellaFundName")));
+        driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")));
+        String umbFund = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText();
+        assertTrue(umbFund.equals("No Umbrella Fund"));
     }
 
     @Test
