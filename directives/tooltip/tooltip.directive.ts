@@ -49,7 +49,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('mouseenter') onMouseEnter(): void {
         this.checkIfTooltipExists();
         if (this.parentDiv) {
-            this.parentDiv.addEventListener( 'scroll', (event) => {
+            this.parentDiv.addEventListener('scroll', (event) => {
                 this.getScroll(event);
             }, false);
             if (this.scrollTop === 0) {
@@ -411,7 +411,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             g = d.getElementsByTagName('body')[0],
             x = w.innerWidth  || e.clientWidth  || g.clientWidth,
             y = w.innerHeight || e.clientHeight || g.clientHeight;
-        return {width: x, height: y};
+        return { width: x, height: y };
     }
 
     getScroll(event): void {
@@ -422,7 +422,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     getOffset(el) {
         let _x = 0;
         let _y = 0;
-        while ( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
             _x += el.offsetLeft - el.scrollLeft;
             _y += el.offsetTop - el.scrollTop;
             el = el.offsetParent;
@@ -461,7 +461,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for (let i = 0; i < length; i++)  {
-            text += possible.charAt(Math.floor(Math.random() * possible.length))
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
     }
@@ -469,7 +469,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     cleanAll(): void {
         this.parentDiv.removeEventListener( 'scroll', (event) => {
             this.getScroll(event);
-        }, true );
+        }, true);
         // remove div tooltip
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             this.divTooltip.remove();
