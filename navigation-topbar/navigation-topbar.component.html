@@ -85,11 +85,16 @@
                 </a>
                 <div class="dropdown-menu" style="margin-right: 10px">
                     <a clrDropdownItem (click)="toggleSidebar.emit($event)" id="dropdown-btn-lang">{{'Language' | translate}}</a>
-                    <a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout">{{'Log
-                        out' | translate}}
-                    </a>
+                    <!--<a [routerLink]="['/logout']" clrDropdownItem id="dropdown-btn-logout">{{'Log out' | translate}}</a>-->
                 </div>
             </clr-dropdown>
+
+            <div class="dropdown">
+                <a [routerLink]="['/logout']" class="nav-button dropdown-toggle messages-icon">
+                    <clr-icon shape="logout" class="icon"></clr-icon>
+                    <p>{{'Log out' | translate}}</p>
+                </a>
+            </div>
         </div>
 
         <button class="header-overflow-trigger" type="button">
