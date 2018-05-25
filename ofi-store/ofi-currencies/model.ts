@@ -6,6 +6,6 @@ export interface CurrencyType {
 }
 
 export interface CurrencyState {
-    isRequested: boolean;
+    loaded: boolean;
     currencies: List<CurrencyType>;
 }
