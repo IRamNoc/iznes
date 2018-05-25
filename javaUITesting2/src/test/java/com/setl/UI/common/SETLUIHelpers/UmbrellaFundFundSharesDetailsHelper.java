@@ -17,12 +17,40 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAt
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class UmbrellaFundFundSharesDetailsHelper {
+
+    public static void createShare(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        waitForNewShareButton();
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+        shareCreationKeyFacts(shareDetails,isinDetails);
+        shareCreationCharacteristics();
+        shareCreationCalendar();
+        shareCreationFees();
+        shareCreationProfile();
+        shareCreationSubmit();
+    }
 
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
