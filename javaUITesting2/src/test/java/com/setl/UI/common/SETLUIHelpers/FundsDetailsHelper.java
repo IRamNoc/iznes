@@ -68,7 +68,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        String LEI = generateRandomLEI();
         driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
@@ -78,6 +77,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
+    }
+
+    public static void fillCertainUmbrellaDetails(String fundName, String lei, String regOffice, String regAddress, String managementComp, String dateSelected, String custodian, String fundAdmin ) throws InterruptedException {
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
+        driver.findElement(By.id("uf_registerOffice")).sendKeys(regOffice);
+        driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(regAddress);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(dateSelected);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
+
+        searchAndSelectTopDropdown("uf_managementCompany", managementComp);
+        searchAndSelectTopDropdown("uf_custodian", custodian);
+        searchAndSelectTopDropdown("uf_fundAdministrator", fundAdmin);
     }
 
     private static String generateRandomLEI() {

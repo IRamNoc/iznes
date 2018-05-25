@@ -190,5 +190,10 @@ public class OpenCSDNavigationAcceptanceTest {
         assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]/span")).getText().equals("My information"));
     }
 
-
+    @Test
+    public void shouldNavigateToSubPortfolioTG278() throws IOException, InterruptedException {
+        loginAndVerifySuccess("investor", "alex01");
+        navigateToPageByID("menu-sub-portfolio");
+        verifyCorrectPage("Sub-portfolio");
+    }
 }

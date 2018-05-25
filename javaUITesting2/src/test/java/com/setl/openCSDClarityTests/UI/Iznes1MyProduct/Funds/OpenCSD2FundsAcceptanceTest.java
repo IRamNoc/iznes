@@ -3,6 +3,7 @@ package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -219,7 +220,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelected() throws InterruptedException, IOException {
+    public void shouldDisplayUmbrellaFundInfoWhenUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
@@ -244,6 +245,54 @@ public class OpenCSD2FundsAcceptanceTest {
 
     @Test
     public void shouldDisplayNoUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", "16616758475934859999", "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+
+        wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
+        wait.until(elementToBeClickable(By.id("new-fund-btn")));
+        driver.findElement(By.id("new-fund-btn")).click();
+        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", uFundDetails[0]);
+        wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
+        driver.findElement(By.id("fund-submitUmbrella-btn")).click();
+        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText());
+        String fundName = split(fundNameText, " ");
+        assertTrue(fundName.equals(uFundDetails[0] + "TG445"));
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[2]/div[1]/div/a/i")).click();
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/i")).click();
+        wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
+
+        String LEIActual = driver.findElement(By.id("umbrellaEditLei")).getAttribute("value");
+        assertTrue(LEIActual.equals("16616758475934859999"));
+
+        String DomicileActual = driver.findElement(By.id("umbrellaEditFundDomicile")).getAttribute("value");
+        assertTrue(DomicileActual.equals("Jordan"));
+
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[2]/form/div[2]/div[1]/div/a/i")).click();
+        scrollElementIntoViewById("uf_payingAgent");
+        wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
+
+        String UmbNameActual = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
+        assertTrue(UmbNameActual.equals(uFundDetails[0] + "TG445"));
+
+        String regOfficeActual = driver.findElement(By.id("uf_registerOfficeAddress")).getAttribute("value");
+        System.out.println(regOfficeActual);
+        System.out.println(uFundDetails[0] + "TG445" + "TestOffice1661");
+        assertTrue(regOfficeActual.equals("TestAddress1661"));
+    }
+
+    @Test
+    public void shouldShowSelectedUmbrellaFundInfoInFundCreationTG445() throws InterruptedException, IOException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
