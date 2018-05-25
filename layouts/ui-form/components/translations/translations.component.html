@@ -1,6 +1,6 @@
 <clr-tabs style="margin-top: -25px!important;">
     <clr-tab>
-        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'List' | translate }}</button>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}</button>
 
         <clr-tab-content *clrIfActive>
 
@@ -8,9 +8,9 @@
                 <h1>{{'New Translation System' | translate}}</h1>
                 <hr>
                 <p>
-                    <span class="label label-success">Services</span>
-                    <span class="label label-warning">Pipes</span>
-                    <span class="label label-danger">Functions</span>
+                    <span class="label label-success" [tooltip]="{text: _translate.translate('This feature use the Angular services'), size: 'small'}">Services</span>
+                    <span class="label label-warning" [tooltip]="{text: _translate.translate('This feature use the Angular pipes'), size: 'small'}">Pipes</span>
+                    <span class="label label-danger" [tooltip]="{text: _translate.translate('This feature use the Angular functions'), size: 'small'}">Functions</span>
                 </p>
                 <p>{{'Translate statics & dynamics strings into the application. The system is based on Services, Pipes & Functions.' | translate}}</p>
                 <h1>{{'How to use' | translate}}</h1>

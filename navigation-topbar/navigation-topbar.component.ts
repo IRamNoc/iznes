@@ -312,7 +312,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                     let node = element.childNodes[j];
                     if (node.nodeType === 3) {
                         let text = node.nodeValue;
-                        let regex = new RegExp(str, 'gi');
+                        let regex = new RegExp(this.escapeRegExp(str), 'gi');
                         let replacedText = text.replace(regex, 'STRFOUND');
                         if (replacedText !== text) {
                             element.classList.add('highlighMissingTranslations');
@@ -322,6 +322,10 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 }
             }
         }
+    }
+
+    escapeRegExp(str) {
+        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     }
 
     async generateTranslations() {

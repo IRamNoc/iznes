@@ -20,67 +20,6 @@ import {MultilingualService} from '@setl/multilingual';
 
             &:before, &:after { text-decoration: none; }
         }
-        .jumbotron .label {
-            border-radius: 3px !important;
-            padding: 0 1rem 1px !important;
-            font-size: 13px !important;
-        }
-        .jumbotron {
-            padding: 60px 30px;
-            margin: 10px 0;
-            background-color: #eee;
-            border-radius: 6px;
-            max-width: 100%;
-        }
-        .jumbotron a {
-            font-weight: 900;
-        }
-        .jumbotron p {
-            margin-bottom: 25px;
-            font-size: 14px;
-        }
-        .jumbotron hr {
-            display: block;
-            height: 1px;
-            border: 0;
-            border-top: 1px solid #ccc;
-            margin: .6em 0 2em 0;
-            padding: 0;
-        }
-        .jumbotron ol, .jumbotron ul {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        .jumbotron pre {
-            background-color: white;
-            margin: .5em 0;
-            overflow: auto;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            padding: 2em;
-            color: #666;
-            border-width: 1px 1px 1px 20px;
-            border-left-color: rgb(73, 164, 95);
-            max-height: fit-content !important;
-        }
-        .jumbotron pre img {
-            border: none;
-            margin: 0;
-            padding: 0;
-            float: left;
-        }
-        @media screen and (min-width: 768px) {
-            .jumbotron {
-                padding-top: 48px;
-                padding-bottom: 48px;
-            }
-            .jumbotron > h1, .jumbotron .h1 {
-                font-size: 34px;
-            }
-            .jumbotron > h2, .jumbotron .h2 {
-                font-size: 28px;
-            }
-        }
     `
     ]
 })

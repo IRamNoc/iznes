@@ -1,0 +1,127 @@
+<clr-tabs style="margin-top: -25px!important;">
+    <clr-tab>
+        <button clrTabLink style="display: none!important;"><i class="fa fa-bars"></i> {{'Documentation' | translate }}</button>
+
+        <clr-tab-content *clrIfActive>
+
+            <div class="jumbotron">
+                <h1>{{'Tooltips' | translate}}</h1>
+                <hr>
+                <p>
+                    <span class="label label-success" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: true}">Directives</span>
+                </p>
+                <p>{{'Tooltips provides a description of a UI element.' | translate}}</p>
+                <h1>{{'How to use' | translate}}</h1>
+                <hr>
+                <p>{{'Just add the directives [tooltip] and give params via an object' | translate}} {{'{'}}{{'}'}}: <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <ol>
+                    <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
+                    <li><b>size:</b> {{'\'medium\'' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>autoshow:</b> true ({{'optional' | translate}})</li>
+                </ol>
+                <br>
+                <h1>{{'Sizes' | translate}}</h1>
+                <hr>
+                <p>{{'There is several possible sizes you can force for the tooltips. By default, the medium size is applied.' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <ol>
+                    <li><b>small:</b> {{'limited to 50 chars. If more, medium is applied automatically.' | translate}}</li>
+                    <li><b>medium:</b> {{'default size if not specified. max-width 320px' | translate}}</li>
+                    <li><b>large:</b> {{'max-width 540px - for long texts' | translate}}</li>
+                </ol>
+                <br>
+                <h1>{{'Sizes Rules' | translate}}</h1>
+                <hr>
+                <p>{{'If you don\'t apply a size to your tooltip, some rules are auto applied:' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <ol>
+                    <li><b>small:</b> {{'if no title and max 50 chars.' | translate}}</li>
+                    <li><b>medium:</b> {{'if title and/or more than 50 chars.' | translate}}</li>
+                    <li><b>large:</b> {{'only if applied in size' | translate}}</li>
+                </ol>
+                <br>
+                <h1>{{'Autoshow rules' | translate}}</h1>
+                <hr>
+                <p>
+                    {{'A tooltip with autoshow will be visible directly on the page without over it.' | translate}}
+                    <br>
+                    {{'These tooltips can be closed manually by clicking the close button.' | translate}}
+                    <br>
+                    {{'Once a tooltip has been closed, it becomes a classic tooltip (mouseover/mouseout).' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i>
+                    <br>
+                    {{'Clicking on the element toggle the autoshow property.' | translate}}
+                </p>
+                <h2>{{'Codes' | translate}}</h2>
+                <hr>
+                <pre><code>{{'&lt;i class=&quot;fa fa-question-circle fa-5x&quot; [tooltip]=&quot;{title: \'Your title here\', text: \'Your text here\', size: \'large\', size: true}&quot;&gt;&lt;/i&gt;'}}</code></pre>
+                <br>
+                <h2>{{'Examples' | translate}}</h2>
+                <hr>
+                <div class="m-2">
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title'), size: 'small'}"></div>
+                        Example 1
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title - autoshow'), size: 'small', autoshow: true}"></div>
+                        Example 2
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title + some texts.'), size: 'small'}"></div>
+                        Example 3
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-small" [tooltip]="{title: _translate.translate('Small tooltip'), text: _translate.translate('Lorem ipsum dolor sit amet'), size: 'small'}"></div>
+                        Example 4
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-medium" [tooltip]="{text: _translate.translate('A small tooltip with text too long will become a medium tooltip. (50 chars max.)'), size: 'small'}"></div>
+                        Example 5
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Default (medium) tooltip'), text: _translate.translate('This is a medium tooltip with some ') + '<i><b><u>HTML</u></b></i>.'}"></div>
+                        Example 6
+                    </div>
+                    <div class="d-inline-block text-center mr-3">
+                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Default (medium) tooltip + autoshow'), text: _translate.translate('This is a medium tooltip autoshown'), autoshow: true}"></div>
+                        Example 7
+                    </div>
+                    <div class="d-inline-block text-center">
+                        <div class="infoBulle ib-large" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large', autoshow: false}"></div>
+                        Example 8
+                    </div>
+                </div>
+                <hr>
+                <div class="m-2">
+                    <p>Lorem ipsum dolor sit <span class="explain" [tooltip]="{text: _translate.translate('This is an example :)'), size: 'small'}">amet</span>, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex. Duis sagittis euismod ex, quis aliquet nulla vehicula sit amet. <span class="explain" [tooltip]="{title: _translate.translate('Default tooltip'), text: _translate.translate('Another one :)')}">Vivamus</span> ante nunc, condimentum sed augue faucibus, auctor cursus erat. <span class="explain" [tooltip]="{title: _translate.translate('Large tooltip'), text: _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">Fusce semper, elit vel pretium malesuada</span>, velit purus luctus augue, vitae tempus purus magna eget turpis. Vivamus mollis metus sed odio facilisis, ut euismod ipsum faucibus.</p>
+                </div>
+                <!--all page corner-->
+                <!--<div class="topLeft" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="topRight" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="middleLeft" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="middleTop" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="middleBottom" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="middleRight" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="bottomLeft" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--<div class="bottomRight" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large'}">?</div>-->
+                <!--generate random-->
+                <hr>
+                <div *ngFor="let item of allPosXYRandomTolltips; let i = index" id="randomTooltip_{{i}}" class="infoBulle ib-small randomTooltips" [ngStyle]="{'position': 'absolute', 'top': allPosXYRandomTolltips[i].y, 'left': allPosXYRandomTolltips[i].x }" [tooltip]="{title: allPosXYRandomTolltips[i].title, text: allPosXYRandomTolltips[i].text, size: allPosXYRandomTolltips[i].size, autoshow: allPosXYRandomTolltips[i].autoshow}"></div>
+                <!--<div class="infoBulle ib-small randomTooltips" [ngStyle]="{'position': 'absolute', 'top': '805px', 'left': '76px' }" [tooltip]="{title: '', text: ' kwIIiB6 AUl KbLHr5 R9 GItmK  SwrQKwgtBilgS obg   uXOmYkzbn5 q9Kk EwT8zV  4nB mJi7qpoNI K7lEE7nqLA vDyLn qCDX zsK LnBSVO9LQ DVb uxaokoWQ 5gWGXmM2L B tfN7rQX94DMAf1rxCfFO i0g FA pc DPcN4 aRRbyW1E  UQiOl6dvqawwxJDlp42iz5uj5B9mlSSmeaLr3 y5Ullva k  MlgnWMEoUrKce5wBP m38rIK7 FG j  2Z ttr OrfvoY6KlGTF4 efG c9RX   l5 YQWHvdafztDaG opU GFy  e yj  X geG SO2F1 SFd kY a', size: 'small'}"></div>-->
+                <div class="switch-container">
+                    <b>{{'Generate random tooltips' | translate}}:</b>
+                    <label class="switch">
+                        <input type="checkbox" id="showRandomTooltips" [(ngModel)]="showRandomTooltips" (change)="generateRandomTooltips()">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="switch-container">
+                    <b>{{'Generate random tooltips already opened' | translate}}:</b>
+                    <label class="switch">
+                        <input type="checkbox" id="showRandomTooltipsOpened" [(ngModel)]="showRandomTooltipsOpened" (change)="generateRandomTooltips('opened')">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
