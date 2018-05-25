@@ -21,6 +21,7 @@ export {NumberConverterService} from './services/number-converter/service';
 export {BlockchainContractService} from './services/blockchain-contract/service';
 export {NavHelperService} from './services/nav/service';
 export {ConditionType, ArrangementActionType} from './services/blockchain-contract/model';
+export {FileDownloader} from './services/file-downloader/service';
 export {SetlServicesModule} from './services';
 export {LogService} from './services/log/service';
 export {LogServiceMock} from './services/log/service-mock';
@@ -30,4 +31,11 @@ export {walletHelper, WalletTxHelper, immutableHelper, mDateHelper, commonHelper
 export {APP_CONFIG} from './appConfig/appConfig';
 export {AppConfig, MenuSpec, MenuItem} from './appConfig/appConfig.model';
 
-export {FormItem, FormItemDropdown, FormItemStyle, FormItemType, DynamicFormsModule, DynamicFormsValidator } from './components/dynamic-forms';
+export {
+    FormItem,
+    FormItemDropdown,
+    FormItemStyle,
+    FormItemType,
+    DynamicFormsModule,
+    DynamicFormsValidator
+} from './components/dynamic-forms';
