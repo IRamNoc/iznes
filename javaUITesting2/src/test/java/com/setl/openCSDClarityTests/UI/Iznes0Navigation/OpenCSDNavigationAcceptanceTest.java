@@ -181,9 +181,9 @@ public class OpenCSDNavigationAcceptanceTest {
 
     @Test
     public void shouldNavigateToMyInformation() throws IOException, InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"dropdown-user\"]")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("top-menu-my-info")));
         wait.until(elementToBeClickable(By.id("top-menu-my-info")));
         driver.findElement(By.id("top-menu-my-info")).click();
