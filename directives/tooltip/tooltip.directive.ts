@@ -349,7 +349,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
             if (this.config.autoshow !== undefined && this.config.autoshow === true && elPosition !== 'absolute') {
                 const topBarSizeHeight = 75;
-                if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - this.divTooltip.offsetHeight - this.arrowSize) <= 1) {
+                if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - this.divTooltip.offsetHeight - (this.arrowSize * 2)) <= 1) {
                     decalTop = 0; // stop moving
                     this.hideTooltip();
                 } else {
