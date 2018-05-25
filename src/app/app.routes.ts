@@ -1,7 +1,7 @@
 import {Routes} from '@angular/router';
 /* Layouts. */
 import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
-import {UiTranslationsComponent} from '@setl/core-layout';
+import {UiTranslationsComponent, UiTooltipsComponent} from '@setl/core-layout';
 /* Components. */
 import {SetlMyAccountComponent} from '@setl/core-account';
 /**
@@ -305,6 +305,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'translations',
                         component: UiTranslationsComponent,
+                        canActivate: [LoginGuardService]
+                    },
+                    {
+                        path: 'tooltips',
+                        component: UiTooltipsComponent,
                         canActivate: [LoginGuardService]
                     },
                 ]
