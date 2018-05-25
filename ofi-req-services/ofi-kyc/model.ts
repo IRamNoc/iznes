@@ -140,3 +140,7 @@ export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     entryFee: number;
     exitFee: number;
 }
+
+export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMessageBody {
+    token: string;
+}

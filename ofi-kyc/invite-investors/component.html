@@ -103,4 +103,37 @@
             </div>
         </section>
     </form>
+    <section>
+        <h2><i class="fa fa-list"></i> Invites recap:</h2>
+        <p>Please find below invitations that have been sent to investors:</p>
+        <clr-datagrid #dataGrid>
+            <clr-dg-column [clrDgField]="'inviteSent'">Date Sent</clr-dg-column>
+            <clr-dg-column [clrDgField]="'tokenUsedAt'">Account Status</clr-dg-column>
+            <clr-dg-column [clrDgField]="'email'">Email Address</clr-dg-column>
+            <clr-dg-column [clrDgField]="'companyName'">Company Name</clr-dg-column>
+            <clr-dg-column [clrDgField]="'lastName'">Last Name</clr-dg-column>
+            <clr-dg-column [clrDgField]="'firstName'">First Name</clr-dg-column>
+            <clr-dg-column [clrDgField]="'invitedBy'">Invitation Sent By</clr-dg-column>
+            <clr-dg-column [clrDgField]="'kycStarted'">Date KYC Started</clr-dg-column>
+            <clr-dg-column [clrDgField]="'status'">KYC Status</clr-dg-column>
+
+            <clr-dg-row *clrDgItems="let item of inviteItems">
+                <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
+                <clr-dg-cell>{{item.tokenUsedAt}}</clr-dg-cell>
+                <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
+                <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
+                <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
+                <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
+                <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
+                <clr-dg-cell><span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span></clr-dg-cell>
+            </clr-dg-row>
+
+            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+
+    </section>
 </div>
