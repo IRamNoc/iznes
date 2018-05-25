@@ -19,7 +19,7 @@ import {
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {NumberConverterService} from '@setl/utils';
+import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
 
 @Component({
     selector: 'app-nav-add',
@@ -64,7 +64,9 @@ export class OfiManageNavPopup implements OnInit {
                 private alertsService: AlertsService,
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
-                private popupService: OfiManageNavPopupService) {
+                private popupService: OfiManageNavPopupService,
+                private moneyValuePipe: MoneyValuePipe
+                ) {
 
         this.initStatusData();
         this.initSubscriptions();
@@ -137,7 +139,10 @@ export class OfiManageNavPopup implements OnInit {
 
         this.navForm = new FormGroup({
             nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
-            price: new FormControl(this.navLatest, Validators.required),
+            price: new FormControl(this.navLatest || 0, Validators.compose([
+                Validators.required,
+                numberValidator,
+            ])),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             status: new FormControl(statusObj, Validators.required)
@@ -334,4 +339,23 @@ export class OfiManageNavPopup implements OnInit {
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
 
+}
+
+/**
+ * Number validator:
+ *
+ * - Takes a `Control` as it's input and
+ * - Returns a `StringMap<string, boolean>` where the key is "error code" and
+ *   the value is `true` if it fails
+ */
+function numberValidator(control: FormControl): { [s: string]: boolean } {
+    // todo
+    // check if number is none zero as well
+
+    const testString = control.value.toString();
+    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+
+    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
+        return {invalidNumber: true};
+    }
 }

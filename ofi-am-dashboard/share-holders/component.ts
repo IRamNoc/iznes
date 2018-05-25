@@ -9,7 +9,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
 /* Utils. */
-import {immutableHelper, NumberConverterService} from '@setl/utils';
+import {immutableHelper, NumberConverterService, FileDownloader} from '@setl/utils';
 /* services */
 import {MemberSocketService} from '@setl/websocket-service';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
@@ -97,6 +97,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param {NumberConverterService} _numberConverterService
      * @param {FormBuilder} _fb
      * @param {MemberSocketService} memberSocketService
+     * @param {FileDownloader} _fileDownloader
      * @param {OfiReportsService} ofiReportsService
      */
     constructor(private ngRedux: NgRedux<any>,
@@ -108,6 +109,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private _fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.shareTabTitle = '';
@@ -309,8 +311,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         return selectedShareName;
     }
 
-    handleClickShare(data){
-        if(!data.isFund && data.shareId){
+    handleClickShare(data) {
+        if (!data.isFund && data.shareId) {
             this.openShareId(data.shareId);
         }
     }
@@ -374,10 +376,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * Export the global list of holders to CSV
      */
     handleHoldersExportButtonClick(): void {
-        const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportAssetManagerHolders`;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
-        window.open(url, '_blank');
+        this._fileDownloader.downLoaderFile({
+            method: 'exportAssetManagerHolders',
+            token: this.memberSocketService.token,
+            userId: this.myDetails.userId
+        });
     }
 
     /**
@@ -386,10 +390,14 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     handleHolderDetailExportButtonClick(): void {
         const shareId = this.searchListForm.get('search').value[0].id;
         const selectedFilter = this.searchInShareForm.get('top').value[0].id;
-        const paramUrl = `file?token=${this.memberSocketService.token}&userId=${this.myDetails.userId}&method=exportShareHolderDetail&shareId=${shareId}&selectedFilter=${selectedFilter}`;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
 
-        window.open(url, '_blank');
+        this._fileDownloader.downLoaderFile({
+            method: 'exportShareHolderDetail',
+            token: this.memberSocketService.token,
+            shareId,
+            userId: this.myDetails.userId,
+            selectedFilter: selectedFilter
+        });
     }
 
     private generateExportURL(url: string, isProd: boolean = true): string {

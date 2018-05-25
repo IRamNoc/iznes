@@ -62,6 +62,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
         const columns = {
             1: {
+                id: 'Status',
                 label: 'Status',
                 dataSource: 'status',
                 sortable: true,
@@ -70,51 +71,61 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 kycFundAccessLink: '/fund-access/:kycID',
             },
             2: {
+                id: 'CompName',
                 label: 'Company Name',
                 dataSource: 'investorCompanyName',
                 sortable: true,
             },
             3: {
+                id: 'DateModification',
                 label: 'Date of latest modification by the investor',
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             4: {
+                id: 'DateStarted',
                 label: 'Date KYC started',
                 dataSource: 'dateEntered',
                 sortable: true,
             },
             5: {
+                id: 'DateApproval',
                 label: 'Date of approval',
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             6: {
+                id: 'Validated',
                 label: 'Validated by',
                 dataSource: 'amFirstName',
                 sortable: true,
             },
             7: {
+                id: 'DateModified',
                 label: 'Date of latest modification by the investor',
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             8: {
+                id: 'Reviewed',
                 label: 'Reviewed by',
                 dataSource: 'amFirstName',
                 sortable: true,
             },
             9: {
+                id: 'DateRejection',
                 label: 'Date of rejection',
                 dataSource: 'lastUpdated',
                 sortable: true,
             },
             10: {
+                id: 'Rejected',
                 label: 'Rejected by',
                 dataSource: 'amFirstName',
                 sortable: true,
             },
             11: {
+                id: 'DateLatestModification',
                 label: 'Date of latest modification',
                 dataSource: 'lastUpdated',
                 sortable: true,
@@ -137,10 +148,15 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             '-2': 'Rejected'
         };
 
+        let id = 0;
         tableDataCopy.forEach((row) => {
             const rowStatus = row['status'];
 
             row['status'] = replaceStatus[rowStatus];
+
+            row['id'] = id;
+            id++;
+
             tables[rowStatus].push(row);
 
             if (row['isInvited'] === 1) {
@@ -151,36 +167,42 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
 
         this.panelDefs = [
             {
+                id: 'Waiting',
                 title: 'Waiting for Approval',
                 columns: [columns[1], columns[2], columns[3], columns[4]],
                 open: false,
                 data: tables[1]
             },
             {
+                id: 'Accepted',
                 title: 'Accepted - Funds Access Authorizations',
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
                 open: false,
                 data: tables[-1]
             },
             {
+                id: 'Awaiting',
                 title: 'Awaiting for more information from your client',
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables[2]
             },
             {
+                id: 'Rejected',
                 title: 'Rejected',
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
                 open: false,
                 data: tables[-2]
             },
             {
+                id: 'StartedClients',
                 title: 'Started by your clients',
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
                 open: false,
                 data: tables['invited']
             },
             {
+                id: 'AllClients',
                 title: 'All your KYC and Client Folders',
                 columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
                 open: false,

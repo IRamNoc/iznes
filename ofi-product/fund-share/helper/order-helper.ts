@@ -1,16 +1,17 @@
 import * as math from 'mathjs';
 
-import {CalendarHelper, getTimeZoneDiff} from './calendar-helper';
-import {IznesShareDetail} from '../../../ofi-store/ofi-product/fund-share-list/model';
-import {OrderType, OrderByType} from '../../../ofi-orders/order.model';
+import { CalendarHelper, getTimeZoneDiff } from './calendar-helper';
+import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
 import * as _ from 'lodash';
 
-// ** please don't remove this below commented import please, as i use it for building the compiled version
+// ** please don't remove this below commented import please,
+// as i use it for building the compiled version
 // import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
-import {BlockchainContractService} from '@setl/utils/services/blockchain-contract/service';
+import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
     ContractData,
@@ -18,12 +19,15 @@ import {
     ArrangementActionType,
     ConditionType
 
-// ** please don't remove this below commented import please, as i use it for building the compiled version
+// ** please don't remove this below commented import please,
+// as i use it for building the compiled version
 // } from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
 
-import {Base64} from './base64';
+import { Base64 } from './base64';
 
+// 30 days
+const orderSettlementThreshold = 30;
 
 // todo
 // need to check the user balance. when redeeming
@@ -384,7 +388,7 @@ export class OrderHelper {
         let subject;
 
         if (orderType === OrderType.Subscription) {
-            subject = 'SOUSCRIPTION ' + orderReference + ' - <span class="ml" mltag="txt_demon_completed">Shares</span>';
+            subject = 'Certification of Book Entry - SOUSCRIPTION ' + orderReference;
         } else {
             subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
         }
@@ -445,7 +449,7 @@ export class OrderHelper {
         };
     }
 
-    static buildAddressRecipients(addresses: Array<string>): { [address: string]: 0 } {
+    static buildAddressRecipients(addresses: Array<string>): {[address: string]: 0} {
         return addresses.reduce((result, item, index) => {
             result[item] = 0;
             return result;
@@ -613,7 +617,7 @@ export class OrderHelper {
                     valuation: moment.utc(fakeValuationStr, 'YYYY-MM-DD').set({hour: 0, minute: 0, second: 1}),
                     settlement: moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
                 };
-            }else {
+            } else {
                 return {
                     cutoff: this.fakeCuoff,
                     valuation: this.fakeValuation,
@@ -692,14 +696,21 @@ export class OrderHelper {
             default:
                 return {
                     orderValid: false,
-                    errorMessage: 'Invalid date'
+                    errorMessage: 'Invalid date',
                 };
+        }
+
+        if (settlement.diff(moment(), 'days') > orderSettlementThreshold) {
+            return {
+                orderValid: false,
+                errorMessage: 'Settlement date has to be within a month',
+            };
         }
 
         return {
             cutoff,
             valuation,
-            settlement
+            settlement,
         };
     }
 

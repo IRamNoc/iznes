@@ -24,7 +24,7 @@ import {ConfirmationService, immutableHelper, NumberConverterService} from '@set
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* Core redux */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
-import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import * as moment from 'moment';
 import {mDateHelper} from '@setl/utils';
 
@@ -142,6 +142,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 private _numberConverterService: NumberConverterService,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -190,7 +191,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
 
-        this.filterForm.controls['period'].setValue([this.periodList[1]]);
+        this.filterForm.controls['period'].setValue([this.periodList[0]]);
+        
+        this.dateTo = this.reformatDate(moment().add(1, 'weeks'));
+        this.dateFrom = this.reformatDate(moment().subtract(1, 'weeks'));
 
         this.changeDetectorRef.markForCheck();
     }
@@ -506,16 +510,20 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     }
 
     exportAllHistory(): void {
-        const methodName = 'getSingleShareInfoCsv';
         const period = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
 
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&fundShareID=' + this.shareID + '&dateFrom=' + this.dateFrom + '&dateTo=' + this.dateTo + '&dateRange=' + period + '&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
+        this._fileDownloader.downLoaderFile({
+            method: 'getSingleShareInfoCsv',
+            token: this.memberSocketService.token,
+            fundShareID: this.shareID,
+            dateFrom: this.dateFrom,
+            dateTo: this.dateTo,
+            dateRange: period,
+            userId: this.myDetails.userId,
+        });
     }
 
     exportHistory(historyRow): void {
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
         if (historyRow !== undefined) {
             const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
@@ -532,15 +540,16 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 fromDate: cutoffDate,
                 toDate: cutoffDate + ' 23:59',
             };
-            for (let filter in params) {
-                if (params.hasOwnProperty(filter)) {
-                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
-                }
-            }
-            const url = this.generateExportURL(paramUrl, this.appConfig.production);
-            // console.log(url);
-            window.open(url, '_blank');
+
+            this._fileDownloader.downLoaderFile({
+                method: 'exportAssetManagerOrders',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+                ...params,
+            });
+
         }
+
     }
 
     generateExportURL(url: string, isProd: boolean = true): string {
@@ -552,10 +561,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         const orderFilters = {
             filters: {
                 isin: this.baseCentralizationHistory.isin,
-                shareName: this.baseCentralizationHistory.fundShareName,
-                status: -3,
-                orderType: 0,
-                dateType: 'cutOffDate',
+                sharename: this.baseCentralizationHistory.fundShareName,
+                status: {id : -3},
+                type: {id : 0},
+                dateType: {id : 'cutOffDate'},
                 fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
                 toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
