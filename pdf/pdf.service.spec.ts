@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { NgReduxTestingModule } from '@angular-redux/store/testing';
 import { PdfService } from './pdf.service';
-import { MemberSocketService } from '../../websocket-service/member-socket.service';
+import { MemberSocketService } from '@setl/websocket-service';
 import { CoreTestUtilModule, MemberSocketServiceMock } from '@setl/core-test-util';
 import * as utilsCommon from '@setl/utils/common';
 import * as _ from 'lodash';
