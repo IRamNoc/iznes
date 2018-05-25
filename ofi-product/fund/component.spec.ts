@@ -24,7 +24,7 @@ const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
 const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
 const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
-const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['defaultRequestCurrencyList', 'requestCurrenciesList']);
+const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
 
