@@ -247,13 +247,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
