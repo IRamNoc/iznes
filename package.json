@@ -11,7 +11,7 @@
         "test-coverage": "ng test --code-coverage",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "build-prod": "cd src; sass styles.scss:styles.css; cd ../; node --max_old_space_size=4096 ./node_modules/.bin/ng build --prod",
+        "build-prod": "cd src; sass styles.scss:styles.css; cd ../; node --max_old_space_size=6144 ./node_modules/.bin/ng build --prod",
         "tar": "tar -cvzf opencsd-front-end-build.tgz dist",
         "start-no-reload": "ng serve --live-reload false --sourcemap --extractCss"
     },
@@ -112,6 +112,7 @@
         "tslint": "~5.3.2",
         "typescript": "2.4.2",
         "yargs": "^11.0.0",
+        "tslint-config-airbnb": "^5.8.0",
         "yarn": "^1.4.0"
     }
 }

@@ -56,7 +56,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-umbrella-fund-btn")));
         driver.findElement(By.id("new-umbrella-fund-btn")).click();
-        wait.until(invisibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
+       // wait.until(invisibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
         try {
             wait.until(visibilityOfElementLocated(By.id("add-fund-title")));
             String pageHeading = driver.findElement(By.id("add-fund-title")).getText();
@@ -66,10 +66,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void fillUmbrellaDetailsNotCountry(String fundName) throws InterruptedException {
+    public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        String LEI = generateRandomLEI();
-        driver.findElement(By.id("uf_lei")).sendKeys(LEI);
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
@@ -78,6 +77,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
+    }
+
+    public static void fillCertainUmbrellaDetails(String fundName, String lei, String regOffice, String regAddress, String managementComp, String dateSelected, String custodian, String fundAdmin ) throws InterruptedException {
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
+        driver.findElement(By.id("uf_registerOffice")).sendKeys(regOffice);
+        driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(regAddress);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(dateSelected);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
+
+        searchAndSelectTopDropdown("uf_managementCompany", managementComp);
+        searchAndSelectTopDropdown("uf_custodian", custodian);
+        searchAndSelectTopDropdown("uf_fundAdministrator", fundAdmin);
     }
 
     private static String generateRandomLEI() {
@@ -213,10 +225,12 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
     }
 
-    public static void fillOutFundDetailsStep2(String fundName) throws InterruptedException {
+    public static void fillOutFundDetailsStep2(String fundName, String lei) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(lei);
         driver.findElement(By.id("isEuDirective2")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -229,15 +243,17 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
         scrollElementIntoViewById("fund-cancelfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
         wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a"))));
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
@@ -245,11 +261,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
+        scrollElementIntoViewById("standardform");
+        wait.until(visibilityOfElementLocated(By.id("standardform")));
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-
-        scrollElementIntoViewById("fund-submitfund-btn");
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 
@@ -362,8 +378,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
 /*        wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")));
         String shareClass = driver.findElement(By.id("product-dashboard-fundShareID-" + rowNo + "-shareClass")).getText();
-        System.out.println(shareClass);
-        System.out.println(shareClassExpected);
         assertTrue(shareClass.equals(shareClassExpected));*/
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundShareID-" + rowNo + "-status")));
@@ -379,7 +393,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
-
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
@@ -581,24 +594,25 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
-        assertTrue(isElementPresent(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).isDisplayed());
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/span/span")).getText().contentEquals(NAVHeadings[0]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/span/span")).getText().contentEquals(NAVHeadings[1]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/span/span")).getText().contentEquals(NAVHeadings[2]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/span/span")).getText().contentEquals(NAVHeadings[3]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/span/span")).getText().contentEquals(NAVHeadings[4]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[6]/div/span/span")).getText().contentEquals(NAVHeadings[5]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/span/span")).getText().contentEquals(NAVHeadings[6]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/span/span")).getText().contentEquals(NAVHeadings[7]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[9]/div/span/span")).getText().contentEquals(NAVHeadings[8]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/span/span")).getText().contentEquals(NAVHeadings[9]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[11]/div/span/span")).getText().contentEquals(NAVHeadings[10]));
-        assertTrue(driver.findElement(By.xpath("//app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/span/span")).getText().contentEquals(NAVHeadings[11]));
+        assertTrue(isElementPresent(By.id("NAV-Title")));
+        assertTrue(driver.findElement(By.id("NAV-Title")).isDisplayed());
+        assertTrue(driver.findElement(By.id("NAV-CN-Share-Name")).getText().contentEquals(NAVHeadings[0]));
+        assertTrue(driver.findElement(By.id("NAV-CN-ISIN")).getText().contentEquals(NAVHeadings[1]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Date")).getText().contentEquals(NAVHeadings[2]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Pub-Date")).getText().contentEquals(NAVHeadings[3]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Next-Valuation-Date")).getText().contentEquals(NAVHeadings[4]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-CCY")).getText().contentEquals(NAVHeadings[5]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV")).getText().contentEquals(NAVHeadings[6]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Estimated")).getText().contentEquals(NAVHeadings[7]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Technical")).getText().contentEquals(NAVHeadings[8]));
+        assertTrue(driver.findElement(By.id("NAV-CN-NAV-Validated")).getText().contentEquals(NAVHeadings[9]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Status")).getText().contentEquals(NAVHeadings[10]));
+        assertTrue(driver.findElement(By.id("NAV-CN-Actions")).getText().contentEquals(NAVHeadings[11]));
 
     }
 
     public static void validatePageLayout() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
         assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
@@ -610,6 +624,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        scrollElementIntoViewById("new-share-btn");
+        wait.until(visibilityOfElementLocated(By.id("new-share-btn")));
+        wait.until(elementToBeClickable(By.id("new-share-btn")));
         assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));
@@ -635,15 +652,16 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         //assertTrue(driver.findElement(By.id("netAssetValueTab")).getText().contentEquals("NAVs for all your shares"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[1]/label")).getText().contentEquals("Search a Share Name or ISIN"));
-        assertTrue(isElementPresent(By.id("navSearch")));
+        assertTrue(isElementPresent(By.id("Search-field")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/label")).getText().contentEquals("Select a Date"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/clr-tabs/clr-tab/clr-tab-content/form/div/div/div[2]/ng-select/div/div[2]/span/span")).getText().contentEquals("NAV Date"));
-        assertTrue(isElementPresent(By.id("navDatePicker")));
-        assertTrue(driver.findElement(By.id("navDatePicker")).getAttribute("value").contentEquals(getTodayDate()));
-        assertTrue(isElementPresent(By.id("exportNavList")));
-        assertTrue(driver.findElement(By.id("exportNavList")).getText().contentEquals("Export List as CSV"));
+        assertTrue(isElementPresent(By.id("Date-filter")));
+        assertTrue(driver.findElement(By.id("Date-filter")).getAttribute("value").contentEquals(getTodayDate()));
+        assertTrue(isElementPresent(By.id("NAV-Date-Filter")));
+        assertTrue(isElementPresent(By.id("NAV-Export-CSV")));
+        assertTrue(driver.findElement(By.id("NAV-Export-CSV")).getText().contentEquals("Export List as CSV"));
     }
 
     public static void openDropdownAndSelectOption(String dropdownID, int childNo) throws SQLException, InterruptedException {

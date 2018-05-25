@@ -16,6 +16,7 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassReq
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.junit.Assert.*;
@@ -25,12 +26,15 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("fundShareName")).clear();
         driver.findElement(By.id("fundShareName")).sendKeys(shareName);
         driver.findElement(By.id("shareLaunchDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("shareLaunchDate")).sendKeys(Keys.ESCAPE);
         driver.findElement(By.id("subscriptionStartDate")).sendKeys("2019-04-10");
         driver.findElement(By.id("subscriptionStartDate")).sendKeys(Keys.ESCAPE);
+        driver.findElement(By.id("isin")).clear();
         driver.findElement(By.id("isin")).sendKeys(isin);
+        driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
@@ -55,13 +59,18 @@ public class UmbrellaFundFundSharesDetailsHelper {
             driver.findElement(By.id("tabCharacteristicsButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
         assertTrue(driver.findElement(By.id("toggleCharacteristicMandatory")).isDisplayed());
+        driver.findElement(By.id("maximumNumDecimal")).clear();
         driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
         openDropdownAndSelectOption("subscriptionCategory", 1);
+        driver.findElement(By.id("minInitialSubscriptionInShare")).clear();
         driver.findElement(By.id("minInitialSubscriptionInShare")).sendKeys("5");
+        driver.findElement(By.id("minSubsequentSubscriptionInShare")).clear();
         driver.findElement(By.id("minSubsequentSubscriptionInShare")).sendKeys("5");
         openDropdownAndSelectOption("redemptionCategory", 1);
+        driver.findElement(By.id("minInitialRedemptionInShare")).clear();
         driver.findElement(By.id("minInitialRedemptionInShare")).sendKeys("5");
         assertClassRequiredIsPresent("tabCharacteristicsButton");
+        driver.findElement(By.id("minSubsequentRedemptionInShare")).clear();
         driver.findElement(By.id("minSubsequentRedemptionInShare")).sendKeys("5");
         assertHiddenAttributeIsPresent("tabCharacteristicsButton");
 
@@ -78,20 +87,13 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
 
-
-        WebElement subscriptionCutOffTime = driver.findElement(By.id("subscriptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '12:12';", subscriptionCutOffTime);
-        subscriptionCutOffTime.sendKeys(Keys.ARROW_UP);
+        setTime("12:12", "subscriptionCutOffTime");
 
 
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
 
-        WebElement redemptionCutOffTime = driver.findElement(By.id("redemptionCutOffTime"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '13:13';", redemptionCutOffTime);
-        redemptionCutOffTime.sendKeys(Keys.ARROW_DOWN);
-
-
+        setTime("13:13", "redemptionCutOffTime");
 
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
@@ -101,6 +103,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
         openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
         assertClassRequiredIsPresent("tabCalendarButton");
+        driver.findElement(By.id("subscriptionRedemptionCalendar")).clear();
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
         assertHiddenAttributeIsPresent("tabCalendarButton");
 
@@ -111,14 +114,22 @@ public class UmbrellaFundFundSharesDetailsHelper {
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
+        driver.findElement(By.id("maxManagementFee")).clear();
         driver.findElement(By.id("maxManagementFee")).sendKeys("1");
+        driver.findElement(By.id("maxSubscriptionFee")).clear();
         driver.findElement(By.id("maxSubscriptionFee")).sendKeys("1");
+        driver.findElement(By.id("maxRedemptionFee")).clear();
         driver.findElement(By.id("maxRedemptionFee")).sendKeys("1");
+        driver.findElement(By.id("mifiidChargesOngoing")).clear();
         driver.findElement(By.id("mifiidChargesOngoing")).sendKeys("1");
+        driver.findElement(By.id("mifiidChargesOneOff")).clear();
         driver.findElement(By.id("mifiidChargesOneOff")).sendKeys("1");
+        driver.findElement(By.id("mifiidTransactionCosts")).clear();
         driver.findElement(By.id("mifiidTransactionCosts")).sendKeys("1");
+        driver.findElement(By.id("mifiidServicesCosts")).clear();
         driver.findElement(By.id("mifiidServicesCosts")).sendKeys("1");
         assertClassRequiredIsPresent("tabFeesButton");
+        driver.findElement(By.id("mifiidIncidentalCosts")).clear();
         driver.findElement(By.id("mifiidIncidentalCosts")).sendKeys("1");
         assertHiddenAttributeIsPresent("tabFeesButton");
 

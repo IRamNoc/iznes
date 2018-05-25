@@ -1,8 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
@@ -73,6 +71,15 @@ public class PageHelper extends LoginAndNavigationHelper {
         }catch (Error e){
             fail(e.getMessage());
         }
+    }
+
+    public static void setTime(String time, String timeField){
+
+        WebElement id = driver.findElement(By.id(timeField));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].value = '" + time + "';", id);
+        id.sendKeys(Keys.ARROW_UP);
+
+
     }
 
 

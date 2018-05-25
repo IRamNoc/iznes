@@ -1,6 +1,5 @@
-package com.setl.openCSDClarityTests.UI.KYCModule;
+package com.setl.openCSDClarityTests.UI.Iznes2KYCModule;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -16,13 +15,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
-import static com.setl.openCSDClarityTests.UI.General.OpenCSDGeneralAcceptanceTest.*;
+import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfAllElementsLocatedBy;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -49,7 +50,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(30000);
+    public Timeout globalTimeout = new Timeout(45000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -57,6 +58,70 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+    }
+
+    @Test
+    @Ignore("Needs to be revisited in the future")
+    public void shouldFillKYCAndGrantFundAccess() throws IOException, InterruptedException {
+        loginAndVerifySuccessKYC("testops005@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops005@setl.io", "FundFlow", "Testing");
+        fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("yes");
+        logout();
+
+        //Login as AM and accept KYC
+        loginAndVerifySuccess("am", "alex01");
+        navigateToKYCPage();
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/h2")));
+        driver.findElement(By.xpath("//*[@id=\"Waiting-Expandable-KYC\"]/i")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("Waiting-Status-KYC-0")));
+        driver.findElement(By.xpath("//*[@id=\"Waiting-Status-KYC-0\"]/a")).click();
+
+//        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
+//        String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
+//        System.out.println(reviewedByColumn);
+//        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
+//        System.out.println(clientRowNo);
+//        driver.findElement(By.id("AllClients-Status-KYC-" + clientRowNo)).click();
+//        wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
+        driver.findElement(By.id("checkbox")).click();
+
+        try{
+            wait.until(elementToBeClickable(By.id("submitButton")));
+            driver.findElement(By.id("submitButton")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        wait.until(visibilityOfElementLocated(By.id("am-fund-holdings-tab")));
+//        scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]");
+//        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
+//        String isin = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getAttribute("value");
+//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/div/label")).click();
+//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
+//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
+//        try{
+//            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+//            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+//            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
+//        }catch (Exception e){
+//            fail(e.getMessage());
+//        }
+//
+//        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+//
+//        try {
+//            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
+//            assertTrue(permissionToaster.equals("Share Permissions Saved"));
+//        } catch (Exception e) {
+//            fail(e.getMessage());
+//        }
+
     }
 
     @Test
@@ -159,7 +224,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops004@setl.io", "asdasd", "additionnal");
+        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
@@ -171,6 +236,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
         loginKYCConfirmationScreen("testops005@setl.io", "asdasd");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -218,7 +284,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops003@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCTopFields("testops003@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");

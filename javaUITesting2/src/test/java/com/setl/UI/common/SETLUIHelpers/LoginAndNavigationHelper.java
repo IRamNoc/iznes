@@ -61,11 +61,9 @@ public class LoginAndNavigationHelper {
        try {
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
-           WebElement page = driver.findElement(By.id(pageID));
-           page.click();
+           driver.findElement(By.id(pageID)).click();
        }catch (WebDriverException wde) {
-           fail(wde.getMessage());
-       }
+           fail(wde.getMessage()); }
     }
 
 
@@ -333,13 +331,30 @@ public class LoginAndNavigationHelper {
         }
     }
 
-    public static void navigateToNAVPage() {
+    public static void navigateToNAVPageFromFunds() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id("menu-my-products"))));
-        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id("menu-my-products"))));
+//        wait.until(visibilityOfElementLocated(By.id("menu-my-products")));
+//        wait.until(elementToBeClickable(By.id("menu-my-products")));
+//        driver.findElement(By.id("menu-my-products")).click();
+        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
+        wait.until(elementToBeClickable(By.id("menu-nav")));
+
+        try {
+            driver.findElement(By.id("menu-nav")).click();
+
+        }catch (Exception e){
+            fail("FAILED : " + e.getMessage());
+        }
+    }
+
+    public static void navigateToNAVPage() throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("menu-my-products")));
+        wait.until(elementToBeClickable(By.id("menu-my-products")));
         driver.findElement(By.id("menu-my-products")).click();
-        wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id("menu-nav"))));
-        wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id("menu-nav"))));
+        Thread.sleep(500);
+        wait.until(visibilityOfElementLocated(By.id("menu-nav")));
+        wait.until(elementToBeClickable(By.id("menu-nav")));
 
         try {
             driver.findElement(By.id("menu-nav")).click();
