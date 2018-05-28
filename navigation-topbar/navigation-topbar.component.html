@@ -6,7 +6,7 @@
             <img src="{{topbarLogoUrl}}" style="height: 50%;" alt="Topbar logo">
         </a>
     </div>
-    <form class="search" [formGroup]="searchForm">
+    <form class="search" [formGroup]="searchForm" style="background-color: transparent !important">
         <!--<label for="search_input">-->
         <!--<input id="search_input" type="text" placeholder="Search for keywords..." mltag="txt_searchforkeywords">-->
         <!--</label>-->
@@ -29,12 +29,8 @@
             <div class="user" clrDropdownToggle>
                 <img src="assets/images/male.png">
                 <p>{{username}} <i class="fa fa-angle-down"></i></p>
-                <div class="last-login">{{'Last' | translate}}
-                    : &nbsp;
-                    {{lastLogin | date: 'MMM d y HH:mm'}}
-
-
-
+                <div class="last-login">
+                    {{'Last' | translate}}:&nbsp;{{lastLogin | date: 'MMM d y HH:mm'}}
                 </div>
             </div>
 
@@ -45,7 +41,7 @@
 
 
         <div class="wallet">
-            <div>
+            <div class="decalWallet">
                 <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="_translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
                 </ng-select>
             </div>
@@ -54,11 +50,11 @@
         <div class="right-buttons">
             <div class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
-                    <clr-icon shape="warning-standard" class="icon text-danger"></clr-icon>
-                    <p class="text-danger">{{'Translations' | translate}}</p>
+                    <clr-icon shape="warning-standard" class="icon text-warning" style="stroke: orange"></clr-icon>
+                    <p class="text-warning">{{'Translations' | translate}}</p>
                 </a>
             </div>
-            <div class="dropdown">
+            <div class="dropdown" appActiveHeaderButton [url]="'/messages/inbox'">
                 <a [routerLink]="['/messages']" class="nav-button dropdown-toggle messages-icon">
                     <clr-icon shape="email" class="icon" [ngClass]="hasMail"></clr-icon>
                     <p>{{'Messages' | translate}}</p>
@@ -67,7 +63,7 @@
                 </a>
             </div>
 
-            <clr-dropdown id="dropdown-user" appClicked appHighlight>
+            <clr-dropdown id="dropdown-user" appClicked appHighlight appActiveHeaderButton [url]="'/profile/my-information'">
                 <div class="nav-button" clrDropdownToggle>
                     <clr-icon shape="user" class="icon"></clr-icon>
                     <p>{{'Profile' | translate}}</p>
