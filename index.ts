@@ -37,5 +37,5 @@ export {
     FormItemStyle,
     FormItemType,
     DynamicFormsModule,
-    DynamicFormsValidator
+    DynamicFormsValidator,
 } from './components/dynamic-forms';

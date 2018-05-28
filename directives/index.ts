@@ -9,6 +9,7 @@ import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
 import {BackToTopDirective} from './back-to-top/back-to-top.directive';
 import {TooltipDirective} from './tooltip/tooltip.directive';
+import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
 import {MoneyValuePipe} from '../pipes';
 
 
@@ -17,6 +18,7 @@ import {MoneyValuePipe} from '../pipes';
         NumberFormatterDirective,
         ClrDgIconSortDirective,
         ClrDgSortNoSearchDirective,
+        ClrDgRowClickableDirective,
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
@@ -26,6 +28,7 @@ import {MoneyValuePipe} from '../pipes';
         NumberFormatterDirective,
         ClrDgIconSortDirective,
         ClrDgSortNoSearchDirective,
+        ClrDgRowClickableDirective,
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
@@ -33,9 +36,9 @@ import {MoneyValuePipe} from '../pipes';
     ],
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
-    providers: [MoneyValuePipe]
+    providers: [MoneyValuePipe],
 })
 
 export class SetlDirectivesModule {
