@@ -9,6 +9,7 @@ import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
 import {BackToTopDirective} from './back-to-top/back-to-top.directive';
 import {TooltipDirective} from './tooltip/tooltip.directive';
+import {ActiveHeaderButtonDirective} from './activeHeaderButton/active-header-button.directive';
 import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
 import {MoneyValuePipe} from '../pipes';
 
@@ -23,6 +24,7 @@ import {MoneyValuePipe} from '../pipes';
         ClickedDirective,
         BackToTopDirective,
         TooltipDirective,
+        ActiveHeaderButtonDirective,
     ],
     exports: [
         NumberFormatterDirective,
@@ -33,6 +35,7 @@ import {MoneyValuePipe} from '../pipes';
         ClickedDirective,
         BackToTopDirective,
         TooltipDirective,
+        ActiveHeaderButtonDirective,
     ],
     imports: [
         CommonModule,
