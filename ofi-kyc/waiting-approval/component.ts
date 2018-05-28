@@ -1,5 +1,6 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, SecurityContext} from '@angular/core';
 import {Location} from '@angular/common';
+import {DomSanitizer} from '@angular/platform-browser';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -76,7 +77,9 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private _router: Router,
                 private walletsService: MyWalletsService,
                 private logService: LogService,
-                private messagesService: MessagesService) {
+                private messagesService: MessagesService,
+                private domSanitizer: DomSanitizer
+    ) {
 
         this.isRejectModalDisplayed = false;
         this.kycId = null;
@@ -232,27 +235,59 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         switch (status) {
             case Statuses.rejected:
                 //this.isRejectModalDisplayed = true;
-
-                this.confirmationService.create(
-                    'Confirm Rejection?',
-                    'Are you sure you want to reject this client\'s application?<br>You can also ask more information to this client in the previous page',
-                    {confirmText: 'Reject the cient\'s application', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
-                    if (ans.resolved){
-                        this.handleRejectButtonClick();
-                    }else{
-                        this.handleModalCloseButtonClick();
-                    }
-                });
+                this.rejectConfirmation();
                 break;
 
             case Statuses.askMoreInfo:
-                this.onAskMoreInfoKyc();
+                this.askInfoConfirmation();
                 break;
 
             case Statuses.approved:
                 this.onApproveKyc();
                 break;
         }
+    }
+
+    rejectConfirmation(){
+        let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
+        additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
+
+        let message = `
+Are you sure you want to reject this client's application?<br>
+Here is the message that will be sent to the investor:<br />
+<textarea style="margin-top:15px;" disabled>${additionalText}</textarea><br />
+You can also ask for more information to this client in the previous page.
+`;
+        let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
+
+        this.confirmationService.create(
+            'Confirm Rejection',
+            (safeMessage as string),
+            {confirmText: 'Reject the client\'s application', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
+            if (ans.resolved){
+                this.handleRejectButtonClick();
+            }
+        });
+    }
+
+    askInfoConfirmation(){
+        let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
+        additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
+
+        let message = `
+Are you sure you want to ask for more information?<br>
+Here is the message that will be sent to the investor:<br />
+<textarea style="margin-top:15px;" disabled>${additionalText}</textarea>
+`;
+        let safeMessage = this.domSanitizer.bypassSecurityTrustHtml(message);
+        this.confirmationService.create(
+            'Ask for more information',
+            (safeMessage as string),
+            {confirmText: 'Ask for more information', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
+            if (ans.resolved){
+                this.onAskMoreInfoKyc();
+            }
+        });
     }
 
     onAskMoreInfoKyc() {
