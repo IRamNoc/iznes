@@ -14,6 +14,11 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
             text-decoration: none;
 
             &:before, &:after { text-decoration: none; }
+        }
+        
+        [enhancedForm] .control-label,
+        [enhancedForm] app-ui-info-pane{
+            margin-top : 200px;
         }`
     ]
 })
