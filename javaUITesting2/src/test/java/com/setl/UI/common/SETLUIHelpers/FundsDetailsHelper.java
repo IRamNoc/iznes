@@ -242,18 +242,14 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
+
         scrollElementIntoViewById("fund-cancelfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
+        wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
+
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
@@ -261,11 +257,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
-        scrollElementIntoViewById("standardform");
-        wait.until(visibilityOfElementLocated(By.id("standardform")));
-        scrollElementIntoViewById("fund-submitfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+
+
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 
