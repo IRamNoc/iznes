@@ -8,6 +8,8 @@ import {ClrDgSortNoSearchDirective} from './clr-dg-sort-nosearch/directive';
 import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
 import {BackToTopDirective} from './back-to-top/back-to-top.directive';
+import {FormChecker} from './enhanced-form/enhanced-form.directive';
+
 import {MoneyValuePipe} from '../pipes';
 
 
@@ -19,6 +21,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        FormChecker
     ],
     exports: [
         NumberFormatterDirective,
@@ -27,6 +30,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        FormChecker
     ],
     imports: [
         CommonModule,
