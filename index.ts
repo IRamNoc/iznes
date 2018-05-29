@@ -98,6 +98,7 @@ export {
     OfiReportModule,
     OfiManageCsvComponent,
     CentralizationReportComponent,
+    CentralizationSelectComponent,
 } from './ofi-report-module';
 
 /*
