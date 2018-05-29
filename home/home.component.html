@@ -52,32 +52,38 @@
             <!-- Balances -->
             <div class="balances-grid">
                 <clr-datagrid #myDataGrid>
-                    <clr-dg-column style="min-width: 160px;">{{'Actions' | translate}}</clr-dg-column>
                     <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                    <clr-dg-column style="min-width: 170px;">{{'Asset' | translate}}</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;">{{'Total' | translate}}</clr-dg-column>
-                    <clr-dg-column>{{'Encumbered' | translate}}</clr-dg-column>
-                    <clr-dg-column>{{'Free' | translate}}</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;" mltag="txt_asset">Asset</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;" mltag="txt_total" class="right">Total</clr-dg-column>
+                    <clr-dg-column mltag="txt_encumbered" class="right">Encumbered</clr-dg-column>
+                    <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
+                    <clr-dg-column style="min-width: 160px;" mltag="txt_actions" class="right">Actions</clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let asset of holdingByAsset$ | async" [class.flash]="asset.isNew">
-                        <clr-dg-cell>
-                            <div class="btn-group btn-sm">
-                                <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/breakdown'">
-                                    <i class="fa fa-search"></i>{{'View' | translate}}</a>
-                                <a class="btn" [routerLink]="'/reports/balances/'+asset.hash+'/history'"><i class="fa fa-history"></i>{{'History' | translate}}</a>
-                            </div>
-                        </clr-dg-cell>
+                    <clr-dg-row *clrDgItems="let asset of holdingByAsset$ | async" [class.flash]="asset.isNew">                       
                         <!--<clr-dg-cell>{{asset.identifier}}</clr-dg-cell>-->
                         <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
-                        <clr-dg-cell [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
-
+                        <clr-dg-cell class="right" [class.flash]="asset.totalChange">{{asset.total | moneyValue}}
                         </clr-dg-cell>
-                        <clr-dg-cell [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
 
+                        <clr-dg-cell class="right" [class.flash]="asset.encumberChange">{{asset.totalencumbered | moneyValue}}
                         </clr-dg-cell>
-                        <clr-dg-cell [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
 
+                        <clr-dg-cell class="right" [class.flash]="asset.freeChange">{{asset.free | moneyValue}}
                         </clr-dg-cell>
+
+                        <clr-dg-cell class="right">
+                            <div class="right">
+                                <a class="btn btn-orange btn-sm" [routerLink]="'/reports/balances/'+asset.hash+'/breakdown'">
+                                    <i class="fa fa-search"></i>
+                                    <span mltag="txt_view">View</span>
+                                </a>
+                                <a class="btn btn-primary btn-sm" [routerLink]="'/reports/balances/'+asset.hash+'/history'">
+                                    <i class="fa fa-history"></i>
+                                    <span mltag="txt_history">History</span>
+                                </a>
+                            </div>
+                        </clr-dg-cell>
+
                     </clr-dg-row>
                 </clr-datagrid>
             </div>
