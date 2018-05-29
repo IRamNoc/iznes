@@ -6,25 +6,26 @@ import {of} from 'rxjs/observable/of';
 
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
-import {Router, ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
 import {ClarityModule} from '@clr/angular';
 import productConfig from '../productConfig';
-
-const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
-const locationSpy = jasmine.createSpyObj('Location', ['back']);
-const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
-const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
-const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
-
 import {FundComponent} from './component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {OfiCurrenciesService} from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+
+const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+const locationSpy = jasmine.createSpyObj('Location', ['back']);
+const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
+const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
+const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
+const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
@@ -51,6 +52,7 @@ const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
             resolve();
         })
     );
+
 const fundServiceSpy = {
     iznCreateFund: iznCreateFund,
     iznUpdateFund: iznUpdateFund,
@@ -82,7 +84,7 @@ const toasterServiceMock = {
 // Stub for routerLink
 @Directive({
     selector: '[routerLink]',
-    host: { '(click)': 'onClick()' }
+    host: {'(click)': 'onClick()'}
 })
 class RouterLinkStubDirective {
     @Input('routerLink') linkParams: any;
@@ -95,10 +97,10 @@ class RouterLinkStubDirective {
 
 describe('FundComponent', () => {
 
-    let comp:    FundComponent;
+    let comp: FundComponent;
     let fixture: ComponentFixture<FundComponent>;
-    let de:      DebugElement;
-    let el:      HTMLElement;
+    let de: DebugElement;
+    let el: HTMLElement;
 
     let linkDes;
     let routerLinks;
@@ -121,15 +123,16 @@ describe('FundComponent', () => {
                 BrowserAnimationsModule,
             ],
             providers: [
-                { provide: 'product-config', useValue: productConfig },
-                { provide: Router, useValue: routerSpy },
-                { provide: Location, useValue: locationSpy },
-                { provide: OfiFundService, useValue: fundServiceSpy },
-                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
-                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
-                { provide: NgRedux, useValue: ngReduxSpy },
-                { provide: ToasterService, useValue: toasterServiceMock },
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                {provide: 'product-config', useValue: productConfig},
+                {provide: Router, useValue: routerSpy},
+                {provide: Location, useValue: locationSpy},
+                {provide: OfiFundService, useValue: fundServiceSpy},
+                {provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub},
+                {provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub},
+                {provide: OfiCurrenciesService, useValue: OfiCurrenciesServiceStub},
+                {provide: NgRedux, useValue: ngReduxSpy},
+                {provide: ToasterService, useValue: toasterServiceMock},
+                {provide: ActivatedRoute, useValue: activatedRouteStub},
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -144,7 +147,7 @@ describe('FundComponent', () => {
 
         comp = fixture.componentInstance;
         activatedRouteStub.setParams('new');
-        comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
+        comp.managementCompanyItems = [{id: '0', text: 'test management company'}];
         comp.umbrellaList = {
             7: {
                 umbrellaFundID: 7,
@@ -173,8 +176,25 @@ describe('FundComponent', () => {
             },
         };
         comp.umbrellaItems = [
-            { id: '0', text: 'none' },
-            { id: 7, text: 'test' },
+            {id: '0', text: 'none'},
+            {id: 7, text: 'test'},
+        ];
+
+        comp.fundCurrencyItems = [
+            {id: 0, text: 'EUR'},
+            {id: 1, text: 'USD'},
+            {id: 2, text: 'GBP'},
+            {id: 3, text: 'CHF'},
+            {id: 4, text: 'JPY'},
+            {id: 5, text: 'AUD'},
+            {id: 6, text: 'NOK'},
+            {id: 7, text: 'SEK'},
+            {id: 8, text: 'ZAR'},
+            {id: 9, text: 'RUB'},
+            {id: 10, text: 'SGD'},
+            {id: 11, text: 'AED'},
+            {id: 12, text: 'CNY'},
+            {id: 13, text: 'PLN'}
         ];
 
         tick();
@@ -326,7 +346,10 @@ describe('FundComponent', () => {
                     const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
                     expect(ucitsVersionBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
-                    comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.UCITS, text: 'ucits' }]);
+                    comp.fundForm.controls['typeOfEuDirective'].setValue([{
+                        id: comp.enums.typeOfEuDirective.UCITS,
+                        text: 'ucits'
+                    }]);
                     tick();
                     fixture.detectChanges();
                     const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#UcitsVersion'));
@@ -337,7 +360,10 @@ describe('FundComponent', () => {
                     const ucitsVersionBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
                     expect(ucitsVersionBeforeEls.length).toEqual(0);
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
-                    comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.Other, text: 'Other' }]);
+                    comp.fundForm.controls['typeOfEuDirective'].setValue([{
+                        id: comp.enums.typeOfEuDirective.Other,
+                        text: 'Other'
+                    }]);
                     tick();
                     fixture.detectChanges();
                     const ucitsVersionAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#ucitsVersion'));
@@ -370,7 +396,10 @@ describe('FundComponent', () => {
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['UcitsVersion'].value).toEqual(testValue);
 
-                    comp.fundForm.controls['typeOfEuDirective'].setValue([{ id: comp.enums.typeOfEuDirective.Other, text: 'Other' }]);
+                    comp.fundForm.controls['typeOfEuDirective'].setValue([{
+                        id: comp.enums.typeOfEuDirective.Other,
+                        text: 'Other'
+                    }]);
                     tick();
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['UcitsVersion'].value).toEqual([]);
@@ -609,18 +638,18 @@ describe('FundComponent', () => {
                 isEuDirective: '0',
                 typeOfEuDirective: null,
                 UcitsVersion: null,
-                legalForm: [{ id: '0', text: 'Contractual Fund' }],
-                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
+                legalForm: [{id: '0', text: 'Contractual Fund'}],
+                nationalNomenclatureOfLegalForm: [{id: '2', text: 'BE Fonds commun de placement (FCP)'}],
                 homeCountryLegalType: null,
                 fundCreationDate: null,
                 fundLaunchate: null,
-                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
+                fundCurrency: [{text: 'Rwanda Franc RWF', id: '124'}],
                 openOrCloseEnded: '0',
                 fiscalYearEnd: '2017-02',
                 isFundOfFund: '0',
-                managementCompanyID: [{ id: '0', text: 'test management company' }],
-                fundAdministrator: [{ id : '1', text: 'Fund Admin 1' }],
-                custodianBank: [{ id : '1', text: 'Custodian Bank 1' }],
+                managementCompanyID: [{id: '0', text: 'test management company'}],
+                fundAdministrator: [{id: '1', text: 'Fund Admin 1'}],
+                custodianBank: [{id: '1', text: 'Custodian Bank 1'}],
                 investmentManager: null,
                 principalPromoter: null,
                 payingAgent: null,
@@ -628,7 +657,7 @@ describe('FundComponent', () => {
                 transferAgent: null,
                 centralizingAgent: null,
                 isDedicatedFund: '0',
-                portfolioCurrencyHedge: [{ id : '1', text: 'No Hedge' }],
+                portfolioCurrencyHedge: [{id: '1', text: 'No Hedge'}],
                 globalItermediaryIdentification: null,
                 delegatedManagementCompany: null,
                 investmentAdvisor: null,

@@ -115,10 +115,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             datePeriod: new FormControl([])
         });
 
-        this.dateFromConfig.max = moment().add(-1, 'days');
-        // comment out and changed to allow search toDate for "today".
-        // this.dateToConfig.max = moment().add(-1, 'days');
-        this.dateToConfig.max = moment();
+        this.dateFromConfig.max = moment();
+        this.dateToConfig.min = moment();
 
         this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
             this.usingDatePeriodToSearch = false;
@@ -368,9 +366,9 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             method: 'exportNavFundHistory',
             token: this.socketToken,
             shareId: requestData.shareId,
-            navDateFrom: encodeURIComponent(requestData.navDateFrom),
-            navDateTo: encodeURIComponent(requestData.navDateTo),
-            userId: this.userId
+            navDateFrom: requestData.navDateFrom,
+            navDateTo: requestData.navDateTo,
+            userId: this.userId,
         });
     }
 

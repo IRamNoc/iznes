@@ -18,9 +18,9 @@ export class ShareProfileMandatory extends DynamicFormsValidator {
 export class ShareProfileOptional {
     recommendedHoldingPeriod: FormItem = {
         type: FormItemType.number,
-        label: 'Recommended Holding Period',
+        label: 'Recommended Holding Period in month(s)',
         required: false,
-        mltag: 'txt_fundshare_recholdingperiod'
+        mltag: 'txt_fundshare_recholdingperiodinmonths'
     }
     benchmark: FormItem = {
         type: FormItemType.text,

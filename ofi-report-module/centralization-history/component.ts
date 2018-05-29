@@ -24,9 +24,10 @@ import {ConfirmationService, immutableHelper, NumberConverterService} from '@set
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 /* Core redux */
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
-import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import * as moment from 'moment';
 import {mDateHelper} from '@setl/utils';
+import { OfiCurrenciesService } from "../../ofi-req-services/ofi-currencies/service";
 
 /* Types. */
 interface SelectedItem {
@@ -99,22 +100,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         {id: 'year', text: 'Last year'},
     ];
 
-    currencyList = [
-        {id: 0, text: 'EUR'},
-        {id: 1, text: 'USD'},
-        {id: 2, text: 'GBP'},
-        {id: 3, text: 'CHF'},
-        {id: 4, text: 'JPY'},
-        {id: 5, text: 'AUD'},
-        {id: 6, text: 'NOK'},
-        {id: 7, text: 'SEK'},
-        {id: 8, text: 'ZAR'},
-        {id: 9, text: 'RUB'},
-        {id: 10, text: 'SGD'},
-        {id: 11, text: 'AED'},
-        {id: 12, text: 'CNY'},
-        {id: 13, text: 'PLN'},
-    ];
+    currencyList = [];
 
     /* Private Properties. */
     private myDetails: any = {};
@@ -131,6 +117,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'baseCentralizationHistory']) OfiBaseCentralizationHistoryObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationHistory']) OfiCentralizationHistoryObj;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -142,7 +129,12 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 private _numberConverterService: NumberConverterService,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                private _fileDownloader: FileDownloader,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                private ofiCurrenciesService: OfiCurrenciesService) {
+
+        this.ofiCurrenciesService.getCurrencyList();
+
         this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.OfiBaseCentralizationHistoryObj.subscribe((requested) => this.getBaseCentralizationHistoryFromRedux(requested)));
@@ -184,18 +176,29 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 this.router.navigateByUrl('/reports/centralization');
             }
         }));
+
+        this.subscriptions.push(this.currenciesObs.subscribe((c) => this.getCurrencyList(c)));
     }
 
     public ngOnInit() {
         this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
 
-        this.filterForm.controls['period'].setValue([this.periodList[1]]);
+        this.filterForm.controls['period'].setValue([this.periodList[0]]);
+        
+        this.dateTo = this.reformatDate(moment().add(1, 'weeks'));
+        this.dateFrom = this.reformatDate(moment().subtract(1, 'weeks'));
 
         this.changeDetectorRef.markForCheck();
     }
 
     public ngAfterViewInit() {
+    }
+
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
+        }
     }
 
     getLanguage(requested): void {
@@ -506,16 +509,20 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     }
 
     exportAllHistory(): void {
-        const methodName = 'getSingleShareInfoCsv';
         const period = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
 
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=' + methodName + '&fundShareID=' + this.shareID + '&dateFrom=' + this.dateFrom + '&dateTo=' + this.dateTo + '&dateRange=' + period + '&userId=' + this.myDetails.userId;
-        const url = this.generateExportURL(paramUrl, this.appConfig.production);
-        window.open(url, '_blank');
+        this._fileDownloader.downLoaderFile({
+            method: 'getSingleShareInfoCsv',
+            token: this.memberSocketService.token,
+            fundShareID: this.shareID,
+            dateFrom: this.dateFrom,
+            dateTo: this.dateTo,
+            dateRange: period,
+            userId: this.myDetails.userId,
+        });
     }
 
     exportHistory(historyRow): void {
-        let paramUrl = 'file?token=' + this.memberSocketService.token + '&method=exportAssetManagerOrders&userId=' + this.myDetails.userId;
 
         if (historyRow !== undefined) {
             const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
@@ -532,15 +539,16 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 fromDate: cutoffDate,
                 toDate: cutoffDate + ' 23:59',
             };
-            for (let filter in params) {
-                if (params.hasOwnProperty(filter)) {
-                    paramUrl += '&' + filter + '=' + encodeURIComponent(params[filter]);
-                }
-            }
-            const url = this.generateExportURL(paramUrl, this.appConfig.production);
-            // console.log(url);
-            window.open(url, '_blank');
+
+            this._fileDownloader.downLoaderFile({
+                method: 'exportAssetManagerOrders',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+                ...params,
+            });
+
         }
+
     }
 
     generateExportURL(url: string, isProd: boolean = true): string {
