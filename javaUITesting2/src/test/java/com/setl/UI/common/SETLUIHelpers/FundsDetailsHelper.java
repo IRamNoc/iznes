@@ -249,6 +249,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
+
+        scrollElementIntoViewById("portfolioCurrencyHedge");
+        wait.until(visibilityOfElementLocated(By.id("portfolioCurrencyHedge")));
+
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
 
         scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a");
