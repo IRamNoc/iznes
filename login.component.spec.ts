@@ -44,6 +44,15 @@ const environment = {
     platform: ''
 };
 
+const ActivatedRouteStub = {
+    params: Observable.of({token: ''}),
+    snapshot: {
+        params: {
+            email: ''
+        },
+    },
+};
+
 describe('SetlLoginComComponent', () => {
     let component: SetlLoginComponent;
     let fixture: ComponentFixture<SetlLoginComponent>;
@@ -75,7 +84,7 @@ describe('SetlLoginComComponent', () => {
                 {provide: ToasterService, useClass: ToasterServiceMock},
                 {provide: AlertsService, useValue: alertServiceMock},
                 {provide: Router, useValue: RouterMock},
-                {provide: ActivatedRoute, useValue: {params: Observable.of({token: ''})}},
+                {provide: ActivatedRoute, useValue: ActivatedRouteStub},
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
