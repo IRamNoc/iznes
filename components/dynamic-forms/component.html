@@ -29,6 +29,7 @@
                                     <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
                                         formControlName="{{item}}"
                                         [dpDayPicker]="model[item].dateOptions"
+                                        [readonly]="true"
                                         mode="day"
                                         theme="dp-material" />
                                 </div>
