@@ -250,6 +250,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
+
+        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
@@ -258,6 +262,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
 
+        scrollElementIntoViewById("fund-submitfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
+        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
 
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
