@@ -19,6 +19,7 @@ import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
@@ -41,7 +42,6 @@ public class OpenCSDNAVAcceptanceTest {
     public Timeout globalTimeout = new Timeout(75000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
-
 
 
     @Before
@@ -102,8 +102,9 @@ public class OpenCSDNAVAcceptanceTest {
         try {
             String TableNav = driver.findElement(By.id("NAV-Value-" + rowNo)).getText();
             assertTrue(TableNav.equals("12.00"));
-        }catch (Error e){
-            fail(e.getMessage()); }
+        } catch (Error e) {
+            fail(e.getMessage());
+        }
     }
 
     @Test
@@ -119,7 +120,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -193,5 +194,98 @@ public class OpenCSDNAVAcceptanceTest {
         assertTrue(driver.findElement(By.id("NAV-ISIN-0")).isDisplayed());
         String navShareName = driver.findElement(By.id("NAV-ISIN-0")).getText();
         assertTrue(navShareName.equals(uIsin[0]));
+    }
+
+    @Test
+    public void AccessNAVSubModuleCheckDetailsTG206TG212() throws InterruptedException, SQLException {
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        String[] uFundDetails = generateRandomFundsDetails();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        navigateToNAVPageFromFunds();
+        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
+        WebDriverWait SearchWait = new WebDriverWait(driver, 2);
+        SearchWait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
+        String ShareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
+        System.out.println(uShareDetails[0]);
+        System.out.println(ShareName);
+        assertTrue(ShareName.equals(uShareDetails[0]));
+        driver.findElement(By.id("NAV-Share-Name-0")).click();
+        wait.until(visibilityOfElementLocated(By.id("shareName")));
+        String shareName = driver.findElement(By.id("shareName")).getAttribute("value");
+        assertTrue(shareName.equals(uShareDetails[0]));
+        String navISIN = driver.findElement(By.id("isin")).getAttribute("value");
+        assertTrue(navISIN.equals(uIsin[0]));
+        String amCompany = driver.findElement(By.id("amCompany")).getAttribute("value");
+        assertTrue(amCompany.equals("Management Company"));
+        String Date = driver.findElement(By.id("currentDate")).getAttribute("value");
+        assertTrue(Date.equals(getTodayDate()));
+        String NavCcy = driver.findElement(By.id("navCurrency")).getAttribute("value");
+        assertTrue(NavCcy.equals("EUR (€)"));
+        String NAVStatus = driver.findElement(By.id("nav")).getAttribute("value");
+        assertTrue(NAVStatus.equals("Pending"));
+        assertTrue(driver.findElement(By.id("numberofshare")).isDisplayed());
+        assertTrue(driver.findElement(By.id("aum")).isDisplayed());
+        assertTrue(driver.findElement(By.id("navDateFrom")).isDisplayed());
+        assertTrue(driver.findElement(By.id("navDateTo")).isDisplayed());
+    }
+
+    @Test
+    public void CheckNavDetailsForNoneValueDataAndSelectDateFieldTG207() throws InterruptedException, SQLException {
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        String[] uFundDetails = generateRandomFundsDetails();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        navigateToNAVPageFromFunds();
+        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        driver.findElement(By.id("NAV-Share-Name-0")).click();
+        driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[2]/span/span")).click();
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[1]/div/a/div")).isDisplayed());
+        String L30D = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[1]/div/a/div")).getText();
+        assertTrue(L30D.equals("Last 30 days"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[2]/div/a/div")).isDisplayed());
+        String L3m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[2]/div/a/div")).getText();
+        assertTrue(L3m.equals("Last 3 months"));
+        scrollElementIntoViewByXpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")).isDisplayed());
+        String L6m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")).getText();
+        assertTrue(L6m.equals("Last 6 months"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[4]/div/a/div")).isDisplayed());
+        String L9m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[4]/div/a/div")).getText();
+        assertTrue(L9m.equals("Last 9 months"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[5]/div/a/div")).isDisplayed());
+        String L12m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[5]/div/a/div")).getText();
+        assertTrue(L12m.equals("Last 12 months"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[6]/div/a/div")).isDisplayed());
+        String YTD = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[6]/div/a/div")).getText();
+        assertTrue(YTD.equals("Year to date"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[7]/div/a/div")).isDisplayed());
+        String STB = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[7]/div/a/div")).getText();
+        assertTrue(STB.equals("Since the beginning"));
+        driver.findElement(By.id("navDateTo")).click();
+        driver.findElement(By.id("navDateTo")).clear();
+        driver.findElement(By.id("navDateTo")).sendKeys("2018-05-24");
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"nav-history-row0-btn-edit\"]/span")));
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form[3]/div/div[1]/a")).click();
+        wait.until(visibilityOfElementLocated(By.id("Search-field")));
+
     }
 }
