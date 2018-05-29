@@ -284,7 +284,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.id("navDateTo")).clear();
         driver.findElement(By.id("navDateTo")).sendKeys("2018-05-24");
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"nav-history-row0-btn-edit\"]/span")));
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form[3]/div/div[1]/a")).click();
+
         wait.until(visibilityOfElementLocated(By.id("Search-field")));
 
     }
