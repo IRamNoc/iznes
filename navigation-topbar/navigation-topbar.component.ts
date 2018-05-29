@@ -283,49 +283,14 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         if (this.showHighlightTranslations) {
             this.highlightMissingTranslations();
         } else {
-            this.removeHighlightMissingTranslations();
+            this._translate.removeHighlightMissingTranslations();
         }
     }
 
     highlightMissingTranslations(){
         for (let tr of this.missingTranslations) {
-            this.replaceMissingTranslations(tr.translation);
+            this._translate.replaceMissingTranslations(tr.translation);
         }
-    }
-
-    removeHighlightMissingTranslations() {
-        const allHighlighted = document.getElementsByClassName('highlighMissingTranslations');
-        Array.from(document.getElementsByClassName('highlighMissingTranslations')).forEach((v) => {
-            v.classList.remove('highlighMissingTranslations');
-            v.classList.remove('blink_bg');
-        });
-
-    }
-
-    replaceMissingTranslations(str) {
-        const elements = document.getElementsByTagName('*');
-        const excludes = 'html,head,style,title,link,meta,script,object,iframe';
-        for (let i = 0; i < elements.length; i++) {
-            let element = elements[i];
-            if ((excludes + ',').indexOf(element.nodeName.toLowerCase() + ',') === -1) {
-                for (let j = 0; j < element.childNodes.length; j++) {
-                    let node = element.childNodes[j];
-                    if (node.nodeType === 3) {
-                        let text = node.nodeValue;
-                        let regex = new RegExp(this.escapeRegExp(str), 'gi');
-                        let replacedText = text.replace(regex, 'STRFOUND');
-                        if (replacedText !== text) {
-                            element.classList.add('highlighMissingTranslations');
-                            element.classList.add('blink_bg');
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    escapeRegExp(str) {
-        return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
     }
 
     async generateTranslations() {
