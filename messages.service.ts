@@ -1,14 +1,19 @@
 /* Angular/vendor imports. */
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 /* Package Imports. */
-import {Observable} from 'rxjs';
-import {Subscription} from 'rxjs/Subscription';
+import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
-import {NgRedux, select} from '@angular-redux/store';
-import {SagaHelper} from '@setl/utils/index';
-import {MyMessagesService} from '@setl/core-req-services';
-import {MessageActionsConfig, MessageConnectionConfig, MessageKycConfig} from '@setl/core-messages';
-import {getBodyNode} from "@angular/animations/browser/src/render/shared";
+import { NgRedux, select } from '@angular-redux/store';
+import { SagaHelper } from '@setl/utils/index';
+import { MyMessagesService } from '@setl/core-req-services';
+import { commonHelper } from '@setl/utils';
+import {
+    MessageActionsConfig,
+    MessageCancelOrderConfig,
+    MessageConnectionConfig,
+    MessageKycConfig,
+} from '@setl/core-messages';
 
 /* Service Class. */
 @Injectable()
@@ -54,14 +59,14 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig = null) {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | MessageCancelOrderConfig = null) {
         const bodyObj = {
-            general: btoa(bodyStr),
-            action: JSON.stringify(action)
+            general: commonHelper.b64EncodeUnicode(bodyStr),
+            action: JSON.stringify(action),
         };
 
         const body = JSON.stringify(bodyObj);
-        const subject = btoa(subjectStr);
+        const subject = commonHelper.b64EncodeUnicode(subjectStr);
 
         const recipients = {};
         let senderPub;
@@ -165,7 +170,7 @@ export class MessagesService {
      *
      * @param messageData
      */
-    public saveReply(messageData){
+    public saveReply(messageData) {
         this.replyData = {
             senderId: messageData['senderId'],
             senderWalletName: messageData['senderWalletName'],
@@ -180,7 +185,7 @@ export class MessagesService {
      *
      * @returns {Promise<any>}
      */
-    public loadReply(){
+    public loadReply() {
         return new Promise((resolve, reject) => {
             resolve(this.replyData);
         });
@@ -189,7 +194,7 @@ export class MessagesService {
     /**
      * clear reply message
      */
-    public clearReply(){
+    public clearReply() {
         this.replyData = {};
     }
 

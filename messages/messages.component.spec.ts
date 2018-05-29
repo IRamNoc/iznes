@@ -7,6 +7,7 @@ import {SetlMessageAttachmentComponent} from './message-components/message-attac
 import {SetlMessageFormActionComponent} from './message-components/message-form-action/message-form-action.component';
 import {SetlMessageConnectionComponent} from './message-components/message-connection/message-connection.component';
 import {SetlMessageKycComponent} from './message-components/message-kyc/message-kyc.component';
+import {SetlMessageAmCancelOrderComponent} from './message-components/message-cancel-order/message-cancel-order.component';
 import {NgxPaginationModule} from 'ngx-pagination';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from '@setl/utils/components/ng2-select/select.module';
@@ -108,7 +109,8 @@ describe('SetlMessagesComponent', () => {
                 SetlMessageAttachmentComponent,
                 SetlMessageFormActionComponent,
                 SetlMessageConnectionComponent,
-                SetlMessageKycComponent
+                SetlMessageKycComponent,
+                SetlMessageAmCancelOrderComponent,
             ],
             imports: [
                 NgReduxTestingModule,
