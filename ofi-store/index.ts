@@ -42,6 +42,9 @@ import {OfiReportsReducer, OfiReportsState} from './ofi-reports';
  */
 import {clearrequested, KycReducer, KycState, setamkyclist, setrequested} from './ofi-kyc';
 
+/* Currencies */
+import {CurrencyState, CurrencyActions, CurrencyReducer} from './ofi-currencies';
+
 export {
     SET_FUND_ACCESS_MY,
     clearRequestedFundAccessMy,
@@ -191,8 +194,14 @@ export {
     clearrequested
 } from './ofi-kyc';
 
+/* Currencies */
+export {CurrencyActions} from './ofi-currencies';
 
+/*--------------------------------------------------*/
+/*--------------- OFI GLOBAL REDUCER ---------------*/
+/*--------------------------------------------------*/
 export interface OfiState {
+    ofiCurrencies: CurrencyState;
     ofiFundInvest: OfiFundInvestState;
     ofiCorpActions: OfiCorpActionsState;
     ofiProduct: OfiProductState;
@@ -203,6 +212,7 @@ export interface OfiState {
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
+    ofiCurrencies: CurrencyReducer,
     ofiFundInvest: OfiFundInvestReducer,
     ofiCorpActions: OfiCorpActionsReducer,
     ofiProduct: OfiProductReducer,

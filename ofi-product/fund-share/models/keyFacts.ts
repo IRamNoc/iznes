@@ -272,15 +272,33 @@ export class ShareKeyFactsOptional {
         mltag: 'txt_fundshare_geoarea'
     }
     srri: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.list,
         label: 'SRRI (Synthetic Risk and Reward Indicator)',
         required: false,
+        listItems: [
+            { id: 1, text: '1' },
+            { id: 2, text: '2' },
+            { id: 3, text: '3' },
+            { id: 4, text: '4' },
+            { id: 5, text: '5' },
+            { id: 6, text: '6' },
+            { id: 7, text: '7' }
+        ],
         mltag: 'txt_fundshare_srri'
     }
     sri: FormItem = {
-        type: FormItemType.number,
+        type: FormItemType.list,
         label: 'SRI (Synthetic Risk Indicator)',
         required: false,
+        listItems: [
+            { id: 1, text: '1' },
+            { id: 2, text: '2' },
+            { id: 3, text: '3' },
+            { id: 4, text: '4' },
+            { id: 5, text: '5' },
+            { id: 6, text: '6' },
+            { id: 7, text: '7' }
+        ],
         mltag: 'txt_fundshare_sri'
     }
     navHedge: FormItem = {

@@ -16,6 +16,8 @@ import {
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
+import {setInvestorInvitationListReset} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+
 
 import {resetHomepage} from '@setl/core-store';
 import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
@@ -26,7 +28,10 @@ import {LogService} from "@setl/utils";
 export class OfiMemberNodeChannelService {
 
     /* Constructor. */
-    constructor(private ngRedux: NgRedux<any>, private logService: LogService,) {
+    constructor(
+        private ngRedux: NgRedux<any>,
+        private logService: LogService,
+    ) {
         /* Stub. */
     }
 
@@ -96,11 +101,17 @@ export class OfiMemberNodeChannelService {
             case 'updatekyc':
                 this.ngRedux.dispatch(clearrequested());
                 this.ngRedux.dispatch(setamkyclist());
+                this.ngRedux.dispatch(setInvestorInvitationListReset());
                 break;
 
             case 'kycaccepted':
                 //enable menu.
                 this.ngRedux.dispatch(resetHomepage());
+                break;
+
+            case 'iznprekycupdate':
+                this.ngRedux.dispatch(setInvestorInvitationListReset());
+                break;
 
             // new umbrella fund created and umbrella fund updated.
             // todo
