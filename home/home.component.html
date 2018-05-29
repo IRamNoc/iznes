@@ -1,7 +1,7 @@
 <h3 class="pt-1 pl-1">
     <b>Welcome {{username}}</b>
     <span *ngIf="lastLogin">
-            <small>Last login: {{lastLogin | date: 'MMM d y HH:mm'}}</small>
+            <small>Last login: {{lastLogin | datex: 'MMMM Do YYYY hh:mm'}}</small>
         </span>
 </h3>
 
