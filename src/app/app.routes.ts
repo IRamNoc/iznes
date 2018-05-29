@@ -25,6 +25,7 @@ import {
     OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
     CentralizationReportComponent,
+    CentralizationSelectComponent,
     OfiCentralizationHistoryComponent,
     OfiDocumentsComponent,
     OfiFundAccessComponent,
@@ -327,6 +328,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'centralization',
                         component: CentralizationReportComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'select-centralization',
+                        component: CentralizationSelectComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],

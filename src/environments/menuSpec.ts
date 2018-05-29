@@ -85,6 +85,13 @@ const reportsCentralization = {
     element_id: 'menu-report-centralization',
     router_link: '/reports/centralization'
 };
+const reportsCentralizationSelect = {
+    label: 'Centralisation',
+    label_txt: 'txt_centralisation',
+    icon_class: 'fa fa-book',
+    element_id: 'menu-report-centralization-select',
+    router_link: '/reports/select-centralization'
+};
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
 //     label_txt: 'txt_holders_list',
@@ -394,6 +401,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     reportsCollectsArchives,
                     reportsCentralization,
+                    reportsCentralizationSelect,
                 ]
             },
             kycDocuments,
