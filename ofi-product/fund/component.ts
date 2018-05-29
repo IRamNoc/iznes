@@ -556,6 +556,7 @@ export class FundComponent implements OnInit, OnDestroy {
                         capitalPreservationPeriod: FundComponent.getListItem(fund.capitalPreservationPeriod, this.capitalPreservationPeriodItems),
                         transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
                         centralizingAgent: FundComponent.getListItem(fund.centralizingAgent, this.centralizingAgentItems),
+                        delegatedManagementCompany: FundComponent.getListItem(fund.delegatedManagementCompany, this.managementCompanyItems),
                     });
                     this.viewMode = 'FUND';
                     return;
