@@ -308,9 +308,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     fundCurrency: (fundCurrency) ? fundCurrency.text : '',
                 });
             });
+
         }
 
-        this.fundList = fundList;
+        this.fundList = _.orderBy(fundList, ['fundID'], ['desc']);
         this.panelDefs[1].data = this.fundList;
         this.panelDefs[1].count = this.fundList.length;
         this._changeDetectorRef.markForCheck();
@@ -349,11 +350,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             });
         }
 
-        this.shareList = shareList;
-
-        this.filteredShareList = shareList.filter((share) => {
+        this.filteredShareList = _.orderBy(shareList.filter((share) => {
             return share.status !== 5;
-        });
+        }), ['fundShareID'], ['desc']);
 
         this.panelDefs[2].data = this.filteredShareList;
         this.panelDefs[2].count = this.filteredShareList.length;
@@ -401,7 +400,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             });
         }
 
-        this.umbrellaFundList = umbrellaFundList;
+        this.umbrellaFundList = _.orderBy(umbrellaFundList, ['umbrellaFundID'], ['desc']);
         this.panelDefs[0].data = this.umbrellaFundList;
         this.panelDefs[0].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
