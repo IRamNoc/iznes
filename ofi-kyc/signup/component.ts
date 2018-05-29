@@ -197,7 +197,14 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                     this.signupForm.controls['username'].patchValue(data[1].Data[0].email);
                 }).catch((e)=>{
                     //handle error.
-                    this.signupForm.controls['username'].patchValue('');
+                    this._ofiKycService.isInvitationTokenUsed(this.invitationToken)
+                        .then((d) => {
+                            this.toasterService.pop('warning', 'This link is no longer valid. Please try to login again.');
+                            this.router.navigate(['login', { email: _.get(d, [1, 'Data', 0, 'email'])}]);
+                        })
+                        .catch(() => {
+                            this.signupForm.controls['username'].patchValue('');
+                        });
                 });
             }
 
