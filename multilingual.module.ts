@@ -9,9 +9,15 @@ import {MultilingualService} from './multilingual.service';
 
 /* Module declaration. */
 @NgModule({
-    declarations: [MultilingualDirective],
+    declarations: [
+        MultilingualDirective,
+    ],
     imports: [],
-    exports: [MultilingualDirective],
-    providers: [MultilingualService]
+    exports: [
+        MultilingualDirective,
+    ],
+    providers: [
+        MultilingualService,
+    ]
 })
 export class MultilingualModule {  }
