@@ -68,7 +68,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        String LEI = generateRandomLEI();
         driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
@@ -78,6 +77,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
         selectTopDropdown("uf_fundAdministrator");
+    }
+
+    public static void fillCertainUmbrellaDetails(String fundName, String lei, String regOffice, String regAddress, String managementComp, String dateSelected, String custodian, String fundAdmin ) throws InterruptedException {
+        driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
+        driver.findElement(By.id("uf_registerOffice")).sendKeys(regOffice);
+        driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(regAddress);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(dateSelected);
+        driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
+
+        searchAndSelectTopDropdown("uf_managementCompany", managementComp);
+        searchAndSelectTopDropdown("uf_custodian", custodian);
+        searchAndSelectTopDropdown("uf_fundAdministrator", fundAdmin);
     }
 
     private static String generateRandomLEI() {
@@ -230,18 +242,22 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"fundAdministrator\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"managementCompanyID\"]/div/div[3]/ul/li[1]/div/a")).click();
+
         scrollElementIntoViewById("fund-cancelfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
+        wait.until(elementToBeClickable(By.id("fund-cancelfund-btn")));
+
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"custodianBank\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div"))));
+
+        scrollElementIntoViewById("portfolioCurrencyHedge");
+        wait.until(visibilityOfElementLocated(By.id("portfolioCurrencyHedge")));
+
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-cancelfund-btn"))));
+
+        scrollElementIntoViewByXpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")));
+
         driver.findElement(By.xpath("//*[@id=\"portfolioCurrencyHedge\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
@@ -249,11 +265,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
-        scrollElementIntoViewById("standardform");
-        wait.until(visibilityOfElementLocated(By.id("standardform")));
+
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
+        wait.until(elementToBeClickable(By.id("fund-submitfund-btn")));
+
         driver.findElement(By.id("fund-submitfund-btn")).click();
     }
 
@@ -600,6 +616,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validatePageLayout() {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
         assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
@@ -611,6 +628,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[1]")).getText().contains("Shares "));
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-chevron-right.rotate")));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[4]/div[1]/div[2]")));
+        scrollElementIntoViewById("new-share-btn");
+        wait.until(visibilityOfElementLocated(By.id("new-share-btn")));
+        wait.until(elementToBeClickable(By.id("new-share-btn")));
         assertTrue(driver.findElement(By.id("new-share-btn")).getText().contains("Add new Share"));
 
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[3]/div[1]/div[1]")));

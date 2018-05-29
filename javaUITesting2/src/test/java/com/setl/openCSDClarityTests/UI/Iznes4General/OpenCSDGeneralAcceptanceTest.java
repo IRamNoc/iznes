@@ -64,9 +64,7 @@ public class OpenCSDGeneralAcceptanceTest {
         enterUsername(userName);
         enterEmailAddress(email);
         navigateToDropdown("topBarMenu");
-        //navigateToPageByID("topBarMyAccount");
         navigateToPageByID("menu-user-admin-users");
-
         driver.findElement(By.id("user-tab-1")).click();
         String screenUserName = driver.findElement(By.id("new-user-username")).getAttribute("value");
         assertTrue(screenUserName.equals(userName));
@@ -87,30 +85,6 @@ public class OpenCSDGeneralAcceptanceTest {
         deleteFormdataFromDatabase("8", "1");
     }
 
-    @Test
-    @Ignore("My Account functionality removed")
-    public void shouldNotDisplayTitleInTextField() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("topBarMenu");
-        navigateToPageByID("topBarMyAccount");
-        //Manually check title is not displayed inside text field
-    }
-
-    @Test
-    @Ignore("My Account functionality removed")
-    public void shouldHaveAsteriskDisplayedNextToTitle() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("topBarMenu");
-        navigateToPageByID("topBarMyAccount");
-        //Manually check asterisks are displayed next to title
-    }
-
-    @Test
-    public void shouldDisplayPopupWhenPageIsRefreshed() throws IOException, InterruptedException {
-        loginAndVerifySuccess("am", "alex01");
-        driver.navigate().refresh();
-        checkAlert();
-    }
 
     @Test
     public void shouldDisplayNavigationMenuOnLogin() throws IOException, InterruptedException {
