@@ -1,6 +1,7 @@
 :host {
     clr-tabs {
         margin: 20px 0;
+        position: relative;
 
         button .required {
             color: red;
@@ -8,6 +9,8 @@
         }
     }
     clr-tab-content {
+        padding-bottom: 95px;
+
         &.outer {
             padding-right: 0;
         }
@@ -31,6 +34,20 @@
 
         > div {
             padding: 0;
+        }
+    }
+
+    .previous-next {
+        border-top: 1px solid #DDD;
+        bottom: 15px;
+        display: flex;
+        padding-top: 15px;
+        position: absolute;
+        width: calc(100% - 20px);
+
+        .buttons {
+            margin: 0 auto;
+            width: 190px;
         }
     }
 

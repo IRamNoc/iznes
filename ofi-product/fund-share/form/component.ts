@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
@@ -9,7 +9,8 @@ import 'rxjs/add/operator/take';
 import {Subscription} from 'rxjs/Subscription';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterService} from 'angular2-toaster';
-import {ConfirmationService} from '@setl/utils';
+import {ClrTabs} from '@clr/angular';
+import {ConfirmationService, ClrTabsHelper} from '@setl/utils';
 
 import {setRequestedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund';
 import {setRequestedUmbrellaFund} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund';
@@ -57,6 +58,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private subscriptionsArray: Subscription[] = [];
     private panels: { [key: string]: any } = new PanelData();
     private iznShareList;
+
+    @ViewChild('tabsRef') tabsRef: ClrTabs;
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
@@ -543,6 +546,34 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     goToAuditTrail(): void {
         this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}/audit`);
+    }
+
+    previousTab(): void {
+        const activeTabIndex: number = ClrTabsHelper.getActiveTabIndex(this.tabsRef);
+
+        if(activeTabIndex > 0) ClrTabsHelper.setActiveTab(this.tabsRef, activeTabIndex-1);
+    }
+
+    nextTab(): void {
+        const activeTabIndex: number = ClrTabsHelper.getActiveTabIndex(this.tabsRef);
+
+        if(activeTabIndex < this.getTabsLength()) ClrTabsHelper.setActiveTab(this.tabsRef, activeTabIndex+1);
+    }
+
+    hidePreviousTabButton(): boolean {
+        if(!this.tabsRef) return true;
+
+        return ClrTabsHelper.getActiveTabIndex(this.tabsRef) === 0;
+    }
+
+    hideNextTabButton(): boolean {
+        if(!this.tabsRef) return true;
+
+        return ClrTabsHelper.getActiveTabIndex(this.tabsRef) === this.getTabsLength();
+    }
+
+    private getTabsLength(): number {
+        return this.tabsRef.tabLinkDirectives.length - 1;
     }
 
     ngOnDestroy() {
