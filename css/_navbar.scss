@@ -69,7 +69,8 @@ header {
                 height: 55px;
                 margin-top: 10px;
                 &:nth-child(n+2) {
-                    border-left: 1px solid rgba(255, 255, 255, 0.5);
+                    //border-left: 1px solid rgba(255, 255, 255, 0.5);
+                    border-left: 1px solid #efefef;
                 }
             }
         }
@@ -87,7 +88,8 @@ header {
             padding: 1px 15px!important;
             width: 200px !important;
             opacity: 1.0 !important;
-            color: white;
+            //color: white;
+            color: #222;
 
             img {
                 width: 50px !important;
@@ -100,9 +102,10 @@ header {
                 margin-top: 3px !important;
                 font-size: 14px !important;
                 float: left !important;
-                color: white;
+                //color: white;
+                color: #222;
                 width: calc(100% - 60px);
-                font-weight: 600;
+                //font-weight: 600;
             }
 
             span {
@@ -142,7 +145,8 @@ header {
                 height: 1rem!important;
                 transform: translateX(-50%)!important;
                 top: 6px!important;
-                color: white;
+                //color: white;
+                color: #969696;
             }
 
             p {
@@ -155,8 +159,9 @@ header {
                 margin-top: 3px !important;
                 font-size: 13px !important;
                 float: left !important;
-                color: white;
-                font-weight: 900;
+                //color: white;
+                color: #969696;
+                //font-weight: 900;
                 width: 100%;
             }
         }
@@ -299,11 +304,12 @@ header clr-dropdown .dropdown-menu {
 }
 
 header .header-actions, header .branding + .search {
-  background: #373a49;
-  /*border-bottom: 1px solid #ddd; }*/
+  //background: #373a49;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
 }
 header .header-actions, header .branding + .search:after {
-  background-color: transparent !important;
+  //background-color: transparent !important;
 }
 
 
