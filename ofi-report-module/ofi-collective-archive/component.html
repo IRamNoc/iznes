@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-book"></i> <span mltag="txt_collectsarchive">Collects Archive</span></h1>
+    <h1><i class="fa fa-book"></i> {{'Collects Archive' | translate}}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -28,12 +28,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_fromdate">From date</span>
+                                <span class="ml_translated">{{'From date' | translate}}</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input formControlName="fromDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('from', $event)" [readonly]="true" mltag="txt_chooseadate">
+                                <input formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('from', $event)" [readonly]="true">
 
 
 
@@ -45,12 +45,12 @@
 
                         <div class="form-group col-sm-6">
                             <label class="control-label">
-                                <span class="ml_translated" mltag="txt_todate">To date</span>
+                                <span class="ml_translated">{{'To date' | translate}}</span>
                             </label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input formControlName="toDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('to', $event)" [readonly]="true" mltag="txt_chooseadate">
+                                <input formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" (ngModelChange)="dateChange('to', $event)" [readonly]="true">
 
 
 
@@ -65,16 +65,16 @@
             </form>
 
             <clr-datagrid #myDataGrid>
-                <clr-dg-column mltag="txt_nameoftheshareisincode">Name of the share / Isin Code</clr-dg-column>
-                <clr-dg-column mltag="txt_currency">Currency</clr-dg-column>
-                <clr-dg-column mltag="txt_centralisationdate">Centralisation Date</clr-dg-column>
-                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
-                <clr-dg-column mltag="txt_amountsubscribed">Amount subscribed</clr-dg-column>
-                <clr-dg-column mltag="txt_quantitysubscribed">Quantity Subscribed</clr-dg-column>
-                <clr-dg-column mltag="txt_acquiredentryfees">Acquired entry fees</clr-dg-column>
-                <clr-dg-column mltag="txt_amountredeemed">Amount redeemed</clr-dg-column>
-                <clr-dg-column mltag="txt_quantityredeemed">Quantity redeemed</clr-dg-column>
-                <clr-dg-column mltag="txt_acquiredexistfees">Acquired exist fees</clr-dg-column>
+                <clr-dg-column>{{'Name of the share / Isin Code' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Currency' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Centralisation Date' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Status' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Amount subscribed' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Quantity Subscribed' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Acquired entry fees' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Amount redeemed' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Quantity redeemed' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Acquired exist fees' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let archive of archiveListFiltered">
 
@@ -82,7 +82,7 @@
 
                     </clr-dg-cell>
 
-                    <clr-dg-cell mltag="txt_eur">EUR
+                    <clr-dg-cell>{{'EUR' | translate}}
 
                     </clr-dg-cell>
 
@@ -94,7 +94,7 @@
 
                     </clr-dg-cell>
 
-                    <clr-dg-cell>€ {{archive.subscriptionTotal | moneyValue: 4}}
+                    <clr-dg-cell>{{'€' | translate}} {{archive.subscriptionTotal | moneyValue: 4}}
 
                     </clr-dg-cell>
 
@@ -102,11 +102,11 @@
 
                     </clr-dg-cell>
 
-                    <clr-dg-cell>€ {{0.00 | moneyValue : 4}}
+                    <clr-dg-cell>{{'€' | translate}} {{0.00 | moneyValue : 4}}
 
                     </clr-dg-cell>
 
-                    <clr-dg-cell>€ {{archive.redemptionTotal | moneyValue: 4}}
+                    <clr-dg-cell>{{'€' | translate}} {{archive.redemptionTotal | moneyValue: 4}}
 
                     </clr-dg-cell>
 
@@ -114,7 +114,7 @@
 
                     </clr-dg-cell>
 
-                    <clr-dg-cell>€ {{0.00 | moneyValue : 4}}
+                    <clr-dg-cell>{{'€' | translate}} {{0.00 | moneyValue : 4}}
 
                     </clr-dg-cell>
 

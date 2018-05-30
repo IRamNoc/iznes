@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list"></i> <span mltag="txt_placeanorder">Place an Order</span></h1>
+    <h1><i class="fa fa-list"></i> {{'Place an Order' | translate}}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,32 +36,32 @@
         <div class="panel-body">
             <div>
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon><span mltag="txt_isin">ISIN</span><span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{'ISIN' | translate}}<span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon><span mltag="txt_sharename">Share Name</span>
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>{{'Share Name' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_assetclass">Asset Class</span>
+                    <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>{{'Asset Class' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon><span mltag="txt_assetmanager">Asset Manager</span>
+                    <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>{{'Asset Manager' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_srri">SRRI</span>
+                    <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>{{'SRRI' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_sri">SRI</span>
+                    <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>{{'SRI' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch><span mltag="txt_sharecurrency">Share Currency</span>
+                    <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>{{'Share Currency' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon><span mltag="txt_lastnav">Last NAV</span><span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>{{'Last NAV' | translate}}<span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon><span mltag="txt_subscriptioncutoffdate">Subscription Cut-off Date</span>
+                    <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>{{'Subscription Cut-off Date' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon><span mltag="txt_redemptioncutoffdate">Redemption Cut-off Date</span>
+                    <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{'Redemption Cut-off Date' | translate}}
                         <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>
-                        <span mltag="txt_settledposition">
-                            Settled Position
-                        </span>
+                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>{{'Position' | translate}}
+
+
+
                     </clr-dg-column>
-                    <clr-dg-column style="min-width: 190px;" mltag="txt_actions">Actions</clr-dg-column>
+                    <clr-dg-column style="min-width: 190px;">{{'Actions' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>{{fund['isin']}}</clr-dg-cell>
@@ -75,13 +75,13 @@
                         <clr-dg-cell>{{fund['nextSubCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['position']}}</clr-dg-cell>
-                        <clr-dg-cell *ngIf="fund['hasNoNav']">No NAV Exist</clr-dg-cell>
+                        <clr-dg-cell *ngIf="fund['hasNoNav']">{{'No NAV Exist' | translate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
                             <div class="btn-group btn-sm">
                                 <button class="btn btn-success btn-sm" (click)="handleSubscribe(i)">
-                                    <i class="fa fa-sign-in"></i> <span mltag="txt_subscribe">Subscribe</span></button>
+                                    <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}</button>
                                 <button class="btn btn-danger btn-sm" (click)="handleRedeem(i)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
-                                    <i class="fa fa-sign-out"></i> <span mltag="txt_redeem">Redeem</span></button>
+                                    <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}</button>
                                 <!--<button class="btn text-yellow" (click)="handleBuySell(i)">-->
                                 <!--<i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>-->
                             </div>

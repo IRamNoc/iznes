@@ -35,6 +35,7 @@ import {OrderByType} from '../../ofi-orders/order.model';
 import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-invest-fund',
@@ -311,6 +312,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _toaster: ToasterService,
                 private _router: Router,
                 private logService: LogService,
+                private _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>) {
     }
 

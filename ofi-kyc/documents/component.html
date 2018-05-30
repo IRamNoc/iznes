@@ -1,11 +1,11 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-align-left"></i> <span mltag="txt_kycdocuments">KYC Documents</span></h1>
+    <h1><i class="fa fa-align-left"></i> {{'KYC Documents' | translate}}</h1>
 </div>
 
 <!-- Main content. -->
 <div class="wrapper wrapper-content">
-    <p><span mltag="txt_heresalistofallclientskycorgan8b15e8832c">Here's a list of all clients' KYC, organised by status</span>:</p>
+    <p>{{'Here\'s a list of all clients\' KYC, organised by status:' | translate}}</p>
 </div>
 
 <div class="well" *ngFor="let panel of panelDefs">
@@ -13,7 +13,7 @@
     <div class="row panel-header">
         <div class="col-xs-6">
             <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i> {{panel.title}} ({{(panel.data | async).length}})
+                <i class="fa fa-chevron-down" [class.reverse]="panel.open"></i>{{panel.title}}({{(panel.data | async).length}})
             </a>
         </div>
         <!--<div class="col-xs-6 text-right">-->

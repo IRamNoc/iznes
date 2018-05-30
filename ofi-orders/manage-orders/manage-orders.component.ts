@@ -49,6 +49,8 @@ import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 
+import {MultilingualService} from '@setl/multilingual';
+
 /* Types. */
 interface SelectedItem {
     id: any;
@@ -235,6 +237,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
+                private _translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;

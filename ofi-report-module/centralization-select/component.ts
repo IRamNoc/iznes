@@ -4,6 +4,7 @@ import 'rxjs/add/operator/takeUntil';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import {Router} from '@angular/router';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -27,6 +28,7 @@ export class CentralizationSelectComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private ofiReportsService: OfiReportsService,
                 private router: Router,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 

@@ -28,6 +28,7 @@ import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import * as moment from 'moment';
 import {mDateHelper} from '@setl/utils';
 import { OfiCurrenciesService } from "../../ofi-req-services/ofi-currencies/service";
+import {MultilingualService} from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -130,6 +131,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService,
                 private _fileDownloader: FileDownloader,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
