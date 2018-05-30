@@ -16,12 +16,8 @@
         <div class="user" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
-            <div class="last-login">{{'Last' | translate}}
-                : &nbsp;
-                {{lastLogin | date: 'MMM d y HH:mm'}}
-
-
-
+            <div class="last-login">
+                {{'Last' | translate}}:&nbsp;{{lastLogin | date: 'MMM d y HH:mm'}}
             </div>
         </div>
 

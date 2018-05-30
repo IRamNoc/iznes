@@ -1,7 +1,7 @@
 <h3 class="pt-1 pl-1">
     <b>{{'Welcome @username@' | translate: {'username': username} }}</b>
     <span *ngIf="lastLogin">
-        <small>{{'Last login:' | translate}} {{lastLogin | date: 'MMM d y HH:mm'}}</small>
+        <small>{{'Last login:' | translate}} {{lastLogin | datex: 'MMMM Do YYYY hh:mm'}}</small>
     </span>
 </h3>
 
@@ -9,7 +9,6 @@
     <clr-tab>
         <button clrTabLink>
             <i class="fa fa-tachometer"></i>{{'Dashboard' | translate}}
-
         </button>
 
         <clr-tab-content *clrIfActive>
