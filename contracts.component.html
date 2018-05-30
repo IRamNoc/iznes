@@ -31,7 +31,7 @@
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
                 <clr-dg-cell><span id="contract-{{contract.index}}"><span mltag="txt_contract">Contract</span> {{contract.name}}</span></clr-dg-cell>
                 <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
-                <clr-dg-cell>{{contract.expiry * 1000 | date:'dd MMM yyyy H:mm:ss'}}</clr-dg-cell>
+                <clr-dg-cell>{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</clr-dg-cell>
                 <clr-dg-cell>
                     <span *ngIf="contract.__completed == -1" class="label label-success" mltag="txt_enabled">Complete</span>
                     <span *ngIf="contract.__completed !== -1" class="label label-warning" mltag="txt_incomplete">Incomplete</span>
@@ -74,11 +74,11 @@
                 <label>Details</label>
                 <div class="form-group">
                     <label for="startDate" mltag="txt_startdate">Start Date</label>
-                    <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000|date:short}}">
+                    <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
                 </div>
                 <div class="form-group">
                     <label for="expiryDate" mltag="txt_expirydate">Expiry Date</label>
-                    <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000|date:short}}">
+                    <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
                 </div>
             </section>
         </form>
