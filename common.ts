@@ -1,9 +1,8 @@
 import * as SagaHelper from './sagaHelper';
-import {always as k} from 'ramda';
+import { always as k } from 'ramda';
 import * as _ from 'lodash';
 
-export const kAction = type => k({type});
-
+export const kAction = type => k({ type });
 
 /******************************************************************************************************************
  *
@@ -37,7 +36,7 @@ export function createMemberNodeSagaRequest(thisConnection, messageBody: MemberN
         MessageType: 'DataRequest',
         MessageHeader: '',
         RequestID: 0, // RequestID in here is just legacy support. that is why the RequestID is 0.
-        MessageBody: messageBody
+        MessageBody: messageBody,
     };
 
     return SagaHelper.create(async () => {
@@ -73,7 +72,7 @@ export function createMemberNodeRequest(thisConnection, messageBody: MemberNodeM
         MessageType: 'DataRequest',
         MessageHeader: '',
         RequestID: 0, // RequestID in here is just legacy support. that is why the RequestID is 0.
-        MessageBody: messageBody
+        MessageBody: messageBody,
     };
 
     return new Promise((resolve, reject) => {
@@ -105,7 +104,6 @@ export interface WalletNodeRequest {
     messageBody: WalletNodeMessageBody;
 }
 
-
 /**
  * Create our RUN_ASYNC_TASK descriptor, for our saga asynchronous task middleware.
  *
@@ -116,10 +114,10 @@ export interface WalletNodeRequest {
  */
 export function createWalletNodeSagaRequest(thisConnection, messageType: string, messageBody: WalletNodeMessageBody): any {
     const request: WalletNodeRequest = {
-        messageType: messageType,
+        messageType,
         messageHeader: '',
         requestID: 0, // requestID in here will be set later in sendRequest method.
-        messageBody: messageBody
+        messageBody,
     };
 
     return SagaHelper.create(async () => {
@@ -153,10 +151,10 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
  */
 export function createWalletNodeRequest(thisConnection, messageType: string, messageBody: WalletNodeMessageBody): any {
     const request: WalletNodeRequest = {
-        messageType: messageType,
+        messageType,
         messageHeader: '',
         requestID: 0,
-        messageBody: messageBody
+        messageBody,
     };
 
     return new Promise((resolve, reject) => {
