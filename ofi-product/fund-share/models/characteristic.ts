@@ -110,28 +110,6 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         },
         mltag: 'txt_fundshare_redcurrency'
     }
-    minInitialRedemptionInShare: FormItem = {
-        type: FormItemType.number,
-        label: 'Minimal Initial Redemption In Shares',
-        required: true,
-        hidden: () => {
-            const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        },
-        mltag: 'txt_fundshare_minredinshare',
-        isBlockchainValue: true
-    }
-    minInitialRedemptionInAmount: FormItem = {
-        type: FormItemType.number,
-        label: 'Minimal Initial Redemption In Amount',
-        required: true,
-        hidden: () => {
-            const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        },
-        mltag: 'txt_fundshare_minredinamount',
-        isBlockchainValue: true
-    }
     minSubsequentRedemptionInShare: FormItem = {
         type: FormItemType.number,
         label: 'Minimal Subsequent Redemption In Shares',

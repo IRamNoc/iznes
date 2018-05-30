@@ -108,8 +108,6 @@ export class FundShare {
             minSubsequentSubscriptionInAmount: this.characteristic.mandatory.minSubsequentSubscriptionInAmount.value(),
             redemptionCategory: this.getSelectValue(this.characteristic.mandatory.redemptionCategory),
             redemptionCurrency: this.getSelectValue(this.characteristic.mandatory.redemptionCurrency),
-            minInitialRedemptionInShare: this.characteristic.mandatory.minInitialRedemptionInShare.value(),
-            minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
             portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge),
@@ -176,8 +174,6 @@ export class FundShare {
         this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset = fundShare.minSubsequentSubscriptionInAmount;
         this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minInitialRedemptionInShare.preset = fundShare.minInitialRedemptionInShare;
-        this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
