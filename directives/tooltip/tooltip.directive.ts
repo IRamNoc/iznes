@@ -1,32 +1,53 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import * as _ from 'lodash';
+import {MultilingualService} from '@setl/multilingual';
 
 @Directive({
     selector: '[tooltip]'
 })
 export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
-    private el: HTMLInputElement;
+    private el: any;
     @Input('tooltip') config: any;
     divTooltip: any;
     divTooltipTitle: any;
     divTooltipText: any;
     divTooltipCloseBtn: any;
+    btnContainer: any;
+    btnBack: any;
+    btnNext: any;
+    btnDone: any;
     arrowSize = 10; // arrow size
     scrollTop = 0;
     parentDiv: any;
     pCases = [0, 0, 0, 0]; // top - right - bottom - left
+    tourConfig = [];
+    step = 0;
+    autoNextTimeout: any;
+    tourDuration = 5000;
+    isAutoNext = true;
+    isTour = false;
 
     constructor(
         private _el: ElementRef,
         private renderer: Renderer2,
+        private _translate: MultilingualService,
     ) {
         this.el = this._el.nativeElement;
         this.parentDiv = document.getElementsByClassName('content-area')[0];
-        this.renderer.setStyle(this.el, 'cursor', 'pointer');
     }
 
     ngOnInit() {
         // this.config.autoshow = (this.el.id !== 'bug') ? false : true;   // debug: keep auto only if id="bug"
+        if (this.config.length > 1) { // tooltip Tour
+            this.isTour = true;
+            for (const conf of this.config) {
+                this.tourConfig.push(_.clone(conf));
+            }
+            this.setConfig(this.step);
+        } else {
+            this.renderer.setStyle(this.el, 'cursor', 'pointer');
+        }
         this.autoshowTooltip();
     }
 
@@ -80,9 +101,10 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     autoshowTooltip() {
         if (this.config.autoshow !== undefined && this.config.autoshow === true) {
+            this.isAutoNext = true;
             this.checkIfTooltipExists();
             if (this.parentDiv) {
-                this.parentDiv.addEventListener( 'scroll', (event) => {
+                this.parentDiv.addEventListener('scroll', (event) => {
                     this.getScroll(event);
                 }, false);
                 if (this.scrollTop === 0) {
@@ -95,18 +117,21 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     checkIfTooltipExists() {
         if (this.divTooltip === null || this.divTooltip === undefined) {
-            const newDiv = document.createElement('div');
-            newDiv.className = 'tooltips';
+            this.divTooltip = document.createElement('div');
+            this.divTooltip.className = 'tooltips';
             const randomID = this.generateID(50);
-            newDiv.id = 'tooltip_' + randomID;
-            let addCloseButton = '<i class="fa fa-times tooltipCloseBtnTitle" id="tooltipCloseBtn_' + randomID + '"></i>';
+            this.divTooltip.id = 'tooltip_' + randomID;
+            let addCloseButton = '';
+            if (!this.isTour) {
+                addCloseButton = '<i class="fa fa-times tooltipCloseBtnTitle" id="tooltipCloseBtn_' + randomID + '"></i>';
+            }
             // add default title
-            newDiv.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title"></div>';
+            this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title"></div>';
             // if autoshow
             if (this.config.autoshow !== undefined && this.config.autoshow === true) {
                 // if title
                 if (this.config.title !== undefined || this.config.title !== '') {
-                    newDiv.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title">' + addCloseButton + '</div>';
+                    this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title">' + addCloseButton + '</div>';
                 }
             }
             // add default text
@@ -119,20 +144,14 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     tmpInnerHTML = '<div id="tooltipText_' + randomID + '" class="text">' + addCloseButton + '</div>';
                 }
             }
-            newDiv.innerHTML += tmpInnerHTML;
-            document.body.appendChild(newDiv);
-            // reset
-            this.divTooltip = null;
-            this.divTooltipTitle = null;
-            this.divTooltipText = null;
-            this.divTooltipCloseBtn = null;
+            this.divTooltip.innerHTML += tmpInnerHTML;
+            document.body.appendChild(this.divTooltip);
             // assign
-            this.divTooltip = document.getElementById('tooltip_' + randomID);
             this.divTooltipTitle = document.getElementById('tooltipTitle_' + randomID);
             this.divTooltipText = document.getElementById('tooltipText_' + randomID);
             this.divTooltipCloseBtn = document.getElementById('tooltipCloseBtn_' + randomID);
             // add click function
-            if (this.divTooltip) {
+            if (this.divTooltip && !this.isTour) {
                 this.divTooltip.onclick = (event) => {
                     if (event.target.id === 'tooltipCloseBtn_' + randomID) {
                         this.config.autoshow = false;
@@ -141,8 +160,71 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 };
             }
             // add title + text
-            this.divTooltipTitle.innerHTML += this.config.title;
+            let tourNum = '';
+            if (this.isTour) {
+                // add step into Title
+                tourNum = (this.step + 1) + '. ';
+            }
+
+            this.divTooltipTitle.innerHTML += tourNum + this.config.title;
             this.divTooltipText.innerHTML += this.config.text;
+
+            if (this.isTour) {
+                // add button back/next
+                this.btnContainer = document.createElement('div');
+                this.btnContainer.className = 'btnTourContainer';
+                this.btnContainer.innerHTML = '<hr>';
+                this.divTooltipText.appendChild(this.btnContainer);
+                if (this.step > 0) {
+                    this.btnBack = document.createElement('button');
+                    this.btnBack.id = 'btnTourBack_' + randomID;
+                    this.btnBack.className = 'btn btn-sm btn-success';
+                    this.btnBack.innerHTML = this._translate.translate('Back');
+                    this.btnBack.onclick = (event) => {
+                        if (event.target.id === 'btnTourBack_' + randomID) {
+                            clearTimeout(this.autoNextTimeout);
+                            this.isAutoNext = false;
+                            this.prevStep();
+                        }
+                    };
+                    this.btnContainer.appendChild(this.btnBack);
+                }
+                if ((this.step) < (this.tourConfig.length - 1)) {
+                    this.btnNext = document.createElement('button');
+                    this.btnNext.id = 'btnTourNext_' + randomID;
+                    this.btnNext.className = 'btn btn-sm btn-success';
+                    this.btnNext.innerHTML = this._translate.translate('Next');
+                    this.btnNext.onclick = (event) => {
+                        if (event.target.id === 'btnTourNext_' + randomID) {
+                            clearTimeout(this.autoNextTimeout);
+                            this.isAutoNext = false;
+                            this.nextStep();
+                        }
+                    };
+                    this.btnContainer.appendChild(this.btnNext);
+                } else {
+                    this.btnDone = document.createElement('button');
+                    this.btnDone.id = 'btnTourDone_' + randomID;
+                    this.btnDone.className = 'btn btn-sm btn-success';
+                    this.btnDone.innerHTML = this._translate.translate('Done');
+                    this.btnDone.onclick = (event) => {
+                        if (event.target.id === 'btnTourDone_' + randomID) {
+                            clearTimeout(this.autoNextTimeout);
+                            this.isAutoNext = false;
+                            this.step += 1;
+                            this.hideTooltip();
+                        }
+                    };
+                    this.btnContainer.appendChild(this.btnDone);
+                }
+            }
+
+            // if tour launch timer
+            if (this.isTour && this.isAutoNext) {
+                this.autoNextTimeout = setTimeout(() => {
+                    this.nextStep();
+                }, this.config.duration);
+            }
         }
     }
 
@@ -208,6 +290,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             // default direction
             this.applyArrowClass('tooltips-bottom');
 
+            this.el = (this.isTour) ? document.getElementById(this.config.target) : this.el;
             const elRect = this.el.getBoundingClientRect();
 
             // position absolute fix
@@ -219,12 +302,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             let newTop: any = Number(this.getOffset(this.el).top - this.divTooltip.offsetHeight - this.arrowSize - this.scrollTop);
             let newLeft: any = Number((elRect.left + (this.el.offsetWidth / 2)) - (this.divTooltip.offsetWidth / 2));
 
-            // console.log(this.getOffset(this.el).top);
-
             // check if tooltip is in screen
             const pageSize = this.getPageSize();
-            // console.log('top', newTop + ' / ' + pageSize.height);
-            // console.log('left', newLeft + ' / ' + pageSize.width);
             // too high
             if (newTop < 0) {
                 this.pCases[0] = 1;
@@ -347,7 +426,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             let decalLeft = (this.divTooltip.style.top !== '') ? parseInt(newLeft) - parseInt(this.divTooltip.style.left) : newLeft;
             decalLeft = (decalLeft < 0) ? decalLeft * -1 : decalLeft;
 
-            if (this.config.autoshow !== undefined && this.config.autoshow === true && elPosition !== 'absolute') {
+            if (this.config.autoshow !== undefined && this.config.autoshow === true && elPosition !== 'absolute' && this.config.target === undefined) {
                 const topBarSizeHeight = 75;
                 if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - this.divTooltip.offsetHeight - (this.arrowSize * 2)) <= 1) {
                     decalTop = 0; // stop moving
@@ -361,8 +440,12 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // apply modification only if decal >= 1
-            if (decalTop >= 1) this.divTooltip.style.top = newTop + 'px';
-            if (decalLeft >= 1) this.divTooltip.style.left = newLeft + 'px';
+            if (decalTop >= 1 || this.divTooltip.style.top === '') this.divTooltip.style.top = newTop + 'px';
+            if (decalLeft >= 1 || this.divTooltip.style.left === '') this.divTooltip.style.left = newLeft + 'px';
+
+            if (this.isTour) {
+                this.scrollToElement();
+            }
         }
     }
 
@@ -404,6 +487,31 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    scrollToElement() {
+        if (!this.config.scrolled) {
+            const pageSize = this.getPageSize();
+            const topBarSizeHeight = 75;
+            let here = 0;
+            const newTop = this.getOffset(this.el).top - this.divTooltip.offsetHeight - (this.arrowSize * 2);
+            if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight) > pageSize.height) {
+                here = newTop;
+            } else {
+                here =  newTop > 0 ? newTop : 0;
+            }
+            const ids = this.parentDiv.querySelectorAll('*[id]');
+            let found = false;
+            [].forEach.call(ids, (div) => {
+                if (div.id === this.config.target) {
+                    found = true;
+                }
+            });
+            if (found) {
+                this.parentDiv.scrollTo(0, here);
+            }
+            this.config.scrolled = true;
+        }
+    }
+
     getPageSize() {
         let w = window,
             d = document,
@@ -431,6 +539,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     hideTooltip(): void {
+        // console.log('hideTooltip');
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             // hide
             const strPCases = this.pCases.join();
@@ -449,7 +558,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     break;
             }
             this.renderer.setStyle(this.divTooltip, 'opacity', '0');
-            if (this.config.autoshow === undefined || this.config.autoshow === false) {
+            if (this.config.autoshow === undefined || this.config.autoshow === false || this.tourConfig.length > 0) {
                 setTimeout(() => {
                     this.cleanAll();
                 }, 300);
@@ -467,13 +576,46 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     cleanAll(): void {
-        this.parentDiv.removeEventListener( 'scroll', (event) => {
+        this.parentDiv.removeEventListener('scroll', (event) => {
             this.getScroll(event);
         }, true);
         // remove div tooltip
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             this.divTooltip.remove();
             this.divTooltip = null;
+        }
+        if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
+            this.autoshowTooltip();
+        }
+    }
+
+    setConfig(index) {
+        // console.log('setConfig');
+        this.config = {
+            title: this.tourConfig[index].title,
+            text: this.tourConfig[index].text,
+            target: this.tourConfig[index].target,
+            autoshow: true,
+            scrolled: false,
+            duration: (this.tourConfig[index].duration) ? this.tourConfig[index].duration : this.tourDuration,
+        };
+    }
+
+    nextStep() {
+        // console.log('nextStep');
+        this.step += 1;
+        if ((this.step) < this.tourConfig.length) {
+            this.setConfig(this.step);
+            this.hideTooltip();
+        }
+    }
+
+    prevStep() {
+        // console.log('nextStep');
+        if (this.step > 0) {
+            this.step -= 1;
+            this.setConfig(this.step);
+            this.hideTooltip();
         }
     }
 
