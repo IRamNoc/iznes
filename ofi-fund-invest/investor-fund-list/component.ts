@@ -165,7 +165,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const isin = item.get('isin', '');
             const shareName = item.get('fundShareName', '');
 
-            const position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
+            let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
+            if(!isNaN(position)){
+                position = this._numberConverterService.toFrontEnd(position);
+            }
 
             result.push({
                 id: item.get('fundShareID', 0),
