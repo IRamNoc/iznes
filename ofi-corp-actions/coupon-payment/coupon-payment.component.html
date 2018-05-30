@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> <span mltag="txt_couponpayment">Coupon Payment</span></h1>
+    <h1 id="ofi-coupon-payments"><i class="fa fa-museum"></i> {{'Coupon Payment' | translate}}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -36,21 +36,21 @@
     <ng-template #staticCouponsList>
         <div class="panel-body">
             <clr-datagrid #walletDataGrid>
-                <clr-dg-column mltag="txt_action">Action</clr-dg-column>
-                <clr-dg-column mltag="txt_couponid">Coupon ID</clr-dg-column>
-                <clr-dg-column mltag="txt_fund">Fund</clr-dg-column>
-                <clr-dg-column mltag="txt_fundisin">Fund ISIN</clr-dg-column>
-                <clr-dg-column mltag="txt_ratio">Ratio</clr-dg-column>
-                <clr-dg-column mltag="txt_grossamount">Gross Amount</clr-dg-column>
-                <clr-dg-column mltag="txt_datevaluation">Date Valuation</clr-dg-column>
-                <clr-dg-column mltag="txt_datesettlement">Date Settlement</clr-dg-column>
-                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                <clr-dg-column>{{'Action' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Coupon ID' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Fund' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Fund ISIN' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Gross Amount' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Date Valuation' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Date Settlement' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Status' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let coupon of couponList">
                     <clr-dg-cell>
                         <div class="btn-group btn-sm">
                             <button id="view-{{coupon.couponID}}" (click)="handleViewCoupon(coupon.couponID)" class="btn">
-                                <i class="fa fa-search"></i> <span mltag="txt_view">View</span></button>
+                                <i class="fa fa-search"></i> {{'View' | translate}}</button>
                         </div>
                     </clr-dg-cell>
                     <clr-dg-cell>{{padNumberLeft(coupon.couponID, 11)}}</clr-dg-cell>
@@ -61,36 +61,36 @@
                     <clr-dg-cell>{{formatCouponDate(coupon.dateValuation)}}</clr-dg-cell>
                     <clr-dg-cell>{{formatCouponDate(coupon.dateSettlement)}}</clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="coupon.status == '1'" class="label label-warning">
-                            <span mltag="txt_waitingapproval">Waiting approval</span>
+                        <span *ngIf="coupon.status == '1'" class="label label-warning">{{'Waiting approval' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '2'" class="label label-warning">
-                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        <span *ngIf="coupon.status == '2'" class="label label-warning">{{'Waiting operation' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '3'" class="label label-warning">
-                            <span mltag="txt_waitingoperation">Waiting operation</span>
+                        <span *ngIf="coupon.status == '3'" class="label label-warning">{{'Waiting operation' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '4'" class="label label-warning">
-                            <span mltag="txt_waitingvaluation">Waiting valuation</span>
+                        <span *ngIf="coupon.status == '4'" class="label label-warning">{{'Waiting valuation' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '5'" class="label label-info">
-                            <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                        <span *ngIf="coupon.status == '5'" class="label label-info">{{'Waiting settlement' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '6'" class="label label-info">
-                            <span mltag="txt_waitingforpayment">Waiting for payment</span>
+                        <span *ngIf="coupon.status == '6'" class="label label-info">{{'Waiting for payment' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '-1'" class="label label-success">
-                            <span mltag="txt_settled">Settled</span>
+                        <span *ngIf="coupon.status == '-1'" class="label label-success">{{'Settled' | translate}}
+
                         </span>
 
-                        <span *ngIf="coupon.status == '0'" class="label label-danger">
-                            <span mltag="txt_canceled">Canceled</span>
+                        <span *ngIf="coupon.status == '0'" class="label label-danger">{{'Canceled' | translate}}
+
                         </span>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -110,16 +110,16 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_natureofaction">Nature of Action</span>
+                            <label class="control-label">{{'Nature of Action' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-nature" type="text" [formControl]="formControl.controls['couponNature']" placeholder="" class="form-control nature">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_drafter">Drafter</span>
+                            <label class="control-label">{{'Drafter' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-drafter" type="text" [formControl]="formControl.controls['couponDrafter']" placeholder="" class="form-control drafter">
@@ -131,7 +131,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_fundsharename">Fund Share Name</label>
+                            <label class="control-label">{{'Fund Share Name' | translate}}</label>
                             <ng-select [items]="filteredUserAssetList" [allowClear]="true" [formControl]="formControl.controls['couponFundShareName']" (selected)="selectedFundShare($event)" (removed)="selectedFundShare([])">
 
 
@@ -141,8 +141,8 @@
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_isin">ISIN</span>
+                            <label class="control-label">{{'ISIN' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-isin" type="text" [formControl]="formControl.controls['couponIsin']" placeholder="" class="form-control coupon-isin">
@@ -154,24 +154,24 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_amountbyshare">Amount By Share</span>
+                            <label class="control-label">{{'Amount By Share' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-amount-by-share" (keyup)="calculateGrossAmount()" type="text" [formControl]="formControl.controls['couponAmountByShare']" placeholder="" class="form-control amount-by-share">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_fundshareunits">Fund Share Units</span>
+                            <label class="control-label">{{'Fund Share Units' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-fund-share-units" type="text" [formControl]="formControl.controls['couponFundShareUnits']" placeholder="" class="form-control fund-share-units">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_grossamount">Gross Amount</span>
+                            <label class="control-label">{{'Gross Amount' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-gross-amount" type="text" [formControl]="formControl.controls['couponGrossAmount']" placeholder="" class="form-control gross-amount">
@@ -183,21 +183,21 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_valuationdate">Valuation Date</span>
+                            <label class="control-label">{{'Valuation Date' | translate}}
+
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_date">Date</span>
+                            <label class="control-label">{{'Date' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-valuation-date" type="date" [formControl]="formControl.controls['couponValuationDate']" placeholder="" class="form-control valuation-date">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_time">Time</span>
+                            <label class="control-label">{{'Time' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-valuation-time" type="time" [formControl]="formControl.controls['couponValuationTime']" placeholder="" class="form-control valuation-time">
@@ -209,21 +209,21 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_settlementdate">Settlement Date</span>
+                            <label class="control-label">{{'Settlement Date' | translate}}
+
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_date">Date</span>
+                            <label class="control-label">{{'Date' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-settlement-date" type="date" [formControl]="formControl.controls['couponSettlementDate']" placeholder="" class="form-control settlement-date">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_time">Time</span>
+                            <label class="control-label">{{'Time' | translate}}
+
                             </label>
                             <div>
                                 <input id="create-coupon-settlement-time" type="time" [formControl]="formControl.controls['couponSettlementTime']" placeholder="" class="form-control settlement-time">
@@ -235,11 +235,11 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_comments">Comments</span>
+                            <label class="control-label">{{'Comments' | translate}}
+
                             </label>
                             <div>
-                                <input id="create-coupon-comments" type="text" [formControl]="formControl.controls['couponComments']" placeholder="Comments" class="form-control comments" mltag="txt_comments">
+                                <input id="create-coupon-comments" type="text" [formControl]="formControl.controls['couponComments']" [placeholder]="_translate.translate('Comments')" class="form-control comments">
                             </div>
                         </div>
                     </div>
@@ -247,7 +247,7 @@
                     <div class="form-group button-group">
                         <div class="col-sm-12">
                             <button id="new-coupon-submit" type="submit" class="btn btn-primary">
-                                <i class="fa fa-save"></i> <span mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i> {{'Save' | translate}}
                             </button>
                         </div>
                     </div>
@@ -263,16 +263,16 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_natureofaction">Nature of Action</span>
+                            <label class="control-label">{{'Nature of Action' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-nature" type="text" [formControl]="formControl.controls['couponNature']" placeholder="" class="form-control nature">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_drafter">Drafter</span>
+                            <label class="control-label">{{'Drafter' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-drafter" type="text" [formControl]="formControl.controls['couponDrafter']" placeholder="" class="form-control drafter">
@@ -284,7 +284,7 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label" mltag="txt_fundsharename">Fund Share Name</label>
+                            <label class="control-label">{{'Fund Share Name' | translate}}</label>
                             <ng-select [items]="filteredUserAssetList" [allowClear]="false" [disabled]="true" [formControl]="formControl.controls['couponFundShareName']">
 
 
@@ -293,8 +293,8 @@
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_isin">ISIN</span>
+                            <label class="control-label">{{'ISIN' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-isin" type="text" [formControl]="formControl.controls['couponIsin']" placeholder="" class="form-control coupon-isin">
@@ -306,24 +306,24 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_amountbyshare">Amount By Share</span>
+                            <label class="control-label">{{'Amount By Share' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-amount-by-share" (keyup)="calculateGrossAmount()" type="text" [formControl]="formControl.controls['couponAmountByShare']" placeholder="" class="form-control amount-by-share">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_fundshareunits">Fund Share Units</span>
+                            <label class="control-label">{{'Fund Share Units' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-fund-share-units" type="text" [formControl]="formControl.controls['couponFundShareUnits']" placeholder="" class="form-control fund-share-units">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_grossamount">Gross Amount</span>
+                            <label class="control-label">{{'Gross Amount' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-gross-amount" type="text" [formControl]="formControl.controls['couponGrossAmount']" placeholder="" class="form-control gross-amount">
@@ -335,21 +335,21 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_valuationdate">Valuation Date</span>
+                            <label class="control-label">{{'Valuation Date' | translate}}
+
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_date">Date</span>
+                            <label class="control-label">{{'Date' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-valuation-date" type="date" [formControl]="formControl.controls['couponValuationDate']" placeholder="" class="form-control valuation-date">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_time">Time</span>
+                            <label class="control-label">{{'Time' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-valuation-time" type="time" [formControl]="formControl.controls['couponValuationTime']" placeholder="" class="form-control valuation-time">
@@ -361,21 +361,21 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_settlementdate">Settlement Date</span>
+                            <label class="control-label">{{'Settlement Date' | translate}}
+
                             </label>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_date">Date</span>
+                            <label class="control-label">{{'Date' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-settlement-date" type="date" [formControl]="formControl.controls['couponSettlementDate']" placeholder="" class="form-control settlement-date">
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label class="control-label">
-                                <span mltag="txt_time">Time</span>
+                            <label class="control-label">{{'Time' | translate}}
+
                             </label>
                             <div>
                                 <input id="view-coupon-settlement-time" type="time" [formControl]="formControl.controls['couponSettlementTime']" placeholder="" class="form-control settlement-time">
@@ -387,33 +387,33 @@
 
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <label class="control-label">
-                                <span mltag="txt_comments">Comments</span>
+                            <label class="control-label">{{'Comments' | translate}}
+
                             </label>
                             <div>
-                                <input id="view-coupon-comments" type="text" [formControl]="formControl.controls['couponComments']" placeholder="Comments" class="form-control comments" mltag="txt_comments">
+                                <input id="view-coupon-comments" type="text" [formControl]="formControl.controls['couponComments']" [placeholder]="_translate.translate('Comments')" class="form-control comments">
                             </div>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</a>
+                            <a (click)="closeTab(tabid)" class="btn btn-secondary">{{'Close' | translate}}</a>
 
                             <ng-container *ngIf="tabsControl[tabid].couponStatus == 1">
                                 <!-- Buttons for status 1 coupons -->
                                 <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'cancel')" class="btn btn-danger">
-                                    <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
+                                    <i class="fa fa-times"></i> {{'Cancel' | translate}}
                                 </a>
                                 <a id="view-coupon-approve" (click)="handleUpdateCoupon(tabid, 'approve')" class="btn btn-primary">
-                                    <i class="fa fa-check"></i> <span mltag="txt_approve">Approve</span>
+                                    <i class="fa fa-check"></i> {{'Approve' | translate}}
                                 </a>
                             </ng-container>
 
                             <ng-container *ngIf="tabsControl[tabid].couponStatus == 2">
                                 <!-- Buttons for status 1 coupons -->
                                 <a id="view-coupon-cancel" (click)="handleUpdateCoupon(tabid, 'confirm-payment')" class="btn btn-primary">
-                                    <i class="fa fa-check"></i> <span mltag="txt_confirmpayment">Confirm Payment</span>
+                                    <i class="fa fa-check"></i> {{'Confirm Payment' | translate}}
                                 </a>
                             </ng-container>
                         </div>

@@ -9,6 +9,7 @@ import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/form
 import {SET_NEW_PASSWORD} from '@setl/core-store/index';
 import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
 import { Router } from '@angular/router';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -52,6 +53,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
+        private _translate: MultilingualService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;

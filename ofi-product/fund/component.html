@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs fundCreateComponent">
     <h1><i class="fa fa-bars"></i>
-        <span *ngIf="param === 'new'" mltag="txt_addanewfund">Add a New Fund</span>
-        <span *ngIf="param !== 'new'">Fund: {{fundForm.controls['fundName'].value}}</span>
+        <span *ngIf="param === 'new'">{{'Add a New Fund' | translate}}</span>
+        <span *ngIf="param !== 'new'">{{'Fund: @fundForm.controls[\'fundName\'].value@' | translate: {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value} }}</span>
     </h1>
 </div>
 
@@ -10,22 +10,22 @@
 <clr-tabs class="fundCreateComponent">
     <clr-tab>
         <button clrTabLink id="standardform">
-            <i class="fa fa-bars"></i> <span mltag="txt_fund">Fund</span>
+            <i class="fa fa-bars"></i> {{'Fund' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
 
             <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
-                <h3><span mltag="txt_pleasefillupthefollowinginform19ef8a5d29">Please fill up the following information to create a new Fund</span>:</h3>
+                <h3>{{'Please fill up the following information to create a new Fund:' | translate}}</h3>
 
                 <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group required-field col-sm-6">
-                                <label class="control-label" for="fund-umbrellaControl-select-1">
-                                    <span mltag="txt_isthisfundpartofanumbrellafundc57e8acae4">Is this Fund part of an Umbrella Fund?</span>
+                                <label class="control-label" for="fund-umbrellaControl-select-1">{{'Is this Fund part of an Umbrella Fund?' | translate}}
+
                                 </label>
-                                <ng-select id="fund-umbrellaControl-select-1" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund name" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafundname3c6014113f">
+                                <ng-select id="fund-umbrellaControl-select-1" [items]="umbrellaItems" [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund name')" [formControl]="umbrellaControl">
 
 
 
@@ -35,8 +35,8 @@
                                 </ng-select>
                             </div>
                             <div class="form-group col-sm-6 btn-container">
-                                <p mltag="txt_or">or</p>
-                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/product/umbrella-fund/0" mltag="txt_addanewumbrellafund">Add a new Umbrella Fund
+                                <p>{{'or' | translate}}</p>
+                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/product/umbrella-fund/0">{{'Add a new Umbrella Fund' | translate}}
 
 
 
@@ -50,7 +50,7 @@
                         <div class="row" *ngIf="selectedUmbrella == 0">
 
                             <div class="col-sm-12">
-                                <p mltag="txt_thefundisnotpartofanumbrellafu5d64cfb8f8">The fund is not part of an Umbrella Fund.</p>
+                                <p>{{'The fund is not part of an Umbrella Fund.' | translate}}</p>
                             </div>
                         </div>
 
@@ -58,15 +58,15 @@
                         <section class="form-block" *ngIf="selectedUmbrella > 0">
                             <div class="row">
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundName" mltag="txt_umbrellafundname">Umbrella Fund Name</label>
+                                    <label class="control-label" for="umbrellaFundName">{{'Umbrella Fund Name' | translate}}</label>
                                     <input type="text" name="umbrellaFundName" id="umbrellaFundName" formControlName="umbrellaFundName">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaLei" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
+                                    <label class="control-label" for="umbrellaLei">{{'Legal Entity Identifier (LEI)' | translate}}</label>
                                     <input type="text" name="umbrellaLei" id="umbrellaLei" formControlName="umbrellaLei">
                                 </div>
                                 <div class="form-group col-sm-6">
-                                    <label class="control-label" for="umbrellaFundDomicile" mltag="txt_umbrellafunddomicilecountry">Umbrella Fund Domicile (Country)</label>
+                                    <label class="control-label" for="umbrellaFundDomicile">{{'Umbrella Fund Domicile (Country)' | translate}}</label>
                                     <input type="text" name="umbrellaFundDomicile" id="umbrellaFundDomicile" formControlName="umbrellaFundDomicile">
                                 </div>
                             </div>
@@ -74,8 +74,8 @@
 
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
-                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
-                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid" mltag="txt_next">Next</button>
+                                <button id="fund-cancelUmbrella-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel' | translate}}</button>
+                                <button id="fund-submitUmbrella-btn" type="submit" class="btn btn-primary" [disabled]="!umbrellaForm.valid">{{'Next' | translate}}</button>
                             </div>
                         </div>
 
@@ -105,7 +105,7 @@
                                     <div class="col-xs-12">
                                         <a href="#" (click)="panels[0][0].open = !panels[0][0].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][0].open"></i>
-                                            <h2><span mltag="txt_chooseanotherumbrellafund">Choose another umbrella fund</span>:</h2>
+                                            <h2>{{'Choose another umbrella fund:' | translate}}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -115,11 +115,11 @@
                                     <section class="form-block" *ngIf="isUmbrellaSelected()">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditLei" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
+                                                <label class="control-label" for="umbrellaEditLei">{{'Legal Entity Identifier (LEI)' | translate}}</label>
                                                 <input type="text" name="umbrellaEditLei" id="umbrellaEditLei" formControlName="umbrellaEditLei">
                                             </div>
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="umbrellaEditFundDomicile" mltag="txt_umbrellafunddomicilecountry">Umbrella Fund Domicile (Country)</label>
+                                                <label class="control-label" for="umbrellaEditFundDomicile">{{'Umbrella Fund Domicile (Country)' | translate}}</label>
                                                 <input type="text" name="umbrellaEditFundDomicile" id="umbrellaEditFundDomicile" formControlName="umbrellaEditFundDomicile">
                                             </div>
                                         </div>
@@ -127,10 +127,10 @@
                                     <section class="form-block">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fund-umbrellaControl-select-2">
-                                                    <span mltag="txt_clickheretoselectanotherumbrel79cad3aa48">Click here to select another Umbrella Fund for this Fund</span>
+                                                <label class="control-label" for="fund-umbrellaControl-select-2">{{'Click here to select another Umbrella Fund for this Fund' | translate}}
+
                                                 </label>
-                                                <ng-select id="fund-umbrellaControl-select-2" [items]="umbrellaItems" [allowClear]="false" placeholder="Select or type an Umbrella Fund" [formControl]="umbrellaControl" mltag="txt_selectortypeanumbrellafund">
+                                                <ng-select id="fund-umbrellaControl-select-2" [items]="umbrellaItems" [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund')" [formControl]="umbrellaControl">
 
 
 
@@ -150,7 +150,7 @@
                                     <div class="col-xs-12">
                                         <a href="#" (click)="panels[0][1].open = !panels[0][1].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][1].open"></i>
-                                            <h2 mltag="txt_maininformation">Main information</h2>
+                                            <h2>{{'Main information' | translate}}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -159,16 +159,16 @@
                                 <div class="panel-body" [class.hidden]="!panels[0][1].open">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_umbrellaFundName">
-                                                <span mltag="txt_umbrellafundname">Umbrella Fund Name</span>
+                                            <label for="uf_umbrellaFundName">{{'Umbrella Fund Name' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_umbrellaFundName" class="form-control" formControlName="umbrellaFundName">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_lei">
-                                                <span mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</span>
+                                            <label for="uf_lei">{{'Legal Entity Identifier (LEI)' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_lei" class="form-control" formControlName="legalEntityIdentifier">
@@ -177,16 +177,16 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOffice">
-                                                <span mltag="txt_nameoftheregistredofficeoftheu705177ce5d">Name of the Registered Office of the Umbrella Fund</span>
+                                            <label for="uf_registerOffice">{{'Name of the Registered Office of the Umbrella Fund' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_registerOffice" class="form-control" formControlName="registerOffice">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_registerOfficeAddress">
-                                                <span mltag="txt_addressoftheregistredofficeoft134f796680">Address of the Registered Office of the Umbrella Fund</span>
+                                            <label for="uf_registerOfficeAddress">{{'Address of the Registered Office of the Umbrella Fund' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_registerOfficeAddress" class="form-control" formControlName="registerOfficeAddress">
@@ -195,35 +195,35 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_domicile">
-                                                <span mltag="txt_umbrellafunddomicilecountry">Umbrella Fund Domicile (country)</span>
+                                            <label for="uf_domicile">{{'Umbrella Fund Domicile (country)' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_domicile" class="form-control" formControlName="domicile">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_umbrellaFundCreationDate">
-                                                <span mltag="txt_umbrellafundcreationdate">Umbrella Fund Creation Date</span>
+                                            <label for="uf_umbrellaFundCreationDate">{{'Umbrella Fund Creation Date' | translate}}
+
                                             </label>
                                             <div class="input-group date-pick-wrapper">
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                                <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_managementCompany">
-                                                <span mltag="txt_managementcompany">Management Company</span>
+                                            <label for="uf_managementCompany">{{'Management Company' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_managementCompany" class="form-control" formControlName="managementCompanyID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_fundAdministrator">
-                                                <span mltag="txt_fundadministrator">Fund Administrator</span>
+                                            <label for="uf_fundAdministrator">{{'Fund Administrator' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_fundAdministrator" class="form-control" formControlName="fundAdministratorID">
@@ -232,32 +232,32 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_custodian">
-                                                <span mltag="txt_custodianbank">Custodian Bank</span>
+                                            <label for="uf_custodian">{{'Custodian Bank' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_custodian" class="form-control" formControlName="custodianBankID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_investmentAdvisor">
-                                                <span mltag="txt_investmentadvisor">Investment Advisor</span>
+                                            <label for="uf_investmentAdvisor">{{'Investment Advisor' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_investmentAdvisor" class="form-control" formControlName="investmentAdvisorID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_payingAgent">
-                                                <span mltag="txt_payingagent">Paying Agent</span>
+                                            <label for="uf_payingAgent">{{'Paying Agent' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_payingAgent" class="form-control" formControlName="payingAgentID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['transferAgentID'].value">
-                                            <label>
-                                                <span mltag="txt_transferagent">Transfer Agent</span>
+                                            <label>{{'Transfer Agent' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_transferAgentID" class="form-control" formControlName="transferAgentID">
@@ -265,8 +265,8 @@
 
                                         </div>
                                         <div class="form-group col-sm-6" *ngIf="umbrellaEditForm.controls['centralisingAgentID'].value">
-                                            <label>
-                                                <span mltag="txt_centralisingagent">Centralising Agent</span>
+                                            <label>{{'Centralising Agent' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_centralisingAgentID" class="form-control" formControlName="centralisingAgentID">
@@ -282,7 +282,7 @@
                                     <div class="col-xs-12">
                                         <a href="#" (click)="panels[0][2].open = !panels[0][2].open; $event.preventDefault();">
                                             <i class="fa fa-chevron-right" [class.rotate]="panels[0][2].open"></i>
-                                            <h2 mltag="txt_optionalinformation">Optional Information</h2>
+                                            <h2>{{'Optional Information' | translate}}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -291,16 +291,16 @@
                                 <div class="panel-body" [class.hidden]="!panels[0][2].open">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_giin">
-                                                <span mltag="txt_globalintermediaryidentificatif680906e8a">Global Intermediary Identification Number (GIIN)</span>
+                                            <label for="uf_giin">{{'Global Intermediary Identification Number (GIIN)' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_giin" class="form-control" formControlName="giin">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_delegatedManagementCompany">
-                                                <span mltag="txt_delegatedmanagementcompany">Delegated Management Company</span>
+                                            <label for="uf_delegatedManagementCompany">{{'Delegated Management Company' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_delegatedManagementCompany" class="form-control" formControlName="delegatedManagementCompanyID">
@@ -309,16 +309,16 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_auditor">
-                                                <span mltag="txt_auditor">Auditor</span>
+                                            <label for="uf_auditor">{{'Auditor' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_auditor" class="form-control" formControlName="auditorID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_taxAuditor">
-                                                <span mltag="txt_taxauditor">Tax Auditor</span>
+                                            <label for="uf_taxAuditor">{{'Tax Auditor' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_taxAuditor" class="form-control" formControlName="taxAuditorID">
@@ -327,16 +327,16 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_principalPromoter">
-                                                <span mltag="txt_principalpromoter">Principal Promoter</span>
+                                            <label for="uf_principalPromoter">{{'Principal Promoter' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_principalPromoter" class="form-control" formControlName="principlePromoterID">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_legalAdvisor">
-                                                <span mltag="txt_legaladvisor">Legal Advisor</span>
+                                            <label for="uf_legalAdvisor">{{'Legal Advisor' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_legalAdvisor" class="form-control" formControlName="legalAdvisorID">
@@ -345,21 +345,21 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_directors">
-                                                <span mltag="txt_directors">Directors</span>
+                                            <label for="uf_directors">{{'Directors' | translate}}
+
                                             </label>
                                             <div>
                                                 <input type="text" id="uf_directors" class="form-control" formControlName="directors">
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                            <label class="control-label" for="uf_internalReference">{{'Internal Reference' | translate}}</label>
                                             <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="form-group col-sm-6">
-                                            <label class="control-label" for="uf_additionnalNotes" mltag="txt_additionalnotes">Additional Notes</label>
+                                            <label class="control-label" for="uf_additionnalNotes">{{'Additional Notes' | translate}}</label>
                                             <textarea id="uf_additionnalNotes" formControlName="additionnalNotes" maxlength="500"></textarea>
                                         </div>
                                     </div>
@@ -376,7 +376,7 @@
                         <div class="col-xs-12">
                             <a href="#" (click)="panels[1].open = !panels[1].open; $event.preventDefault();">
                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1].open"></i>
-                                <h2> Fund: {{fundForm.controls['fundName'].value}}</h2>
+                                <h2> {{'Fund: @fundForm.controls[\'fundName\'].value@' | translate: {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value} }}</h2>
                             </a>
                         </div>
                     </div>
@@ -392,7 +392,7 @@
                                         <div class="col-xs-12">
                                             <a href="#" (click)="panels[1][0].open = !panels[1][0].open; $event.preventDefault();">
                                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1][0].open">
-                                                </i> <h2 mltag="txt_maininformation">Main Information</h2>
+                                                </i><h2>{{'Main Information' | translate}}</h2>
                                             </a>
                                         </div>
                                     </div>
@@ -401,91 +401,91 @@
                                     <div class="panel-body" [class.hidden]="!panels[1][0].open">
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" mltag="txt_fundstructure">Fund Structure</label>
+                                                <label class="control-label">{{'Fund Structure' | translate}}</label>
                                                 <div class="radio-inline disabled">
                                                     <input type="radio" name="isFundStructure" id="isFundStructure1" formControlName="isFundStructure" value="{{enums.isFundStructure.FUND}}">
-                                                    <label for="isFundStructure1" mltag="txt_singlefundstructure">Single fund Structure</label>
+                                                    <label for="isFundStructure1">{{'Single fund Structure' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline disabled">
                                                     <input type="radio" name="isFundStructure" id="isFundStructure2" formControlName="isFundStructure" value="{{enums.isFundStructure.UMBRELLA}}">
-                                                    <label for="isFundStructure2" mltag="txt_fundumbrellastructure">Fund Umbrella Structure</label>
+                                                    <label for="isFundStructure2">{{'Fund Umbrella Structure' | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundName" mltag="txt_fundname">Fund Name</label>
+                                                    <label class="control-label" for="fundName">{{'Fund Name' | translate}}</label>
                                                     <input type="text" name="fundName" id="fundName" formControlName="fundName" maxlength="100">
-                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('required')" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</span>
+                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('required')" class="field-error">{{'Field is required' | translate}}</span>
+                                                    <span *ngIf="fundForm.controls['fundName'].touched && fundForm.controls['fundName'].hasError('pattern')" class="field-error">{{'Incorrect entry' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalEntityIdentifier" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
+                                                <label class="control-label" for="legalEntityIdentifier">{{'Legal Entity Identifier (LEI)' | translate}}</label>
                                                 <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
-                                                <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error" mltag="txt_incorrectlei">Incorrect LEI</span>
+                                                <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')" class="field-error">{{'Incorrect LEI' | translate}}</span>
 
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOffice" mltag="txt_nameoftheregisteredofficeofthe5032bb8072">Name of the Registered Office of the Fund</label>
+                                                <label class="control-label" for="registerOffice">{{'Name of the Registered Office of the Fund' | translate}}</label>
                                                 <input type="text" name="registerOffice" id="registerOffice" formControlName="registerOffice">
-                                                <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')" class="field-error" mltag="txt_incorrectname">Incorrect name</span>
+                                                <span *ngIf="fundForm.controls['registerOffice'].touched && fundForm.controls['registerOffice'].hasError('pattern')" class="field-error">{{'Incorrect name' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="registerOfficeAddress" mltag="txt_addressoftheregisterofficeofth6110081a32">Address of the register Office of the Fund</label>
+                                                <label class="control-label" for="registerOfficeAddress">{{'Address of the register Office of the Fund' | translate}}</label>
                                                 <input type="text" name="registerOfficeAddress" id="registerOfficeAddress" formControlName="registerOfficeAddress">
-                                                <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error" mltag="txt_incorrectaddress">Incorrect address</span>
+                                                <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error">{{'Incorrect address' | translate}}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="domicile" mltag="txt_funddomicilecountry">Fund Domicile (country)</label>
-                                                    <ng-select id="domicile" [items]="domicileItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['domicile']" mltag="txt_select">
+                                                    <label class="control-label" for="domicile">{{'Fund Domicile (country)' | translate}}</label>
+                                                    <ng-select id="domicile" [items]="domicileItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['domicile']">
 
 
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['domicile'].hasError('required') && fundForm.controls['domicile'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
-                                                    <label class="control-label" for="homeCountryLegalType" mltag="txt_homecountrylegaltypeoffund">Home Country Legal Type of Fund</label>
-                                                    <ng-select id="homeCountryLegalType" [items]="homeCountryLegalTypeItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['homeCountryLegalType']" mltag="txt_select">
+                                                    <label class="control-label" for="homeCountryLegalType">{{'Home Country Legal Type of Fund' | translate}}</label>
+                                                    <ng-select id="homeCountryLegalType" [items]="homeCountryLegalTypeItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['homeCountryLegalType']">
 
 
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['homeCountryLegalType'].hasError('required') && fundForm.controls['homeCountryLegalType'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" mltag="txt_iseudirectiverelevant">Is EU Directive Relevant?</label>
+                                                <label class="control-label">{{'Is EU Directive Relevant?' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isEuDirective" id="isEuDirective1" formControlName="isEuDirective" value="{{enums.isEuDirective.YES}}">
-                                                    <label for="isEuDirective1" mltag="txt_yes">Yes</label>
+                                                    <label for="isEuDirective1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isEuDirective" id="isEuDirective2" formControlName="isEuDirective" value="{{enums.isEuDirective.NO}}">
-                                                    <label for="isEuDirective2" mltag="txt_no">No</label>
+                                                    <label for="isEuDirective2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString()">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="typeOfEuDirective" mltag="txt_typeofeudirective">Type of EU Directive</label>
-                                                    <ng-select id="typeOfEuDirective" [items]="typeOfEuDirectiveItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['typeOfEuDirective']" mltag="txt_select">
+                                                    <label class="control-label" for="typeOfEuDirective">{{'Type of EU Directive' | translate}}</label>
+                                                    <ng-select id="typeOfEuDirective" [items]="typeOfEuDirectiveItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['typeOfEuDirective']">
 
 
 
@@ -493,20 +493,20 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['typeOfEuDirective'].hasError('required') && fundForm.controls['typeOfEuDirective'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
-                                                    <label class="control-label" for="UcitsVersion" mltag="txt_ucitsversion">UCITS Version</label>
-                                                    <ng-select id="UcitsVersion" [items]="UcitsVersionItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['UcitsVersion']" mltag="txt_select">
+                                                    <label class="control-label" for="UcitsVersion">{{'UCITS Version' | translate}}</label>
+                                                    <ng-select id="UcitsVersion" [items]="UcitsVersionItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['UcitsVersion']">
 
 
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['UcitsVersion'].hasError('required') && fundForm.controls['UcitsVersion'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -514,52 +514,52 @@
                                         <div class="row">
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="legalForm" mltag="txt_legalformofthefund">Legal Form of the Fund</label>
-                                                    <ng-select id="legalForm" [items]="legalFormItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['legalForm']" mltag="txt_select">
+                                                    <label class="control-label" for="legalForm">{{'Legal Form of the Fund' | translate}}</label>
+                                                    <ng-select id="legalForm" [items]="legalFormItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['legalForm']">
 
 
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['legalForm'].hasError('required') && fundForm.controls['legalForm'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div *ngIf="fundForm.controls['legalForm'].value.length">
-                                                    <label class="control-label" for="nationalNomenclatureOfLegalForm" mltag="txt_nationalnomenclatureoflegalfun5600a7b0bc">National Nomenclature of Legal Fund</label>
-                                                    <ng-select id="nationalNomenclatureOfLegalForm" [items]="nationalNomenclatureOfLegalFormItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']" mltag="txt_select">
+                                                    <label class="control-label" for="nationalNomenclatureOfLegalForm">{{'National Nomenclature of Legal Fund' | translate}}</label>
+                                                    <ng-select id="nationalNomenclatureOfLegalForm" [items]="nationalNomenclatureOfLegalFormItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
 
 
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['nationalNomenclatureOfLegalForm'].hasError('required') && fundForm.controls['nationalNomenclatureOfLegalForm'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundCreationDate" mltag="txt_fundcreationdateyyyymmjj">Fund Creation Date (YYYY-MM-JJ)</label>
+                                                <label class="control-label" for="fundCreationDate">{{'Fund Creation Date (YYYY-MM-JJ)' | translate}}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                                    <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                                                 </div>
-                                                <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
+                                                <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')" class="field-error">{{'Incorrect date' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundLaunchate" mltag="txt_fundlaunchdateyyyymmdd">Fund Launch Date (YYYY-MM-DD)</label>
+                                                <label class="control-label" for="fundLaunchate">{{'Fund Launch Date (YYYY-MM-DD)' | translate}}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundLaunchate" formControlName="fundLaunchate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                                    <input id="fundLaunchate" formControlName="fundLaunchate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                                                 </div>
-                                                <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
+                                                <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')" class="field-error">{{'Incorrect date' | translate}}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundCurrency" mltag="txt_fundcurrency">Fund Currency</label>
-                                                    <ng-select id="fundCurrency" [items]="fundCurrencyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['fundCurrency']" mltag="txt_select">
+                                                    <label class="control-label" for="fundCurrency">{{'Fund Currency' | translate}}</label>
+                                                    <ng-select id="fundCurrency" [items]="fundCurrencyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['fundCurrency']">
 
 
 
@@ -567,48 +567,48 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundCurrency'].hasError('required') && fundForm.controls['fundCurrency'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" mltag="txt_openendedorcloseendedfundstrucffbc9f988e">Open-ended or Close-ended Fund Structure</label>
+                                                <label class="control-label">{{'Open-ended or Close-ended Fund Structure' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="openOrCloseEnded" id="openOrCloseEnded1" formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.OPEN_ENDED}}">
-                                                    <label for="openOrCloseEnded1" mltag="txt_openended">Open-ended</label>
+                                                    <label for="openOrCloseEnded1">{{'Open-ended' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="openOrCloseEnded" id="openOrCloseEnded2" formControlName="openOrCloseEnded" value="{{enums.openOrCloseEnded.CLOSE_ENDED}}">
-                                                    <label for="openOrCloseEnded2" mltag="txt_closeended">Close-ended</label>
+                                                    <label for="openOrCloseEnded2">{{'Close-ended' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" for="fiscalYearEnd" mltag="txt_nextfiscalyearendmmdd">Next Fiscal Year End (MM-DD)</label>
+                                                <label class="control-label" for="fiscalYearEnd">{{'Next Fiscal Year End (MM-DD)' | translate}}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" placeholder="Choose a date" mode="month" theme="dp-material" mltag="txt_chooseadate">
+                                                    <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" [placeholder]="_translate.translate('Choose a date')" mode="month" theme="dp-material">
                                                 </div>
-                                                <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')" class="text-danger" mltag="txt_fieldisrequired">Field is required</div>
-                                                <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')" class="field-error" mltag="txt_incorrectdate">Incorrect date</span>
+                                                <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')" class="text-danger">{{'Field is required' | translate}}</div>
+                                                <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')" class="field-error">{{'Incorrect date' | translate}}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" mltag="txt_isfundoffunds">Is Fund of Funds</label>
+                                                <label class="control-label">{{'Is Fund of Funds' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund1" formControlName="isFundOfFund" value="{{enums.isFundOfFund.YES}}">
-                                                    <label for="isFundOfFund1" mltag="txt_yes">Yes</label>
+                                                    <label for="isFundOfFund1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundOfFund" id="isFundOfFund2" formControlName="isFundOfFund" value="{{enums.isFundOfFund.NO}}">
-                                                    <label for="isFundOfFund2" mltag="txt_no">No</label>
+                                                    <label for="isFundOfFund2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="managementCompanyID" mltag="txt_managementcompany">Management Company</label>
-                                                    <ng-select id="managementCompanyID" [items]="managementCompanyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['managementCompanyID']" mltag="txt_select">
+                                                    <label class="control-label" for="managementCompanyID">{{'Management Company' | translate}}</label>
+                                                    <ng-select id="managementCompanyID" [items]="managementCompanyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['managementCompanyID']">
 
 
 
@@ -616,14 +616,14 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['managementCompanyID'].hasError('required') && fundForm.controls['managementCompanyID'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="fundAdministrator" mltag="txt_fundadministrator">Fund Administrator</label>
-                                                    <ng-select id="fundAdministrator" [items]="fundAdministratorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['fundAdministrator']" mltag="txt_select">
+                                                    <label class="control-label" for="fundAdministrator">{{'Fund Administrator' | translate}}</label>
+                                                    <ng-select id="fundAdministrator" [items]="fundAdministratorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['fundAdministrator']">
 
 
 
@@ -631,14 +631,14 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministrator'].hasError('required') && fundForm.controls['fundAdministrator'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministrator'].hasError('required') && fundForm.controls['fundAdministrator'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="custodianBank" mltag="txt_custodianbank">Custodian Bank</label>
-                                                    <ng-select id="custodianBank" [items]="custodianBankItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['custodianBank']" mltag="txt_select">
+                                                    <label class="control-label" for="custodianBank">{{'Custodian Bank' | translate}}</label>
+                                                    <ng-select id="custodianBank" [items]="custodianBankItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['custodianBank']">
 
 
 
@@ -646,13 +646,13 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBank'].hasError('required') && fundForm.controls['custodianBank'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBank'].hasError('required') && fundForm.controls['custodianBank'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentManager" mltag="txt_investmentmanager">Investment Manager</label>
-                                                <ng-select id="investmentManager" [items]="investmentManagerItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['investmentManager']" mltag="txt_select">
+                                                <label class="control-label" for="investmentManager">{{'Investment Manager' | translate}}</label>
+                                                <ng-select id="investmentManager" [items]="investmentManagerItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['investmentManager']">
 
 
 
@@ -661,8 +661,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="principalPromoter" mltag="txt_principalpromoter">Principal Promoter</label>
-                                                <ng-select id="principalPromoter" [items]="principalPromoterItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['principalPromoter']" mltag="txt_select">
+                                                <label class="control-label" for="principalPromoter">{{'Principal Promoter' | translate}}</label>
+                                                <ng-select id="principalPromoter" [items]="principalPromoterItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['principalPromoter']">
 
 
 
@@ -671,8 +671,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="payingAgent" mltag="txt_payingagent">Paying Agent</label>
-                                                <ng-select id="payingAgent" [items]="payingAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['payingAgent']" mltag="txt_select">
+                                                <label class="control-label" for="payingAgent">{{'Paying Agent' | translate}}</label>
+                                                <ng-select id="payingAgent" [items]="payingAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['payingAgent']">
 
 
 
@@ -681,15 +681,15 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="fundManagers" mltag="txt_fundmanagers">Fund Managers</label>
+                                                <label class="control-label" for="fundManagers">{{'Fund Managers' | translate}}</label>
                                                 <input type="text" name="fundManagers" id="fundManagers" formControlName="fundManagers">
-                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched" mltag="txt_incorrectentry">Incorrect entry</span>
+                                                <span class="field-error" *ngIf="fundForm.controls['fundManagers'].hasError('required') && fundForm.controls['fundManagers'].touched">{{'Incorrect entry' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6" *ngIf="isTransferAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="transferAgent" mltag="txt_transferagent">Transfer Agent</label>
-                                                    <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['transferAgent']" mltag="txt_select">
+                                                    <label class="control-label" for="transferAgent">{{'Transfer Agent' | translate}}</label>
+                                                    <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['transferAgent']">
 
 
 
@@ -702,8 +702,8 @@
 
                                             <div class="form-group col-sm-6" *ngIf="isCentralizingAgentActive()">
                                                 <div>
-                                                    <label class="control-label" for="centralizingAgent" mltag="txt_centralizingagent">Centralizing Agent</label>
-                                                    <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['centralizingAgent']" mltag="txt_select">
+                                                    <label class="control-label" for="centralizingAgent">{{'Centralizing Agent' | translate}}</label>
+                                                    <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['centralizingAgent']">
 
 
 
@@ -715,21 +715,21 @@
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" mltag="txt_isdedicatedfund">Is Dedicated Fund</label>
+                                                <label class="control-label">{{'Is Dedicated Fund' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isDedicatedFund" id="isDedicatedFund1" formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.YES}}">
-                                                    <label for="isDedicatedFund1" mltag="txt_yes">Yes</label>
+                                                    <label for="isDedicatedFund1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isDedicatedFund" id="isDedicatedFund2" formControlName="isDedicatedFund" value="{{enums.isDedicatedFund.NO}}">
-                                                    <label for="isDedicatedFund2" mltag="txt_no">No</label>
+                                                    <label for="isDedicatedFund2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
                                                 <div>
-                                                    <label class="control-label" for="portfolioCurrencyHedge" mltag="txt_portfoliocurrencyhedge">Portfolio Currency Hedge</label>
-                                                    <ng-select id="portfolioCurrencyHedge" [items]="portfolioCurrencyHedgeItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['portfolioCurrencyHedge']" mltag="txt_select">
+                                                    <label class="control-label" for="portfolioCurrencyHedge">{{'Portfolio Currency Hedge' | translate}}</label>
+                                                    <ng-select id="portfolioCurrencyHedge" [items]="portfolioCurrencyHedgeItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['portfolioCurrencyHedge']">
 
 
 
@@ -737,12 +737,12 @@
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched" mltag="txt_fieldisrequired">Field is required</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['portfolioCurrencyHedge'].hasError('required') && fundForm.controls['portfolioCurrencyHedge'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentObjective" mltag="txt_investmentobjective">Investment Objective</label>
+                                                <label class="control-label" for="investmentObjective">{{'Investment Objective' | translate}}</label>
                                                 <textarea name="investmentObjective" id="investmentObjective" formControlName="investmentObjective"></textarea>
                                             </div>
                                         </div>
@@ -755,7 +755,7 @@
                                         <div class="col-xs-12">
                                             <a href="#" (click)="panels[1][1].open = !panels[1][1].open; $event.preventDefault();">
                                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1][1].open">
-                                                </i> <h2 mltag="txt_optionalinformation">Optional Information</h2>
+                                                </i><h2>{{'Optional Information' | translate}}</h2>
                                             </a>
                                         </div>
                                     </div>
@@ -764,14 +764,14 @@
                                     <div class="panel-body" [class.hidden]="!panels[1][1].open">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="globalItermediaryIdentification" mltag="txt_globalintermediaryidentificatif680906e8a">Global Intermediary Identification Number (GIIN)</label>
+                                                <label class="control-label" for="globalItermediaryIdentification">{{'Global Intermediary Identification Number (GIIN)' | translate}}</label>
                                                 <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification" formControlName="globalItermediaryIdentification" maxlength="19">
-                                                <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')" class="field-error" mltag="txt_incorrectgiin">Incorrect GIIN</span>
+                                                <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')" class="field-error">{{'Incorrect GIIN' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="delegatedManagementCompany" mltag="txt_delegatedmanagementcompany">Delegated Management Company</label>
-                                                <ng-select id="delegatedManagementCompany" [items]="managementCompanyItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['delegatedManagementCompany']" mltag="txt_select">
+                                                <label class="control-label" for="delegatedManagementCompany">{{'Delegated Management Company' | translate}}</label>
+                                                <ng-select id="delegatedManagementCompany" [items]="managementCompanyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['delegatedManagementCompany']">
 
 
 
@@ -780,8 +780,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="investmentAdvisor" mltag="txt_investmentadvisor">Investment Advisor</label>
-                                                <ng-select id="investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['investmentAdvisor']" mltag="txt_select">
+                                                <label class="control-label" for="investmentAdvisor">{{'Investment Advisor' | translate}}</label>
+                                                <ng-select id="investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['investmentAdvisor']">
 
 
 
@@ -790,8 +790,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="auditor" mltag="txt_auditor">Auditor</label>
-                                                <ng-select id="auditor" [items]="auditorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['auditor']" mltag="txt_select">
+                                                <label class="control-label" for="auditor">{{'Auditor' | translate}}</label>
+                                                <ng-select id="auditor" [items]="auditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['auditor']">
 
 
 
@@ -800,8 +800,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="taxAuditor" mltag="txt_taxauditor">Tax Auditor</label>
-                                                <ng-select id="taxAuditor" [items]="taxAuditorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['taxAuditor']" mltag="txt_select">
+                                                <label class="control-label" for="taxAuditor">{{'Tax Auditor' | translate}}</label>
+                                                <ng-select id="taxAuditor" [items]="taxAuditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['taxAuditor']">
 
 
 
@@ -810,8 +810,8 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="legalAdvisor" mltag="txt_legaladvisor">Legal Advisor</label>
-                                                <ng-select id="legalAdvisor" [items]="legalAdvisorItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['legalAdvisor']" mltag="txt_select">
+                                                <label class="control-label" for="legalAdvisor">{{'Legal Advisor' | translate}}</label>
+                                                <ng-select id="legalAdvisor" [items]="legalAdvisorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['legalAdvisor']">
 
 
 
@@ -820,44 +820,44 @@
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="directors" mltag="txt_directors">Directors</label>
+                                                <label class="control-label" for="directors">{{'Directors' | translate}}</label>
                                                 <input type="text" name="directors" id="directors" formControlName="directors">
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_hasembeddedderivatives">Has Embedded Derivatives</label>
+                                                <label class="control-label">{{'Has Embedded Derivatives' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective1" formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.YES}}">
-                                                    <label for="hasEmbeddedDirective1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasEmbeddedDirective1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasEmbeddedDirective" id="hasEmbeddedDirective2" formControlName="hasEmbeddedDirective" value="{{enums.hasEmbeddedDirective.NO}}">
-                                                    <label for="hasEmbeddedDirective2" mltag="txt_no">No</label>
+                                                    <label for="hasEmbeddedDirective2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_hascapitalpreservation">Has Capital Preservation</label>
+                                                <label class="control-label">{{'Has Capital Preservation' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation1" formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.YES}}">
-                                                    <label for="hasCapitalPreservation1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasCapitalPreservation1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasCapitalPreservation" id="hasCapitalPreservation2" formControlName="hasCapitalPreservation" value="{{enums.hasCapitalPreservation.NO}}">
-                                                    <label for="hasCapitalPreservation2" mltag="txt_no">No</label>
+                                                    <label for="hasCapitalPreservation2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row" *ngIf="fundForm.controls['hasCapitalPreservation'].value === enums.hasCapitalPreservation.YES.toString()">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationLevel" mltag="txt_capitalpreservationlevel">Capital Preservation Level</label>
+                                                <label class="control-label" for="capitalPreservationLevel">{{'Capital Preservation Level' | translate}}</label>
                                                 <input type="number" name="capitalPreservationLevel" id="capitalPreservationLevel" formControlName="capitalPreservationLevel">
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="capitalPreservationPeriod" mltag="txt_capitalpreservationperiod">Capital Preservation Period</label>
-                                                <ng-select id="capitalPreservationPeriod" [items]="capitalPreservationPeriodItems" [allowClear]="true" placeholder="Select" [formControl]="fundForm.controls['capitalPreservationPeriod']" mltag="txt_select">
+                                                <label class="control-label" for="capitalPreservationPeriod">{{'Capital Preservation Period' | translate}}</label>
+                                                <ng-select id="capitalPreservationPeriod" [items]="capitalPreservationPeriodItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['capitalPreservationPeriod']">
 
 
 
@@ -867,141 +867,141 @@
                                         </div>
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_hascppi">Has CPPI</label>
+                                                <label class="control-label">{{'Has CPPI' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasCppi" id="hasCppi1" formControlName="hasCppi" value="{{enums.hasCppi.YES}}">
-                                                    <label for="hasCppi1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasCppi1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasCppi" id="hasCppi2" formControlName="hasCppi" value="{{enums.hasCppi.NO}}">
-                                                    <label for="hasCppi2" mltag="txt_no">No</label>
+                                                    <label for="hasCppi2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <div *ngIf="fundForm.controls['hasCppi'].value === enums.hasCppi.YES.toString()">
-                                                    <label class="control-label" for="cppiMultiplier" mltag="txt_cppimultiplier">CPPI Multiplier</label>
+                                                    <label class="control-label" for="cppiMultiplier">{{'CPPI Multiplier' | translate}}</label>
                                                     <input type="number" name="cppiMultiplier" id="cppiMultiplier" formControlName="cppiMultiplier">
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_hashedgefundstrategy">Has Hedge Fund Strategy</label>
+                                                <label class="control-label">{{'Has Hedge Fund Strategy' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy1" formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.YES}}">
-                                                    <label for="hasHedgeFundStrategy1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasHedgeFundStrategy1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasHedgeFundStrategy" id="hasHedgeFundStrategy2" formControlName="hasHedgeFundStrategy" value="{{enums.hasHedgeFundStrategy.NO}}">
-                                                    <label for="hasHedgeFundStrategy2" mltag="txt_no">No</label>
+                                                    <label for="hasHedgeFundStrategy2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_isleveraged">Is Leveraged</label>
+                                                <label class="control-label">{{'Is Leveraged' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isLeveraged" id="isLeveraged1" formControlName="isLeveraged" value="{{enums.isLeveraged.YES}}">
-                                                    <label for="isLeveraged1" mltag="txt_yes">Yes</label>
+                                                    <label for="isLeveraged1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isLeveraged" id="isLeveraged2" formControlName="isLeveraged" value="{{enums.isLeveraged.NO}}">
-                                                    <label for="isLeveraged2" mltag="txt_no">No</label>
+                                                    <label for="isLeveraged2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_has13030strategy">Has 130/30 Strategy</label>
+                                                <label class="control-label">{{'Has 130/30 Strategy' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy1" formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.YES}}">
-                                                    <label for="has130Or30Strategy1" mltag="txt_yes">Yes</label>
+                                                    <label for="has130Or30Strategy1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="has130Or30Strategy" id="has130Or30Strategy2" formControlName="has130Or30Strategy" value="{{enums.has130_30Strategy.NO}}">
-                                                    <label for="has130Or30Strategy2" mltag="txt_no">No</label>
+                                                    <label for="has130Or30Strategy2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_isfundtargetingenvironmentalor1e729dc37e">Is Fund Targeting Environmental or Social Objectives (EOS)</label>
+                                                <label class="control-label">{{'Is Fund Targeting Environmental or Social Objectives (EOS)' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos1" formControlName="isFundTargetingEos" value="{{enums.isFundTargetingEos.YES}}">
-                                                    <label for="isFundTargetingEos1" mltag="txt_yes">Yes</label>
+                                                    <label for="isFundTargetingEos1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundTargetingEos" id="isFundTargetingEos2" formControlName="isFundTargetingEos" value="{{enums.isFundTargetingEos.NO}}">
-                                                    <label for="isFundTargetingEos2" mltag="txt_no">No</label>
+                                                    <label for="isFundTargetingEos2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_isfundtargetingsociallyrespons31534f9cf0">Is Fund Targeting Socially Responsible Investment (SRI)</label>
+                                                <label class="control-label">{{'Is Fund Targeting Socially Responsible Investment (SRI)' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri1" formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.YES}}">
-                                                    <label for="isFundTargetingSri1" mltag="txt_yes">Yes</label>
+                                                    <label for="isFundTargetingSri1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isFundTargetingSri" id="isFundTargetingSri2" formControlName="isFundTargetingSri" value="{{enums.isFundTargetingSri.NO}}">
-                                                    <label for="isFundTargetingSri2" mltag="txt_no">No</label>
+                                                    <label for="isFundTargetingSri2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_ispassivefund">Is Passive Fund</label>
+                                                <label class="control-label">{{'Is Passive Fund' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isPassiveFund" id="isPassiveFund1" formControlName="isPassiveFund" value="{{enums.isPassiveFund.YES}}">
-                                                    <label for="isPassiveFund1" mltag="txt_yes">Yes</label>
+                                                    <label for="isPassiveFund1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="isPassiveFund" id="isPassiveFund2" formControlName="isPassiveFund" value="{{enums.isPassiveFund.NO}}">
-                                                    <label for="isPassiveFund2" mltag="txt_no">No</label>
+                                                    <label for="isPassiveFund2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" mltag="txt_hassecuritylending">Has Security Lending</label>
+                                                <label class="control-label">{{'Has Security Lending' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending1" formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.YES}}">
-                                                    <label for="hasSecurityiesLending1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasSecurityiesLending1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasSecurityiesLending" id="hasSecurityiesLending2" formControlName="hasSecurityiesLending" value="{{enums.hasSecurityiesLending.NO}}">
-                                                    <label for="hasSecurityiesLending2" mltag="txt_no">No</label>
+                                                    <label for="hasSecurityiesLending2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group checkbox-container col-sm-6">
-                                                <label class="control-label" mltag="txt_hasswap">Has Swap</label>
+                                                <label class="control-label">{{'Has Swap' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasSwap" id="hasSwap1" formControlName="hasSwap" value="{{enums.hasSwap.YES}}">
-                                                    <label for="hasSwap1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasSwap1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasSwap" id="hasSwap2" formControlName="hasSwap" value="{{enums.hasSwap.NO}}">
-                                                    <label for="hasSwap2" mltag="txt_no">No</label>
+                                                    <label for="hasSwap2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group checkbox-container col-sm-6">
-                                                <label class="control-label" mltag="txt_hasdurationhedge">Has Duration Hedge</label>
+                                                <label class="control-label">{{'Has Duration Hedge' | translate}}</label>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasDurationHedge" id="hasDurationHedge1" formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.YES}}">
-                                                    <label for="hasDurationHedge1" mltag="txt_yes">Yes</label>
+                                                    <label for="hasDurationHedge1">{{'Yes' | translate}}</label>
                                                 </div>
                                                 <div class="radio-inline">
                                                     <input type="radio" name="hasDurationHedge" id="hasDurationHedge2" formControlName="hasDurationHedge" value="{{enums.hasDurationHedge.NO}}">
-                                                    <label for="hasDurationHedge2" mltag="txt_no">No</label>
+                                                    <label for="hasDurationHedge2">{{'No' | translate}}</label>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                                <label class="control-label" for="internalReference">{{'Internal Reference' | translate}}</label>
                                                 <input type="text" name="internalReference" id="internalReference" formControlName="internalReference" maxlength="50">
                                             </div>
                                         </div>
 
                                         <div class="row">
                                             <div class="form-group col-sm-6">
-                                                <label class="control-label" for="additionnalNotes" mltag="txt_additionalnotes">Additional Notes</label>
+                                                <label class="control-label" for="additionnalNotes">{{'Additional Notes' | translate}}</label>
                                                 <textarea name="additionnalNotes" id="additionnalNotes" class="form-control" formControlName="additionnalNotes" maxlength="500"></textarea>
                                             </div>
                                         </div>
@@ -1014,12 +1014,9 @@
                 <br>
 
                 <div class="form-group col-sm-6">
-                    <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()" mltag="txt_cancel">Cancel</button>
+                    <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel' | translate}}</button>
                     <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
-                        <span>
-                            <i class="fa fa-save"></i>
-                            <span>{{param === 'new' ? 'Save' : 'Update'}}</span>
-                        </span>
+                        <i class="fa fa-save"></i> {{param === 'new' ? 'Save' : 'Update'}}
                     </button>
                 </div>
 

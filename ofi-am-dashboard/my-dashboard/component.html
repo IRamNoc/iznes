@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-user"></i>
-        <span mltag="txt_mydashboard">My Dashboard</span> - {{ connectedWalletName }}</h1>
+    <h1 id="am-fund-holdings"><i class="fa fa-user"></i>{{'My Dashboard - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
+    </h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -8,22 +8,22 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-bar-chart"></i> <span mltag="txt_myholdings">My Holdings</span>
+                <i class="fa fa-bar-chart"></i> {{'My Holdings' | translate}}
             </button>
             <clr-tab-content *clrIfActive="true">
                 <div class="panel-body">
                     <form>
                         <div class="row form-group">
                             <div class="col-sm-12">
-                                <label mltag="txt_fundmanager">Fund Manager</label>
+                                <label>{{'Fund Manager' | translate}}</label>
                                 <ng-select [items]="filteredFundAssetList" [allowClear]="true" [formControl]="fundShareForm.controls['selectFund']">
 
 
 
                                 </ng-select>
-                                <button (click)="handleCompanySelection()" class="btn btn-primary btn-end" mltag="txt_go">
+                                <button (click)="handleCompanySelection()" class="btn btn-primary btn-end">{{'Go' | translate}}
 
-                                    Go</button>
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -36,12 +36,12 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="text-left"><span mltag="txt_subportfolio">Sub Portfolio</span></th>
-                                            <th><span mltag="txt_asset">Asset</span></th>
-                                            <th class="text-left"><span mltag="txt_assetmanager">Asset Manager</span></th>
-                                            <th class="text-right"><span mltag="txt_quantity">Quantity</span></th>
-                                            <th class="text-right"><span mltag="txt_estimatedamount">Estimated Amount</span></th>
-                                            <th class="text-right"><span mltag="txt_ratio">Ratio</span></th>
+                                            <th class="text-left">{{'Sub Portfolio' | translate}}</th>
+                                            <th>{{'Asset' | translate}}</th>
+                                            <th class="text-left">{{'Asset Manager' | translate}}</th>
+                                            <th class="text-right">{{'Quantity' | translate}}</th>
+                                            <th class="text-right">{{'Estimated Amount' | translate}}</th>
+                                            <th class="text-right">{{'Ratio' | translate}}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -51,8 +51,8 @@
                                             <td class="text-left">{{ holding.asset }}</td>
                                             <td class="text-left">{{ holding.assetManager }}</td>
                                             <td class="text-right">{{ holding.quantity | moneyValue: 5 }}</td>
-                                            <td class="text-right">&euro; {{ holding.estimatedAmount | moneyValue: 4 }}</td>
-                                            <td class="text-right">{{ holding.ratio }}%</td>
+                                            <td class="text-right">{{'&euro;' | translate}} {{ holding.estimatedAmount | moneyValue: 4 }}</td>
+                                            <td class="text-right">{{'@holding.ratio@%' | translate: {'holding.ratio': holding.ratio} }}</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -11,6 +11,8 @@ import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {fromJS} from 'immutable';
 
+import {MultilingualService} from '@setl/multilingual';
+
 export enum ViewMode {
     PAGE = 'PAGE',
     POPUP = 'POPUP'
@@ -285,6 +287,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 private _ngRedux: NgRedux<any>,
                 private _fb: FormBuilder,
                 private mcService: OfiManagementCompanyService,
+                private _translate: MultilingualService,
     ) {
 
         this.additionnalForm = this._fb.group({

@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {ClarityModule} from '@clr/angular';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SetlComponentsModule} from '@setl/utils/index';
+import {SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils/index';
 
 /* My informations module */
 import {OfiMyInformationsModule} from '../ofi-my-informations/module';
@@ -27,6 +27,8 @@ import {OfiProfileMyInformationsComponent} from './profile-my-informations/compo
         FormsModule,
         ReactiveFormsModule,
         SetlComponentsModule,
+        SetlDirectivesModule,
+        SetlPipesModule,
     ],
     providers: [
 

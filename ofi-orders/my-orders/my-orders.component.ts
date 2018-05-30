@@ -28,6 +28,8 @@ import * as _ from 'lodash';
 /* Clarity */
 import {ClrDatagridStateInterface} from '@clr/angular';
 
+import {MultilingualService} from '@setl/multilingual';
+
 /* Types. */
 interface SelectedItem {
     id: any;
@@ -165,7 +167,8 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         private route: ActivatedRoute,
         private router: Router,
         private logService: LogService,
-        public _numberConverterService: NumberConverterService
+        public _numberConverterService: NumberConverterService,
+        private _translate: MultilingualService,
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
     }
