@@ -583,7 +583,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             'quantity': (value) => {
-                const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
+
+                const newValue = this._moneyValuePipe.transform(value, this.shareData.maximumNumDecimal);
 
                 /**
                  * amount = unit * nav
@@ -829,6 +830,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     getDate(dateString: string): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    }
+
+    roundAmount(){
+        this.amount.setValue(Math.ceil(this._moneyValuePipe.parse(this.amount.value) / (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal))));
+        this.unSubscribeForChange();
     }
 }
 

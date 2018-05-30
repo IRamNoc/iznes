@@ -384,7 +384,7 @@
                                 <span class="" mltag="txt_amount">Amount</span>
                             </label>
                             <div>
-                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="4">
+                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="roundAmount();" appNumberFormatter [fractionSize]="4">
                             </div>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisrequired">Field is required</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger" mltag="txt_fieldisinvalid">Field is invalid</span>
