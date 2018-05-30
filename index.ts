@@ -6,6 +6,7 @@ export {
     SagaHelper,
 };
 
+export {TranslatePipe} from './pipes';
 export {MoneyValuePipe} from './pipes';
 export {SetlPipesModule} from './pipes';
 
@@ -37,5 +38,5 @@ export {
     FormItemStyle,
     FormItemType,
     DynamicFormsModule,
-    DynamicFormsValidator
+    DynamicFormsValidator,
 } from './components/dynamic-forms';
