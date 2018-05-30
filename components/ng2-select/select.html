@@ -12,7 +12,7 @@
                       (click)="matchClick($event)"
                       style="outline: 0;">
                 <span *ngIf="inlineLabel !== ''" class="pull-left">
-                    {{this.multilingualService.getTranslation(inlineLabelMlTag) || inlineLabel}}:
+                    {{this._translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
                 </span>
         <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
         <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
