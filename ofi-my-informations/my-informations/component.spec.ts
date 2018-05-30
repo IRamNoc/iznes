@@ -7,6 +7,7 @@ import {SelectModule} from '@setl/utils/index';
 import {NgRedux} from '@angular-redux/store';
 import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {MultilingualService} from '@setl/multilingual';
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
@@ -15,6 +16,10 @@ class OfiManagementCompanyServiceMock {
         return;
     }
 }
+
+const MultilingualServiceStub = {
+
+};
 
 describe('OfiMyInformationsComponent', () => {
 
@@ -39,6 +44,7 @@ describe('OfiMyInformationsComponent', () => {
             providers: [
                 { provide: NgRedux, useValue: ngReduxSpy },
                 { provide: OfiManagementCompanyService, useClass: OfiManagementCompanyServiceMock },
+                { provide: MultilingualService, useValue: MultilingualServiceStub },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
