@@ -14,10 +14,14 @@ import {ToasterService} from 'angular2-toaster';
 
 import {OfiInviteInvestorsComponent} from './component';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import {MultilingualService} from '@setl/multilingual';
 
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
 const OfiKycServiceSpy = jasmine.createSpyObj('OfiKycService', ['getInvitationsByUserAmCompany', 'sendInvestInvitations']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
+const MultilingualServiceStub = {
+
+};
 
 describe('OfiInviteInvestorsComponent', () => {
 
@@ -48,6 +52,7 @@ describe('OfiInviteInvestorsComponent', () => {
                 { provide: Location, useValue: locationSpy },
                 { provide: OfiKycService, useValue: OfiKycServiceSpy },
                 { provide: NgRedux, useValue: ngReduxSpy },
+                { provide: MultilingualService, useValue: MultilingualServiceStub },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

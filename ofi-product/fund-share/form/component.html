@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <clr-tabs>
+            <clr-tabs #tabsRef>
                 <clr-tab>
                     <button clrTabLink id="tabKeyFactsButton">
                         <span>
@@ -55,7 +55,7 @@
                             <span class="required" [hidden]="model.keyFacts.mandatory.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -91,7 +91,7 @@
                             <span class="required" [hidden]="model.characteristic.mandatory.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -115,7 +115,7 @@
                             <span class="required" [hidden]="model.calendar.mandatory.isValid() && model.calendar.subscriptionTradeCycle.isValid() && model.calendar.redemptionTradeCycle.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -149,7 +149,7 @@
                             <span class="required" [hidden]="model.fees.mandatory.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -185,7 +185,7 @@
                             <span class="required" [hidden]="model.profile.mandatory.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -218,7 +218,7 @@
                     <button clrTabLink id="tabRespresentationButton">
                         <span mltag="txt_representation">Representation</span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -239,7 +239,7 @@
                     <button clrTabLink id="tabFTaxationButton">
                         <span mltag="txt_taxation">Taxation</span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -260,7 +260,7 @@
                     <button clrTabLink id="tabListingButton">
                         <span mltag="txt_listing">Listing</span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -281,7 +281,7 @@
                     <button clrTabLink id="tabPRIIPButton">
                         <span mltag="txt_priips">PRIIPS</span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -302,7 +302,7 @@
                     <button clrTabLink id="tabSolvencyButton">
                         <span mltag="txt_solvencyii">Solvency II</span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -326,7 +326,7 @@
                             <span class="required" [hidden]="model.documents.mandatory.isValid()">*</span>
                         </span>
                     </button>
-                    <clr-tab-content>
+                    <clr-tab-content *clrIfActive>
                         <div class="well">
                             <div class="row panel-header">
                                 <div class="col-xs-6">
@@ -354,7 +354,23 @@
                         </div>
                     </clr-tab-content>
                 </clr-tab>
+
+                <div class="form-group previous-next">
+                    <div class="buttons">
+                        <button class="btn btn-default" id="previousTab" mltag="txt_previoustab"
+                            (click)="previousTab()"
+                            [disabled]="hidePreviousTabButton()">
+                            Previous
+                        </button>
+                        <button class="btn btn-default" id="nextTab" mltag="txt_nexttab"
+                            (click)="nextTab()"
+                            [disabled]="hideNextTabButton()">
+                            Next
+                        </button>
+                    </div>
+                </div>
             </clr-tabs>
+
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
