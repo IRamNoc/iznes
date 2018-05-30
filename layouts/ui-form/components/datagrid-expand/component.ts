@@ -11,6 +11,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 // Internal
 import {Subscription} from 'rxjs/Subscription';
+import {MultilingualService} from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -320,6 +321,7 @@ export class UiDatagridExpandComponent implements OnInit, OnDestroy {
                 private ngRedux: NgRedux<any>,
                 private _changeDetectorRef: ChangeDetectorRef,
                 private logService: LogService,
+                private _translate: MultilingualService,
                 private _alertsService: AlertsService,
     ) {
         this.searchForm = this._fb.group({
