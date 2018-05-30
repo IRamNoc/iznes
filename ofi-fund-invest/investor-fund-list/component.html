@@ -56,6 +56,11 @@
                         <span class="column-label"></span></clr-dg-column>
                     <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon><span mltag="txt_redemptioncutoffdate">Redemption Cut-off Date</span>
                         <span class="column-label"></span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>
+                        <span mltag="txt_sharequantity">
+                            Position
+                        </span>
+                    </clr-dg-column>
                     <clr-dg-column style="min-width: 190px;" mltag="txt_actions">Actions</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
@@ -69,6 +74,7 @@
                         <clr-dg-cell>{{fund['nav'] | moneyValue}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextSubCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['position']}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="fund['hasNoNav']">No NAV Exist</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
                             <div class="btn-group btn-sm">
