@@ -209,6 +209,9 @@ export class UiTooltipsComponent implements OnInit {
     showRandomTooltips = false;
     showRandomTooltipsOpened = false;
 
+    showTour = false;
+    tourObject = [];
+
     private unsubscribe: Subject<any> = new Subject();
 
     constructor(
@@ -283,6 +286,38 @@ export class UiTooltipsComponent implements OnInit {
             }
         }
         this.changeDetectorRef.markForCheck();
+    }
+
+    launchTour() {
+        this.showTour = false;
+        this.tourObject = [];
+        setTimeout(() => {
+            this.tourObject.push(
+                {
+                    title: this._translate.translate('Auto-scroll to element'),
+                    text: this._translate.translate('Duration forced to 3s (default 5s).'),
+                    target: 'tooltip-label-directives',
+                    duration: 3000,
+                },
+                {
+                    title: this._translate.translate('Translations reports'),
+                    text: this._translate.translate('Get a report of all missing translations.'),
+                    target: 'translation-report-button',
+                },
+                {
+                    title: this._translate.translate('Tooltip Tour'),
+                    text: this._translate.translate('This is here the tooltip tour started.'),
+                    target: 'tooltip-tour-btn',
+                },
+                {
+                    title: this._translate.translate('User Infos'),
+                    text: this._translate.translate('Here you can see you last connection.'),
+                    target: 'topBarMenu',
+                },
+            );
+            this.showTour = true;
+            this.changeDetectorRef.markForCheck();
+        }, 50);
     }
 
     toggleInfoPanes(event: Event): void {

@@ -8,7 +8,7 @@
                 <h1>{{'Tooltips' | translate}}</h1>
                 <hr>
                 <p>
-                    <span class="label label-success" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: true}">Directives</span>
+                    <span class="label label-success" id="tooltip-label-directives" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: true}">Directives</span>
                 </p>
                 <p>{{'Tooltips provides a description of a UI element.' | translate}}</p>
                 <h1>{{'How to use' | translate}}</h1>
@@ -123,6 +123,53 @@
                         <span class="slider round"></span>
                     </label>
                 </div>
+                <br>
+                <h2>{{'User Tour' | translate}} <small class="text-warning">({{'new' | translate}})</small></h2>
+                <hr>
+                <p>{{'Based on the standard tooltip behavior, the tooltip directives check if the inputs passed in config is a single or a multiple object. A multiple object is detected automatically as a User Tour.' | translate}}</p>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-success" id="tooltip-tour-btn" (click)="launchTour()">{{'Launch your tutorial Tour' | translate}}</button>
+                    <div *ngIf="showTour">
+                        <i [tooltip]="tourObject"></i>
+                    </div>
+                </div>
+                <br>
+                <b>{{'HTML Implementation' | translate}}:</b>
+                <pre><code>{{'&lt;button (click)=&quot;launchTour()&quot;&gt;\{\{\'Launch your tutorial Tour\' | translate\}\}&lt;/button&gt;'}}
+{{'&lt;div *ngIf=&quot;showTour&quot;&gt; &lt;i [tooltip]=&quot;tourObject&quot;&gt;&lt;/i&gt; &lt;/div&gt;'}}</code></pre>
+                <br>
+                <b>{{'TS Implementation' | translate}}:</b>
+                <pre><code>{{'launchTour() {'}}
+    {{'this.showTour = false;'}}
+    {{'this.tourObject = [];'}}
+    {{'setTimeout(() => {'}}
+        {{'this.tourObject.push('}}
+            {{'{'}}
+                {{'title: this._translate.translate(\'Auto-scroll to element\'),'}}
+                {{'text: this._translate.translate(\'Duration forced to 3s (default 5s).\'),'}}
+                {{'target: \'tooltip-label-directives\', // id of the element'}}
+                {{'duration: 3000, // optionnal'}}
+            {{'},'}}
+            {{'{'}}
+                {{'title: this._translate.translate(\'Translations reports\'),'}}
+                {{'text: this._translate.translate(\'Get a report of all missing translations.\'),'}}
+                {{'target: \'translation-report-button\','}}
+            {{'},'}}
+            {{'{'}}
+                {{'title: this._translate.translate(\'Tooltip Tour\'),'}}
+                {{'text: this._translate.translate(\'This is here the tooltip tour started.\'),'}}
+                {{'target: \'tooltip-tour-btn\','}}
+            {{'},'}}
+            {{'{'}}
+                {{'title: this._translate.translate(\'User Infos\'),'}}
+                {{'text: this._translate.translate(\'Here you can see you last connection.\'),'}}
+                {{'target: \'topBarMenu\','}}
+            {{'},'}}
+        {{');'}}
+        {{'this.showTour = true;'}}
+        {{'this.changeDetectorRef.markForCheck();'}}
+    {{'}, 50);'}}
+{{'}'}}</code></pre>
             </div>
         </clr-tab-content>
     </clr-tab>

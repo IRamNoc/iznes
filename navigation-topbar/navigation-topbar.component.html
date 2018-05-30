@@ -48,7 +48,7 @@
         </div>
 
         <div class="right-buttons">
-            <div class="dropdown" *ngIf="!appConfig.production">
+            <div id="translation-report-button" class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
                     <clr-icon shape="warning-standard" class="icon text-warning" style="stroke: orange"></clr-icon>
                     <p class="text-warning">{{'Translations' | translate}}</p>

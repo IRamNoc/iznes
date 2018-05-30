@@ -1443,3 +1443,19 @@ dp-date-picker div {
   right: -9px;
   padding: 2px 0 0 1px;
 }
+.btnTourContainer {
+  width: 100%;
+  text-align: right;
+}
+.btnTourContainer hr {
+  height: 1px;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+  margin: 10px 0 15px 0;
+}
+.btnTourContainer .btn {
+  margin-right: 6px!important;
+}
+.btnTourContainer .btn:last-child {
+  margin-right: 0!important;
+}
