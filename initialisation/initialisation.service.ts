@@ -128,15 +128,6 @@ export class InitialisationService {
             [],
             asyncTaskPipes,
             {},
-            function (data) {
-                const test = data;
-                this.logService.log(test);
-            },
-
-            function (data) {
-                const test = data;
-                this.logService.log(test);
-            }
         ));
 
         return false;
