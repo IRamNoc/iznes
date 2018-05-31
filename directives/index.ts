@@ -25,7 +25,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
-        FormChecker
+        FormChecker,
         TooltipDirective,
         ActiveHeaderButtonDirective,
     ],
@@ -37,7 +37,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
-        FormChecker
+        FormChecker,
         TooltipDirective,
         ActiveHeaderButtonDirective,
     ],
