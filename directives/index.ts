@@ -8,6 +8,8 @@ import {ClrDgSortNoSearchDirective} from './clr-dg-sort-nosearch/directive';
 import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
 import {BackToTopDirective} from './back-to-top/back-to-top.directive';
+import {FormChecker} from './enhanced-form/enhanced-form.directive';
+
 import {TooltipDirective} from './tooltip/tooltip.directive';
 import {ActiveHeaderButtonDirective} from './activeHeaderButton/active-header-button.directive';
 import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
@@ -23,6 +25,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        FormChecker
         TooltipDirective,
         ActiveHeaderButtonDirective,
     ],
@@ -34,6 +37,7 @@ import {MoneyValuePipe} from '../pipes';
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        FormChecker
         TooltipDirective,
         ActiveHeaderButtonDirective,
     ],
