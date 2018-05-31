@@ -135,4 +135,59 @@
             </form>
         </clr-tab-content>
     </clr-tab>
+
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-bars"></i> <span mltag="txt_enhancedform">Enhanced form</span>
+        </button>
+
+        <clr-tab-content *clrIfActive>
+            <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'Use enhancedForm directive to access the enhanced form functionality. Large margins are for demonstration purposes only.'"></app-ui-info-pane>
+            <form [formGroup]="longForm" (ngSubmit)="submitForm()" enhancedForm>
+                <section class="form-block">
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="enhancedFirstName" mltag="txt_firstname">First name (required)</label>
+                        <input type="text" id="enhancedFirstName" formControlName="firstName">
+                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="enhancedLastName" mltag="txt_lastname">Last name (required)</label>
+                        <input type="text" id="enhancedLastName" formControlName="lastName">
+                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="enhancedPassword" mltag="txt_password">Password (required)</label>
+                        <input type="text" id="enhancedPassword" formControlName="password">
+                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="enhancedPasswordConfirm" mltag="txt_confirmpassword">Password Confirm(required)</label>
+                        <input type="text" id="enhancedPasswordConfirm" formControlName="passwordConfirm">
+                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="control-label required-field" for="enhancedInputRequired" mltag="txt_inputfieldrequired">Input field (required)</label>
+                        <input type="text" name="inputRequired" id="enhancedInputRequired" formControlName="inputRequired">
+                        <span class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'The directive relies on a &lt;button type=\'submit\'&gt; tag'"></app-ui-info-pane>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <button type="submit" class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+
+                </section>
+            </form>
+        </clr-tab-content>
+    </clr-tab>
 </clr-tabs>
