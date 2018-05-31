@@ -37,8 +37,6 @@ import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
 
-import {MultilingualModule} from '@setl/multilingual';
-
 @Component({
     selector: 'app-invest-fund',
     templateUrl: 'component.html',
@@ -313,7 +311,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _toaster: ToasterService,
                 private _router: Router,
-                private _translate: MultilingualModule,
                 private logService: LogService,
                 private _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>) {
