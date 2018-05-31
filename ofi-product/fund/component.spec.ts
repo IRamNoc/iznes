@@ -106,7 +106,7 @@ export class TranslatePipe implements PipeTransform {
     }
 }
 
-describe('FundComponent', () => {
+xdescribe('FundComponent', () => {
 
     let comp: FundComponent;
     let fixture: ComponentFixture<FundComponent>;
