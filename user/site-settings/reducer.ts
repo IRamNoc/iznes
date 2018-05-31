@@ -6,13 +6,13 @@ import * as _ from 'lodash';
 let defaultLanguage;
 switch (window.navigator.language) {
     case 'en-GB':
-        defaultLanguage = 'eng';
+        defaultLanguage = 'en-Latn';
         break;
     case 'fr-FR':
-        defaultLanguage = 'fra';
+        defaultLanguage = 'fr-Latn';
         break;
     default:
-        defaultLanguage = 'fra';
+        defaultLanguage = 'fr-Latn';
         break;
 }
 
