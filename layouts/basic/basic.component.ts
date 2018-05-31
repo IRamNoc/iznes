@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
 import {FadeSlideRight} from '../../animations/fade-slide-right';
@@ -20,6 +20,8 @@ import {MultilingualService} from '@setl/multilingual';
 })
 
 export class BasicLayoutComponent implements OnInit, OnDestroy {
+    @ViewChild('main') mainEl : ElementRef;
+
     public _opened = false;
     public _modeNum = 0;
     public _positionNum = 1;
@@ -170,5 +172,12 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }
+    }
+
+    onDeactivate(){
+        let element = this.mainEl.nativeElement;
+        element.classList.add('pure-scroll');
+        element.scrollTop = 0;
+        element.classList.remove('pure-scroll');
     }
 }
