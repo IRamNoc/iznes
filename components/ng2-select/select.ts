@@ -125,7 +125,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     private _active: Array<SelectItem> = [];
 
     public constructor(element: ElementRef,
-                       private changeDetectorRef: ChangeDetectorRef, private multilingualService: MultilingualService) {
+                       private changeDetectorRef: ChangeDetectorRef, private _translate: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
 

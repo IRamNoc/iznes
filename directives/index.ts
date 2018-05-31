@@ -8,6 +8,9 @@ import {ClrDgSortNoSearchDirective} from './clr-dg-sort-nosearch/directive';
 import {HighlightDirective} from './highlight/highlight.directive';
 import {ClickedDirective} from './clicked/clicked.directive';
 import {BackToTopDirective} from './back-to-top/back-to-top.directive';
+import {TooltipDirective} from './tooltip/tooltip.directive';
+import {ActiveHeaderButtonDirective} from './activeHeaderButton/active-header-button.directive';
+import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
 import {MoneyValuePipe} from '../pipes';
 
 
@@ -16,23 +19,29 @@ import {MoneyValuePipe} from '../pipes';
         NumberFormatterDirective,
         ClrDgIconSortDirective,
         ClrDgSortNoSearchDirective,
+        ClrDgRowClickableDirective,
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        TooltipDirective,
+        ActiveHeaderButtonDirective,
     ],
     exports: [
         NumberFormatterDirective,
         ClrDgIconSortDirective,
         ClrDgSortNoSearchDirective,
+        ClrDgRowClickableDirective,
         HighlightDirective,
         ClickedDirective,
         BackToTopDirective,
+        TooltipDirective,
+        ActiveHeaderButtonDirective,
     ],
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ],
-    providers: [MoneyValuePipe]
+    providers: [MoneyValuePipe],
 })
 
 export class SetlDirectivesModule {
