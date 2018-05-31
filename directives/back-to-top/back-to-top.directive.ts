@@ -19,8 +19,7 @@ export class BackToTopDirective {
 
     }
 
-    @HostListener('scroll', ['$event'])
-    public onScroll(event: Event): void {
+    @HostListener('scroll', ['$event']) public onScroll(event: Event): void {
         if (event.srcElement.scrollTop > 80) {
             this.isScroll = true;
             this.createBacktToTopElmt();

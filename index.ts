@@ -6,6 +6,7 @@ export {
     SagaHelper,
 };
 
+export {TranslatePipe} from './pipes';
 export {MoneyValuePipe} from './pipes';
 export {SetlPipesModule} from './pipes';
 
@@ -26,6 +27,7 @@ export {LogService} from './services/log/service';
 export {LogServiceMock} from './services/log/service-mock';
 
 export {walletHelper, WalletTxHelper, immutableHelper, mDateHelper, commonHelper, WalletTxHelperModel} from './helper';
+export {ClrTabsHelper} from './helper/tabs';
 
 export {APP_CONFIG} from './appConfig/appConfig';
 export {AppConfig, MenuSpec, MenuItem} from './appConfig/appConfig.model';
@@ -36,5 +38,5 @@ export {
     FormItemStyle,
     FormItemType,
     DynamicFormsModule,
-    DynamicFormsValidator
+    DynamicFormsValidator,
 } from './components/dynamic-forms';

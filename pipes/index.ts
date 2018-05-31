@@ -2,6 +2,30 @@ import {NgModule, Pipe, PipeTransform} from '@angular/core';
 import {pad} from '../helper/common';
 import * as moment from 'moment';
 
+import { MultilingualService } from '@setl/multilingual';
+
+@Pipe({
+    name: 'translate',
+    pure: false // add in this line, update value when we change language
+})
+export class TranslatePipe implements PipeTransform {
+
+    constructor(
+        private _translate: MultilingualService
+    ) {
+
+    }
+
+    transform(value: any, params: any): any {
+        if (value !== '' && value !== undefined) {
+            // console.log('PIPE TRANSLATE FOR ' + value);
+            return this._translate.translate(value, params);
+        } else {
+            return value;
+        }
+    }
+}
+
 @Pipe({
     name: 'truncate'
 })
@@ -63,7 +87,7 @@ export class MoneyValuePipe implements PipeTransform {
                 : value;
 
             // fix if round up give only an integer
-            const fixInteger = (newValue.toString().indexOf('.') === -1) ? newValue + '.0' : newValue;
+            const fixInteger = this.round(newValue.toString().indexOf('.') === -1 ? newValue + '.0' : newValue, fractionSize);
 
             let [integer, fraction = ''] = (fixInteger || '').toString()
                 .split(this.DECIMAL_SEPARATOR);
@@ -114,6 +138,14 @@ export class MoneyValuePipe implements PipeTransform {
         const cleanedValue = Number(Number(value.toString().replace(/ /g, '')) + 'e' + decimals);
         return Number(Math.round(cleanedValue) + 'e-' + decimals);
     }
+
+    private round(number, precision) {
+        var shift = function (number, exponent) {
+            var numArray = ("" + number).split("e");
+            return +(numArray[0] + "e" + (numArray[1] ? (+numArray[1] + exponent) : exponent));
+        };
+        return shift(Math.round(shift(number, +precision)), -precision);
+    }
 }
 
 @Pipe({name: 'capitalize'})
@@ -157,6 +189,7 @@ export class PercentagePipe implements PipeTransform {
 
 @NgModule({
     declarations: [
+        TranslatePipe,
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,
@@ -166,6 +199,7 @@ export class PercentagePipe implements PipeTransform {
         PercentagePipe
     ],
     exports: [
+        TranslatePipe,
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,

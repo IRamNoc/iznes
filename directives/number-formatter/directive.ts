@@ -7,8 +7,10 @@ export class NumberFormatterDirective implements OnInit {
     private el: HTMLInputElement;
     @Input() fractionSize: number;
 
-    constructor(private _elementRef: ElementRef,
-                private _moneyValuePipe: MoneyValuePipe) {
+    constructor(
+        private _elementRef: ElementRef,
+        private _moneyValuePipe: MoneyValuePipe
+    ) {
         this.el = this._elementRef.nativeElement;
         this.fractionSize = 2;
     }
