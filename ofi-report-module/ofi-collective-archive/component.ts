@@ -52,7 +52,7 @@ export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
                 private _ofiOrdersService: OfiOrdersService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 

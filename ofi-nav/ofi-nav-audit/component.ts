@@ -59,7 +59,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
                 private service: OfiNavAuditService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private ofiNavService: OfiNavService) {
     }
 
