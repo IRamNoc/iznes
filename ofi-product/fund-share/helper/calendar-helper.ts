@@ -104,6 +104,7 @@ export class CalendarHelper {
 
     constructor(fundShare: IznesShareDetail) {
         this.fundShare = fundShare;
+
     }
 
     getNextCutoffDate(orderType: OrderType) {
@@ -360,7 +361,7 @@ export class CalendarHelper {
         return moment.utc(valuationDateStr).set({
             hour: 0,
             minute: 0,
-            second: 1
+            second: 1,
         });
     }
 
@@ -372,7 +373,7 @@ export class CalendarHelper {
         const settlementDate = moment.utc(settlementDateStr).set({
             hour: 0,
             minute: 0,
-            second: 1
+            second: 1,
         });
 
         if (settlementDate.isSame(moment(), 'day')) {
@@ -381,7 +382,6 @@ export class CalendarHelper {
 
         return settlementDate;
     }
-
 
     getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
         valuationDate = momentToMomentBusiness(valuationDate);
@@ -399,7 +399,6 @@ export class CalendarHelper {
 
 }
 
-
 /**
  * Make sure we have a moment business day here
  * @param dateToConvert
@@ -408,18 +407,6 @@ export class CalendarHelper {
 export function momentToMomentBusiness(dateToConvert): moment {
     return moment(dateToConvert.valueOf());
 }
-
-/**
- * Convert moment object to specific timezone
- * @param momentObject
- * @param {TimezonesEnum} offSet
- * @return {any}
- */
-export function convertToTimeZone(momentObject, offSet: E.TimezonesEnum): any {
-    const offSetString = ShareValue.TimeZoneOffsetValue[offSet];
-    return moment(momentObject.valueOf()).add(1, 'hours');
-}
-
 
 export function getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment, tradeTimeZone: E.TimezonesEnum): moment {
     const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
@@ -464,38 +451,6 @@ export function getMonthBusinessDayIndex(dateToCheck) {
 
     const lastDateOfLastMonth = dateToCheck.clone().date(0);
     return dateToCheck.businessDiff(lastDateOfLastMonth);
-}
-
-export function getBankHolidaysForTheMonth(dateToCheck, onlyIncludePast) {
-    const monthIndexToCheck = dateToCheck.get('month');
-    const holidaysOfTheMonth: Array<any> = [];
-
-    for (const holiday of FranceHolidays2018) {
-        const mHoliday = moment(holiday, 'YYYY-MM-DD');
-        const holidayMonthIndex = mHoliday.get('month');
-
-        if (monthIndexToCheck === holidayMonthIndex) {
-            const isDayPast = Boolean(mHoliday.valueOf() < moment().valueOf());
-            if (!onlyIncludePast || !isDayPast) {
-                holidaysOfTheMonth.push(mHoliday);
-            }
-        }
-    }
-
-    return holidaysOfTheMonth;
-}
-
-export function getNumPastHolidaysForTheMonth(dateToCheck) {
-    return getBankHolidaysForTheMonth(dateToCheck, true).length;
-}
-
-export function getNumPastNonWeekDaysForTheMonth(dateToCheck) {
-    const dateToCheckCopy = dateToCheck.clone();
-    const firstDayOfTheMonth = dateToCheckCopy.set({
-        date: 1
-    });
-
-    return moment.weekendDays(firstDayOfTheMonth, dateToCheckCopy);
 }
 
 export function getWeekIndexOfTheMonth(dateToCheck) {
