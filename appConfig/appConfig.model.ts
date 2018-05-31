@@ -4,6 +4,7 @@ export interface MenuItem {
     icon_class: string;
     element_id: string;
     router_link?: string;
+    dynamic_link?: string;
     children?: Array<MenuItem>;
 }
 
@@ -25,17 +26,21 @@ interface MemberNodeConnection {
     path: string;
 }
 
+type RegStr = string;
+
 export interface AppConfig {
     production: boolean;
     MEMBER_NODE_CONNECTION: MemberNodeConnection;
     numberDivider: 1;
     menuSpec: MenuSpec;
+    nonMenuLink?: RegStr[];
     reportingNodeUrl: string;
     messagesMenu: Array<MessagesMenuItem>;
     logoUrl: string;
     logoID: string;
     platform: string;
     topbarLogoUrl: string;
+    applyRestrictUrl?: boolean;
 }
 
 export interface MessagesMenuItem {
