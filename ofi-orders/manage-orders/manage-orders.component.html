@@ -219,12 +219,10 @@
                     <!-- ACTIONS -->
                     <clr-dg-column><span class="text-center">{{'Actions' | translate}}</span></clr-dg-column>
 
-                    <clr-dg-row *ngFor="let order of ordersList; let i = index">
+                    <clr-dg-row *ngFor="let order of ordersList; let i = index" (click)="buildLink(order, i, $event)" clrDgRowClickable>
                         <clr-dg-cell>
                             <!-- orderRef -->
-                            <a (click)="buildLink(order, i)" class="fakeLink">{{getOrderRef(order.orderID)}}
-
-                            </a>
+                            {{getOrderRef(order.orderID)}}
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderType -->

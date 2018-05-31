@@ -44,10 +44,10 @@
 
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}">
+                <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}" (click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
                     <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
-                        <span *ngIf="dataCol.dataSource == panel.columnLink" class="fakeLink" id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}" (click)="goToView(panel.link, row[panel.linkIdent])">{{row[dataCol.dataSource]}}
-
+                        <span *ngIf="dataCol.dataSource == panel.columnLink" id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}">
+                            {{row[dataCol.dataSource]}}
                         </span>
                         <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
                     </clr-dg-cell>

@@ -959,14 +959,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    buildLink(order, index) {
-        let dest = '';
-        if (this.isInvestorUser) {
-            dest = 'order-book/my-orders/' + order.orderID;
-        } else {
-            dest = 'manage-orders/' + order.orderID;
+    buildLink(order, index, event) {
+        if (
+            !event.target.classList.contains('datagrid-expandable-caret') &&
+            !event.target.classList.contains('datagrid-expandable-caret-button') &&
+            !event.target.classList.contains('datagrid-expandable-caret-icon')
+        ) {
+            let dest = '';
+            if (this.isInvestorUser) {
+                dest = 'order-book/my-orders/' + order.orderID;
+            } else {
+                dest = 'manage-orders/' + order.orderID;
+            }
+            this.router.navigateByUrl(dest);
         }
-        this.router.navigateByUrl(dest);
     }
 
     /**

@@ -3,6 +3,7 @@ import {AbstractControl, FormControl, FormArray, FormBuilder, FormGroup, Validat
 import { Subpanel } from './models';
 import { MockKYCDocumentsService } from './documents.mock.service';
 import { LogService} from "@setl/utils";
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-invite-investors',
@@ -24,6 +25,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private service: MockKYCDocumentsService,
         private logService: LogService,
+        private _router: Router,
     ) {
 
     }
@@ -37,7 +39,6 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                         label: 'Share name',
                         dataSource: 'name',
                         sortable: true,
-                        link: '/product-module/shares/:id',
                     },
                     {
                         label: 'Fund name',
@@ -71,6 +72,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                     callback: this.addShare,
                 },
                 open: false,
+                link: '/product-module/shares/:id',
                 data: this.service.getShares(),
             },
             {
@@ -80,7 +82,6 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                         label: 'Fund name',
                         dataSource: 'name',
                         sortable: true,
-                        //link: '/product-module/funds/:id',
                     },
                     {
                         label: 'LEI',
@@ -120,6 +121,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                 },
                 open: false,
                 data: this.service.getFunds(),
+                // link: '/product-module/funds/:id',
             },
             {
                 title: 'Umbrella Funds',
@@ -128,7 +130,6 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                         label: 'Umbrella fund name',
                         dataSource: 'name',
                         sortable: true,
-                        //link: '/product-module/umbrella-funds/:id',
                     },
                     {
                         label: 'LEI',
@@ -158,6 +159,7 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
                 },
                 open: false,
                 data: this.service.getUmbrellaFunds(),
+                //link: '/product-module/umbrella-funds/:id',
             },
             {
                 title: 'Shares, Funds & Umbreallas waiting for your validation (modification not yet published to investors on IZNES)',
@@ -199,14 +201,22 @@ export class OfiDocumentsComponent implements OnInit, OnDestroy {
         ];
     }
 
-    buildLink(column, row) {
-        let ret = column.link;
-        column.link.match(/:\w+/g).forEach((match) => {
-            const key = match.substring(1);
-            const regex = new RegExp(match);
-            ret = ret.replace(regex, row[key]);
-        });
-        return ret;
+    buildLink(column, row, link, event) {
+        if (
+            !event.target.classList.contains('datagrid-expandable-caret') &&
+            !event.target.classList.contains('datagrid-expandable-caret-button') &&
+            !event.target.classList.contains('datagrid-expandable-caret-icon')
+        ) {
+            if (link !== undefined) {
+                let ret = link;
+                link.match(/:\w+/g).forEach((match) => {
+                    const key = match.substring(1);
+                    const regex = new RegExp(match);
+                    ret = ret.replace(regex, row[key]);
+                });
+                this._router.navigateByUrl(ret);
+            }
+        }
     }
 
     addShare() {

@@ -108,10 +108,10 @@
 
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let data of holdersList" (click)="handleClickShare(data)">
+                <clr-dg-row *clrDgItems="let data of holdersList" (click)="handleClickShare(data)" clrDgRowClickable>
                     <clr-dg-cell>
-                        <span *ngIf="data.isFund; else col1">{{data.fundName}}
-
+                        <span *ngIf="data.isFund; else col1">
+                            {{data.fundName}}
                         </span>
                         <ng-template #col1>
                             <!--empty-->
@@ -122,7 +122,7 @@
                             <!--empty-->
                         </span>
                         <ng-template #col2>
-                            <a (click)="openShareId(data.shareId)">{{data.shareName}}</a>
+                            {{data.shareName}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
