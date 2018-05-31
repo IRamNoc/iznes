@@ -21,6 +21,9 @@ import {UiAlertsComponent} from './layouts/ui-form/components/alerts/alerts.comp
 import {UiModalComponent} from './layouts/ui-form/components/modal/modal.component';
 import {UiButtonComponent} from './layouts/ui-form/components/button/button.component';
 import {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
+import {UiTranslationsComponent} from './layouts/ui-form/components/translations/translations.component';
+import {UiTooltipsComponent} from './layouts/ui-form/components/tooltips/tooltips.component';
+
 
 import {UiColourComponent} from './layouts/ui-form/components/colour/colour.component';
 import {UiFormPersistComponent} from './layouts/ui-form/components/form-persist/form-persist.component';
@@ -87,6 +90,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiModalComponent,
         UiButtonComponent,
         UiToasterComponent,
+        UiTranslationsComponent,
+        UiTooltipsComponent,
         UiColourComponent,
         UiFormPersistComponent,
         UiIconsComponent,
@@ -118,6 +123,9 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         UiButtonComponent,
         UiModalComponent,
         UiToasterComponent,
+        UiTranslationsComponent,
+        UiTooltipsComponent,
+
         UiColourComponent,
         UiFormPersistComponent,
         UiIconsComponent,

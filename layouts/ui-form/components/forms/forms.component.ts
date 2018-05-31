@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-ui-layouts-forms',
@@ -14,6 +15,11 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
             text-decoration: none;
 
             &:before, &:after { text-decoration: none; }
+        }
+        
+        [enhancedForm] .control-label,
+        [enhancedForm] app-ui-info-pane{
+            margin-top : 200px;
         }`
     ]
 })
@@ -29,7 +35,9 @@ export class UiFormsComponent {
     longForm: FormGroup;
     dropdownForm: FormGroup;
 
-    constructor() {
+    constructor(
+        private _translate: MultilingualService,
+    ) {
         this.initMocks();
         this.initForms();
     }

@@ -1,12 +1,12 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-pencil"></i> <span mltag="txt_expandablecontent">Expandable Content
-        </span></h1>
+    <h1><i class="fa fa-pencil"></i> {{'Expandable Content' | translate}}
+    </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="modal">
-            <i class="fa fa-bars"></i> <span mltag="txt_expandablecontent">Expandable Content</span>
+            <i class="fa fa-bars"></i> {{'Expandable Content' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
@@ -17,7 +17,7 @@
                     <div class="col-xs-12">
                         <a href="#" (click)="panels[1] = !panels[1]; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
-                            <h2 mltag="txt_title1">Title 1</h2>
+                            <h2>{{'Title 1' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="panel-body" [class.hidden]="!panels[1]">
                     <div class="row">
 
-                        <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl in diam
+                        <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl in diam
                             placerat eleifend. Donec feugiat quam at ornare mollis. Fusce semper sollicitudin sapien vel
                             vestibulum. Aenean leo eros, lacinia id fermentum ut, porta in est. Suspendisse id nisi
                             purus. Proin eu augue ut risus elementum maximus a vitae lectus. Duis sit amet augue vitae
@@ -34,7 +34,15 @@
                             Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
                             Maecenas velit enim, pharetra malesuada orci eu, dictum vehicula sem. Nulla et risus sapien.
                             Fusce maximus est id ante faucibus, sit amet rhoncus nisl sodales. Pellentesque vehicula
-                            urna eu arcu consectetur, nec aliquam risus porttitor. Proin hendrerit ultricies hendrerit.
+                            urna eu arcu consectetur, nec aliquam risus porttitor. Proin hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
 
 
 
@@ -56,7 +64,7 @@
                                     <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="panels[2]">
                                         </i>
-                                        <h2 mltag="txt_title2">Title 2</h2>
+                                        <h2>{{'Title 2' | translate}}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -65,7 +73,7 @@
                             <div class="panel-body" [class.hidden]="!panels[2]">
                                 <div class="row">
 
-                                    <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl
+                                    <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl
                                         in diam placerat eleifend. Donec feugiat quam at ornare mollis. Fusce semper
                                         sollicitudin sapien vel vestibulum. Aenean leo eros, lacinia id fermentum ut,
                                         porta in est. Suspendisse id nisi purus. Proin eu augue ut risus elementum
@@ -75,7 +83,17 @@
                                         velit enim, pharetra malesuada orci eu, dictum vehicula sem. Nulla et risus
                                         sapien. Fusce maximus est id ante faucibus, sit amet rhoncus nisl sodales.
                                         Pellentesque vehicula urna eu arcu consectetur, nec aliquam risus porttitor.
-                                        Proin hendrerit ultricies hendrerit.
+                                        Proin hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -97,7 +115,7 @@
                                             <div class="col-xs-6">
                                                 <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
                                                     <i class="fa fa-chevron-right" [class.rotate]="panels[3]">
-                                                    </i> <h2 mltag="txt_title3">Title 3</h2>
+                                                    </i><h2>{{'Title 3' | translate}}</h2>
                                                 </a>
                                             </div>
                                         </div>
@@ -106,7 +124,7 @@
                                         <div class="panel-body" [class.hidden]="!panels[3]">
                                             <div class="row">
 
-                                                <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+                                                <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
                                                     placerat nisl in diam placerat eleifend. Donec feugiat quam at
                                                     ornare mollis. Fusce semper sollicitudin sapien vel vestibulum.
                                                     Aenean leo eros, lacinia id fermentum ut, porta in est. Suspendisse
@@ -118,7 +136,19 @@
                                                     dictum vehicula sem. Nulla et risus sapien. Fusce maximus est id
                                                     ante faucibus, sit amet rhoncus nisl sodales. Pellentesque vehicula
                                                     urna eu arcu consectetur, nec aliquam risus porttitor. Proin
-                                                    hendrerit ultricies hendrerit.
+                                                    hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -156,7 +186,7 @@
                     <div class="col-xs-12">
                         <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
-                            <h2 mltag="txt_title1">Title 1</h2>
+                            <h2>{{'Title 1' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -165,7 +195,7 @@
                 <div class="panel-body" [class.hidden]="!panels[4]">
                     <div class="row">
 
-                        <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl in diam
+                        <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl in diam
                             placerat eleifend. Donec feugiat quam at ornare mollis. Fusce semper sollicitudin sapien vel
                             vestibulum. Aenean leo eros, lacinia id fermentum ut, porta in est. Suspendisse id nisi
                             purus. Proin eu augue ut risus elementum maximus a vitae lectus. Duis sit amet augue vitae
@@ -173,7 +203,15 @@
                             Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
                             Maecenas velit enim, pharetra malesuada orci eu, dictum vehicula sem. Nulla et risus sapien.
                             Fusce maximus est id ante faucibus, sit amet rhoncus nisl sodales. Pellentesque vehicula
-                            urna eu arcu consectetur, nec aliquam risus porttitor. Proin hendrerit ultricies hendrerit.
+                            urna eu arcu consectetur, nec aliquam risus porttitor. Proin hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
 
 
 
@@ -195,7 +233,7 @@
                                     <a href="#" (click)="panels[5] = !panels[5]; $event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="panels[5]">
                                         </i>
-                                        <h2 mltag="txt_title2">Title 2</h2>
+                                        <h2>{{'Title 2' | translate}}</h2>
                                     </a>
                                 </div>
                             </div>
@@ -204,7 +242,7 @@
                             <div class="panel-body" [class.hidden]="!panels[5]">
                                 <div class="row">
 
-                                    <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl
+                                    <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat nisl
                                         in diam placerat eleifend. Donec feugiat quam at ornare mollis. Fusce semper
                                         sollicitudin sapien vel vestibulum. Aenean leo eros, lacinia id fermentum ut,
                                         porta in est. Suspendisse id nisi purus. Proin eu augue ut risus elementum
@@ -214,7 +252,17 @@
                                         velit enim, pharetra malesuada orci eu, dictum vehicula sem. Nulla et risus
                                         sapien. Fusce maximus est id ante faucibus, sit amet rhoncus nisl sodales.
                                         Pellentesque vehicula urna eu arcu consectetur, nec aliquam risus porttitor.
-                                        Proin hendrerit ultricies hendrerit.
+                                        Proin hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -237,7 +285,7 @@
                                                 <a href="#" (click)="panels[6] = !panels[6]; $event.preventDefault();">
                                                     <i class="fa fa-chevron-right" [class.rotate]="panels[6]"></i>
 
-                                                    <h2 mltag="txt_title3">Title 3</h2>
+                                                    <h2>{{'Title 3' | translate}}</h2>
                                                 </a>
                                             </div>
                                         </div>
@@ -246,7 +294,7 @@
                                         <div class="panel-body" [class.hidden]="!panels[6]">
                                             <div class="row">
 
-                                                <div class="col-xs-12" mltag="txt_loremipsumdolorsitametconsectec252621cfb">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
+                                                <div class="col-xs-12">{{'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
                                                     placerat nisl in diam placerat eleifend. Donec feugiat quam at
                                                     ornare mollis. Fusce semper sollicitudin sapien vel vestibulum.
                                                     Aenean leo eros, lacinia id fermentum ut, porta in est. Suspendisse
@@ -258,7 +306,19 @@
                                                     dictum vehicula sem. Nulla et risus sapien. Fusce maximus est id
                                                     ante faucibus, sit amet rhoncus nisl sodales. Pellentesque vehicula
                                                     urna eu arcu consectetur, nec aliquam risus porttitor. Proin
-                                                    hendrerit ultricies hendrerit.
+                                                    hendrerit ultricies hendrerit.' | translate}}
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

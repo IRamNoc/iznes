@@ -74,6 +74,14 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
+    public missingTranslations = [];
+    public responsesService = <any>[];
+    showMissingTranslations = false;
+    showHighlightTranslations = true;
+    nbMaxTranslationsToProcess = 60;
+
+    isSaving = false;
+
     @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
     @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
@@ -90,7 +98,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private _myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private multilingualService: MultilingualService,
+                private _translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
                 private initialisationService: InitialisationService,
@@ -177,7 +185,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-        this.subscriptionsArray.push(this.multilingualService.getLanguage.subscribe((data) => {
+        this.subscriptionsArray.push(this._translate.getLanguage.subscribe((data) => {
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
             const userType = currentUserDetails.userType;
@@ -253,6 +261,78 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         this.logService.log(window.innerWidth);
 
         this.ngRedux.dispatch(setMenuShown(true));
+    }
+
+    public getMissingTranslations() {
+        // reset
+        this.missingTranslations = [];
+        this.responsesService = [];
+        // get translatation
+        const tr = this._translate.getTranslations();
+        // clone
+        this.missingTranslations = _.clone(tr);
+        this.showMissingTranslations = true;
+
+        this.doHighlight();
+
+        // this.changeDetectorRef.markForCheck();
+        // this.changeDetectorRef.detectChanges();
+    }
+
+    doHighlight() {
+        if (this.showHighlightTranslations) {
+            this.highlightMissingTranslations();
+        } else {
+            this._translate.removeHighlightMissingTranslations();
+        }
+    }
+
+    highlightMissingTranslations(){
+        for (let tr of this.missingTranslations) {
+            this._translate.replaceMissingTranslations(tr.translation);
+        }
+    }
+
+    async generateTranslations() {
+        if (this.missingTranslations.length > 0) {
+            const nbMax1 = (this.missingTranslations.length > this.nbMaxTranslationsToProcess) ? this.nbMaxTranslationsToProcess : this.missingTranslations.length;
+            if (nbMax1 > 0) {
+                for (let i = 0; i < nbMax1; i++) {
+                    this.responsesService.push({
+                        response: await this._translate.addNewTranslation({
+                            mltag: this.missingTranslations[i].mltag,
+                            value: this.missingTranslations[i].original,
+                            location: this.missingTranslations[i].from
+                        }),
+                        translation: this.missingTranslations[i],
+                    });
+                }
+                const nbMax2 = this.responsesService.length;
+                if (nbMax2 > 0) {
+                    let idList = [];
+                    let trFound = undefined;
+                    let ix = -1;
+                    for (let i = 0; i < nbMax2; i++) {
+                        if (this.responsesService[i].response.ok) {
+                            trFound = this.missingTranslations.find((item) => item.original === this.responsesService[i].translation.original);
+                            if (trFound !== undefined) {
+                                ix = this.missingTranslations.indexOf(trFound);
+                                if (ix !== -1 && ix !== undefined) {
+                                    idList.push(ix);
+                                }
+                            }
+                        }
+                    }
+                    if (idList.length > 0) {
+                        for (let i = 0; i < idList.length; i++) {
+                            this.missingTranslations.splice(idList[i] - i, 1);
+                        }
+                    }
+                }
+            }
+        }
+        this.isSaving = false;
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy() {

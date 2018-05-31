@@ -26,14 +26,14 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     constructor(private router: Router,
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private _changeDetectorRef: ChangeDetectorRef,
-                private multilingualService: MultilingualService,
+                private _translate: MultilingualService,
                 private logService: LogService,
                 private ngRedux: NgRedux<any>) {
     }
 
     ngOnInit() {
         /* Subscribe for language change. */
-        this.subscription = this.multilingualService.getLanguage.subscribe((data) => {
+        this.subscription = this._translate.getLanguage.subscribe((data) => {
             /* Retrieve and declare data... */
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
@@ -99,11 +99,11 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
         return immutableHelper.reduce(rawMenuData, (result, item) => {
             const mltag = item.get('label_txt', '');
-            const label = this.multilingualService.getTranslation(mltag) || item.get('label', '');
+            const label = this._translate.getTranslation(mltag) || item.get('label', '');
             const children_old = item.get('children', []);
             const children = immutableHelper.reduce(children_old, (childrenResult, childrenItem) => {
                 const cmltag = childrenItem.get('label_txt', '');
-                const clabel = this.multilingualService.getTranslation(cmltag) || childrenItem.get('label', '');
+                const clabel = this._translate.getTranslation(cmltag) || childrenItem.get('label', '');
                 childrenResult.push(childrenItem.set('label', clabel).toJS());
                 return childrenResult;
             }, []);

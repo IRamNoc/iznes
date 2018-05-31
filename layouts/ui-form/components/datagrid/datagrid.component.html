@@ -1,10 +1,11 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-table"></i> <span mltag="txt_datagrid">Data Grid</span></h1>
+    <h1><i class="fa fa-table"></i> {{'Data Grid' | translate}}</h1>
 </div>
 
 <div class="padding">
     <a href="#" class="toggle-info-panes" (click)="toggleInfoPanes($event)">{{ showInfoPanes ? '[-] hide info panes' :
         '[+] show info panes' }}
+
     </a>
     <app-ui-info-pane [hidden]="!showInfoPanes" [message]="'This info pane does not make up part of these guidelines. If you see this pane displayed in any of the below items, it is just for informational purposes. To view the source code for this page, go to @setl/core-layout/layouts/ui-form/components/forms.'">
     </app-ui-info-pane>
@@ -13,27 +14,27 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="datagrid">
-            <i class="fa fa-bars"></i> <span mltag="txt_datagrid">Data Grid</span>
+            <i class="fa fa-bars"></i> {{'Data Grid' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
 
-            <p><span mltag="txt_moreabout">More about</span><a href="" mltag="txt_datagridwithbuttonsseehere">DataGrid with Buttons see here</a></p>
+            <p>{{'More about' | translate}}<a href="">{{'DataGrid with Buttons see here' | translate}}</a></p>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column mltag="txt_column1">Column 1</clr-dg-column>
-                <clr-dg-column mltag="txt_column2">Column 2</clr-dg-column>
-                <clr-dg-column class="actions" mltag="txt_actions">Actions</clr-dg-column>
+                <clr-dg-column>{{'Column 1' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Column 2' | translate}}</clr-dg-column>
+                <clr-dg-column class="actions">{{'Actions' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of mockDataGridItems; let i = index">
                     <clr-dg-cell>{{item.value1}}</clr-dg-cell>
                     <clr-dg-cell>{{item.value2}}</clr-dg-cell>
                     <clr-dg-cell class="actions">
-                        <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_delete">
-                                Delete</span></button>
+                        <button class="btn btn-danger btn-sm"><i class="fa fa-pencil-square-o"></i>{{'Delete' | translate}}
+                        </button>
 
-                        <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i> <span mltag="txt_edit">
-                                Edit</span></button>
+                        <button class="btn btn-success btn-sm"><i class="fa fa-pencil-square-o"></i>{{'Edit' | translate}}
+                        </button>
 
                     </clr-dg-cell>
                 </clr-dg-row>

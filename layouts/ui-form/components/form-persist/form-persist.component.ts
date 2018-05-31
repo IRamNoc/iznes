@@ -5,6 +5,8 @@ import {FormGroup, FormControl, Validators} from '@angular/forms';
 /* Import the service definition. */
 import {PersistService} from "@setl/core-persist";
 
+import {MultilingualService} from '@setl/multilingual';
+
 /* Decorator. */
 @Component({
     selector: 'app-ui-layouts-form-persist',
@@ -56,7 +58,8 @@ export class UiFormPersistComponent {
 
     constructor (
         /* Scope the PersistService as a private property. */
-        private _persistService: PersistService
+        private _persistService: PersistService,
+        private _translate: MultilingualService,
     ) {
         /*
             So to enable the form persist on a form you simple create a normal

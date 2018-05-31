@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-exclamation"></i> <span mltag="txt_toasters">Toasters</span></h1>
+    <h1><i class="fa fa-exclamation"></i> {{'Toasters' | translate}}</h1>
 </div>
 
 <div class="padding">
@@ -10,16 +10,16 @@
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="toasters">
-            <i class="fa fa-bars"></i> <span mltag="txt_toasters">Toasters</span>
+            <i class="fa fa-bars"></i> {{'Toasters' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
             <form>
                 <section class="form-block">
                     <div class="form-group col-sm-12">
-                        <button id="showSuccessToaster" class="btn btn-primary" (click)="showSuccessToaster()" mltag="txt_showexamplesuccesstoaster">Show Example Success Toaster</button>
-                        <button id="showWarningToaster" class="btn btn-warning" (click)="showWarningToaster()" mltag="txt_showexamplewarningtoaster">Show Example Warning Toaster</button>
-                        <button id="showErrorToaster" class="btn btn-danger" (click)="showErrorToaster()" mltag="txt_showexampleerrortoaster">Show Example Error Toaster</button>
+                        <button id="showSuccessToaster" class="btn btn-primary" (click)="showSuccessToaster()">{{'Show Example Success Toaster' | translate}}</button>
+                        <button id="showWarningToaster" class="btn btn-warning" (click)="showWarningToaster()">{{'Show Example Warning Toaster' | translate}}</button>
+                        <button id="showErrorToaster" class="btn btn-danger" (click)="showErrorToaster()">{{'Show Example Error Toaster' | translate}}</button>
                     </div>
                 </section>
             </form>
