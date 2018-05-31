@@ -132,6 +132,14 @@ export class UserAdminService {
             'id': '65',
             'text': 'Rooster Operator'
         },
+        {
+            'id': '66',
+            'text': 'Rooster IPA'
+        },
+        {
+            'id': '67',
+            'text': 'Rooster Final Custodian'
+        },
     ];
 
     /* Group Types. */
