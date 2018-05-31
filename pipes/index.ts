@@ -75,12 +75,16 @@ export class MoneyValuePipe implements PipeTransform {
     // }
 
     transform(value: any, fractionSize: number = 2): any {
+
+        // type checking
         if (typeof value !== 'number') {
             value = Number(value);
         }
         if (value === '' || value === null || isNaN(value)) {
             value = 0;
         }
+
+        // aka if valid number
         if (typeof value !== 'undefined' && !isNaN(value.toString().replace(/ /g, ''))) {
             const newValue = (this.ROUND_UP_DECIMALS.indexOf(Number(fractionSize)) !== -1)
                 ? this.roundUp(value, fractionSize)
