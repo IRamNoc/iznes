@@ -76,8 +76,6 @@ public class OpenCSD4FundFlowAcceptanceTest {
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-
-        //Store title number count for Funds
         String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
 
@@ -85,15 +83,9 @@ public class OpenCSD4FundFlowAcceptanceTest {
         String [] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep1(umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
-
-        //Assert fund table displays the information for the fund created previously, including umbFund
         getFundTableRow(fundCount, uFundDetails[0], "16615748475934658531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
-
-        //Store the number of shares created.
         String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
-
-        //Navigate to create a new share.
         waitForNewShareButton();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -104,8 +96,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         } catch (Exception e) {
-            fail("dropdown not selected. " + e.getMessage());
-        }
+            fail("dropdown not selected. " + e.getMessage());}
 
         WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
         waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
@@ -115,8 +106,7 @@ public class OpenCSD4FundFlowAcceptanceTest {
         try {
             assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
         }catch (Exception e){
-            fail("not present");
-        }
+            fail("not present");}
 
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
