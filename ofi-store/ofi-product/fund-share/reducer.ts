@@ -84,8 +84,6 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 minSubsequentSubscriptionInAmount: convertBlockchainNumber(item.get('minSubsequentSubscriptionInAmount', '')),
                 redemptionCategory: item.get('redemptionCategory', ''),
                 redemptionCurrency: item.get('redemptionCurrency', ''),
-                minInitialRedemptionInShare: convertBlockchainNumber(item.get('minInitialRedemptionInShare', '')),
-                minInitialRedemptionInAmount: convertBlockchainNumber(item.get('minInitialRedemptionInAmount', '')),
                 minSubsequentRedemptionInShare: convertBlockchainNumber(item.get('minSubsequentRedemptionInShare', '')),
                 minSubsequentRedemptionInAmount: convertBlockchainNumber(item.get('minSubsequentRedemptionInAmount', '')),
                 subscriptionTradeCyclePeriod: item.get('subscriptionTradeCyclePeriod', ''),
