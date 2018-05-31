@@ -4,6 +4,7 @@ export interface MyDetailState {
     userId: number;
     lastLogin: string;
     userType: number;
+    userTypeStr: string;
     displayName?: string;
     firstName: string;
     lastName: string;

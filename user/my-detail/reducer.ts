@@ -9,6 +9,7 @@ const initialState: MyDetailState = {
     userId: 0,
     lastLogin: '',
     userType: 0,
+    userTypeStr: '',
     firstName: '',
     lastName: '',
     admin: false,
@@ -17,6 +18,22 @@ const initialState: MyDetailState = {
     companyName: '',
     phoneCode: '',
     phoneNumber: '',
+};
+
+const UserTypeStr = {
+    '15': 'system_admin',
+    '25': 'chain_admin',
+    '27': 'bank',
+    '35': 'member_user',
+    '36': 'am',
+    '45': 'standard_user',
+    '46': 'investor',
+    '47': 'valuer',
+    '48': 'custodian',
+    '49': 'cac',
+    '50': 'registrar',
+    '60': 't2s',
+    '65': 'rooster_operator'
 };
 
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
@@ -34,8 +51,9 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             emailAddress = _.get(loginedData, 'EMailAddress', '');
             const userId = _.get(loginedData, 'UserID', 0);
             const lastLogin = _.get(loginedData, 'last_login', '');
-            const userType = _.get(loginedData, 'userType', '');
-            const admin = _.get(loginedData, 'admin', 0) ? true : false;
+            const userType = _.get(loginedData, 'userType', 0);
+            const userTypeStr = UserTypeStr[userType];
+            const admin = !!_.get(loginedData, 'admin', 0);
             const accountId = _.get(loginedData, 'accontID', '');
             const memberId = _.get(loginedData, 'memberID', '');
 
@@ -45,6 +63,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 userId,
                 lastLogin,
                 userType,
+                userTypeStr,
                 admin,
                 accountId,
                 memberId
