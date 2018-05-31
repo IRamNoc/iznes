@@ -23,7 +23,9 @@
                            class="form-control"
                            formControlName="username"
                            [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
-                           autofocus mltag="txt_username">
+                           mltag="txt_username"
+                           #usernameInput
+                           >
                     <div *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
                          class="field-error" mltag="txt_thisfieldisrequired">
                         Username is required
@@ -34,7 +36,8 @@
                     <input id="password-field" name="password" type="password" class="form-control"
                            placeholder="Password" formControlName="password"
                            [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
-                           mltag="txt_password">
+                           mltag="txt_password"
+                           #passwordInput>
                     <div *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
                          class="field-error" mltag="txt_thisfieldisrequired">
                         Password is required

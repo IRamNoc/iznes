@@ -1,5 +1,5 @@
 // Vendors
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild, Renderer} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
@@ -69,6 +69,9 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     isTokenExpired = false;
     changePassword = false;
 
+    @ViewChild('usernameInput') usernameEl: ElementRef;
+    @ViewChild('passwordInput') passwordEl: ElementRef;
+
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
@@ -89,6 +92,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private toasterService: ToasterService,
                 private loginGuardService: LoginGuardService,
                 private logService: LogService,
+                private renderer: Renderer,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -100,7 +104,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
          * Form control setup
          */
         this.loginForm = new FormGroup({
-            username: new FormControl('', Validators.required),
+            username: new FormControl(
+                _activatedRoute.snapshot.params['email'] || '',
+                Validators.required,
+            ),
             password: new FormControl('', Validators.required)
         });
         /**
@@ -164,7 +171,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        document.getElementById('username-field').focus();
+        if (this.loginForm.controls['username'].value) {
+            this.renderer.invokeElementMethod(this.passwordEl.nativeElement, 'focus');
+            return;
+        }
+        this.renderer.invokeElementMethod(this.usernameEl.nativeElement, 'focus');
     }
 
     login(value) {
