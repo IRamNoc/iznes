@@ -22,7 +22,7 @@ import {ToasterService} from 'angular2-toaster';
 import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 /* Utils. */
-import {SagaHelper, NumberConverterService, LogService} from '@setl/utils';
+import {SagaHelper, NumberConverterService, LogService, ConfirmationService} from '@setl/utils';
 import {FundComponent} from '../fund/component';
 import {validators} from "../productConfig";
 import {MultilingualService} from '@setl/multilingual';
@@ -76,6 +76,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     legalAdvisorOptions = [];
     transferAgentOptions = [];
     centralizingAgentOptions = [];
+    currentRoute : {
+        fromFund? : boolean,
+        fromShare? : boolean
+    } = {};
 
     /* Private properties. */
     subscriptionsArray: Array<Subscription> = [];
@@ -112,6 +116,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
         private _ofiManagementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
+        private confirmationService: ConfirmationService,
         private _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
@@ -272,6 +277,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        this._activatedRoute.queryParams.subscribe(params => {
+            if(params.fromFund){
+                this.currentRoute.fromFund = true;
+            }
+            if(params.fromShare){
+                this.currentRoute.fromShare = true;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -473,6 +486,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             internalReference: formValues.internalReference,
             additionnalNotes: formValues.additionnalNotes,
         };
+
         if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.editForm) {
             // UPDATE
             const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
@@ -509,10 +523,20 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    // this.logService.log('save success new fund', data); // success
+                    let umbrellaFundID = _.get(data, ['1', 'Data', '0', 'umbrellaFundID']);
+                    let umbrellaFundName = _.get(data, ['1', 'Data', '0', 'umbrellaFundName']);
+
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                    this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully created!');
-                    this._location.back();
+
+                    if(!_.isUndefined(umbrellaFundID)){
+                        if(this.currentRoute.fromFund){
+                            this.redirectToFund(umbrellaFundID);
+                        } else{
+                            this.displayFundPopup(umbrellaFundName, umbrellaFundID );
+                        }
+                    } else{
+                        this.creationSuccess(umbrellaFundName);
+                    }
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
@@ -525,6 +549,43 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 })
             );
         }
+    }
+
+    redirectToFund(umbrellaID?){
+        let extras = {};
+
+        if(umbrellaID){
+            extras = {
+                queryParams: {
+                    umbrella: umbrellaID,
+                    fromFund: null
+                },
+                queryParamsHandling: "merge"
+            }
+        };
+
+        this._router.navigate(['/product-module/product/fund/new'], extras);
+    }
+
+    displayFundPopup(umbrellaFundName, umbrellaFundID){
+        const message = `<span>By clicking "Yes", you will be able to create a fund directly linked to ${umbrellaFundName}.</span>`;
+
+        this.confirmationService.create(
+            '<span>Do you want to create a fund?</span>',
+            message,
+            {confirmText: 'Yes', declineText: 'No'}
+        ).subscribe((ans) => {
+            if (ans.resolved) {
+                this.redirectToFund(umbrellaFundID);
+            } else{
+                this.creationSuccess(umbrellaFundName);
+            }
+        });
+    }
+
+    creationSuccess(umbrellaFundName){
+        this._toasterService.pop('success', `${umbrellaFundName} has been successfully created!`);
+        this._location.back();
     }
 
     confirmModal(response) {
