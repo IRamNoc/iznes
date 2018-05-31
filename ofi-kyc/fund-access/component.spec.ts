@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement} from '@angular/core';
+import {DebugElement, Pipe, PipeTransform} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {NgRedux} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
@@ -13,6 +13,8 @@ import {ActivatedRoute} from '@angular/router';
 import {ConfirmationService} from '@setl/utils';
 import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
 import {APP_CONFIG} from '@setl/utils/index';
+import {MultilingualService} from '@setl/multilingual';
+const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
@@ -58,6 +60,14 @@ const activatedRouteStub = {
     }),
 };
 
+// Stub for translate
+@Pipe({name: 'translate'})
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
+    }
+}
+
 describe('OfiFundAccessComponent', () => {
 
     let comp:    OfiFundAccessComponent;
@@ -72,6 +82,7 @@ describe('OfiFundAccessComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OfiFundAccessComponent,
+                TranslatePipe,
             ],
             imports: [
                 FormsModule,
@@ -86,6 +97,7 @@ describe('OfiFundAccessComponent', () => {
                 { provide: OfiFundShareService, useValue: OfiFundShareServiceStub },
                 { provide: MessagesService, useValue: MessagesServiceStub },
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 ConfirmationService,
             ]
         }).compileComponents();

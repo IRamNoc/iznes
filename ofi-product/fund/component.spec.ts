@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement, Directive, Input} from '@angular/core';
+import {DebugElement, Directive, Input, Pipe, PipeTransform} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs/observable/of';
 
@@ -10,6 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
+import {SetlPipesModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import productConfig from '../productConfig';
 import {FundComponent} from './component';
@@ -27,7 +28,7 @@ const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService'
 const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
-// const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['getTranslationByString']);
+const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
@@ -83,10 +84,6 @@ const toasterServiceMock = {
     pop: pop,
 };
 
-const MultilingualServiceStub = {
-
-};
-
 // Stub for routerLink
 @Directive({
     selector: '[routerLink]',
@@ -98,6 +95,14 @@ class RouterLinkStubDirective {
 
     onClick() {
         this.navigatedTo = this.linkParams;
+    }
+}
+
+// Stub for translate
+@Pipe({name: 'translate'})
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
     }
 }
 
@@ -119,6 +124,7 @@ describe('FundComponent', () => {
             declarations: [
                 FundComponent,
                 RouterLinkStubDirective,
+                TranslatePipe,
             ],
             imports: [
                 ReactiveFormsModule,
@@ -127,6 +133,7 @@ describe('FundComponent', () => {
                 SelectModule,
                 DpDatePickerModule,
                 BrowserAnimationsModule,
+                SetlPipesModule,
             ],
             providers: [
                 {provide: 'product-config', useValue: productConfig},
@@ -139,7 +146,7 @@ describe('FundComponent', () => {
                 {provide: NgRedux, useValue: ngReduxSpy},
                 {provide: ToasterService, useValue: toasterServiceMock},
                 {provide: ActivatedRoute, useValue: activatedRouteStub},
-                {provide: MultilingualService, useValue: MultilingualServiceStub},
+                {provide: MultilingualService, useValue: MultilingualServiceSpy},
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
