@@ -12,6 +12,7 @@ import {ToasterService} from 'angular2-toaster';
 import * as moment from 'moment';
 
 import {investorInvitation} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import {MultilingualService} from '@setl/multilingual';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -70,6 +71,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
+                private _translate: MultilingualService,
                 private redux: NgRedux<any>) {
 
         this.invitationForm = this._fb.group({

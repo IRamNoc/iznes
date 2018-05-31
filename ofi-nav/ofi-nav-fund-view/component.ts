@@ -24,6 +24,7 @@ import {
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, AppConfig, FileDownloader} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -77,6 +78,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private _fileDownloader: FileDownloader,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 

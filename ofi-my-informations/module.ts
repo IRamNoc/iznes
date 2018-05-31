@@ -33,7 +33,7 @@ import {OfiMyInformationsComponent} from './my-informations/component';
         SelectModule,
         SetlPipesModule,
         SetlComponentsModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
     ],
     providers: [
 
