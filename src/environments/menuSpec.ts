@@ -287,6 +287,7 @@ const ofiProductHome = {
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
     router_link: '/product-module/product',
+    dynamic_link: '/product-module/product/[^\/]*',
 };
 const productsManagementCompany = {
     label: 'Management Company',
