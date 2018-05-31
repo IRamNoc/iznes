@@ -78,7 +78,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private _fileDownloader: FileDownloader,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 

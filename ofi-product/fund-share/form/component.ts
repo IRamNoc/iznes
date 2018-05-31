@@ -19,7 +19,10 @@ import {
     getOfiFundShareCurrentRequest,
     OfiFundShare
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
-import {getOfiFundShareSelectedFund} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
+import {
+    getOfiFundShareSelectedFund,
+    ofiSetCurrentFundShareSelectedFund
+} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 import {
     clearRequestedFundShareDocs,
     getOfiFundShareDocsCurrentRequest,
@@ -89,24 +92,37 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.model = new FundShare();
+        this.route.queryParams.subscribe(params => {
+            let fundID = parseInt(params.fund);
+            if(fundID){
+                this.setCurrentFund(fundID);
+            }
 
-        this.initSubscriptions();
+            this.model = new FundShare();
 
-        this.redux.dispatch(clearRequestedFundShare());
-        this.redux.dispatch(clearRequestedFundShareDocs());
+            this.initSubscriptions();
+
+            this.redux.dispatch(clearRequestedFundShare());
+            this.redux.dispatch(clearRequestedFundShareDocs());
+        });
     }
 
     get fund() {
-        return this.model.fundID ? _.find(this.fundList, (fundItem) => {
+        let foundFund = this.model.fundID ? _.find(this.fundList, (fundItem) => {
             return fundItem.fundID === this.model.fundID;
         }) : null;
+
+        return foundFund;
     }
 
     get umbrellaFund() {
         return this.model.umbrellaFundID ? _.find(this.umbrellaFundList, (umbrellaItem) => {
             return umbrellaItem.umbrellaFundID === this.model.umbrellaFundID;
         }) : null;
+    }
+
+    setCurrentFund(fundId){
+        this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(fundId));
     }
 
     private initSubscriptions(): void {

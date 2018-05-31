@@ -36,8 +36,7 @@
                             </div>
                             <div class="form-group col-sm-6 btn-container">
                                 <p>{{'or' | translate}}</p>
-                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" routerLink="/product-module/product/umbrella-fund/0">{{'Add a new Umbrella Fund' | translate}}
-
+                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" [routerLink]="['/product-module/product/umbrella-fund/0']" [queryParams]="{fromFund: 'true', umbrella : null}" queryParamsHandling="merge">Add a new Umbrella Fund
 
 
 

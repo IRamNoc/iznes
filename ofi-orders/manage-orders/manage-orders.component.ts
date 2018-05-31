@@ -31,6 +31,7 @@ import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { ToasterService } from 'angular2-toaster';
 /* Services. */
 import { WalletNodeRequestService } from '@setl/core-req-services';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
@@ -47,6 +48,7 @@ import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
 import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 
 import {MultilingualService} from '@setl/multilingual';
@@ -160,6 +162,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     fundShareID = 0;
     fundShareListObj = {};
     userAssetList: Array<any> = [];
+    isAmConfirmModalDisplayed: boolean;
+    amConfirmModal = {};
+    cancelModalMessage: string;
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -237,10 +242,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
-                private _translate: MultilingualService,
+                private messagesService: MessagesService,
+                private toasterService: ToasterService,
+                public _translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
         this.ofiCurrenciesService.getCurrencyList();
     }
 
@@ -359,6 +368,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.resizeDataGrid();
     }
 
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        // this.changeDetectorRef.detach();
+        //
+        /* Unsunscribe Observables. */
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+
+        this.setOrdersFilters();
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+    }
+
     resizeDataGrid() {
         if (this.orderDatagrid) {
             this.orderDatagrid.resize();
@@ -389,26 +409,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    getCurrencyList(data) {
-        if (data) {
-            this.currencyList = data.toJS();
-            console.log('currencies: ', this.currencyList);
+    getLanguage(language): void {
+        if (language) {
+            this.language = language;
+
+            this.configDate = {
+                ...this.configDate,
+                locale: this.language.substr(0, 2),
+            };
         }
     }
 
-    getLanguage(requested): void {
-        if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
         }
     }
 
@@ -675,15 +689,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     cancelOrder(index) {
-        let confMessage = '';
-        if (this.ordersList[index].orderType === 3) {
-            confMessage += 'Subscription ';
+        const orderId = this.getOrderRef(this.ordersList[index].orderID);
+        const message = (this.ordersList[index].orderType === 3) ? `Subscription ${orderId}` : `Redemption ${orderId}`;
+
+        if (this.isInvestorUser) {
+            this.showConfirmationAlert(message, index);
+        } else {
+            this.isAmConfirmModalDisplayed = true;
+            this.amConfirmModal = {
+                targetedOrder: this.ordersList[index],
+                title: `Cancel - ${message}`,
+                body: `Are you sure you want to cancel the ${message}?`,
+                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
+            };
+
         }
-        if (this.ordersList[index].orderType === 4) {
-            confMessage += 'Redemption ';
-        }
-        confMessage += this.getOrderRef(this.ordersList[index].orderID);
-        this.showConfirmationAlert(confMessage, index);
     }
 
     settleOrder(index) {
@@ -734,7 +754,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
@@ -742,16 +761,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             { confirmText: 'Confirm', declineText: 'Back', btnClass: 'error' }
         ).subscribe((ans) => {
             if (ans.resolved) {
-                let asyncTaskPipe;
-                if (this.isInvestorUser) {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                } else {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                }
+                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
+                    orderID: this.ordersList[index].orderID,
+                });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
@@ -1036,42 +1048,87 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges();
     }
 
-    /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    handleAmModalBackButtonClick() {
+        this.resetAmConfirmModalValue();
     }
 
     /**
-     * ===============
-     * Alert Functions
-     * ===============
+     * Cancel an investor's order by an asset manager
+     *
+     * @param targetedOrder
      */
+    handleAmModalConfirmButtonClick(targetedOrder) {
+        const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+            orderID: targetedOrder.orderID,
+        });
 
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        // this.changeDetectorRef.detach();
-        //
-        /* Unsunscribe Observables. */
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                this.logService.log('cancel order success', data); // success
+                this.loading = true;
+                this.getOrdersList();
+                this.sendMessageToInvestor(targetedOrder);
+                this.resetAmConfirmModalValue();
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.resetAmConfirmModalValue();
+            }),
+        );
+    }
 
-        this.setOrdersFilters();
-        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+    sendMessageToInvestor(targetedOrder) {
+        const orderRef = this.getOrderRef(targetedOrder.orderID);
+        const amCompanyName = targetedOrder.amCompanyName;
+        let orderType = '';
+        let subject = '';
+        let dateFormat = '';
+        const toasterMessages = {
+            success: {
+                'fr-Latn': `Le message a été envoyé avec succès à ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+                'en-Latn': `The message has been successfully sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+            fail: {
+                'fr-Latn': `L'envoi du message à ${targetedOrder.firstName} ${targetedOrder.lastName} a échoué`,
+                'en-Latn': `The message has failed to be sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+        };
+
+        switch (this.language) {
+            case 'fr-Latn':
+                orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
+                subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
+                dateFormat = 'DD/MM/YYYY HH:mm:ss';
+                break;
+
+            default:
+                orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
+                subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
+                dateFormat = 'YYYY-MM-DD HH:mm:ss';
+                break;
+        }
+
+        const actionConfig = new MessageCancelOrderConfig();
+        actionConfig.lang = this.language;
+        actionConfig.orderType = orderType;
+        actionConfig.orderRef = orderRef;
+        actionConfig.orderDate = moment(targetedOrder.orderDate).format(dateFormat);
+        actionConfig.amCompanyName = amCompanyName;
+        actionConfig.cancelMessage = this.cancelModalMessage;
+
+        this.messagesService.sendMessage(
+            [targetedOrder.investorWalletID],
+            subject,
+            '',
+            actionConfig,
+        ).then((result) => {
+            this.logService.log('on message success: ', result);
+            this.toasterService.pop('success', toasterMessages.success[this.language]);
+        }).catch((error) => {
+            this.logService.log('on message fail: ', error);
+            this.toasterService.pop('error', toasterMessages.fail[this.language]);
+        });
     }
 
     /**
@@ -1101,45 +1158,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
+     * Reset values of asset manager confirm modal
      */
-    private showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    resetAmConfirmModalValue() {
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
+        this.amConfirmModal = {};
     }
-
-    /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    private showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
 }

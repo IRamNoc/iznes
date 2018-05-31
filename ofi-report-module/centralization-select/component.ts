@@ -28,7 +28,7 @@ export class CentralizationSelectComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private ofiReportsService: OfiReportsService,
                 private router: Router,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 
