@@ -423,7 +423,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getCurrencyList(data) {
         if (data) {
             this.currencyList = data.toJS();
-            console.log('currencies: ', this.currencyList);
         }
     }
 
