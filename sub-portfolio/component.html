@@ -45,10 +45,14 @@
                                 IBAN</label>
                             <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN"
                                    class="form-control mlp_translated" mltag="txt_subportfolioiban"
-                                   formControlName="subPortfolioIban">
-                            <div *ngIf="!formControl.controls['subPortfolioIban'].valid && formControl.controls['subPortfolioIban'].touched"
+                                   formControlName="subPortfolioIban" maxlength="34">
+                            <div *ngIf="formControl.controls['subPortfolioIban'].hasError('required') && formControl.controls['subPortfolioIban'].touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">
                                 This field is required
+                            </div>
+                            <div *ngIf="formControl.controls['subPortfolioIban'].hasError('minlength') && formControl.controls['subPortfolioIban'].touched"
+                                 class="field-error">
+                                IBAN must be at least 14 characters long
                             </div>
                         </div>
 

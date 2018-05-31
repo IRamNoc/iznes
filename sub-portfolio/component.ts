@@ -67,7 +67,11 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
             formControl: new FormGroup(
                 {
                     'subPortfolioName': new FormControl('', [Validators.required]),
-                    'subPortfolioIban': new FormControl('', [Validators.required])
+                    'subPortfolioIban': new FormControl('', [
+                        Validators.required,
+                        Validators.minLength(14),
+                        Validators.maxLength(34),
+                    ]),
                 }
             )
         }];
