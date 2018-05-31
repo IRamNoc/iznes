@@ -26,7 +26,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     constructor(private router: Router,
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private _changeDetectorRef: ChangeDetectorRef,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private logService: LogService,
                 private ngRedux: NgRedux<any>) {
     }

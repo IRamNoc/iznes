@@ -30,7 +30,7 @@ export class UiDropdownsComponent {
     dropdownForm: FormGroup;
 
     constructor(
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
     ) {
         this.initMocks();
         this.initForms();

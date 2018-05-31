@@ -52,7 +52,7 @@ export class UiTranslationsComponent {
         private fb: FormBuilder,
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
     ) {
         this.translateForm = this.fb.group({
             inputText: [

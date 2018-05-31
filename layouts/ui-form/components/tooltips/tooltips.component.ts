@@ -218,7 +218,7 @@ export class UiTooltipsComponent implements OnInit {
         private fb: FormBuilder,
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
     ) {
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
     }
