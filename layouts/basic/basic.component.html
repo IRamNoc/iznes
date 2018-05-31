@@ -68,14 +68,14 @@
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
-                <main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}">
+                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="getRouterOutletState(o)">
                     <!--
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
                     -->
-                    <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
+                    <div class="router-container">
                         <div class="fade-slide-right">
-                            <router-outlet #o="outlet"></router-outlet>
+                            <router-outlet #o="outlet" (deactivate)="onDeactivate($event)"></router-outlet>
                         </div>
                     </div>
 
