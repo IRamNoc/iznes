@@ -59,7 +59,7 @@ export class UiFormPersistComponent {
     constructor (
         /* Scope the PersistService as a private property. */
         private _persistService: PersistService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
     ) {
         /*
             So to enable the form persist on a form you simple create a normal

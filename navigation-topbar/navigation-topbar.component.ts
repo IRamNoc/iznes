@@ -98,7 +98,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private _myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
                 private initialisationService: InitialisationService,

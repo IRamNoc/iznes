@@ -50,7 +50,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
