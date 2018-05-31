@@ -1,33 +1,40 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, Inject, OnChanges} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {SagaHelper} from '@setl/utils';
-import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
-import {ContractService} from '@setl/core-contracts/services';
-import {MyWalletsService} from '@setl/core-req-services/my-wallets/my-wallets.service';
-import {WalletNodeRequestService} from '@setl/core-req-services/walletnode-request/walletnode-request.service';
-import {Subscription} from 'rxjs/Subscription';
-import {TabControl, Tab} from '@setl/core-balances/tabs';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnInit,
+    Inject,
+    OnDestroy,
+} from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { SagaHelper } from '@setl/utils';
+import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
+import { ContractService } from '@setl/core-contracts/services';
+import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
+import { Subscription } from 'rxjs/Subscription';
+import { TabControl, Tab } from '@setl/core-balances/tabs';
 import * as _ from 'lodash';
-import {ContractModel} from '@setl/core-contracts/models';
-import {SET_CONTRACT_LIST, UPDATE_CONTRACT} from '@setl/core-store/wallet/my-wallet-contract/actions';
-
+import { ContractModel } from '@setl/core-contracts/models';
+import {
+    SET_CONTRACT_LIST,
+    UPDATE_CONTRACT,
+} from '@setl/core-store/wallet/my-wallet-contract/actions';
 
 @Component({
     selector: 'setl-contracts',
     templateUrl: 'contracts.component.html',
     styleUrls: ['contracts.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-export class ContractsComponent implements OnInit, OnChanges {
+export class ContractsComponent implements OnInit, OnDestroy {
     public token: string = null;
     public userId: string = null;
     public walletId: string = null;
-    public addresses: Array<any> = [];
-    public contracts: Array<ContractModel> = [];
+    public addresses: string[] = [];
+    public contracts: ContractModel[] = [];
     public contract;
     public contractFields;
 
@@ -37,27 +44,40 @@ export class ContractsComponent implements OnInit, OnChanges {
     public tabControl: TabControl;
     public tabs: Tab[];
 
-    private subscriptions: Array<Subscription> = [];
+    private subscriptions: Subscription[] = [];
 
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     @select(['user', 'myDetail', 'userId']) getUser;
-
     @select(['wallet', 'myWalletContract', 'contractList']) getContractList;
-
     @select(['wallet', 'myWalletContract', 'updatedContractList']) updateContractList;
 
-    /**
-     * Constructor
-     */
-    public constructor(private contractService: ContractService,
-                       private alertsService: AlertsService,
-                       private memberSocketService: MemberSocketService,
-                       private walletService: MyWalletsService,
-                       private walletNodeRequestService: WalletNodeRequestService,
-                       private changeDetectorRef: ChangeDetectorRef,
-                       private ngRedux: NgRedux<any>,
-                       @Inject(APP_CONFIG) private appConfig: AppConfig) {
-        this.appConfig = appConfig;
+    constructor(
+        private contractService: ContractService,
+        private alertsService: AlertsService,
+        private memberSocketService: MemberSocketService,
+        private walletService: MyWalletsService,
+        private walletNodeRequest: WalletNodeRequestService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private ngRedux: NgRedux<any>,
+        @Inject(APP_CONFIG) private appConfig: AppConfig,
+    ) { }
+
+    public ngOnInit() {
+        this.tabControl = new TabControl({
+            title: 'Search',
+            icon: 'search',
+            active: false,
+            data: {
+                template: 'contractsListTab',
+            },
+        });
+        this.subscriptions.push(
+            this.tabControl.getTabs().subscribe((tabs) => {
+                this.tabs = tabs;
+                this.changeDetectorRef.markForCheck();
+            }),
+        );
+
         this.token = this.memberSocketService.token;
         if (this.updateContractList) {
             this.updateContractList.subscribe(
@@ -65,8 +85,8 @@ export class ContractsComponent implements OnInit, OnChanges {
                     if (this.walletId === '0' || this.walletId === null) {
                         this.walletId = '5';
                     }
-                    const asyncTaskPipe = this.walletNodeRequestService.requestContractsByWallet({
-                        walletId: this.walletId
+                    const asyncTaskPipe = this.walletNodeRequest.requestContractsByWallet({
+                        walletId: this.walletId,
                     });
                     this.ngRedux.dispatch(SagaHelper.runAsync(
                         [SET_CONTRACT_LIST],
@@ -76,118 +96,79 @@ export class ContractsComponent implements OnInit, OnChanges {
                         () => {
                             this.changeDetectorRef.markForCheck();
                         },
-                        () => {
-                        }
                     ));
-                    /*_.each(data, (contractAddress) => {
-                        const asyncTaskPipe = this.walletNodeRequestService.requestContractByAddress({
-                            walletId: this.walletId,
-                            address: contractAddress
-                        });
-
-                        this.ngRedux.dispatch(SagaHelper.runAsync(
-                            [UPDATE_CONTRACT],
-                            [],
-                            asyncTaskPipe,
-                            {},
-                            (data) => {
-                                this.contracts = [];
-                                _.each(data[1].data, (contract) => {
-                                    contract = this.contractService.fromJSON(contract, this.addresses);
-                                    this.contracts.push(contract);
-                                    if (contract.address === data[1].request.address) {
-                                        this.contract = contract;
-                                    }
-                                });
-                                this.changeDetectorRef.detectChanges();
-                            },
-                            (error) => {
-                                console.log('ERROR:');
-                                console.log(error);
-                            }
-                        ));
-                    });*/
-                }
+                },
             );
         }
         if (this.getUser) {
-            this.getUser.subscribe(
-                (data) => {
-                    this.userId = data;
-                }
-            );
+            this.getUser.subscribe(data => this.userId = data);
         }
-        if (this.getConnectedWallet) {
-            this.getConnectedWallet.subscribe(
-                (data) => {
-                    this.walletId = data;
-                    const asyncTaskPipe = this.walletService.requestWalletLabel({walletId: this.walletId});
-                    return new Promise((resolve, reject) => {
-                        this.ngRedux.dispatch(
-                            SagaHelper.runAsyncCallback(
-                                asyncTaskPipe,
-                                (data) => {
-                                    _.each(data[1].Data, (address) => {
-                                        this.addresses[address.option] = address;
-                                    });
 
-                                    const asyncTaskPipe = this.walletNodeRequestService.requestContractsByWallet({
-                                        walletId: this.walletId
-                                    });
-                                    this.ngRedux.dispatch(SagaHelper.runAsync(
-                                        [SET_CONTRACT_LIST],
-                                        [],
-                                        asyncTaskPipe,
-                                        {},
-                                        () => {
-                                            this.changeDetectorRef.markForCheck();
-                                        },
-                                        () => {
-                                        }
-                                    ));
-                                    resolve();
+        this.getConnectedWallet.subscribe((data) => {
+            this.walletId = data;
+            const asyncTaskPipe = this.walletService.requestWalletLabel({ walletId: data });
+            return new Promise((resolve, reject) => {
+                this.ngRedux.dispatch(
+                    SagaHelper.runAsyncCallback(
+                        asyncTaskPipe,
+                        (data) => {
+                            _.each(data[1].Data, (address) => {
+                                this.addresses[address.option] = address;
+                            });
+
+                            const asyncTaskPipe = this.walletNodeRequest.requestContractsByWallet({
+                                walletId: this.walletId,
+                            });
+                            this.ngRedux.dispatch(SagaHelper.runAsync(
+                                [SET_CONTRACT_LIST],
+                                [],
+                                asyncTaskPipe,
+                                {},
+                                () => {
+                                    this.changeDetectorRef.markForCheck();
                                 },
-                                (error) => {
-                                    reject(error);
-                                }
-                            )
-                        );
-                    });
-                }
-            );
-        }
+                            ));
+                            resolve();
+                        },
+                        (error) => {
+                            reject(error);
+                        },
+                    ),
+                );
+            });
+        });
 
         this.subscriptions.push(this.getContractList.subscribe((data) => {
             if (typeof data === 'undefined' || data.length <= 0) {
                 return;
             }
-
-            data = _.groupBy(data[0].contractData, (contract) => contract.__address);
-            this.contracts = [];
-            _.each(data, (contract) => {
-                this.contract = this.contractService.fromJSON(contract[0], this.addresses);
-                this.contracts.push(this.contract);
-                if (this.tabs) {
-                    const tab = this.tabs.find(this.findTab(this.contract.__address, 'contractDetails'));
-
-                    if (tab) {
-                        tab.data.contract = this.contract;
-                    }
-                }
+            this.contracts = data[0].contractData.map((contract) => {
+                return this.updateContract(this.contractService.fromJSON(contract, this.addresses));
             });
-            this.contractFields = [];
-            for (const prop in this.contract) {
-                if (prop) {
-                    this.contractFields.push(prop);
-                }
-            }
-            this.changeDetectorRef.markForCheck();
         }));
     }
 
+    private updateContract(contract: ContractModel) {
+        if (this.tabs) {
+            const tab = this.tabs.find(
+                this.findTab(contract.__address, 'contractDetails'),
+            );
+
+            if (tab) {
+                tab.data.contract = contract;
+            }
+        }
+        return contract;
+    }
+
+    public ngOnDestroy(): void {
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
+    }
 
     public commitAuthorisation(index: number, contract: ContractModel): void {
-        index++;
+        index += 1;
         console.log('INDEX:', index);
         let contractJson = JSON.parse(this.contractService.toJSON(contract));
         contractJson = contractJson.contractdata;
@@ -201,20 +182,20 @@ export class ContractsComponent implements OnInit, OnChanges {
             receive[i] = [i, contract.parties[index - 1].sigAddress];
         });
 
-        const asyncTaskPipe = this.walletNodeRequestService.walletCommitToContract({
+        const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
             walletid: this.walletId,
             address: contract.parties[index - 1].sigAddress,
             function: contract.function + '_commit',
             contractdata: {
+                commitment,
+                receive,
                 contractfunction: contract.function + '_commit',
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 parties: contractJson.parties,
-                commitment: commitment,
-                receive: receive,
-                authorise: contractJson.authorisations
+                authorise: contractJson.authorisations,
             },
-            contractaddress: contract.address
+            contractaddress: contract.address,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -225,12 +206,12 @@ export class ContractsComponent implements OnInit, OnChanges {
             () => {
             },
             () => {
-            }
+            },
         ));
     }
 
     public commitParty(index: number, contract: ContractModel): void {
-        index++;
+        index += 1;
         console.log('INDEX:', index);
         let contractJson = JSON.parse(this.contractService.toJSON(contract));
         contractJson = contractJson.contractdata;
@@ -244,25 +225,25 @@ export class ContractsComponent implements OnInit, OnChanges {
             receive[i] = [i, contract.parties[index - 1].sigAddress];
         });
 
-        const asyncTaskPipe = this.walletNodeRequestService.walletCommitToContract({
+        const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
             walletid: this.walletId,
             address: contract.parties[index - 1].sigAddress,
             function: contract.function + '_commit',
             contractdata: {
+                commitment,
+                receive,
                 contractfunction: contract.function + '_commit',
                 issuingaddress: contract.issuingaddress,
                 contractaddress: contract.address,
                 party: [
                     contract.parties[index - 1].partyIdentifier,
                     '',
-                    ''
+                    '',
                 ],
                 parties: contractJson.parties,
-                commitment: commitment,
-                receive: receive,
-                authorise: contractJson.authorisations
+                authorise: contractJson.authorisations,
             },
-            contractaddress: contract.address
+            contractaddress: contract.address,
         });
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [],
@@ -272,8 +253,6 @@ export class ContractsComponent implements OnInit, OnChanges {
             () => {
                 this.showAlert('Committing to Contract', 'success');
             },
-            () => {
-            }
         ));
     }
 
@@ -295,10 +274,10 @@ export class ContractsComponent implements OnInit, OnChanges {
             icon: 'search',
             active: false,
             data: {
-                contract: contract,
+                contract,
                 address: contract.__address,
-                template: 'contractDetails'
-            }
+                template: 'contractDetails',
+            },
         });
     }
 
@@ -311,7 +290,7 @@ export class ContractsComponent implements OnInit, OnChanges {
      * @returns {(tab) => boolean}
      */
     private findTab(address: string, template: string) {
-        return (tab) => tab.data.address === address && tab.data.template === template;
+        return tab => tab.data.address === address && tab.data.template === template;
     }
 
     /**
@@ -325,33 +304,6 @@ export class ContractsComponent implements OnInit, OnChanges {
      */
     closeTab(index: number) {
         this.tabControl.close(index);
-    }
-
-    public ngOnInit() {
-        this.tabControl = new TabControl({
-            title: 'Search',
-            icon: 'search',
-            active: false,
-            data: {
-                template: 'contractsListTab'
-            }
-        });
-        this.subscriptions.push(
-            this.tabControl.getTabs().subscribe((tabs) => {
-                this.tabs = tabs;
-                this.changeDetectorRef.markForCheck();
-            })
-        );
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public ngOnChanges() {
-    }
-
-    public ngOnDestroy() {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
     }
 
     /**

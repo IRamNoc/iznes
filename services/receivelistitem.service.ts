@@ -7,7 +7,7 @@ export class ReceiveListItemService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let receiveListItem = new ReceiveListItemModel();
+        const receiveListItem = new ReceiveListItemModel();
         receiveListItem.address = json[0];
         receiveListItem.namespace = json[1];
         receiveListItem.assetId = json[2];
@@ -24,7 +24,7 @@ export class ReceiveListItemService {
             receiveListItem.publicKey,
             receiveListItem.signature,
             receiveListItem.issuance,
-            receiveListItem.metadata
+            receiveListItem.metadata,
         ];
     }
 }

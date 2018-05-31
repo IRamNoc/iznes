@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { PartyModel } from '../models';
-import { PayListItemService} from '../services/paylistitem.service';
+import { PayListItemService } from '../services/paylistitem.service';
 import { PayListItemModel } from '../models';
 import { ReceiveListItemService } from '../services/receivelistitem.service';
 import { ReceiveListItemModel } from '../models';
 import * as _ from 'lodash';
-
 
 @Injectable()
 export class PartyService {
@@ -26,7 +25,7 @@ export class PartyService {
     }
 
     public toJSON(party: PartyModel) {
-        let payList = [];
+        const payList = [];
         _.each(party.payList, (payListItem) => {
             if (payListItem instanceof Array) {
                 payList.push(payListItem);
@@ -35,7 +34,7 @@ export class PartyService {
             }
         });
 
-        let receiveList = [];
+        const receiveList = [];
         _.each(party.receiveList, (receiveListItem) => {
             if (receiveListItem instanceof Array) {
                 receiveList.push(receiveListItem);
@@ -44,14 +43,14 @@ export class PartyService {
             }
         });
 
-        let result =  [
+        const result =  [
             party.partyIdentifier,
             party.sigAddress,
             payList,
             receiveList,
             party.publicKey,
             party.signature,
-            party.mustSign
+            party.mustSign,
         ];
 
         return result;
@@ -64,17 +63,17 @@ export class PartyService {
         receiveList = null,
         publicKey = null,
         signature = null,
-        mustSign = null
+        mustSign = null,
     ) {
-        let party = new PartyModel();
+        const party = new PartyModel();
         party.partyIdentifier = partyIdentifier;
         party.sigAddress = sigAddress;
 
         _.each(payList, (payListItem) => {
-           this.addPayListItem(party, this.payListItemService.fromJSON(payListItem));
+            this.addPayListItem(party, this.payListItemService.fromJSON(payListItem));
         });
         _.each(receiveList, (receiveListItem) => {
-           this.addReceiveListItem(party, this.receiveListItemService.fromJSON(receiveListItem));
+            this.addReceiveListItem(party, this.receiveListItemService.fromJSON(receiveListItem));
         });
 
         party.publicKey = publicKey;

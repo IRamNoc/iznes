@@ -6,7 +6,7 @@ export class PayListItemService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let payListItem = new PayListItemModel();
+        const payListItem = new PayListItemModel();
         payListItem.address = json[0];
         payListItem.namespace = json[1];
         payListItem.assetId = json[2];
@@ -27,7 +27,7 @@ export class PayListItemService {
             payListItem.publicKey,
             payListItem.signature,
             payListItem.issuance,
-            payListItem.metadata
+            payListItem.metadata,
         ];
     }
 }

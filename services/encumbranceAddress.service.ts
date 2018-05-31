@@ -7,7 +7,7 @@ export class EncumbranceAddressService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let encumbranceAddress = new EncumbranceAddressModel();
+        const encumbranceAddress = new EncumbranceAddressModel();
         encumbranceAddress.address = json[0];
         encumbranceAddress.startUTC = json[1];
         encumbranceAddress.endUTC = json[2];
@@ -18,7 +18,7 @@ export class EncumbranceAddressService {
         return [
             encumbranceAddress.address,
             encumbranceAddress.startUTC,
-            encumbranceAddress.endUTC
+            encumbranceAddress.endUTC,
         ];
     }
 }

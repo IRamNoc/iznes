@@ -24,7 +24,7 @@ export class ParameterItemService {
             parameterItem.calculatedIndex,
             parameterItem.contractSpecific,
             parameterItem.calculationOnly,
-            parameterItem.signature
+            parameterItem.signature,
         ];
     }
 }

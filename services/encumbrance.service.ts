@@ -15,16 +15,20 @@ export class EncumbranceService {
         if (typeof json === 'string') {
             json = JSON.parse(json);
         }
-        let encumbrance = new EncumbranceModel();
+        const encumbrance = new EncumbranceModel();
         encumbrance.publicKey = json[0];
         encumbrance.fullAssetId = json[1];
         encumbrance.reference = json[2];
         encumbrance.amount = json[3];
         _.each(json[4], (beneficiaryJson) => {
-            encumbrance.beneficiaries.push(this.encumbranceAddressService.fromJSON(beneficiaryJson));
+            encumbrance.beneficiaries.push(
+                this.encumbranceAddressService.fromJSON(beneficiaryJson),
+            );
         });
         _.each(json[5], (administratorJson) => {
-           encumbrance.administrators.push(this.encumbranceAddressService.fromJSON(administratorJson));
+            encumbrance.administrators.push(
+                this.encumbranceAddressService.fromJSON(administratorJson),
+            );
         });
         encumbrance.signature = json[6];
         return encumbrance;
@@ -38,7 +42,7 @@ export class EncumbranceService {
             encumbrance.amount,
             _.map(encumbrance.beneficiaries, this.encumbranceAddressService.toJSON),
             _.map(encumbrance.administrators, this.encumbranceAddressService.toJSON),
-            encumbrance.signature
+            encumbrance.signature,
         ];
     }
 }

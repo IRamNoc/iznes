@@ -5,10 +5,9 @@ export class PartyModel {
     public partyIdentifier: string = '';
     public sigAddress: string = '';
     public sigAddress_label: string = '';
-    public payList: Array<PayListItemModel> = new Array();
-    public receiveList: Array<ReceiveListItemModel> = new Array();
+    public payList: PayListItemModel[] = [];
+    public receiveList: ReceiveListItemModel[] = [];
     public publicKey: string = '';
     public signature: string = '';
     public mustSign: boolean = false;
 }
-
