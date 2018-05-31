@@ -1099,13 +1099,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             case 'fr-Latn':
                 orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
                 subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
-                dateFormat = 'DD/MM/YYYY hh:mm:ss';
+                dateFormat = 'DD/MM/YYYY HH:mm:ss';
                 break;
 
             default:
                 orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
                 subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
-                dateFormat = 'YYYY-MM-DD hh:mm:ss';
+                dateFormat = 'YYYY-MM-DD HH:mm:ss';
                 break;
         }
 
@@ -1113,7 +1113,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         actionConfig.lang = this.language;
         actionConfig.orderType = orderType;
         actionConfig.orderRef = orderRef;
-        actionConfig.orderDate = this.formatDate(dateFormat, new Date(targetedOrder.orderDate));
+        actionConfig.orderDate = moment(targetedOrder.orderDate).format(dateFormat);
         actionConfig.amCompanyName = amCompanyName;
         actionConfig.cancelMessage = this.cancelModalMessage;
 
@@ -1164,42 +1164,5 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
         this.amConfirmModal = {};
-    }
-
-    /**
-     * Format Date
-     * -----------
-     * Formats a date to a string.
-     * YYYY - 4 character year
-     * YY - 2 character year
-     * MM - 2 character month
-     * DD - 2 character date
-     * hh - 2 character hour (24 hour)
-     * hH - 2 character hour (12 hour)
-     * mm - 2 character minute
-     * ss - 2 character seconds
-     *
-     * @param  {string} formatString [description]
-     * @param  {Date}   dateObj      [description]
-     * @return {string}              [description]
-     */
-    private formatDate(formatString: string, dateObj: Date): string {
-        if (!formatString || !dateObj) {
-            return '';
-        }
-
-        const numPad = (number) => {
-            return number < 10 ? '0' + number : number;
-        };
-
-        return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', numPad(dateObj.getDate().toString()))
-            .replace('hh', numPad(dateObj.getHours()))
-            .replace('hH', numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', numPad(dateObj.getMinutes()))
-            .replace('ss', numPad(dateObj.getSeconds()));
     }
 }
