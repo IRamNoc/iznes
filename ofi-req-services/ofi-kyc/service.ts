@@ -98,6 +98,17 @@ export class OfiKycService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
+    isInvitationTokenUsed(token: string): any {
+
+        const messageBody: VerifyInvitationTokenRequestBody = {
+            RequestName: 'iznesistokenused',
+            token: token,
+            source: ''
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
     createUser(requestData: CreateUserRequestData): any {
 
         const messageBody: CreateUserRequestBody = {
