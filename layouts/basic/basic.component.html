@@ -4,28 +4,13 @@
 
         <ng-sidebar [(opened)]="_opened" [mode]="_MODES[_modeNum]" [keyClose]="_keyClose" [position]="_POSITIONS[_positionNum]" [dock]="_dock" [dockedSize]="'50px'" [autoCollapseHeight]="_autoCollapseHeight" [autoCollapseWidth]="_autoCollapseWidth" [closeOnClickOutside]="_closeOnClickOutside" [closeOnClickBackdrop]="_closeOnClickBackdrop" [showBackdrop]="_showBackdrop" [animate]="_animate" [trapFocus]="_trapFocus" [autoFocus]="_autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline btn-sm" (click)="_toggleSidebar()" mltag="txt_close">Close</button>
+                    <button class="btn btn-outline btn-sm mr-1" (click)="_toggleSidebar()">{{'Close' | translate}}</button>
                 </div>
                 <div class="ng-sidebar-header-middle title_text">
-                    <i class="fa fa-cogs"></i>
-                    <span mltag="txt_settings">Settings</span></div>
+                    <i class="fa fa-cogs"></i>{{'Settings' | translate}}
+                </div>
                 <div class="ng-sidebar-header-right">
 
                 </div>
@@ -34,20 +19,21 @@
 
                 <div class="ng-sidebar-section-header">
                     <div class="title_text">
-                        <i class="fa fa-language"></i>
-                        <span mltag="txt_language">Language</span></div>
-                    <span mltag="txt_chooseyourlanguage">Choose your language.</span></div>
+                        <i class="fa fa-language"></i> {{'Language' | translate}}
+                    </div>{{'Choose your language.' | translate}}
+
+                </div>
                 <div class="ng-sidebar-section-body">
 
                     <section class="form-block">
                         <div class="form-group">
                             <div class="radio" (click)="changeLanguage('fr-Latn')">
                                 <input type="radio" name="gridRadios1" id="lang_fra" [checked]="isCurrentLanguage('fr-Latn')">
-                                <label for="lang_fra" mltag="txt_franais">Français</label>
+                                <label for="lang_fra">{{'Français' | translate}}</label>
                             </div>
                             <div class="radio" (click)="changeLanguage('en-Latn')">
                                 <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
-                                <label for="lang_eng" mltag="txt_english">English</label>
+                                <label for="lang_eng">{{'English' | translate}}</label>
                             </div>
                             <!--<div class="radio" (click)="changeLanguage('eng')">-->
                             <!--<input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">-->
@@ -64,7 +50,7 @@
             </div>
 
             <button class="header-overflow-trigger" type="button">
-                <span></span>
+
             </button>
 
 
@@ -87,9 +73,6 @@
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
                     -->
-
-
-
                     <div class="router-container" [@routerTransition]="getRouterOutletState(o)">
                         <div class="fade-slide-right">
                             <router-outlet #o="outlet"></router-outlet>

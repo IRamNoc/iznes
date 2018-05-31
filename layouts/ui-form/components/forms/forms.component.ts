@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-ui-layouts-forms',
@@ -29,7 +30,9 @@ export class UiFormsComponent {
     longForm: FormGroup;
     dropdownForm: FormGroup;
 
-    constructor() {
+    constructor(
+        private _translate: MultilingualService,
+    ) {
         this.initMocks();
         this.initForms();
     }

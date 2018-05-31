@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import {Component, OnInit, Input, HostBinding} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { positionToGridAreaNotation } from '../helpers';
 
@@ -27,7 +27,9 @@ export class CounterTileComponent implements OnInit {
     };
     public backgroundColor: string;
 
-    constructor(private sanitizer: DomSanitizer) {
+    constructor(
+        private sanitizer: DomSanitizer,
+    ) {
     }
 
     ngOnInit() {

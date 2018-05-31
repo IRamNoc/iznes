@@ -1,29 +1,28 @@
 <h3 class="pt-1 pl-1">
-    <b>Welcome {{username}}</b>
+    <b>{{'Welcome @username@' | translate: {'username': username} }}</b>
     <span *ngIf="lastLogin">
-            <small>Last login: {{lastLogin | datex: 'MMMM Do YYYY hh:mm'}}</small>
-        </span>
+        <small>{{'Last login:' | translate}} {{lastLogin | datex: 'MMMM Do YYYY hh:mm'}}</small>
+    </span>
 </h3>
 
 <clr-tabs class="mt-2">
     <clr-tab>
         <button clrTabLink>
-            <i class="fa fa-tachometer"></i>
-            <span mltag="txt_dashboard">Dashboard</span>
+            <i class="fa fa-tachometer"></i>{{'Dashboard' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
             <app-dashboard [rows]="2" [columns]="4">
-                <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">
-                    Actions
+                <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">{{'Actions' | translate}}
+
                 </app-counter-tile>
-                <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">
-                    Connections
+                <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">{{'Connections' | translate}}
+
                 </app-counter-tile>
-                <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">New
-                    messages
+                <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">{{'New messages' | translate}}
+
                 </app-counter-tile>
-                <app-counter-tile name="contracts" icon="plug" count="0" color="blue">Contracts</app-counter-tile>
+                <app-counter-tile name="contracts" icon="plug" count="0" color="blue">{{'Contracts' | translate}}</app-counter-tile>
                 <app-basic-tile name="asset1" color="green">
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
                 </app-basic-tile>
@@ -31,13 +30,10 @@
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]} || {}"></ng-container>
                 </app-basic-tile>
                 <app-basic-tile name="search" color="blue">
-                    <h1 class="tile-heading" mltag="txt_search">Search</h1>
+                    <h1 class="tile-heading">{{'Search' | translate}}</h1>
                     <div class="input-group">
-                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;"
-                               class="form-control" placeholder="Search by Tx ID, Contract Address, Instruments or Address"
-                               mltag="txt_searchbytxidcontractaddressins54d69b08e6">
-                        <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i
-                                class="fa fa-search"></i></button>
+                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" [placeholder]="_translate.translate('Search by Tx ID, Contract Address, Instruments or Address')">
+                        <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i class="fa fa-search"></i></button>
                     </div>
 
                 </app-basic-tile>
@@ -47,15 +43,14 @@
 
     <clr-tab>
         <button clrTabLink>
-            <i class="fa fa-th-list"></i>
-            <span mltag="txt_balances">Balances</span>
+            <i class="fa fa-th-list"></i>{{'Balances' | translate}}
+
         </button>
 
         <clr-tab-content *clrIfActive>
             <!-- Balances -->
             <div class="balances-grid">
                 <clr-datagrid #myDataGrid>
-                    
                     <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
                     <clr-dg-column style="min-width: 170px;" mltag="txt_asset">Asset</clr-dg-column>
                     <clr-dg-column style="min-width: 170px;" mltag="txt_total" class="right">Total</clr-dg-column>
@@ -96,27 +91,27 @@
 
     <clr-tab>
         <button clrTabLink>
-            <i class="fa fa-key"></i>
-            <span mltag="txt_transactions">Transactions</span>
+            <i class="fa fa-key"></i>{{'Transactions' | translate}}
+
         </button>
 
         <clr-tab-content *clrIfActive>
             <!-- Transactions -->
             <div class="transactions-grid">
                 <clr-datagrid #myDataGrid>
-                    <clr-dg-column style="min-width: 160px;" mltag="txt_actions">Actions</clr-dg-column>
-                    <clr-dg-column style="min-width: 150px;" mltag="txt_txid">Tx ID</clr-dg-column>
+                    <clr-dg-column style="min-width: 160px;">{{'Actions' | translate}}</clr-dg-column>
+                    <clr-dg-column style="min-width: 150px;">{{'Tx ID' | translate}}</clr-dg-column>
                     <!--<clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>-->
-                    <clr-dg-column style="min-width: 170px;" mltag="txt_asset">Asset</clr-dg-column>
-                    <clr-dg-column style="min-width: 170px;" mltag="txt_timeutc">Time (UTC)</clr-dg-column>
-                    <clr-dg-column mltag="txt_type">Type</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;">{{'Asset' | translate}}</clr-dg-column>
+                    <clr-dg-column style="min-width: 170px;">{{'Time (UTC)' | translate}}</clr-dg-column>
+                    <clr-dg-column>{{'Type' | translate}}</clr-dg-column>
 
 
                     <clr-dg-row *clrDgItems="let transaction of transactions$ | async;">
                         <clr-dg-cell class="col-actions">
                             <div class="btn-group btn-sm">
                                 <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
-                                    <i class="fa fa-search"></i><span mltag="txt_view">View</span>
+                                    <i class="fa fa-search"></i>{{'View' | translate}}
                                 </a>
                             </div>
                         </clr-dg-cell>
@@ -145,8 +140,7 @@
         </div>
         <div class="row">
             <div class="col-xs-12">
-                <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history"
-                   class="btn btn-transparent"><i class="fa fa-history"></i></a>
+                <a [routerLink]="'/reports/balances/'+asset.hash+'/history'" title="View history" class="btn btn-transparent"><i class="fa fa-history"></i></a>
             </div>
         </div>
     </div>

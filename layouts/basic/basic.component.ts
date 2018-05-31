@@ -7,7 +7,9 @@ import {setLanguage} from '@setl/core-store';
 
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
-import {SET_LANGUAGE} from "@setl/core-store/user/site-settings/actions";
+import {SET_LANGUAGE} from '@setl/core-store/user/site-settings/actions';
+
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-basic-layout',
@@ -38,7 +40,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
-    @select(['user', 'siteSettings', 'language']) languageOb;
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
 
     public menuShown: number;
     public currentLanguage: string;
@@ -48,6 +50,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
+                private _translate: MultilingualService,
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
@@ -61,12 +64,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
         ));
 
         /* Subscribe to the language flag in redux. */
-        this.subscriptionsArray.push(this.languageOb.subscribe(
-            (language) => {
-                /* Set the current language. */
-                this.currentLanguage = language;
-            }
-        ));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((language) => this.getLanguage(language)));
     }
 
     /**
@@ -74,6 +72,11 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
      */
     ngOnInit() {
         /* Stub. */
+    }
+
+    getLanguage(language): void {
+        this.currentLanguage = language;
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -104,6 +107,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             'en-Latn',
             'fr-Latn'
         ];
+
+        this._translate.updateLanguage(lang);
 
         //save language in db
         let asyncTaskPipe = this.myUserService.setLanguage({lang: lang});

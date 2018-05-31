@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 
+import {MultilingualService} from '@setl/multilingual';
+
 @Component({
     selector: 'app-ui-layouts-dropdowns',
     templateUrl: './dropdowns.component.html',
@@ -27,7 +29,9 @@ export class UiDropdownsComponent {
     // forms
     dropdownForm: FormGroup;
 
-    constructor() {
+    constructor(
+        private _translate: MultilingualService,
+    ) {
         this.initMocks();
         this.initForms();
     }

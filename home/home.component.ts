@@ -45,8 +45,9 @@ export class HomeComponent {
     public holdingByAsset$: Observable<Array<any>>;
 
     public constructor(
-        private reportingService: ReportingService
-    ) { }
+        private reportingService: ReportingService,
+    ) {
+    }
 
     ngOnInit() {
         this.subscriptions = [
