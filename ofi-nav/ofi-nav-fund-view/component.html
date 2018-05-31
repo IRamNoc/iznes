@@ -1,171 +1,156 @@
 <div class="header-breadcrumbs" *ngIf="navFund">
     <h1>
-        <i class="fa fa-ellipsis-h"></i>
-        <span mltag="txt_netassetvalue">Net asset value</span>: {{navFund.fundShareName}}
-    </h1>
+        <i class="fa fa-ellipsis-h"></i>{{'Net asset value: @navFund.fundShareName@' | translate: {'navFund.fundShareName': navFund.fundShareName} }}
 
-    <span mltag="txt_viewandmanagenavsforashare">View and manage NAV's for a share.</span>
+    </h1>{{'View and manage NAV\'s for a share.' | translate}}
+
+
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button id="netAssetValueTab" clrTabLink>
-            <i class="fa fa-th-list"></i>
-            <span mltag="txt_view">View</span>
+            <i class="fa fa-th-list"></i>{{'View' | translate}}
+
         </button>
 
         <clr-tab-content *clrIfActive="true">
             <form *ngIf="navFund">
                 <div class="row">
                     <div class="form-group col-sm-3">
-                        <label class="control-label" for="shareName" mltag="txt_sharename">Share name</label>
+                        <label class="control-label" for="shareName">{{'Share name' | translate}}</label>
                         <input type="text" id="shareName" name="shareName" value="{{navFund.fundShareName}}" readonly>
                     </div>
 
                     <div class="form-group col-sm-3">
-                        <label class="control-label" for="isin" mltag="txt_isin">ISIN</label>
+                        <label class="control-label" for="isin">{{'ISIN' | translate}}</label>
                         <input type="text" id="isin" name="isin" value="{{navFund.isin}}" readonly>
                     </div>
 
                     <div class="form-group col-sm-5">
-                        <label class="control-label" for="amCompany" mltag="txt_assetmanagementcompany">Asset Management Company</label>
+                        <label class="control-label" for="amCompany">{{'Asset Management Company' | translate}}</label>
                         <input type="text" id="amCompany" name="amCompany" value="{{navFund.asm}}" readonly>
                     </div>
                 </div>
 
                 <div class="hr-line-dashed"></div>
-                <span class="text-badge" mltag="txt_currentnavinformation">Current NAV Information</span>
+                <span class="text-badge">{{'Current NAV Information' | translate}}</span>
 
                 <div class="row">
                     <div class="form-group col-sm-2">
-                        <label class="control-label" for="currentDate" mltag="txt_date">Date</label>
+                        <label class="control-label" for="currentDate">{{'Date' | translate}}</label>
                         <input type="text" id="currentDate" name="currentDate" value="{{currentDate}}" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">
-                        <label class="control-label" for="navCurrency" mltag="txt_navcurrency">NAV Currency</label>
+                        <label class="control-label" for="navCurrency">{{'NAV Currency' | translate}}</label>
                         <input type="text" id="navCurrency" name="navCurrency" value="{{getCurrencyString(navFund.currency)}} ({{getCurrencySymbol(navFund.currency)}})" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">
-                        <label class="control-label" for="nav" mltag="txt_nav">NAV</label>
+                        <label class="control-label" for="nav">{{'NAV' | translate}}</label>
                         <input type="text" id="nav" name="nav" value="{{ navFund.nav !== null ? navToFrontEndString(navFund.nav) : 'Pending'}}" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">
-                        <label class="control-label" for="numberofshare" mltag="txt_numberofshares">Number of Shares</label>
+                        <label class="control-label" for="numberofshare">{{'Number of Shares' | translate}}</label>
                         <input type="text" id="numberofshare" name="numberofshare" value="" readonly>
                     </div>
 
                     <div class="form-group col-sm-2">
-                        <label class="control-label" for="aum" mltag="txt_aum">AUM</label>
+                        <label class="control-label" for="aum">{{'AUM' | translate}}</label>
                         <input type="text" id="aum" name="aum" value="" readonly>
                     </div>
                 </div>
             </form>
 
             <div class="hr-line-dashed"></div>
-            <span class="text-badge" mltag="txt_navhistory">NAV History</span>
+            <span class="text-badge">{{'NAV History' | translate}}</span>
 
             <form [formGroup]="navHistoryForm">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-2">
-                            <label class="control-label" for="navDateFrom" mltag="txt_datefrom">Date From</label>
+                            <label class="control-label" for="navDateFrom">{{'Date From' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDateFrom" name="navDateFrom" placeholder="Select date"
-                                    formControlName="navDateFrom"
-                                    [dpDayPicker]="dateFromConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_selectdate">
+                                <input id="navDateFrom" name="navDateFrom" [placeholder]="_translate.translate('Select date')" formControlName="navDateFrom" [dpDayPicker]="dateFromConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-2">
-                            <label class="control-label" for="navDateTo" mltag="txt_dateto">Date To</label>
+                            <label class="control-label" for="navDateTo">{{'Date To' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="navDateTo" name="navDateTo" placeholder="Select date"
-                                    formControlName="navDateTo"
-                                    [dpDayPicker]="dateToConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_selectdate">
+                                <input id="navDateTo" name="navDateTo" [placeholder]="_translate.translate('Select date')" formControlName="navDateTo" [dpDayPicker]="dateToConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-1 text-center">
-                            <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
-                            <div><strong mltag="txt_or">- or -</strong></div>
+                            <label class="control-label">{{'&nbsp;' | translate}}</label>
+                            <div><strong>{{'- or -' | translate}}</strong></div>
                         </div>
 
                         <div class="form-group col-sm-3">
-                            <label class="control-label" for="searchDatePeriod" mltag="txt_dateperiod">Date Period</label>
-                            <ng-select id="searchDatePeriod" class="fluid-width"
-                                [items]="datePeriodItems"
-                                formControlName="datePeriod"
-                                [allowClear]="true"
-                                placeholder="Select date period"
-                                mltag="txt_selectdateperiod">
+                            <label class="control-label" for="searchDatePeriod">{{'Date Period' | translate}}</label>
+                            <ng-select id="searchDatePeriod" class="fluid-width" [items]="datePeriodItems" formControlName="datePeriod" [allowClear]="true" [placeholder]="_translate.translate('Select date period')">
                             </ng-select>
                         </div>
 
                         <div class="form-group col-sm-4 add-new-nav">
-                            <label class="control-label">&nbsp;</label>
-                            <button class="btn btn-primary" (click)="addNav()" mltag="txt_addnewnav">Add New NAV</button>
-                            <button class="btn" (click)="goToAuditTrail()" mltag="txt_navaudittrail">NAV Audit Trail</button>
+                            <label class="control-label">{{'&nbsp;' | translate}}</label>
+                            <button class="btn btn-primary" (click)="addNav()">{{'Add New NAV' | translate}}</button>
+                            <button class="btn" (click)="goToAuditTrail()">{{'NAV Audit Trail' | translate}}</button>
                         </div>
                     </div>
                 </div>
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column [clrDgField]="'navDate'" class="col-date">
-                    <span mltag="txt_navdate">NAV Date</span>
+                <clr-dg-column class="col-date">{{'NAV Date' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'navPubDate'" class="col-date">
-                    <span mltag="txt_publicationdate">Publication Date</span>
+                <clr-dg-column class="col-date">{{'Publication Date' | translate}}
+
                 </clr-dg-column>
                 <!--<clr-dg-column>-->
                 <!--<span>Use</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column [clrDgField]="'currency'" class="col-currency">
-                    <span mltag="txt_fundcurrency">NAV CCY</span>
+                <clr-dg-column class="col-currency">{{'NAV CCY' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'nav'">
-                    <span mltag="txt_nav">NAV</span>
+                <clr-dg-column>{{'NAV' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'numberOfShares'">
-                    <span mltag="txt_numberofshares">Number of Shares</span>
+                <clr-dg-column>{{'Number of Shares' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'shareAum'">
-                    <span mltag="txt_shareaum">Share AUM</span>
-                </clr-dg-column>                
+                <clr-dg-column>{{'Share AUM' | translate}}
+
+                </clr-dg-column>
                 <!--<clr-dg-column>-->
                 <!--<span>Parity</span>-->
                 <!--</clr-dg-column>-->
                 <!--<clr-dg-column>-->
                 <!--<span>Fund AUM</span>-->
                 <!--</clr-dg-column>-->
-                <clr-dg-column [clrDgField]="'coupons'">
-                    <span mltag="txt_coupons">Coupons</span>
+                <clr-dg-column>{{'Coupons' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'status'" class="col-status">
-                    <span mltag="txt_status">Status</span>
+                <clr-dg-column class="col-status">{{'Status' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="actions">
-                    <span mltag="txt_actions">Actions</span>
+                <clr-dg-column class="actions">{{'Actions' | translate}}
+
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navFundHistory; let i = index" id="{{'product-nav-history-row' + i}}">
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-date'}}" class="col-date">{{item.navDate}}</clr-dg-cell>
                     <clr-dg-cell id="{{'nav-history-row'+i+'-col-pub-date'}}" class="col-date">{{item.navPubDate}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{getCurrencyString(item.currency)}} ({{getCurrencySymbol(item.currency)}})</clr-dg-cell>
+                    <clr-dg-cell id="{{'nav-history-row'+i+'-col-currency'}}" class="col-currency">{{'@getCurrencyString(item.currency)@ (@getCurrencySymbol(item.currency)@)' | translate: {'getCurrencyString(item.currency)': getCurrencyString(item.currency),'getCurrencySymbol(item.currency)': getCurrencySymbol(item.currency)} }}</clr-dg-cell>
                     <clr-dg-cell>
                         <span [hidden]="isNavNull(item.nav)">{{navToFrontEndString(item.nav)}}</span>
-                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning" mltag="txt_pending">Pending</span>
+                        <span [hidden]="!isNavNull(item.nav)" class="label label-warning">{{'Pending' | translate}}</span>
                     </clr-dg-cell>
                     <clr-dg-cell>
                     </clr-dg-cell>
@@ -176,24 +161,24 @@
                     <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span class="label label-success" mltag="txt_validated">Validated</span>
+                                <span class="label label-success">{{'Validated' | translate}}</span>
                             </span>
                             <span *ngSwitchCase="1">
-                                <span class="label label-warning" mltag="txt_estimated">Estimated</span>
+                                <span class="label label-warning">{{'Estimated' | translate}}</span>
                             </span>
 
                             <span *ngSwitchCase="2">
-                                <span class="label label-warning" mltag="txt_technical">Technical</span>
+                                <span class="label label-warning">{{'Technical' | translate}}</span>
                             </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
                             <button id="{{'nav-history-row'+i+'-btn-edit'}}" (click)="editNav(item)" class="btn btn-success btn-sm">
-                                <i class="fa fa-edit"></i> <span mltag="txt_editnav">Edit NAV</span>
+                                <i class="fa fa-edit"></i> {{'Edit NAV' | translate}}
                             </button>
                             <button id="{{'nav-history-row'+i+'-cancel-edit'}}" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
-                                <i class="fa fa-remove"></i> <span mltag="txt_deletenav">Delete NAV</span>
+                                <i class="fa fa-remove"></i> {{'Delete NAV' | translate}}
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -208,11 +193,11 @@
             <form>
                 <div class="row">
                     <div class="form-block form-group col-sm-6">
-                        <a href="/#/product-module/net-asset-value" class="btn btn-secondary" mltag="txt_close">Close</a>
+                        <a href="/#/product-module/net-asset-value" class="btn btn-secondary">{{'Close' | translate}}</a>
                     </div>
 
                     <div class="col-sm-3 offset-sm-3 export-nav text-right">
-                        <button class="btn btn-primary" (click)="exportCSV()" mltag="txt_exportlistascsv">Export List as CSV</button>
+                        <button class="btn btn-primary" (click)="exportCSV()">{{'Export List as CSV' | translate}}</button>
                     </div>
                 </div>
             </form>

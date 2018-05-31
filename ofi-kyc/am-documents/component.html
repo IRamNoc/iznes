@@ -1,11 +1,11 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-align-left"></i> <span mltag="txt_onboardingmanagement">On-boarding Management</span></h1>
+    <h1><i class="fa fa-align-left"></i> {{'On-boarding Management' | translate}}</h1>
 </div>
 
 <!-- Main content. -->
 <div class="wrapper wrapper-content text-margin">
-    <p><span mltag="txt_heresalistofallclientskycorgan8b15e8832c">Here's a list of all clients' KYC, organised by status</span>:</p>
+    <p>{{'Here\'s a list of all clients\' KYC, organised by status:' | translate}}</p>
 </div>
 
 <div class="well" *ngFor="let panel of panelDefs">
@@ -13,7 +13,7 @@
     <div class="row panel-header">
         <div class="col-xs-6">
             <a id="{{panel.id + '-Expandable-KYC'}}" href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i> <h2>{{panel.title}} ({{(panel.data).length}})</h2>
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i><h2>{{'@panel.title@ (@(panel.data).length@)' | translate: {'panel.title': panel.title,'(panel.data).length': (panel.data).length} }}</h2>
             </a>
         </div>
     </div>
@@ -25,8 +25,8 @@
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
                 <clr-dg-row *clrDgItems="let row of panel.data">
                     <clr-dg-cell id="{{panel.id + '-' + dataCol.id + '-KYC-' + row.id}}" *ngFor="let dataCol of panel.columns">
-                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">
-                            {{row[dataCol.dataSource]}}
+                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">{{row[dataCol.dataSource]}}
+
                         </a>
                         <span *ngIf="!dataCol.hasLink">{{row[dataCol.dataSource]}}
                             <ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>

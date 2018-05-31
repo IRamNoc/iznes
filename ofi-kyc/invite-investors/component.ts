@@ -3,12 +3,19 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angul
 import {Location} from '@angular/common';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {immutableHelper} from '@setl/utils';
-import {select} from '@angular-redux/store';
+import {select, NgRedux} from '@angular-redux/store';
 import {Subscription} from 'rxjs/Subscription';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ToasterService} from 'angular2-toaster';
+import * as moment from 'moment';
+
+import {investorInvitation} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import {MultilingualService} from '@setl/multilingual';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 
 @Component({
     selector: 'app-invite-investors',
@@ -24,7 +31,38 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         {id: 'en', text: 'English'},
         // {id: 'tch', text: '繁體中文'},
         // {id: 'sch', text: '中文'}
-        ];
+    ];
+
+    enums = {
+        status: {
+            [-2]: {
+                label: 'Rejected',
+                type: 'danger',
+            },
+            [-1]: {
+                label: 'Accepted',
+                type: 'success',
+            },
+            [0]: {
+                label: 'Draft',
+                type: 'info',
+            },
+            [1]: {
+                label: 'Waiting For Approval',
+                type: 'warning',
+            },
+            [2]: {
+                label: 'Awaiting Informations',
+                type: 'warning',
+            },
+        }
+    }
+
+    inviteItems: investorInvitation[];
+
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['ofi', 'ofiKyc', 'investorInvitations', 'data']) investorInvitations$;
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -32,7 +70,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _location: Location,
                 private alertsService: AlertsService,
                 private _ofiKycService: OfiKycService,
-                private _toasterService: ToasterService) {
+                private _toasterService: ToasterService,
+                private _translate: MultilingualService,
+                private redux: NgRedux<any>) {
 
         this.invitationForm = this._fb.group({
             investors: this._fb.array([
@@ -76,10 +116,31 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this._ofiKycService.getInvitationsByUserAmCompany();
 
+        this.investorInvitations$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d: investorInvitation[]) => {
+                this.inviteItems = d;
+                if (this.inviteItems.length) {
+                    this.inviteItems = this.inviteItems.map((invite) => {
+                        const tokenUsedAt = invite.tokenUsedAt ? `Account created - ${moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss')}` : `Account not created`;
+                        const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
+                        return {
+                            ...invite,
+                            inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
+                            tokenUsedAt,
+                            kycStarted,
+                        };
+                    })
+                }
+                this.markForCheck();
+            });
     }
 
     ngOnDestroy(): void {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
         /* Detach the change detector on destroy. */
         this._changeDetectorRef.detach();
     }

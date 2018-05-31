@@ -332,8 +332,6 @@ export class OfiFundShareService {
     }
 
     private convertNumbersForBlockchain(request: any): void {
-        request.minInitialRedemptionInAmount = this.numberService.toBlockchain(request.minInitialRedemptionInAmount);
-        request.minInitialRedemptionInShare = this.numberService.toBlockchain(request.minInitialRedemptionInShare);
         request.minInitialSubscriptionInAmount = this.numberService.toBlockchain(request.minInitialSubscriptionInAmount);
         request.minInitialSubscriptionInShare = this.numberService.toBlockchain(request.minInitialSubscriptionInShare);
         request.minSubsequentRedemptionInAmount = this.numberService.toBlockchain(request.minSubsequentRedemptionInAmount);

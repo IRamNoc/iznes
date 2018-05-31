@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>
-        <span><span mltag="txt_clientfolderfundssharesaccessa1c2656ad8e">Client folder - Funds' Shares access authorisation</span>:</span> - {{investorData['companyName']}}
+    <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>{{'Client folder - Funds\' Shares access authorisation: - @investorData[\'companyName\']@' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}
+
     </h1>
 </div>
 
@@ -9,53 +9,53 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-user"></i> <span mltag="txt_fundssharesaccessauthorisation55e4a20f24">Funds' Shares Access Authorisation</span>
+                <i class="fa fa-user"></i> {{'Funds\' Shares Access Authorisation' | translate}}
             </button>
             <clr-tab-content>
                 <div class="panel-body">
 
-                    <div>Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
-                    <h2>Professional Investor Details</h2>
+                    <div>{{'Please select the funds you would like @investorData[\'companyName\']@ to have access to:' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}</div>
+                    <h2>{{'Professional Investor Details' | translate}}</h2>
                     <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="companyName">Company name:</label>
+                                <label for="companyName">{{'Company name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="companyName" class="form-control" formControlName="companyName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="clientReference">Client reference:</label>
+                                <label for="clientReference">{{'Client reference:' | translate}}</label>
                                 <div>
                                     <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="firstName">First name:</label>
+                                <label for="firstName">{{'First name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="firstName" class="form-control" formControlName="firstName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="lastName">Last name:</label>
+                                <label for="lastName">{{'Last name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="lastName" class="form-control" formControlName="lastName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="email">Email address:</label>
+                                <label for="email">{{'Email address:' | translate}}</label>
                                 <div>
                                     <input type="text" id="email" class="form-control" formControlName="email">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="phoneNumber">Phone number:</label>
+                                <label for="phoneNumber">{{'Phone number:' | translate}}</label>
                                 <div>
                                     <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="approvalDateRequest">Date of approval request:</label>
+                                <label for="approvalDateRequest">{{'Date of approval request:' | translate}}</label>
                                 <div>
                                     <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
                                 </div>
@@ -63,23 +63,23 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
-                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">Save</button>
+                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{'Save' | translate}}</button>
                             </div>
                         </div>
                     </form>
                     <div class="hr-line-dashed"></div>
 
                     <div>
-                        <h2 mltag="txt_fundsshareaccessauthorisation">Funds' Share Access Authorisation</h2>
+                        <h2>{{'Funds\' Share Access Authorisation' | translate}}</h2>
 
                         <form>
-                            <div class="row form-group">We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
+                            <div class="row form-group">{{'We @this.amCompany@, wish to authorize @investorData[\'companyName\']@ to be able to invest in the following funds\' shares:' | translate: {'this.amCompany': this.amCompany,'investorData[\'companyName\']': investorData['companyName']} }}
 
                                 <clr-datagrid #myDataGrid class="fund-table">
-                                    <clr-dg-column mltag="txt_fundname">Fund Name</clr-dg-column>
-                                    <clr-dg-column mltag="txt_sharename">Share Name</clr-dg-column>
-                                    <clr-dg-column mltag="txt_isin">ISIN</clr-dg-column>
-                                    <clr-dg-column mltag="txt_grantaccesstothisshare">Grant Access to this Share?</clr-dg-column>
+                                    <clr-dg-column>{{'Fund Name' | translate}}</clr-dg-column>
+                                    <clr-dg-column>{{'Share Name' | translate}}</clr-dg-column>
+                                    <clr-dg-column>{{'ISIN' | translate}}</clr-dg-column>
+                                    <clr-dg-column>{{'Grant Access to this Share?' | translate}}</clr-dg-column>
                                     <clr-dg-row *clrDgItems="let row of tableData">
                                         <clr-dg-cell>{{row['fundName']}}
 
@@ -93,11 +93,7 @@
                                         <clr-dg-cell>
                                             <div class="switch-container">
                                                 <label class="switch">
-                                                    <input type="checkbox"
-                                                           id="{{row['isin'] + '-access'}}"
-                                                           [checked]="access[row['id']]['access']"
-                                                           (click)="onClickAccess(access[row['id']])"
-                                                    >
+                                                    <input type="checkbox" id="{{row['isin'] + '-access'}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
@@ -106,8 +102,8 @@
                                 </clr-datagrid>
                             </div>
                             <div class="row">
-                                <button class="btn btn-info" routerLink="/kyc-am-documents" mltag="txt_back">Back</button>
-                                <button class="btn btn-primary" (click)="displayModal();" mltag="txt_validate">Validate</button>
+                                <button class="btn btn-info" routerLink="/kyc-am-documents">{{'Back' | translate}}</button>
+                                <button class="btn btn-primary" (click)="displayModal();">{{'Validate' | translate}}</button>
                             </div>
                         </form>
                     </div>

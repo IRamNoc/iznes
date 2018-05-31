@@ -16,6 +16,8 @@ import {
     setRequestedFundShareAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
 
+import {MultilingualService} from '@setl/multilingual';
+
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-product-fund-share-audit',
@@ -45,6 +47,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private service: FundShareAuditService,
+        private _translate: MultilingualService,
         private ofiFundShareService: OfiFundShareService) { }
         
     ngOnInit() {

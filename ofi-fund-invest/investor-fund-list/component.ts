@@ -18,6 +18,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
 import {OrderType} from '../../ofi-orders/order.model';
 import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/combineLatest';
 import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
 import {ReportingService} from '@setl/core-balances/reporting.service';
 import has = Reflect.has;
@@ -79,8 +80,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             }
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
-        this.subscriptionsArray.push(this.fundShareAccessListOb.subscribe(
-            (fundShareAccessList) => this.updateFundList(fundShareAccessList)));
+
+        const combinedFundShare$ = this.fundShareAccessListOb.combineLatest(this.balancesOb);
+        this.subscriptionsArray.push(combinedFundShare$.subscribe(
+            ([fundShareAccessList, balances]) => this.updateFundList(fundShareAccessList, balances)));
 
         this.subscriptionsArray.push(this._route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
@@ -89,6 +92,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.balancesOb.subscribe((walletsbalances) => {
             this.walletBalances = walletsbalances[this.connectedWalletId];
+            console.log('===', this.walletBalances);
             this._changeDetectorRef.markForCheck();
         }));
 
@@ -146,7 +150,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      * Update fund list
      * @param fundList
      */
-    updateFundList(fundList): void {
+    updateFundList(fundList, balances): void {
         this.fundListObj = fundList;
 
         const fundListImu = fromJS(fundList);
@@ -159,10 +163,18 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const nextRedCutOff = new CalendarHelper(item.toJS()).getNextCutoffDate(OrderType.Redemption);
 
             const nav = this._numberConverterService.toFrontEnd(item.get('price', 0));
+            const isin = item.get('isin', '');
+            const shareName = item.get('fundShareName', '');
+
+            let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
+            if(!isNaN(position)){
+                position = this._numberConverterService.toFrontEnd(position);
+            }
+
             result.push({
                 id: item.get('fundShareID', 0),
-                isin: item.get('isin', ''),
-                shareName: item.get('fundShareName', ''),
+                isin: isin,
+                shareName: shareName,
                 assetClass: item.get('shareClassCode', ''),
                 assetManager: item.get('companyName', ''),
                 srri: item.getIn(['keyFactOptionalData', 'srri'], ''),
@@ -171,7 +183,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 nav,
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
                 nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
-                hasNoNav: Boolean(nav <= 0)
+                hasNoNav: Boolean(nav <= 0),
+                position : position
             });
 
             return result;
@@ -235,7 +248,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 colorClass: 'text-green-title'
             },
             fundShareId: fundShareId,
-            fundShareData: fundShareData,
+                fundShareData: fundShareData,
             actionType: 'subscribe',
             active: false,
             formData: {}

@@ -20,6 +20,7 @@ import {
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav-add',
@@ -65,6 +66,7 @@ export class OfiManageNavPopup implements OnInit {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
+                private _translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe
                 ) {
 
@@ -139,9 +141,9 @@ export class OfiManageNavPopup implements OnInit {
 
         this.navForm = new FormGroup({
             nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
-            price: new FormControl(this.navLatest, Validators.compose([
+            price: new FormControl(this.navLatest || 0, Validators.compose([
                 Validators.required,
-                Validators.pattern(/^[0-9]+([.,][0-9]{1,2})?$/)
+                numberValidator,
             ])),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
@@ -170,12 +172,6 @@ export class OfiManageNavPopup implements OnInit {
         });
 
         this.changeDetectorRef.markForCheck();
-    }
-
-    transformAndValidate(control){
-        let value = this.moneyValuePipe.transform(control.value, 2);
-        control.patchValue(value);
-        control.updateValueAndValidity();
     }
 
     private checkIfNavExceedsThreshold(nav: number): void {
@@ -345,4 +341,23 @@ export class OfiManageNavPopup implements OnInit {
         this.redux.dispatch(clearRequestedNavFundHistory());
     }
 
+}
+
+/**
+ * Number validator:
+ *
+ * - Takes a `Control` as it's input and
+ * - Returns a `StringMap<string, boolean>` where the key is "error code" and
+ *   the value is `true` if it fails
+ */
+function numberValidator(control: FormControl): { [s: string]: boolean } {
+    // todo
+    // check if number is none zero as well
+
+    const testString = control.value.toString();
+    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+
+    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
+        return {invalidNumber: true};
+    }
 }

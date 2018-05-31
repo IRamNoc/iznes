@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-orders"><i class="fa fa-list-ul"></i>
-        <span mltag="txt_orderbook">Order Book</span> - {{ connectedWalletName }}</h1>
+    <h1 id="manage-orders"><i class="fa fa-list-ul"></i>{{'Order Book - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
+    </h1>
 </div>
 
 <!--<button type="button" class="btn btn-info m-1" (click)="placeFakeOrder()">Place a fake Order</button>-->
@@ -39,46 +39,36 @@
                 <div class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
-                            <label>
-                                <span mltag="txt_isin">ISIN</span>
+                            <label>{{'ISIN' | translate}}
+
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text" placeholder="ISIN" style="width: 100% !important" mltag="txt_isin">
+                                <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text" [placeholder]="_translate.translate('ISIN')" style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
-                            <label>
-                                <span mltag="txt_sharename">Share Name</span>
+                            <label>{{'Share Name' | translate}}
+
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" placeholder="Share Name" style="width: 100% !important" mltag="txt_sharename">
+                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" [placeholder]="_translate.translate('Share Name')" style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
-                            <label>
-                                <span mltag="txt_status">Status</span>
+                            <label>{{'Status' | translate}}
+
                             </label>
                             <div>
-                                <ng-select id="orders-search-status" class="fluid-width"
-                                           [active]="[orderStatuses[0]]"
-                                           [items]="orderStatuses"
-                                           [formControl]="tabsControl[0].searchForm.controls['status']"
-                                           placeholder="Status"
-                                           mltag="txt_status">
+                                <ng-select id="orders-search-status" class="fluid-width" [active]="[orderStatuses[0]]" [items]="orderStatuses" [formControl]="tabsControl[0].searchForm.controls['status']" [placeholder]="_translate.translate('Status')">
                                 </ng-select>
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
-                            <label>
-                                <span mltag="txt_ordertype">Order type</span>
+                            <label>{{'Order type' | translate}}
+
                             </label>
                             <div>
-                                <ng-select id="orders-search-type" class="fluid-width"
-                                           [active]="[orderTypes[0]]"
-                                           [items]="orderTypes"
-                                           [formControl]="tabsControl[0].searchForm.controls['type']"
-                                           placeholder="Type"
-                                           mltag="txt_type">
+                                <ng-select id="orders-search-type" class="fluid-width" [active]="[orderTypes[0]]" [items]="orderTypes" [formControl]="tabsControl[0].searchForm.controls['type']" [placeholder]="_translate.translate('Type')">
                                 </ng-select>
                             </div>
                         </div>
@@ -92,7 +82,7 @@
                                         <a href="#" (click)="isOptionalFilters = !isOptionalFilters; $event.preventDefault();">
 
                                             <i class="fa fa-chevron-right" [class.rotate]="isOptionalFilters"></i>
-                                            <h2 mltag="txt_optionalfilters">Optional filters</h2>
+                                            <h2>{{'Optional filters' | translate}}</h2>
                                         </a>
                                     </div>
                                 </div>
@@ -100,37 +90,31 @@
                                 <!-- Panel body -->
                                 <div class="row panel-body" [class.hidden]="!isOptionalFilters">
                                     <div class="form-group col-sm-4">
-                                        <label>
-                                            <span mltag="txt_datetype">Date Type</span>
+                                        <label>{{'Date Type' | translate}}
+
                                         </label>
                                         <div>
-                                            <ng-select id="orders-search-date-types" class="fluid-width"
-                                                       [active]="[dateTypes[2]]"
-                                                       [items]="dateTypes"
-                                                       [allowClear]="false"
-                                                       [formControl]="tabsControl[0].searchForm.controls['dateType']"
-                                                       placeholder="Type"
-                                                       mltag="txt_type">
+                                            <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false" [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="_translate.translate('Type')">
                                             </ng-select>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label for="orders-search-from-date">
-                                            <span mltag="txt_fromdate">From date</span>
+                                        <label for="orders-search-from-date">{{'From date' | translate}}
+
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
 
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-4">
-                                        <label for="orders-search-to-date">
-                                            <span mltag="txt_todate">To date</span>
+                                        <label for="orders-search-to-date">{{'To date' | translate}}
+
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
 
                                         </div>
                                     </div>
@@ -140,11 +124,10 @@
                         <div class="form-group col-sm-3">
                             <div class="text-right">
                                 <button class="btn" (click)="clearForm()">
-                                    <i class="fa fa-trash"></i> <span>Clear filters</span>
+                                    <i class="fa fa-trash"></i> {{'Clear filters' | translate}}
                                 </button>
                                 <button class="btn btn-success nomargin" (click)="exportOrders()">
-                                    <i class="fa fa-download"></i>
-                                    <span mltag="txt_exportorderscsv">Export Orders CSV</span>
+                                    <i class="fa fa-download"></i> {{'Export Orders CSV' | translate}}
                                 </button>
                             </div>
                         </div>
@@ -153,88 +136,88 @@
 
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_orderref">Order Ref</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Ref' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_ordertype">Order Type</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Type' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_investor">Investor</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Investor' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_isin">ISIN</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISIN' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_sharename">Share Name</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Name' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Asset Management Company' | translate}}
+
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_sharecurrency">Share Currency</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Currency' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_quantity">Quantity</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Quantity' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_latestnav">Latest NAV</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Latest NAV' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'grossAmount'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Trade Amount</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Trade Amount' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'feesAmount'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_feesamount">Fees Amount</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Fees Amount' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderDate'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_orderdate">Order Date</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Date' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'cutOffDate'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_cutoffdate">Cut-off Date</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Cut-off Date' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_navdate">NAV Date</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'NAV Date' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_settlementdate">Settlement Date</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Settlement Date' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderStatus'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_status">Status</span> <span class="column-label"></span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Status' | translate}}
+                            <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column><span class="text-center" mltag="txt_actions">Actions</span></clr-dg-column>
+                    <clr-dg-column><span class="text-center">{{'Actions' | translate}}</span></clr-dg-column>
 
                     <clr-dg-row *ngFor="let order of ordersList; let i = index">
                         <clr-dg-cell>
@@ -245,12 +228,12 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- orderType -->
-                            <span *ngIf="order.orderType == 3" mltag="txt_subscription">Subscription</span>
-                            <span *ngIf="order.orderType == 4" mltag="txt_redemption">Redemption</span>
+                            <span *ngIf="order.orderType == 3">{{'Subscription' | translate}}</span>
+                            <span *ngIf="order.orderType == 4">{{'Redemption' | translate}}</span>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- investor {{showInvestor(order)}} -->
-                            {{order.investorCompanyName}}
+                            <!-- investor {{showInvestor(order)}} -->{{order.investorCompanyName}}
+
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -302,26 +285,26 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <span *ngIf="order.orderStatus == 1" class="label label-warning">
-                                <span mltag="txt_initiated">Initiated</span>
+                            <span *ngIf="order.orderStatus == 1" class="label label-warning">{{'Initiated' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == 2" class="label label-info">
-                                <span mltag="txt_waitingnav">Waiting NAV</span>
+                            <span *ngIf="order.orderStatus == 2" class="label label-info">{{'Waiting NAV' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == 3" class="label label-info">
-                                <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                            <span *ngIf="order.orderStatus == 3" class="label label-info">{{'Waiting settlement' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == false" class="label label-error">
-                                <span mltag="txt_unpaid">Unpaid</span>
+                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == false" class="label label-error">{{'Unpaid' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">
-                                <span mltag="txt_waitingsettlement">Waiting settlement</span>
+                            <span *ngIf="order.orderStatus == 4 && order.orderUnpaid == true" class="label label-info">{{'Waiting settlement' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == -1" class="label label-success">
-                                <span mltag="txt_settled">Settled</span>
+                            <span *ngIf="order.orderStatus == -1" class="label label-success">{{'Settled' | translate}}
+
                             </span>
-                            <span *ngIf="order.orderStatus == 0" class="label label-error">
-                                <span mltag="txt_cancelled">Cancelled</span>
+                            <span *ngIf="order.orderStatus == 0" class="label label-error">{{'Cancelled' | translate}}
+
                             </span>
                         </clr-dg-cell>
                         <clr-dg-cell [ngSwitch]="order.orderStatus">
@@ -331,12 +314,12 @@
                             <!--<button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>-->
                             <!--</ng-template>-->
 
-                            <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" mltag="txt_cancel" *ngSwitchCase="1">Cancel</button>
+                            <button type="button" class="btn btn-sm btn-danger" (click)="cancelOrder(i)" *ngSwitchCase="1">{{'Cancel' | translate}}</button>
                             <ng-container *ngSwitchCase="4">
-                                <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled mltag="txt_cancel">Cancel</button>
-                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" mltag="txt_settle" (click)="settleOrder(i)">Settle</button>
+                                <button type="button" *ngIf="isInvestorUser" class="btn btn-sm btn-info" disabled>{{'Cancel' | translate}}</button>
+                                <button type="button" *ngIf="!isInvestorUser" class="btn btn-sm btn-primary" (click)="settleOrder(i)">{{'Settle' | translate}}</button>
                             </ng-container>
-                            <button type="button" class="btn btn-sm btn-info" disabled mltag="txt_cancel" *ngSwitchDefault>Cancel</button>
+                            <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault>{{'Cancel' | translate}}</button>
 
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
@@ -345,41 +328,41 @@
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td><b mltag="txt_assetmanagementcompany">Asset Management Company</b>
-                                                </td>
-                                                <td>{{order.amCompanyName}}</td>
-                                            </tr>
+                                                <tr>
+                                                    <td><b>{{'Asset Management Company' | translate}}</b>
+                                                    </td>
+                                                    <td>{{order.amCompanyName}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td><b mltag="txt_latestnav">Latest NAV</b></td>
-                                                <td>{{order.price | moneyValue: 4}}</td>
-                                            </tr>
+                                                <tr>
+                                                    <td><b>{{'Latest NAV' | translate}}</b></td>
+                                                    <td>{{order.price | moneyValue: 4}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td><b mltag="txt_feesamount">Fees Amount</b></td>
-                                                <td>{{order.fee | moneyValue: 4}}</td>
-                                            </tr>
+                                                <tr>
+                                                    <td><b>{{'Fees Amount' | translate}}</b></td>
+                                                    <td>{{order.fee | moneyValue: 4}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <table>
                                             <tbody>
-                                            <tr>
-                                                <td><b mltag="txt_navdate">NAV Date</b></td>
-                                                <td>{{getOnlyDate(order.valuationDate)}}</td>
-                                            </tr>
+                                                <tr>
+                                                    <td><b>{{'NAV Date' | translate}}</b></td>
+                                                    <td>{{getOnlyDate(order.valuationDate)}}</td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -391,8 +374,8 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>
-                                <span><span mltag="txt_showhidefields">Show/hide fields</span>:</span>
+                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}
+
                             </clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
@@ -426,7 +409,7 @@
                     <div class="col-xs-6">
                         <a href="#" (click)="clientInformation  = !clientInformation ; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="clientInformation "></i>
-                            <h2 mltag="txt_clientinformation">Client Information</h2>
+                            <h2>{{'Client Information' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -435,16 +418,16 @@
                 <div class="panel-body" [class.hidden]="!clientInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_companyname">Company name</span>
+                            <label>{{'Company name' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.investorCompanyName}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_investor">Investor</span>
+                            <label>{{'Investor' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{showInvestor(orderData)}}</span>
@@ -457,7 +440,7 @@
                             <div class="col-xs-6">
                                 <a href="#" (click)="clientDetailsInformation  = !clientDetailsInformation ; $event.preventDefault();">
                                     <i class="fa fa-chevron-right" [class.rotate]="clientDetailsInformation "></i>
-                                    <h2 mltag="txt_details">Details</h2>
+                                    <h2>{{'Details' | translate}}</h2>
                                 </a>
                             </div>
                         </div>
@@ -467,16 +450,16 @@
                             <div class="form-group col-sm-12">
                                 <div class="row mb-1">
                                     <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_firstname">First name</span>
+                                        <label>{{'First name' | translate}}
+
                                         </label>
                                         <div>
                                             <span class="readonly-field">{{orderData.firstName}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_lastname">Last name</span>
+                                        <label>{{'Last name' | translate}}
+
                                         </label>
                                         <div>
                                             <span class="readonly-field">{{orderData.lastName}}</span>
@@ -495,7 +478,7 @@
                     <div class="col-xs-6">
                         <a href="#" (click)="generalInvestmentInformation  = !generalInvestmentInformation ; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="generalInvestmentInformation "></i>
-                            <h2 mltag="txt_generalinvestmentinformation">General Investment Information</h2>
+                            <h2>{{'General Investment Information' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -504,8 +487,8 @@
                 <div class="panel-body" [class.hidden]="!generalInvestmentInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
+                            <label>{{'Asset Management Company' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.amCompanyName}}</span>
@@ -514,11 +497,11 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_entryexitfees">(Entry/Exit) fees</span>
+                            <label>{{'(Entry/Exit) fees' | translate}}
+
                             </label>
                             <div>
-                                <span class="readonly-field">{{orderData.feePercentage | moneyValue : 2}}%</span>
+                                <span class="readonly-field">{{orderData.feePercentage | moneyValue : 2}}{{'%' | translate}}</span>
                             </div>
                         </div>
                     </div>
@@ -528,7 +511,7 @@
                             <div class="col-xs-6">
                                 <a href="#" (click)="mifid  = !mifid ; $event.preventDefault();">
                                     <i class="fa fa-chevron-right" [class.rotate]="mifid "></i>
-                                    <h2 mltag="txt_mifidiicostscharges">MIFID II Costs & Charges</h2>
+                                    <h2>{{'MIFID II Costs & Charges' | translate}}</h2>
                                 </a>
                             </div>
                         </div>
@@ -538,47 +521,47 @@
                             <div class="form-group col-sm-12">
                                 <div class="row mb-1">
                                     <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_oneoffcharges">One-off charges</span>
+                                        <label>{{'One-off charges' | translate}}
+
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{fundShare.mifiidChargesOneOff | moneyValue: 2 }} %</span>
+                                            <span class="readonly-field">{{fundShare.mifiidChargesOneOff | moneyValue: 2 }} {{'%' | translate}}</span>
                                         </div>
                                     </div>
                                     <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_ongoingcharges">Ongoing charges</span>
+                                        <label>{{'Ongoing charges' | translate}}
+
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{fundShare.mifiidChargesOngoing | moneyValue: 2 }} %</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row mb-1">
-                                    <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_costsrelatedtotransactionsinitd82e13ff15">Costs related to transactions initiated</span>
-                                        </label>
-                                        <div>
-                                            <span class="readonly-field">{{fundShare.mifiidTransactionCosts | moneyValue: 2 }} %</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_chargesrelatedtoancillaryservi31f9ae522d">Charges related to ancillary services</span>
-                                        </label>
-                                        <div>
-                                            <span class="readonly-field">{{fundShare.mifiidServicesCosts | moneyValue: 2 }} %</span>
+                                            <span class="readonly-field">{{fundShare.mifiidChargesOngoing | moneyValue: 2 }} {{'%' | translate}}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row mb-1">
                                     <div class="form-group col-sm-6">
-                                        <label>
-                                            <span mltag="txt_incidentalcosts">Incidental costs</span>
+                                        <label>{{'Costs related to transactions initiated' | translate}}
+
                                         </label>
                                         <div>
-                                            <span class="readonly-field">{{fundShare.mifiidIncidentalCosts | moneyValue: 2}} %</span>
+                                            <span class="readonly-field">{{fundShare.mifiidTransactionCosts | moneyValue: 2 }} {{'%' | translate}}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-6">
+                                        <label>{{'Charges related to ancillary services' | translate}}
+
+                                        </label>
+                                        <div>
+                                            <span class="readonly-field">{{fundShare.mifiidServicesCosts | moneyValue: 2 }} {{'%' | translate}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-1">
+                                    <div class="form-group col-sm-6">
+                                        <label>{{'Incidental costs' | translate}}
+
+                                        </label>
+                                        <div>
+                                            <span class="readonly-field">{{fundShare.mifiidIncidentalCosts | moneyValue: 2}} {{'%' | translate}}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -594,7 +577,7 @@
                     <div class="col-xs-6">
                         <a href="#" (click)="productInformation  = !productInformation ; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="productInformation "></i>
-                            <h2 mltag="txt_productinformation">Product Information</h2>
+                            <h2>{{'Product Information' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -603,16 +586,16 @@
                 <div class="panel-body" [class.hidden]="!productInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_isin">ISIN</span>
+                            <label>{{'ISIN' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.isin}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_sharename">Share Name</span>
+                            <label>{{'Share Name' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.fundShareName}}</span>
@@ -621,16 +604,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_assetclass">Asset Class</span>
+                            <label>{{'Asset Class' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{fundShare.shareClassCode}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_srri">SRRI</span>
+                            <label>{{'SRRI' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{fundShare.keyFactOptionalData.srri}}</span>
@@ -639,16 +622,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_sri">SRI</span>
+                            <label>{{'SRI' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{fundShare.keyFactOptionalData.sri}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_sharecurrency">Share Currency</span>
+                            <label>{{'Share Currency' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{showCurrency(orderData)}}</span>
@@ -657,16 +640,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_nav">NAV</span>
+                            <label>{{'NAV' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.price | moneyValue: 4}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_navdate">NAV Date</span>
+                            <label>{{'NAV Date' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{getOnlyDate(orderData.valuationDate)}}</span>
@@ -675,8 +658,8 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_decimalization">Decimalization</span>
+                            <label>{{'Decimalization' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{fundShare.decimalization}}</span>
@@ -691,7 +674,7 @@
                     <div class="col-xs-6">
                         <a href="#" (click)="datesInformation  = !datesInformation ; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="datesInformation "></i>
-                            <h2 mltag="txt_datesinformation">Dates Information</h2>
+                            <h2>{{'Dates Information' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -700,16 +683,16 @@
                 <div class="panel-body" [class.hidden]="!datesInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_orderdate">Order Date</span>
+                            <label>{{'Order Date' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{ getDateTime(orderData.orderDate)}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_cutoffdate">Cut-off Date</span>
+                            <label>{{'Cut-off Date' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{getDateTime(orderData.cutoffDate)}} </span>
@@ -718,16 +701,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_navdate">NAV Date</span>
+                            <label>{{'NAV Date' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{ getOnlyDate(orderData.valuationDate)}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_settlementdate">Settlement Date</span>
+                            <label>{{'Settlement Date' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{getOnlyDate(orderData.settlementDate)}}</span>
@@ -742,7 +725,7 @@
                     <div class="col-xs-6">
                         <a href="#" (click)="orderInformation  = !orderInformation ; $event.preventDefault();">
                             <i class="fa fa-chevron-right" [class.rotate]="orderInformation "></i>
-                            <h2 mltag="txt_orderinformation">Order Information</h2>
+                            <h2>{{'Order Information' | translate}}</h2>
                         </a>
                     </div>
                 </div>
@@ -751,16 +734,16 @@
                 <div class="panel-body" [class.hidden]="!orderInformation">
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_orderreference">Order Reference</span>
+                            <label>{{'Order Reference' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{ getOrderRef(orderData.orderID)}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_ordertype">Order Type</span>
+                            <label>{{'Order Type' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{showTypes(orderData)}}</span>
@@ -769,16 +752,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_quantity">Quantity</span>
+                            <label>{{'Quantity' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.quantity | moneyValue: 5}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_amount">Amount</span>
+                            <label>{{'Amount' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.amount | moneyValue: 4}}</span>
@@ -787,16 +770,16 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_feeamount">Fee Amount</span>
+                            <label>{{'Fee Amount' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.fee | moneyValue: 4}}</span>
                             </div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label>
-                                <span mltag="txt_netamount">Net Amount</span>
+                            <label>{{'Net Amount' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.amountWithCost | moneyValue: 4 }}</span>
@@ -805,8 +788,8 @@
                     </div>
                     <div class="row mb-1">
                         <div class="form-group col-sm-12">
-                            <label>
-                                <span mltag="txt_comment">Comment</span>
+                            <label>{{'Comment' | translate}}
+
                             </label>
                             <div>
                                 <span class="readonly-field">{{orderData.orderNote}}</span>
@@ -821,7 +804,7 @@
 
 <!-- Asset manager order cancel modal -->
 <clr-modal [(clrModalOpen)]="isAmConfirmModalDisplayed" [clrModalClosable]="false">
-    <h3 class="modal-title">{{amConfirmModal.title}}</h3>
+    <h3 class="modal-title">{{amConfirmModal.title | translate}}</h3>
 
     <div class="modal-body">
         <div class="jaspero__dialog-icon">
@@ -833,7 +816,7 @@
             </div>
         </div>
 
-        <div class="jaspero__dialog-content" [innerHtml]="amConfirmModal.body"></div>
+        <div class="jaspero__dialog-content" [innerHtml]="_translate.translate(amConfirmModal.body)"></div>
 
         <form>
             <section class="form-block">
@@ -841,7 +824,7 @@
                     <div class="form-group col-sm-12">
                         <textarea id="cancelModalTextArea"
                                   style="min-height: 80px"
-                                  placeholder="{{amConfirmModal.placeholder}}"
+                                  [placeholder]="_translate.translate(amConfirmModal.placeholder)"
                                   [(ngModel)]="cancelModalMessage"
                                   [ngModelOptions]="{standalone: true}">
                         </textarea>
@@ -856,14 +839,14 @@
                 type="button"
                 class="btn btn-outline"
                 (click)="handleAmModalBackButtonClick()">
-            Back
+            {{'Back' | translate}}
         </button>
 
         <button id='cancelModalConfirmButton'
                 type="button"
                 class="btn btn-danger cancel-modal-confirm-btn"
                 (click)="handleAmModalConfirmButtonClick(amConfirmModal.targetedOrder)">
-            Confirm
+            {{'Confirm' | translate}}
         </button>
     </div>
 </clr-modal>

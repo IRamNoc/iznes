@@ -49,6 +49,9 @@ import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
+import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
+
+import {MultilingualService} from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -65,9 +68,6 @@ interface SelectedItem {
 
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
-
-    unknownValue = '???';
-
     searchForm: FormGroup;
 
     /* Datagrid server driven */
@@ -139,23 +139,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         { id: 'settlementDate', text: 'Settlement Date' },
     ];
 
-    currencyList = [
-        { id: 0, text: 'EUR' },
-        { id: 1, text: 'USD' },
-        { id: 2, text: 'GBP' },
-        { id: 3, text: 'CHF' },
-        { id: 4, text: 'JPY' },
-        { id: 5, text: 'AUD' },
-        { id: 6, text: 'NOK' },
-        { id: 7, text: 'SEK' },
-        { id: 8, text: 'ZAR' },
-        { id: 9, text: 'RUB' },
-        { id: 10, text: 'SGD' },
-        { id: 11, text: 'AED' },
-        { id: 12, text: 'CNY' },
-        { id: 13, text: 'PLN' },
-    ];
-
+    currencyList = [];
     appConfig: AppConfig;
 
     @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
@@ -196,6 +180,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
+    /* Private Properties. */
+    private subscriptions: Array<any> = [];
+    private reduxUnsubscribe: Unsubscribe;
+    private myDetails: any = {};
+    private myWallets: any = [];
+    private walletDirectory: any = [];
+    private connectedWalletId: any = 0;
+    private requestedSearch: any;
+    private sort: { name: string, direction: string } = { name: 'dateEntered', direction: 'ASC' }; // default search.
     private defaultFilters = {
         sharename: [
             '',
@@ -228,15 +222,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         fromDate: '',
         toDate: '',
     };
-    /* Private Properties. */
-    private subscriptions: Array<any> = [];
-    private reduxUnsubscribe: Unsubscribe;
-    private myDetails: any = {};
-    private myWallets: any = [];
-    private walletDirectory: any = [];
-    private connectedWalletId: any = 0;
-    private requestedSearch: any;
-    private sort: { name: string, direction: string } = { name: 'dateEntered', direction: 'ASC' }; // default search.
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ngRedux: NgRedux<any>,
@@ -258,11 +243,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
                 private messagesService: MessagesService,
-                private toasterService: ToasterService,) {
+                private toasterService: ToasterService,
+                private _translate: MultilingualService,
+                private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
+        this.ofiCurrenciesService.getCurrencyList();
     }
 
     get isInvestorUser() {
@@ -371,6 +359,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptions.push(combinedSubscription);
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
 
         this.detectChanges();
     }
@@ -428,6 +417,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 ...this.configDate,
                 locale: this.language.substr(0, 2),
             };
+        }
+    }
+
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
+            console.log('currencies: ', this.currencyList);
         }
     }
 
@@ -707,6 +703,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 body: `Are you sure you want to cancel the ${message}?`,
                 placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
             };
+            
         }
     }
 
@@ -1136,6 +1133,32 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
+     * Update Wallet Connection
+     * ------------------------
+     * Updates the view depending on what wallet we're using.
+     *
+     * @return {void}
+     */
+    private updateWalletConnection(): void {
+        /* Loop over my wallets, and find the one we're connected to. */
+        let wallet;
+        if (this.connectedWalletId && Object.keys(this.myWallets).length) {
+            for (wallet in this.myWallets) {
+                if (wallet.toString() === this.connectedWalletId.toString()) {
+                    this.connectedWalletName = this.myWallets[wallet].walletName;
+                    break;
+                }
+            }
+        }
+
+        /* Detect changes. */
+        this.detectChanges();
+
+        /* Return. */
+        return;
+    }
+
+    /**
      * Reset values of asset manager confirm modal
      */
     resetAmConfirmModalValue() {
@@ -1179,31 +1202,5 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             .replace('hH', numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
             .replace('mm', numPad(dateObj.getMinutes()))
             .replace('ss', numPad(dateObj.getSeconds()));
-    }
-
-    /**
-     * Update Wallet Connection
-     * ------------------------
-     * Updates the view depending on what wallet we're using.
-     *
-     * @return {void}
-     */
-    private updateWalletConnection(): void {
-        /* Loop over my wallets, and find the one we're connected to. */
-        let wallet;
-        if (this.connectedWalletId && Object.keys(this.myWallets).length) {
-            for (wallet in this.myWallets) {
-                if (wallet.toString() === this.connectedWalletId.toString()) {
-                    this.connectedWalletName = this.myWallets[wallet].walletName;
-                    break;
-                }
-            }
-        }
-
-        /* Detect changes. */
-        this.detectChanges();
-
-        /* Return. */
-        return;
     }
 }

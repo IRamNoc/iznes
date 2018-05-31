@@ -26,8 +26,6 @@ export interface OfiFundShare {
     minSubsequentSubscriptionInAmount: number;
     redemptionCategory: number;
     redemptionCurrency: number;
-    minInitialRedemptionInShare: number;
-    minInitialRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     subscriptionTradeCyclePeriod: number;

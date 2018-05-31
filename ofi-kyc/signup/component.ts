@@ -33,6 +33,7 @@ import {ConfirmationService} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {setLanguage} from '@setl/core-store';
+import {MultilingualService} from '@setl/multilingual';
 
 /* Dectorator. */
 @Component({
@@ -99,6 +100,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
                 private _ofiKycService: OfiKycService,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language
@@ -197,7 +199,14 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                     this.signupForm.controls['username'].patchValue(data[1].Data[0].email);
                 }).catch((e)=>{
                     //handle error.
-                    this.signupForm.controls['username'].patchValue('');
+                    this._ofiKycService.isInvitationTokenUsed(this.invitationToken)
+                        .then((d) => {
+                            this.toasterService.pop('warning', 'This link is no longer valid. Please try to login again.');
+                            this.router.navigate(['login', { email: _.get(d, [1, 'Data', 0, 'email'])}]);
+                        })
+                        .catch(() => {
+                            this.signupForm.controls['username'].patchValue('');
+                        });
                 });
             }
 
