@@ -201,8 +201,6 @@ export class OrderHelper {
     minInitialSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
-    minInitialRedemptionInAmount: number;
-    minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
 
@@ -231,10 +229,6 @@ export class OrderHelper {
             [OrderType.Subscription]: {
                 [OrderByType.Amount]: (this.fundShare.minInitialSubscriptionInAmount || 0),
                 [OrderByType.Quantity]: (this.fundShare.minInitialSubscriptionInShare || 0),
-            },
-            [OrderType.Redemption]: {
-                [OrderByType.Amount]: (this.fundShare.minInitialRedemptionInAmount || 0),
-                [OrderByType.Quantity]: (this.fundShare.minInitialRedemptionInShare || 0),
             }
         }[this.orderType] || {})[this.orderBy] || 0;
     }

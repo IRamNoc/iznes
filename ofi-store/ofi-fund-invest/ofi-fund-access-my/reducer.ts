@@ -95,8 +95,6 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             minSubsequentSubscriptionInAmount: convertBlockchainNumber(item.get('minSubsequentSubscriptionInAmount', '')),
             redemptionCategory: item.get('redemptionCategory', 0),
             redemptionCurrency: item.get('redemptionCurrency', 0),
-            minInitialRedemptionInShare: convertBlockchainNumber(item.get('minInitialRedemptionInShare', '')),
-            minInitialRedemptionInAmount: convertBlockchainNumber(item.get('minInitialRedemptionInAmount', '')),
             minSubsequentRedemptionInShare: convertBlockchainNumber(item.get('minSubsequentRedemptionInShare', '')),
             minSubsequentRedemptionInAmount: convertBlockchainNumber(item.get('minSubsequentRedemptionInAmount', '')),
             portfolioCurrencyHedge: item.get('portfolioCurrencyHedge', 0),

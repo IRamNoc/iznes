@@ -1,13 +1,15 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
-import {DebugElement, DebugNode} from '@angular/core';
+import {DebugElement, DebugNode, Pipe, PipeTransform} from '@angular/core';
 import {OfiMyInformationsComponent, ViewMode} from './component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from '@setl/utils/index';
+import {SetlPipesModule} from '@setl/utils';
 import {NgRedux} from '@angular-redux/store';
 import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {MultilingualService} from '@setl/multilingual';
+const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
@@ -17,9 +19,13 @@ class OfiManagementCompanyServiceMock {
     }
 }
 
-const MultilingualServiceStub = {
-
-};
+// Stub for translate
+@Pipe({name: 'translate'})
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
+    }
+}
 
 describe('OfiMyInformationsComponent', () => {
 
@@ -36,15 +42,17 @@ describe('OfiMyInformationsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OfiMyInformationsComponent,
+                TranslatePipe,
             ],
             imports: [
                 ReactiveFormsModule,
                 SelectModule,
+                SetlPipesModule,
             ],
             providers: [
                 { provide: NgRedux, useValue: ngReduxSpy },
                 { provide: OfiManagementCompanyService, useClass: OfiManagementCompanyServiceMock },
-                { provide: MultilingualService, useValue: MultilingualServiceStub },
+                { provide: MultilingualService, useValue: MultilingualServiceSpy },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

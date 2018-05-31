@@ -38,8 +38,6 @@ export interface IznesShareDetail {
     minSubsequentSubscriptionInAmount: number;
     redemptionCategory: string;
     redemptionCurrency: string;
-    minInitialRedemptionInShare: number;
-    minInitialRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     portfolioCurrencyHedge: string;
