@@ -20,6 +20,7 @@ import {
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav-add',
@@ -65,6 +66,7 @@ export class OfiManageNavPopup implements OnInit {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
+                private _translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe
                 ) {
 

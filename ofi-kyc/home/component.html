@@ -1,16 +1,16 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="ofi-welcome-additionnal"><i class="fa fa-unlock"></i>Welcome to {{appConfig.platform}}</h1>
+    <h1 id="ofi-welcome-additionnal"><i class="fa fa-unlock"></i>{{'Welcome to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button clrTabLink id="button">
-            <i class="fa fa-bars"></i> <span mltag="txt_userinformations">User Informations</span>
+            <i class="fa fa-bars"></i> {{'User Informations' | translate}}
         </button>
 
         <clr-tab-content *clrIfActive>
-            <h2><span mltag="txt_pleaseprovideabitinformation">Please provide a bit information</span>:</h2>
+            <h2>{{'Please provide a bit information:' | translate}}</h2>
             <div *ngIf="!hasFilledAdditionnalInfos">
                 <app-my-informations [viewMode]="'PAGE'" [type]="userType" [userInfo]="userInfo" (onSubmit)="openMyInformationsModal($event)">
 
@@ -21,16 +21,16 @@
 
                 <!--CUSTOM TEXT MODALS-->
                 <clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="false">
-                    <h3 class="modal-title" mltag="txt_myinformation">MY INFORMATION</h3>
+                    <h3 class="modal-title">{{'MY INFORMATION' | translate}}</h3>
                     <div class="modal-body text-center">
-                        <p><span mltag="txt_thisinformationwillbesavedin">This information will be saved in</span>
-                            <b mltag="txt_profile">"Profile"</b> <span mltag="txt_abovein">(above), in</span> <b mltag="txt_myinformation">"My information"</b>
-                            <br><span mltag="txt_itislocatedatthetoprightofeach5fe9e0ad3f">It is located at the top right of each page, in the top menu bar.</span>
+                        <p>{{'This information will be saved in' | translate}}
+                            <b>{{'"Profile"' | translate}}</b> {{'(above), in' | translate}} <b>{{'"My information"' | translate}}</b>
+                            <br>{{'It is located at the top right of each page, in the top menu bar.' | translate}}
 
                         </p>
                         <br>
-                        <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">
-                            <span mltag="txt_okiunderstand">OK, I understand</span>
+                        <button id="addInfo-ok-button" class="btn btn-info" type="button" (click)="closeModal()">{{'OK, I understand' | translate}}
+
                         </button>
                         <br>
                     </div>

@@ -19,6 +19,7 @@ import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service
 import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import {OfiCurrenciesService} from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import {MultilingualService} from '@setl/multilingual';
 
 const routerSpy = jasmine.createSpyObj('Router', ['navigate']);
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
@@ -26,6 +27,7 @@ const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService'
 const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
 const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
+// const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['getTranslationByString']);
 
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
@@ -81,6 +83,10 @@ const toasterServiceMock = {
     pop: pop,
 };
 
+const MultilingualServiceStub = {
+
+};
+
 // Stub for routerLink
 @Directive({
     selector: '[routerLink]',
@@ -133,6 +139,7 @@ describe('FundComponent', () => {
                 {provide: NgRedux, useValue: ngReduxSpy},
                 {provide: ToasterService, useValue: toasterServiceMock},
                 {provide: ActivatedRoute, useValue: activatedRouteStub},
+                {provide: MultilingualService, useValue: MultilingualServiceStub},
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

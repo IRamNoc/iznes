@@ -25,6 +25,7 @@ import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-f
 import {SagaHelper, NumberConverterService, LogService, ConfirmationService} from '@setl/utils';
 import {FundComponent} from '../fund/component';
 import {validators} from "../productConfig";
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -116,6 +117,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _ofiManagementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
+        private _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
 

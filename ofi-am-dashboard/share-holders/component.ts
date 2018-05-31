@@ -15,6 +15,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {Subscription} from 'rxjs/Subscription';
 import {APP_CONFIG, AppConfig} from "@setl/utils/index";
+import {MultilingualService} from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -110,6 +111,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
                 private _fileDownloader: FileDownloader,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
         this.shareTabTitle = '';

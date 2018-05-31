@@ -1,24 +1,20 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-bars"></i> <span mltag="txt_addnewshare">Add a New Share</span></h1>
+    <h1><i class="fa fa-bars"></i> {{'Add a New Share' | translate}}</h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton"><span mltag="txt_selectfund">Share</span></button>
+        <button clrTabLink id="tabFundShareButton">{{'Share' | translate}}</button>
         <clr-tab-content class="outer">
-            <h3><span mltag="txt_pleaseenterfollowinginformatio07623519b7">Please fill out the following information to create a new Share:</span></h3>
+            <h3>{{'Please fill out the following information to create a new Share:' | translate}}</h3>
 
             <div class="row" *ngIf="newFundShareForm">
                 <div class="col-sm-6">
                     <form [formGroup]="newFundShareForm">
                         <section class="form-block">
                             <div class="form-group">
-                                <label class="control-label required-field" mltag="txt_isthissharepartofanexistingfunadd88fe222">Is this Share part of an existing Fund?</label>
-                                <ng-select id="selectFund"
-                                    [items]="fundListItems"
-                                    placeholder=""
-                                    [formControl]="newFundShareForm.controls['fund']"
-                                    [required]="true">
+                                <label class="control-label required-field">{{'Is this Share part of an existing Fund?' | translate}}</label>
+                                <ng-select id="selectFund" [items]="fundListItems" placeholder="" [formControl]="newFundShareForm.controls['fund']" [required]="true">
                                 </ng-select>
                             </div>
                         </section>
@@ -27,11 +23,11 @@
                 <div class="col-sm-6">
                     <section class="form-block">
                         <div class="form-group alt-option">
-                            <label class="control-label" mltag="txt_nbsp">&nbsp;</label>
-                            <div>
-                                <span mltag="txt_or">or</span>
-                                <a [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund" mltag="txt_addanewfund">
-                                    Add a new Fund
+                            <label class="control-label">{{'&nbsp;' | translate}}</label>
+                            <div>{{'or' | translate}}
+
+                                <a class="btn btn-default action-button add-new-fund" [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}" id="buttonAddNewFund">
+									{{'Add a new Fund' | translate}}
                                 </a>
                             </div>
                         </div>
@@ -44,13 +40,13 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col-sm-4">
-                                <label class="control-label" mltag="txt_fundlegalentity">Legal Entity Identifier (LEI)</label>
+                                <label class="control-label">{{'Legal Entity Identifier (LEI)' | translate}}</label>
                                 <input type="text" id="legalEntity" name="legalEntity" formControlName="legalEntity">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label class="control-label" mltag="txt_funddomicile">Domicile</label>
+                                <label class="control-label">{{'Domicile' | translate}}</label>
                                 <input type="text" id="domicile" name="domicile" formControlName="domicile">
                             </div>
                         </div>
@@ -61,11 +57,11 @@
                 <div class="col-sm-12">
                     <form>
                         <div class="form-group">
-                            <a href="/#/product-module/product" class="btn btn-default" id="buttonBack" mltag="txt_back">
-                                Back
+                            <a href="/#/product-module/product" class="btn btn-default" id="buttonBack">{{'Back' | translate}}
+
                             </a>
-                            <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund" (click)="selectFund()" [disabled]="!isValid()" mltag="txt_next">
-                                Next
+                            <button type="button" class="btn btn-primary action-button select-fund" id="buttonSelectFund" (click)="selectFund()" [disabled]="!isValid()">{{'Next' | translate}}
+
                             </button>
                         </div>
                     </form>

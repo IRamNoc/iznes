@@ -15,6 +15,7 @@ import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.servi
 import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import {MultilingualService} from '@setl/multilingual';
 
 interface UmbrellaList {
     [key: string]: UmbrellaFundDetail;
@@ -143,6 +144,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private changeDetectorRef : ChangeDetectorRef,
         private confirmationService : ConfirmationService,
+        private _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
 
@@ -586,6 +588,7 @@ export class FundComponent implements OnInit, OnDestroy {
                         capitalPreservationPeriod: FundComponent.getListItem(fund.capitalPreservationPeriod, this.capitalPreservationPeriodItems),
                         transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
                         centralizingAgent: FundComponent.getListItem(fund.centralizingAgent, this.centralizingAgentItems),
+                        delegatedManagementCompany: FundComponent.getListItem(fund.delegatedManagementCompany, this.managementCompanyItems),
                     });
                     this.viewMode = 'FUND';
                     return;

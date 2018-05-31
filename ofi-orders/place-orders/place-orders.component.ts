@@ -5,6 +5,7 @@ import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import {LogService} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     templateUrl: './place-orders.component.html',
@@ -55,6 +56,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
                 private kycService: OfiKycService,
                 private redux: NgRedux<any>,
                 private logService: LogService,
+                private _translate: MultilingualService,
                 private route: ActivatedRoute) {
 
         console.clear();

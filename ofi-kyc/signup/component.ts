@@ -33,6 +33,7 @@ import {ConfirmationService} from '@setl/utils';
 import {Subscription} from 'rxjs/Subscription';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {setLanguage} from '@setl/core-store';
+import {MultilingualService} from '@setl/multilingual';
 
 /* Dectorator. */
 @Component({
@@ -99,6 +100,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
                 private _ofiKycService: OfiKycService,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language
