@@ -53,7 +53,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         private myUserService: MyUserService,
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;

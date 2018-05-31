@@ -168,7 +168,7 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         private router: Router,
         private logService: LogService,
         public _numberConverterService: NumberConverterService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
     ) {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
     }

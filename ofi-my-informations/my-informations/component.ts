@@ -287,7 +287,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 private _ngRedux: NgRedux<any>,
                 private _fb: FormBuilder,
                 private mcService: OfiManagementCompanyService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
     ) {
 
         this.additionnalForm = this._fb.group({

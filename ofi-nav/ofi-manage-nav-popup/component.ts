@@ -66,7 +66,7 @@ export class OfiManageNavPopup implements OnInit {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe
                 ) {
 

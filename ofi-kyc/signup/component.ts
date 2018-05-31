@@ -100,7 +100,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                 private initialisationService: InitialisationService,
                 private toasterService: ToasterService,
                 private _ofiKycService: OfiKycService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // language

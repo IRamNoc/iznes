@@ -312,7 +312,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _toaster: ToasterService,
                 private _router: Router,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>) {
     }
 

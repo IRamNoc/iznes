@@ -237,7 +237,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;

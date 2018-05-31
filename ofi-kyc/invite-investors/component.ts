@@ -71,7 +71,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private redux: NgRedux<any>) {
 
         this.invitationForm = this._fb.group({

@@ -144,7 +144,7 @@ export class FundComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private changeDetectorRef : ChangeDetectorRef,
         private confirmationService : ConfirmationService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
 
