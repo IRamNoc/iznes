@@ -214,7 +214,7 @@ describe('SetlMessagesComponent', () => {
     });
 
     it('should be able to reset messages', () => {
-        component.resetMessages();
+        component.resetMessages(true);
         expect(component.messages).toEqual([]);
         expect(component.currentCategory).toBe(0);
         expect(component.currentPage).toBe(0);
