@@ -82,7 +82,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 private router: Router,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private _confirmationService: ConfirmationService,) {
     }
 

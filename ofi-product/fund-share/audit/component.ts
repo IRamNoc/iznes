@@ -47,7 +47,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private service: FundShareAuditService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
         private ofiFundShareService: OfiFundShareService) { }
         
     ngOnInit() {

@@ -117,7 +117,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _ofiManagementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
-        private _translate: MultilingualService,
+        public _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
 

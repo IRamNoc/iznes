@@ -56,7 +56,7 @@ export class PlaceOrdersComponent implements OnInit, OnDestroy {
                 private kycService: OfiKycService,
                 private redux: NgRedux<any>,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private route: ActivatedRoute) {
 
         console.clear();

@@ -244,7 +244,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 public _numberConverterService: NumberConverterService,
                 private messagesService: MessagesService,
                 private toasterService: ToasterService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;
@@ -703,7 +703,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 body: `Are you sure you want to cancel the ${message}?`,
                 placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
             };
-            
+
         }
     }
 
