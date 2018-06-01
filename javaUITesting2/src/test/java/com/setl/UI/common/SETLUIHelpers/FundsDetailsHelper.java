@@ -397,6 +397,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
 
         String umbFundName = driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + shareNameNo)).getText();
+        System.out.println(umbFundName);
+        System.out.println(umbFundNameExpected);
         assertTrue(umbFundName.equals(umbFundNameExpected));
 
         String leiName = driver.findElement(By.id("product-dashboard-umbrellaFundID-" + shareNameNo + "-legalEntityIdentifier")).getText();
@@ -623,7 +625,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
         assertTrue(isElementPresent(By.id("am-product-home")));
         assertTrue(driver.findElement(By.id("am-product-home")).getText().contentEquals("Shares / Funds / Umbrella funds"));
-        assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[1]/h1/span")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[4]/div[2]/div/div")).getText().contentEquals("Display only active Shares"));
         assertTrue(isElementPresent(By.id("switchActiveShares")));
         assertTrue(driver.findElement(By.id("switchActiveShares")).isEnabled());

@@ -21,12 +21,7 @@ import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationCalendar;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationCharacteristics;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationKeyFacts;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationFees;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationProfile;
-import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.shareCreationSubmit;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
@@ -76,16 +71,18 @@ public class OpenCSD4FundFlowAcceptanceTest {
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
-        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(umbFundDetails[0]);
 
-        //Navigate to fund creation and create a fund with umbFund
+        getUmbrellaTableRow(0, umbFundDetails[0], "16616758475934857531", "Management Company", "Jordan");
+
         String [] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep1(umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
-        getFundTableRow(fundCount, uFundDetails[0], "16615748475934658531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
-        String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
+        assertPopupNextFundNo("Share");
+        searchFundsTable(uFundDetails[0]);
+
+        getFundTableRow(0, uFundDetails[0], "16615748475934658531", "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
         waitForNewShareButton();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -118,13 +115,9 @@ public class OpenCSD4FundFlowAcceptanceTest {
         shareCreationProfile();
         shareCreationSubmit();
 
-        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        assertTrue(shareCountPost == shareCountPre + 1);
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
+        searchSharesTable(uShareDetails[0]);
 
-        getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
+        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
     }
 
 }

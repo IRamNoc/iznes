@@ -80,6 +80,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0], "16614748475934158531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
@@ -124,8 +125,10 @@ public class OpenCSDNAVAcceptanceTest {
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
         fillOutFundDetailsStep1(umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
@@ -155,6 +158,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
@@ -182,6 +186,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
@@ -209,6 +214,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
@@ -252,6 +258,7 @@ public class OpenCSDNAVAcceptanceTest {
         navigateToPageByID("menu-product-home");
         fillOutFundDetailsStep1("none");
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
