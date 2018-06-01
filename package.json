@@ -1,0 +1,10 @@
+{
+  "name": "tslint-config-setl",
+  "description": "A TSLint config for SETL JavaScript Style",
+  "version": "1.0",
+  "author": "SETL",
+  "dependencies": {
+    "tslint-config-airbnb": "^5.9.2"
+  },
+  "main": "tslint.js"
+}
