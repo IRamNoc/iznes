@@ -19,6 +19,7 @@ export interface Subpanel {
     columns: SubpanelColumn[];
     open: boolean;
     data: Observable<Share[] | Fund[] | UmbrellaFund[] | Awaiting[]>;
+    link?: string;
 }
 
 export interface Share {

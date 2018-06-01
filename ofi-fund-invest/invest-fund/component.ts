@@ -817,6 +817,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
+    resetForm(form) {
+        const resetList = [
+            {field: 'address', value: null},
+            {field: 'cutoffDate', value: null},
+            {field: 'valuationDate', value: null},
+            {field: 'settlementDate', value: null},
+            {field: 'quantity', value: 0},
+            {field: 'amount', value: 0},
+            {field: 'comment', value: null},
+        ];
+        Object.keys(form.controls).forEach((key) => {
+            resetList.forEach((field) => {
+                if (key === field.field) {
+                    this.form.get(key).patchValue(field.value, {emitEvent: false});
+                }
+            });
+        });
+    }
 
     findPortFolioBalance(balances) {
         const breakDown = _.get(balances, ['breakdown'], []);
