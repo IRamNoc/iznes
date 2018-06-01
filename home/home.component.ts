@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { isEmpty } from 'lodash';
 import { ReportingService } from '@setl/core-balances';
+import { MultilingualService } from '@setl/multilingual';
 
 interface Asset {
     total: number;
@@ -46,6 +47,7 @@ export class HomeComponent {
 
     public constructor(
         private reportingService: ReportingService,
+        public _translate: MultilingualService,
     ) {
     }
 
@@ -65,12 +67,12 @@ export class HomeComponent {
 
         this.transactions$ = this.reportingService.getTransactions().map(txs => txs.slice(0, 5));
         this.holdingByAsset$ = this.reportingService.getBalances()
-           .do((assets) => {
+            .do((assets) => {
                 assets.slice(0, 2).map((asset, idx) => {
                     this.assetTiles[idx] = asset;
                 });
-           })
-           .map(assets => assets.slice(0, 5));
+            })
+            .map(assets => assets.slice(0, 5));
     }
 
     ngOnDestroy() {
