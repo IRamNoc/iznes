@@ -21,9 +21,6 @@ import { MultilingualModule } from '@setl/multilingual';
 /* Components. */
 import { ProductHomeComponent } from './home/component';
 import { ProductConfigurationComponent } from './configuration/component';
-import {
-    ProductConfigurationHolidayMgmtComponent,
-} from './configuration/holiday-management/component';
 import { UmbrellaFundComponent } from './umbrella-fund/component';
 import { FundShareComponent } from './fund-share/form/component';
 import { FundShareTradeCycleComponent } from './fund-share/form/trade-cycle/component';
@@ -47,7 +44,6 @@ import productConfig from './productConfig';
     declarations: [
         ProductHomeComponent,
         ProductConfigurationComponent,
-        ProductConfigurationHolidayMgmtComponent,
         UmbrellaFundComponent,
         FundShareComponent,
         FundShareTradeCycleComponent,
@@ -58,7 +54,6 @@ import productConfig from './productConfig';
     exports: [
         ProductHomeComponent,
         ProductConfigurationComponent,
-        ProductConfigurationHolidayMgmtComponent,
         UmbrellaFundComponent,
         FundShareComponent,
         FundShareTradeCycleComponent,
