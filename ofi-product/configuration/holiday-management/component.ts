@@ -6,7 +6,7 @@ import {
 import { FormGroup, FormControl } from '@angular/forms';
 import * as moment from 'moment';
 
-import { HolidayMgmtMDateHelper } from './helpers/date';
+import { HolidayMgmtDateHelper } from './helpers/date';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -18,7 +18,7 @@ import { HolidayMgmtMDateHelper } from './helpers/date';
 export class ProductConfigurationHolidayMgmtComponent implements OnInit, OnDestroy {
     form: FormGroup;
     dateConfig;
-    selectedDates: moment.Moment[];
+    selectedDates: moment.Moment[] = [];
 
     constructor() {
         this.initForm();
@@ -33,15 +33,15 @@ export class ProductConfigurationHolidayMgmtComponent implements OnInit, OnDestr
         });
 
         this.form.controls.excludeWeekends.valueChanges.subscribe((value) => {
-            const arr = [];
-
-            this.selectedDates.forEach((date: moment.Moment, index: number) => {
-                if (date.isoWeekday() < 6) {
-                    arr.push(date);
-                }
-            });
-
-            this.selectedDates = arr;
+            if (value) {
+                this.selectedDates =
+                    HolidayMgmtDateHelper.addWeekendsToArray(this.selectedDates,
+                                                             moment(),
+                                                             moment().add(2, 'year'));
+            } else {
+                this.selectedDates =
+                    HolidayMgmtDateHelper.removeWeekendsFromArray(this.selectedDates);
+            }
         });
     }
 
@@ -51,18 +51,11 @@ export class ProductConfigurationHolidayMgmtComponent implements OnInit, OnDestr
             disableKeypress: true,
             firstDayOfWeek: 'mo',
             format: 'YYYY-MM-DD',
-            isDayDisabledCallback: (date: moment.Moment) => this.isDayDisabled(date),
             locale: null,
+            min: moment(),
+            max: moment().add(2, 'year'),
             theme: 'dp-material',
         };
-    }
-
-    private isDayDisabled(date: moment.Moment): boolean {
-        if (this.form.value.excludeWeekends === true && date.isoWeekday() > 5) {
-            return true;
-        }
-
-        return false;
     }
 
     clear(): void {
