@@ -28,6 +28,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Subscription} from 'rxjs/Subscription';
+import {MultilingualService} from '@setl/multilingual';
 
 /* Dectorator. */
 @Component({
@@ -93,6 +94,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private loginGuardService: LoginGuardService,
                 private logService: LogService,
                 private renderer: Renderer,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
