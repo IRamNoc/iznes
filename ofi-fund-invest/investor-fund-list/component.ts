@@ -92,11 +92,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.balancesOb.subscribe((walletsbalances) => {
             this.walletBalances = walletsbalances[this.connectedWalletId];
-            console.log('===', this.walletBalances);
             this._changeDetectorRef.markForCheck();
         }));
 
-        this._ngRedux.dispatch(clearRequestedFundAccessMy());
     }
 
     setInitialTabs() {
