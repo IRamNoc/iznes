@@ -66,7 +66,7 @@ public class OpenCSDNavigationAcceptanceTest {
     @Test
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         //test thread.sleep to see if not having time to connect to the wallet node is causing issues.
-        Thread.sleep(45000);
+        //Thread.sleep(45000);
         loginAndVerifySuccess("am", "alex01");
         navigateToPageByID("menu-management-company");
         verifyCorrectPage("Management Company");
@@ -91,14 +91,14 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-am-report-section");
         navigateToPageByID("holders-list");
-        verifyCorrectPage("Recordkeeping:");
+        verifyCorrectPage("Recordkeeping");
     }
 
     @Test
     public void shouldNavigateToRecordKeepingHomepage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[2]/div/a")).click();
-        verifyCorrectPage("Recordkeeping:");
+        verifyCorrectPage("Recordkeeping");
     }
 
     @Test
@@ -161,7 +161,7 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
         driver.findElement(By.id("menu-home")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1/span")).getText().equals("Home"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText().contains("Home"));
     }
     @Test
     public void shouldNavigateToHomepageFromLogo() throws IOException, InterruptedException {
@@ -169,25 +169,25 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[1]/a")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1/span")).getText().equals("Home"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText().contains("Home"));
     }
 
     @Test
     public void shouldNavigateToMessages() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div/a")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-messages/div/div[2]/h2")).getText().equals("Inbox"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[1]/a")).click();
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/setl-messages/div/div[2]/h2")).getText().contains("Inbox"));
     }
 
     @Test
     public void shouldNavigateToMyInformation() throws IOException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
-        driver.findElement(By.xpath("//*[@id=\"dropdown-user\"]")).click();
+        driver.findElement(By.id("dropdown-user")).click();
         wait.until(visibilityOfElementLocated(By.id("top-menu-my-info")));
         wait.until(elementToBeClickable(By.id("top-menu-my-info")));
         driver.findElement(By.id("top-menu-my-info")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]/span")).getText().equals("My information"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]")).getText().equals("MY INFORMATION"));
     }
 
     @Test

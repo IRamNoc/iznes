@@ -555,6 +555,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillOutFundDetailsStep1(String umbFundName) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("new-fund-btn");
+        wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
 
         driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();

@@ -89,7 +89,7 @@ const reportsCentralizationSelect = {
     label_txt: 'txt_centralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralization-select',
-    router_link: '/reports/select-centralization'
+    router_link: '/reports/select-centralization',
 };
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
@@ -190,14 +190,6 @@ const corpCouponPayment = {
     dynamic_link: '/corporate-actions/coupon-payment/[^\/]*',
 
 };
-const corpDividendDemo = {
-    label: 'Dividend demo',
-    label_txt: 'txt_Dividends',
-    icon_class: 'fa fa-briefcase',
-    element_id: 'menu-coupon',
-    router_link: '/workflow-engine/dividend',
-    dynamic_link: '/workflow-engine/dividend/[^\/]*',
-};
 const userAdminUsers = {
     label: 'Users',
     label_txt: 'txt_users',
@@ -287,6 +279,7 @@ const ofiProductHome = {
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
     router_link: '/product-module/product',
+    dynamic_link: '/product-module/product/[^\/]*',
 };
 const productsManagementCompany = {
     label: 'Management Company',
@@ -553,7 +546,6 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
-                    corpDividendDemo,
                 ],
             },
             {
@@ -582,21 +574,6 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             chainAdmin,
-            {
-                label: 'Workflow Engine',
-                label_txt: 'txt_wfe',
-                icon_class: 'fa fa-gears',
-                element_id: 'menu-workflow-engine',
-                children: [
-                    {
-                        label: 'Editor',
-                        label_txt: 'txt_editor',
-                        icon_class: 'fa fa-edit',
-                        element_id: 'workflow-editor',
-                        router_link: '/workflow-engine/editor',
-                    },
-                ],
-            },
         ],
         member_user: [
             {
