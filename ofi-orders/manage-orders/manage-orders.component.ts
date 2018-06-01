@@ -7,7 +7,7 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,13 +24,14 @@ import {
     FileDownloader,
     immutableHelper,
     LogService,
-    SagaHelper
+    SagaHelper,
 } from '@setl/utils';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
 import * as _ from 'lodash';
 import * as moment from 'moment';
+import { ToasterService } from 'angular2-toaster';
 /* Services. */
 import { WalletNodeRequestService } from '@setl/core-req-services';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
@@ -47,9 +48,10 @@ import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
 import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -61,7 +63,7 @@ interface SelectedItem {
 @Component({
     styleUrls: ['./manage-orders.component.css'],
     templateUrl: './manage-orders.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 /* Class. */
@@ -97,7 +99,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
     };
 
     /* Tabs Control array */
@@ -155,11 +157,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             sri: null,
         },
         decimalization: null,
-        shareClassCode: null
+        shareClassCode: null,
     };
     fundShareID = 0;
     fundShareListObj = {};
     userAssetList: Array<any> = [];
+    isAmConfirmModalDisplayed: boolean;
+    amConfirmModal: any = {};
+    cancelModalMessage: string;
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
@@ -237,10 +242,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private logService: LogService,
                 private _fileDownloader: FileDownloader,
                 public _numberConverterService: NumberConverterService,
+                private messagesService: MessagesService,
+                private toasterService: ToasterService,
                 public _translate: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
         this.appConfig = appConfig;
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
         this.ofiCurrenciesService.getCurrencyList();
     }
 
@@ -312,14 +321,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (tabAlreadyHere === undefined) {
                         this.tabsControl.push(
                             {
-                                'title': {
-                                    'icon': 'fa-shopping-basket',
-                                    'text': tabTitle,
+                                title: {
+                                    icon: 'fa-shopping-basket',
+                                    text: tabTitle,
                                 },
-                                'orderId': this.orderID,
-                                'active': true,
+                                orderId: this.orderID,
+                                active: true,
                                 orderData: order,
-                            }
+                            },
                         );
                     }
                     this.setTabActive(this.orderID);
@@ -333,10 +342,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        let filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
-        let combined$ = orderStream$.combineLatest(filterStream$);
+        const filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
+        const combined$ = orderStream$.combineLatest(filterStream$);
 
-        let combinedSubscription = combined$.subscribe(([requested, filters]) => {
+        const combinedSubscription = combined$.subscribe(([requested, filters]) => {
             if (_.isEmpty(filters)) {
                 if (!this.isInvestorUser) {
                     this.getAmOrdersNewOrder(requested);
@@ -357,6 +366,17 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
         this.resizeDataGrid();
+    }
+
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        // this.changeDetectorRef.detach();
+        //
+        /* Unsunscribe Observables. */
+        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+
+        this.setOrdersFilters();
+        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
     }
 
     resizeDataGrid() {
@@ -389,26 +409,20 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    getCurrencyList(data) {
-        if (data) {
-            this.currencyList = data.toJS();
-            console.log('currencies: ', this.currencyList);
+    getLanguage(language): void {
+        if (language) {
+            this.language = language;
+
+            this.configDate = {
+                ...this.configDate,
+                locale: this.language.substr(0, 2),
+            };
         }
     }
 
-    getLanguage(requested): void {
-        if (requested) {
-            switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
-            }
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
         }
     }
 
@@ -432,7 +446,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getAmOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
 
-        for (let i in this.ordersList) {
+        for (const i in this.ordersList) {
             this.ordersList[i]['orderUnpaid'] = false;
             if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
         }
@@ -469,8 +483,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (statusFound !== undefined) {
                         this.tabsControl[0].searchForm.get('status').patchValue([{
                             id: statusFound.id,
-                            text: statusFound.text
-                        }]);// emitEvent = true cause infinite loop (make a valueChange)
+                            text: statusFound.text,
+                        }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
                 } else {
                     this.tabsControl[0].searchForm.get('status').patchValue([]);
@@ -483,8 +497,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (orderTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('type').patchValue([{
                             id: orderTypeFound.id,
-                            text: orderTypeFound.text
-                        }]);// emitEvent = true cause infinite loop (make a valueChange)
+                            text: orderTypeFound.text,
+                        }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
                 } else {
                     this.tabsControl[0].searchForm.get('type').patchValue([]);
@@ -495,14 +509,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     if (dateTypeFound !== undefined) {
                         this.tabsControl[0].searchForm.get('dateType').patchValue([{
                             id: dateTypeFound.id,
-                            text: dateTypeFound.text
+                            text: dateTypeFound.text,
                         }]); // emitEvent = true cause infinite loop (make a valueChange)
                     }
                 } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
                 if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
-                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate);// emitEvent = true cause infinite loop (make a valueChange)
+                    this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
                 if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
@@ -523,15 +537,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         const haveFiltersChanged = !_.isEqual(formValue, this.defaultEmptyForm);
 
         if (haveFiltersChanged) {
-            let filters = { filters: formValue };
-            this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, 'filters': filters });
+            const filters = { filters: formValue };
+            this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: filters });
         }
     }
 
     getInvOrdersListFromRedux(list) {
         this.ordersList = this.ordersObjectToList(list);
 
-        for (let i in this.ordersList) {
+        for (const i in this.ordersList) {
             this.ordersList[i]['orderUnpaid'] = false;
             if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
         }
@@ -581,12 +595,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     price: orderFigure.price,
                     quantity: orderFigure.quantity,
                     fee: orderFigure.fee,
-                    feePercentage: orderFigure.feePercentage
-                }
+                    feePercentage: orderFigure.feePercentage,
+                },
             );
 
             return result;
-        }, []);
+        },                              []);
     }
 
     getAmOrdersNewOrder(requested): void {
@@ -645,14 +659,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Default tabs. */
         this.tabsControl = [
             {
-                'title': {
-                    'icon': 'fa fa-th-list',
-                    'text': 'List'
+                title: {
+                    icon: 'fa fa-th-list',
+                    text: 'List',
                 },
-                'orderId': -1,
-                'searchForm': this.searchForm,
-                'active': true
-            }
+                orderId: -1,
+                searchForm: this.searchForm,
+                active: true,
+            },
         ];
 
         if (openedTabs.length !== 0) {
@@ -667,7 +681,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.total = this.ordersList[0].totalResult;
             this.lastPage = Math.ceil(this.total / this.itemPerPage);
 
-
         } else {
             this.total = 0;
             this.lastPage = 0;
@@ -675,15 +688,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     cancelOrder(index) {
-        let confMessage = '';
-        if (this.ordersList[index].orderType === 3) {
-            confMessage += 'Subscription ';
+        const orderId = this.getOrderRef(this.ordersList[index].orderID);
+        const message = (this.ordersList[index].orderType === 3) ? `Subscription ${orderId}` : `Redemption ${orderId}`;
+
+        if (this.isInvestorUser) {
+            this.showConfirmationAlert(message, index);
+        } else {
+            this.isAmConfirmModalDisplayed = true;
+            this.amConfirmModal = {
+                targetedOrder: this.ordersList[index],
+                title: `Cancel - ${message}`,
+                body: `Are you sure you want to cancel the ${message}?`,
+                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
+            };
+
         }
-        if (this.ordersList[index].orderType === 4) {
-            confMessage += 'Redemption ';
-        }
-        confMessage += this.getOrderRef(this.ordersList[index].orderID);
-        this.showConfirmationAlert(confMessage, index);
     }
 
     settleOrder(index) {
@@ -707,7 +726,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want settle the ' + confMessage + '?</span>',
-            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' }
+            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.sendSettleOrderRequest(index);
@@ -734,24 +753,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-
     showConfirmationAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
             '<span>Are you sure you want cancel the ' + confMessage + '?</span>',
-            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'error' }
+            { confirmText: 'Confirm', declineText: 'Back', btnClass: 'error' },
         ).subscribe((ans) => {
             if (ans.resolved) {
-                let asyncTaskPipe;
-                if (this.isInvestorUser) {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                } else {
-                    asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
-                        orderID: this.ordersList[index].orderID,
-                    });
-                }
+                const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByInvestor({
+                    orderID: this.ordersList[index].orderID,
+                });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
@@ -762,7 +773,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     },
                     (data) => {
                         this.logService.log('Error: ', data);
-                    })
+                    }),
                 );
             }
         });
@@ -780,7 +791,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             method: methodName,
             token: this.memberSocketService.token,
             userId: this.myDetails.userId,
-            ...this.dataGridParams
+            ...this.dataGridParams,
         });
     }
 
@@ -826,7 +837,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     refresh(state: ClrDatagridStateInterface) {
-        let filters: { [prop: string]: any[] } = {};
+        const filters: { [prop: string]: any[] } = {};
         if (state.filters) {
             for (const filter of state.filters) {
                 const { property, value } = <{ property: string, value: string }>filter;
@@ -850,42 +861,42 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (state.sort) {
             switch (state.sort.by) {
-                case 'orderRef':
-                    this.dataGridParams.sortByField = 'orderId';
-                    break;
-                case 'investor':
-                    this.dataGridParams.sortByField = 'investorWalletID';
-                    break;
-                case 'orderType':
-                    this.dataGridParams.sortByField = 'orderType';
-                    break;
-                case 'isin':
-                    this.dataGridParams.sortByField = 'isin';
-                    break;
-                case 'shareName':
-                    this.dataGridParams.sortByField = 'shareName';
-                    break;
-                case 'shareCurrency':
-                    this.dataGridParams.sortByField = 'currency';
-                    break;
-                case 'quantity':
-                    this.dataGridParams.sortByField = 'quantity';
-                    break;
-                case 'grossAmount':
-                    this.dataGridParams.sortByField = 'amountWithCost';
-                    break;
-                case 'orderDate':
-                    this.dataGridParams.sortByField = 'orderDate';
-                    break;
-                case 'cutOffDate':
-                    this.dataGridParams.sortByField = 'cutoffDate';
-                    break;
-                case 'settlementDate':
-                    this.dataGridParams.sortByField = 'settlementDate';
-                    break;
-                case 'orderStatus':
-                    this.dataGridParams.sortByField = 'orderStatus';
-                    break;
+            case 'orderRef':
+                this.dataGridParams.sortByField = 'orderId';
+                break;
+            case 'investor':
+                this.dataGridParams.sortByField = 'investorWalletID';
+                break;
+            case 'orderType':
+                this.dataGridParams.sortByField = 'orderType';
+                break;
+            case 'isin':
+                this.dataGridParams.sortByField = 'isin';
+                break;
+            case 'shareName':
+                this.dataGridParams.sortByField = 'shareName';
+                break;
+            case 'shareCurrency':
+                this.dataGridParams.sortByField = 'currency';
+                break;
+            case 'quantity':
+                this.dataGridParams.sortByField = 'quantity';
+                break;
+            case 'grossAmount':
+                this.dataGridParams.sortByField = 'amountWithCost';
+                break;
+            case 'orderDate':
+                this.dataGridParams.sortByField = 'orderDate';
+                break;
+            case 'cutOffDate':
+                this.dataGridParams.sortByField = 'cutoffDate';
+                break;
+            case 'settlementDate':
+                this.dataGridParams.sortByField = 'settlementDate';
+                break;
+            case 'orderStatus':
+                this.dataGridParams.sortByField = 'orderStatus';
+                break;
             }
             this.dataGridParams.sortOrder = (!state.sort.reverse) ? 'asc' : 'desc';
         }
@@ -1007,7 +1018,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Remove the object from the tabsControl. */
         this.tabsControl = [
             ...this.tabsControl.slice(0, index),
-            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
         /* Reset tabs. */
@@ -1042,42 +1053,87 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges();
     }
 
-    /**
-     * Show Success Message
-     * ------------------
-     * Shows an success popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    handleAmModalBackButtonClick() {
+        this.resetAmConfirmModalValue();
     }
 
     /**
-     * ===============
-     * Alert Functions
-     * ===============
+     * Cancel an investor's order by an asset manager
+     *
+     * @param targetedOrder
      */
+    handleAmModalConfirmButtonClick(targetedOrder) {
+        const asyncTaskPipe = this.ofiOrdersService.requestCancelOrderByAM({
+            orderID: targetedOrder.orderID,
+        });
 
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        // this.changeDetectorRef.detach();
-        //
-        /* Unsunscribe Observables. */
-        this.subscriptions.forEach(subscription => subscription.unsubscribe());
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                this.logService.log('cancel order success', data); // success
+                this.loading = true;
+                this.getOrdersList();
+                this.sendMessageToInvestor(targetedOrder);
+                this.resetAmConfirmModalValue();
+            },
+            (data) => {
+                this.logService.log('Error: ', data);
+                this.resetAmConfirmModalValue();
+            }),
+        );
+    }
 
-        this.setOrdersFilters();
-        this.ngRedux.dispatch(ofiManageOrderActions.setAllTabs(this.tabsControl));
+    sendMessageToInvestor(targetedOrder) {
+        const orderRef = this.getOrderRef(targetedOrder.orderID);
+        const amCompanyName = targetedOrder.amCompanyName;
+        let orderType = '';
+        let subject = '';
+        let dateFormat = '';
+        const toasterMessages = {
+            success: {
+                'fr-Latn': `Le message a été envoyé avec succès à ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+                'en-Latn': `The message has been successfully sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+            fail: {
+                'fr-Latn': `L'envoi du message à ${targetedOrder.firstName} ${targetedOrder.lastName} a échoué`,
+                'en-Latn': `The message has failed to be sent to ${targetedOrder.firstName} ${targetedOrder.lastName}`,
+            },
+        };
+
+        switch (this.language) {
+        case 'fr-Latn':
+            orderType = (targetedOrder.orderType === 3) ? 'souscription' : 'rachat';
+            subject = `Annulation d'un ordre: votre ordre de ${orderType} avec la référence ${orderRef} a été annulé par ${amCompanyName}`;
+            dateFormat = 'DD/MM/YYYY HH:mm:ss';
+            break;
+
+        default:
+            orderType = (targetedOrder.orderType === 3) ? 'subscription' : 'redemption';
+            subject = `Order cancelled: your ${orderType} order ${orderRef} has been cancelled by ${amCompanyName}`;
+            dateFormat = 'YYYY-MM-DD HH:mm:ss';
+            break;
+        }
+
+        const actionConfig = new MessageCancelOrderConfig();
+        actionConfig.lang = this.language;
+        actionConfig.orderType = orderType;
+        actionConfig.orderRef = orderRef;
+        actionConfig.orderDate = moment(targetedOrder.orderDate).format(dateFormat);
+        actionConfig.amCompanyName = amCompanyName;
+        actionConfig.cancelMessage = this.cancelModalMessage;
+
+        this.messagesService.sendMessage(
+            [targetedOrder.investorWalletID],
+            subject,
+            '',
+            actionConfig,
+        ).then((result) => {
+            this.logService.log('on message success: ', result);
+            this.toasterService.pop('success', toasterMessages.success[this.language]);
+        }).catch((error) => {
+            this.logService.log('on message fail: ', error);
+            this.toasterService.pop('error', toasterMessages.fail[this.language]);
+        });
     }
 
     /**
@@ -1107,45 +1163,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * Show Error Message
-     * ------------------
-     * Shows an error popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
+     * Reset values of asset manager confirm modal
      */
-    private showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    resetAmConfirmModalValue() {
+        this.isAmConfirmModalDisplayed = false;
+        this.cancelModalMessage = '';
+        this.amConfirmModal = {};
     }
-
-    /**
-     * Show Warning Message
-     * ------------------
-     * Shows a warning popup.
-     *
-     * @param  {message} string - the string to be shown in the message.
-     * @return {void}
-     */
-    private showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
 }
