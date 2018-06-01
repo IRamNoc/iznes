@@ -13,6 +13,7 @@ import {ToasterModule, ToasterService} from 'angular2-toaster';
 
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual';
+import {SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
 
 @NgModule({
     declarations: [
@@ -26,6 +27,8 @@ import {MultilingualModule} from '@setl/multilingual';
         ReactiveFormsModule,
         ClarityModule,
         MultilingualModule,
+        SetlDirectivesModule,
+        SetlPipesModule,
         RouterModule.forChild([
             {
                 path: 'login',
