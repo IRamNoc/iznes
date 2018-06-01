@@ -1,10 +1,11 @@
 {
   "name": "tslint-config-setl",
   "description": "A TSLint config for SETL JavaScript Style",
-  "version": "1.0",
+  "version": "1.0.0",
   "author": "SETL",
   "dependencies": {
     "tslint-config-airbnb": "^5.9.2"
   },
-  "main": "tslint.js"
+  "main": "tslint.js",
+  "repository": "git@si-nexus01.dev.setl.io:common-components/tslint-config-setl.git"
 }
