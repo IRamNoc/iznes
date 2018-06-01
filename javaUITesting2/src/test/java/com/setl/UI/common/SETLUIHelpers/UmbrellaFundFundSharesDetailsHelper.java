@@ -75,7 +75,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(elementToBeClickable(By.id("couponType")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
-        assertClassRequiredIsPresent("tabKeyFactsButton");
+        //assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
         openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
         //assertHiddenAttributeIsPresent("tabKeyFactsButton");
@@ -95,12 +95,9 @@ public class UmbrellaFundFundSharesDetailsHelper {
         driver.findElement(By.id("minSubsequentSubscriptionInShare")).clear();
         driver.findElement(By.id("minSubsequentSubscriptionInShare")).sendKeys("5");
         openDropdownAndSelectOption("redemptionCategory", 1);
-        driver.findElement(By.id("minInitialRedemptionInShare")).clear();
-        driver.findElement(By.id("minInitialRedemptionInShare")).sendKeys("5");
-        assertClassRequiredIsPresent("tabCharacteristicsButton");
         driver.findElement(By.id("minSubsequentRedemptionInShare")).clear();
         driver.findElement(By.id("minSubsequentRedemptionInShare")).sendKeys("5");
-        assertHiddenAttributeIsPresent("tabCharacteristicsButton");
+        openDropdownAndSelectOption("redemptionCategory", 1);
 
     }
 
@@ -130,10 +127,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
         openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
-        assertClassRequiredIsPresent("tabCalendarButton");
         driver.findElement(By.id("subscriptionRedemptionCalendar")).clear();
         driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
-        assertHiddenAttributeIsPresent("tabCalendarButton");
 
     }
 
@@ -156,10 +151,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
         driver.findElement(By.id("mifiidTransactionCosts")).sendKeys("1");
         driver.findElement(By.id("mifiidServicesCosts")).clear();
         driver.findElement(By.id("mifiidServicesCosts")).sendKeys("1");
-        assertClassRequiredIsPresent("tabFeesButton");
         driver.findElement(By.id("mifiidIncidentalCosts")).clear();
         driver.findElement(By.id("mifiidIncidentalCosts")).sendKeys("1");
-        assertHiddenAttributeIsPresent("tabFeesButton");
 
     }
 
@@ -169,9 +162,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
         assertTrue(driver.findElement(By.id("toggleProfileMandatory")).isDisplayed());
-        assertClassRequiredIsPresent("tabProfileButton");
         openDropdownAndSelectOption("investorProfile", 1);
-        assertHiddenAttributeIsPresent("tabProfileButton");
 
     }
 
@@ -192,4 +183,53 @@ public class UmbrellaFundFundSharesDetailsHelper {
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
     }
 
+    public static void assertPopupNextFundYes(String fundType) {
+        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
+        assertTrue(test.equals("Do you want to create a  " + fundType + "?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+    }
+
+    public static void assertPopupNextFundNo(String fundType) {
+        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
+        assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
+        waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+    }
+
+    public static void searchUmbrellaTable(String fundName) {
+        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(fundName);
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button"));
+    }
+
+    public static void searchFundsTable(String fundName) {
+        WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(fundName);
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+    }
+
+    public static void searchSharesTable(String shareName) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(shareName);
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
+    }
 }

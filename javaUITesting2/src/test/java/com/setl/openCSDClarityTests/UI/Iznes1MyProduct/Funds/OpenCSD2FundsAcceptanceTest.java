@@ -24,6 +24,9 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.submitUmbrella
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.assertPopupNextFundNo;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchFundsTable;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchSharesTable;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -62,52 +65,37 @@ public class OpenCSD2FundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException, SQLException {
 
-        //Login and navigate to Product Module
-
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-
-        //Create umbrella fund for later use
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934858531");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
-
-        //Store title number count for Funds
+        assertPopupNextFundNo("Fund");
 
         String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-        System.out.println(fundCount + " funds are displayed in the funds table");
-
-        //Navigate to fund creation and create a fund with umbFund
 
         String [] uFundDetails = generateRandomFundsDetails();
 
         fillOutFundDetailsStep1(umbFundDetails[0]);
         fillOutFundDetailsStep2(uFundDetails[0], "16616758475934858531");
 
-        //Assert fund table displays the information for the fund created previously, including umbFund
-
-        getFundTableRow(fundCount, uFundDetails[0], "16616758475934858531", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
-
-        //Navigate to the fund previously created
-
-        driver.findElement(By.id("product-dashboard-link-fundID-" + fundCount)).click();
+        assertPopupNextFundNo("Share");
+        searchFundsTable(uFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], "16616758475934858531", "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
 
-        //Update all fund information with random chars at the end
-
         String [] updateChars = generateRandomDetails();
-
         driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
         driver.findElement(By.id("legalEntityIdentifier")).clear();
         driver.findElement(By.id("legalEntityIdentifier")).sendKeys("92345678901234567890");
-
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[2]/span/a")).click();
 
         searchAndSelectFundDropdown("domicile", "Albania");
@@ -121,14 +109,12 @@ public class OpenCSD2FundsAcceptanceTest {
         scrollElementIntoViewById("fund-submitfund-btn");
         wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
         wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-
         driver.findElement(By.id("fund-submitfund-btn")).click();
-
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
-
+        searchFundsTable(uFundDetails[0]);
 
         //Assert that table displays the fund details with random chars at the end.
-        getFundTableRow(fundCount, uFundDetails[0] + updateChars[0], "92345678901234567890", "USD US Dollar", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0] + updateChars[0], "92345678901234567890", "USD", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
         validateDatabaseFundExists(0, uFundDetails[0]);
         validateDatabaseFundExists(1, uFundDetails[0] + updateChars[0]);
 
@@ -154,6 +140,8 @@ public class OpenCSD2FundsAcceptanceTest {
         String[] uFundDetails = generateRandomFundsDetails();
         fillOutFundDetailsStep2(uFundDetails[0], "16615748475934858531");
 
+        assertPopupNextFundNo("Share");
+
         try {
 
             scrollElementIntoViewByClassName("toast-title");
@@ -163,7 +151,9 @@ public class OpenCSD2FundsAcceptanceTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
-        getFundTableRow(fundCount, uFundDetails[0], "16615748475934858531", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+
+        searchFundsTable(uFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], "16615748475934858531", "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
         validateDatabaseFundExists(1, uFundDetails[0]);
     }
 
@@ -230,6 +220,7 @@ public class OpenCSD2FundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857451");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-fund-btn")));
@@ -257,6 +248,7 @@ public class OpenCSD2FundsAcceptanceTest {
         fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", "16616758475934859999", "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
 
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-fund-btn")));
@@ -438,6 +430,8 @@ public class OpenCSD2FundsAcceptanceTest {
 
             String[] uFundDetails = generateRandomFundsDetails();
             fillOutFundDetailsStep2(uFundDetails[0], "16616748475934858531");
+            assertPopupNextFundNo("Share");
+            searchFundsTable(uFundDetails[0]);
 
             try {
 
@@ -448,7 +442,7 @@ public class OpenCSD2FundsAcceptanceTest {
             } catch (Exception e) {
                 fail(e.getMessage());
             }
-            getFundTableRow(fundCount, uFundDetails[0], "16616748475934858531", "EUR Euro", "Management Company", "Afghanistan", "Contractual Fund", "");
+            getFundTableRow(0, uFundDetails[0], "16616748475934858531", "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
 
 
         }

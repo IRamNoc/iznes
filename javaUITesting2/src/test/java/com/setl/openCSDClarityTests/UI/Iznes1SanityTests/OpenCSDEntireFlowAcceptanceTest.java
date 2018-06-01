@@ -83,6 +83,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857598");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
 
         String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
         int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
