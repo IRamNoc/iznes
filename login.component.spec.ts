@@ -1,4 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {Pipe, PipeTransform} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
 import {ToasterModule, ToasterService} from 'angular2-toaster';
@@ -38,6 +39,9 @@ import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {LoginGuardService} from './login-guard.service';
 
+import {MultilingualService} from '@setl/multilingual';
+const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
+
 const environment = {
     logoID: '',
     logoUrl: '',
@@ -52,6 +56,14 @@ const ActivatedRouteStub = {
         },
     },
 };
+
+// Stub for translate
+@Pipe({name: 'translate'})
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
+    }
+}
 
 describe('SetlLoginComComponent', () => {
     let component: SetlLoginComponent;
@@ -70,7 +82,10 @@ describe('SetlLoginComComponent', () => {
                 CoreTestUtilModule,
                 ClarityModule,
             ],
-            declarations: [SetlLoginComponent],
+            declarations: [
+                SetlLoginComponent,
+                TranslatePipe,
+            ],
             providers: [
                 {provide: MyUserService, useValue: myUserServiceMock},
                 {provide: MemberSocketService, useValue: memberSocketService},
@@ -85,6 +100,7 @@ describe('SetlLoginComComponent', () => {
                 {provide: AlertsService, useValue: alertServiceMock},
                 {provide: Router, useValue: RouterMock},
                 {provide: ActivatedRoute, useValue: ActivatedRouteStub},
+                {provide: MultilingualService, useValue: MultilingualServiceSpy},
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
