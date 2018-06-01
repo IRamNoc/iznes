@@ -110,9 +110,9 @@
         "resolve-url-loader": "^2.2.1",
         "ts-node": "~3.0.4",
         "tslint": "~5.3.2",
+        "tslint-config-setl": "git+ssh://git@si-nexus01.dev.setl.io:common-components/tslint-config-setl.git",
         "typescript": "2.4.2",
         "yargs": "^11.0.0",
-        "tslint-config-airbnb": "^5.8.0",
         "yarn": "^1.4.0"
     }
 }
