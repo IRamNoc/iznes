@@ -168,7 +168,7 @@ class RouterLinkDirectiveStub {
     }
 }
 
-xdescribe('FundComponent', () => {
+describe('FundComponent', () => {
 
     let comp: FundComponent;
     let fixture: ComponentFixture<FundComponent>;
