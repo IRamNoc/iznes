@@ -125,7 +125,7 @@
                                             <span class="ml_translated">{{'@metadata.feeLabel@ fee' | translate: {'metadata.feeLabel': metadata.feeLabel} }}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control mlp_translated" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
+                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
                                         </div>
                                     </div>
                                 </div>
@@ -157,7 +157,7 @@
                                 <span class="">{{'NAV' | translate}}</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
+                                <input type="text" class="form-control" formControlName="navStrControl"  [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
                             </div>
                         </div>
                     </div>
