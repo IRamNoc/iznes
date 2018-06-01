@@ -1,6 +1,6 @@
 import * as math from 'mathjs';
 
-import { CalendarHelper, getTimeZoneDiff } from './calendar-helper';
+import { CalendarHelper } from './calendar-helper';
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
