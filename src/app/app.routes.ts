@@ -70,7 +70,6 @@ import {
     MergerAbsorptionComponent,
     SplitComponent
 } from '@setl/core-corp-actions';
-import {WorkflowEngineDividendComponent, WorkflowEngineEditorComponent} from '@setl/core-wfe';
 /**
  * Asset serving module
  */
@@ -95,10 +94,6 @@ import {
 import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
 /** Connection module */
 import {ConnectionComponent} from '@setl/core-connections/connections/component';
-/**
- * T2S Module.
- */
-import {T2sMessagesComponent} from '@setl/core-t2s';
 import {SetlMessagesComponent} from '@setl/core-messages';
 import {OfiWaitingApprovalComponent} from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 
@@ -576,33 +571,6 @@ export const ROUTES: Routes = [
                         path: 'centralization-history/:tabid',
                         canActivate: [LoginGuardService],
                         component: OfiCentralizationHistoryComponent
-                    }
-                ]
-            },
-            {
-                path: 'workflow-engine',
-                canActivate: [LoginGuardService],
-                children: [
-                    {
-                        path: 'dividend',
-                        canActivate: [LoginGuardService],
-                        component: WorkflowEngineDividendComponent
-                    },
-                    {
-                        path: 'editor',
-                        canActivate: [LoginGuardService],
-                        component: WorkflowEngineEditorComponent
-                    }
-                ]
-            },
-            {
-                path: 't2s',
-                canActivate: [LoginGuardService],
-                children: [
-                    {
-                        path: 'messages',
-                        canActivate: [LoginGuardService],
-                        component: T2sMessagesComponent
                     }
                 ]
             },
