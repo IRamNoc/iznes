@@ -94,7 +94,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private loginGuardService: LoginGuardService,
                 private logService: LogService,
                 private renderer: Renderer,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
