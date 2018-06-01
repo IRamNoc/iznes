@@ -36,7 +36,6 @@ import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
-import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
     selector: 'app-invest-fund',
