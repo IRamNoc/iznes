@@ -36,6 +36,7 @@ import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
+import {forEach} from "@angular/router/src/utils/collection";
 
 @Component({
     selector: 'app-invest-fund',
@@ -817,6 +818,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
+    resetForm(form) {
+        const resetList = [
+            {field: 'address', value: null},
+            {field: 'cutoffDate', value: null},
+            {field: 'valuationDate', value: null},
+            {field: 'settlementDate', value: null},
+            {field: 'quantity', value: 0},
+            {field: 'amount', value: 0},
+            {field: 'comment', value: null},
+        ];
+        Object.keys(form.controls).forEach((key) => {
+            resetList.forEach((field) => {
+                if (key === field.field) {
+                    this.form.get(key).patchValue(field.value, {emitEvent: false});
+                }
+            });
+        });
+    }
 
     findPortFolioBalance(balances) {
         const breakDown = _.get(balances, ['breakdown'], []);
