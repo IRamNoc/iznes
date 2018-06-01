@@ -25,5 +25,8 @@ module.exports = {
             true,
             120
         ],
+        "object-shorthand-properties-first": [
+            false
+        ]
     }
 };
