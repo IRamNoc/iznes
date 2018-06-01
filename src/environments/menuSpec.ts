@@ -89,7 +89,7 @@ const reportsCentralizationSelect = {
     label_txt: 'txt_centralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralization-select',
-    router_link: '/reports/select-centralization'
+    router_link: '/reports/select-centralization',
 };
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
@@ -189,14 +189,6 @@ const corpCouponPayment = {
     router_link: '/corporate-actions/coupon-payment/0',
     dynamic_link: '/corporate-actions/coupon-payment/[^\/]*',
 
-};
-const corpDividendDemo = {
-    label: 'Dividend demo',
-    label_txt: 'txt_Dividends',
-    icon_class: 'fa fa-briefcase',
-    element_id: 'menu-coupon',
-    router_link: '/workflow-engine/dividend',
-    dynamic_link: '/workflow-engine/dividend/[^\/]*',
 };
 const userAdminUsers = {
     label: 'Users',
@@ -554,7 +546,6 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
-                    corpDividendDemo,
                 ],
             },
             {
@@ -583,21 +574,6 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             chainAdmin,
-            {
-                label: 'Workflow Engine',
-                label_txt: 'txt_wfe',
-                icon_class: 'fa fa-gears',
-                element_id: 'menu-workflow-engine',
-                children: [
-                    {
-                        label: 'Editor',
-                        label_txt: 'txt_editor',
-                        icon_class: 'fa fa-edit',
-                        element_id: 'workflow-editor',
-                        router_link: '/workflow-engine/editor',
-                    },
-                ],
-            },
         ],
         member_user: [
             {
