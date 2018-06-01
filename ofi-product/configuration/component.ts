@@ -11,9 +11,15 @@ import {
 })
 
 export class ProductConfigurationComponent implements OnInit, OnDestroy {
+    dates: () => string[];
+
     constructor() {}
 
     ngOnInit() {}
+
+    getDates(dates: () => string[]): void {
+        this.dates = dates;
+    }
 
     ngOnDestroy() {}
 }
