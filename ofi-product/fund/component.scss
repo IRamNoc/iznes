@@ -36,6 +36,19 @@
             margin-left: 24px;
             width: initial;
         }
+        .lei {
+            align-self: flex-start;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            label.switch:first-child {
+                margin: 4px !important;
+                width: 15%;
+            }
+            div:last-child {
+                width: 85%;
+            }
+        }
     }
 
     .checkbox label:first-child {
