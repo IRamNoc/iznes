@@ -156,8 +156,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.getMailCounts,
             this.getMessageList
         ]).subscribe((subs) => {
-            this.mailCounts = subs[0];
-            this.messagesList(subs[1]);
+                this.mailCounts = subs[0];
+                this.messagesList(subs[1]);
         });
 
         this.messageComposeForm = new FormGroup({
@@ -406,9 +406,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param index
      * @param {boolean} composeSelected
      */
-    showCategory(index, composeSelected = false, page = 0) {
-        this.messageView = false;
-        this.resetMessages();
+    showCategory(index, composeSelected = false, page = 0, reset = true) {
+        if(reset){
+            this.messageView = false;
+        }
+        this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
         this.composeSelected = composeSelected;
@@ -427,10 +429,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             this.requestMailboxByCategory(type, page);
 
-            this.currentMessage = {
-                id: 0,
-                mailid: 0
-            };
+            if(reset){
+                this.currentMessage = {
+                    id: 0,
+                    mailid: 0
+                };
+            }
         }
         this.categories = categories;
         this.changeDetectorRef.markForCheck();
@@ -465,15 +469,17 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         });
     }
 
-    resetMessages() {
+    resetMessages(reset) {
         this.messages = [];
         // Default current category
         this.currentCategory = 0;
         this.currentPage = 0;
         // Default current message
-        this.currentMessage = {
-            id: 0
-        };
+        if(reset){
+            this.currentMessage = {
+                id: 0
+            };
+        }
     }
 
     public sendMessage() {
@@ -511,7 +517,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.ngRedux.dispatch(setRequestedMailList());
             // Set the state flag to true. so we do not request it again.
             if (!this.composeSelected) {
-                this.showCategory(this.currentCategory, false);
+                this.showCategory(this.currentCategory, false, 0, false);
             }
         }
     }
