@@ -23,12 +23,10 @@
         <div class="col-xs-12">
             <clr-datagrid #myDataGrid>
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
-                <clr-dg-row *clrDgItems="let row of panel.data">
-                    <clr-dg-cell id="{{panel.id + '-' + dataCol.id + '-KYC-' + row.id}}" *ngFor="let dataCol of panel.columns">
-                        <a *ngIf="dataCol.hasLink" [routerLink]="buildLink(dataCol, row)">{{row[dataCol.dataSource]}}
+                <clr-dg-row *clrDgItems="let row of panel.data" clrDgRowClickable>
+                    <clr-dg-cell id="{{panel.id + '-' + dataCol.id + '-KYC-' + row.id}}" *ngFor="let dataCol of panel.columns" (click)="buildLink(dataCol, row, $event)">
+                        <span>{{row[dataCol.dataSource]}}
 
-                        </a>
-                        <span *ngIf="!dataCol.hasLink">{{row[dataCol.dataSource]}}
                             <ng-container *ngIf="dataCol.dataSource == 'amFirstName'"> {{row['amLastName']}}</ng-container>
                         </span>
                     </clr-dg-cell>
