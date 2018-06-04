@@ -19,7 +19,8 @@
 
         <div class="message_list_menu">
             <div class="message_list_menu_buttons">
-                <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i> <span mltag="txt_refresh">Refresh</span></button>
+                <button id="messagesRefresh" (click)="refreshMailbox()"><i class="fa fa-refresh"></i>
+                    <span mltag="txt_refresh">Refresh</span></button>
                 <button [class.disabled]="checked.length === 0" *ngIf="currentBox.type == 'inbox'" id="messagesMarkAsRead" (click)="checkedMarkAsRead()">
 
                     <i class="fa fa-eye"></i> <span mltag="txt_markasread">Mark as Read</span>
@@ -54,7 +55,6 @@
         </div>
 
         <div class="" *ngFor="let message of messages | paginate: { itemsPerPage: 15, currentPage: currentPage, totalItems:currentBoxCount }; let i = index" [ngClass]="{'message-active': i === currentMessage.id}">
-
 
 
             <!--<span class="message-preview" [innerHtml]="message.content | truncate: [160]"></span>-->
@@ -110,15 +110,11 @@
                 <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
 
 
-
-
                 </setl-message-form-action>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
                 <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
-
-
 
 
                 </setl-message-connection>
@@ -130,18 +126,23 @@
                     || currentMessage.action.type === 'kycInvestorNo'">
 
 
-
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'amCancelOrder'">
                 <setl-message-cancel-order [config]="currentMessage.action"></setl-message-cancel-order>
             </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID);">Download File</button>
+            </p>
         </div>
 
         <div class="message_view_menu">
-            <button *ngIf="currentMessage.senderId != connectedWalletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()"><i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
-            <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i> <span mltag="txt_close">Close</span></button>
+            <button *ngIf="currentMessage.senderId != connectedWalletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
+                <i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
+            <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i>
+                <span mltag="txt_close">Close</span></button>
             <button *ngIf="! ['sent', 'deleted'].includes(currentBox.type)" [title]="currentBox.type" (click)="showDeleteModal = true">
                 <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
             </button>
@@ -173,14 +174,6 @@
                         <ng-select [multiple]="true" [items]="items" [disabled]="disabled" id="messagesRecipients" [formControl]="messageComposeForm.controls['recipients']" (data)="refreshValue($event)" (selected)="selected($event)" (removed)="removed($event)" [captureKeys]="true" [containerWidth]="" placeholder="Select Recipients" mltag="txt_selectrecipients">
 
 
-
-
-
-
-
-
-
-
                         </ng-select>
                     </div>
                 </div>
@@ -200,18 +193,16 @@
                 <quill-editor [formControl]="messageComposeForm.controls['body']" [options]="editorOptions" (blur)="onEditorBlurred($event)" (focus)="onEditorFocused($event)" (ready)="onEditorCreated($event)" (change)="onContentChanged($event)" id="messagesBody">
 
 
-
-
-
-
                 </quill-editor>
             </div>
 
             <div class="message_view_menu">
                 <!--<button><i class="fa fa-reply"></i> Reply</button>-->
-                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i> <span mltag="txt_discard">Discard</span>
+                <button id="messagesCloseCompose" (click)="closeAndResetComposed()"><i class="fa fa-times"></i>
+                    <span mltag="txt_discard">Discard</span>
                 </button>
-                <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i> <span mltag="txt_send">Send</span></button>
+                <button class="blue" id="messagesSendMessage"><i class="fa fa-paper-plane"></i>
+                    <span mltag="txt_send">Send</span></button>
             </div>
         </form>
 
