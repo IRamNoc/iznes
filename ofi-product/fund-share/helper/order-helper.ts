@@ -844,7 +844,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -955,7 +955,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -978,7 +978,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
