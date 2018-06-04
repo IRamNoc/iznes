@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-bars"></i>{{'Share Audit Trail' | translate}}
-
+        <ng-container *ngIf="fundShare && fundShare.fundShareName"> - {{fundShare.fundShareName}}</ng-container>
     </h1>
 </div>
 
