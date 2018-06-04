@@ -131,7 +131,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService,
                 private _fileDownloader: FileDownloader,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 

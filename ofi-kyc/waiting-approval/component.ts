@@ -77,7 +77,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private _router: Router,
                 private walletsService: MyWalletsService,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private messagesService: MessagesService) {
 
         this.isRejectModalDisplayed = false;

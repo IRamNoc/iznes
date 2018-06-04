@@ -1,5 +1,5 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement, Directive, Input} from '@angular/core';
+import {DebugElement, Directive, Input, Pipe, PipeTransform} from '@angular/core';
 import {By} from '@angular/platform-browser';
 import {of} from 'rxjs/observable/of';
 
@@ -19,9 +19,15 @@ import {MultilingualService} from '@setl/multilingual';
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
 const OfiKycServiceSpy = jasmine.createSpyObj('OfiKycService', ['getInvitationsByUserAmCompany', 'sendInvestInvitations']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
-const MultilingualServiceStub = {
+const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
-};
+// Stub for translate
+@Pipe({name: 'translate'})
+export class TranslatePipe implements PipeTransform {
+    transform(value: any): any {
+        return value;
+    }
+}
 
 describe('OfiInviteInvestorsComponent', () => {
 
@@ -40,6 +46,7 @@ describe('OfiInviteInvestorsComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 OfiInviteInvestorsComponent,
+                TranslatePipe,
             ],
             imports: [
                 ReactiveFormsModule,
@@ -52,7 +59,7 @@ describe('OfiInviteInvestorsComponent', () => {
                 { provide: Location, useValue: locationSpy },
                 { provide: OfiKycService, useValue: OfiKycServiceSpy },
                 { provide: NgRedux, useValue: ngReduxSpy },
-                { provide: MultilingualService, useValue: MultilingualServiceStub },
+                { provide: MultilingualService, useValue: MultilingualServiceSpy },
             ]
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

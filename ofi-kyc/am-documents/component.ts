@@ -18,6 +18,7 @@ import {Observable} from 'rxjs/Observable';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 
 import {immutableHelper} from '@setl/utils';
+import { Router } from '@angular/router';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -43,13 +44,12 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 private _ofiKycService: OfiKycService,
                 private _ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
+                private _router: Router,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
     }
 
-
     ngOnInit() {
-
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             (requested) => this.requestKycList(requested)));
         this.subscriptions.push(this.kycListOb.subscribe(
@@ -224,15 +224,22 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
         }
     }
 
-    buildLink(column, row) {
-        let ret = row.status === 'Accepted' ? column.kycFundAccessLink : column.kycDocLink;
-        const linkKey = row.status === -1 ? 'kycFundAccessLink' : 'kycDocLink';
-        column[linkKey].match(/:\w+/g).forEach((match) => {
-            const key = match.substring(1);
-            const regex = new RegExp(match);
-            ret = ret.replace(regex, row[key]);
-        });
-        return ret;
+    buildLink(column, row, event) {
+        if (
+            !event.target.classList.contains('datagrid-expandable-caret') &&
+            !event.target.classList.contains('datagrid-expandable-caret-button') &&
+            !event.target.classList.contains('datagrid-expandable-caret-icon')
+        ) {
+            let ret = row.status === 'Accepted' ? column.kycFundAccessLink : column.kycDocLink;
+            const linkKey = row.status === -1 ? 'kycFundAccessLink' : 'kycDocLink';
+            column[linkKey].match(/:\w+/g).forEach((match) => {
+                const key = match.substring(1);
+                const regex = new RegExp(match);
+                ret = ret.replace(regex, row[key]);
+            });
+            this._router.navigateByUrl(ret);
+        }
+
     }
 
     /* On Destroy. */

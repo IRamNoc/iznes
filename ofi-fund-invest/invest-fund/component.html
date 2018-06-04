@@ -5,6 +5,7 @@
 
         <br><br>
 
+        <button type="button" class="btn resetButton" (click)="resetForm(form)">{{'Reset Order Information' | translate}}</button>
 
         <div class="well">
             <!-- Panel header -->
@@ -124,7 +125,7 @@
                                             <span class="ml_translated">{{'@metadata.feeLabel@ fee' | translate: {'metadata.feeLabel': metadata.feeLabel} }}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control mlp_translated" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
+                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="(feePercentage * 100) + '%' " [readonly]="true" appNumberFormatter [fractionSize]="2">
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +157,7 @@
                                 <span class="">{{'NAV' | translate}}</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
+                                <input type="text" class="form-control" formControlName="navStrControl"  [value]="navStr" [readonly]="true" appNumberFormatter [fractionSize]="4">
                             </div>
                         </div>
                     </div>
@@ -439,7 +440,7 @@
             </div>
 
             <!-- Panel body -->
-            <div class="panel-body" [class.hidden]="!panels[6]">
+            <div class="panel-body" [class.hidden]="!panels[6]" class="mb-1">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
@@ -452,10 +453,10 @@
                         </div>
                     </div>
                     <div class="col-sm-12">
-                        <div class="form-group">
-
+                        <div class="mb-1">
                             <span style="margin-right: 5px">{{'The lastest version of the KIID can be accessed via here' | translate}}</span>
-                            <setl-file-viewer [fileHash]="getKiidFileHash()" [viewType]="1"></setl-file-viewer>
+                            <setl-file-viewer [fileHash]="getKiidFileHash()" [viewType]="1" style="display: inline-block"></setl-file-viewer>
+                            <br>
                         </div>
                     </div>
                 </div>

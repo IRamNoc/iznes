@@ -106,7 +106,7 @@ export class OfiTaxReportComponent implements OnInit, OnDestroy {
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 

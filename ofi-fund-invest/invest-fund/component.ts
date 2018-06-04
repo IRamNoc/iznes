@@ -7,12 +7,12 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output
+    Output,
 } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 // Internal
@@ -133,6 +133,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     netAmount: FormControl;
     address: FormControl;
     disclaimer: FormControl;
+    navStrControl: FormControl;
+    feeControl: FormControl;
 
     addressSelected: any;
 
@@ -312,7 +314,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _toaster: ToasterService,
                 private _router: Router,
                 private logService: LogService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>) {
     }
 
@@ -338,6 +340,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
+        this.navStrControl = new FormControl('');
+        this.feeControl = new FormControl('');
+
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
@@ -349,7 +354,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             cutoffDate: this.cutoffDate,
             valuationDate: this.valuationDate,
             settlementDate: this.settlementDate,
-            disclaimer: this.disclaimer
+            disclaimer: this.disclaimer,
+            navStrControl: this.navStrControl,
+            feeControl: this.feeControl,
         });
 
         // this.setInitialFormValue();
@@ -817,6 +824,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
+    resetForm(form) {
+        const resetList = [
+            {field: 'address', value: null},
+            {field: 'cutoffDate', value: null},
+            {field: 'valuationDate', value: null},
+            {field: 'settlementDate', value: null},
+            {field: 'quantity', value: 0},
+            {field: 'amount', value: 0},
+            {field: 'comment', value: null},
+        ];
+        Object.keys(form.controls).forEach((key) => {
+            resetList.forEach((field) => {
+                if (key === field.field) {
+                    this.form.get(key).patchValue(field.value, {emitEvent: false});
+                }
+            });
+        });
+    }
 
     findPortFolioBalance(balances) {
         const breakDown = _.get(balances, ['breakdown'], []);

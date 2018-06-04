@@ -26,8 +26,8 @@
                             <label class="control-label">{{'&nbsp;' | translate}}</label>
                             <div>{{'or' | translate}}
 
-                                <a href="/#/product-module/product/fund/new" class="btn btn-default action-button add-new-fund" id="buttonAddNewFund">{{'Add a new Fund' | translate}}
-
+                                <a class="btn btn-default action-button add-new-fund" [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}" id="buttonAddNewFund">
+									{{'Add a new Fund' | translate}}
                                 </a>
                             </div>
                         </div>

@@ -95,7 +95,6 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             this._changeDetectorRef.markForCheck();
         }));
 
-        this._ngRedux.dispatch(clearRequestedFundAccessMy());
     }
 
     setInitialTabs() {
@@ -247,7 +246,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 colorClass: 'text-green-title'
             },
             fundShareId: fundShareId,
-            fundShareData: fundShareData,
+                fundShareData: fundShareData,
             actionType: 'subscribe',
             active: false,
             formData: {}

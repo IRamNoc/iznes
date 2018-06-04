@@ -68,7 +68,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private ofiKycService: OfiKycService,
                 private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;

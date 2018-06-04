@@ -89,7 +89,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _numberConverterService: NumberConverterService,
                 private _ofiCorpActionService: OfiCorpActionService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private fileService: FileService) {
     }
 

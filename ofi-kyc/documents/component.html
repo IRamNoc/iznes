@@ -26,14 +26,9 @@
         <div class="col-xs-12">
             <clr-datagrid #myDataGrid>
                 <clr-dg-column *ngFor="let column of panel.columns">{{column.label}}</clr-dg-column>
-                <clr-dg-row *clrDgItems="let row of panel.data | async">
-                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}">
-                        <a *ngIf="dataCol.link" [routerLink]="buildLink(dataCol, row)">{{row[dataCol.dataSource]}}
-
-                        </a>
-                        <span *ngIf="!dataCol.link">{{row[dataCol.dataSource]}}
-
-                        </span>
+                <clr-dg-row *clrDgItems="let row of panel.data | async" clrDgRowClickable>
+                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" (click)="buildLink(dataCol, row, panel.link, $event)">
+                        <span>{{row[dataCol.dataSource]}}</span>
                     </clr-dg-cell>
                 </clr-dg-row>
             </clr-datagrid>
