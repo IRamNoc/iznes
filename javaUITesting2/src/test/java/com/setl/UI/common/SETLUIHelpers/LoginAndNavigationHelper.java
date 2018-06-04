@@ -61,11 +61,9 @@ public class LoginAndNavigationHelper {
        try {
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfElementLocated(By.id(pageID))));
            wait.until(ExpectedConditions.refreshed(ExpectedConditions.elementToBeClickable(By.id(pageID))));
-           WebElement page = driver.findElement(By.id(pageID));
-           page.click();
+           driver.findElement(By.id(pageID)).click();
        }catch (WebDriverException wde) {
-           fail(wde.getMessage());
-       }
+           fail(wde.getMessage()); }
     }
 
 

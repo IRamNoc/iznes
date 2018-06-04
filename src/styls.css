@@ -381,13 +381,15 @@ h2.statement {
 header {
   background-color: #292e3c !important;
   flex: 0 0 75px;
-  height: 75px; }
+  height: 75px;
+}
   header .header-actions .nav-link.nav-icon {
     color: #282b38;
     width: 100px;
     text-align: center;
     height: 75px;
-    font-size: 90%; }
+    font-size: 90%;
+  }
     header .header-actions .nav-link.nav-icon::after {
       position: absolute;
       left: 0;
@@ -521,8 +523,8 @@ header clr-dropdown .dropdown-menu {
   margin-top: 5px !important; }
 
 header .header-actions, header .branding + .search {
-  background: white;
-  border-bottom: 1px solid #ddd; }
+  background: #373a49;
+  /*border-bottom: 1px solid #ddd; }*/
 
 .sidenav {
   width: 230px;

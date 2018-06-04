@@ -5,7 +5,7 @@ node {
 node {
     timestamps {
 
-            stage('Check Out Application Code') {
+        stage('Check Out Application Code') {
 
                 checkout([$class                           : 'GitSCM', branches: [[name: '*/release']],
                           doGenerateSubmoduleConfigurations: false, extensions: [],
@@ -32,9 +32,9 @@ node {
                         rm -rf /var/lib/jenkins/Deploy/iznes_release_dist &&
                         rsync -a ./iznes_release_dist /var/lib/jenkins/Deploy/'''
 
-                }
-
             }
+
+        }
     }
 
 }

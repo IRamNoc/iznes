@@ -1,11 +1,15 @@
-import {menuSpec} from './menuSpec';
+import { menuSpec } from './menuSpec';
+import { nonMenuLink } from './nonMenuLink';
 
 export const environment = {
+    nonMenuLink,
+    menuSpec,
     production: true,
+    applyRestrictUrl: true,
     MEMBER_NODE_CONNECTION: {
         host: window.location.hostname,
         port: 443,
-        path: 'db'
+        path: 'db',
     },
     numberDivider: 100000,
     reportingNodeUrl: 'http://10.0.1.106:13544/sapi',
@@ -16,7 +20,7 @@ export const environment = {
             icon: 'fa-inbox',
             type: 'inbox',
             level: 1,
-            active: true
+            active: true,
         },
         {
             name: 'Action Messages',
@@ -24,7 +28,7 @@ export const environment = {
             icon: 'fa-rocket',
             type: 'action',
             level: 2,
-            active: false
+            active: false,
         },
         {
             name: 'Sent Messages',
@@ -32,7 +36,7 @@ export const environment = {
             icon: 'fa-envelope-o',
             type: 'sent',
             level: 1,
-            active: false
+            active: false,
         },
         {
             name: 'Deleted Messages',
@@ -40,12 +44,11 @@ export const environment = {
             icon: 'fa-trash-o',
             type: 'deleted',
             level: 1,
-            active: false
+            active: false,
         },
     ],
     logoUrl: 'assets/images/logo-iznes-only.png',
     logoID: 'logo-iznes',
     platform: 'IZNES',
     topbarLogoUrl: 'assets/images/logo-iznes-only.png',
-    menuSpec
 };

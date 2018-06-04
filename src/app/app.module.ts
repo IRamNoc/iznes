@@ -50,9 +50,7 @@ import {AssetServicingModule} from '@setl/asset-servicing';
 import {PermissionGridModule} from '@setl/permission-grid';
 import {CoreManageMemberModule} from '@setl/core-manage-member';
 import {CorpActionsModule} from '@setl/core-corp-actions';
-import {T2sModule} from '@setl/core-t2s';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
-import {CoreWorkflowEngineModule} from '@setl/core-wfe';
 import {SetlLayoutModule} from '@setl/core-layout';
 import {LogService} from'@setl/utils';
 /* OFI Modules */
@@ -131,9 +129,7 @@ export function memberSocketServiceFactory() {
         SetlDirectivesModule,
         SetlServicesModule,
         ConnectionsModule,
-        CoreWorkflowEngineModule,
-        T2sModule,
-        SetlLayoutModule
+        SetlLayoutModule,
     ],
     providers: [
         {

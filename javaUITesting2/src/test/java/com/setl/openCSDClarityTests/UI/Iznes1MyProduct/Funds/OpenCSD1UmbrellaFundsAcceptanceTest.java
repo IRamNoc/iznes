@@ -1,4 +1,4 @@
-package com.setl.openCSDClarityTests.UI.MyProduct.Funds;
+package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
@@ -22,6 +22,9 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.assertPopupNextFundNo;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchFundsTable;
+import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchUmbrellaTable;
 import static org.junit.Assert.*;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -64,17 +67,16 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
 
-        String umbFundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[1]/div[1]/a/h2")).getText();
-        int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
-        System.out.println(umbFundCount);
-
         selectAddUmbrellaFund();
         String [] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
 
-        getUmbrellaTableRow(umbFundCount, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(uFundDetails[0]);
+
+        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
 
@@ -87,7 +89,6 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
 
         String umbFundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[2]/div[1]/div[1]/a/h2")).getText();
         int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
-        System.out.println(umbFundCount);
 
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
@@ -95,10 +96,13 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         searchAndSelectTopDropdownXpath("uf_domicile", "Afghanistan");
         submitUmbrellaFund();
 
-        getUmbrellaTableRow(umbFundCount, umbFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(umbFundDetails[0]);
+
+        getUmbrellaTableRow(0, umbFundDetails[0], "16616758475934857431", "Management Company", "Afghanistan");
         validateDatabaseUmbrellaFundExists(1, umbFundDetails[0]);
 
-        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-" + umbFundCount)).click();
+        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/div/h1")));
         String [] updateChars = generateRandomDetails();
@@ -117,11 +121,11 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         scrollElementIntoViewById("mcBtnSubmitForm");
         wait.until(visibilityOfElementLocated(By.id("mcBtnSubmitForm")));
         wait.until(elementToBeClickable(driver.findElement(By.id("mcBtnSubmitForm"))));
-
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         wait.until(visibilityOfElementLocated(By.id("am-product-home")));
-        getUmbrellaTableRow(umbFundCount, umbFundDetails[0] + updateChars[0], "16616758475934857600", "Management Company", "Albania");
 
+        searchUmbrellaTable(umbFundDetails[0]);
+        getUmbrellaTableRow(0, umbFundDetails[0] + updateChars[0], "16616758475934857600", "Management Company", "Albania");
         validateDatabaseUmbrellaFundExists(1, umbFundDetails[0] + updateChars[0]);
         validateDatabaseUmbrellaFundExists(0, umbFundDetails[0]);
 
@@ -173,6 +177,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857433");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
         try {
             String umbFundName = driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).getText();
@@ -233,12 +238,12 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
         String preCreationNo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
         int i = Integer.parseInt(preCreationNo.replaceAll("[\\D]", ""));
-        System.out.println(i);
         selectAddUmbrellaFund();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857437");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
             wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")));
@@ -255,6 +260,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")));
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-umbrellaFundID-0-umbrellaFundName")).getText();
         try {
             driver.findElement(By.xpath("//*[@id=\"product-dashboard-umbrellaFundID-0-umbrellaFundName\"]/span")).click();

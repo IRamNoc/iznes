@@ -5,35 +5,36 @@ const home = {
     label_txt: 'txt_home',
     icon_class: 'fa fa-home',
     element_id: 'menu-home',
-    router_link: '/home'
+    router_link: '/home',
 };
 const dashboard = {
     label: 'My Dashboard',
     label_txt: 'txt_mydashboard',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-my-dashboard',
-    router_link: '/asset-management/my-dashboard'
+    router_link: '/asset-management/my-dashboard',
 };
 const subPortfolio = {
     label: 'Sub-portfolio',
     label_txt: 'txt_subportfolio',
     icon_class: 'fa fa-id-badge',
     element_id: 'menu-sub-portfolio',
-    router_link: '/user-administration/subportfolio'
+    router_link: '/user-administration/subportfolio',
 };
 const messages = {
     label: 'Messages',
     label_txt: 'txt_messages',
     icon_class: 'fa fa-envelope',
     element_id: 'menu-messages',
-    router_link: '/messages'
+    router_link: '/messages',
 };
 const listOfFunds = {
-    label: 'List of funds',
-    label_txt: 'txt_listoffunds',
+    label: 'Place Order',
+    label_txt: 'txt_placeorder',
     icon_class: 'fa fa-university',
     element_id: 'menu-list-of-fund',
-    router_link: '/list-of-funds/0'
+    router_link: '/list-of-funds/0',
+    dynamic_link: '/list-of-funds/[^\/]*',
 };
 const orderBook = {
     label: 'Order Book',
@@ -41,49 +42,54 @@ const orderBook = {
     icon_class: 'fa fa-university',
     element_id: 'menu-order-module',
     children: [
-        {
-            label: 'Place Order',
-            label_txt: 'txt_placeorder',
-            icon_class: 'fa fa-university',
-            element_id: 'menu-list-of-fund',
-            router_link: '/list-of-funds/0'
-        },
+        listOfFunds,
         {
             label: 'My Orders',
             label_txt: 'txt_myorders',
             icon_class: 'fa fa-book',
             element_id: 'menu-my-orders',
-            router_link: '/order-book/my-orders/list'
-        }
-    ]
+            router_link: '/order-book/my-orders/list',
+            dynamic_link: '/order-book/my-orders/[^\/]*',
+        },
+    ],
 };
 const fundHoldings = {
     label: 'Fund Holdings',
     label_txt: 'txt_fundholdings',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-asset-manager-dashboard',
-    router_link: '/asset-management/fund-holdings'
+    router_link: '/asset-management/fund-holdings',
+    dynamic_link: '/asset-management/fund-holdings/[^\/]*',
 };
 const manageOrders = {
     label: 'Order Book',
     label_txt: 'txt_orderbook',
     icon_class: 'fa fa-list-ul',
     element_id: 'menu-manage-orders',
-    router_link: '/manage-orders/list'
+    router_link: '/manage-orders/list',
+    dynamic_link: '\/manage-orders\/[^\/]*',
 };
 const reportsCollectsArchives = {
     label: 'Recordkeeping',
     label_txt: 'txt_recordkeeping',
     icon_class: 'fa fa-book',
     element_id: 'holders-list',
-    router_link: '/reports/holders-list/list'
+    router_link: '/reports/holders-list/list',
+    dynamic_link: '\/reports/holders-list\/[^\/]*',
 };
 const reportsCentralization = {
     label: 'Precentralisation',
     label_txt: 'txt_precentralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralization',
-    router_link: '/reports/centralization'
+    router_link: '/reports/centralization',
+};
+const reportsCentralizationSelect = {
+    label: 'Centralisation',
+    label_txt: 'txt_centralisation',
+    icon_class: 'fa fa-book',
+    element_id: 'menu-report-centralization-select',
+    router_link: '/reports/select-centralization',
 };
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
@@ -97,35 +103,35 @@ const reportsTaxReport = {
     label_txt: 'txt_taxreport',
     icon_class: 'fa fa-eur',
     element_id: 'menu-reports-section-tax',
-    router_link: '/reports-section/tax'
+    router_link: '/reports-section/tax',
 };
 const reportsPL = {
     label: 'P&L',
     label_txt: 'txt_pl',
     icon_class: 'fa fa-list-alt',
     element_id: 'menu-reports-section-pnl',
-    router_link: '/reports-section/pnl'
+    router_link: '/reports-section/pnl',
 };
 const reportsBalances = {
     label: 'Balances Reports',
     label_txt: 'txt_balancesreports',
     icon_class: 'fa fa-th-list',
     element_id: 'menu-report-balance-report',
-    router_link: '/reports/balances'
+    router_link: '/reports/balances',
 };
 const reportsIssues = {
     label: 'Issue Reports',
     label_txt: 'txt_issuereports',
     icon_class: 'fa fa-money',
     element_id: 'menu-report-issue',
-    router_link: '/reports/issue'
+    router_link: '/reports/issue',
 };
 const reportsTransactions = {
     label: 'Transactions Reports',
     label_txt: 'txt_transactionsreports',
     icon_class: 'fa fa-key',
     element_id: 'menu-report-transaction',
-    router_link: '/reports/transactions'
+    router_link: '/reports/transactions',
 };
 const chainAdmin = {
     label: 'Chain Administration',
@@ -138,72 +144,75 @@ const chainAdmin = {
             label_txt: 'txt_chains',
             icon_class: 'fa fa-chain',
             element_id: 'chain-administration-chains',
-            router_link: '/chain-admin/manage-chains'
+            router_link: '/chain-admin/manage-chains',
+            dynamic_link: '/chain-admin/manage-chains/[^\/]*',
         },
         {
             label: 'Wallet Nodes',
             label_txt: 'txt_walletnodes',
             icon_class: 'fa fa-code-fork',
             element_id: 'chain-administration-wallet-nodes',
-            router_link: '/chain-admin/manage-wallet-nodes'
+            router_link: '/chain-admin/manage-wallet-nodes',
+            dynamic_link: '/chain-admin/manage-wallet-nodes/[^\/]*',
         },
         {
             label: 'Member',
             label_txt: 'txt_member',
             icon_class: 'fa fa-address-card',
             element_id: 'chain-administration-member',
-            router_link: '/chain-admin/manage-member'
+            router_link: '/chain-admin/manage-member',
+            dynamic_link: '/chain-admin/manage-member/[^\/]*',
         },
         {
             label: 'Groups',
             label_txt: 'txt_groups',
             icon_class: 'fa fa-user-o',
             element_id: 'chain-administration-groups',
-            router_link: '/chain-admin/manage-groups'
+            router_link: '/chain-admin/manage-groups',
+            dynamic_link: '/chain-admin/manage-groups/[^\/]*',
         },
         {
             label: 'Chain Membership',
             label_txt: 'txt_chainmembership',
             icon_class: 'fa fa-handshake-o',
             element_id: 'chain-administration-membership',
-            router_link: '/chain-admin/chain-membership'
+            router_link: '/chain-admin/chain-membership',
+            dynamic_link: '/chain-admin/chain-membership/[^\/]*',
         },
-    ]
+    ],
 };
 const corpCouponPayment = {
     label: 'Coupon Payment',
     label_txt: 'txt_couponpayment',
     icon_class: 'fa fa-briefcase',
     element_id: 'menu-coupon',
-    router_link: '/corporate-actions/coupon-payment/0'
-};
-const corpDividendDemo = {
-    label: 'Dividend demo',
-    label_txt: 'txt_Dividends',
-    icon_class: 'fa fa-briefcase',
-    element_id: 'menu-coupon',
-    router_link: '/workflow-engine/dividend'
+    router_link: '/corporate-actions/coupon-payment/0',
+    dynamic_link: '/corporate-actions/coupon-payment/[^\/]*',
+
 };
 const userAdminUsers = {
     label: 'Users',
     label_txt: 'txt_users',
     icon_class: 'fa fa-user',
     element_id: 'menu-user-admin-users',
-    router_link: '/user-administration/users/0'
+    router_link: '/user-administration/users/0',
+    dynamic_link: '/user-administration/users/[^\/]*',
 };
 const userAdminWallets = {
     label: 'Wallets',
     label_txt: 'txt_wallets',
     icon_class: 'fa fa-briefcase',
     element_id: 'menu-user-admin-wallets',
-    router_link: '/user-administration/wallets/0'
+    router_link: '/user-administration/wallets/0',
+    dynamic_link: '/user-administration/wallets/[^\/]*',
 };
 const userAdminPermissions = {
     label: 'Permissions',
     label_txt: 'txt_permissions',
     icon_class: 'fa fa-key',
     element_id: 'menu-user-admin-permissions',
-    router_link: '/user-administration/permissions/0'
+    router_link: '/user-administration/permissions/0',
+    dynamic_link: '/user-administration/permissions/[^\/]*',
 };
 const financing = {
     label: 'Financing',
@@ -216,9 +225,10 @@ const financing = {
             label_txt: 'txt_encumberassets',
             icon_class: 'fa fa-money',
             element_id: 'financing-encumber-assets',
-            router_link: '/financing/encumber-assets'
+            router_link: '/financing/encumber-assets',
+            dynamic_link: '/financing/encumber-assets/[^\/]*',
         },
-    ]
+    ],
 };
 const assetServicing = {
     label: 'Asset Servicing',
@@ -231,72 +241,76 @@ const assetServicing = {
             label_txt: 'txt_registerissuer',
             icon_class: 'fa fa-user-plus',
             element_id: 'menu-asset-servicing-register-issuer',
-            router_link: '/asset-servicing/register-issuer'
+            router_link: '/asset-servicing/register-issuer',
         },
         {
             label: 'Register Asset',
             label_txt: 'txt_registerasset',
             icon_class: 'fa fa-plus-circle',
             element_id: 'menu-asset-servicing-register-asset',
-            router_link: '/asset-servicing/register-asset'
+            router_link: '/asset-servicing/register-asset',
         },
         {
             label: 'Issue Asset',
             label_txt: 'txt_issueasset',
             icon_class: 'fa fa-paper-plane',
             element_id: 'menu-asset-servicing-issue-asset',
-            router_link: '/asset-servicing/issue-asset'
+            router_link: '/asset-servicing/issue-asset',
         },
         {
             label: 'Send Asset',
             label_txt: 'txt_sendasset',
             icon_class: 'fa fa-share-square-o',
             element_id: 'menu-asset-servicing-send-asset',
-            router_link: '/asset-servicing/send-asset'
+            router_link: '/asset-servicing/send-asset',
         },
         {
             label: 'Request Asset',
             label_txt: 'txt_requestasset',
             icon_class: 'fa fa-exchange',
             element_id: 'menu-asset-servicing-request-asset',
-            router_link: '/asset-servicing/request-asset'
-        }
-    ]
+            router_link: '/asset-servicing/request-asset',
+        },
+    ],
 };
 const ofiProductHome = {
     label: 'Shares / Funds / Umbrella funds',
     label_txt: 'txt_sharesfundsumbrellafunds',
     icon_class: 'fa fa-bar-chart',
     element_id: 'menu-product-home',
-    router_link: '/product-module/product'
+    router_link: '/product-module/product',
+    dynamic_link: '/product-module/product/[^\/]*',
 };
 const productsManagementCompany = {
     label: 'Management Company',
     label_txt: 'txt_managementcompany',
     icon_class: 'fa fa-university',
     element_id: 'menu-management-company',
-    router_link: '/management-company'
+    router_link: '/management-company',
+    dynamic_link: '/management-company/[^\/]*',
 };
 const productsSicav = {
     label: 'SICAV',
     label_txt: 'txt_sicav',
     icon_class: 'fa fa-user',
     element_id: 'menu-sicav',
-    router_link: '/product-module/sicav'
+    router_link: '/product-module/sicav',
+    dynamic_link: '/product-module/sicav/[^\/]*',
 };
 const productsFund = {
     label: 'Fund',
     label_txt: 'txt_fund',
     icon_class: 'fa fa-area-chart',
     element_id: 'menu-product-fund',
-    router_link: '/product-module/fund'
+    router_link: '/product-module/fund',
+    dynamic_link: '/product-module/fund/[^\/]*',
 };
 const productsNav = {
     label: 'Net Asset Value',
     label_txt: 'txt_netassetvalue',
     icon_class: 'fa fa-ellipsis-h',
     element_id: 'menu-nav',
-    router_link: '/product-module/net-asset-value'
+    router_link: '/product-module/net-asset-value',
 };
 
 const profileMyInfo = {
@@ -304,7 +318,7 @@ const profileMyInfo = {
     label_txt: 'txt_my_information',
     icon_class: '',
     element_id: 'top-menu-my-info',
-    router_link: '/profile/my-information'
+    router_link: '/profile/my-information',
 };
 
 const kycDocuments = {
@@ -318,16 +332,17 @@ const kycDocuments = {
             label_txt: 'txt_on_boarding_management',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-onboarding-management',
-            router_link: '/kyc-am-documents'
+            router_link: '/kyc-am-documents',
+            dynamic_link: '/kyc-am-documents/[^\/]*',
         },
         {
             label: 'Invite Investors',
             label_txt: 'txt_invite_investors',
             icon_class: 'fa fa-align-left',
             element_id: 'top-menu-invite-investor',
-            router_link: '/invite-investors'
-        }
-    ]
+            router_link: '/invite-investors',
+        },
+    ],
 };
 
 export const menuSpec: MenuSpec = {
@@ -363,7 +378,7 @@ export const menuSpec: MenuSpec = {
             standard_user: [
                 profileMyInfo,
             ],
-        }
+        },
     },
     side: {
         investor: [
@@ -394,6 +409,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     reportsCollectsArchives,
                     reportsCentralization,
+                    reportsCentralizationSelect,
                 ]
             },
             kycDocuments,
@@ -405,7 +421,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     ofiProductHome,
                     productsNav,
-                ]
+                ],
             },
             productsManagementCompany,
         ],
@@ -419,7 +435,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-my-products',
                 children: [
                     productsNav,
-                ]
+                ],
             },
             listOfFunds,
             {
@@ -429,8 +445,8 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
-                ]
-            }
+                ],
+            },
 
         ],
         custodian: [
@@ -458,7 +474,7 @@ export const menuSpec: MenuSpec = {
                     productsSicav,
                     productsFund,
                     productsNav,
-                ]
+                ],
             },
             listOfFunds,
             manageOrders,
@@ -471,7 +487,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     reportsTaxReport,
                     reportsPL,
-                ]
+                ],
             },
             {
                 label: 'Reports',
@@ -480,10 +496,11 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
-                ]
-            }
+                ],
+            },
         ],
         system_admin: [
+            home,
             {
                 label: 'Corporate Actions',
                 label_txt: 'txt_corporateactions',
@@ -491,7 +508,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
-                ]
+                ],
             },
             {
                 label: 'User Administration',
@@ -502,7 +519,7 @@ export const menuSpec: MenuSpec = {
                     userAdminUsers,
                     userAdminWallets,
                     userAdminPermissions,
-                ]
+                ],
             },
             messages,
             subPortfolio,
@@ -517,7 +534,7 @@ export const menuSpec: MenuSpec = {
                     reportsBalances,
                     reportsIssues,
                     reportsTransactions,
-                ]
+                ],
             },
             chainAdmin,
         ],
@@ -529,8 +546,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
-                    corpDividendDemo,
-                ]
+                ],
             },
             {
                 label: 'User Administration',
@@ -540,7 +556,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     userAdminUsers,
                     userAdminWallets,
-                ]
+                ],
             },
             messages,
             subPortfolio,
@@ -555,24 +571,9 @@ export const menuSpec: MenuSpec = {
                     reportsBalances,
                     reportsIssues,
                     reportsTransactions,
-                ]
+                ],
             },
             chainAdmin,
-            {
-                label: 'Workflow Engine',
-                label_txt: 'txt_wfe',
-                icon_class: 'fa fa-gears',
-                element_id: 'menu-workflow-engine',
-                children: [
-                    {
-                        label: 'Editor',
-                        label_txt: 'txt_editor',
-                        icon_class: 'fa fa-edit',
-                        element_id: 'workflow-editor',
-                        router_link: '/workflow-engine/editor'
-                    }
-                ]
-            },
         ],
         member_user: [
             {
@@ -582,7 +583,7 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-corporate-actions',
                 children: [
                     corpCouponPayment,
-                ]
+                ],
             },
             {
                 label: 'User Administration',
@@ -592,7 +593,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     userAdminUsers,
                     userAdminWallets,
-                ]
+                ],
             },
             messages,
             subPortfolio,
@@ -606,8 +607,8 @@ export const menuSpec: MenuSpec = {
                     reportsBalances,
                     reportsIssues,
                     reportsTransactions,
-                ]
-            }
+                ],
+            },
         ],
         standard_user: [
             messages,
@@ -622,9 +623,9 @@ export const menuSpec: MenuSpec = {
                     reportsBalances,
                     reportsIssues,
                     reportsTransactions,
-                ]
-            }
+                ],
+            },
         ],
     },
-    disabled: [] // '/manage-orders/list', '/am-reports-section/collects-archive', '/reports-section/csv','/order-book/my-orders/list', '/asset-management/my-dashboard'
+    disabled: [],
 };
