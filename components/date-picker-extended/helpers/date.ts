@@ -35,4 +35,14 @@ export class DatePickerExtendedHelper {
 
         return arr;
     }
+
+    static convertStringDatesToMoment(dates: string[]): moment.Moment[] {
+        const arr: moment.Moment[] = [];
+
+        _.forEach(dates, (e: string) => {
+            arr.push(moment(e));
+        });
+
+        return arr;
+    }
 }
