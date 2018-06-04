@@ -4,51 +4,51 @@
             <div class="row">
                 <ng-container *ngFor="let item of formKeys; trackBy: trackFormItemByFn">
                     <div class="form-group {{model[item].cssClass}}" [hidden]="isHidden(item)">
-                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}" >{{model[item].label}}</label>
+                        <label class="control-label" [class.required-field]="model[item].required" for="{{item}}">{{model[item].label}}</label>
 
                         <ng-container [ngSwitch]="model[item].type">
                             <ng-container *ngSwitchCase="0">
                                 <input id="{{item}}" name="{{item}}" class="form-control"
-                                    [class.required-field]="model[item].required"
-                                    type="text"
-                                    placeholder="{{model[item].placeholder}}"
-                                    formControlName="{{item}}" />
+                                       [class.required-field]="model[item].required"
+                                       type="text"
+                                       placeholder="{{model[item].placeholder}}"
+                                       formControlName="{{item}}"/>
                             </ng-container>
 
                             <ng-container *ngSwitchCase="1">
                                 <input id="{{item}}" name="{{item}}" class="form-control"
-                                    [class.required-field]="model[item].required"
-                                    type="number"
-                                    placeholder="{{model[item].placeholder}}"
-                                    formControlName="{{item}}" />
+                                       [class.required-field]="model[item].required"
+                                       type="number"
+                                       placeholder="{{model[item].placeholder}}"
+                                       formControlName="{{item}}"/>
                             </ng-container>
 
                             <ng-container *ngSwitchCase="2">
                                 <div class="input-group">
                                     <span class="fa fa-calendar"></span>
                                     <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
-                                        formControlName="{{item}}"
-                                        [dpDayPicker]="model[item].dateOptions"
-                                        [readonly]="true"
-                                        mode="day"
-                                        theme="dp-material" />
+                                           formControlName="{{item}}"
+                                           [dpDayPicker]="model[item].dateOptions"
+                                           [readonly]="false"
+                                           mode="day"
+                                           theme="dp-material"/>
                                 </div>
                             </ng-container>
 
                             <ng-container *ngSwitchCase="3">
                                 <ng-select id="{{item}}" *ngIf="showDropdown(model[item])"
-                                    [items]="model[item].listItems"
-                                    [active]="model[item].preset"
-                                    [disabled]="model[item].control.disabled"
-                                    placeholder="{{model[item].placeholder}}"
-                                    [formControl]="model[item].control"
-                                    [required]="model[item].required">
+                                           [items]="model[item].listItems"
+                                           [active]="model[item].preset"
+                                           [disabled]="model[item].control.disabled"
+                                           placeholder="{{model[item].placeholder}}"
+                                           [formControl]="model[item].control"
+                                           [required]="model[item].required">
                                 </ng-select>
 
                                 <input type="text" id="{{item}}_na" name="{{item}}_na" value="N/A"
-                                    class="form-control na-field"
-                                    disabled
-                                    *ngIf="!showDropdown(model[item])" />
+                                       class="form-control na-field"
+                                       disabled
+                                       *ngIf="!showDropdown(model[item])"/>
                             </ng-container>
 
                             <ng-container *ngSwitchCase="4">
@@ -69,9 +69,9 @@
 
                             <ng-container *ngSwitchCase="6">
                                 <textarea id="{{item}}" name="{{item}}" class="form-control"
-                                    [class.required-field]="model[item].required"
-                                    placeholder="{{model[item].placeholder}}"
-                                    formControlName="{{item}}">
+                                          [class.required-field]="model[item].required"
+                                          placeholder="{{model[item].placeholder}}"
+                                          formControlName="{{item}}">
                                 </textarea>
                             </ng-container>
 
@@ -79,8 +79,8 @@
                                 <div class="input-group">
                                     <span class="fa fa-clock-o"></span>
                                     <input id="{{item}}" name="{{item}}" type="time"
-                                        placeholder="{{model[item].placeholder}}"
-                                        formControlName="{{item}}" />
+                                           placeholder="{{model[item].placeholder}}"
+                                           formControlName="{{item}}"/>
                                 </div>
                             </ng-container>
                         </ng-container>
