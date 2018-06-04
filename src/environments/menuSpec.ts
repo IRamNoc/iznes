@@ -345,6 +345,14 @@ const kycDocuments = {
     ],
 };
 
+const productConfiguration = {
+    label: 'Configuration',
+    label_txt: 'txt_productconfig',
+    icon_class: 'fa fa-cog',
+    element_id: 'menu-product-config',
+    router_link: '/product-module/configuration',
+}
+
 export const menuSpec: MenuSpec = {
     top: {
         profile: {
@@ -421,6 +429,7 @@ export const menuSpec: MenuSpec = {
                 children: [
                     ofiProductHome,
                     productsNav,
+                    productConfiguration,
                 ],
             },
             productsManagementCompany,

@@ -42,7 +42,8 @@ import {
     OfiPnlReportComponent,
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
-    OfiTaxReportComponent
+    OfiTaxReportComponent,
+    ProductConfigurationComponent
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -277,6 +278,11 @@ export const ROUTES: Routes = [
                         path: 'nav-fund-view',
                         component: OfiNavFundView,
                         canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/configuration',
+                        component: ProductConfigurationComponent,
+                        canActivate: [LoginGuardService]
                     }
                 ]
             },
