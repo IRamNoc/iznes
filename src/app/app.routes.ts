@@ -1,13 +1,13 @@
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 /* Layouts. */
-import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
-import {UiTranslationsComponent, UiTooltipsComponent} from '@setl/core-layout';
+import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
+import { UiTranslationsComponent, UiTooltipsComponent } from '@setl/core-layout';
 /* Components. */
-import {SetlMyAccountComponent} from '@setl/core-account';
+import { SetlMyAccountComponent } from '@setl/core-account';
 /**
  * Login Guard service
  */
-import {LoginGuardService} from '@setl/core-login';
+import { LoginGuardService } from '@setl/core-login';
 /* Ofi Manage Orders Module. */
 /* Ofi Home Page. */
 /**
@@ -43,7 +43,7 @@ import {
     OfiProfileMyInformationsComponent,
     OfiSignUpComponent,
     OfiTaxReportComponent,
-    ProductConfigurationComponent
+    ProductConfigurationComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -51,17 +51,17 @@ import {
     AdminUsersComponent,
     AdminWalletsComponent,
     AdminWizardComponent,
-    ManageSubPortfolioComponent
+    ManageSubPortfolioComponent,
 } from '@setl/core-useradmin';
 /* Product */
-import {OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent} from '@ofi/product';
+import { OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent } from '@ofi/product';
 import {
     ProductHomeComponent,
     UmbrellaFundComponent,
     FundShareComponent,
     AddNewFundShareComponent,
     FundShareAuditComponent,
-    FundComponent
+    FundComponent,
 } from '@ofi/ofi-main';
 /* Corporate Actions Components */
 import {
@@ -69,7 +69,7 @@ import {
     DistributionComponent,
     IssueResolutionComponent,
     MergerAbsorptionComponent,
-    SplitComponent
+    SplitComponent,
 } from '@setl/core-corp-actions';
 /**
  * Asset serving module
@@ -92,11 +92,11 @@ import {
     ManageMemberComponent,
     ManageWalletNodesComponent,
 } from '@setl/core-manage-member';
-import {SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent} from '@setl/core-balances';
+import { SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent } from '@setl/core-balances';
 /** Connection module */
-import {ConnectionComponent} from '@setl/core-connections/connections/component';
-import {SetlMessagesComponent} from '@setl/core-messages';
-import {OfiWaitingApprovalComponent} from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
+import { ConnectionComponent } from '@setl/core-connections/connections/component';
+import { SetlMessagesComponent } from '@setl/core-messages';
+import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -127,13 +127,13 @@ export const ROUTES: Routes = [
             {
                 path: 'home',
                 component: OfiHomeComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'core-home',
                 component: HomeComponent,
                 canActivate: [LoginGuardService],
-                data: { state: 'home' }
+                data: { state: 'home' },
             },
             {
                 path: 'invite-investors',
@@ -148,7 +148,7 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'messages',
-                redirectTo: '/messages/inbox'
+                redirectTo: '/messages/inbox',
             },
             {
                 path: 'account',
@@ -157,24 +157,24 @@ export const ROUTES: Routes = [
                         path: 'my-account/:tabname',
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'my-account' }
-                    }
-                ]
+                        data: { state: 'my-account' },
+                    },
+                ],
             },
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'fund-access/:kycId',
                 component: OfiFundAccessComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'kyc-am-documents',
                 component: OfiAmDocumentsComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'new-investor',
@@ -182,13 +182,13 @@ export const ROUTES: Routes = [
                     {
                         path: 'informations',
                         component: OfiKycHomeComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'already-done/:status',
                         component: OfiKycAlreadyDoneComponent,
-                        canActivate: [LoginGuardService]
-                    }
+                        canActivate: [LoginGuardService],
+                    },
                 ],
             },
             {
@@ -214,7 +214,7 @@ export const ROUTES: Routes = [
                         component: MyDashboardComponent,
                         canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
             {
                 path: 'product-module',
@@ -247,12 +247,12 @@ export const ROUTES: Routes = [
                     {
                         path: 'product/fund-share',
                         component: FundShareComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'product/fund/:id',
                         component: FundComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'fund',
@@ -280,11 +280,11 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product/configuration',
+                        path: 'configuration',
                         component: ProductConfigurationComponent,
-                        canActivate: [LoginGuardService]
-                    }
-                ]
+                        canActivate: [LoginGuardService],
+                    },
+                ],
             },
             {
                 path: 'management-company',
@@ -297,9 +297,9 @@ export const ROUTES: Routes = [
                     {
                         path: 'form',
                         component: FormElementsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
             {
                 path: 'ui-layouts',
@@ -307,14 +307,14 @@ export const ROUTES: Routes = [
                     {
                         path: 'translations',
                         component: UiTranslationsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'tooltips',
                         component: UiTooltipsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
             {
                 path: 'reports',
@@ -323,19 +323,19 @@ export const ROUTES: Routes = [
                         path: 'balances',
                         component: SetlBalancesComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-my-account' }
+                        data: { state: 'reports-my-account' },
                     },
                     {
                         path: 'issue',
                         component: SetlIssueComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-issue' }
+                        data: { state: 'reports-issue' },
                     },
                     {
                         path: 'transactions',
                         component: SetlTransactionsComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'reports-transactions' }
+                        data: { state: 'reports-transactions' },
                     },
                     {
                         path: 'holders-list/:tabid',
@@ -353,7 +353,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                 ],
-                data: { state: 'reports' }
+                data: { state: 'reports' },
             },
             {
                 path: 'connections',
@@ -361,9 +361,9 @@ export const ROUTES: Routes = [
                     {
                         path: 'my-connections',
                         component: ConnectionComponent,
-                        canActivate: [LoginGuardService]
-                    }
-                ]
+                        canActivate: [LoginGuardService],
+                    },
+                ],
             },
             {
                 path: 'asset-servicing',
@@ -371,30 +371,30 @@ export const ROUTES: Routes = [
                     {
                         path: 'register-issuer',
                         component: RegisterIssuerComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'register-asset',
                         component: RegisterAssetComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'issue-asset',
                         component: IssueAssetComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'send-asset',
                         component: SendAssetComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'request-asset',
                         component: RequestAssetComponent,
-                        canActivate: [LoginGuardService]
-                    }
+                        canActivate: [LoginGuardService],
+                    },
                 ],
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'financing',
@@ -402,10 +402,10 @@ export const ROUTES: Routes = [
                     {
                         path: 'encumber-assets',
                         component: EncumberAssetsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                 ],
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'user-administration',
@@ -414,32 +414,32 @@ export const ROUTES: Routes = [
                         path: 'users/:tabid',
                         component: AdminUsersComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'admin-users' }
+                        data: { state: 'admin-users' },
                     },
                     {
                         path: 'wallets/:walletid',
                         component: AdminWalletsComponent,
                         canActivate: [LoginGuardService],
-                        data: { state: 'admin-wallets' }
+                        data: { state: 'admin-wallets' },
                     },
                     {
                         path: 'permissions/:permissionid',
                         component: AdminPermissionsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'wizard',
                         component: AdminWizardComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'subportfolio',
                         component: ManageSubPortfolioComponent,
-                        canActivate: [LoginGuardService]
-                    }
+                        canActivate: [LoginGuardService],
+                    },
 
                 ],
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'chain-admin',
@@ -447,30 +447,30 @@ export const ROUTES: Routes = [
                     {
                         path: 'manage-member',
                         component: ManageMemberComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'manage-groups',
                         component: ManageAccountComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'chain-membership',
                         component: ManageChainMembershipComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'manage-chains',
                         component: ManageChainsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'manage-wallet-nodes',
                         component: ManageWalletNodesComponent,
-                        canActivate: [LoginGuardService]
-                    }
+                        canActivate: [LoginGuardService],
+                    },
                 ],
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'corporate-actions',
@@ -512,7 +512,7 @@ export const ROUTES: Routes = [
                         component: CouponPaymentComponent,
                         canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
 
             /**
@@ -521,12 +521,12 @@ export const ROUTES: Routes = [
             {
                 path: 'list-of-funds/:tabid',
                 component: OfiInvestorFundListComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'manage-orders/:tabid',
                 component: ManageOrdersComponent,
-                canActivate: [LoginGuardService]
+                canActivate: [LoginGuardService],
             },
             {
                 path: 'order-book',
@@ -536,8 +536,8 @@ export const ROUTES: Routes = [
                         path: 'my-orders/:tabid',
                         canActivate: [LoginGuardService],
                         component: ManageOrdersComponent,
-                    }
-                ]
+                    },
+                ],
             },
 
             /**
@@ -550,19 +550,19 @@ export const ROUTES: Routes = [
                     {
                         path: 'tax',
                         canActivate: [LoginGuardService],
-                        component: OfiTaxReportComponent
+                        component: OfiTaxReportComponent,
                     },
                     {
                         path: 'pnl',
                         canActivate: [LoginGuardService],
-                        component: OfiPnlReportComponent
+                        component: OfiPnlReportComponent,
                     },
                     {
                         path: 'csv',
                         canActivate: [LoginGuardService],
-                        component: OfiManageCsvComponent
-                    }
-                ]
+                        component: OfiManageCsvComponent,
+                    },
+                ],
             },
             {
                 path: 'am-reports-section',
@@ -571,14 +571,14 @@ export const ROUTES: Routes = [
                     {
                         path: 'collects-archive',
                         canActivate: [LoginGuardService],
-                        component: OfiCollectiveArchiveComponent
+                        component: OfiCollectiveArchiveComponent,
                     },
                     {
                         path: 'centralization-history/:tabid',
                         canActivate: [LoginGuardService],
-                        component: OfiCentralizationHistoryComponent
-                    }
-                ]
+                        component: OfiCentralizationHistoryComponent,
+                    },
+                ],
             },
             {
                 path: 'kyc-documents',
@@ -587,10 +587,10 @@ export const ROUTES: Routes = [
                     {
                         path: 'client/:kycId',
                         component: OfiWaitingApprovalComponent,
-                    }
-                ]
+                    },
+                ],
             },
         ],
-        canActivate: [LoginGuardService]
-    }
+        canActivate: [LoginGuardService],
+    },
 ];
