@@ -21,9 +21,16 @@
     }
 
     /deep/  {
+        .dp-calendar-nav-container-left,
+        .dp-calendar-nav-container-right {
+            width: auto;
+        }
+        
         .dp-material .dp-calendar-day {
             border-radius: 0;
             height: 50px;
+            margin-bottom: 0;
+            margin-top: 0;
             width: 50px;
 
             &.dp-selected, &[disabled] {
