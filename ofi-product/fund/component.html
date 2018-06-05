@@ -769,7 +769,7 @@
                                     <!-- Panel body -->
                                     <div class="panel-body" [class.hidden]="!panels[1][1].open">
                                         <div class="form-group col-sm-12">
-                                            <label class="control-label">{{'Use Default Holiday Management Configuration?' | translate}}</label>
+                                            <label class="control-label">{{'Use Default Holiday Management Configuration?' | translate}} <i>{{'(Can be found in My Products > Configuration)' | translate}}</i></label>
                                             <div class="radio-inline">
                                                 <input type="radio" name="useDefaultHolidayMgmt" id="useDefaultHolidayMgmtYes" formControlName="useDefaultHolidayMgmt" value="{{enums.useDefaultHolidayMgmt.YES}}">
                                                 <label for="useDefaultHolidayMgmtYes">{{'Yes' | translate}}</label>
