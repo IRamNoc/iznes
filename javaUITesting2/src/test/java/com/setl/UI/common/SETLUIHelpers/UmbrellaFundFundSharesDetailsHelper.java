@@ -52,6 +52,53 @@ public class UmbrellaFundFundSharesDetailsHelper {
         shareCreationSubmit();
     }
 
+    public static void createShareWithoutCharacteristics(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        waitForNewShareButton();
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+    }
+
+    public static void createShareFromYesPopup(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+        shareCreationKeyFacts(shareDetails,isinDetails);
+        shareCreationCharacteristics();
+        shareCreationCalendar();
+        shareCreationFees();
+        shareCreationProfile();
+        shareCreationSubmit();
+    }
+
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -194,7 +241,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
         String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
-        assertTrue(test.equals("Do you want to create a  " + fundType + "?"));
+        assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
     }

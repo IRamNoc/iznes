@@ -24,6 +24,7 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
+import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.validateDatabaseShareExists;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -62,11 +63,13 @@ public class OpenCSD3SharesAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateShare() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateShareAssertTableDataIsCorrectAndDatabaseCheck() throws IOException, InterruptedException, SQLException {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = "16614748475934658531";
+
+        validateDatabaseShareExists(0, uShareDetails[0]);
 
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
@@ -77,6 +80,25 @@ public class OpenCSD3SharesAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], randomLEI, "EUR", "Management Company", "Afghanistan","Contractual Fund", "");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
+
+        validateDatabaseShareExists(1, uShareDetails[0]);
+    }
+
+    @Test
+    public void shouldCreateShareAndSelectYesOnPopup() throws IOException, InterruptedException, SQLException {
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        String[] uFundDetails = generateRandomFundsDetails();
+        String randomLEI = "16614748475934658539";
+
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
+        assertPopupNextFundYes("Share");
+        createShareFromYesPopup(uFundDetails[0], uShareDetails[0], uIsin[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
     }
 

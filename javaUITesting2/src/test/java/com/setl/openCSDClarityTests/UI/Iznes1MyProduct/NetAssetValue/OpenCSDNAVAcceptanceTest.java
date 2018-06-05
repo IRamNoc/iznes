@@ -84,6 +84,7 @@ public class OpenCSDNAVAcceptanceTest {
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
+
         wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo)));
         wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-" + rowNo)));
         driver.findElement(By.id("Btn-AddNewNAV-" + rowNo)).click();
