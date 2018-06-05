@@ -387,6 +387,7 @@
                             <div>
                                 <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="roundAmount();" appNumberFormatter="4">
                             </div>
+                            <span *ngIf="amountTooBig" class="text-danger">{{'Warning: be aware the order amount exceeds 15 million' | translate}}</span>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
                             <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
