@@ -1,29 +1,29 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement, Directive, Input, Pipe, PipeTransform} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {of} from 'rxjs/observable/of';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DebugElement, Directive, Input, Pipe, PipeTransform } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { of } from 'rxjs/observable/of';
 
-import {ProductHomeComponent} from '@ofi/ofi-main'
-import {FundComponent} from './component';
+import { ProductHomeComponent } from '@ofi/ofi-main';
+import { FundComponent } from './component';
 
-import {NgRedux} from '@angular-redux/store';
-import {ToasterService} from 'angular2-toaster';
-import {RouterTestingModule} from '@angular/router/testing';
-import {SpyLocation} from '@angular/common/testing';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {DpDatePickerModule, SelectModule} from '@setl/utils/index';
-import {SetlPipesModule} from '@setl/utils';
-import {ClarityModule} from '@clr/angular';
-import {Router, RouterModule, ActivatedRoute} from '@angular/router';
+import { NgRedux } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SpyLocation } from '@angular/common/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DpDatePickerModule, SelectModule } from '@setl/utils/index';
+import { SetlPipesModule } from '@setl/utils';
+import { ClarityModule } from '@clr/angular';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import productConfig from '../productConfig';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {Fund} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
-import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
-import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {OfiCurrenciesService} from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
-import {MultilingualService} from '@setl/multilingual';
-import {ConfirmationService} from '@setl/utils';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { MultilingualService } from '@setl/multilingual';
+import { ConfirmationService, SetlComponentsModule } from '@setl/utils';
 import { Subject } from 'rxjs';
 
 const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
@@ -33,7 +33,7 @@ const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 const ConfirmationServiceSpy = jasmine.createSpyObj('ConfirmationService', ['create']);
 const LocationSpy = {
-    back: jasmine.createSpy('back')
+    back: jasmine.createSpy('back'),
 };
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
@@ -95,33 +95,33 @@ const iznCreateFund = jasmine.createSpy('iznCreateFund')
                 internalReference: '',
                 additionnalNotes: '' ,
             };
-            resolve([null, {Data: [{...payload}]}]);
-        })
+            resolve([null, { Data: [{ ...payload }] }]);
+        }),
     );
 const iznUpdateFund = jasmine.createSpy('iznUpdateFund')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 const defaultRequestIznesFundList = jasmine.createSpy('defaultRequestIznesFundList')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 
 const fundServiceSpy = {
-    iznCreateFund: iznCreateFund,
-    iznUpdateFund: iznUpdateFund,
-    defaultRequestIznesFundList: defaultRequestIznesFundList,
-    requestIznesFundList: requestIznesFundList,
+    iznCreateFund,
+    iznUpdateFund,
+    defaultRequestIznesFundList,
+    requestIznesFundList,
 };
 
 const ActivatedRouteStub = {
@@ -130,7 +130,7 @@ const ActivatedRouteStub = {
     }),
     setParams: (id: string) => {
         this.params = of({
-            id: id,
+            id,
         });
     },
     queryParams: new Subject(),
@@ -140,14 +140,14 @@ const pop = jasmine.createSpy('pop')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 const toasterServiceMock = {
-    pop: pop,
+    pop,
 };
 
 // Stub for translate
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
     transform(value: any): any {
         return value;
@@ -157,14 +157,14 @@ export class TranslatePipe implements PipeTransform {
 // Stub for routerLink
 @Directive({
     selector: '[routerLink]',
-    host: { '(click)': 'onClick()' }
+    host: { '(click)': 'onClick()' },
 })
 class RouterLinkDirectiveStub {
     @Input('routerLink') linkParams: any;
     navigatedTo: any = null;
 
     onClick() {
-    this.navigatedTo = this.linkParams;
+        this.navigatedTo = this.linkParams;
     }
 }
 
@@ -197,7 +197,7 @@ describe('FundComponent', () => {
                 ReactiveFormsModule,
                 SelectModule,
                 ClarityModule,
-                SelectModule,
+                SetlComponentsModule,
                 DpDatePickerModule,
                 BrowserAnimationsModule,
                 SetlPipesModule,
@@ -218,23 +218,23 @@ describe('FundComponent', () => {
                                 path: 'product/fund/:id',
                                 component: FundComponent,
                             },
-                        ]
+                        ],
                     },
                 ]),
             ],
             providers: [
-                {provide: 'product-config', useValue: productConfig},
-                {provide: OfiFundService, useValue: fundServiceSpy},
-                {provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub},
-                {provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub},
-                {provide: OfiCurrenciesService, useValue: OfiCurrenciesServiceStub},
-                {provide: NgRedux, useValue: ngReduxSpy},
-                {provide: ToasterService, useValue: toasterServiceMock},
-                {provide: MultilingualService, useValue: MultilingualServiceSpy},
-                {provide: ConfirmationService, useValue: ConfirmationServiceSpy},
-                {provide: ActivatedRoute, useValue: ActivatedRouteStub},
-                {provide: Location, useValue: LocationSpy},
-            ]
+                { provide: 'product-config', useValue: productConfig },
+                { provide: OfiFundService, useValue: fundServiceSpy },
+                { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
+                { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
+                { provide: OfiCurrenciesService, useValue: OfiCurrenciesServiceStub },
+                { provide: NgRedux, useValue: ngReduxSpy },
+                { provide: ToasterService, useValue: toasterServiceMock },
+                { provide: MultilingualService, useValue: MultilingualServiceSpy },
+                { provide: ConfirmationService, useValue: ConfirmationServiceSpy },
+                { provide: ActivatedRoute, useValue: ActivatedRouteStub },
+                { provide: Location, useValue: LocationSpy },
+            ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
@@ -248,7 +248,7 @@ describe('FundComponent', () => {
 
         comp = fixture.componentInstance;
         comp.param = 'new';
-        comp.managementCompanyItems = [{id: '0', text: 'test management company'}];
+        comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
                 umbrellaFundID: 7,
@@ -277,25 +277,25 @@ describe('FundComponent', () => {
             },
         };
         comp.umbrellaItems = [
-            {id: '0', text: 'none'},
-            {id: 7, text: 'test'},
+            { id: '0', text: 'none' },
+            { id: 7, text: 'test' },
         ];
 
         comp.fundCurrencyItems = [
-            {id: 0, text: 'EUR'},
-            {id: 1, text: 'USD'},
-            {id: 2, text: 'GBP'},
-            {id: 3, text: 'CHF'},
-            {id: 4, text: 'JPY'},
-            {id: 5, text: 'AUD'},
-            {id: 6, text: 'NOK'},
-            {id: 7, text: 'SEK'},
-            {id: 8, text: 'ZAR'},
-            {id: 9, text: 'RUB'},
-            {id: 10, text: 'SGD'},
-            {id: 11, text: 'AED'},
-            {id: 12, text: 'CNY'},
-            {id: 13, text: 'PLN'}
+            { id: 0, text: 'EUR' },
+            { id: 1, text: 'USD' },
+            { id: 2, text: 'GBP' },
+            { id: 3, text: 'CHF' },
+            { id: 4, text: 'JPY' },
+            { id: 5, text: 'AUD' },
+            { id: 6, text: 'NOK' },
+            { id: 7, text: 'SEK' },
+            { id: 8, text: 'ZAR' },
+            { id: 9, text: 'RUB' },
+            { id: 10, text: 'SGD' },
+            { id: 11, text: 'AED' },
+            { id: 12, text: 'CNY' },
+            { id: 13, text: 'PLN' },
         ];
 
         tick();
@@ -391,13 +391,13 @@ describe('FundComponent', () => {
 
             // Fund Main Informations
             const formGroupMainEls = fixture.debugElement.queryAllNodes(
-                By.css('form.fundForm > .well + .well .well:first-child div.form-group')
+                By.css('form.fundForm > .well + .well .well:first-child div.form-group'),
             );
             expect(formGroupMainEls.length).toEqual(26);
 
             // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
             const formGroupOptionEls = fixture.debugElement.queryAllNodes(
-                By.css('form.fundForm > .well + .well .well:last-child div.form-group')
+                By.css('form.fundForm > .well + .well .well:last-child div.form-group'),
             );
             expect(formGroupOptionEls.length).toEqual(22);
         }));
@@ -454,7 +454,7 @@ describe('FundComponent', () => {
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{
                         id: comp.enums.typeOfEuDirective.UCITS,
-                        text: 'ucits'
+                        text: 'ucits',
                     }]);
                     tick();
                     fixture.detectChanges();
@@ -468,7 +468,7 @@ describe('FundComponent', () => {
                     comp.fundForm.controls['isEuDirective'].setValue(comp.enums.isEuDirective.YES.toString());
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{
                         id: comp.enums.typeOfEuDirective.Other,
-                        text: 'Other'
+                        text: 'Other',
                     }]);
                     tick();
                     fixture.detectChanges();
@@ -504,7 +504,7 @@ describe('FundComponent', () => {
 
                     comp.fundForm.controls['typeOfEuDirective'].setValue([{
                         id: comp.enums.typeOfEuDirective.Other,
-                        text: 'Other'
+                        text: 'Other',
                     }]);
                     tick();
                     fixture.detectChanges();
@@ -516,7 +516,7 @@ describe('FundComponent', () => {
                 it('should display the homeCountryLegalType input', fakeAsync(() => {
                     const homeCountryLegalTypeBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#homeCountryLegalType'));
                     expect(homeCountryLegalTypeBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'LU', text: 'Luxembourg'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'LU', text: 'Luxembourg' }]);
                     tick();
                     fixture.detectChanges();
                     const homeCountryLegalTypeAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#homeCountryLegalType'));
@@ -540,7 +540,7 @@ describe('FundComponent', () => {
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['homeCountryLegalType'].value).toEqual(testValue);
 
-                    comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['homeCountryLegalType'].value).toEqual([]);
@@ -551,7 +551,7 @@ describe('FundComponent', () => {
                 it('should display the transferAgent select when fundDomicile is set to \'IE\'', fakeAsync(() => {
                     const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'IE', text: 'Ireland'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'IE', text: 'Ireland' }]);
                     tick();
                     fixture.detectChanges();
                     const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
@@ -561,7 +561,7 @@ describe('FundComponent', () => {
                 it('should display the transferAgent select when fundDomicile is set to \'LU\'', fakeAsync(() => {
                     const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'LU', text: 'Luxembourg'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'LU', text: 'Luxembourg' }]);
                     tick();
                     fixture.detectChanges();
                     const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
@@ -571,7 +571,7 @@ describe('FundComponent', () => {
                 it('should not display the transferAgent select', fakeAsync(() => {
                     const transferAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
                     expect(transferAgentBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
                     const transferAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#transferAgent'));
@@ -585,7 +585,7 @@ describe('FundComponent', () => {
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['transferAgent'].value).toEqual(testValue);
 
-                    comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['transferAgent'].value).toEqual([]);
@@ -596,7 +596,7 @@ describe('FundComponent', () => {
                 it('should display the centralizingAgent select when fundDomicile is set to \'FR\'', fakeAsync(() => {
                     const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'FR', text: 'France'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'FR', text: 'France' }]);
                     tick();
                     fixture.detectChanges();
                     const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
@@ -606,7 +606,7 @@ describe('FundComponent', () => {
                 it('should not display the centralizingAgent select', fakeAsync(() => {
                     const centralizingAgentBeforeEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
                     expect(centralizingAgentBeforeEls.length).toEqual(0);
-                    comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
                     const centralizingAgentAfterEls = fixture.debugElement.queryAllNodes(By.css('ng-select#centralizingAgent'));
@@ -620,7 +620,7 @@ describe('FundComponent', () => {
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['centralizingAgent'].value).toEqual(testValue);
 
-                    comp.fundForm.controls['domicile'].setValue([{id: 'AF', text: 'Afghanistan'}]);
+                    comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
                     expect(comp.fundForm.controls['centralizingAgent'].value).toEqual([]);
@@ -740,22 +740,22 @@ describe('FundComponent', () => {
                 legalEntityIdentifier: null,
                 registerOffice: null,
                 registerOfficeAddress: null,
-                domicile: [{id: 'AF', text: 'Afghanistan'}],
+                domicile: [{ id: 'AF', text: 'Afghanistan' }],
                 isEuDirective: '0',
                 typeOfEuDirective: null,
                 UcitsVersion: null,
-                legalForm: [{id: '0', text: 'Contractual Fund'}],
-                nationalNomenclatureOfLegalForm: [{id: '2', text: 'BE Fonds commun de placement (FCP)'}],
+                legalForm: [{ id: '0', text: 'Contractual Fund' }],
+                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
                 homeCountryLegalType: null,
                 fundCreationDate: null,
                 fundLaunchate: null,
-                fundCurrency: [{text: 'Rwanda Franc RWF', id: '124'}],
+                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
                 openOrCloseEnded: '0',
                 fiscalYearEnd: '2017-02',
                 isFundOfFund: '0',
-                managementCompanyID: [{id: '0', text: 'test management company'}],
-                fundAdministrator: [{id: '1', text: 'Fund Admin 1'}],
-                custodianBank: [{id: '1', text: 'Custodian Bank 1'}],
+                managementCompanyID: [{ id: '0', text: 'test management company' }],
+                fundAdministrator: [{ id: '1', text: 'Fund Admin 1' }],
+                custodianBank: [{ id: '1', text: 'Custodian Bank 1' }],
                 investmentManager: null,
                 principalPromoter: null,
                 payingAgent: null,
@@ -763,7 +763,7 @@ describe('FundComponent', () => {
                 transferAgent: null,
                 centralizingAgent: null,
                 isDedicatedFund: '0',
-                portfolioCurrencyHedge: [{id: '1', text: 'No Hedge'}],
+                portfolioCurrencyHedge: [{ id: '1', text: 'No Hedge' }],
                 globalItermediaryIdentification: null,
                 delegatedManagementCompany: null,
                 investmentAdvisor: null,
@@ -833,7 +833,7 @@ describe('FundComponent', () => {
                 it('should fire the toaster service with a success message', fakeAsync(() => {
                     const expectedResult = [
                         'success',
-                        `${testPayload.fundName} has been successfully created.`
+                        `${testPayload.fundName} has been successfully created.`,
                     ];
                     comp.submitFundForm();
                     tick();
@@ -888,7 +888,7 @@ describe('FundComponent', () => {
                 it('should fire the toaster service with a success message', fakeAsync(() => {
                     const expectedResult = [
                         'success',
-                        `${testPayload.fundName} has been successfully updated.`
+                        `${testPayload.fundName} has been successfully updated.`,
                     ];
                     comp.submitFundForm();
                     tick();
