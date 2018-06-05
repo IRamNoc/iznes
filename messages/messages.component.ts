@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ToasterService} from 'angular2-toaster';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
+import {FileDownloader} from "../../utils";
 
 @Component({
     selector: 'setl-messages',
@@ -29,6 +30,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     @select(['message', 'myMessages', 'requestMailList']) requestMailList;
     @select(['wallet', 'walletDirectory', 'walletList']) getWalletDirectoryList;
     @select(['message', 'myMessages', 'counts']) getMailCounts;
+    @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
 
     public messages = [];
     public categories;
@@ -57,6 +60,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     private disabled = false;
     private messageService: MessagesService;
     public mailHelper: MailHelper;
+
+    socketToken: string;
+    userId: string;
 
     subscriptionsArray: Array<Subscription> = [];
 
@@ -94,6 +100,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 private router: Router,
                 private toaster: ToasterService,
                 private logService: LogService,
+                private _fileDownloader: FileDownloader,
                 @Inject(APP_CONFIG) _appConfig: AppConfig) {
         this.mailHelper = new MailHelper(ngRedux, myMessageService);
         this.messageService = new MessagesService(this.ngRedux, this.myMessageService);
@@ -136,6 +143,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.subscriptionsArray.push(
             this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState))
         );
+
+        this.subscriptionsArray.push(this.tokenOb.subscribe(token => {
+            this.socketToken = token;
+        }));
+
+        this.subscriptionsArray.push(this.userIdOb.subscribe(userId => {
+            this.userId = userId;
+        }));
 
         Observable.combineLatest([
             this.getMailCounts,
@@ -288,12 +303,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Checked Deleted - Multiselect
      */
     checkedDeleted() {
-        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message,1));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message, 1));
         this.refreshMailbox();
     }
 
     checkedPutBack() {
-        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message,0));
+        this.checked.forEach(message => this.mailHelper.deleteMessage(this.connectedWalletId, message, 0));
         this.refreshMailbox();
     }
 
@@ -550,5 +565,14 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     replyMessage() {
         this.messageService.saveReply(this.currentMessage);
         this.router.navigateByUrl('/messages/compose');
+    }
+
+    downloadTxtFile(id) {
+        this._fileDownloader.downLoaderFile({
+            method: 'getIznMT502',
+            token: this.socketToken,
+            orderId: id,
+            userId: this.userId,
+        });
     }
 }
