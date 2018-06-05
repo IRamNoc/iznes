@@ -48,6 +48,7 @@ import {MultilingualService} from '@setl/multilingual';
 export class InvestFundComponent implements OnInit, OnDestroy {
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
+    quantityDecimalSize = 5;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -158,6 +159,30 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
+
+    /**
+     * This function pads floats as string with zeros
+     * @param value {float} the value to pad with zeros
+     * @param size {int} the wanted decimal size
+     */
+    static padWithZeros(value: string, size: number): string {
+        const len = value.split('.')[1].length;
+        if (len === size) {
+            return value;
+        }
+        if (len < size) {
+            let newValue = value;
+
+            while (newValue.split('.')[1].length < size) {
+                newValue += '0';
+            }
+            return newValue;
+        }
+
+        const newValue = value.split('.');
+        return `${newValue[0]}.${newValue[1].slice(0, size)}`;
+
+    }
 
     get feePercentage(): number {
         return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
@@ -384,7 +409,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.updateDateInputs();
 
-
         }));
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
@@ -593,12 +617,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const callBack = {
             'quantity': (value) => {
 
-                const newValue = this._moneyValuePipe.transform(value, this.shareData.maximumNumDecimal);
-
+                const val = Number(value.toString().replace(/\s+/g, ''));
                 /**
                  * amount = unit * nav
                  */
-                const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
                 beTriggered.setValue(this._moneyValuePipe.transform(amount.toString(), 4));
 
                 // calculate fee
@@ -620,7 +643,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  */
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14);
-                beTriggered.setValue(this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal));
+                const newQuantity = InvestFundComponent.padWithZeros(
+                    this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal),
+                    this.quantityDecimalSize,
+                );
+                beTriggered.setValue(newQuantity);
 
                 // calculate fee
                 const fee = calFee(newValue, this.feePercentage);
@@ -818,6 +845,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.shareData.kiid;
     }
 
+    unSubscribeQuantity() {
+        const newValue = InvestFundComponent.padWithZeros(this.quantity.value, this.quantityDecimalSize);
+
+        this.quantity.setValue(newValue);
+        this.unSubscribeForChange();
+    }
+
     unSubscribeForChange(): void {
         if (this.inputSubscription) {
             this.inputSubscription.unsubscribe();
@@ -859,8 +893,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
     }
 
-    roundAmount(){
-        this.amount.setValue(Math.ceil(this._moneyValuePipe.parse(this.amount.value) / (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal))));
+    roundAmount() {
+        const moneyParsedValue = this._moneyValuePipe.parse(this.amount.value);
+        const newValue = Math.ceil(
+            moneyParsedValue /
+            (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))
+        ) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)));
+        const paddedNewValue = InvestFundComponent.padWithZeros(newValue.toString(), 4);
+
+        this.amount.setValue(paddedNewValue);
         this.unSubscribeForChange();
     }
 }
