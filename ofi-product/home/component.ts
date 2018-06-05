@@ -300,7 +300,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 fundList.push({
                     fundID: fund.fundID,
                     fundName: fund.fundName,
-                    legalEntityIdentifier: fund.legalEntityIdentifier,
+                    legalEntityIdentifier: fund.legalEntityIdentifier || 'N/A',
                     managementCompany: _.get(this.managementCompanyAccessList, [fund.managementCompanyID, 'companyName'], ''),
                     domicile: domicile.text,
                     lawStatus: lawStatus.text,
@@ -378,7 +378,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     umbrellaFundName: item.get('umbrellaFundName', ''),
                     registerOffice: item.get('registerOffice', ''),
                     registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
+                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0) || 'N/A',
                     domicile: domicile.text,
                     umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
                     managementCompany: _.get(this.managementCompanyAccessList, [item.get('managementCompanyID', 0), 'companyName'], ''),
