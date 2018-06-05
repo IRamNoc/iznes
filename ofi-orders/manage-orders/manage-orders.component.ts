@@ -289,55 +289,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }));
 
         let orderStream$;
+        let orderListStream$;
         if (!this.isInvestorUser) {  // AM side
             orderStream$ = this.requestedOfiAmOrdersOb;
-            this.subscriptions.push(this.OfiAmOrdersListOb.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+            orderListStream$ = this.OfiAmOrdersListOb;
+            this.subscriptions.push(orderListStream$.subscribe((list) => this.getAmOrdersListFromRedux(list)));
             this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
             this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
         } else if (this.isInvestorUser) {  // INV side
             orderStream$ = this.requestedOfiInvOrdersOb;
-            this.subscriptions.push(this.OfiInvOrdersListOb.subscribe((list) => this.getInvOrdersListFromRedux(list)));
+            orderListStream$ = this.OfiInvOrdersListOb;
+            this.subscriptions.push(orderListStream$.subscribe((list) => this.getInvOrdersListFromRedux(list)));
             this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe(
                 (requested) => this.requestMyFundAccess(requested)));
             this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
         }
-
-        this.subscriptions.push(this.route.params.subscribe(params => {
-            this.orderID = params['tabid'];
-            if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
-                const order = this.ordersList.find(elmt => {
-                    if (elmt.orderID.toString() === this.orderID.toString()) {
-                        return elmt;
-                    }
-                });
-                if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
-                    this.fundShareID = order.fundShareID;
-                    let tabTitle = '';
-                    if (order.orderType === 3) tabTitle += 'Subscription: ';
-                    if (order.orderType === 4) tabTitle += 'Redemption: ';
-                    tabTitle += ' ' + this.getOrderRef(this.orderID);
-
-                    const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
-                    if (tabAlreadyHere === undefined) {
-                        this.tabsControl.push(
-                            {
-                                title: {
-                                    icon: 'fa-shopping-basket',
-                                    text: tabTitle,
-                                },
-                                orderId: this.orderID,
-                                active: true,
-                                orderData: order,
-                            },
-                        );
-                    }
-                    this.setTabActive(this.orderID);
-
-                    this.updateCurrentFundShare();
-
-                }
-            }
-        }));
 
         this.createForm();
         this.setInitialTabs();
@@ -357,11 +323,58 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         });
 
+        let routeParams$ = this.route.params;
+        let routeCombinedSubscription = orderListStream$
+            .filter(orders => !_.isEmpty(orders))
+            .take(1)
+            .switchMap(() => routeParams$)
+            .subscribe(params => {
+                this.routeUpdate(params);
+            });
+        this.subscriptions.push(routeCombinedSubscription);
+
         this.subscriptions.push(combinedSubscription);
         this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
 
         this.detectChanges();
+    }
+
+    routeUpdate(params){
+        this.orderID = params['tabid'];
+        if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
+            const order = this.ordersList.find(elmt => {
+                if (elmt.orderID.toString() === this.orderID.toString()) {
+                    return elmt;
+                }
+            });
+            if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
+                this.fundShareID = order.fundShareID;
+                let tabTitle = '';
+                if (order.orderType === 3) tabTitle += 'Subscription: ';
+                if (order.orderType === 4) tabTitle += 'Redemption: ';
+                tabTitle += ' ' + this.getOrderRef(this.orderID);
+
+                const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
+                if (tabAlreadyHere === undefined) {
+                    this.tabsControl.push(
+                        {
+                            title: {
+                                icon: 'fa-shopping-basket',
+                                text: tabTitle,
+                            },
+                            orderId: this.orderID,
+                            active: true,
+                            orderData: order,
+                        },
+                    );
+                }
+                this.setTabActive(this.orderID);
+
+                this.updateCurrentFundShare();
+
+            }
+        }
     }
 
     ngAfterViewInit() {

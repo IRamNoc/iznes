@@ -36,6 +36,7 @@ import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
+import {MessagesService} from '@setl/core-messages';
 
 @Component({
     selector: 'app-invest-fund',
@@ -147,6 +148,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     subPortfolio;
     addressListObj;
+
+    amountLimit : number = 15000000;
 
     panels = {
         1: true,
@@ -328,6 +331,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return Boolean(redeeming >= balance);
     }
 
+    get amountTooBig(){
+        let value = this.amount.value;
+        let quantity = this._moneyValuePipe.parse(value, 4);
+
+        if(isNaN(quantity)){
+            quantity = 0;
+        }
+
+        return quantity > this.amountLimit;
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 public _moneyValuePipe: MoneyValuePipe,
                 private _myWalletService: MyWalletsService,
@@ -340,7 +354,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _router: Router,
                 private logService: LogService,
                 public _translate: MultilingualService,
-                private _ngRedux: NgRedux<any>) {
+                private _ngRedux: NgRedux<any>,
+                private _messagesService: MessagesService
+    ) {
     }
 
     ngOnDestroy() {
@@ -594,12 +610,33 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
             this.handleClose();
 
+            if(this.amountTooBig){
+                this.sendMessageToAM({
+                    walletID : this.shareData.walletID,
+                    orderTypeLabel : this.orderTypeLabel,
+                    orderID : orderId,
+                    orderRef : orderRef
+                });
+            }
+
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
             this._toaster.pop('warning', errorMessage);
         });
 
+    }
+//this.shareData.walletId
+
+    sendMessageToAM(params){
+        const amWalletID = params.walletID;
+        const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
+        const body = `<p>Hello,<br /><br />
+Please be aware that the ${params.orderTypeLabel} order ${params.orderRef} has exceeded the limit of 15 million.<br />
+<a href="/#/manage-orders/${params.orderID}" class="btn btn-secondary">Go to this order</a><br /><br />
+The IZNES Team.</p>`;
+
+        this._messagesService.sendMessage([amWalletID], subject, body, null);
     }
 
     subscribeForChange(type: string): void {
@@ -787,11 +824,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this._moneyValuePipe.parse(this.quantity.value);
         const amountStr = this._moneyValuePipe.transform(amount, 4);
         const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
-
-        this._confirmationService.create(
-            '<span>Order confirmation</span>',
-            `
+        const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
+        let message =             `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            ${amountMessage}
             <table class="table grid">
                 <tbody>
                     <tr>
@@ -832,7 +868,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-            `,
+            `;
+
+        this._confirmationService.create(
+            '<span>Order confirmation</span>',
+            message,
             {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
         ).subscribe((ans) => {
             if (ans.resolved) {
