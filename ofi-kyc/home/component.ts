@@ -7,6 +7,8 @@ import {fromJS} from 'immutable';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 
+import {MultilingualService} from '@setl/multilingual';
+
 /* Ofi orders request service. */
 import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
 import {setInformations, KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
@@ -66,6 +68,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private ofiKycService: OfiKycService,
                 private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
+                public _translate: MultilingualService,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;

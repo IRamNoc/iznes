@@ -11,6 +11,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
 import {setRequestedCollectiveArchive} from '../../ofi-store/ofi-orders/collective-archive/actions';
 import {FormControl, FormGroup} from "@angular/forms";
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-ofi-pnl-report',
@@ -51,6 +52,7 @@ export class OfiCollectiveArchiveComponent implements OnInit, OnDestroy {
                 private _numberConverterService: NumberConverterService,
                 private _alertsService: AlertsService,
                 private _ofiOrdersService: OfiOrdersService,
+                public _translate: MultilingualService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 

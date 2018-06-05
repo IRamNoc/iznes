@@ -48,7 +48,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         private _moneyValuePipe: MoneyValuePipe,
         private _fb: FormBuilder,
         private _router: Router,
-        private multilingualService: MultilingualService,
+        public _translate: MultilingualService,
         private logService: LogService,
         @Inject(APP_CONFIG) appConfig: AppConfig
     ) {

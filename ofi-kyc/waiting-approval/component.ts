@@ -13,6 +13,7 @@ import {ToasterService} from 'angular2-toaster';
 import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
 import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {ConfirmationService, LogService} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 enum Statuses {
     waitingApproval = 1,
@@ -77,6 +78,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                 private _router: Router,
                 private walletsService: MyWalletsService,
                 private logService: LogService,
+                public _translate: MultilingualService,
                 private messagesService: MessagesService,
                 private domSanitizer: DomSanitizer
     ) {

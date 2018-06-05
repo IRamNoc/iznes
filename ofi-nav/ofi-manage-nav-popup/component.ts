@@ -20,6 +20,7 @@ import {
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav-add',
@@ -65,6 +66,7 @@ export class OfiManageNavPopup implements OnInit {
                 private ofiNavService: OfiNavService,
                 private numberConverterService: NumberConverterService,
                 private popupService: OfiManageNavPopupService,
+                public _translate: MultilingualService,
                 private moneyValuePipe: MoneyValuePipe
                 ) {
 
@@ -137,15 +139,18 @@ export class OfiManageNavPopup implements OnInit {
             [_.find(this.statusItems, {'id': share.status})] :
             [this.statusItems[0]];
 
+        const nav = this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest;
+
         this.navForm = new FormGroup({
-            nav: new FormControl((this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest)),
-            price: new FormControl(this.navLatest || 0, Validators.compose([
+            nav: new FormControl(nav),
+            price: new FormControl('', Validators.compose([
                 Validators.required,
+                Validators.max(10000000),
                 numberValidator,
             ])),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
-            status: new FormControl(statusObj, Validators.required)
+            status: new FormControl([], Validators.required)
         });
 
         if(mode === model.NavPopupMode.ADD) {
@@ -203,7 +208,7 @@ export class OfiManageNavPopup implements OnInit {
             fundShareIsin: this.share.isin,
             fundDate: `${this.navForm.controls.navDate.value} 00:00:00`,
             navPublicationDate: `${this.navForm.controls.navPubDate.value} 00:00:00`,
-            price: this.numberConverterService.toBlockchain(this.navForm.value.price),
+            price: this.numberConverterService.toBlockchain(this.navForm.controls.price.value.replace(/\s+/g, '')),
             priceStatus: this.navForm.controls.status.value[0].id
         }
 
@@ -341,10 +346,15 @@ export class OfiManageNavPopup implements OnInit {
 
 }
 
+const regex = {
+    floatMaxTwoDecimals: /^\d+(\.\d{1,2})?$/,
+}
+
 /**
  * Number validator:
  *
  * - Takes a `Control` as it's input and
+ *   checks for 2 max decimal float number
  * - Returns a `StringMap<string, boolean>` where the key is "error code" and
  *   the value is `true` if it fails
  */
@@ -352,10 +362,12 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     // todo
     // check if number is none zero as well
 
-    const testString = control.value.toString();
-    const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
+    const testString = control.value.replace(/\s+/g, '');
 
-    if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
-        return {invalidNumber: true};
+    if (!regex.floatMaxTwoDecimals.test(testString)) {
+        return {
+            invalidNumber: true,
+        };
     }
+
 }

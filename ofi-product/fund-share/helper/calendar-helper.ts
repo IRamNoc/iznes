@@ -1,11 +1,10 @@
-import {IznesShareDetail} from '../../../ofi-store/ofi-product/fund-share-list/model';
-import {OrderType} from '../../../ofi-orders/order.model';
+import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import { OrderType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
 
-
-export const FranceHolidays2018 = [
+export const FRANCE_HOLIDAYS_2018 = [
     //     Monday 1 January 2018 (New Year’s Day)
     '2018-01-01',
 
@@ -18,6 +17,8 @@ export const FranceHolidays2018 = [
     // Tuesday 1 May 2018 (Labour Day)
     '2018-05-01',
 
+    '2018-06-04',
+
     // Tuesday 25 December 2018 (Christmas Day)
     '2018-12-25',
 
@@ -25,34 +26,32 @@ export const FranceHolidays2018 = [
     '2018-12-26',
 ];
 
-// set holidays
-moment.locale('fr', {
-    holidays: FranceHolidays2018,
-    holidayFormat: 'YYYY-MM-DD'
-});
-
-export const DayNumber = {
+export const DAY_NUMBER = {
     [E.WeeklyDealingDaysEnum.Monday]: 1,
     [E.WeeklyDealingDaysEnum.Tuesday]: 2,
     [E.WeeklyDealingDaysEnum.Wednesday]: 3,
     [E.WeeklyDealingDaysEnum.Thursday]: 4,
-    [E.WeeklyDealingDaysEnum.Friday]: 5
+    [E.WeeklyDealingDaysEnum.Friday]: 5,
 };
 
 export class CalendarHelper {
     fundShare: IznesShareDetail;
     orderType: OrderType = OrderType.Subscription;
+    fundShareHoliday: string [];
 
     get tradeCyclePeriod() {
         return {
-            [OrderType.Subscription]: this.fundShare.subscriptionTradeCyclePeriod || E.TradeCyclePeriodEnum.Daily,
-            [OrderType.Redemption]: this.fundShare.redemptionTradeCyclePeriod || E.TradeCyclePeriodEnum.Daily,
+            [OrderType.Subscription]: this.fundShare.subscriptionTradeCyclePeriod ||
+            E.TradeCyclePeriodEnum.Daily,
+            [OrderType.Redemption]: this.fundShare.redemptionTradeCyclePeriod ||
+            E.TradeCyclePeriodEnum.Daily,
         }[this.orderType];
     }
 
     get tradeTimeZone(): any {
         return {
-            [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone || E.TimezonesEnum.UTC,
+            [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
+            E.TimezonesEnum.UTC,
             [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || E.TimezonesEnum.UTC,
         }[this.orderType];
     }
@@ -72,13 +71,13 @@ export class CalendarHelper {
                 [OrderType.Subscription]: {
                     [E.TradeCyclePeriodEnum.Weekly]: this.fundShare.weeklySubscriptionDealingDays,
                     [E.TradeCyclePeriodEnum.Monthly]: this.fundShare.monthlySubscriptionDealingDays,
-                    [E.TradeCyclePeriodEnum.Yearly]: this.fundShare.yearlySubscriptionDealingDays
+                    [E.TradeCyclePeriodEnum.Yearly]: this.fundShare.yearlySubscriptionDealingDays,
                 },
                 [OrderType.Redemption]: {
                     [E.TradeCyclePeriodEnum.Weekly]: this.fundShare.weeklyRedemptionDealingDays,
                     [E.TradeCyclePeriodEnum.Monthly]: this.fundShare.monthlyRedemptionDealingDays,
-                    [E.TradeCyclePeriodEnum.Yearly]: this.fundShare.yearlyRedemptionDealingDays
-                }
+                    [E.TradeCyclePeriodEnum.Yearly]: this.fundShare.yearlyRedemptionDealingDays,
+                },
             }[this.orderType][this.tradeCyclePeriod] as any;
 
             return JSON.parse(tradeDaysJsonStr);
@@ -102,14 +101,23 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
-    constructor(fundShare: IznesShareDetail) {
+    constructor(fundShare: IznesShareDetail, fundShareHoliday: string[] = FRANCE_HOLIDAYS_2018) {
         this.fundShare = fundShare;
+
+        this.fundShareHoliday = fundShareHoliday;
+
+        // set holidays
+        moment.locale('fr', {
+            holidays: FRANCE_HOLIDAYS_2018,
+            holidayFormat: 'YYYY-MM-DD',
+        });
     }
 
     getNextCutoffDate(orderType: OrderType) {
-        let dayToFind = getSpecificDateCutOff(moment(), this.cutoffTime, this.tradeTimeZone);
+        this.orderType = orderType;
+        let dayToFind = this.getSpecificDateCutOff(moment(), this.cutoffTime, this.tradeTimeZone);
 
-        for (let i = 1; i < 365; i++) {
+        for (let i = 1; i < 365; i += 1) {
             const isCutoff = this.isValidCutoffDateTime(dayToFind, orderType);
             if (isCutoff) {
                 break;
@@ -121,39 +129,40 @@ export class CalendarHelper {
         return dayToFind;
     }
 
-
     isValidCutoffDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
 
         this.orderType = orderType;
 
-        const dateTimeToCheckCopy = getSpecificDateCutOff(momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZone);
+        const dateTimeToCheckCopy = this.getSpecificDateCutOff(
+            this.momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZone);
 
         // check the date cutoff is still in the future.
-        const isDateTimeToCheckInFuture = Boolean(dateTimeToCheckCopy.valueOf() > moment().valueOf());
+        const isDateTimeToCheckInFuture = Boolean(
+            dateTimeToCheckCopy.valueOf() > moment().valueOf());
 
         if (!isDateTimeToCheckInFuture) {
             return false;
         }
 
         // check the date is not holiday
-        if (isNonWorkingDate(dateTimeToCheckCopy)) {
+        if (this.isNonWorkingDate(dateTimeToCheckCopy)) {
             return false;
         }
 
-
-        // depend on the trade period, we will have different logic to check if provided dateTime is valid cutoff.
+        // depend on the trade period, we will have different logic to check if provided dateTime
+        // is valid cutoff.
         switch (this.tradeCyclePeriod) {
-            case E.TradeCyclePeriodEnum.Daily:
-                return true;
+        case E.TradeCyclePeriodEnum.Daily:
+            return true;
 
-            case E.TradeCyclePeriodEnum.Weekly:
-                return this.verifyWeeklyTradeDays(dateTimeToCheckCopy);
+        case E.TradeCyclePeriodEnum.Weekly:
+            return this.verifyWeeklyTradeDays(dateTimeToCheckCopy);
 
-            case E.TradeCyclePeriodEnum.Monthly:
-                return this.verifyMonthlyTradeDays(dateTimeToCheckCopy);
+        case E.TradeCyclePeriodEnum.Monthly:
+            return this.verifyMonthlyTradeDays(dateTimeToCheckCopy);
 
-            case E.TradeCyclePeriodEnum.Yearly:
-                return this.verifyYearlyTradeDays(dateTimeToCheckCopy);
+        case E.TradeCyclePeriodEnum.Yearly:
+            return this.verifyYearlyTradeDays(dateTimeToCheckCopy);
         }
 
         return false;
@@ -167,33 +176,35 @@ export class CalendarHelper {
             const dateTimeToCheckCopy = dateTimeToCheck.clone();
             // check if the day is a trade day
             switch (day.id) {
-                case E.WeeklyDealingDaysEnum.FirstBusinessDay:
-                    // if yesterday is not a working day. that means the day we are checking is first business day.
-                    const dateBeforeTheDateToCheck = dateTimeToCheckCopy.subtract(1, 'days');
-                    if (isNonWorkingDate(dateBeforeTheDateToCheck)) {
-                        return true;
-                    }
-                    break;
+            case E.WeeklyDealingDaysEnum.FirstBusinessDay:
+                // if yesterday is not a working day.
+                // that means the day we are checking is first business day.
+                const dateBeforeTheDateToCheck = dateTimeToCheckCopy.subtract(1, 'days');
+                if (this.isNonWorkingDate(dateBeforeTheDateToCheck)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysEnum.LastBusinessDay:
-                    // if tomorrow is not a working day. that means the day we checking is last business day.
-                    const dateAfterTheDateToCheck = dateTimeToCheckCopy.add(1, 'days');
-                    if (isNonWorkingDate(dateAfterTheDateToCheck)) {
-                        return true;
-                    }
-                    break;
+            case E.WeeklyDealingDaysEnum.LastBusinessDay:
+                // if tomorrow is not a working day. that means the day we checking
+                // is last business day.
+                const dateAfterTheDateToCheck = dateTimeToCheckCopy.add(1, 'days');
+                if (this.isNonWorkingDate(dateAfterTheDateToCheck)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysEnum.Monday:
-                case E.WeeklyDealingDaysEnum.Tuesday:
-                case E.WeeklyDealingDaysEnum.Wednesday:
-                case E.WeeklyDealingDaysEnum.Thursday:
-                case E.WeeklyDealingDaysEnum.Friday:
-                    const dayNumber = DayNumber[day.id];
+            case E.WeeklyDealingDaysEnum.Monday:
+            case E.WeeklyDealingDaysEnum.Tuesday:
+            case E.WeeklyDealingDaysEnum.Wednesday:
+            case E.WeeklyDealingDaysEnum.Thursday:
+            case E.WeeklyDealingDaysEnum.Friday:
+                const dayNumber = DAY_NUMBER[day.id];
 
-                    if (dayOfTheDate === dayNumber) {
-                        return true;
-                    }
-                    break;
+                if (dayOfTheDate === dayNumber) {
+                    return true;
+                }
+                break;
             }
         }
 
@@ -203,55 +214,57 @@ export class CalendarHelper {
     verifyMonthlyTradeDays(dateTimeToCheck: moment): boolean {
         const dayOfTheDate = Number(dateTimeToCheck.days());
         const dateOfTheMonth = Number(dateTimeToCheck.get('date'));
-        const businessDayOfTheMonth = Number(getMonthBusinessDayIndex(dateTimeToCheck));
+        const businessDayOfTheMonth = Number(this.getMonthBusinessDayIndex(dateTimeToCheck));
 
         for (const tradeDay of this.tradeDays) {
             const dateTimeToCheckCopy = dateTimeToCheck.clone();
 
             // check if the day is a trade day
             switch (tradeDay.termB) {
-                case E.WeeklyDealingDaysAltEnum.CalendarDay:
-                    if (Number(tradeDay.termA) === dateOfTheMonth) {
-                        return true;
-                    }
+            case E.WeeklyDealingDaysAltEnum.CalendarDay:
+                if (Number(tradeDay.termA) === dateOfTheMonth) {
+                    return true;
+                }
 
-                    // check if last calendar day
-                    if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastCalenderDayOfTheMonth(dateTimeToCheckCopy)) {
-                        return true;
-                    }
-                    break;
+                // check if last calendar day
+                if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                    this.isLastCalenderDayOfTheMonth(dateTimeToCheckCopy)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysAltEnum.BusinessDay:
-                    if (Number(tradeDay.termA) === businessDayOfTheMonth) {
-                        return true;
-                    }
+            case E.WeeklyDealingDaysAltEnum.BusinessDay:
+                if (Number(tradeDay.termA) === businessDayOfTheMonth) {
+                    return true;
+                }
 
-                    // check if last business day
-                    if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastBusinessDayOfTheMonth(dateTimeToCheckCopy)) {
-                        return true;
-                    }
-                    break;
+                // check if last business day
+                if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                    this.isLastBusinessDayOfTheMonth(dateTimeToCheckCopy)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysAltEnum.Monday:
-                case E.WeeklyDealingDaysAltEnum.Tuesday:
-                case E.WeeklyDealingDaysAltEnum.Wednesday:
-                case E.WeeklyDealingDaysAltEnum.Thursday:
-                case E.WeeklyDealingDaysAltEnum.Friday:
-                    // check if the numberOf week match
-                    const numberOfWeek = Number(tradeDay.termA);
-                    const currentNumberOfWeek = getWeekIndexOfTheMonth(dateTimeToCheckCopy);
-                    const numOfWeekMatch = Boolean(numberOfWeek === currentNumberOfWeek) ||
-                        Boolean(tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastWeekOfTheMonth(dateTimeToCheckCopy));
+            case E.WeeklyDealingDaysAltEnum.Monday:
+            case E.WeeklyDealingDaysAltEnum.Tuesday:
+            case E.WeeklyDealingDaysAltEnum.Wednesday:
+            case E.WeeklyDealingDaysAltEnum.Thursday:
+            case E.WeeklyDealingDaysAltEnum.Friday:
+                // check if the numberOf week match
+                const numberOfWeek = Number(tradeDay.termA);
+                const currentNumberOfWeek = this.getWeekIndexOfTheMonth(dateTimeToCheckCopy);
+                const numOfWeekMatch = Boolean(numberOfWeek === currentNumberOfWeek) ||
+                    Boolean(tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                        this.isLastWeekOfTheMonth(dateTimeToCheckCopy));
 
+                // check if the day match
+                const dayNumber = DAY_NUMBER[tradeDay.termB];
+                const dayMatch = Boolean(dayNumber === dayOfTheDate);
 
-                    // check if the day match
-                    const dayNumber = DayNumber[tradeDay.termB];
-                    const dayMatch = Boolean(dayNumber === dayOfTheDate);
-
-                    if (numOfWeekMatch && dayMatch) {
-                        return true;
-                    }
-                    break;
+                if (numOfWeekMatch && dayMatch) {
+                    return true;
+                }
+                break;
             }
         }
 
@@ -262,7 +275,7 @@ export class CalendarHelper {
     verifyYearlyTradeDays(dateTimeToCheck) {
         const dayOfTheDate = Number(dateTimeToCheck.days());
         const dateOfTheMonth = Number(dateTimeToCheck.get('date'));
-        const businessDayOfTheMonth = Number(getMonthBusinessDayIndex(dateTimeToCheck));
+        const businessDayOfTheMonth = Number(this.getMonthBusinessDayIndex(dateTimeToCheck));
         const monthOfTheYear = Number(dateTimeToCheck.get('month'));
 
         for (const tradeDay of this.tradeDays) {
@@ -275,49 +288,51 @@ export class CalendarHelper {
 
             // check if the day is a trade day
             switch (tradeDay.termB) {
-                case E.WeeklyDealingDaysAltEnum.CalendarDay:
-                    if (Number(tradeDay.termA) === dateOfTheMonth) {
-                        return true;
-                    }
+            case E.WeeklyDealingDaysAltEnum.CalendarDay:
+                if (Number(tradeDay.termA) === dateOfTheMonth) {
+                    return true;
+                }
 
-                    // check if last calendar day
-                    if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastCalenderDayOfTheMonth(dateTimeToCheckCopy)) {
-                        return true;
-                    }
-                    break;
+                // check if last calendar day
+                if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                    this.isLastCalenderDayOfTheMonth(dateTimeToCheckCopy)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysAltEnum.BusinessDay:
-                    if (Number(tradeDay.termA) === businessDayOfTheMonth) {
-                        return true;
-                    }
+            case E.WeeklyDealingDaysAltEnum.BusinessDay:
+                if (Number(tradeDay.termA) === businessDayOfTheMonth) {
+                    return true;
+                }
 
-                    // check if last business day
-                    if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastBusinessDayOfTheMonth(dateTimeToCheckCopy)) {
-                        return true;
-                    }
-                    break;
+                // check if last business day
+                if (tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                    this.isLastBusinessDayOfTheMonth(dateTimeToCheckCopy)) {
+                    return true;
+                }
+                break;
 
-                case E.WeeklyDealingDaysAltEnum.Monday:
-                case E.WeeklyDealingDaysAltEnum.Tuesday:
-                case E.WeeklyDealingDaysAltEnum.Wednesday:
-                case E.WeeklyDealingDaysAltEnum.Thursday:
-                case E.WeeklyDealingDaysAltEnum.Friday:
-                    // check if the numberOf week match
-                    const numberOfWeek = Number(tradeDay.termA);
-                    const currentNumberOfWeek = getWeekIndexOfTheMonth(dateTimeToCheckCopy);
-                    const numOfWeekMatch = Boolean(numberOfWeek === currentNumberOfWeek) ||
-                        Boolean(tradeDay.termA === E.MonthlyDealingDaysEnum.Last && isLastWeekOfTheMonth(dateTimeToCheckCopy));
+            case E.WeeklyDealingDaysAltEnum.Monday:
+            case E.WeeklyDealingDaysAltEnum.Tuesday:
+            case E.WeeklyDealingDaysAltEnum.Wednesday:
+            case E.WeeklyDealingDaysAltEnum.Thursday:
+            case E.WeeklyDealingDaysAltEnum.Friday:
+                // check if the numberOf week match
+                const numberOfWeek = Number(tradeDay.termA);
+                const currentNumberOfWeek = this.getWeekIndexOfTheMonth(dateTimeToCheckCopy);
+                const numOfWeekMatch = Boolean(numberOfWeek === currentNumberOfWeek) ||
+                    Boolean(tradeDay.termA === E.MonthlyDealingDaysEnum.Last &&
+                        this.isLastWeekOfTheMonth(dateTimeToCheckCopy));
 
+                // check if the day match
+                const dayNumber = DAY_NUMBER[tradeDay.termB];
+                const dayMatch = Boolean(dayNumber === dayOfTheDate);
 
-                    // check if the day match
-                    const dayNumber = DayNumber[tradeDay.termB];
-                    const dayMatch = Boolean(dayNumber === dayOfTheDate);
+                if (numOfWeekMatch && dayMatch) {
 
-                    if (numOfWeekMatch && dayMatch) {
-
-                        return true;
-                    }
-                    break;
+                    return true;
+                }
+                break;
             }
         }
 
@@ -327,7 +342,7 @@ export class CalendarHelper {
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!isWorkingDate(momentToMomentBusiness(dateTimeToChecks))) {
+        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
             return false;
         }
 
@@ -338,7 +353,7 @@ export class CalendarHelper {
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!isWorkingDate(momentToMomentBusiness(dateTimeToChecks))) {
+        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
             return false;
         }
 
@@ -349,187 +364,133 @@ export class CalendarHelper {
 
     getCutoffTimeForSpecificDate(dateToCheck: moment, orderType: OrderType) {
         this.orderType = orderType;
-        return getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZone);
+        return this.getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZone);
     }
 
     getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
-        cutoffDate = momentToMomentBusiness(cutoffDate);
+        cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const valuationDateStr = cutoffDate.clone().businessAdd(this.valuationOffSet).format('YYYY-MM-DD');
+        const valuationDateStr = cutoffDate.clone().businessAdd(
+            this.valuationOffSet).format('YYYY-MM-DD');
         return moment.utc(valuationDateStr).set({
             hour: 0,
             minute: 0,
-            second: 1
+            second: 1,
         });
     }
 
     getSettlementDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
-        cutoffDate = momentToMomentBusiness(cutoffDate);
+        cutoffDate = this.momentToMomentBusiness(cutoffDate);
         this.orderType = orderType;
 
-        const settlementDateStr = cutoffDate.clone().businessAdd(this.settlementOffSet).format('YYYY-MM-DD');
+        const settlementDateStr = cutoffDate.clone().businessAdd(
+            this.settlementOffSet).format('YYYY-MM-DD');
         const settlementDate = moment.utc(settlementDateStr).set({
             hour: 0,
             minute: 0,
-            second: 1
+            second: 1,
         });
 
         if (settlementDate.isSame(moment(), 'day')) {
-            return moment().add(2, 'minute');
+            return cutoffDate.clone().add(2, 'minute');
         }
 
         return settlementDate;
     }
 
-
     getCutoffDateFromValuation(valuationDate: moment, orderType: OrderType) {
-        valuationDate = momentToMomentBusiness(valuationDate);
+        valuationDate = this.momentToMomentBusiness(valuationDate);
         this.orderType = orderType;
 
         return valuationDate.clone().businessSubtract(this.valuationOffSet);
     }
 
     getCutoffDateFromSettlement(settlementDate: moment, orderType: OrderType) {
-        settlementDate = momentToMomentBusiness(settlementDate);
+        settlementDate = this.momentToMomentBusiness(settlementDate);
         this.orderType = orderType;
 
         return settlementDate.clone().businessSubtract(this.settlementOffSet);
     }
 
-}
-
-
-/**
- * Make sure we have a moment business day here
- * @param dateToConvert
- * @return {}
- */
-export function momentToMomentBusiness(dateToConvert): moment {
-    return moment(dateToConvert.valueOf());
-}
-
-/**
- * Convert moment object to specific timezone
- * @param momentObject
- * @param {TimezonesEnum} offSet
- * @return {any}
- */
-export function convertToTimeZone(momentObject, offSet: E.TimezonesEnum): any {
-    const offSetString = ShareValue.TimeZoneOffsetValue[offSet];
-    return moment(momentObject.valueOf()).add(1, 'hours');
-}
-
-
-export function getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment, tradeTimeZone: E.TimezonesEnum): moment {
-    const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
-    const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
-    const timeZoneDiff = currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
-
-    // work out the current date's cutoff
-    return dateToCheck.clone().set(
-        {
-            hour: (cutoffTime.get('hour') - timeZoneDiff),
-            minute: cutoffTime.get('minute'),
-            second: cutoffTime.get('second')
-        }
-    );
-}
-
-export function getTimeZoneDiff(tradeTimeZone: E.TimezonesEnum) {
-    const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
-    const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
-    return currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
-}
-
-
-export function isNonWorkingDate(dateToCheck) {
-    // // check if date is weekend.
-    // if (dateToCheck.isWeekendDay()) {
-    //     return true;
-    // }
-    //
-    // // check if date is bank holiday.
-    // const dateString = dateToCheck.format('YYYY-MM-DD');
-    // return Boolean(FranceHolidays2018.indexOf(dateString) !== -1);
-
-    return !dateToCheck.isBusinessDay();
-}
-
-export function isWorkingDate(dateToCheck) {
-    return Boolean(!isNonWorkingDate(dateToCheck));
-}
-
-export function getMonthBusinessDayIndex(dateToCheck) {
-
-    const lastDateOfLastMonth = dateToCheck.clone().date(0);
-    return dateToCheck.businessDiff(lastDateOfLastMonth);
-}
-
-export function getBankHolidaysForTheMonth(dateToCheck, onlyIncludePast) {
-    const monthIndexToCheck = dateToCheck.get('month');
-    const holidaysOfTheMonth: Array<any> = [];
-
-    for (const holiday of FranceHolidays2018) {
-        const mHoliday = moment(holiday, 'YYYY-MM-DD');
-        const holidayMonthIndex = mHoliday.get('month');
-
-        if (monthIndexToCheck === holidayMonthIndex) {
-            const isDayPast = Boolean(mHoliday.valueOf() < moment().valueOf());
-            if (!onlyIncludePast || !isDayPast) {
-                holidaysOfTheMonth.push(mHoliday);
-            }
-        }
+    /**
+     * Make sure we have a moment business day here
+     * @param dateToConvert
+     * @return {}
+     */
+    momentToMomentBusiness(dateToConvert): moment {
+        return moment(dateToConvert.valueOf());
     }
 
-    return holidaysOfTheMonth;
-}
+    getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
+                          tradeTimeZone: E.TimezonesEnum): moment {
+        const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
+        const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
+        const timeZoneDiff = currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
 
-export function getNumPastHolidaysForTheMonth(dateToCheck) {
-    return getBankHolidaysForTheMonth(dateToCheck, true).length;
-}
-
-export function getNumPastNonWeekDaysForTheMonth(dateToCheck) {
-    const dateToCheckCopy = dateToCheck.clone();
-    const firstDayOfTheMonth = dateToCheckCopy.set({
-        date: 1
-    });
-
-    return moment.weekendDays(firstDayOfTheMonth, dateToCheckCopy);
-}
-
-export function getWeekIndexOfTheMonth(dateToCheck) {
-    const weekArr = dateToCheck.monthBusinessWeeks();
-
-    let weekIndex = 1;
-    for (const week of weekArr) {
-
-        for (const day of week) {
-            if (day.date() === dateToCheck.date()) {
-                return weekIndex;
-            }
-        }
-        weekIndex++;
+        // work out the current date's cutoff
+        return dateToCheck.clone().set(
+            {
+                hour: (cutoffTime.get('hour') - timeZoneDiff),
+                minute: cutoffTime.get('minute'),
+                second: cutoffTime.get('second'),
+            },
+        );
     }
 
-    return 0;
-}
+    getTimeZoneDiff(tradeTimeZone: E.TimezonesEnum) {
+        const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
+        const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
+        return currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
+    }
 
-export function isLastCalenderDayOfTheMonth(dateToCheck) {
-    const dateToCheckCopy = dateToCheck.clone();
-    const lastDayOfTheMonth = dateToCheckCopy.add('months', 1).date(0);
-    return Boolean(lastDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
-}
+    isNonWorkingDate(dateToCheck) {
+        return !dateToCheck.isBusinessDay();
+    }
 
-export function isLastBusinessDayOfTheMonth(dateToCheck) {
-    const dateToCheckCopy = dateToCheck.clone();
-    const firstDayOfNextMonth = dateToCheckCopy.add('months', 1).date(1);
-    const lastBusinessDayOfTheMonth = firstDayOfNextMonth.prevBusinessDay();
-    return Boolean(lastBusinessDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
-}
+    isWorkingDate(dateToCheck) {
+        return Boolean(!this.isNonWorkingDate(dateToCheck));
+    }
 
-export function isLastWeekOfTheMonth(dateToCheck) {
-    const currentWeekIndex = getWeekIndexOfTheMonth(dateToCheck);
-    return Number(currentWeekIndex) === 4;
-}
+    getMonthBusinessDayIndex(dateToCheck) {
 
+        const lastDateOfLastMonth = dateToCheck.clone().date(0);
+        return dateToCheck.businessDiff(lastDateOfLastMonth);
+    }
+
+    getWeekIndexOfTheMonth(dateToCheck) {
+        const weekArr = dateToCheck.monthBusinessWeeks();
+
+        let weekIndex = 1;
+        for (const week of weekArr) {
+
+            for (const day of week) {
+                if (day.date() === dateToCheck.date()) {
+                    return weekIndex;
+                }
+            }
+            weekIndex += 1;
+        }
+
+        return 0;
+    }
+
+    isLastCalenderDayOfTheMonth(dateToCheck) {
+        const dateToCheckCopy = dateToCheck.clone();
+        const lastDayOfTheMonth = dateToCheckCopy.add('months', 1).date(0);
+        return Boolean(lastDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
+    }
+
+    isLastBusinessDayOfTheMonth(dateToCheck) {
+        const dateToCheckCopy = dateToCheck.clone();
+        const firstDayOfNextMonth = dateToCheckCopy.add('months', 1).date(1);
+        const lastBusinessDayOfTheMonth = firstDayOfNextMonth.prevBusinessDay();
+        return Boolean(lastBusinessDayOfTheMonth.get('date') === dateToCheckCopy.get('date'));
+    }
+
+    isLastWeekOfTheMonth(dateToCheck) {
+        const currentWeekIndex = this.getWeekIndexOfTheMonth(dateToCheck);
+        return Number(currentWeekIndex) === 4;
+    }
+
+}

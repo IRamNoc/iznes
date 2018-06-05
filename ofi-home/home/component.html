@@ -1,22 +1,22 @@
 <div class="p-1">
     <h1>
-        <i class="fa fa-home"></i> <span mltag="txt_home">Home</span> - {{ connectedWalletName }}
+        <i class="fa fa-home"></i> {{'Home - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
     </h1>
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 36">
-        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders/list">Order Book</app-counter-tile>
-        <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">Recordkeeping</app-counter-tile>
+        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders/list">{{'Order Book' | translate}}</app-counter-tile>
+        <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">{{'Recordkeeping' | translate}}</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralization">Precentralization Report</app-counter-tile>
-        <app-counter-tile name="contracts" icon="ellipsis-h" [count]="" color="blue" route="product-module/net-asset-value">Net Asset Value</app-counter-tile>
+        <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralization">{{'Precentralization Report' | translate}}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="ellipsis-h" [count]="" color="blue" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
     </app-dashboard>
 
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 46">
-        <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0">Place Order</app-counter-tile>
-        <app-counter-tile name="connections" icon="book" [count]="" color="green" route="order-book/my-orders/list">My Orders</app-counter-tile>
+        <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0">{{'Place Order' | translate}}</app-counter-tile>
+        <app-counter-tile name="connections" icon="book" [count]="" color="green" route="order-book/my-orders/list">{{'My Orders' | translate}}</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio">Sub-portfolio</app-counter-tile>
-        <app-counter-tile name="contracts" icon="user" [count]="" color="blue" route="profile/my-information">My Information</app-counter-tile>
+        <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio">{{'Sub-portfolio' | translate}}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="user" [count]="" color="blue" route="profile/my-information">{{'My Information' | translate}}</app-counter-tile>
     </app-dashboard>
 
 </div>

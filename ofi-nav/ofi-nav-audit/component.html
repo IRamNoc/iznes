@@ -1,42 +1,32 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-bars"></i>
-        <span mltag="txt_navaudittrail">NAV Audit Trail</span> - {{navFund['fundShareName']}}
+        <i class="fa fa-bars"></i>{{'NAV Audit Trail - @navFund[\'fundShareName\']@' | translate: {'navFund[\'fundShareName\']': navFund['fundShareName']} }}
+
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabNavAuditButton">
-            <span mltag="txt_audit">Audit</span>
+        <button clrTabLink id="tabNavAuditButton">{{'Audit' | translate}}
+
         </button>
         <clr-tab-content class="outer">
             <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" mltag="txt_datefrom">Date from</label>
+                            <label class="control-label">{{'Date from' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateFrom" name="auditDateFrom" placeholder="Choose a date"
-                                    formControlName="dateFrom"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_chooseadate">
+                                <input id="auditDateFrom" name="auditDateFrom" [placeholder]="_translate.translate('Choose a date')" formControlName="dateFrom" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
-                            <label class="control-label" mltag="txt_dateto">Date to</label>
+                            <label class="control-label">{{'Date to' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateTo" name="auditDateTo" placeholder="Choose a date"
-                                    formControlName="dateTo"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_chooseadate">
+                                <input id="auditDateTo" name="auditDateTo" [placeholder]="_translate.translate('Choose a date')" formControlName="dateTo" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -44,34 +34,34 @@
             </form>
 
             <clr-datagrid #dataGrid (clrDgRefresh)="dataGridRefresh($event)" *ngIf="navAuditData">
-                <clr-dg-column class="col-action">
-                    <span mltag="txt_action">Action</span>
+                <clr-dg-column class="col-action">{{'Action' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-navprevious">
-                    <span mltag="navprevious">NAV (previous)</span>
+                <clr-dg-column class="col-navprevious">{{'NAV (previous)' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-navnew">
-                    <span mltag="txt_navmodified">NAV (new)</span>
+                <clr-dg-column class="col-navnew">{{'NAV (new)' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-navvaldate">
-                    <span mltag="txt_navvaluationdate">NAV Valuation Date</span>
+                <clr-dg-column class="col-navvaldate">{{'NAV Valuation Date' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-modifiedby">
-                    <span mltag="txt_modifiedby">Modified by</span>
+                <clr-dg-column class="col-modifiedby">{{'Modified by' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-date">
-                    <span mltag="txt_date">Date</span>
+                <clr-dg-column class="col-date">{{'Date' | translate}}
+
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of navAuditData; let idx = index;" id="{{'product-nav-audit-row' + i}}">
                     <clr-dg-cell class="col-logtype" id="{{'nav-audit-row'+idx+'-col-logtype'}}">
-                        <span class="label label-success" *ngIf="isLogTypeInsert(item)" mltag="txt_insert">Insert</span>
-                        <span class="label label-warning" *ngIf="isLogTypeUpdate(item)" mltag="txt_update">Update</span>
-                        <span class="label label-danger" *ngIf="isLogTypeRemove(item)" mltag="txt_remove">Remove</span>
+                        <span class="label label-success" *ngIf="isLogTypeInsert(item)">{{'Insert' | translate}}</span>
+                        <span class="label label-warning" *ngIf="isLogTypeUpdate(item)">{{'Update' | translate}}</span>
+                        <span class="label label-danger" *ngIf="isLogTypeRemove(item)">{{'Remove' | translate}}</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="col-navprevious" id="{{'nav-audit-row'+idx+'-col-prev-price'}}">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
-                    <clr-dg-cell class="col-navnew{{getPriceClass(item)}}" id="{{'nav-audit-row'+idx+'-col-new-price'}}">
-                        {{navToFrontEndString(item.price)}}
+                    <clr-dg-cell class="col-navnew{{getPriceClass(item)}}" id="{{'nav-audit-row'+idx+'-col-new-price'}}">{{navToFrontEndString(item.price)}}
+
                         <span class="fa fa-sort-asc" [hidden]="!isPriceHigherThanPrevious(item)"></span>
                         <span class="fa fa-sort-desc" [hidden]="isPriceHigherThanPrevious(item)"></span>
                     </clr-dg-cell>
@@ -88,7 +78,7 @@
 
             <div class="row actions">
                 <div class="col-sm-12">
-                    <button class="btn btn-default" (click)="returnToNav()">Cancel</button>
+                    <button class="btn btn-default" (click)="returnToNav()">{{'Cancel' | translate}}</button>
                 </div>
             </div>
         </clr-tab-content>

@@ -25,6 +25,8 @@ import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe, APP_CONFIG, AppConfig, FileDownloader} from '@setl/utils';
 
+import {MultilingualService} from '@setl/multilingual';
+
 @Component({
     selector: 'app-nav-manage-list',
     templateUrl: './component.html',
@@ -67,6 +69,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private _fileDownloader: FileDownloader,
+                public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
 
@@ -136,7 +139,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
      * @return void
      */
     private updateNavList(navList: model.NavModel[]): void {
-        this.navListItems = this.processNavList(navList);
+        this.navListItems = _.orderBy(this.processNavList(navList),['shareId'],['desc']);
         this.changeDetectorRef.markForCheck();
     }
 

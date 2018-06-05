@@ -7,12 +7,12 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output
+    Output,
 } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 // Internal
@@ -35,6 +35,7 @@ import {OrderByType} from '../../ofi-orders/order.model';
 import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-invest-fund',
@@ -47,6 +48,7 @@ import {LogService} from '@setl/utils';
 export class InvestFundComponent implements OnInit, OnDestroy {
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
+    quantityDecimalSize = 5;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -132,6 +134,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     netAmount: FormControl;
     address: FormControl;
     disclaimer: FormControl;
+    navStrControl: FormControl;
+    feeControl: FormControl;
 
     addressSelected: any;
 
@@ -155,6 +159,31 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
+
+    /**
+     * This function pads floats as string with zeros
+     * @param value {float} the value to pad with zeros
+     * @param size {int} the wanted decimal size
+     */
+    static padWithZeros(value: string, size: number): string {
+        const isInt = value.split('.').length === 1;
+        const len = !isInt && value.split('.')[1].length;
+        if (len === size) {
+            return value;
+        }
+        if (len < size) {
+            let newValue = isInt ? value + '.' : value;
+
+            while (newValue.split('.')[1].length < size) {
+                newValue += '0';
+            }
+            return newValue;
+        }
+
+        const newValue = value.split('.');
+        return `${newValue[0]}.${newValue[1].slice(0, size)}`;
+
+    }
 
     get feePercentage(): number {
         return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
@@ -311,6 +340,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _toaster: ToasterService,
                 private _router: Router,
                 private logService: LogService,
+                public _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>) {
     }
 
@@ -336,6 +366,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
+        this.navStrControl = new FormControl('');
+        this.feeControl = new FormControl('');
+
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
@@ -347,7 +380,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             cutoffDate: this.cutoffDate,
             valuationDate: this.valuationDate,
             settlementDate: this.settlementDate,
-            disclaimer: this.disclaimer
+            disclaimer: this.disclaimer,
+            navStrControl: this.navStrControl,
+            feeControl: this.feeControl,
         });
 
         // this.setInitialFormValue();
@@ -374,7 +409,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
             this.updateDateInputs();
-
 
         }));
 
@@ -583,12 +617,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             'quantity': (value) => {
-                const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
 
+                const val = Number(value.toString().replace(/\s+/g, ''));
                 /**
                  * amount = unit * nav
                  */
-                const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
                 beTriggered.setValue(this._moneyValuePipe.transform(amount.toString(), 4));
 
                 // calculate fee
@@ -610,7 +644,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  */
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14);
-                beTriggered.setValue(this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal));
+                const newQuantity = InvestFundComponent.padWithZeros(
+                    this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal),
+                    this.quantityDecimalSize,
+                );
+                beTriggered.setValue(newQuantity);
 
                 // calculate fee
                 const fee = calFee(newValue, this.feePercentage);
@@ -808,12 +846,37 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.shareData.kiid;
     }
 
+    unSubscribeQuantity() {
+        const newValue = InvestFundComponent.padWithZeros(this.quantity.value, this.quantityDecimalSize);
+
+        this.quantity.setValue(newValue);
+        this.unSubscribeForChange();
+    }
+
     unSubscribeForChange(): void {
         if (this.inputSubscription) {
             this.inputSubscription.unsubscribe();
         }
     }
 
+    resetForm(form) {
+        const resetList = [
+            {field: 'address', value: null},
+            {field: 'cutoffDate', value: null},
+            {field: 'valuationDate', value: null},
+            {field: 'settlementDate', value: null},
+            {field: 'quantity', value: 0},
+            {field: 'amount', value: 0},
+            {field: 'comment', value: null},
+        ];
+        Object.keys(form.controls).forEach((key) => {
+            resetList.forEach((field) => {
+                if (key === field.field) {
+                    this.form.get(key).patchValue(field.value, {emitEvent: false});
+                }
+            });
+        });
+    }
 
     findPortFolioBalance(balances) {
         const breakDown = _.get(balances, ['breakdown'], []);
@@ -829,6 +892,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     getDate(dateString: string): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    }
+
+    roundAmount() {
+        const moneyParsedValue = this._moneyValuePipe.parse(this.amount.value);
+        const newValue = Math.ceil(
+            moneyParsedValue /
+            (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))
+        ) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)));
+        const paddedNewValue = InvestFundComponent.padWithZeros(newValue.toString(), 4);
+
+        this.amount.setValue(paddedNewValue);
+        this.unSubscribeForChange();
     }
 }
 

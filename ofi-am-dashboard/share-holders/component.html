@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-orders"><i class="fa fa-sitemap"></i>
-        <span><span mltag="txt_recordkeeping">Recordkeeping</span>:</span>
-        <span *ngIf="shareID === 0" mltag="txt_allshares">All Shares</span>
+    <h1 id="manage-orders"><i class="fa fa-sitemap"></i>{{'Recordkeeping:' | translate}}
+
+        <span *ngIf="shareID === 0">{{'All Shares' | translate}}</span>
         <span *ngIf="shareID > 0">{{shareTabTitle}}</span>
     </h1>
 </div>
@@ -16,26 +16,21 @@
             <clr-tab-content *clrIfActive="tabdata.active">
                 <form [formGroup]="searchListForm" id="search-orders-form">
                     <div class="form-horizontal">
-                        <h3 *ngIf="tabdata.shareData">
-                            Please find a list below of all the top holders for {{tabdata.shareData.shareName}}
+                        <h3 *ngIf="tabdata.shareData">{{'Please find a list below of all the top holders for @tabdata.shareData.shareName@' | translate: {'tabdata.shareData.shareName': tabdata.shareData.shareName} }}
+
                         </h3>
 
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label style="margin: 10px 0;">
-                                    <b><span *ngIf="!tabdata.shareData"><span mltag="txt_searchforarecordkeepingforaspe5bccfda4e6">Search for a recordkeeping for a specific Share</span>:</span></b>
-                                    <span *ngIf="tabdata.shareData">Share name:</span>
+                                    <b><span *ngIf="!tabdata.shareData">{{'Search for a recordkeeping for a specific Share:' | translate}}</span></b>
+                                    <span *ngIf="tabdata.shareData">{{'Share name:' | translate}}</span>
                                 </label>
 
                                 <br>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-search-field"
-                                               [items]="dataListForSearch"
-                                               [allowClear]="true"
-                                               placeholder="Type a Share name or ISIN"
-                                               [formControl]="searchListForm.controls['search']"
-                                               mltag="txt_typeasharenameorisin">
+                                    <ng-select id="holders-search-field" [items]="dataListForSearch" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" [formControl]="searchListForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
@@ -68,52 +63,52 @@
         <div class="panel-body">
             <table style="width: 100%;">
                 <tbody>
-                <tr>
-                    <td>
-                        <h3 style="margin-bottom: 3px;">
-                            <span mltag="txt_pleasefindalistofallthesharesb681c697503">Please find a list of all the shares below</span>:
-                        </h3>
-                        <span mltag="txt_youcanaccesstherecordkeepingfo0dc0cd7c3c">You can access the recordkeeping for a specific Share by clicking on a line in this table.</span>
-                    </td>
-                    <td class="text-right" valign="middle">
-                        <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="txt_exportthisrecordkeepingforallt709b50bef3" (click)="handleHoldersExportButtonClick()">Export this recordkeeping for all these Funds & Shares below</button>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <h3 style="margin-bottom: 3px;">{{'Please find a list of all the shares below:' | translate}}
+
+                            </h3>{{'You can access the recordkeeping for a specific Share by clicking on a line in this table.' | translate}}
+
+                        </td>
+                        <td class="text-right" valign="middle">
+                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="handleHoldersExportButtonClick()">{{'Export this recordkeeping for all these Funds & Shares below' | translate}}</button>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
             <br>
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid>
-                <clr-dg-column>
-                    <span mltag="txt_fundname">Fund name</span>
+                <clr-dg-column>{{'Fund name' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_sharename">Share name</span>
+                <clr-dg-column>{{'Share name' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_currency">Currency</span>
+                <clr-dg-column>{{'Currency' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_isin">ISIN</span>
+                <clr-dg-column>{{'ISIN' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_nav">NAV</span>
+                <clr-dg-column>{{'NAV' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_numberofunits">Number of units</span>
+                <clr-dg-column>{{'Number of units' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_aumccy">AUM</span>
+                <clr-dg-column>{{'AUM' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_ratio">Ratio</span> (%)
+                <clr-dg-column>{{'Ratio (%)' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_numberofholders">Number of holders</span>
+                <clr-dg-column>{{'Number of holders' | translate}}
+
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let data of holdersList" (click)="handleClickShare(data)">
+                <clr-dg-row *clrDgItems="let data of holdersList" (click)="handleClickShare(data)" clrDgRowClickable>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col1">
                             {{data.fundName}}
@@ -127,63 +122,63 @@
                             <!--empty-->
                         </span>
                         <ng-template #col2>
-                            <a (click)="openShareId(data.shareId)">{{data.shareName}}</a>
+                            {{data.shareName}}
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="data.isFund; else col3">
-                            {{data.fundCurrency}}
+                        <span *ngIf="data.isFund; else col3">{{data.fundCurrency}}
+
                         </span>
-                        <ng-template #col3>
-                            {{data.shareCurrency}}
+                        <ng-template #col3>{{data.shareCurrency}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col4">
                             <!--empty-->
                         </span>
-                        <ng-template #col4>
-                            {{data.shareIsin}}
+                        <ng-template #col4>{{data.shareIsin}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col5">
                             <!--empty-->
                         </span>
-                        <ng-template #col5>
-                            {{data.shareNav | moneyValue: 2}}
+                        <ng-template #col5>{{data.shareNav | moneyValue: 2}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col6">
                             <!--empty-->
                         </span>
-                        <ng-template #col6>
-                            {{data.shareUnitNumber | moneyValue:4}}
+                        <ng-template #col6>{{data.shareUnitNumber | moneyValue:4}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="data.isFund; else col7">
-                            {{data.fundAum | moneyValue:5}}
+                        <span *ngIf="data.isFund; else col7">{{data.fundAum | moneyValue:5}}
+
                         </span>
-                        <ng-template #col7>
-                            {{data.shareAum | moneyValue:5}}
+                        <ng-template #col7>{{data.shareAum | moneyValue:5}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <span *ngIf="data.isFund; else col8">
                             <!--empty-->
                         </span>
-                        <ng-template #col8>
-                            {{data.shareRatio | moneyValue:2}}%
+                        <ng-template #col8>{{data.shareRatio | moneyValue:2}}{{'%' | translate}}
+
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="data.isFund; else col9">
-                            {{data.fundHolderNumber}}
+                        <span *ngIf="data.isFund; else col9">{{data.fundHolderNumber}}
+
                         </span>
-                        <ng-template #col9>
-                            {{data.shareHolderNumber}}
+                        <ng-template #col9>{{data.shareHolderNumber}}
+
                         </ng-template>
                     </clr-dg-cell>
                 </clr-dg-row>
@@ -205,31 +200,21 @@
                 <div class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-xl-6">
-                            <label>
-                                <span><span mltag="txt_topholdersofthisshare">Top holders of this Share</span>:</span>
+                            <label>{{'Top holders of this Share:' | translate}}
+
                             </label>
                             <br>
                             <div class="input-button-group">
-                                <ng-select id="top-holders-search-field"
-                                           [items]="holderFilters"
-                                           name="top"
-                                           [formControl]="searchInShareForm.controls['top']"
-                                           mltag="txt_select"
-                                           (selected)="handleHolderFilterSelect($event.id)">
+                                <ng-select id="top-holders-search-field" [items]="holderFilters" name="top" [formControl]="searchInShareForm.controls['top']" (selected)="handleHolderFilterSelect($event.id)">
                                 </ng-select>
                             </div>
                         </div>
 
                         <div class="form-group col-xl-6 text-right">
-                            <label mltag="txt_nbsp">&nbsp;</label>
+                            <label>{{'&nbsp;' | translate}}</label>
                             <div>
-                                <button id="holders-export-share-btn"
-                                        type="button"
-                                        class="btn btn-success"
-                                        style="max-width: none !important"
-                                        mltag="txt_exportholderslistforthisdate"
-                                        (click)="handleHolderDetailExportButtonClick()">
-                                    Export recordkeeping for this date
+                                <button id="holders-export-share-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="handleHolderDetailExportButtonClick()">{{'Export recordkeeping for this date' | translate}}
+
                                 </button>
                             </div>
                         </div>
@@ -238,79 +223,79 @@
 
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
-                    <tr>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span><span mltag="txt_numberofholdersforthisdate">Number of holders (for this date)</span>:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
+                        <tr>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>{{'Number of holders (for this date):' | translate}}
+
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span><span mltag="txt_aum">AUM</span>:</span>
-                                </label>
-                                <div><span class="readonly-field">€ {{shareData.shareAum  | moneyValue:5}}</span></div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span><span mltag="txt_numberofunits">Number of units</span>:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{shareData.shareUnitNumber  | moneyValue:4}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>{{'AUM:' | translate}}
+
+                                    </label>
+                                    <div><span class="readonly-field">{{'€' | translate}} {{shareData.shareAum  | moneyValue:5}}</span></div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span><span mltag="txt_latestnav">Latest NAV</span>:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field">{{shareData.shareNav  | moneyValue:2}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>{{'Number of units:' | translate}}
+
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{shareData.shareUnitNumber  | moneyValue:4}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                        <td width="20%">
-                            <div class="form-group">
-                                <label>
-                                    <span><span mltag="txt_currency">Currency</span>:</span>
-                                </label>
-                                <div>
-                                    <span class="readonly-field" mltag="txt_eur">{{shareData.shareCurrency}}</span>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>{{'Latest NAV:' | translate}}
+
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{shareData.shareNav  | moneyValue:2}}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
+                            </td>
+                            <td width="20%">
+                                <div class="form-group">
+                                    <label>{{'Currency:' | translate}}
+
+                                    </label>
+                                    <div>
+                                        <span class="readonly-field">{{shareData.shareCurrency}}</span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </form>
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid>
-                <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_ranking">Ranking</span> <span class="column-label"></span>
+                <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>{{'Ranking' | translate}} 
+                    <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_investorname">Investor name</span> <span class="column-label"></span>
+                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>{{'Investor name' | translate}} 
+                    <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_quantity">Quantity</span> <span class="column-label"></span>
+                <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>{{'Quantity' | translate}} 
+                    <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch>
-                    <span>Asset (€)</span> <span class="column-label"></span>
+                <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch>{{'Asset (€)' | translate}} 
+                    <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>
-                    <span mltag="txt_ratio">Ratio (%)</span> <span class="column-label"></span>
+                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>{{'Ratio (%)' | translate}} 
+                    <span class="column-label"></span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let holderItem of holderDetailData">
@@ -318,7 +303,7 @@
                     <clr-dg-cell>{{holderItem.investorName}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.quantity | moneyValue: 4}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.amount | moneyValue: 5}}</clr-dg-cell>
-                    <clr-dg-cell>{{holderItem.ratio | moneyValue:2}}%</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.ratio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -327,7 +312,7 @@
             </clr-datagrid>
 
             <div class="text-center mt-1">
-                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', '0']" mltag="txt_backtoallholderspage">Back to ALL holders page</button>
+                <button id="holders-btn-back-list" type="button" class="btn btn-info" style="max-width: none !important" [routerLink]="['/reports/holders-list', '0']">{{'Back to ALL holders page' | translate}}</button>
             </div>
         </div>
     </ng-template>

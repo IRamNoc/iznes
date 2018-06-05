@@ -1,6 +1,6 @@
 import * as math from 'mathjs';
 
-import { CalendarHelper, getTimeZoneDiff } from './calendar-helper';
+import { CalendarHelper } from './calendar-helper';
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
@@ -201,8 +201,6 @@ export class OrderHelper {
     minInitialSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
-    minInitialRedemptionInAmount: number;
-    minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
 
@@ -231,10 +229,6 @@ export class OrderHelper {
             [OrderType.Subscription]: {
                 [OrderByType.Amount]: (this.fundShare.minInitialSubscriptionInAmount || 0),
                 [OrderByType.Quantity]: (this.fundShare.minInitialSubscriptionInShare || 0),
-            },
-            [OrderType.Redemption]: {
-                [OrderByType.Amount]: (this.fundShare.minInitialRedemptionInAmount || 0),
-                [OrderByType.Quantity]: (this.fundShare.minInitialRedemptionInShare || 0),
             }
         }[this.orderType] || {})[this.orderBy] || 0;
     }
@@ -850,7 +844,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -961,7 +955,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -984,7 +978,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],

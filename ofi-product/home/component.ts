@@ -17,6 +17,7 @@ import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fu
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
 import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 
 /* Models */
 
@@ -229,6 +230,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestManagementCompanyAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
 
     constructor(private _ngRedux: NgRedux<any>,
                 private _changeDetectorRef: ChangeDetectorRef,
@@ -240,13 +242,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
-                @Inject('product-config') productConfig) {
-        this.fundCurrencyItems = productConfig.fundItems.fundCurrencyItems;
+                @Inject('product-config') productConfig,
+                private ofiCurrenciesService: OfiCurrenciesService) {
+
         this.countryItems = productConfig.fundItems.domicileItems;
         this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
     }
 
     ngOnInit() {
+        this.ofiCurrenciesService.getCurrencyList();
+
+        this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
         this.subscriptions.push(this.requestManagementCompanyAccessListOb.subscribe((d) => this.requestManagementCompanyAccessList(d)));
         this.subscriptions.push(this.managementCompanyAccessListOb.subscribe(d => this.managementCompanyAccessList = d));
         this.subscriptions.push(this.userDetailObs.subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
@@ -256,7 +262,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
-
+        
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
         OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
         OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
@@ -289,22 +295,23 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             _.values(funds).map((fund) => {
                 const domicile = _.find(this.countryItems, {id: fund.domicile}) || {text: ''};
                 const lawStatus = _.find(this.legalFormItems, {id: fund.legalForm}) || {text: ''};
-                const fundCurrency = _.find(this.fundCurrencyItems, {id: fund.fundCurrency}) || {text: ''};
+                const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
 
                 fundList.push({
                     fundID: fund.fundID,
                     fundName: fund.fundName,
-                    legalEntityIdentifier: fund.legalEntityIdentifier,
+                    legalEntityIdentifier: fund.legalEntityIdentifier || 'N/A',
                     managementCompany: _.get(this.managementCompanyAccessList, [fund.managementCompanyID, 'companyName'], ''),
                     domicile: domicile.text,
                     lawStatus: lawStatus.text,
                     umbrellaFundName: fund.umbrellaFundName,
-                    fundCurrency: fundCurrency.text,
+                    fundCurrency: (fundCurrency) ? fundCurrency.text : '',
                 });
             });
+
         }
 
-        this.fundList = fundList;
+        this.fundList = _.orderBy(fundList, ['fundID'], ['desc']);
         this.panelDefs[1].data = this.fundList;
         this.panelDefs[1].count = this.fundList.length;
         this._changeDetectorRef.markForCheck();
@@ -327,7 +334,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     return item.id === share.shareClassInvestmentStatus;
                 }).text;
 
-                const shareCurrency = _.find(this.fundCurrencyItems, {id: share.shareClassCurrency.toString()}) || {text: ''};
+                const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
 
                 shareList.push({
                     fundShareID: share.fundShareID,
@@ -337,17 +344,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     managementCompany: share.managementCompanyName,
                     shareClass: share.shareClassCode,
                     status: status,
-                    shareCurrency: shareCurrency.text,
+                    shareCurrency: (shareCurrency) ? shareCurrency.text : '',
                     umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
                 });
             });
         }
 
-        this.shareList = shareList;
-
-        this.filteredShareList = shareList.filter((share) => {
+        this.filteredShareList = _.orderBy(shareList.filter((share) => {
             return share.status !== 5;
-        });
+        }), ['fundShareID'], ['desc']);
 
         this.panelDefs[2].data = this.filteredShareList;
         this.panelDefs[2].count = this.filteredShareList.length;
@@ -373,7 +378,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     umbrellaFundName: item.get('umbrellaFundName', ''),
                     registerOffice: item.get('registerOffice', ''),
                     registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0),
+                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0) || 'N/A',
                     domicile: domicile.text,
                     umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
                     managementCompany: _.get(this.managementCompanyAccessList, [item.get('managementCompanyID', 0), 'companyName'], ''),
@@ -395,10 +400,16 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             });
         }
 
-        this.umbrellaFundList = umbrellaFundList;
+        this.umbrellaFundList = _.orderBy(umbrellaFundList, ['umbrellaFundID'], ['desc']);
         this.panelDefs[0].data = this.umbrellaFundList;
         this.panelDefs[0].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
+    }
+
+    getCurrencyList(data) {
+        if (data) {
+            this.fundCurrencyItems = data.toJS();
+        }
     }
 
     handleShareToggleClick() {

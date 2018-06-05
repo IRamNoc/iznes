@@ -16,6 +16,9 @@ import {
     setRequestedFundShareAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
 
+import {MultilingualService} from '@setl/multilingual';
+import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
+
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-product-fund-share-audit',
@@ -24,6 +27,7 @@ import {
 })
 export class FundShareAuditComponent implements OnInit, OnDestroy {
 
+    fundShare;
     private fundShareId: number;
     private subscriptionsArray: Subscription[] = [];
     private ignoreFormChange: boolean = true;
@@ -39,12 +43,15 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiProduct', 'ofiFundShareAudit', 'requestedFundShareAudit']) fundShareAuditRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareAudit', 'fundShareAudit']) fundShareAuditOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
         private route: ActivatedRoute,
         private router: Router,
         private changeDetectorRef: ChangeDetectorRef,
         private service: FundShareAuditService,
+        public _translate: MultilingualService,
         private ofiFundShareService: OfiFundShareService) { }
         
     ngOnInit() {
@@ -65,6 +72,17 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundShareAuditOb.subscribe(fundShareAudit => {
             this.updateFundShareAudit(fundShareAudit);
         }));
+
+        const fundShareRequestedSubscription = this.fundShareRequestedOb.filter(requested => !requested).subscribe(() => {
+            this.requestFundShare();
+        });
+        this.subscriptionsArray.push(fundShareRequestedSubscription);
+
+        const fundShareSubscription = this.fundShareOb.subscribe(fundShare => {
+            this.fundShare = fundShare;
+            this.changeDetectorRef.markForCheck();
+        });
+        this.subscriptionsArray.push(fundShareSubscription);
     }
 
     private initSearchForm(): void {
@@ -106,6 +124,13 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(setRequestedFundShareAudit());
         this.changeDetectorRef.markForCheck();
+    }
+
+    private requestFundShare(): void {
+        const requestData = getOfiFundShareCurrentRequest(this.redux.getState());
+        requestData.fundShareID = this.fundShareId;
+
+        OfiFundShareService.defaultRequestFundShare(this.ofiFundShareService, this.redux, requestData);
     }
 
     returnToShare(): void {

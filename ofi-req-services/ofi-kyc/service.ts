@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 
 import {MemberSocketService} from '@setl/websocket-service';
 import {
@@ -18,20 +18,36 @@ import {
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
+    fetchInvitationsByUserAmCompanyRequestBody,
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import * as _ from 'lodash';
+import {Subject} from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 import {SagaHelper} from '@setl/utils';
 import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {SET_INVESTOR_INVITATIONS_LIST, SET_INVESTOR_INVITATIONS_LIST_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 
 @Injectable()
 export class OfiKycService {
-    constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>) {
 
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
+
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>
+    ) {
+
+    }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     /**
@@ -75,6 +91,17 @@ export class OfiKycService {
 
         const messageBody: VerifyInvitationTokenRequestBody = {
             RequestName: 'iznesverifytoken',
+            token: token,
+            source: ''
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    isInvitationTokenUsed(token: string): any {
+
+        const messageBody: VerifyInvitationTokenRequestBody = {
+            RequestName: 'iznesistokenused',
             token: token,
             source: ''
         };
@@ -174,6 +201,40 @@ export class OfiKycService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getInvitationsByUserAmCompany() {
+
+        this.investorInvitationsRequested$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (d) {
+                    return;
+                }
+                this.fetchInvitationsByUserAmCompany();
+            });
+
+    }
+
+    fetchInvitationsByUserAmCompany() {
+        const messageBody: fetchInvitationsByUserAmCompanyRequestBody = {
+            RequestName: 'getinvitationsbyuseramcompany',
+            token: this.memberSocketService.token
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_INVESTOR_INVITATIONS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch({
+                    type: SET_INVESTOR_INVITATIONS_LIST_REQUESTED
+                });
+            }
+        ));
     }
 
     fetchInvestor() {

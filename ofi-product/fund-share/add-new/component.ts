@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Location} from '@angular/common';
 import {FormGroup, FormControl} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
@@ -39,16 +40,50 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private router: Router,
-        private ofiFundService: OfiFundService,
-        private ofiFundShareService: OfiFundShareService) {}
+                private changeDetectorRef: ChangeDetectorRef,
+                private router: Router,
+                private ofiFundService: OfiFundService,
+                private ofiFundShareService: OfiFundShareService,
+                private route: ActivatedRoute,
+                private location : Location) {
+    }
 
     ngOnInit() {
         this.initForms();
         this.initSubscriptions();
+        this.checkIfFromFund();
 
         this.redux.dispatch(ofiClearCurrentFundShareSelectedFund());
+    }
+
+    checkIfFromFund(){
+        this.route.queryParams.subscribe(params => {
+            if(params.fund){
+                let fundID = parseInt(params.fund);
+                this.waitForCurrentFund(fundID);
+            }
+        });
+    }
+
+    waitForCurrentFund(fundID) {
+        this.fundListOb
+            .map(fundItems => {
+                return _.find(fundItems, ['fundID', fundID]);
+            })
+            .filter(fundItem => !!fundItem)
+            .take(1)
+            .subscribe(fundItem => {
+                let newUrl = this.router.createUrlTree([], {
+                    queryParams: { fund: null },
+                    queryParamsHandling: "merge"
+                });
+                this.location.replaceState(this.router.serializeUrl(newUrl));
+
+                this.newFundShareForm.controls['fund'].patchValue([{
+                    id : fundItem.fundID,
+                    text : fundItem.fundName
+                }]);
+            });
     }
 
     private initForms(): void {

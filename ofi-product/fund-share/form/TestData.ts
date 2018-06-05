@@ -22,8 +22,6 @@ export class FundShareTestData {
         (model.keyFacts.mandatory.valuationFrequency.preset as any) = [{id: E.ValuationFrequencyEnum.Daily, text: 'Daily' }];
 
         model.characteristic.mandatory.maximumNumDecimal.preset = 1;
-        model.characteristic.mandatory.minInitialRedemptionInAmount.preset = 1;
-        model.characteristic.mandatory.minInitialRedemptionInShare.preset = 1;
         model.characteristic.mandatory.minInitialSubscriptionInAmount.preset = 1;
         model.characteristic.mandatory.minInitialSubscriptionInShare.preset = 1;
         model.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = 1;
