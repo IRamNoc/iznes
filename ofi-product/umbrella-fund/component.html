@@ -47,10 +47,18 @@
 
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_lei" class="control-label">{{'Legal Entity Identifier (LEI)' | translate}}</label>
-                                <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
-                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
-                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{'This field is required' | translate}}</span>
-                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{'Incorrect LEI' | translate}}</span>
+                                <div class="lei">
+                                    <label class="switch">
+                                        <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}" (click)="onClickLeiSwitch()">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <div *ngIf="isLeiVisible">
+                                        <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
+                                        <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{'This field is required' | translate}}</span>
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{'Incorrect LEI' | translate}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

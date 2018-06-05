@@ -9,3 +9,24 @@ textarea {
   min-height: 40px;
   max-height: 160px;
 }
+
+.lei {
+  align-self: flex-start;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  label.switch:first-child {
+      margin: 4px !important;
+      width: 15%;
+      &:after {
+        content: '';
+      }
+  }
+  div:last-child {
+      width: 85%;
+  }
+  .slider {
+    top: unset;
+    bottom: unset;
+  }
+}
