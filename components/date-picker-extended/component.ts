@@ -20,6 +20,9 @@ import { DatePickerExtendedHelper } from './helpers/date';
 })
 
 export class DatePickerExtendedComponent implements OnInit, OnDestroy {
+    @Input() set dates(dates: string[]) {
+        this.selectedDates = DatePickerExtendedHelper.convertStringDatesToMoment(dates);
+    }
     @Input() showClearButton: boolean = true;
     @Input() showWeekendToggle: boolean = true;
     @Input() areYouSureMessage: string = '';
@@ -45,7 +48,7 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
         const arr = [];
 
         _.forEach(this.selectedDates, (e: moment.Moment) => {
-            arr.push(e.format('YYYY-MM-DD'));
+            arr.push(e.hours(0).minutes(0).seconds(0).milliseconds(0).toISOString());
         });
 
         return arr;
