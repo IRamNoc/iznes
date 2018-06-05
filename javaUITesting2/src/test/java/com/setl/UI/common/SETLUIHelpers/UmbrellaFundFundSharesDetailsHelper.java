@@ -54,6 +54,9 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
+
         driver.findElement(By.id("fundShareName")).clear();
         driver.findElement(By.id("fundShareName")).sendKeys(shareName);
         driver.findElement(By.id("shareLaunchDate")).click();
@@ -75,18 +78,20 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(elementToBeClickable(By.id("couponType")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
-        //assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
         openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
-        //assertHiddenAttributeIsPresent("tabKeyFactsButton");
     }
 
     public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
-
         try {
             driver.findElement(By.id("tabCharacteristicsButton")).click();
-        }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleCharacteristicMandatory")).isDisplayed());
+        }
+        catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        assertTrue(driver.findElement(By.id("maximumNumDecimal")).isDisplayed());
+
         driver.findElement(By.id("maximumNumDecimal")).clear();
         driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
         openDropdownAndSelectOption("subscriptionCategory", 1);
@@ -108,18 +113,15 @@ public class UmbrellaFundFundSharesDetailsHelper {
         try {
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
+
+        assertTrue(driver.findElement(By.id("subscriptionTradeCyclePeriod")).isDisplayed());
+
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-
         setTime("12:12", "subscriptionCutOffTime");
-
-
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-
         setTime("13:13", "redemptionCutOffTime");
-
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
@@ -137,6 +139,9 @@ public class UmbrellaFundFundSharesDetailsHelper {
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
+
+        assertTrue(driver.findElement(By.id("maxManagementFee")).isDisplayed());
+
         driver.findElement(By.id("maxManagementFee")).clear();
         driver.findElement(By.id("maxManagementFee")).sendKeys("1");
         driver.findElement(By.id("maxSubscriptionFee")).clear();
@@ -160,8 +165,10 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         try {
             driver.findElement(By.id("tabProfileButton")).click();
-        }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleProfileMandatory")).isDisplayed());
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("investorProfile")).isDisplayed());
         openDropdownAndSelectOption("investorProfile", 1);
 
     }
