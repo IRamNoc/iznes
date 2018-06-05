@@ -147,7 +147,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm !== null ? fund.nationalNomenclatureOfLegalForm.toString() : null,
             fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
             fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-            fundCurrency: fund.fundCurrency.toString(),
+            fundCurrency: fund.fundCurrency,
             openOrCloseEnded: fund.openOrCloseEnded.toString(),
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
             isFundOfFund: fund.isFundOfFund.toString(),

@@ -369,7 +369,7 @@
                                 <span class="">{{'Quantity' | translate}}</span>
                             </label>
                             <div [class]="type === 'redeem' ? 'quantity-group' : ''">
-                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="shareData.maximumNumDecimal">
+                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeQuantity()" appNumberFormatter="{{shareData.maximumNumDecimal}}">
                                 <button *ngIf="type === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
                                     Redeem all
                                 </button>
@@ -387,7 +387,7 @@
                                 <span class="">{{'Amount' | translate}}</span>
                             </label>
                             <div>
-                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="roundAmount();" appNumberFormatter [fractionSize]="4">
+                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="roundAmount();" appNumberFormatter="4">
                             </div>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
                             <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger">{{'Field is invalid' | translate}}</span>

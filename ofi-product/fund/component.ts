@@ -56,6 +56,7 @@ export class FundComponent implements OnInit, OnDestroy {
         },
     };
 
+    isLeiVisible = false;
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
     param: string;
@@ -590,6 +591,9 @@ export class FundComponent implements OnInit, OnDestroy {
                         centralizingAgent: FundComponent.getListItem(fund.centralizingAgent, this.centralizingAgentItems),
                         delegatedManagementCompany: FundComponent.getListItem(fund.delegatedManagementCompany, this.managementCompanyItems),
                     });
+                    if (fund.legalEntityIdentifier) {
+                        this.isLeiVisible = true;
+                    }
                     this.viewMode = 'FUND';
                     return;
                 } else {
@@ -653,6 +657,7 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
 
         if (this.param === 'new') {
@@ -727,6 +732,10 @@ export class FundComponent implements OnInit, OnDestroy {
 
     onClickBack() {
         this.router.navigateByUrl('/product-module/product');
+    }
+
+    onClickLeiSwitch() {
+        this.isLeiVisible = !this.isLeiVisible;
     }
 
     ngOnDestroy() {
