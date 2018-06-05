@@ -754,13 +754,47 @@
                                         <div class="col-xs-12">
                                             <a href="#" (click)="panels[1][1].open = !panels[1][1].open; $event.preventDefault();">
                                                 <i class="fa fa-chevron-right" [class.rotate]="panels[1][1].open">
-                                                </i><h2>{{'Optional Information' | translate}}</h2>
+                                                </i><h2>{{'Holiday Management' | translate}}</h2>
                                             </a>
                                         </div>
                                     </div>
 
                                     <!-- Panel body -->
                                     <div class="panel-body" [class.hidden]="!panels[1][1].open">
+                                        <div class="form-group col-sm-12">
+                                            <label class="control-label">{{'Use Default Holiday Management Configuration?' | translate}}</label>
+                                            <div class="radio-inline">
+                                                <input type="radio" name="useDefaultHolidayMgmt" id="useDefaultHolidayMgmtYes" formControlName="useDefaultHolidayMgmt" value="{{enums.useDefaultHolidayMgmt.YES}}">
+                                                <label for="useDefaultHolidayMgmtYes">{{'Yes' | translate}}</label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <input type="radio" name="useDefaultHolidayMgmt" id="useDefaultHolidayMgmtNo" formControlName="useDefaultHolidayMgmt" value="{{enums.useDefaultHolidayMgmt.NO}}">
+                                                <label for="useDefaultHolidayMgmtNo">{{'No' | translate}}</label>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-12">
+                                            <date-picker-extended [hidden]="!showHolidayMgmtConfig()"
+                                                [dates]="fundForm.value.holidayMgmtConfig"
+                                                (datesEmitter)="setHolidayMgmtConfig($event)">
+                                            </date-picker-extended>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="well">
+                                    <!-- Panel header -->
+                                    <div class="row panel-header">
+                                        <div class="col-xs-12">
+                                            <a href="#" (click)="panels[1][2].open = !panels[1][2].open; $event.preventDefault();">
+                                                <i class="fa fa-chevron-right" [class.rotate]="panels[1][2].open">
+                                                </i><h2>{{'Optional Information' | translate}}</h2>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Panel body -->
+                                    <div class="panel-body" [class.hidden]="!panels[1][2].open">
                                         <div class="row">
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="globalItermediaryIdentification">{{'Global Intermediary Identification Number (GIIN)' | translate}}</label>

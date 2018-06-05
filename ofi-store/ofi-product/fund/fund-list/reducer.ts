@@ -1,53 +1,53 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as FundActions from './actions';
-import {FundDetail, FundListState, IznesFundDetail} from './model';
+import { FundDetail, FundListState, IznesFundDetail } from './model';
 import * as _ from 'lodash';
-import {fromJS, Map} from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 const initialState: FundListState = {
     fundList: {},
     requested: false,
     iznFundList: {},
-    requestedIznesFund: false
+    requestedIznesFund: false,
 };
 
 export const FundListReducer = function (state: FundListState = initialState, action: Action) {
     switch (action.type) {
-        case FundActions.SET_FUND_LIST:
+    case FundActions.SET_FUND_LIST:
 
-            const fdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const fdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const fundList = formatFundDataResponse(fdata);
-            return Object.assign({}, state, {
-                fundList
-            });
+        const fundList = formatFundDataResponse(fdata);
+        return Object.assign({}, state, {
+            fundList,
+        });
 
-        case FundActions.SET_FUND_SHARE_LIST:
+    case FundActions.SET_FUND_SHARE_LIST:
 
-            const fsdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const fsdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const fundShareList = formatFundshareDataResponse(fsdata);
-            return Object.assign({}, state, {
-                fundShareList
-            });
+        const fundShareList = formatFundshareDataResponse(fsdata);
+        return Object.assign({}, state, {
+            fundShareList,
+        });
 
-        case FundActions.SET_REQUESTED_FUND:
-            return handleSetRequested(state, action);
+    case FundActions.SET_REQUESTED_FUND:
+        return handleSetRequested(state, action);
 
-        case FundActions.CLEAR_REQUESTED_FUND:
-            return handleClearRequested(state, action);
+    case FundActions.CLEAR_REQUESTED_FUND:
+        return handleClearRequested(state, action);
 
-        case FundActions.SET_REQUESTED_IZN_FUNDS:
-            return handleSetIznesFundsRequested(state);
+    case FundActions.SET_REQUESTED_IZN_FUNDS:
+        return handleSetIznesFundsRequested(state);
 
-        case FundActions.CLEAR_REQUESTED_IZN_FUNDS:
-            return clearSetIznesFundsRequested(state);
+    case FundActions.CLEAR_REQUESTED_IZN_FUNDS:
+        return clearSetIznesFundsRequested(state);
 
-        case FundActions.GET_IZN_FUND_LIST:
-            return handleGetIznesFunds(state, action);
+    case FundActions.GET_IZN_FUND_LIST:
+        return handleGetIznesFunds(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -102,7 +102,7 @@ function handleSetRequested(state: FundListState, action: Action): FundListState
     const requested = true;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
@@ -116,19 +116,19 @@ function handleClearRequested(state: FundListState, action: Action): FundListSta
     const requested = false;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
 function handleSetIznesFundsRequested(state: FundListState): FundListState {
     return Object.assign({}, state, {
-        requestedIznesFund: true
+        requestedIznesFund: true,
     });
 }
 
 function clearSetIznesFundsRequested(state: FundListState): FundListState {
     return Object.assign({}, state, {
-        requestedIznesFund: false
+        requestedIznesFund: false,
     });
 }
 
@@ -179,12 +179,14 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             hasSecurityiesLending: fund.hasSecurityiesLending !== null ? fund.hasSecurityiesLending.toString() : null,
             hasSwap: fund.hasSwap !== null ? fund.hasSwap.toString() : null,
             hasDurationHedge: fund.hasDurationHedge !== null ? fund.hasDurationHedge.toString() : null,
+            useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt !== null ? fund.useDefaultHolidayMgmt.toString() : null,
+            holidayMgmtConfig: fund.holidayMgmtConfig !== null ? fund.holidayMgmtConfig : null,
         };
         return {
             ...sum,
-            [fund.fundID]: fundData
+            [fund.fundID]: fundData,
         };
-    }, {});
+    },                              {});
 
     return {
         ...state,
