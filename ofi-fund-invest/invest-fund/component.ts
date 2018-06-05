@@ -8,6 +8,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
@@ -46,6 +48,9 @@ import {MultilingualService} from '@setl/multilingual';
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
+    @ViewChild('quantityInput') quantityInput: ElementRef;
+    @ViewChild('subportfolio') subportfolio: ElementRef;
+
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
 
@@ -158,6 +163,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
+
+    redeemedAll : Boolean;
+
 
     get feePercentage(): number {
         return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
@@ -300,7 +308,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
-        return Boolean(redeeming >= balance);
+        return Boolean(redeeming > balance);
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -405,6 +413,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.addressSelected = this.initialFormData.address[0];
             this.actionBy = this.initialFormData.actionBy;
         }
+    }
+
+    redeemAll($event){
+        $event.preventDefault();
+
+        if(!this.addressSelected){
+            this.redeemedAll = true;
+            this.subportfolio.nativeElement.scrollIntoView();
+            this.form.get('address').markAsDirty();
+            this.form.get('address').markAsTouched();
+            return false;
+        }
+
+        let quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
+
+        this.quantityInput.nativeElement.focus();
+        this.form.get('quantity').setValue(quantity);
+        this.quantityInput.nativeElement.blur();
     }
 
     updateDateInputs() {
@@ -761,10 +787,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const amountStr = this._moneyValuePipe.transform(amount, 4);
         const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
 
-        this._confirmationService.create(
-            '<span>Order confirmation</span>',
-            `
+        let conditionalMessage;
+        if(this.type === 'redeem'){
+            const quantityBlockchain = this._numberConverterService.toBlockchain(quantity);
+            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
+        }
+
+        let message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            ${conditionalMessage ? conditionalMessage : ''}
             <table class="table grid">
                 <tbody>
                     <tr>
@@ -805,7 +836,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-            `,
+            `;
+
+        this._confirmationService.create(
+            '<span>Order confirmation</span>',
+            message,
             {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
         ).subscribe((ans) => {
             if (ans.resolved) {

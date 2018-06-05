@@ -31,15 +31,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-6" #subportfolio>
                         <div class="form-group">
                             <label class="control-label required-field" for="subportfolio">
                                 <span class="">{{'Investment Portfolio' | translate}}</span>
                             </label>
                             <div>
                                 <ng-select id="subportfolio" [class.error]="!form.controls['address'].valid && form.controls['address'].touched" [items]="addressList" [allowClear]="false" [placeholder]="_translate.translate('Select an investment porfolio')" formControlName="address" (selected)="handleSelectedAddress($event)">
-
-
                                 </ng-select>
                             </div>
                             <span *ngIf="address.hasError('required') && address.touched" class="text-danger">{{'Field is required' | translate}}</span>
@@ -370,13 +368,17 @@
                             <label class="control-label required-field" for="quantity">
                                 <span class="">{{'Quantity' | translate}}</span>
                             </label>
-                            <div>
-                                <input [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="shareData.maximumNumDecimal">
+                            <div [class]="type === 'redeem' ? 'quantity-group' : ''">
+                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()" appNumberFormatter [fractionSize]="shareData.maximumNumDecimal">
+                                <button *ngIf="type === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
+                                    Redeem all
+                                </button>
                             </div>
                             <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is required' | translate}}</span>
                             <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
                             <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
                             <span *ngIf="isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger">{{'Insufficient balance to redeem' | translate}}</span>
+                            <span *ngIf="redeemedAll && !addressSelected" class="text-danger">{{'Please select an Investment Portfolio' | translate}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
