@@ -27,8 +27,8 @@ import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product
 })
 export class FundShareAuditComponent implements OnInit, OnDestroy {
 
+    fundShare;
     private fundShareId: number;
-    private fundShare;
     private subscriptionsArray: Subscription[] = [];
     private ignoreFormChange: boolean = true;
     fundShareAuditData: FundShareAuditDetail[];
