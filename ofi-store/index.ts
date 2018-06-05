@@ -1,8 +1,8 @@
-import {combineReducers, Reducer} from "redux";
+import { combineReducers, Reducer } from 'redux';
 /*
  Ofi Invest
  */
-import {OfiFundInvestReducer, OfiFundInvestState} from "./ofi-fund-invest";
+import { OfiFundInvestReducer, OfiFundInvestState } from './ofi-fund-invest';
 /*
  Ofi client tx
  */
@@ -11,12 +11,12 @@ import {
     OfiClientTxReducer,
     OfiClientTxState,
     SET_CLIENT_TX_LIST,
-    setRequestedClientTxList
-} from "./ofi-client-txs";
+    setRequestedClientTxList,
+} from './ofi-client-txs';
 /*
  Ofi Corp Actions
  */
-import {OfiCorpActionsReducer, OfiCorpActionsState} from "./ofi-corp-actions";
+import { OfiCorpActionsReducer, OfiCorpActionsState } from './ofi-corp-actions';
 /*
  Ofi Product
  */
@@ -27,38 +27,36 @@ import {
     SET_FUND_LIST,
     SET_FUND_SHARE,
     SET_MANAGEMENT_COMPANY_LIST,
-    SET_SICAV_LIST
-} from "./ofi-product";
+    SET_SICAV_LIST,
+} from './ofi-product';
 /*
  Ofi Orders
  */
-import {OfiOrdersReducer, OfiOrdersState} from './ofi-orders';
+import { OfiOrdersReducer, OfiOrdersState } from './ofi-orders';
 /*
  Ofi Reports
  */
-import {OfiReportsReducer, OfiReportsState} from './ofi-reports';
+import { OfiReportsReducer, OfiReportsState } from './ofi-reports';
 /*
  Ofi My Informations
  */
-import {clearrequested, KycReducer, KycState, setamkyclist, setrequested} from './ofi-kyc';
+import { clearrequested, KycReducer, KycState, setamkyclist, setrequested } from './ofi-kyc';
 
 /* Currencies */
-import {CurrencyState, CurrencyActions, CurrencyReducer} from './ofi-currencies';
+import { CurrencyState, CurrencyActions, CurrencyReducer } from './ofi-currencies';
 
 export {
     SET_FUND_ACCESS_MY,
     clearRequestedFundAccessMy,
     setRequestedFundAccessMy,
-    ofiListOfFundsComponentActions
+    ofiListOfFundsComponentActions,
 } from './ofi-fund-invest';
-
 
 export {
     SET_CLIENT_TX_LIST,
     setRequestedClientTxList,
-    clearRequestedClientTxList
+    clearRequestedClientTxList,
 } from './ofi-client-txs';
-
 
 export {
     /* Coupons */
@@ -70,7 +68,7 @@ export {
     getOfiUserIssuedAssets,
     OFI_SET_USER_ISSUED_ASSETS,
     ofiClearRequestedIssuedAssets,
-    ofiSetRequestedUserIssuedAssets
+    ofiSetRequestedUserIssuedAssets,
 } from './ofi-corp-actions';
 
 export {
@@ -105,9 +103,8 @@ export {
     // Collective report
     setRequestedCollectiveArchive,
     clearRequestedCollectiveArchive,
-    SET_COLLECTIVE_ARCHIVE
+    SET_COLLECTIVE_ARCHIVE,
 } from './ofi-orders';
-
 
 export {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
@@ -121,7 +118,7 @@ export {
     ofiSetRequestedAmHolders,
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
-    OFI_GET_SHARE_HOLDER_DETAIL
+    OFI_GET_SHARE_HOLDER_DETAIL,
 } from './ofi-reports';
 
 export {
@@ -185,17 +182,24 @@ export {
     clearRequestedFundShareAudit,
     SET_FUND_SHARE_AUDIT,
     SET_REQUESTED_FUND_SHARE_AUDIT,
-    CLEAR_REQUESTED_FUND_SHARE_AUDIT
+    CLEAR_REQUESTED_FUND_SHARE_AUDIT,
+    // PRODUCT CONFIG
+    ProductConfiguration,
+    SET_PRODUCT_CONFIGURATION,
+    SET_REQUESTED_CONFIGURATION,
+    CLEAR_REQUESTED_CONFIGURATION,
+    setRequestedConfiguration,
+    clearRequestedConfiguration,
 } from './ofi-product';
 
 export {
     setrequested,
     setamkyclist,
-    clearrequested
+    clearrequested,
 } from './ofi-kyc';
 
 /* Currencies */
-export {CurrencyActions} from './ofi-currencies';
+export { CurrencyActions } from './ofi-currencies';
 
 /*--------------------------------------------------*/
 /*--------------- OFI GLOBAL REDUCER ---------------*/
