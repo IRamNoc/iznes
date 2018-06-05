@@ -18,6 +18,7 @@ import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import productConfig from '../productConfig';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Fund } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service.model';
+import { OfiProductConfigService } from '@ofi/ofi-main/ofi-req-services/ofi-product/configuration/service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
@@ -224,6 +225,7 @@ describe('FundComponent', () => {
             ],
             providers: [
                 { provide: 'product-config', useValue: productConfig },
+                OfiProductConfigService,
                 { provide: OfiFundService, useValue: fundServiceSpy },
                 { provide: OfiUmbrellaFundService, useValue: OfiUmbrellaFundServiceStub },
                 { provide: OfiManagementCompanyService, useValue: OfiManagementCompanyServiceStub },
