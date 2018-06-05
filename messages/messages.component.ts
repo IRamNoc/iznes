@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ToasterService} from 'angular2-toaster';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/combineLatest';
-import {FileDownloader} from "../../utils";
+import {FileDownloader} from "@setl/utils";
 
 @Component({
     selector: 'setl-messages',

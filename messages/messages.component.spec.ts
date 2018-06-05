@@ -1,34 +1,38 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
-import {ClarityModule} from '@clr/angular';
-import {SetlMessagesComponent} from './messages.component';
-import {SetlMessageBodyComponent} from './message-components/message-body/message-body.component';
-import {SetlMessageAttachmentComponent} from './message-components/message-attachment/message-attachment.component';
-import {SetlMessageFormActionComponent} from './message-components/message-form-action/message-form-action.component';
-import {SetlMessageConnectionComponent} from './message-components/message-connection/message-connection.component';
-import {SetlMessageKycComponent} from './message-components/message-kyc/message-kyc.component';
-import {SetlMessageAmCancelOrderComponent} from './message-components/message-cancel-order/message-cancel-order.component';
-import {NgxPaginationModule} from 'ngx-pagination';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule} from '@setl/utils/components/ng2-select/select.module';
-import {QuillEditorModule} from 'ngx-quill-editor';
-import {SetlPipesModule} from '@setl/utils/pipes';
-import {FileViewerModule} from '@setl/core-fileviewer/fileviewer.module';
-import {FileViewerComponent} from '@setl/core-fileviewer/fileviewer.component';
-import {MyMessagesService} from '@setl/core-req-services/my-messages/my-messages.service';
-import {MemberSocketService} from '@setl/websocket-service/member-socket.service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {MessagesService} from '../messages.service';
-import {MessageAction, MessageActionsConfig} from './message-components/message-form-action/message-form-action.model';
-import {MockMailHelper} from './mockMailHelper';
-import {ActivatedRoute, RouterModule} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {APP_BASE_HREF} from '@angular/common';
-import {APP_CONFIG, LogServiceMock, LogService} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgReduxTestingModule, MockNgRedux } from '@angular-redux/store/testing';
+import { ClarityModule } from '@clr/angular';
+import { SetlMessagesComponent } from './messages.component';
+import { SetlMessageBodyComponent } from './message-components/message-body/message-body.component';
+import { SetlMessageAttachmentComponent } from './message-components/message-attachment/message-attachment.component';
+import { SetlMessageFormActionComponent } from './message-components/message-form-action/message-form-action.component';
+import { SetlMessageConnectionComponent } from './message-components/message-connection/message-connection.component';
+import { SetlMessageKycComponent } from './message-components/message-kyc/message-kyc.component';
+import { SetlMessageAmCancelOrderComponent } from './message-components/message-cancel-order/message-cancel-order.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SelectModule } from '@setl/utils/components/ng2-select/select.module';
+import { QuillEditorModule } from 'ngx-quill-editor';
+import { SetlPipesModule } from '@setl/utils/pipes';
+import { FileViewerModule } from '@setl/core-fileviewer/fileviewer.module';
+import { FileViewerComponent } from '@setl/core-fileviewer/fileviewer.component';
+import { MyMessagesService } from '@setl/core-req-services/my-messages/my-messages.service';
+import { MemberSocketService } from '@setl/websocket-service/member-socket.service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { MessagesService } from '../messages.service';
+import {
+    MessageAction,
+    MessageActionsConfig
+} from './message-components/message-form-action/message-form-action.model';
+import { MockMailHelper } from './mockMailHelper';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { APP_BASE_HREF } from '@angular/common';
+import { APP_CONFIG, LogServiceMock, LogService } from '@setl/utils';
+import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { ToasterService } from 'angular2-toaster';
+import { FileDownloader } from "@setl/utils";
 
 const routes = [
     {
@@ -122,7 +126,7 @@ describe('SetlMessagesComponent', () => {
                 NgxPaginationModule,
                 SetlPipesModule,
                 FileViewerModule,
-                RouterModule.forRoot(routes)
+                RouterModule.forRoot(routes),
             ],
             providers: [
                 {provide: MyMessagesService},
@@ -135,7 +139,8 @@ describe('SetlMessagesComponent', () => {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
-                {provide: LogService, useClass: LogServiceMock}
+                {provide: LogService, useClass: LogServiceMock},
+                {provide: FileDownloader}
             ]
         }).compileComponents();
         MockNgRedux.reset();
