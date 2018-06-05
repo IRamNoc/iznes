@@ -166,12 +166,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      * @param size {int} the wanted decimal size
      */
     static padWithZeros(value: string, size: number): string {
-        const len = value.split('.')[1].length;
+        const isInt = value.split('.').length === 1;
+        const len = !isInt && value.split('.')[1].length;
         if (len === size) {
             return value;
         }
         if (len < size) {
-            let newValue = value;
+            let newValue = isInt ? value + '.' : value;
 
             while (newValue.split('.')[1].length < size) {
                 newValue += '0';
