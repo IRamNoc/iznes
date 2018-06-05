@@ -96,26 +96,23 @@
     </div>
 </header>
 
-<clr-modal [(clrModalOpen)]="showCountdownModal">
+<clr-modal [(clrModalOpen)]="showCountdownModal" [clrModalClosable]="false">
     <div class="modal-title">
         <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
         <h4 class="modal-title-text">
             <span class="ml_translated">{{'Session expiring soon' | translate}}</span></h4>
     </div>
     <div class="modal-body">
-        <p>{{'Your session will expire in' | translate}} <span class="text-warning">{{remainingSecond && remainingSecond}}</span>{{'seconds.' | translate}}
+        <p>{{'Your session will expire in' | translate}} <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{'seconds.' | translate}}
 
         </p>
-        <p>{{'Press' | translate}} <span class="text-primary font-weight-bold ml_translated">{{'continue' | translate}}</span>{{'to continue using this site.' | translate}}
+        <p>{{'Press' | translate}} <span class="text-primary font-weight-bold ml_translated">{{'continue' | translate}}</span> {{'to continue using this site.' | translate}}
 
         </p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
             <span class="ml_translated">{{'Continue' | translate}}</span>
-        </button>
-        <button type="button" class="btn btn-outline" (click)="showCountdownModal = false">
-            <span class="ml_translated">{{'Close' | translate}}</span>
         </button>
     </div>
 </clr-modal>
