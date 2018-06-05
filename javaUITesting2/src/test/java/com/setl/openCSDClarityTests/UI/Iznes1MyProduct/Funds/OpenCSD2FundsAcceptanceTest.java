@@ -486,13 +486,13 @@ public class OpenCSD2FundsAcceptanceTest {
             }
         }
 
-        public static void validateDatabaseShareExists ( int expectedCount, String UFundName) throws SQLException {
+        public static void validateDatabaseShareExists ( int expectedCount, String UShareName) throws SQLException {
             conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
             //for the query
             Statement stmt = conn.createStatement();
             ResultSet rs = null;
             try {
-                rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where Name =  " + "\"" + UFundName + "\"");
+                rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
                 int rows = 0;
 
                 if (rs.last()) {

@@ -68,7 +68,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
@@ -81,7 +80,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillCertainUmbrellaDetails(String fundName, String lei, String regOffice, String regAddress, String managementComp, String dateSelected, String custodian, String fundAdmin ) throws InterruptedException {
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
-        driver.findElement(By.id("uf_lei")).sendKeys(lei);
         driver.findElement(By.id("uf_registerOffice")).sendKeys(regOffice);
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(regAddress);
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(dateSelected);
@@ -230,7 +228,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(lei);
         driver.findElement(By.id("isEuDirective2")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
