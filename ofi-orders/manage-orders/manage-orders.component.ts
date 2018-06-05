@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import {Location} from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -78,6 +79,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         isin: null,
         status: null,
         orderType: null,
+        orderID : null,
         pageSize: this.itemPerPage,
         rowOffSet: 0,
         sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
@@ -191,6 +193,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private requestedSearch: any;
     private sort: { name: string, direction: string } = { name: 'dateEntered', direction: 'ASC' }; // default search.
     private defaultFilters = {
+        orderID: [
+            ''
+        ],
         sharename: [
             '',
         ],
@@ -214,6 +219,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ],
     };
     private defaultEmptyForm = {
+        orderID: '',
         sharename: '',
         isin: '',
         status: [this.orderStatuses[0]],
@@ -245,7 +251,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private messagesService: MessagesService,
                 private toasterService: ToasterService,
                 public _translate: MultilingualService,
-                private ofiCurrenciesService: OfiCurrenciesService) {
+                private ofiCurrenciesService: OfiCurrenciesService,
+                private location: Location) {
 
         this.appConfig = appConfig;
         this.isAmConfirmModalDisplayed = false;
@@ -331,6 +338,21 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(params => {
                 this.routeUpdate(params);
             });
+
+        this.route.queryParams.subscribe(queryParams => {
+            if(queryParams.orderID){
+                this.getAmOrdersFiltersFromRedux({
+                    orderID : queryParams.orderID
+                });
+
+                let newUrl = this.router.createUrlTree([], {
+                    queryParams: { orderID: null },
+                    queryParamsHandling: "merge"
+                });
+                this.location.replaceState(this.router.serializeUrl(newUrl));
+            }
+        });
+
         this.subscriptions.push(routeCombinedSubscription);
 
         this.subscriptions.push(combinedSubscription);
@@ -412,6 +434,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     clearForm() {
         this.searchForm.patchValue({
+            orderID : '',
             sharename: '',
             isin: '',
             status: [this.orderStatuses[0]],
@@ -478,10 +501,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     applyFilters() {
         if (this.tabsControl[0] && this.tabsControl[0].searchForm) {
+            let orderID = _.get(this, ['filtersFromRedux', 'orderID']);
+
             if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.sharename !== 'undefined' ||
                 typeof this.filtersFromRedux.status !== 'undefined' || typeof this.filtersFromRedux.orderType !== 'undefined' ||
                 typeof this.filtersFromRedux.dateType !== 'undefined' || typeof this.filtersFromRedux.fromDate !== 'undefined' ||
-                typeof  this.filtersFromRedux.toDate !== 'undefined') {
+                typeof  this.filtersFromRedux.toDate !== 'undefined' || orderID) {
 
                 if (typeof this.filtersFromRedux.isin !== 'undefined' && this.filtersFromRedux.isin !== '') {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin); // , {emitEvent: false}
@@ -534,6 +559,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
+                    this.isOptionalFilters = true;
+                }
+
+                if(orderID){
+                    this.tabsControl[0].searchForm.get('orderID').patchValue(orderID);
                     this.isOptionalFilters = true;
                 }
 
@@ -811,6 +841,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     requestSearch() {
 
         const tmpDataGridParams = {
+            orderID: this.dataGridParams.orderID,
             shareName: this.dataGridParams.shareName,
             isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
@@ -825,6 +856,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         const searchValues = this.tabsControl[0].searchForm.value;
+
+        let orderID = _.get(searchValues, 'orderID');
+        this.dataGridParams.orderID = orderID ? orderID : null;
 
         this.dataGridParams.shareName = _.get(searchValues, 'sharename', null);
         this.dataGridParams.isin = _.get(searchValues, 'isin', null);
@@ -859,6 +893,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         const tmpDataGridParams = {
+            orderID: this.dataGridParams.orderID,
             shareName: this.dataGridParams.shareName,
             isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
