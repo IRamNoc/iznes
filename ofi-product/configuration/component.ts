@@ -36,7 +36,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     ]) configOb: Observable<any>;
 
     private subscriptionsArray: Subscription[] = [];
-    private config: ProductConfiguration;
+    config: ProductConfiguration;
 
     constructor(private service: OfiProductConfigService,
                 private redux: NgRedux<any>,
