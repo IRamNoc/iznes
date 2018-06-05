@@ -728,11 +728,8 @@ export class FundComponent implements OnInit, OnDestroy {
             transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
             centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
             capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-<<<<<<< HEAD
             holidayMgmtConfig: this.getHolidayMgmtConfig(),
-=======
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
->>>>>>> 1e508e0a8772d735f3b7d04096809ab4a8c89e21
         };
 
         console.log('payload', payload);
