@@ -42,8 +42,6 @@ public class OpenCSD4FundFlowAcceptanceTest {
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
-
-
     @Before
     public void setUp() throws Exception {
         testSetUp();

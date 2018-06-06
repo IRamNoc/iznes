@@ -21,6 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAnd
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuser;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuserPassword;
@@ -76,14 +77,14 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToOrderBook() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToPageByID("menu-manage-orders");
-        verifyCorrectPage("Order Book - AssetManagerWallet");
+        verifyCorrectPageContains("Order Book");
     }
 
     @Test
     public void shouldNavigateToOrderBookHomepage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a")).click();
-        verifyCorrectPage("Order Book - AssetManagerWallet");
+        verifyCorrectPageContains("Order Book");
     }
 
     @Test
