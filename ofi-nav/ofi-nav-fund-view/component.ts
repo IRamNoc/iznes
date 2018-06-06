@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, ChangeDetectorRef, Inject} from '@angular/core';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef, Inject, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
@@ -25,6 +25,7 @@ import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
 import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe, immutableHelper, APP_CONFIG, AppConfig, FileDownloader} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
+import {AlertsService} from "@setl/jaspero-ng2-alerts/src/alerts.service";
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -59,6 +60,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     usingDatePeriodToSearch: boolean = false;
 
     appConfig: AppConfig;
+    isNavUploadModalDisplayed: boolean;
+    navCsvFile: any;
+
+    @ViewChild('detailNavCsvFile')
+    detailNavCsvFile: any;
 
     private subscriptionsArray: Subscription[] = [];
 
@@ -77,11 +83,13 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
+                private alertService: AlertsService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
         this.appConfig = appConfig;
-
+        this.isNavUploadModalDisplayed = false;
+        this.navCsvFile = null;
     }
 
     ngOnInit() {
@@ -389,4 +397,79 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }
     }
 
+    handleUploadNavSubmitClick() {
+        if (this.navCsvFile) {
+            const reader = new FileReader();
+            reader.readAsText(this.navCsvFile);
+
+            reader.onload = () => {
+                const payload = {
+                    navData: JSON.stringify(reader.result),
+                    shareIsin: this.navFund.isin.toString(),
+                };
+
+                return this.ofiNavService.uploadNavFile(
+                    'detail',
+                    payload,
+                    this.redux,
+                    res => this.handleUploadNavSuccess(res),
+                    err => this.handleUploadNavFail(err),
+                );
+            };
+        }
+    }
+
+    handleUploadNavSuccess(res) {
+        this.resetNavUploadModal();
+        const successMessage = res[1].Data[0].Message.replace('{{shareName}}', `for ${this.navFund.fundShareName}`);
+
+        this.alertService.create(
+            'success',
+            `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-success">${successMessage}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `,
+            {},
+            'NAVs Upload - Success',
+        );
+    }
+
+    handleUploadNavFail(err) {
+        if (err) {
+            this.resetNavUploadModal();
+            const errorMessage = err[1].Data[0].Message;
+
+            this.alertService.create(
+                'error',
+                `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">
+                                NAVs upload for ${this.navFund.fundShareName} has failed for the following reason:
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">${errorMessage}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            `,
+                {},
+                'NAVs Upload - Error',
+            );
+        }
+    }
+
+    resetNavUploadModal() {
+        this.detailNavCsvFile.nativeElement.value = '';
+        this.navCsvFile = null;
+        this.isNavUploadModalDisplayed = false;
+        this.changeDetectorRef.markForCheck();
+    }
 }
