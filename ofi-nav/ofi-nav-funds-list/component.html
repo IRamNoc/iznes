@@ -16,6 +16,21 @@
         </button>
 
         <clr-tab-content *clrIfActive="true">
+            <!-- Button container -->
+            <div class="row">
+                <div class="form-group button-container">
+                    <button class="btn btn-primary" id="uploadNavFileButton" (click)="isNavUploadModalDisplayed = true">
+                        {{'Upload NAVs' | translate}}
+                    </button>
+
+                    <button class="btn btn-primary" id="NAV-Export-CSV" (click)="exportCSV()" [disabled]="(!navListItems) || navListItems.length === 0">
+                        {{'Export List as CSV' | translate}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
             <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
@@ -28,9 +43,6 @@
                             <ng-select id="NAV-Date-Filter" class="fluid-width" [items]="dateTypes" formControlName="dateType" [placeholder]="_translate.translate('Select Date type')" [allowClear]="false">
 
 
-
-
-
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
@@ -38,9 +50,6 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
                                 <input id="Date-filter" name="searchDate" [placeholder]="_translate.translate('Choose a date')" formControlName="date" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
-
-
-
 
 
                             </div>
@@ -133,16 +142,46 @@
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
-
-            <div class="row">
-                <div class="form-group offset-sm-9 col-sm-3 text-right export-nav">
-                    <button class="btn btn-primary" id="NAV-Export-CSV" (click)="exportCSV()" [disabled]="(!navListItems) || navListItems.length === 0">
-                        {{'Export List as CSV' | translate}}
-                    </button>
-                </div>
-            </div>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
 
 <app-nav-add></app-nav-add>
+
+<clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'">
+    <h3 class="modal-title">{{'Upload NAVs' | translate}}</h3>
+
+    <div class="modal-body">
+        <p class="text-center text-warning">{{'This may take a few moments' | translate}}</p>
+
+        <form>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="globalNavCsvFile">{{'File to upload: ' | translate}}</label>
+                    <input #globalNavCsvFile
+                           id="globalNavCsvFile"
+                           name="globalNavCsvFile"
+                           type="file"
+                           accept="text/csv"
+                           (change)="this.navCsvFile = $event.target.files[0]"
+                    />
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button"
+                class="btn btn-outline"
+                (click)="resetNavUploadModal()">
+            {{'Cancel' | translate}}
+        </button>
+
+        <button type="button"
+                class="btn btn-success"
+                (click)="handleUploadNavSubmitClick()"
+                [disabled]="!navCsvFile">
+            {{'Upload' | translate}}
+        </button>
+    </div>
+</clr-modal>
