@@ -650,6 +650,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
             this._toaster.pop('warning', errorMessage);
+
+            this._router.navigateByUrl('/order-book/my-orders/list');
         });
 
     }
