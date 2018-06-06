@@ -6,9 +6,16 @@
     <clr-tab>
         <button clrTabLink id="tabConfigurationButton">{{'Holiday Management' | translate}}</button>
         <clr-tab-content class="outer">
-            <h3>{{'Lorem ipsum' | translate}}</h3>
-            <p>Lorem ipsum dolor sit amet.</p>
-            <date-picker-extended (datesEmitter)="getDates($event)"></date-picker-extended>
+            <p>Configure on which dates, trades should not be able to be placed.</p>
+            <p>These settings will effect all Funds which are configured to use these default settings.</p>
+            <p>Funds with individually configured dates, will need to be updated manually.</p>
+            
+            <date-picker-extended *ngIf="config" [dates]="config.holidayManagement.dates" (datesEmitter)="getDates($event)"></date-picker-extended>
+
+            <button id="configurationSave" class="btn btn-primary" type="button"
+                (click)="saveConfiguration()">
+                {{ 'Save' | translate }}
+            </button>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>
