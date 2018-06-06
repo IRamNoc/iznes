@@ -8,6 +8,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
+    ViewChild,
+    ElementRef
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
@@ -47,6 +49,9 @@ import {MessagesService} from '@setl/core-messages';
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
+    @ViewChild('quantityInput') quantityInput: ElementRef;
+    @ViewChild('subportfolio') subportfolio: ElementRef;
+
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
     quantityDecimalSize = 5;
@@ -163,11 +168,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
 
+    redeemedAll : Boolean;
+
     /**
      * This function pads floats as string with zeros
      * @param value {float} the value to pad with zeros
      * @param size {int} the wanted decimal size
      */
+
     static padWithZeros(value: string, size: number): string {
         const isInt = value.split('.').length === 1;
         const len = !isInt && value.split('.')[1].length;
@@ -329,7 +337,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
-        return Boolean(redeeming >= balance);
+        return Boolean(redeeming > balance);
     }
 
     get amountTooBig(){
@@ -446,6 +454,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.addressSelected = this.initialFormData.address[0];
             this.actionBy = this.initialFormData.actionBy;
         }
+    }
+
+    redeemAll($event){
+        $event.preventDefault();
+
+        if(!this.addressSelected){
+            this.redeemedAll = true;
+            this.subportfolio.nativeElement.scrollIntoView();
+            this.form.get('address').markAsDirty();
+            this.form.get('address').markAsTouched();
+            return false;
+        }
+
+        let quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
+
+        this.quantityInput.nativeElement.focus();
+        this.form.get('quantity').setValue(quantity);
+        this.quantityInput.nativeElement.blur();
     }
 
     updateDateInputs() {
@@ -826,8 +852,16 @@ The IZNES Team.</p>`;
         const amountStr = this._moneyValuePipe.transform(amount, 4);
         const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
         const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
-        let message =             `
+
+        let conditionalMessage;
+        if(this.type === 'redeem'){
+            const quantityBlockchain = this._numberConverterService.toBlockchain(quantity);
+            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
+        }
+
+        let message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            ${conditionalMessage ? conditionalMessage : ''}
             ${amountMessage}
             <table class="table grid">
                 <tbody>
