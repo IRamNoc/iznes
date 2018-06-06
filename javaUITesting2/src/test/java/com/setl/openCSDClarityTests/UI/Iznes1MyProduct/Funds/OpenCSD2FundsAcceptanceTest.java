@@ -396,6 +396,7 @@ public class OpenCSD2FundsAcceptanceTest {
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("fund-submitfund-btn");
 
         try {
             wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
