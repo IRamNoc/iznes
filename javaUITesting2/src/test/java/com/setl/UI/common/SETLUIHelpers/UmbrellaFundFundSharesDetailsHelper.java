@@ -220,7 +220,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     }
 
-    public static void shareCreationSubmit() {
+    public static void shareCreationSubmit() throws InterruptedException {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -231,6 +231,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         }catch (Exception e){
             System.out.println("fail " + e.getMessage());
         }
+        Thread.sleep(5000);
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
         assertTrue(popupSubheading.equals("Info!"));
@@ -239,7 +240,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void assertPopupNextFundYes(String fundType) {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
-        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        waits.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
         assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
@@ -248,7 +249,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void assertPopupNextFundNo(String fundType) {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
-        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        waits.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
         assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();

@@ -1,6 +1,7 @@
 package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -67,11 +68,18 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
         driver.findElement(By.id("uf_registerOffice")).sendKeys("testOffice");
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys("testAddress");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys("2019-10-20");
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
+        js.executeScript("document.getElementById(\"switchActiveShares\").click();");
+
+        wait.until(visibilityOfElementLocated(By.id("uf_lei")));
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
 
         selectTopDropdown("uf_managementCompany");
         selectTopDropdown("uf_custodian");
@@ -79,11 +87,19 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillCertainUmbrellaDetails(String fundName, String lei, String regOffice, String regAddress, String managementComp, String dateSelected, String custodian, String fundAdmin ) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(fundName);
         driver.findElement(By.id("uf_registerOffice")).sendKeys(regOffice);
         driver.findElement(By.id("uf_registerOfficeAddress")).sendKeys(regAddress);
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(dateSelected);
         driver.findElement(By.id("uf_umbrellaFundCreationDate")).sendKeys(Keys.ENTER);
+
+        js.executeScript("document.getElementById(\"switchActiveShares\").click();");
+
+        wait.until(visibilityOfElementLocated(By.id("uf_lei")));
+        driver.findElement(By.id("uf_lei")).sendKeys(lei);
 
         searchAndSelectTopDropdown("uf_managementCompany", managementComp);
         searchAndSelectTopDropdown("uf_custodian", custodian);
@@ -224,10 +240,17 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void fillOutFundDetailsStep2(String fundName, String lei) throws InterruptedException {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.id("fundName")).sendKeys(fundName);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[3]/ul/li[1]/div/a")).click();
+
+        js.executeScript("document.getElementById(\"switchActiveShares\").click();");
+
+        wait.until(visibilityOfElementLocated(By.id("legalEntityIdentifier")));
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(lei);
+
         driver.findElement(By.id("isEuDirective2")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
@@ -328,6 +351,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")));
         String leiName = driver.findElement(By.id("product-dashboard-fundID-" + rowNo + "-legalEntityIdentifier")).getText();
+        System.out.println(leiExpected);
+        System.out.println(leiName);
         assertTrue(leiName.equals(leiExpected));
 
         wait.until(visibilityOfElementLocated(By.id("product-dashboard-fundID-" + rowNo + "-fundCurrency")));
@@ -555,6 +580,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillOutFundDetailsStep1(String umbFundName) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         scrollElementIntoViewById("new-fund-btn");
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();

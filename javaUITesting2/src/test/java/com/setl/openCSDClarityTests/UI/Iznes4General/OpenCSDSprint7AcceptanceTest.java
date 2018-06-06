@@ -43,7 +43,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (30000);
+    public Timeout globalTimeout = new Timeout (45000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -63,7 +63,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
     @Test
     public void shouldInviteInvestorAndCheckDBTG659() throws InterruptedException, SQLException {
-        String investorEmail = "jordan.miller@setl.io";
+        String investorEmail = "jordan.miller2@setl.io";
 
         validateDatabaseInvestorInvited(0, investorEmail);
 
@@ -89,12 +89,12 @@ public class OpenCSDSprint7AcceptanceTest {
 
     @Test
     public void shouldHaveNextAndPreviousButtonsTG1090() throws IOException, InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();
         String randomLEI = "16614748475934658531";
-
-        validateDatabaseShareExists(0, uShareDetails[0]);
 
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
@@ -104,6 +104,78 @@ public class OpenCSDSprint7AcceptanceTest {
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
         createShareWithoutCharacteristics(uFundDetails[0], uShareDetails[0], uIsin[0]);
+
+        assertTrue(driver.findElement(By.id("nextTab")).isDisplayed());
+        assertTrue(driver.findElement(By.id("previousTab")).isDisplayed());
+
+        String disabledPrev = driver.findElement(By.id("previousTab")).getAttribute("disabled");
+        System.out.println(disabledPrev);
+        assertTrue(disabledPrev.equals("true"));
+        assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
+        driver.findElement(By.id("nextTab")).click();
+        wait.until(visibilityOfElementLocated(By.id("maximumNumDecimal")));
+
+        driver.findElement(By.id("tabDocumentsButton")).click();
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("prospectus")));
+
+        String disabledNext = driver.findElement(By.id("nextTab")).getAttribute("disabled");
+        System.out.println(disabledNext);
+        assertTrue(disabledNext.equals("true"));
+        assertTrue(driver.findElement(By.id("prospectus")).isDisplayed());
+        driver.findElement(By.id("previousTab")).click();
+        wait.until(visibilityOfElementLocated(By.id("toggleSolvencyOptional")));
+
+
+    }
+
+    @Test
+    public void shouldHaveLogoutButtonOnNavTG1052() throws IOException, InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccess("am", "alex01");
+        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).isDisplayed());
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).click();
+
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("username-field")));
+        assertTrue(driver.findElement(By.id("username-field")).isDisplayed());
+    }
+
+    @Test
+    public void shouldPopupAfterUmbrellaCreationTG1027() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+
+        selectAddUmbrellaFund();
+        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+
+        assertPopupNextFundNo("Fund");
+    }
+
+    @Test
+    public void shouldPopupAfterFundCreationTG1028() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+
+        selectAddUmbrellaFund();
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934858531");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+
+        String [] uFundDetails = generateRandomFundsDetails();
+        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], "16616758475934858531");
+
+        assertPopupNextFundNo("Share");
     }
 
     public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {

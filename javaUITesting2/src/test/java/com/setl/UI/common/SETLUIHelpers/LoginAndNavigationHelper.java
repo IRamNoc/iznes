@@ -291,26 +291,13 @@ public class LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
-            wait.until(invisibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
-            wait.until(visibilityOfElementLocated(By.id("dropdown-settings")));
-            wait.until(elementToBeClickable(By.id("dropdown-settings")));
-            WebElement settings = driver.findElement(By.id("dropdown-settings"));
-            settings.click();
+            wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+            wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+            WebElement logout = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a"));
+            logout.click();
 
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
-        }
-
-        WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
-
-        try {
-            wait1.until(visibilityOf(logOff));
-            wait1.until(elementToBeClickable(logOff));
-            logOff.click();
-
-        } catch (Exception e) {
-            fail("Logout button not available " + e.getMessage());
         }
     }
 
