@@ -49,6 +49,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     modalTitle = '';
     modalText = '';
 
+    isLeiVisible = false;
     mainInformationOpen = true;
     optionalInformationOpen = false;
 
@@ -398,6 +399,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundForm.get('umbrellaFundName').patchValue(this.umbrellaFund[0].umbrellaFundName, {emitEvent: false});
         this.umbrellaFundForm.get('registerOffice').patchValue(this.umbrellaFund[0].registerOffice, {emitEvent: false});
         this.umbrellaFundForm.get('registerOfficeAddress').patchValue(this.umbrellaFund[0].registerOfficeAddress, {emitEvent: false});
+        if (this.umbrellaFund[0].legalEntityIdentifier) {
+            this.isLeiVisible = true;
+        }
         this.umbrellaFundForm.get('legalEntityIdentifier').patchValue(this.umbrellaFund[0].legalEntityIdentifier, {emitEvent: false});
         const domicile = this.countries.filter(element => element.id.toString() === this.umbrellaFund[0].domicile.toString());
         if (domicile.length > 0) {
@@ -466,7 +470,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundName: formValues.umbrellaFundName,
             registerOffice: formValues.registerOffice,
             registerOfficeAddress: formValues.registerOfficeAddress,
-            legalEntityIdentifier: formValues.legalEntityIdentifier,
+            legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
             domicile: formValues.domicile[0].id,
             umbrellaFundCreationDate: formValues.umbrellaFundCreationDate,
             managementCompanyID: formValues.managementCompanyID[0].id,
@@ -565,6 +569,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this._router.navigate(['/product-module/product/fund/new'], extras);
+    }
+
+    onClickLeiSwitch() {
+        if (this.isLeiVisible) {
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
+        } else {
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].enable();
+        }
+        this.isLeiVisible = !this.isLeiVisible;
     }
 
     displayFundPopup(umbrellaFundName, umbrellaFundID){

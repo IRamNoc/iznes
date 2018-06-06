@@ -208,7 +208,7 @@ export class OfiManageNavPopup implements OnInit {
             fundShareIsin: this.share.isin,
             fundDate: `${this.navForm.controls.navDate.value} 00:00:00`,
             navPublicationDate: `${this.navForm.controls.navPubDate.value} 00:00:00`,
-            price: this.numberConverterService.toBlockchain(this.navForm.value.price),
+            price: this.numberConverterService.toBlockchain(this.navForm.controls.price.value.replace(/\s+/g, '')),
             priceStatus: this.navForm.controls.status.value[0].id
         }
 

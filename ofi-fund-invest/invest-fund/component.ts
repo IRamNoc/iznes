@@ -36,6 +36,7 @@ import {ToasterService} from 'angular2-toaster';
 import {Router} from '@angular/router';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
+import {MessagesService} from '@setl/core-messages';
 
 @Component({
     selector: 'app-invest-fund',
@@ -48,6 +49,7 @@ import {MultilingualService} from '@setl/multilingual';
 export class InvestFundComponent implements OnInit, OnDestroy {
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
+    quantityDecimalSize = 5;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -147,6 +149,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     subPortfolio;
     addressListObj;
 
+    amountLimit : number = 15000000;
+
     panels = {
         1: true,
         2: true,
@@ -158,6 +162,31 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
+
+    /**
+     * This function pads floats as string with zeros
+     * @param value {float} the value to pad with zeros
+     * @param size {int} the wanted decimal size
+     */
+    static padWithZeros(value: string, size: number): string {
+        const isInt = value.split('.').length === 1;
+        const len = !isInt && value.split('.')[1].length;
+        if (len === size) {
+            return value;
+        }
+        if (len < size) {
+            let newValue = isInt ? value + '.' : value;
+
+            while (newValue.split('.')[1].length < size) {
+                newValue += '0';
+            }
+            return newValue;
+        }
+
+        const newValue = value.split('.');
+        return `${newValue[0]}.${newValue[1].slice(0, size)}`;
+
+    }
 
     get feePercentage(): number {
         return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
@@ -303,6 +332,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return Boolean(redeeming >= balance);
     }
 
+    get amountTooBig(){
+        let value = this.amount.value;
+        let quantity = this._moneyValuePipe.parse(value, 4);
+
+        if(isNaN(quantity)){
+            quantity = 0;
+        }
+
+        return quantity > this.amountLimit;
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 public _moneyValuePipe: MoneyValuePipe,
                 private _myWalletService: MyWalletsService,
@@ -315,7 +355,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _router: Router,
                 private logService: LogService,
                 public _translate: MultilingualService,
-                private _ngRedux: NgRedux<any>) {
+                private _ngRedux: NgRedux<any>,
+                private _messagesService: MessagesService
+    ) {
     }
 
     ngOnDestroy() {
@@ -383,7 +425,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
             this.updateDateInputs();
-
 
         }));
 
@@ -570,12 +611,33 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
             this.handleClose();
 
+            if(this.amountTooBig){
+                this.sendMessageToAM({
+                    walletID : this.shareData.walletID,
+                    orderTypeLabel : this.orderTypeLabel,
+                    orderID : orderId,
+                    orderRef : orderRef
+                });
+            }
+
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
             this._toaster.pop('warning', errorMessage);
         });
 
+    }
+//this.shareData.walletId
+
+    sendMessageToAM(params){
+        const amWalletID = params.walletID;
+        const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
+        const body = `<p>Hello,<br /><br />
+Please be aware that the ${params.orderTypeLabel} order ${params.orderRef} has exceeded the limit of 15 million.<br />
+<a href="/#/manage-orders/list?orderID=${params.orderID}" class="btn btn-secondary">Go to this order</a><br /><br />
+The IZNES Team.</p>`;
+
+        this._messagesService.sendMessage([amWalletID], subject, body, null);
     }
 
     subscribeForChange(type: string): void {
@@ -593,12 +655,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const callBack = {
             'quantity': (value) => {
 
-                const newValue = this._moneyValuePipe.transform(value, this.shareData.maximumNumDecimal);
-
+                const val = Number(value.toString().replace(/\s+/g, ''));
                 /**
                  * amount = unit * nav
                  */
-                const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
                 beTriggered.setValue(this._moneyValuePipe.transform(amount.toString(), 4));
 
                 // calculate fee
@@ -620,7 +681,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  */
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14);
-                beTriggered.setValue(this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal));
+                const newQuantity = InvestFundComponent.padWithZeros(
+                    this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal),
+                    this.quantityDecimalSize,
+                );
+                beTriggered.setValue(newQuantity);
 
                 // calculate fee
                 const fee = calFee(newValue, this.feePercentage);
@@ -760,11 +825,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this._moneyValuePipe.parse(this.quantity.value);
         const amountStr = this._moneyValuePipe.transform(amount, 4);
         const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
-
-        this._confirmationService.create(
-            '<span>Order confirmation</span>',
-            `
+        const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
+        let message =             `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            ${amountMessage}
             <table class="table grid">
                 <tbody>
                     <tr>
@@ -805,7 +869,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-            `,
+            `;
+
+        this._confirmationService.create(
+            '<span>Order confirmation</span>',
+            message,
             {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
         ).subscribe((ans) => {
             if (ans.resolved) {
@@ -816,6 +884,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     getKiidFileHash(): string {
         return this.shareData.kiid;
+    }
+
+    unSubscribeQuantity() {
+        const newValue = InvestFundComponent.padWithZeros(this.quantity.value, this.quantityDecimalSize);
+
+        this.quantity.setValue(newValue);
+        this.unSubscribeForChange();
     }
 
     unSubscribeForChange(): void {
@@ -859,8 +934,15 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
     }
 
-    roundAmount(){
-        this.amount.setValue(Math.ceil(this._moneyValuePipe.parse(this.amount.value) / (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal))));
+    roundAmount() {
+        const moneyParsedValue = this._moneyValuePipe.parse(this.amount.value);
+        const newValue = Math.ceil(
+            moneyParsedValue /
+            (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))
+        ) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)));
+        const paddedNewValue = InvestFundComponent.padWithZeros(newValue.toString(), 4);
+
+        this.amount.setValue(paddedNewValue);
         this.unSubscribeForChange();
     }
 }
