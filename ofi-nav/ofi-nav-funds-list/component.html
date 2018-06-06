@@ -148,12 +148,10 @@
 
 <app-nav-add></app-nav-add>
 
-<clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'">
+<clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'" [clrModalClosable]="false">
     <h3 class="modal-title">{{'Upload NAVs' | translate}}</h3>
 
     <div class="modal-body">
-        <p class="text-center text-warning">{{'This may take a few moments' | translate}}</p>
-
         <form>
             <section class="form-block">
                 <div class="form-group col-sm-12">
@@ -163,7 +161,7 @@
                            name="globalNavCsvFile"
                            type="file"
                            accept="text/csv"
-                           (change)="this.navCsvFile = $event.target.files[0]"
+                           (change)="navCsvFile = $event.target.files[0]"
                     />
                 </div>
             </section>
@@ -171,17 +169,25 @@
     </div>
 
     <div class="modal-footer">
-        <button type="button"
+        <button id='globalNavModalCancelButton'
+                type="button"
                 class="btn btn-outline"
+                [disabled]="!hasResult"
                 (click)="resetNavUploadModal()">
             {{'Cancel' | translate}}
         </button>
 
-        <button type="button"
+        <button *ngIf="hasResult"
+                id='globalNavModalSubmitButton'
+                type="button"
                 class="btn btn-success"
                 (click)="handleUploadNavSubmitClick()"
                 [disabled]="!navCsvFile">
             {{'Upload' | translate}}
         </button>
+
+        <div *ngIf='!hasResult' class="btn btn-success">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
     </div>
 </clr-modal>

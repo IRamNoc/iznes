@@ -48,6 +48,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     };
     isNavUploadModalDisplayed: boolean;
     navCsvFile: any;
+    hasResult: boolean;
 
     @ViewChild('globalNavCsvFile')
     globalNavCsvFile: any;
@@ -76,6 +77,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.appConfig = appConfig;
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
+        this.hasResult = true;
     }
 
     ngOnInit() {
@@ -192,24 +194,28 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                     navData: JSON.stringify(reader.result),
                 };
 
-                return this.ofiNavService.uploadNavFile(
+                this.ofiNavService.uploadNavFile(
                     'global',
                     payload,
                     this.redux,
                     res => this.handleUploadNavSuccess(res),
                     err => this.handleUploadNavFail(err),
                 );
+
+                this.hasResult = false;
             };
         }
     }
 
     handleUploadNavSuccess(res) {
         this.resetNavUploadModal();
-        const successMessage = res[1].Data[0].Message;
 
-        this.alertService.create(
-            'success',
-            `
+        if (res) {
+            const successMessage = res[1].Data[0].Message;
+
+            this.alertService.create(
+                'success',
+                `
                 <table class="table grid">
                     <tbody>
                         <tr>
@@ -218,14 +224,16 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                     </tbody>
                 </table>
             `,
-            {},
-            'NAVs Upload - Success',
-        );
+                {},
+                'NAVs Upload - Success',
+            );
+        }
     }
 
     handleUploadNavFail(err) {
+        this.resetNavUploadModal();
+
         if (err) {
-            this.resetNavUploadModal();
             const errorMessage = err[1].Data[0].Message;
 
             this.alertService.create(
@@ -252,6 +260,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.globalNavCsvFile.nativeElement.value = '';
         this.navCsvFile = null;
         this.isNavUploadModalDisplayed = false;
+        this.hasResult = true;
+
         this.changeDetectorRef.markForCheck();
     }
 
