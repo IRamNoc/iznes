@@ -72,7 +72,7 @@ public class OpenCSDNAVAcceptanceTest {
         String[] uFundDetails = generateRandomFundsDetails();
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
-        int rowNo = 1;
+        int rowNo = 0;
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
