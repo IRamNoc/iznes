@@ -159,6 +159,7 @@ public class OpenCSDGeneralAcceptanceTest {
     }
 
     @Test
+    @Ignore("Not needed yet")
     public void shouldLoginToOffice365() throws InterruptedException {
         LoginToOutlook("test@setl.io", "Sphericals1057!");
     }

@@ -112,6 +112,7 @@ public class OpenCSDSprint7AcceptanceTest {
         System.out.println(disabledPrev);
         assertTrue(disabledPrev.equals("true"));
         assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
+        wait.until(elementToBeClickable(By.id("nextTab")));
         driver.findElement(By.id("nextTab")).click();
         wait.until(visibilityOfElementLocated(By.id("maximumNumDecimal")));
 
