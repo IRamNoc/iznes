@@ -4,10 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -16,6 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.*;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUmbrellaFundExists;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVerifySuccess;
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
@@ -60,6 +59,12 @@ public class OpenCSDSprint7AcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBToProdOff();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        setDBToProdOn();
     }
 
     @Test

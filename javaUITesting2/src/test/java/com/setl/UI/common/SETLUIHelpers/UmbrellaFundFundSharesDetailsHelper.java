@@ -130,7 +130,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
     }
 
     public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabCharacteristicsButton")).click();
         }
         catch (Exception e){
@@ -158,6 +162,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
 
@@ -183,7 +189,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationFees() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
 
@@ -210,7 +220,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationProfile() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){
             fail(e.getMessage());
