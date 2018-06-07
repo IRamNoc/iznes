@@ -109,10 +109,10 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(driver.findElement(By.id("previousTab")).isDisplayed());
 
         String disabledPrev = driver.findElement(By.id("previousTab")).getAttribute("disabled");
-        System.out.println(disabledPrev);
         assertTrue(disabledPrev.equals("true"));
         assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
         wait.until(elementToBeClickable(By.id("nextTab")));
+        scrollElementIntoViewById("nextTab");
         driver.findElement(By.id("nextTab")).click();
         wait.until(visibilityOfElementLocated(By.id("maximumNumDecimal")));
 
@@ -120,7 +120,6 @@ public class OpenCSDSprint7AcceptanceTest {
         wait.until(visibilityOfAllElementsLocatedBy(By.id("prospectus")));
 
         String disabledNext = driver.findElement(By.id("nextTab")).getAttribute("disabled");
-        System.out.println(disabledNext);
         assertTrue(disabledNext.equals("true"));
         assertTrue(driver.findElement(By.id("prospectus")).isDisplayed());
         driver.findElement(By.id("previousTab")).click();
