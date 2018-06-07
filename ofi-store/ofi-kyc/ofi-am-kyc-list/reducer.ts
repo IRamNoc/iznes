@@ -2,7 +2,7 @@ import * as actions from './actions';
 import {Action} from 'redux';
 import * as _ from 'lodash';
 import {AmKycListState} from './model';
-import {immutableHelper} from '@setl/utils';
+import {immutableHelper, mDateHelper} from '@setl/utils';
 
 const initialState: AmKycListState = {
     amKycList: [],
@@ -48,7 +48,7 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 amUserName: item.get('amUserName', 0),
                 amFirstName: item.get('amFirstName', 0),
                 amLastName: item.get('amLastName', 0),
-                lastUpdated: item.get('lastUpdated', 0),
+                lastUpdated: mDateHelper.convertUtcStrToLocalStr(item.get('lastUpdated', 0), 'YYYY-MM-DD HH:mm'),
                 lastReviewBy: item.get('lastReviewBy', 0),
                 investorWalletID: item.get('investorWalletID', 0),
                 walletName: item.get('walletName', 0),
@@ -56,8 +56,8 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 isInvited: item.get('isInvited', 0),
                 invitedID: item.get('invitedID', 0),
                 status: item.get('kycStatus', 0),
-                dateEntered: item.get('dateEntered', 0),
-                clientReference: item.get('clientReference', 0)
+                dateEntered: mDateHelper.convertUtcStrToLocalStr(item.get('dateEntered', 0), 'YYYY-MM-DD HH:mm'),
+                clientReference: item.get('clientReference', 0),
             });
 
             return result;
