@@ -78,6 +78,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             fundShareName: item.get('fundShareName', 'N/A'),
             fundID: item.get('fundID', 0),
             isin: item.get('isin', 'N/A'),
+            walletID: item.get('walletID', 0),
             shareClassCode: item.get('shareClassCode', 0),
             shareClassInvestmentStatus: item.get('shareClassInvestmentStatus', 0),
             shareClassCurrency: item.get('shareClassCurrency', 0),
