@@ -21,6 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.loginAndVer
 import static com.setl.UI.common.SETLUIHelpers.AccountsDetailsHelper.navigateToDropdown;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyFundOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageContents;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -109,10 +110,10 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(driver.findElement(By.id("previousTab")).isDisplayed());
 
         String disabledPrev = driver.findElement(By.id("previousTab")).getAttribute("disabled");
-        System.out.println(disabledPrev);
         assertTrue(disabledPrev.equals("true"));
         assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
         wait.until(elementToBeClickable(By.id("nextTab")));
+        scrollElementIntoViewById("nextTab");
         driver.findElement(By.id("nextTab")).click();
         wait.until(visibilityOfElementLocated(By.id("maximumNumDecimal")));
 
@@ -120,7 +121,6 @@ public class OpenCSDSprint7AcceptanceTest {
         wait.until(visibilityOfAllElementsLocatedBy(By.id("prospectus")));
 
         String disabledNext = driver.findElement(By.id("nextTab")).getAttribute("disabled");
-        System.out.println(disabledNext);
         assertTrue(disabledNext.equals("true"));
         assertTrue(driver.findElement(By.id("prospectus")).isDisplayed());
         driver.findElement(By.id("previousTab")).click();
@@ -190,6 +190,16 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(navlinkactive.equals("nav-link active"));
         driver.findElement(By.id("menu-nav")).click();
         assertTrue(driver.findElement(By.id("menu-product-home")).getAttribute("class").equals("nav-link"));
+    }
+
+    @Test
+    public void NavigateToCentralisationHistoryPageTG1079() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-am-report-section");
+        navigateToPageByID("menu-report-centralization-select");
+        verifyCorrectPage("Centralisation History");
+
     }
 
     public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {

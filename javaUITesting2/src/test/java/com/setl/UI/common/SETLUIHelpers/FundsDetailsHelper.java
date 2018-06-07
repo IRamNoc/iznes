@@ -28,13 +28,13 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElem
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static String[] generateRandomUmbrellaFundsDetails() {
-        String str = randomAlphabetic(5);
+        String str = randomAlphabetic(7);
         String umbrellaFundName = "Test_Umbrella_Fund_" + str;
         return new String[]{umbrellaFundName};
     }
 
     public static String[] generateRandomFundsDetails() {
-        String str = randomAlphabetic(5);
+        String str = randomAlphabetic(7);
         String umbrellaFundName = "Test_Fund_" + str;
         return new String[]{umbrellaFundName};
     }
