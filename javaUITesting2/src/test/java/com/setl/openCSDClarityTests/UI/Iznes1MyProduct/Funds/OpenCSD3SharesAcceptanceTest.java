@@ -63,7 +63,7 @@ public class OpenCSD3SharesAcceptanceTest {
     }
 
     @Test
-    public void shouldCreateShareAssertTableDataIsCorrectAndDatabaseCheck() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateShareAndAssertTableDataIsCorrectAndDatabaseCheck() throws IOException, InterruptedException, SQLException {
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uIsin = generateRandomISIN();
         String[] uFundDetails = generateRandomFundsDetails();

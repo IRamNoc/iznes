@@ -179,6 +179,19 @@ public class OpenCSDSprint7AcceptanceTest {
         assertPopupNextFundNo("Share");
     }
 
+    @Test
+    public void shouldApplySelectedFilterOnNavigationMenuTG1097() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+
+        String navlinkactive = driver.findElement(By.id("menu-product-home")).getAttribute("class");
+        assertTrue(navlinkactive.equals("nav-link active"));
+        driver.findElement(By.id("menu-nav")).click();
+        assertTrue(driver.findElement(By.id("menu-product-home")).getAttribute("class").equals("nav-link"));
+    }
+
     public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
         //for the query
