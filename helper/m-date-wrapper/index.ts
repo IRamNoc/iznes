@@ -75,3 +75,13 @@ export function getCurrentUnixTimestampStr(format) {
 export function convertToLocal(date: Date, formatStr: string) {
     return moment.utc(date).local().format(formatStr);
 }
+
+/**
+ *  convert utc date time string to local date time.
+ * @param dateTimeStr
+ * @param format
+ * @return {string}
+ */
+export function convertUtcStrToLocalStr(dateTimeStr: string, formatStr: string) {
+    return moment.utc(dateTimeStr, formatStr).local().format(formatStr);
+}
