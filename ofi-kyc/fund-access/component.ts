@@ -34,9 +34,16 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     amCompany: string;
     kycId: number;
     investorWalletId: number;
-    investorWalletIdFundAccess: Array<number>;
+    investorWalletData = {};
 
     investorForm: FormGroup;
+
+    showOverrideModal = false;
+    currentOverride: number = 0;
+    newOverride = {
+        amount: 0,
+        document: ''
+    };
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
@@ -143,14 +150,14 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         }
 
         this._confirmationService.create('Confirm Fund Share Access:', message, {
-            confirmText: 'Confirm Access',
+            confirmText: 'Confirm Access and Save Changes',
             declineText: 'Cancel',
             btnClass: 'primary'
         }).subscribe((ans) => {
             if (ans.resolved) {
                 this.saveAccess();
             } else {
-                this.updateFundAccess();
+                //this.updateFundAccess();
             }
         });
     }
@@ -170,75 +177,25 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     }
 
     saveAccess() {
-        if (this.changes['add'] || this.changes['remove']) {
-            let shareArray = {
-                add: [],
-                remove: []
-            };
-            let emailArray = {
-                add: {},
-                remove: {}
-            };
-            Object.keys(this.access).forEach((key) => {
-                if (this.access[key]['changed']) {
-                    shareArray[(this.access[key]['access'] ? 'add' : 'remove')].push(key);
+        this._ofiKycService.saveFundAccess({
+            kycID: this.investorData['kycID'],
+            investorWalletID: this.investorData['investorWalletID'],
+            access: this.access
+        }).then(() => {
 
-                    //array for email
-                    if (emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] == null) {
-                        emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']] = [];
-                    }
-                    emailArray[(this.access[key]['access'] ? 'add' : 'remove')][this.access[key]['fundName']].push({
-                        shareName: this.access[key]['shareName'],
-                        isin: this.access[key]['isin']
-                    });
-                }
-            });
+            // success call back
+            this.toasterService.pop('success', 'Share Permissions Saved');
 
-            let promises = [];
-            if (shareArray['add'].length > 0) {
-                promises.push(new Promise((resolve, reject) => {
-                    this._ofiKycService.saveFundAccess({
-                        kycID: this.investorData['kycID'],
-                        investorWalletID: this.investorData['investorWalletID'],
-                        shareArray: shareArray['add']
-                    }).then(() => {
-                        this.setChangedToFalse(shareArray['add']);
-                        // success call back
-                        resolve();
-                    }, () => {
-                        // fail call back
-                        // todo
-                    });
-                }));
-            }
-            if (shareArray['remove'].length > 0) {
-                promises.push(new Promise((resolve, reject) => {
-                    this._ofiKycService.removeFundAccess({
-                        kycID: this.investorData['kycID'],
-                        investorWalletID: this.investorData['investorWalletID'],
-                        shareArray: shareArray['remove']
-                    }).then(() => {
-                        this.setChangedToFalse(shareArray['remove']);
-                        // success call back
-                        resolve();
-                    }, () => {
-                        // fail call back
-                        // todo
-                    });
-                }));
-            }
-            Promise.all(promises).then(() => {
-                this.toasterService.pop('success', 'Share Permissions Saved');
+            let recipientsArr = [this.investorData['investorWalletID']];
+            let subjectStr = this.amCompany + ' has updated your access';
 
-                let recipientsArr = [this.investorData['investorWalletID']];
-                let subjectStr = this.amCompany + ' has updated your access';
-
-                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
-
-                bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br><a class="btn" href="/#/list-of-funds/0">Start Trading</a><br><br>Thank you,<br><br>The IZNES team.';
-                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
-            });
-        }
+            let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
+            bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br><a class="btn" href="/#/list-of-funds/0">Start Trading</a><br><br>Thank you,<br><br>The IZNES team.';
+            this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
+        }, () => {
+            // fail call back
+            // todo
+        });
     }
 
     setAmKycListRequested(requested) {
@@ -281,10 +238,9 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
             // Get the fund access for investor walletID and render it.
             this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
-                this.investorWalletIdFundAccess = immutableHelper.reduce(_.get(data, '[1].Data', []), (result, item) => {
-                    result.push(item.get('shareID', 0));
-                    return result;
-                }, []);
+                _.get(data, '[1].Data', []).forEach((row) => {
+                    this.investorWalletData[row['shareID']] = row;
+                });
                 this.updateFundAccess();
             }).catch((e) => {
 
@@ -306,7 +262,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 fundName: item.get('fundName', ''),
                 shareName: item.get('fundShareName', ''),
                 isin: item.get('isin', ''),
-                assess: false
+                max: Math.min(item.get('maxRedemptionFee', 0), item.get('maxSubscriptionFee', 0)),
+                minInvestment: item.get('minSubsequentSubscriptionInAmount', 0)
             });
             return result;
         }, []);
@@ -316,11 +273,16 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     updateFundAccess() {
         this.tableData.forEach((row) => {
             this.access[row['id']] = {
-                access: this.investorWalletIdFundAccess.indexOf(row['id']) !== -1,
+                access: !!this.investorWalletData[row['id']],
                 changed: false,
-                fundName: row['fundName'],
-                shareName: row['shareName'],
-                isin: row['isin']
+                entry: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['entryFee'] : 0) / 100000,
+                exit: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['exitFee'] : 0) / 100000,
+                max: row['max'],
+                minInvestment: row['minInvestment'],
+                override: (!!this.investorWalletData[row['id']] ? (this.investorWalletData[row['id']]['minInvestOverride'] == 1 ? 1 : 0) : false),
+                overrideAmount: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['minInvestVal'] : 0) / 100000,
+                overrideDocument: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['minInvestDocument'] : ''),
+                newOverride: false
             };
         });
         this._changeDetectorRef.markForCheck();
@@ -329,11 +291,54 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     onClickAccess(item) {
         item['access'] = !item['access'];
         item['changed'] = !item['changed'];
+
+        if (!item['access']) {
+            item['entry'] = 0;
+            item['exit'] = 0;
+            item['override'] = false;
+        }
     }
 
-    setChangedToFalse(sharesArray: Array<number>) {
-        sharesArray.forEach((shareId) => {
-            this.access[shareId]['changed'] = false;
-        });
+    checkFee(id, type) {
+        if (isNaN(parseFloat(this.access[id][type])) || !isFinite(this.access[id][type])) this.access[id][type] = 0;
+        this.access[id][type] = Math.round(this.access[id][type] * 10000) / 10000;
+        if (this.access[id][type] < 0) this.access[id][type] = 0;
+        if (this.access[id][type] > this.access[id]['max']) this.access[id][type] = this.access[id]['max'];
+        // this.access[id]['changed'] = true;
+    }
+
+    openOverrideModal(id) {
+        this.currentOverride = id;
+        this.showOverrideModal = true;
+    }
+
+    closeOverrideModal(type) {
+
+        if (type == 1) {
+            this.access[this.currentOverride]['newOverride'] = true;
+            this.access[this.currentOverride]['override'] = true;
+            this.access[this.currentOverride]['overrideAmount'] = this.newOverride['amount'];
+            this.access[this.currentOverride]['overrideDocument'] = this.newOverride['document'];
+            this.newOverride = {
+                amount: 0,
+                document: ''
+            };
+        }
+        if (type == 2) {
+            this.access[this.currentOverride]['newOverride'] = true;
+            this.access[this.currentOverride]['override'] = false;
+            this.access[this.currentOverride]['overrideAmount'] = 0;
+            this.access[this.currentOverride]['overrideDocument'] = '';
+            this.newOverride = {
+                amount: 0,
+                document: ''
+            };
+        }
+        this.currentOverride = 0;
+        this.showOverrideModal = false;
+    }
+
+    onDropFiles(event, modelItem) {
+        //this.service.uploadFile(event, modelItem, this.changeDetectorRef);
     }
 }
