@@ -192,7 +192,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("My information"));
+        String test = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
+        System.out.println(test);
+
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("MY INFORMATION"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value").equals(email));
