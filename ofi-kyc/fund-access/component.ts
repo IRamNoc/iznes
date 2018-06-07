@@ -262,7 +262,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 fundName: item.get('fundName', ''),
                 shareName: item.get('fundShareName', ''),
                 isin: item.get('isin', ''),
-                max: Math.min(item.get('maxRedemptionFee', 0), item.get('maxSubscriptionFee', 0)),
+                max: (1 + Math.min(item.get('maxRedemptionFee', 0), item.get('maxSubscriptionFee', 0))) * 100 - 100,
                 minInvestment: item.get('minSubsequentSubscriptionInAmount', 0)
             });
             return result;
@@ -301,10 +301,9 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
     checkFee(id, type) {
         if (isNaN(parseFloat(this.access[id][type])) || !isFinite(this.access[id][type])) this.access[id][type] = 0;
-        this.access[id][type] = Math.round(this.access[id][type] * 10000) / 10000;
+        this.access[id][type] = Math.round((this.access[id][type]) * 10000) / 10000;
         if (this.access[id][type] < 0) this.access[id][type] = 0;
         if (this.access[id][type] > this.access[id]['max']) this.access[id][type] = this.access[id]['max'];
-        // this.access[id]['changed'] = true;
     }
 
     openOverrideModal(id) {
