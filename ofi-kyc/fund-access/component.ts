@@ -12,6 +12,8 @@ import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share
 import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {FileService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -44,6 +46,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         amount: 0,
         document: ''
     };
+    uploadFiles = {};
 
     /* Private properties. */
     private subscriptions: Array<any> = [];
@@ -64,6 +67,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 private _confirmationService: ConfirmationService,
                 private _ofiFundShareService: OfiFundShareService,
                 private _fb: FormBuilder,
+                private fileService: FileService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -177,24 +181,56 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     }
 
     saveAccess() {
-        this._ofiKycService.saveFundAccess({
-            kycID: this.investorData['kycID'],
-            investorWalletID: this.investorData['investorWalletID'],
-            access: this.access
-        }).then(() => {
 
-            // success call back
-            this.toasterService.pop('success', 'Share Permissions Saved');
+        let promises = [];
+        let uploadData = {};
 
-            let recipientsArr = [this.investorData['investorWalletID']];
-            let subjectStr = this.amCompany + ' has updated your access';
+        Object.keys(this.access).forEach((key) => {
+            if (this.access[key]['newOverride'] && this.access[key]['override']) {
+                promises.push(new Promise((resolve, reject) => {
+                    const asyncTaskPipe = this.fileService.addFile({
+                        files: this.uploadFiles[key],
+                    });
+                    this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                        asyncTaskPipe,
+                        (function (data) {
+                            uploadData[key] = data[1].Data[0][0];
+                            resolve();
+                        })
+                    ));
+                }));
+            }
+            if (this.access[key]['newOverride'] && !this.access[key]['override']) {
+                //remove file
+                this.access[key]['overrideDocument'] = '';
+            }
+        });
 
-            let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
-            bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br><a class="btn" href="/#/list-of-funds/0">Start Trading</a><br><br>Thank you,<br><br>The IZNES team.';
-            this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
-        }, () => {
-            // fail call back
-            // todo
+        Promise.all(promises).then(() => {
+            Object.keys(uploadData).forEach((key) => {
+                this.access[key]['overrideDocument'] = uploadData[key]['fileHash'];
+            });
+
+            this._ofiKycService.saveFundAccess({
+                kycID: this.investorData['kycID'],
+                investorWalletID: this.investorData['investorWalletID'],
+                access: this.access
+            }).then(() => {
+
+                // success call back
+                this.toasterService.pop('success', 'Share Permissions Saved');
+
+                let recipientsArr = [this.investorData['investorWalletID']];
+                let subjectStr = this.amCompany + ' has updated your access';
+
+                let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
+                bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br><a class="btn" href="/#/list-of-funds/0">Start Trading</a><br><br>Thank you,<br><br>The IZNES team.';
+                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
+            }, () => {
+                // fail call back
+                // todo
+            });
+
         });
     }
 
@@ -262,12 +298,11 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 fundName: item.get('fundName', ''),
                 shareName: item.get('fundShareName', ''),
                 isin: item.get('isin', ''),
-                max: (1 + Math.min(item.get('maxRedemptionFee', 0), item.get('maxSubscriptionFee', 0))) * 100 - 100,
-                minInvestment: item.get('minSubsequentSubscriptionInAmount', 0)
+                max: ((1 + Math.min(item.get('maxRedemptionFee', 0), item.get('maxSubscriptionFee', 0))) * 100 - 100).toFixed(5),
+                minInvestment: item.get('minSubsequentSubscriptionInAmount', 0),
             });
             return result;
         }, []);
-
     }
 
     updateFundAccess() {
@@ -282,6 +317,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
                 override: (!!this.investorWalletData[row['id']] ? (this.investorWalletData[row['id']]['minInvestOverride'] == 1 ? 1 : 0) : false),
                 overrideAmount: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['minInvestVal'] : 0) / 100000,
                 overrideDocument: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['minInvestDocument'] : ''),
+                overrideDocumentTitle: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['fileTitle'] : ''),
                 newOverride: false
             };
         });
@@ -317,27 +353,35 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             this.access[this.currentOverride]['newOverride'] = true;
             this.access[this.currentOverride]['override'] = true;
             this.access[this.currentOverride]['overrideAmount'] = this.newOverride['amount'];
-            this.access[this.currentOverride]['overrideDocument'] = this.newOverride['document'];
-            this.newOverride = {
-                amount: 0,
-                document: ''
-            };
         }
         if (type == 2) {
             this.access[this.currentOverride]['newOverride'] = true;
             this.access[this.currentOverride]['override'] = false;
             this.access[this.currentOverride]['overrideAmount'] = 0;
-            this.access[this.currentOverride]['overrideDocument'] = '';
-            this.newOverride = {
-                amount: 0,
-                document: ''
-            };
         }
+
+        if (type != 0) {
+            if (type == 2 || this.newOverride['document'].length == 0) {
+                this.access[this.currentOverride]['overrideDocumentTitle'] = '';
+                this.uploadFiles[this.currentOverride] = {};
+            } else {
+                this.access[this.currentOverride]['overrideDocumentTitle'] = this.newOverride['document'][0]['name'];
+                this.uploadFiles[this.currentOverride] = this.newOverride['document'];
+            }
+        }
+
+
+        this.newOverride = {
+            amount: 0,
+            document: ''
+        };
         this.currentOverride = 0;
         this.showOverrideModal = false;
     }
 
-    onDropFiles(event, modelItem) {
-        //this.service.uploadFile(event, modelItem, this.changeDetectorRef);
+    onDropFiles(event) {
+        this.newOverride['document'] = _.filter(event.files, function (file) {
+            return file.status !== 'uploaded-file';
+        });
     }
 }

@@ -134,7 +134,8 @@
                                                     {{(access[row['id']]['override'] ? access[row['id']]['overrideAmount'] : access[row['id']]['minInvestment'])}}
                                                     <ng-container *ngIf="access[row['id']]['override']">
                                                         <span style="color: red; padding-left: 5px;">[Override]</span>
-                                                        <i class="fa fa-lg fa-file-o" style="cursor: pointer; margin-left: 5px;"></i>
+                                                        <i *ngIf="access[row['id']]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o" style="margin-left: 5px;"></i>
+                                                        <setl-file-viewer *ngIf="!access[row['id']]['newOverride']" [fileHash]="access[row['id']]['overrideDocument']" [viewType]="1"></setl-file-viewer>
                                                     </ng-container>
                                                     <button class="btn btn-sm btn-primary" style="margin: 0px 0px 0px 15px; float: right;" (click)="openOverrideModal(row['id'])">Override</button>
                                                 </clr-dg-cell>
@@ -175,26 +176,21 @@
             <div class="col-sm-8">
                 <div style="margin-bottom: 5px;">
                     {{access[currentOverride]['overrideAmount'] | moneyValue: 5 }}
-                    <i class="fa fa-lg fa-file-o" style="cursor: pointer; margin-left: 5px"></i>
+                    <i *ngIf="access[currentOverride]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o" style="margin-left: 15px; margin-right: 5px"></i> {{access[currentOverride]['overrideDocumentTitle']}}
+                    <setl-file-viewer *ngIf="!access[currentOverride]['newOverride']" [fileHash]="access[currentOverride]['overrideDocument']" [viewType]="1"></setl-file-viewer>
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-sm-4">
                 New Override
             </div>
             <div class="col-sm-8">
-                <div style="margin-bottom: 5px;">
-                    <input name="newOverrideAmount" value="{{0  | moneyValue: 5}}" [(ngModel)]="newOverride['amount']">
-                </div>
-                <div>
-
-                    <input type="file"> <!--replace with setl-file-drop-->
-                </div>
+                <input name="newOverrideAmount" value="{{0  | moneyValue: 5}}" [(ngModel)]="newOverride['amount']">
+                <div style="font-size: 80%">Upload a file below to justify this change for the customer.</div>
+                <setl-file-drop id="test" name="test" (onDrop)="onDropFiles($event)" ngDefaultControl></setl-file-drop>
             </div>
         </div>
-
     </div>
     <div class="modal-footer" *ngIf="currentOverride != 0">
         <button *ngIf="access[currentOverride]['override']" type="button" class="btn btn-warning" (click)="closeOverrideModal(2);">
