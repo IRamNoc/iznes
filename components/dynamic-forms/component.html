@@ -85,7 +85,7 @@
                             </ng-container>
                         </ng-container>
 
-                        <span class="field-error" *ngIf="showRequiredFieldText(model[item].type)">Field is required</span>
+                        <span class="field-error" *ngIf="showRequiredFieldText(model[item].type) && model[item].control.hasError('required')">Field is required</span>
                     </div>
                     <div class="break" *ngIf="itemHasBreakAfter(model[item])"></div>
                 </ng-container>
