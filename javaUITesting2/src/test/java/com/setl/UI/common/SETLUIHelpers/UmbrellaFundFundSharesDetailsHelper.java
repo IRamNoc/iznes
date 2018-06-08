@@ -132,19 +132,18 @@ public class UmbrellaFundFundSharesDetailsHelper {
     public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        try {
-            scrollElementIntoViewById("tabFundShareButton");
-            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
-            driver.findElement(By.id("tabCharacteristicsButton")).click();
-        }
-        catch (Exception e){
-            fail(e.getMessage());
-        }
+        scrollElementIntoViewById("tabFundShareButton");
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        scrollElementIntoViewById("tabFundShareButton");
+
+        Thread.sleep(500);
+        driver.findElement(By.id("tabCharacteristicsButton")).click();
 
         assertTrue(driver.findElement(By.id("maximumNumDecimal")).isDisplayed());
 
         driver.findElement(By.id("maximumNumDecimal")).clear();
         driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
+        scrollElementIntoViewById("nextTab");
         openDropdownAndSelectOption("subscriptionCategory", 1);
         driver.findElement(By.id("minInitialSubscriptionInShare")).clear();
         driver.findElement(By.id("minInitialSubscriptionInShare")).sendKeys("5");
@@ -191,9 +190,12 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
+        scrollElementIntoViewById("tabFundShareButton");
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        scrollElementIntoViewById("tabFundShareButton");
+        wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+
         try {
-            scrollElementIntoViewById("tabFundShareButton");
-            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
 
