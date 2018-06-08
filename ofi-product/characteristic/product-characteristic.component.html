@@ -11,7 +11,7 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <p>Please find below the main information regarding {{currentProduct.fundShareName}}</p>
+            <p>{{'Please find below the main information regarding @currentProduct.fundShareName@' | translate: {'currentProduct.fundShareName': currentProduct.fundShareName} }}</p>
 
             <div class="well">
                 <!-- Panel header -->
@@ -29,61 +29,61 @@
 
                     <section class="form-block">
                         <clr-datagrid>
-                            <clr-dg-column>Information</clr-dg-column>
-                            <clr-dg-column>Value</clr-dg-column>
+                            <clr-dg-column>{{'Information' | translate}}</clr-dg-column>
+                            <clr-dg-column>{{'Value' | translate}}</clr-dg-column>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Share Name</clr-dg-cell>
+                                <clr-dg-cell>{{'Share Name' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.fundShareName}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>ISIN</clr-dg-cell>
+                                <clr-dg-cell>{{'ISIN' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.isin}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Share Class Launch Date</clr-dg-cell>
+                                <clr-dg-cell>{{'Share Class Launch Date' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.launchDate}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Initial NAV</clr-dg-cell>
+                                <clr-dg-cell>{{'Initial NAV' | translate}}</clr-dg-cell>
                                 <clr-dg-cell></clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Latest NAV</clr-dg-cell>
+                                <clr-dg-cell>{{'Latest NAV' | translate}}</clr-dg-cell>
                                 <clr-dg-cell></clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Fund Managers (name)</clr-dg-cell>
+                                <clr-dg-cell>{{'Fund Managers (name)' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.fundManagers}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>SRRI</clr-dg-cell>
+                                <clr-dg-cell>{{'SRRI' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.srri}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>SRI</clr-dg-cell>
+                                <clr-dg-cell>{{'SRI' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.sri}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>AMF CLassification</clr-dg-cell>
+                                <clr-dg-cell>{{'AMF CLassification' | translate}}</clr-dg-cell>
                                 <clr-dg-cell></clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Legal Form</clr-dg-cell>
+                                <clr-dg-cell>{{'Legal Form' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.legalForm}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Investment Horizon In Months</clr-dg-cell>
+                                <clr-dg-cell>{{'Investment Horizon In Months' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.recommendedHoldingPeriod}}</clr-dg-cell>
                             </clr-dg-row>
 
@@ -107,42 +107,42 @@
                 <div class="panel-body" [class.hidden]="!panels[2]">
                     <section class="form-block">
                         <clr-datagrid>
-                            <clr-dg-column>Information</clr-dg-column>
-                            <clr-dg-column>Value</clr-dg-column>
+                            <clr-dg-column>{{'Information' | translate}}</clr-dg-column>
+                            <clr-dg-column>{{'Value' | translate}}</clr-dg-column>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Share Currency</clr-dg-cell>
+                                <clr-dg-cell>{{'Share Currency' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.shareClassCurrency}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Valuation Frequency (NAV)</clr-dg-cell>
+                                <clr-dg-cell>{{'Valuation Frequency (NAV)' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.valuationFrequency}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Is Master vs Feeder</clr-dg-cell>
+                                <clr-dg-cell>{{'Is Master vs Feeder' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.status}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Result Affectation</clr-dg-cell>
+                                <clr-dg-cell>{{'Result Affectation' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.distributionPolicy}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Management Fee Maximum</clr-dg-cell>
-                                <clr-dg-cell>{{currentProduct.maxManagementFee}} %</clr-dg-cell>
+                                <clr-dg-cell>{{'Management Fee Maximum' | translate}}</clr-dg-cell>
+                                <clr-dg-cell>{{'@currentProduct.maxManagementFee@ %' | translate: {'currentProduct.maxManagementFee': currentProduct.maxManagementFee} }}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Subscription Fee Maximum</clr-dg-cell>
-                                <clr-dg-cell>{{currentProduct.maxSubscriptionFee}} %</clr-dg-cell>
+                                <clr-dg-cell>{{'Subscription Fee Maximum' | translate}}</clr-dg-cell>
+                                <clr-dg-cell>{{'@currentProduct.maxSubscriptionFee@ %' | translate: {'currentProduct.maxSubscriptionFee': currentProduct.maxSubscriptionFee} }}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Redemption Fee Maximum</clr-dg-cell>
-                                <clr-dg-cell>{{currentProduct.maxRedemptionFee}} %</clr-dg-cell>
+                                <clr-dg-cell>{{'Redemption Fee Maximum' | translate}}</clr-dg-cell>
+                                <clr-dg-cell>{{'@currentProduct.maxRedemptionFee@ %' | translate: {'currentProduct.maxRedemptionFee': currentProduct.maxRedemptionFee} }}</clr-dg-cell>
                             </clr-dg-row>
 
                         </clr-datagrid>
@@ -166,81 +166,81 @@
 
                     <section class="form-block">
                         <clr-datagrid>
-                            <clr-dg-column>Information</clr-dg-column>
-                            <clr-dg-column>Value</clr-dg-column>
+                            <clr-dg-column>{{'Information' | translate}}</clr-dg-column>
+                            <clr-dg-column>{{'Value' | translate}}</clr-dg-column>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Subscription Trade Cycle Period</clr-dg-cell>
+                                <clr-dg-cell>{{'Subscription Trade Cycle Period' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.subscriptionTradeCyclePeriod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Subscription Cut-off Time</clr-dg-cell>
+                                <clr-dg-cell>{{'Subscription Cut-off Time' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.subscriptionCutOffTime}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>NAV Period For Subscription</clr-dg-cell>
+                                <clr-dg-cell>{{'NAV Period For Subscription' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.navPeriodForSubscription}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Settlement Period For Subscription</clr-dg-cell>
+                                <clr-dg-cell>{{'Settlement Period For Subscription' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.subscriptionSettlementPeriod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Subscription Category</clr-dg-cell>
+                                <clr-dg-cell>{{'Subscription Category' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.subscriptionCategory}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Minimal Initial Subscription In Amount</clr-dg-cell>
+                                <clr-dg-cell>{{'Minimal Initial Subscription In Amount' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.minInitialSubscriptionInAmount}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Minimal Initial Subscription In Shares</clr-dg-cell>
+                                <clr-dg-cell>{{'Minimal Initial Subscription In Shares' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.minInitialSubscriptionInShare}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Redemption Trade Cycle Period</clr-dg-cell>
+                                <clr-dg-cell>{{'Redemption Trade Cycle Period' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.redemptionTradeCyclePeriod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Redemption Cut-off Time</clr-dg-cell>
+                                <clr-dg-cell>{{'Redemption Cut-off Time' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.redemptionCutOffTime}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>NAV Period For Redemption</clr-dg-cell>
+                                <clr-dg-cell>{{'NAV Period For Redemption' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.navPeriodForRedemption}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Settlement For Redemption</clr-dg-cell>
+                                <clr-dg-cell>{{'Settlement For Redemption' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.redemptionSettlementPeriod}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Redemption Category</clr-dg-cell>
+                                <clr-dg-cell>{{'Redemption Category' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.redemptionCategory}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Minimal Initial Redemption In Amount</clr-dg-cell>
+                                <clr-dg-cell>{{'Minimal Initial Redemption In Amount' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.minSubsequentRedemptionInAmount}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Minimal Initial Redemption In Shares</clr-dg-cell>
+                                <clr-dg-cell>{{'Minimal Initial Redemption In Shares' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.minSubsequentRedemptionInShare}}</clr-dg-cell>
                             </clr-dg-row>
 
                             <clr-dg-row>
-                                <clr-dg-cell>Decimalisation</clr-dg-cell>
+                                <clr-dg-cell>{{'Decimalisation' | translate}}</clr-dg-cell>
                                 <clr-dg-cell>{{currentProduct.maximumNumDecimal}}</clr-dg-cell>
                             </clr-dg-row>
 
