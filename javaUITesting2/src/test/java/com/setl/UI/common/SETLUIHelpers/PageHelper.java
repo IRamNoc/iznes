@@ -41,6 +41,10 @@ public class PageHelper extends LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.className("header-breadcrumbs")).getText().equals(title));
     }
 
+    public static void verifyCorrectPageContains(String title) {
+        assertTrue(driver.findElement(By.className("header-breadcrumbs")).getText().contains(title));
+    }
+
     public static void verifyCorrectPageById(String title) {
         assertTrue(driver.findElement(By.id("pageTitle")).getText().equals(title));
 

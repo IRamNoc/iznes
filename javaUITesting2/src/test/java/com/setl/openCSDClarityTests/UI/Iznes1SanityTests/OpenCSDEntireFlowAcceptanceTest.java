@@ -4,10 +4,7 @@ import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -18,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
+import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomISIN;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.getShareTableRow;
@@ -65,6 +64,12 @@ public class OpenCSDEntireFlowAcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
+        setDBToProdOff();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        setDBToProdOn();
     }
 
     @Test
@@ -74,75 +79,46 @@ public class OpenCSDEntireFlowAcceptanceTest {
         ///////////////                FUNDS             ////////////////////////
         /////////////////////////////////////////////////////////////////////////
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        String[] uFundDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        int rowNo = 0;
+        int setNav = 14;
+        String umbLei = "16616758475934857598";
+        String fundLei = "16616758475934857522";
+
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
         String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857598");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], umbLei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
-        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
-        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-        String [] uFundDetails = generateRandomFundsDetails();
+        searchUmbrellaTable(umbFundDetails[0]);
+        getUmbrellaTableRow(0, umbFundDetails[0], umbLei, "Management Company", "Jordan");
+
         fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658598");
+        fillOutFundDetailsStep2(uFundDetails[0], fundLei);
 
-        getFundTableRow(fundCount, uFundDetails[0], "16615748475934658598", "EUR Euro", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        assertPopupNextFundNo("Share");
 
-        String shareCountXpathPre = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPre = Integer.parseInt(shareCountXpathPre.replaceAll("[\\D]", ""));
-        waitForNewShareButton();
+        searchFundsTable(uFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], fundLei, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
-        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(uFundDetails[0]);
-        try {
-            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
-        } catch (Exception e) {
-            fail("dropdown not selected. " + e.getMessage());
-        }
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
-        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
-        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
-        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
-        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
-        selectFundBtn.click();
-        try {
-            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
-        }catch (Exception e){
-            fail("not present");
-        }
-
-        String[] uShareDetails = generateRandomFundsDetails();
-        String[] uIsin = generateRandomISIN();
-
-        shareCreationKeyFacts(uShareDetails[0],uIsin[0]);
-        shareCreationCharacteristics();
-        shareCreationCalendar();
-        shareCreationFees();
-        shareCreationProfile();
-        shareCreationSubmit();
-
-        String shareCountXpathPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[1]/div[1]/a/h2")).getText();
-        int shareCountPost = Integer.parseInt(shareCountXpathPost.replaceAll("[\\D]", ""));
-        assertTrue(shareCountPost == shareCountPre + 1);
-        String shareNameID = driver.findElement(By.id("product-dashboard-fundShareID-" + shareCountPre + "-shareName")).getAttribute("id");
-        int shareNameNo = Integer.parseInt(shareNameID.replaceAll("[\\D]", ""));
-
-        getShareTableRow(shareNameNo, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR Euro", "Management Company", "", "share class", "Open" );
+        searchSharesTable(uShareDetails[0]);
+        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
 
         /////////////////////////////////////////////////////////////////////////
         ////////////////                NAV             /////////////////////////
         /////////////////////////////////////////////////////////////////////////
-
-        int rowNo = 0;
-        int setNav = 14;
 
         navigateToNAVPageFromFunds();
         wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo)));
@@ -196,9 +172,8 @@ public class OpenCSDEntireFlowAcceptanceTest {
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
         String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
         System.out.println(reviewedByColumn);
-        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
-        System.out.println(clientRowNo);
-        driver.findElement(By.xpath("//*[@id=\"AllClients-Status-KYC-" + clientRowNo + "\"]/a")).click();
+
+        driver.findElement(By.id("AllClients-Status-KYC-0")).click();
 
         wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
 
@@ -212,31 +187,6 @@ public class OpenCSDEntireFlowAcceptanceTest {
         }
 
         wait.until(visibilityOfElementLocated(By.id("companyName")));
-//        System.out.println(uIsin[0] + "-access");
-//        Thread.sleep(2500);
-//
-//        driver.findElement(By.id(uIsin[0] + "-access")).click();
-//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
-//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
-//
-//        try{
-//            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-//            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-//            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
-//        }catch (Exception e){
-//            fail("FAILED : " + e.getMessage());
-//        }
-//
-//        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-//
-//        try {
-//            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
-//            assertTrue(permissionToaster.equals("Share Permissions Saved"));
-//        } catch (Exception e) {
-//            fail(e.getMessage());
-//        }
-
-
     }
 
     @Test

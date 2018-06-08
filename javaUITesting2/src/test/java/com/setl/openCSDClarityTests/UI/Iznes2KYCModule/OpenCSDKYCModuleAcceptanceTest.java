@@ -228,6 +228,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
+        ///////////thisone
     }
 
     @Test
@@ -256,6 +257,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         selectOptionNoValidatePopup();
         logout();
         loginCompleteKYC("testops006@setl.io", "asdasd");
+        ///////////thisone
     }
 
     @Test
@@ -289,6 +291,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");
         logout();
+        ///////////thisone
     }
 
     @Test
@@ -335,6 +338,9 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public static void fillKYCLowerFields(String companyName, String phoneNumber) throws IOException, InterruptedException{
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
         driver.findElement(By.id("kyc_additionnal_phoneCode")).click();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/ul/li[1]/div/a")));
+        driver.findElement(By.xpath("//*[@id=\"kyc_additionnal_phoneCode\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
     }
 
@@ -343,7 +349,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         try {
             Thread.sleep(750);
             String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            System.out.println(header2);
             assertTrue(header2.equals("My Information"));
         }catch (Exception e){
             fail(e.getMessage());

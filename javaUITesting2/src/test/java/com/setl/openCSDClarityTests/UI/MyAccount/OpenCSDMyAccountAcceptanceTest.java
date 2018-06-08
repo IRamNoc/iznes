@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.MyAccount;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -99,7 +100,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops082@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], "testops033@setl.io", "asdasd");
         logout();
         clickForgottenPassword("testops082@setl.io");
         //LoginToOutlook("test@setl.io", "Sphericals1057!");
@@ -174,7 +175,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("My information"));
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("MY INFORMATION"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_invitedBy")).isDisplayed());
@@ -192,7 +193,10 @@ public class OpenCSDMyAccountAcceptanceTest {
         assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).isDisplayed());
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-user")));
 
-        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("My information"));
+        String test = driver.findElement(By.id("ofi-welcome-additionnal")).getText();
+        System.out.println(test);
+
+        assertTrue(driver.findElement(By.id("ofi-welcome-additionnal")).getText().equals("MY INFORMATION"));
 
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).isDisplayed());
         assertTrue(driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value").equals(email));

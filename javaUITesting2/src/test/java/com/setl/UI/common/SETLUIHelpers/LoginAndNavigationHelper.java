@@ -286,31 +286,17 @@ public class LoginAndNavigationHelper {
 
     }
 
-    public static void logout() {
+    public static void logout() throws InterruptedException {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")));
+        Thread.sleep(750);
         try {
-            wait.until(invisibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")));
-            wait.until(visibilityOfElementLocated(By.id("dropdown-settings")));
-            wait.until(elementToBeClickable(By.id("dropdown-settings")));
-            WebElement settings = driver.findElement(By.id("dropdown-settings"));
-            settings.click();
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[3]/div[2]/a")).click();
 
         } catch (Exception e) {
             fail("Settings dropdown not available " + e.getMessage());
-        }
-
-        WebDriverWait wait1 = new WebDriverWait(driver, timeoutInSeconds);
-        WebElement logOff = driver.findElement(By.id("dropdown-btn-logout"));
-
-        try {
-            wait1.until(visibilityOf(logOff));
-            wait1.until(elementToBeClickable(logOff));
-            logOff.click();
-
-        } catch (Exception e) {
-            fail("Logout button not available " + e.getMessage());
         }
     }
 
@@ -393,10 +379,10 @@ public class LoginAndNavigationHelper {
 
     public static void validateKYCPageComponents() {
         assertTrue(isElementPresent(By.cssSelector("i.fa.fa-align-left")));
-        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText().contentEquals("On-boarding Management"));
-        assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")));
-        assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")).getText().contentEquals("Here's a list of all clients' KYC, organised by status:"));
+        assertTrue(isElementPresent(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")).getText().contentEquals("On-boarding Management"));
+        assertTrue(isElementPresent(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[2]/p")).getText().contentEquals("Here's a list of all clients' KYC, organised by status"));
 
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a/i")));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[3]/div[1]/div/a")));
