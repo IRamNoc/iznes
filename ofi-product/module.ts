@@ -28,6 +28,7 @@ import { AddNewFundShareComponent } from './fund-share/add-new/component';
 import { FundShareAuditComponent } from './fund-share/audit/component';
 import { FundShareAuditService } from './fund-share/audit/service';
 import { FundComponent } from './fund/component';
+import { ProductCharacteristicComponent } from './characteristic/product-characteristic.component';
 
 /* Graphs. */
 import { ChartsModule } from 'ng2-charts';
@@ -37,6 +38,9 @@ import { OfiKYCModule } from '@ofi/ofi-main/ofi-kyc/module';
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
 
+import {
+    ProductCharacteristicsService,
+} from '@ofi/ofi-main/ofi-req-services/ofi-product/product-characteristics/service';
 import productConfig from './productConfig';
 
 /* Am Dashboard service. */
@@ -50,6 +54,7 @@ import productConfig from './productConfig';
         AddNewFundShareComponent,
         FundShareAuditComponent,
         FundComponent,
+        ProductCharacteristicComponent,
     ],
     exports: [
         ProductHomeComponent,
@@ -60,6 +65,7 @@ import productConfig from './productConfig';
         AddNewFundShareComponent,
         FundShareAuditComponent,
         FundComponent,
+        ProductCharacteristicComponent,
     ],
     imports: [
         CommonModule,
@@ -76,9 +82,11 @@ import productConfig from './productConfig';
         OfiKYCModule,
         DynamicFormsModule,
         SetlComponentsModule,
+        FileViewerModule,
     ],
     providers: [
         FundShareAuditService,
+        ProductCharacteristicsService,
         { provide: 'product-config', useValue: productConfig },
     ],
 })

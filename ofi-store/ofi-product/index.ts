@@ -68,6 +68,13 @@ import {
 } from './nav-audit';
 
 import {
+    SET_REQUESTED_PRODUCT_CHARACTERISTICS,
+    SET_PRODUCT_CHARACTERISTICS,
+    productCharacteristicsReducer,
+    productCharacteristicsState,
+} from './product-characteristics';
+
+import {
     OfiFundShareListState,
     OfiFundShareListReducer,
     SET_AM_ALL_FUND_SHARE_LIST,
@@ -224,6 +231,9 @@ export {
     clearRequestedConfiguration,
     OfiProductConfigReducer,
     OfiProductConfigState,
+    // PRODUCT CHARACTERISTICS
+    SET_REQUESTED_PRODUCT_CHARACTERISTICS,
+    SET_PRODUCT_CHARACTERISTICS,
 };
 
 export interface OfiProductState {
@@ -238,6 +248,7 @@ export interface OfiProductState {
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
     ofiProductConfiguration: OfiProductConfigState;
+    ofiProductCharacteristics: productCharacteristicsState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
@@ -254,4 +265,5 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiNavLatest: OfiNavLatestReducer,
     ofiNavAudit: OfiNavAuditReducer,
     ofiProductConfiguration: OfiProductConfigReducer,
+    ofiProductCharacteristics: productCharacteristicsReducer,
 });
