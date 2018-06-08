@@ -26,6 +26,7 @@ import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyOptInfoPageConte
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
 import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2FundsAcceptanceTest.validateDatabaseShareExists;
+import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.*;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.inviteAnInvestor;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.navigateToInviteInvestorPage;
 import static org.junit.Assert.assertEquals;
@@ -198,12 +199,40 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
-    public void NavigateToCentralisationHistoryPageTG1079() throws InterruptedException, SQLException {
+    public void shouldNavigateToCentralisationHistoryPageTG1079() throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-am-report-section");
         navigateToPageByID("menu-report-centralization-select");
         verifyCorrectPage("Centralisation History");
+
+    }
+
+    @Test
+    public void shouldShowPopUpMoreInformationKYCTG1108() throws InterruptedException, SQLException, IOException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        String compName = "JDN Corp";
+
+        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
+        fillKYCLowerFields(compName, "07956701992");
+        saveKYCAndVerifySuccessPageOne();
+        selectOptionAndSubmitKYC("yes");
+        logout();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToKYCPage();
+
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("Waiting-Expandable-KYC")));
+        driver.findElement(By.xpath("//*[@id=\"Waiting-Expandable-KYC\"]/h2")).click();
+        wait.until(elementToBeClickable(By.id("Waiting-Status-KYC-0")));
+        driver.findElement(By.id("Waiting-Status-KYC-0")).click();
+        wait.until(visibilityOfAllElementsLocatedBy(By.id("companyName")));
+        String test = driver.findElement(By.id("companyName")).getAttribute("value");
+        assertTrue(test.equals(compName));
+        driver.findElement(By.id("askForMoreInfo")).click();
+        driver.findElement(By.id("checkbox")).click();
+        wait.until(elementToBeClickable(By.id("submitButton")));
+        driver.findElement(By.id("submitButton")).click();
 
     }
 
