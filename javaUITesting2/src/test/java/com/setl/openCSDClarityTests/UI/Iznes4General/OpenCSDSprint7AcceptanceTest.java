@@ -209,6 +209,7 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
+    @Ignore("need more KYC users")
     public void shouldShowPopUpMoreInformationKYCTG1108() throws InterruptedException, SQLException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         String compName = "JDN Corp";
