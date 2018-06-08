@@ -142,7 +142,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         assertTrue(driver.findElement(By.id("maximumNumDecimal")).isDisplayed());
 
         driver.findElement(By.id("maximumNumDecimal")).clear();
-        driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
+        driver.findElement(By.id("maximumNumDecimal")).sendKeys("5");
         scrollElementIntoViewById("nextTab");
         openDropdownAndSelectOption("subscriptionCategory", 1);
         driver.findElement(By.id("minInitialSubscriptionInShare")).clear();
