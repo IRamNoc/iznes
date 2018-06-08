@@ -40,8 +40,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomISIN() {
-        Random rand = new Random();
-        int n = rand.nextInt(250) + 1;
+        String n = randomNumeric(7);
         String randomISIN = "1661" + n;
         return new String[]{randomISIN};
     }
