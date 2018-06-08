@@ -13,7 +13,7 @@
 
             <b>{{'Search for the centralisation history for a specific share:' | translate}}</b>
 
-            <ng-select [items]="shareList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" (selected)="loadHistory($event)">
+            <ng-select id="shareName-isin" [items]="shareList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" (selected)="loadHistory($event)">
             </ng-select>
 
         </clr-tab-content>
