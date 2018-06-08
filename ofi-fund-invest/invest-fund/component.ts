@@ -777,24 +777,9 @@ The IZNES Team.</p>`;
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
 
-            triggering.setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[0].setValue(valuationDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(settlementDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            triggering.setValue(cutoffDateStr);
+            beTriggered[0].setValue(valuationDateStr);
+            beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
@@ -805,18 +790,8 @@ The IZNES Team.</p>`;
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(settlementDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
@@ -826,18 +801,8 @@ The IZNES Team.</p>`;
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(valuationStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(valuationStr);
 
             this.dateBy = 'settlement';
         }
