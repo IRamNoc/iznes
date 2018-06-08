@@ -120,6 +120,8 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
         wait.until(elementToBeClickable(By.id("nextTab")));
         scrollElementIntoViewById("nextTab");
+        wait.until(visibilityOfElementLocated(By.id("nextTab")));
+        wait.until(elementToBeClickable(By.id("nextTab")));
         driver.findElement(By.id("nextTab")).click();
         wait.until(visibilityOfElementLocated(By.id("maximumNumDecimal")));
 
