@@ -247,7 +247,7 @@ public class OpenCSDSprint7AcceptanceTest {
         String[] uIsin = generateRandomISIN();
         String randomLEI = "16616758475934857531";
 
-        loginAndVerifySuccess("am2", "alex01");
+        loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
