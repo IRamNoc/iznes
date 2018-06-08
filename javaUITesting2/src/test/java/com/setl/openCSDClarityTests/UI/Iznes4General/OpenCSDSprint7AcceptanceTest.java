@@ -44,7 +44,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (45000);
+    public Timeout globalTimeout = new Timeout (65000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -236,6 +236,61 @@ public class OpenCSDSprint7AcceptanceTest {
         driver.findElement(By.id("submitButton")).click();
 
     }
+
+
+    @Test
+    public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        String randomLEI = "16616758475934857531";
+
+        loginAndVerifySuccess("am2", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        selectAddUmbrellaFund();
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], randomLEI);
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        fillOutFundDetailsStep1(umbFundDetails[0]);
+        fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
+        assertPopupNextFundNo("Share");
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        navigateToDropdown("menu-am-report-section");
+        navigateToPageByID("menu-report-centralization-select");
+
+        driver.findElement(By.id("menu-report-centralization-select")).click();
+        String CentralHeader = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
+        assertTrue(CentralHeader.equals("Centralisation History"));
+        wait.until(elementToBeClickable(By.cssSelector("i.special:nth-child(3)")));
+        driver.findElement(By.cssSelector("i.special:nth-child(3)")).click();
+        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")).sendKeys(uShareDetails[0]);
+
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-15\"]/ng-select/div/div[3]/ul/li[2]")));
+
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+
+
+        String ShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/form/div/div/div/div/ng-select/div/div[2]/span/span")).getText();
+        assertTrue(ShareName.equals(uShareDetails[0]));
+        String FundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[1]/div/div")).getText();
+        assertTrue(FundName.equals(uFundDetails[0]));
+
+        String CCY = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[3]/div/div")).getText();
+        assertTrue(CCY.equals("EUR"));
+        String Umbrella = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/div[2]/form/table[1]/tbody/tr/td[2]/div/div")).getText();
+        assertTrue(Umbrella.equals(umbFundDetails[0]));
+        driver.findElement(By.xpath("//*[@id=\"export-centralization-btn\"]")).isDisplayed();
+        driver.findElement(By.xpath("//*[@id=\"holders-btn-back-list\"]")).isDisplayed();
+    }
+
+
 
     public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
