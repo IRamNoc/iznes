@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OfiFundAccessComponent } from './component';
 import { ClarityModule } from '@clr/angular';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { FileService } from '@setl/core-req-services/file/file.service';
 import { MessagesService } from '@setl/core-messages';
 import { of } from 'rxjs/observable/of';
 import { ActivatedRoute } from '@angular/router';
@@ -104,6 +105,7 @@ describe('OfiFundAccessComponent', () => {
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 ConfirmationService,
+                FileService,
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
