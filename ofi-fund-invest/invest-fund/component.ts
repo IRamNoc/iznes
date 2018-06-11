@@ -11,10 +11,10 @@ import {
     ViewChild,
     ElementRef
 } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
-import { NgRedux, select } from '@angular-redux/store';
+import {Subscription} from 'rxjs/Subscription';
+import {NgRedux, select} from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 // Internal
@@ -154,7 +154,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     subPortfolio;
     addressListObj;
 
-    amountLimit : number = 15000000;
+    amountLimit: number = 15000000;
 
     panels = {
         1: true,
@@ -168,7 +168,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
 
-    redeemedAll : Boolean;
+    redeemedAll: Boolean;
 
     /**
      * This function pads floats as string with zeros
@@ -197,7 +197,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
+        return (this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
     }
 
     get cutoffTime(): string {
@@ -340,11 +340,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return Boolean(redeeming > balance);
     }
 
-    get amountTooBig(){
+    get amountTooBig() {
         let value = this.amount.value;
         let quantity = this._moneyValuePipe.parse(value, 4);
 
-        if(isNaN(quantity)){
+        if (isNaN(quantity)) {
             quantity = 0;
         }
 
@@ -456,10 +456,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         }
     }
 
-    redeemAll($event){
+    redeemAll($event) {
         $event.preventDefault();
 
-        if(!this.addressSelected){
+        if (!this.addressSelected) {
             this.redeemedAll = true;
             this.subportfolio.nativeElement.scrollIntoView();
             this.form.get('address').markAsDirty();
@@ -637,12 +637,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
             this.handleClose();
 
-            if(this.amountTooBig){
+            if (this.amountTooBig) {
                 this.sendMessageToAM({
-                    walletID : this.shareData.walletID,
-                    orderTypeLabel : this.orderTypeLabel,
-                    orderID : orderId,
-                    orderRef : orderRef
+                    walletID: this.shareData.walletID,
+                    orderTypeLabel: this.orderTypeLabel,
+                    orderID: orderId,
+                    orderRef: orderRef
                 });
             }
 
@@ -655,9 +655,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         });
 
     }
+
 //this.shareData.walletId
 
-    sendMessageToAM(params){
+    sendMessageToAM(params) {
         const amWalletID = params.walletID;
         const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
         const body = `<p>Hello,<br /><br />
@@ -821,7 +822,7 @@ The IZNES Team.</p>`;
         const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
 
         let conditionalMessage;
-        if(this.type === 'redeem'){
+        if (this.type === 'redeem') {
             const quantityBlockchain = this._numberConverterService.toBlockchain(quantity);
             conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
         }
@@ -1009,7 +1010,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
+    return Number(math.format(math.chain(amount).multiply((feePercent / 100)).done(), 14));
 }
 
 /**

@@ -1,5 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>{{'Client folder - Funds\' Shares access authorisation: - @investorData[\'companyName\']@' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}
+    <h1 id="am-fund-holdings">
+        <i class="fa fa-align-left"></i>{{'Client folder - Funds\' Shares access authorisation: - @investorData[\'companyName\']@' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}
 
     </h1>
 </div>
@@ -80,24 +81,66 @@
                                     <clr-dg-column>{{'Share Name' | translate}}</clr-dg-column>
                                     <clr-dg-column>{{'ISIN' | translate}}</clr-dg-column>
                                     <clr-dg-column>{{'Grant Access to this Share?' | translate}}</clr-dg-column>
+
+                                    <clr-dg-column>{{'Non Acquired Entry access %' | translate}}</clr-dg-column>
+                                    <clr-dg-column>{{'Non Acquired Exit access %' | translate}}</clr-dg-column>
+                                    <clr-dg-column>{{'Minimum Investment Amount' | translate}}</clr-dg-column>
+
                                     <clr-dg-row *clrDgItems="let row of tableData">
-                                        <clr-dg-cell>{{row['fundName']}}
+                                        <ng-container *ngIf="!!access[row['id']]">
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>{{row['shareName']}}
+                                            <clr-dg-cell>{{row['fundName']}}
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>{{row['isin']}}
+                                            </clr-dg-cell>
+                                            <clr-dg-cell>{{row['shareName']}}
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>
-                                            <div class="switch-container">
-                                                <label class="switch">
-                                                    <input type="checkbox" id="{{row['isin'] + '-access'}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </clr-dg-cell>
+                                            </clr-dg-cell>
+                                            <clr-dg-cell>{{row['isin']}}
+
+                                            </clr-dg-cell>
+                                            <clr-dg-cell>
+                                                <div class="switch-container">
+                                                    <label class="switch">
+                                                        <input type="checkbox" id="{{row['isin'] + '-access'}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </clr-dg-cell>
+
+                                            <ng-container *ngIf="!access[row['id']]['access']">
+                                                <clr-dg-cell>
+                                                    {{access[row['id']]['entry']}}
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell>
+                                                    {{access[row['id']]['exit']}}
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell>
+                                                    {{access[row['id']]['minInvestment']}}
+                                                </clr-dg-cell>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="access[row['id']]['access']">
+                                                <clr-dg-cell>
+                                                    <input name="entry{{row['id']}}" [(ngModel)]="access[row['id']]['entry']" (change)="checkFee(row['id'],'entry');">
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell>
+                                                    <input name="exit{{row['id']}}" [(ngModel)]="access[row['id']]['exit']" (change)="checkFee(row['id'],'exit');">
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell>
+                                                    {{(access[row['id']]['override'] ? access[row['id']]['overrideAmount'] : access[row['id']]['minInvestment'])}}
+                                                    <ng-container *ngIf="access[row['id']]['override']">
+                                                        <span style="color: red; padding-left: 5px;">[Override]</span>
+                                                        <i *ngIf="access[row['id']]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o" style="margin-left: 5px;"></i>
+                                                        <setl-file-viewer *ngIf="!access[row['id']]['newOverride']" [fileHash]="access[row['id']]['overrideDocument']" [viewType]="1"></setl-file-viewer>
+                                                    </ng-container>
+                                                    <button class="btn btn-sm btn-primary" style="margin: 0px 0px 0px 15px; float: right;" (click)="openOverrideModal(row['id'])">Override</button>
+                                                </clr-dg-cell>
+                                            </ng-container>
+                                        </ng-container>
                                     </clr-dg-row>
                                 </clr-datagrid>
                             </div>
@@ -112,3 +155,52 @@
         </clr-tab>
     </clr-tabs>
 </div>
+
+<clr-modal [(clrModalOpen)]="showOverrideModal">
+    <h3 class="modal-title">Override Minimum Investment Amount</h3>
+    <div class="modal-body" *ngIf="currentOverride != 0">
+
+        <div class="row" style="margin-bottom: 15px;">
+            <div class="col-sm-4">
+                Share Specified Amount
+            </div>
+            <div class="col-sm-8">
+                {{access[currentOverride]['minInvestment']}}
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 15px;" *ngIf="access[currentOverride]['override']">
+            <div class="col-sm-4">
+                Current Override
+            </div>
+            <div class="col-sm-8">
+                <div style="margin-bottom: 5px;">
+                    {{access[currentOverride]['overrideAmount'] | moneyValue: 5 }}
+                    <i *ngIf="access[currentOverride]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o" style="margin-left: 15px; margin-right: 5px"></i> {{access[currentOverride]['overrideDocumentTitle']}}
+                    <setl-file-viewer *ngIf="!access[currentOverride]['newOverride']" [fileHash]="access[currentOverride]['overrideDocument']" [viewType]="1"></setl-file-viewer>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                New Override
+            </div>
+            <div class="col-sm-8">
+                <input name="newOverrideAmount" value="{{0  | moneyValue: 5}}" [(ngModel)]="newOverride['amount']">
+                <div style="font-size: 80%">Upload a file below to justify this change for the customer.</div>
+                <setl-file-drop id="test" name="test" (onDrop)="onDropFiles($event)" ngDefaultControl></setl-file-drop>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" *ngIf="currentOverride != 0">
+        <button *ngIf="access[currentOverride]['override']" type="button" class="btn btn-warning" (click)="closeOverrideModal(2);">
+            Remove Override
+        </button>
+        <button type="button" class="btn btn-outline" (click)="closeOverrideModal(0);">
+            Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="closeOverrideModal(1);">
+            Override
+        </button>
+    </div>
+</clr-modal>
