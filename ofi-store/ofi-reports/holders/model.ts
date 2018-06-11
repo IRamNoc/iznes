@@ -35,6 +35,7 @@ export interface HolderDetailStructure {
 export interface ShareHolderItem {
     ranking: number;
     investorName: string;
+    companyName: string;
     quantity: number;
     amount: number;
     ratio: number;
