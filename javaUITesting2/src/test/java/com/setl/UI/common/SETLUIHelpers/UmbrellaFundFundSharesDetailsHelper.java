@@ -190,10 +190,20 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
-        scrollElementIntoViewById("tabFundShareButton");
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
         wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
-        scrollElementIntoViewById("tabFundShareButton");
-        wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
 
         try {
             driver.findElement(By.id("tabFeesButton")).click();
