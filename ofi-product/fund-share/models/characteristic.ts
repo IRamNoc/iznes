@@ -7,6 +7,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     maximumNumDecimal: FormItem = {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',
+        required: true,
         validator: Validators.compose([
             Validators.required,
             Validators.min(0),
