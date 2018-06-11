@@ -172,9 +172,8 @@ public class OpenCSDEntireFlowAcceptanceTest {
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
         String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
         System.out.println(reviewedByColumn);
-        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
-        System.out.println(clientRowNo);
-        driver.findElement(By.xpath("//*[@id=\"AllClients-Status-KYC-" + clientRowNo + "\"]/a")).click();
+
+        driver.findElement(By.id("AllClients-Status-KYC-0")).click();
 
         wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
 

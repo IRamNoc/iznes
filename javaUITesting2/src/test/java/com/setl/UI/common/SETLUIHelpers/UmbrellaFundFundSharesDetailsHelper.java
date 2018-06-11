@@ -130,17 +130,20 @@ public class UmbrellaFundFundSharesDetailsHelper {
     }
 
     public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
-        try {
-            driver.findElement(By.id("tabCharacteristicsButton")).click();
-        }
-        catch (Exception e){
-            fail(e.getMessage());
-        }
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("tabFundShareButton");
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        scrollElementIntoViewById("tabFundShareButton");
+
+        Thread.sleep(500);
+        driver.findElement(By.id("tabCharacteristicsButton")).click();
 
         assertTrue(driver.findElement(By.id("maximumNumDecimal")).isDisplayed());
 
         driver.findElement(By.id("maximumNumDecimal")).clear();
-        driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
+        driver.findElement(By.id("maximumNumDecimal")).sendKeys("5");
+        scrollElementIntoViewById("nextTab");
         openDropdownAndSelectOption("subscriptionCategory", 1);
         driver.findElement(By.id("minInitialSubscriptionInShare")).clear();
         driver.findElement(By.id("minInitialSubscriptionInShare")).sendKeys("5");
@@ -158,6 +161,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
 
@@ -182,6 +187,23 @@ public class UmbrellaFundFundSharesDetailsHelper {
     }
 
     public static void shareCreationFees() throws SQLException, InterruptedException {
+
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
 
         try {
             driver.findElement(By.id("tabFeesButton")).click();
@@ -210,7 +232,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationProfile() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){
             fail(e.getMessage());
@@ -279,6 +305,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
     public static void searchSharesTable(String shareName) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        scrollElementIntoViewById("product-dashboard-fundShareID-0-shareName");
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
