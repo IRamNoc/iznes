@@ -42,9 +42,19 @@ export class DynamicFormComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
     }
 
-    showRequiredFieldText(type: FormItemType): boolean {
-        return type === FormItemType.text ||
-            type === FormItemType.number;
+    showRequiredFieldText(formItem: FormItem): boolean {
+        return (formItem.type === FormItemType.text || formItem.type === FormItemType.number)
+            && formItem.control.hasError('required');
+    }
+
+    isFieldValid(formItem: FormItem): boolean {
+        if (!(formItem.type === FormItemType.text || formItem.type === FormItemType.number)
+            || formItem.control.hasError('required')
+            || formItem.control.valid
+        ) {
+            return false;
+        }
+        return true;
     }
 
     isHidden(item: string): boolean {
