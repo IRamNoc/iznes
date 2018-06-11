@@ -15,6 +15,7 @@ import { ConfirmationService, SetlPipesModule } from '@setl/utils';
 import { FileViewerModule } from '@setl/core-fileviewer';
 import { FileDropModule } from '@setl/core-filedrop';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
+import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG } from '@setl/utils/index';
 import { MultilingualService } from '@setl/multilingual';
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
@@ -106,6 +107,7 @@ describe('OfiFundAccessComponent', () => {
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 ConfirmationService,
                 FileService,
+                MemberSocketService,
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
