@@ -12,6 +12,7 @@ import { of } from 'rxjs/observable/of';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService, SetlPipesModule } from '@setl/utils';
 import { FileViewerModule } from '@setl/core-fileviewer';
+import { FileDropModule } from '@setl/core-filedrop';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import { APP_CONFIG } from '@setl/utils/index';
 import { MultilingualService } from '@setl/multilingual';
@@ -91,6 +92,7 @@ describe('OfiFundAccessComponent', () => {
                 ClarityModule,
                 SetlPipesModule,
                 FileViewerModule,
+                FileDropModule,
             ],
             providers: [
                 { provide: APP_CONFIG, useValue: {} },
