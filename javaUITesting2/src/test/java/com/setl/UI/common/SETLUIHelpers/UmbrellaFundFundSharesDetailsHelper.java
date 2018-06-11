@@ -205,6 +205,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
             fail(e.getMessage());
         }
 
+        Thread.sleep(500);
+
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
