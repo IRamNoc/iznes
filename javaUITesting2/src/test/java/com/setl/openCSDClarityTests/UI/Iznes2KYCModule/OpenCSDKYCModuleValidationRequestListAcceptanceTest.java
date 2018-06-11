@@ -57,6 +57,7 @@ public class OpenCSDKYCModuleValidationRequestListAcceptanceTest {
         waitForHomePageToLoad();
         navigateToKYCPage();
         validateKYCPageComponents();
+        ///////////thisone
     }
 
    }

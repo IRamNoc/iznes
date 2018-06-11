@@ -65,37 +65,36 @@ public class OpenCSD2FundsAcceptanceTest {
     @Test
     public void shouldCreateFundAndAssertDetailsInTableAreUpdated() throws InterruptedException, SQLException {
 
+        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String [] uFundDetails = generateRandomFundsDetails();
+        String [] updateChars = generateRandomDetails();
+        String randomLei = "16616758475934858531";
+
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
 
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934858531");
+        fillUmbrellaDetailsNotCountry(umbFundDetails[0], randomLei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
 
-        String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
-        int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-
-        String [] uFundDetails = generateRandomFundsDetails();
-
         fillOutFundDetailsStep1(umbFundDetails[0]);
-        fillOutFundDetailsStep2(uFundDetails[0], "16616758475934858531");
+        fillOutFundDetailsStep2(uFundDetails[0], randomLei);
 
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], "16616758475934858531", "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], randomLei, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+
         driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
 
-        String [] updateChars = generateRandomDetails();
         driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
         driver.findElement(By.id("legalEntityIdentifier")).clear();
-        driver.findElement(By.id("legalEntityIdentifier")).sendKeys("92345678901234567890");
+        driver.findElement(By.id("legalEntityIdentifier")).sendKeys(randomLei);
         driver.findElement(By.xpath("//*[@id=\"domicile\"]/div/div[2]/span/a")).click();
 
         searchAndSelectFundDropdown("domicile", "Albania");
@@ -114,7 +113,7 @@ public class OpenCSD2FundsAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
 
         //Assert that table displays the fund details with random chars at the end.
-        getFundTableRow(0, uFundDetails[0] + updateChars[0], "92345678901234567890", "USD", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0] + updateChars[0], randomLei, "USD", "Management Company", "Albania","Unit Trust", umbFundDetails[0]);
         validateDatabaseFundExists(0, uFundDetails[0]);
         validateDatabaseFundExists(1, uFundDetails[0] + updateChars[0]);
 
@@ -235,17 +234,19 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    public void shouldDisplayNoUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
+    public void shouldNotDisplayUmbrellaFundWhenNoUmbrellaFundIsSelectedTG445() throws InterruptedException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String randomLei = "16616758475934859999";
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
 
+
         selectAddUmbrellaFund();
-        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", "16616758475934859999", "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
+        fillCertainUmbrellaDetails(uFundDetails[0] + "TG445", randomLei, "TestOffice1661", "TestAddress1661", "Management Company", "2019-10-20", "Custodian Bank 1", "Fund Admin 1");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
@@ -265,7 +266,7 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
 
         String LEIActual = driver.findElement(By.id("umbrellaEditLei")).getAttribute("value");
-        assertTrue(LEIActual.equals("16616758475934859999"));
+        assertTrue(LEIActual.equals(randomLei));
 
         String DomicileActual = driver.findElement(By.id("umbrellaEditFundDomicile")).getAttribute("value");
         assertTrue(DomicileActual.equals("Jordan"));
@@ -278,8 +279,6 @@ public class OpenCSD2FundsAcceptanceTest {
         assertTrue(UmbNameActual.equals(uFundDetails[0] + "TG445"));
 
         String regOfficeActual = driver.findElement(By.id("uf_registerOfficeAddress")).getAttribute("value");
-        System.out.println(regOfficeActual);
-        System.out.println(uFundDetails[0] + "TG445" + "TestOffice1661");
         assertTrue(regOfficeActual.equals("TestAddress1661"));
     }
 
@@ -397,12 +396,11 @@ public class OpenCSD2FundsAcceptanceTest {
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("fund-submitfund-btn");
 
         try {
             wait.until(visibilityOfElementLocated(By.id("fund-submitfund-btn")));
             wait.until(elementToBeClickable(driver.findElement(By.id("fund-submitfund-btn"))));
-            WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[2]/div[2]/div/div/div[1]/div[1]/div/a/h2"));
-            mainInfo.click();
 
             WebElement submit = driver.findElement(By.id("fund-submitfund-btn"));
             submit.click();
@@ -417,10 +415,6 @@ public class OpenCSD2FundsAcceptanceTest {
         }
 
         private void createFund () throws InterruptedException {
-
-            String fundCountXpath = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[3]/div[1]/div[1]/a/h2")).getText();
-            int fundCount = Integer.parseInt(fundCountXpath.replaceAll("[\\D]", ""));
-            System.out.println(fundCount);
 
             driver.findElement(By.id("new-fund-btn")).click();
             driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
@@ -467,6 +461,32 @@ public class OpenCSD2FundsAcceptanceTest {
             ResultSet rs = null;
             try {
                 rs = stmt.executeQuery("select * from setlnet.tblIznFund where fundName =  " + "\"" + UFundName + "\"");
+                int rows = 0;
+
+                if (rs.last()) {
+                    rows = rs.getRow();
+                    // Move to back to the beginning
+
+                    rs.beforeFirst();
+                }
+                assertEquals("There should be exactly " + expectedCount + " record(s) matching (ignoring case): ", expectedCount, rows);
+            } catch (Exception e) {
+                e.printStackTrace();
+                fail();
+            } finally {
+                conn.close();
+                stmt.close();
+                rs.close();
+            }
+        }
+
+        public static void validateDatabaseShareExists ( int expectedCount, String UShareName) throws SQLException {
+            conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+            //for the query
+            Statement stmt = conn.createStatement();
+            ResultSet rs = null;
+            try {
+                rs = stmt.executeQuery("select * from setlnet.tblIznFundShare where fundShareName =  " + "\"" + UShareName + "\"");
                 int rows = 0;
 
                 if (rs.last()) {

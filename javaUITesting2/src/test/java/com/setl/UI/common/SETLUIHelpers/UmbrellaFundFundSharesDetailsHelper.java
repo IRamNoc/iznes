@@ -52,8 +52,58 @@ public class UmbrellaFundFundSharesDetailsHelper {
         shareCreationSubmit();
     }
 
+    public static void createShareWithoutCharacteristics(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        waitForNewShareButton();
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+    }
+
+    public static void createShareFromYesPopup(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
+        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
+        try {
+            driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
+        } catch (Exception e) {
+            fail("dropdown not selected. " + e.getMessage()); }
+        WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
+        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
+        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
+        selectFundBtn.click();
+        try {
+            assertTrue(driver.findElement(By.id("tabFundShareButton")).isDisplayed());
+        } catch (Exception e){fail("not present"); }
+        shareCreationKeyFacts(shareDetails,isinDetails);
+        shareCreationCharacteristics();
+        shareCreationCalendar();
+        shareCreationFees();
+        shareCreationProfile();
+        shareCreationSubmit();
+    }
+
     public static void shareCreationKeyFacts(String shareName, String isin) throws SQLException, InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
+
         driver.findElement(By.id("fundShareName")).clear();
         driver.findElement(By.id("fundShareName")).sendKeys(shareName);
         driver.findElement(By.id("shareLaunchDate")).click();
@@ -75,20 +125,25 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(elementToBeClickable(By.id("couponType")));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
-        //assertClassRequiredIsPresent("tabKeyFactsButton");
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
         openDropdownAndSelectOption("sharePortfolioCurrencyHedge", 1);
-        //assertHiddenAttributeIsPresent("tabKeyFactsButton");
     }
 
     public static void shareCreationCharacteristics() throws SQLException, InterruptedException {
 
-        try {
-            driver.findElement(By.id("tabCharacteristicsButton")).click();
-        }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleCharacteristicMandatory")).isDisplayed());
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewById("tabFundShareButton");
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        scrollElementIntoViewById("tabFundShareButton");
+
+        Thread.sleep(500);
+        driver.findElement(By.id("tabCharacteristicsButton")).click();
+
+        assertTrue(driver.findElement(By.id("maximumNumDecimal")).isDisplayed());
+
         driver.findElement(By.id("maximumNumDecimal")).clear();
-        driver.findElement(By.id("maximumNumDecimal")).sendKeys("1991");
+        driver.findElement(By.id("maximumNumDecimal")).sendKeys("5");
+        scrollElementIntoViewById("nextTab");
         openDropdownAndSelectOption("subscriptionCategory", 1);
         driver.findElement(By.id("minInitialSubscriptionInShare")).clear();
         driver.findElement(By.id("minInitialSubscriptionInShare")).sendKeys("5");
@@ -106,20 +161,19 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleCalendarMandatory")).isDisplayed());
+
+        assertTrue(driver.findElement(By.id("subscriptionTradeCyclePeriod")).isDisplayed());
+
         openDropdownAndSelectOption("subscriptionTradeCyclePeriod", 1);
         openDropdownAndSelectOption("redemptionTradeCyclePeriod", 1);
-
         setTime("12:12", "subscriptionCutOffTime");
-
-
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
-
         setTime("13:13", "redemptionCutOffTime");
-
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
@@ -134,9 +188,29 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationFees() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+
+        try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
         try {
             driver.findElement(By.id("tabFeesButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
+
+        assertTrue(driver.findElement(By.id("maxManagementFee")).isDisplayed());
+
         driver.findElement(By.id("maxManagementFee")).clear();
         driver.findElement(By.id("maxManagementFee")).sendKeys("1");
         driver.findElement(By.id("maxSubscriptionFee")).clear();
@@ -158,15 +232,21 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void shareCreationProfile() throws SQLException, InterruptedException {
 
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         try {
+            scrollElementIntoViewById("tabFundShareButton");
+            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
             driver.findElement(By.id("tabProfileButton")).click();
-        }catch (Exception e){ fail(e.getMessage()); }
-        assertTrue(driver.findElement(By.id("toggleProfileMandatory")).isDisplayed());
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        assertTrue(driver.findElement(By.id("investorProfile")).isDisplayed());
         openDropdownAndSelectOption("investorProfile", 1);
 
     }
 
-    public static void shareCreationSubmit() {
+    public static void shareCreationSubmit() throws InterruptedException {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
 
         try {
@@ -177,6 +257,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         }catch (Exception e){
             System.out.println("fail " + e.getMessage());
         }
+        Thread.sleep(5000);
         waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
         assertTrue(popupSubheading.equals("Info!"));
@@ -185,16 +266,16 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
     public static void assertPopupNextFundYes(String fundType) {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
-        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        waits.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
-        assertTrue(test.equals("Do you want to create a  " + fundType + "?"));
+        assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
         waits.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
     }
 
     public static void assertPopupNextFundNo(String fundType) {
         WebDriverWait waits = new WebDriverWait(driver, timeoutInSeconds);
-        waits.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        waits.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
         String test = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
         assertTrue(test.equals("Do You Want To Create A " + fundType + "?"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
@@ -224,6 +305,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
     public static void searchSharesTable(String shareName) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button");
+        scrollElementIntoViewById("product-dashboard-fundShareID-0-shareName");
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
