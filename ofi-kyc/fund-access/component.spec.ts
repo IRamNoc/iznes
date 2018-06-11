@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OfiFundAccessComponent } from './component';
 import { ClarityModule } from '@clr/angular';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { FileService } from '@setl/core-req-services/file/file.service';
 import { MessagesService } from '@setl/core-messages';
 import { of } from 'rxjs/observable/of';
 import { ActivatedRoute } from '@angular/router';
@@ -14,6 +15,7 @@ import { ConfirmationService, SetlPipesModule } from '@setl/utils';
 import { FileViewerModule } from '@setl/core-fileviewer';
 import { FileDropModule } from '@setl/core-filedrop';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
+import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG } from '@setl/utils/index';
 import { MultilingualService } from '@setl/multilingual';
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
@@ -104,6 +106,8 @@ describe('OfiFundAccessComponent', () => {
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 ConfirmationService,
+                FileService,
+                MemberSocketService,
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;

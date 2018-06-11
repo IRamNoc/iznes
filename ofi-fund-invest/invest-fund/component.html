@@ -287,7 +287,10 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" (dateChange)="subscribeForChangeDate('cutoff', $event)">
+                                <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff"
+                                       [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material"
+                                       [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('cutoff', $event)">
 
 
                             </div>
@@ -306,7 +309,10 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="valuationdate" formControlName="valuationDate" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" (dateChange)="subscribeForChangeDate('valuation', $event)">
+                                <input id="valuationdate" formControlName="valuationDate" [dpDayPicker]="configDateValuation"
+                                       [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material"
+                                       [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('valuation', $event)">
 
 
                             </div>
@@ -322,7 +328,13 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                    <input id="settlementdate" formControlName="settlementDate" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" (dateChange)="subscribeForChangeDate('settlement', $event)">
+                                    <input id="settlementdate" formControlName="settlementDate"
+                                           [dpDayPicker]="configDateSettlement"
+                                           [placeholder]="_translate.translate('Choose a date')"
+                                           mode="day" theme="dp-material"
+                                           [ngStyle]="{'width':'100%'}"
+                                           [readonly]="doValidate" autocomplete="off"
+                                           (dateChange)="subscribeForChangeDate('settlement', $event)">
 
 
                                 </div>
@@ -369,7 +381,10 @@
                                 <span class="">{{'Quantity' | translate}}</span>
                             </label>
                             <div [class]="type === 'redeem' ? 'quantity-group' : ''">
-                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity" class="form-control" formControlName="quantity" (focus)="subscribeForChange('quantity')" (blur)="unSubscribeQuantity()" appNumberFormatter="{{shareData.maximumNumDecimal}}">
+                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity"
+                                       class="form-control" formControlName="quantity"
+                                       (focus)="subscribeForChange('quantity')" (blur)="unSubscribeQuantity()"
+                                       appNumberFormatter="{{shareData.maximumNumDecimal}}" autocomplete="off">
                                 <button *ngIf="type === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
                                     Redeem all
                                 </button>
@@ -387,7 +402,9 @@
                                 <span class="">{{'Amount' | translate}}</span>
                             </label>
                             <div>
-                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control" formControlName="amount" (focus)="subscribeForChange('amount')" (blur)="roundAmount();" appNumberFormatter="4">
+                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control"
+                                       formControlName="amount" (focus)="subscribeForChange('amount')"
+                                       (blur)="roundAmount();" appNumberFormatter="4" autocomplete="off">
                             </div>
                             <span *ngIf="amountTooBig" class="text-danger">{{'Warning: be aware the order amount exceeds 15 million' | translate}}</span>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
@@ -423,7 +440,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <textarea class="form-control" formControlName="comment"></textarea>
+                            <textarea class="form-control" formControlName="comment" autocomplete="off"></textarea>
                         </div>
                     </div>
                 </div>
