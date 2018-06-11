@@ -239,7 +239,6 @@ public class OpenCSDSprint7AcceptanceTest {
 
     }
 
-
     @Test
     public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -292,7 +291,65 @@ public class OpenCSDSprint7AcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"holders-btn-back-list\"]")).isDisplayed();
     }
 
+    @Test
+    public void ShareAuditTrailHeaderContainsShareNameTG447() throws Exception {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+        String[] uFundDetails = generateRandomFundsDetails();
+        String randomLEI = "16614748475934658531";
+
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
+        assertPopupNextFundNo("Share");
+        searchFundsTable(uFundDetails[0]);
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uShareDetails[0]);
+        wait.until(invisibilityOfElementLocated(By.id("product-dashboard-fundShareID-1-shareName")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/div/button")).click();
+        wait.until(elementToBeClickable(By.id("product-dashboard-fundShareID-0-shareName")));
+        driver.findElement(By.id("product-dashboard-fundShareID-0-shareName")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-fund-share/clr-tabs/clr-tab/clr-tab-content/div[1]/div/button")).click();
+        String HeaderShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-product-fund-share-audit/div/h1")).getText();
+        assertTrue(HeaderShareName.equals("Share Audit Trail - " + uShareDetails[0]));
+    }
+
+    @Test
+    public void ShouldValidateNetAssetValueAuditTrailHeading() throws Exception {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        String[] uFundDetails = generateRandomFundsDetails();
+        String[] uShareDetails = generateRandomFundsDetails();
+        String[] uIsin = generateRandomISIN();
+
+        loginAndVerifySuccess("am", "alex01");
+        waitForHomePageToLoad();
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        fillOutFundDetailsStep1("none");
+        fillOutFundDetailsStep2(uFundDetails[0], "16615748475934658531");
+        assertPopupNextFundNo("Share");
+        createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+
+        navigateToNAVPageFromFunds();
+        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        String ShareNameNAV = driver.findElement(By.id("NAV-Share-Name-0")).getText();
+        assertTrue(ShareNameNAV.equals(uShareDetails[0]));
+        driver.findElement(By.id("NAV-Share-Name-0")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-fund-view/clr-tabs/clr-tab/clr-tab-content/form[2]/div/div/div[5]/button[2]")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-fund-view/clr-tabs/clr-tab/clr-tab-content/form[2]/div/div/div[5]/button[2]")).click();
+
+        String NAVAuditTrail = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-product-nav-audit/div/h1")).getText();
+        assertTrue(NAVAuditTrail.equals("NAV Audit Trail - " + uShareDetails[0]));
+    }
 
     public static void validateDatabaseInvestorInvited ( int expectedCount, String UInvestorEmail) throws SQLException {
         conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
