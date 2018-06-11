@@ -1,6 +1,7 @@
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { OrderType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
+import * as momentTz from 'moment-timezone';
 import * as E from '../FundShareEnum';
 import * as ShareValue from '../fundShareValue';
 
@@ -48,12 +49,15 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
-    get tradeTimeZone(): any {
-        return {
+    get tradeTimeZoneOffset(): any {
+        const timeZonString = {
             [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
             E.TimezonesEnum.UTC,
-            [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || E.TimezonesEnum.UTC,
+            [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
         }[this.orderType];
+
+        return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
+
     }
 
     get cutoffTime() {
@@ -115,7 +119,7 @@ export class CalendarHelper {
 
     getNextCutoffDate(orderType: OrderType) {
         this.orderType = orderType;
-        let dayToFind = this.getSpecificDateCutOff(moment(), this.cutoffTime, this.tradeTimeZone);
+        let dayToFind = this.getSpecificDateCutOff(moment(), this.cutoffTime, this.tradeTimeZoneOffset);
 
         for (let i = 1; i < 365; i += 1) {
             const isCutoff = this.isValidCutoffDateTime(dayToFind, orderType);
@@ -134,7 +138,7 @@ export class CalendarHelper {
         this.orderType = orderType;
 
         const dateTimeToCheckCopy = this.getSpecificDateCutOff(
-            this.momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZone);
+            this.momentToMomentBusiness(dateTimeToChecks), this.cutoffTime, this.tradeTimeZoneOffset);
 
         // check the date cutoff is still in the future.
         const isDateTimeToCheckInFuture = Boolean(
@@ -364,7 +368,7 @@ export class CalendarHelper {
 
     getCutoffTimeForSpecificDate(dateToCheck: moment, orderType: OrderType) {
         this.orderType = orderType;
-        return this.getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZone);
+        return this.getSpecificDateCutOff(dateToCheck, this.cutoffTime, this.tradeTimeZoneOffset);
     }
 
     getValuationDateFromCutoff(cutoffDate: moment, orderType: OrderType) {
@@ -423,10 +427,9 @@ export class CalendarHelper {
     }
 
     getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
-                          tradeTimeZone: E.TimezonesEnum): moment {
-        const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
-        const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
-        const timeZoneDiff = currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
+                          tradeTimeZoneOffSet: number): moment {
+        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        const timeZoneDiff = currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
 
         // work out the current date's cutoff
         return dateToCheck.clone().set(
@@ -438,10 +441,9 @@ export class CalendarHelper {
         );
     }
 
-    getTimeZoneDiff(tradeTimeZone: E.TimezonesEnum) {
-        const currentTimeZoneOffsetFromUtc = Number((new Date().getTimezoneOffset() / 60));
-        const cutoffTimeZoneOffset = ShareValue.TimeZoneOffsetValue[tradeTimeZone];
-        return currentTimeZoneOffsetFromUtc - cutoffTimeZoneOffset;
+    getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
+        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
     }
 
     isNonWorkingDate(dateToCheck) {
