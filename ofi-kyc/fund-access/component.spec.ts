@@ -1,19 +1,21 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement, Pipe, PipeTransform} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {NgRedux} from '@angular-redux/store';
-import {ToasterService} from 'angular2-toaster';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {OfiFundAccessComponent} from './component';
-import {ClarityModule} from '@clr/angular';
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
-import {MessagesService} from '@setl/core-messages';
-import {of} from 'rxjs/observable/of';
-import {ActivatedRoute} from '@angular/router';
-import {ConfirmationService} from '@setl/utils';
-import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
-import {APP_CONFIG} from '@setl/utils/index';
-import {MultilingualService} from '@setl/multilingual';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DebugElement, Pipe, PipeTransform } from '@angular/core';
+import { By } from '@angular/platform-browser';
+import { NgRedux } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OfiFundAccessComponent } from './component';
+import { ClarityModule } from '@clr/angular';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { MessagesService } from '@setl/core-messages';
+import { of } from 'rxjs/observable/of';
+import { ActivatedRoute } from '@angular/router';
+import { ConfirmationService, SetlPipesModule } from '@setl/utils';
+import { FileViewerModule } from '@setl/core-fileviewer';
+import { FileDropModule } from '@setl/core-filedrop';
+import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
+import { APP_CONFIG } from '@setl/utils/index';
+import { MultilingualService } from '@setl/multilingual';
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
@@ -22,7 +24,7 @@ const updateInvestor = jasmine.createSpy('updateInvestor')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 
 const OfiKycServiceStub = {
@@ -37,7 +39,7 @@ const requestInvestorFundAccess = jasmine.createSpy('requestInvestorFundAccess')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 
 const OfiFundShareServiceStub = {
@@ -48,10 +50,10 @@ const pop = jasmine.createSpy('pop')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
-        })
+        }),
     );
 const toasterServiceStub = {
-    pop: pop,
+    pop,
 };
 
 const activatedRouteStub = {
@@ -61,7 +63,7 @@ const activatedRouteStub = {
 };
 
 // Stub for translate
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
     transform(value: any): any {
         return value;
@@ -88,6 +90,9 @@ describe('OfiFundAccessComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 ClarityModule,
+                SetlPipesModule,
+                FileViewerModule,
+                FileDropModule,
             ],
             providers: [
                 { provide: APP_CONFIG, useValue: {} },
@@ -99,7 +104,7 @@ describe('OfiFundAccessComponent', () => {
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
                 ConfirmationService,
-            ]
+            ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
@@ -181,8 +186,8 @@ describe('OfiFundAccessComponent', () => {
                     invitedID: 20,
                     status: -1,
                     dateEntered: '2018-04-25 16:09:01',
-                    clientReference: 'lol trefh'
-                }
+                    clientReference: 'lol trefh',
+                },
             ];
             comp.amKycListObs.next(fakeKycList);
 
@@ -238,7 +243,7 @@ describe('OfiFundAccessComponent', () => {
                     status: -1,
                     dateEntered: '2018-04-25 16:09:01',
                     clientReference: expectedResult.clientReference,
-                }
+                },
             ];
             comp.amKycListObs.next(fakeKycList);
 
