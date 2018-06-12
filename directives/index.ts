@@ -11,10 +11,11 @@ import {BackToTopDirective} from './back-to-top/back-to-top.directive';
 import {FormChecker} from './enhanced-form/enhanced-form.directive';
 
 import {TooltipDirective} from './tooltip/tooltip.directive';
+import {FormStepsDirective} from './form-steps/formsteps';
+import {FormPercentDirective} from './form-percent/formpercent';
 import {ActiveHeaderButtonDirective} from './activeHeaderButton/active-header-button.directive';
 import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
 import {MoneyValuePipe} from '../pipes';
-
 
 @NgModule({
     declarations: [
@@ -27,6 +28,8 @@ import {MoneyValuePipe} from '../pipes';
         BackToTopDirective,
         FormChecker,
         TooltipDirective,
+        FormStepsDirective,
+        FormPercentDirective,
         ActiveHeaderButtonDirective,
     ],
     exports: [
@@ -39,6 +42,8 @@ import {MoneyValuePipe} from '../pipes';
         BackToTopDirective,
         FormChecker,
         TooltipDirective,
+        FormStepsDirective,
+        FormPercentDirective,
         ActiveHeaderButtonDirective,
     ],
     imports: [
