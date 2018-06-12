@@ -1,12 +1,18 @@
 import * as _ from 'lodash';
 import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
 import * as E from '../FundShareEnum';
+import { Validators } from '@angular/forms';
 
 export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     maximumNumDecimal: FormItem = {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',
         required: true,
+        validator: Validators.compose([
+            Validators.required,
+            Validators.min(0),
+            Validators.max(5),
+        ]),
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_maxdecshares'
     }

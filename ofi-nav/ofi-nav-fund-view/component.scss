@@ -13,15 +13,15 @@
 }
 
 .col-status {
-    width: 100px !important;
+    //width: 100px !important;
 }
 
 .col-date {
-    width: 95px !important;
+    //width: 95px !important;
 }
 
 .col-currency {
-    width: 50px !important;
+    //width: 50px !important;
 }
 
 .export-nav {
@@ -39,4 +39,8 @@
     display: flex;
     justify-content: flex-end;
     width: 100%;
+}
+
+.col-min-width {
+    min-width: 133px !important;
 }

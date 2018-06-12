@@ -1,8 +1,8 @@
-.pointer{
+.pointer {
     cursor: pointer;
 }
 
-.fund-table{
+.fund-table {
     width: 100%;
     margin-top: 10px;
 }
@@ -18,4 +18,37 @@
 label.switch {
     position: absolute !important;
     margin: 4px !important;
+}
+
+.override-text {
+    color: red;
+    padding-left: 5px;
+}
+
+.override-icon {
+    margin-left: 5px;
+}
+
+.override-button {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    margin-left: 15px;
+    float: right;
+}
+
+.override-modal-margin {
+    margin-bottom: 15px;
+}
+
+.font-80 {
+    font-size: 80%;
+}
+
+.override-modal-icon {
+    margin-left: 15px;
+    margin-right: 5px;
+}
+
+.override-modal-div {
+    margin-bottom: 5px;
 }
