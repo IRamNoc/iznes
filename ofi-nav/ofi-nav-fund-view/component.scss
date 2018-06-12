@@ -35,6 +35,12 @@
     margin: 0;
 }
 
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
 .col-min-width {
     min-width: 133px !important;
 }

@@ -15,6 +15,19 @@
         </button>
 
         <clr-tab-content *clrIfActive="true">
+            <!-- Button container -->
+            <div class="row">
+                <div class="form-group button-container">
+                    <button class="btn btn-primary" id="uploadDetailNavFileButton" (click)="isNavUploadModalDisplayed = true">
+                        {{'Upload NAVs' | translate}}
+                    </button>
+
+                    <button class="btn btn-primary" (click)="exportCSV()">{{'Export List as CSV' | translate}}</button>
+                </div>
+            </div>
+
+            <div class="hr-line-dashed"></div>
+
             <form *ngIf="navFund">
                 <div class="row">
                     <div class="form-group col-sm-3">
@@ -195,10 +208,6 @@
                     <div class="form-block form-group col-sm-6">
                         <a href="/#/product-module/net-asset-value" class="btn btn-secondary">{{'Close' | translate}}</a>
                     </div>
-
-                    <div class="col-sm-3 offset-sm-3 export-nav text-right">
-                        <button class="btn btn-primary" (click)="exportCSV()">{{'Export List as CSV' | translate}}</button>
-                    </div>
                 </div>
             </form>
         </clr-tab-content>
@@ -206,3 +215,50 @@
 </clr-tabs>
 
 <app-nav-add></app-nav-add>
+
+<!-- NAV upload modal -->
+<clr-modal [(clrModalOpen)]="isNavUploadModalDisplayed" [clrModalSize]="'sm'" [clrModalClosable]="false">
+    <h3 class="modal-title" *ngIf="navFund">
+        {{'Upload NAVs for @navFund.fundShareName@' | translate: {'navFund.fundShareName': navFund.fundShareName} }}
+    </h3>
+
+    <div class="modal-body">
+        <form>
+            <section class="form-block">
+                <div class="form-group col-sm-12">
+                    <label class="control-label" for="detailNavCsvFile">{{'File to upload: ' | translate}}</label>
+                    <input #detailNavCsvFile
+                           id="detailNavCsvFile"
+                           name="detailNavCsvFile"
+                           type="file"
+                           accept="text/csv"
+                           (change)="navCsvFile = $event.target.files[0]"
+                    />
+                </div>
+            </section>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button id='detailNavModalCancelButton'
+                type="button"
+                class="btn btn-outline"
+                [disabled]="!hasResult"
+                (click)="resetNavUploadModal()">
+            {{'Cancel' | translate}}
+        </button>
+
+        <button *ngIf='hasResult'
+                id='detailNavModalSubmitButton'
+                type="button"
+                class="btn btn-success"
+                (click)="handleUploadNavSubmitClick()"
+                [disabled]="!navCsvFile">
+            {{'Upload' | translate}}
+        </button>
+
+        <div *ngIf='!hasResult' class="btn btn-success">
+            <i class="fa fa-spinner fa-spin"></i>
+        </div>
+    </div>
+</clr-modal>
