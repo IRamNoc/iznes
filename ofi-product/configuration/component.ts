@@ -99,6 +99,8 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
     }
 
     private onCreateSuccess(): void {
+        this.redux.dispatch(clearRequestedConfiguration());
+
         this.toaster.pop('success', 'Product Configuration saved successfully');
     }
 
