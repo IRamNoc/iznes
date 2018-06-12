@@ -254,6 +254,11 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        Thread.sleep(500);
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("fundManagers")).sendKeys("testManager");
         scrollElementIntoViewByXpath("//*[@id=\"fundAdministrator\"]/div");
@@ -281,8 +286,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.id("fiscalYearEnd")).sendKeys("2019-04");
         driver.findElement(By.id("openOrCloseEnded2")).click();
         driver.findElement(By.id("isFundOfFund2")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
-        driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.id("isDedicatedFund1")).click();
 
         scrollElementIntoViewById("fund-submitfund-btn");
