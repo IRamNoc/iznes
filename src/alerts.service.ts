@@ -20,6 +20,10 @@ export class AlertsService {
         return create$;
     }
 
+    close(){
+        this.alert$.next({close: true});
+    }
+
     updateView(type, message: string) {
         this.update$.next({type, message});
     }
