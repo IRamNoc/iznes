@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "moment-timezone": "^0.5.17",
     "ramda": "^0.24.1",
     "redux-saga": "^0.15.6",
     "xss": "^0.3.8"
