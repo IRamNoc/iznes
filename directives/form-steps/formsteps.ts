@@ -1,4 +1,5 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import {ControlContainer, FormControl, FormControlDirective, FormControlName} from '@angular/forms';
 import * as _ from 'lodash';
 import {MultilingualService} from '@setl/multilingual';
 
@@ -38,6 +39,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         private _el: ElementRef,
         private renderer: Renderer2,
         private _translate: MultilingualService,
+        private changeDetectorRef : ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
     }
@@ -181,23 +183,46 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         this.btNext.innerHTML = 'Next';
         this.btNext.setAttribute('type', 'button');
         this.divButtons.appendChild(this.btNext);
-        if (this.isMultiForm) {
-            if (this.config[this.currentStep].form !== undefined) {
-                this.btNext.setAttribute('form', this.config[this.currentStep].id);
-            } else {
-                this.btNext.setAttribute('type', 'button');
-            }
-        }
+        // if (this.isMultiForm) {
+        //     if (this.config[this.currentStep].form !== undefined) {
+        //         this.btNext.setAttribute('form', this.config[this.currentStep].id);
+        //     } else {
+        //         this.btNext.setAttribute('type', 'button');
+        //     }
+        // }
         this.btNext.onclick = (event) => {
-            setTimeout(() => {
+            if (!this.isValid()) {
                 if (this.isMultiForm) {
                     if (this.config[this.currentStep].form !== undefined) {
-                        this.config[this.currentStep].submitted = true;
+                        if (!this.config[this.currentStep].form.valid) {
+                            this.dirty(this.config[this.currentStep].form.controls);
+                            setTimeout(() => {
+                                this.resizeHeight();
+                                this.scrollToFirstError();
+                            }, 50);
+
+                        }
+                    }
+                } else {
+                    if (!this.config.form.controls['step' + ((this.currentStep) + 1)].valid) {
+                        this.dirty(this.config.form.controls['step' + ((this.currentStep) + 1)].controls);
+                        setTimeout(() => {
+                            this.resizeHeight();
+                            this.scrollToFirstError();
+                        }, 50);
                     }
                 }
-                this.currentStep++;
-                this.move();
-            }, 50);
+            } else {
+                setTimeout(() => {
+                    if (this.isMultiForm) {
+                        if (this.config[this.currentStep].form !== undefined) {
+                            this.config[this.currentStep].submitted = true;
+                        }
+                    }
+                    this.currentStep++;
+                    this.move();
+                }, 50);
+            }
         };
 
         // SUBMIT
@@ -205,22 +230,45 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         this.btSubmit.className = 'btn btn-success btSubmit';
         this.btSubmit.innerHTML = 'Finish';
         this.divButtons.appendChild(this.btSubmit);
-        if (!this.isMultiForm) {
-            this.btSubmit.setAttribute('form', this.el.id);
-        } else {
-            if (this.config[this.nbSteps - 1].form !== undefined) {
-                this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
-            } else {
-                this.btSubmit.setAttribute('type', 'button');
-            }
-        }
+        // if (!this.isMultiForm) {
+        //     this.btSubmit.setAttribute('form', this.el.id);
+        // } else {
+        //     if (this.config[this.nbSteps - 1].form !== undefined) {
+        //         this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
+        //     } else {
+        //         this.btSubmit.setAttribute('type', 'button');
+        //     }
+        // }
         this.btSubmit.onclick = (event) => {
-            setTimeout(() => {
-                this.currentStep++;
-                this.move();
-                this.divButtons.remove();
-                this.isAllFinished = true;
-            }, 50);
+            console.log(this.isValid());
+            if (!this.isValid()) {
+                if (this.isMultiForm) {
+                    if (this.config[this.currentStep].form !== undefined) {
+                        if (!this.config[this.currentStep].form.valid) {
+                            this.dirty(this.config[this.currentStep].form.controls);
+                            setTimeout(() => {
+                                this.resizeHeight();
+                                this.scrollToFirstError();
+                            }, 50);
+                        }
+                    }
+                } else {
+                    if (!this.config.form.controls['step' + ((this.currentStep) + 1)].valid) {
+                        this.dirty(this.config.form.controls['step' + ((this.currentStep) + 1)].controls);
+                        setTimeout(() => {
+                            this.resizeHeight();
+                            this.scrollToFirstError();
+                        }, 50);
+                    }
+                }
+            } else {
+                setTimeout(() => {
+                    this.currentStep++;
+                    this.move();
+                    this.divButtons.remove();
+                    this.isAllFinished = true;
+                }, 50);
+            }
         };
     }
 
@@ -278,48 +326,58 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             if (this.isMultiForm) {
                 if (this.config[this.nbSteps - 1].form !== undefined) {
                     if (this.config[this.nbSteps - 1].form.valid) {
-                        this.btSubmit.removeAttribute('disabled');
+                        // this.btSubmit.removeAttribute('disabled');
+                        this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
                     } else {
-                        this.btSubmit.setAttribute('disabled', 'disabled');
+                        // this.btSubmit.setAttribute('disabled', 'disabled');
                     }
                 }
             } else {
                 if (this.config.form.valid) {
-                    this.btSubmit.removeAttribute('disabled');
+                    // this.btSubmit.removeAttribute('disabled');
+                    this.btSubmit.setAttribute('form', this.el.id);
                 } else {
-                    this.btSubmit.setAttribute('disabled', 'disabled');
+                    // this.btSubmit.setAttribute('disabled', 'disabled');
                 }
             }
         }
 
-        this.isNextDisabled();
+        // this.isNextDisabled();
+        this.resizeHeight();
         this.applyStepToProgressBar();
     }
 
-    isNextDisabled() {
+    isValid() {
         if (this.isMultiForm) {
-            if (this.currentStep < (this.nbSteps - 1)) {
-                if (this.config[this.currentStep].form !== undefined) {
-                    if (!this.config[this.currentStep].form.valid) {
-                        this.btNext.setAttribute('disabled', 'disabled');
-                    } else {
-                        this.btNext.removeAttribute('disabled');
-                    }
+            if (this.config[this.currentStep].form !== undefined) {
+                if (!this.config[this.currentStep].form.valid) {
+                    // this.btNext.setAttribute('disabled', 'disabled');
+                    return false;
                 } else {
-                    this.btNext.removeAttribute('disabled');
+                    // this.btNext.removeAttribute('disabled');
+                    return true;
                 }
             } else {
-                this.btNext.removeAttribute('disabled');
+                // this.btNext.removeAttribute('disabled');
+                return true;
             }
         } else {
             if (this.currentStep < (this.nbSteps - 1) && !this.forceNext) {
                 if (this.config.form.controls['step' + ((this.currentStep) + 1)].valid) {
-                    this.btNext.removeAttribute('disabled');
+                    // this.btNext.removeAttribute('disabled');
+                    return true;
                 } else {
-                    this.btNext.setAttribute('disabled', 'disabled');
+                    // this.btNext.setAttribute('disabled', 'disabled');
+                    return false;
                 }
             } else {
-                this.btNext.removeAttribute('disabled');
+                if (this.config.form.controls['step' + ((this.currentStep) + 1)].valid) {
+                    // this.btNext.removeAttribute('disabled');
+                    return true;
+                } else {
+                    // this.btNext.setAttribute('disabled', 'disabled');
+                    return false;
+                }
             }
         }
     }
@@ -349,6 +407,52 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         }
+    }
+
+    dirty(controls) {
+        console.log(controls);
+        Object.keys(controls).forEach((key) => {
+            let formControl : FormControl = controls[key];
+            if (controls[key].controls) {
+                this.dirty(controls[key].controls);
+            } else {
+                formControl.markAsDirty();
+                formControl.markAsTouched();
+            }
+        });
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    scrollToFirstError() {
+        let element: any;
+        if (!this.isMultiForm) {
+            element = document.getElementById(this.el.id).querySelector('.ng-invalid');
+        } else {
+            element = document.getElementById(this.config[this.currentStep].id).querySelector('.ng-invalid');
+        }
+        if (element) {
+            this.scrollIntoView(element);
+        }
+    }
+
+    scrollIntoView(element: Element){
+        const el = (element.parentNode as Element);
+        const parent = document.getElementsByClassName('content-area')[0];
+        if (parent) {
+            parent.scrollTo(0, this.getOffset(el).top - 100); // 75 for topbar + 25 margin :)
+        }
+    }
+
+    getOffset(el) {
+        let _x = 0;
+        let _y = 0;
+        while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
+            _x += el.offsetLeft - el.scrollLeft;
+            _y += el.offsetTop - el.scrollTop;
+            el = el.offsetParent;
+        }
+        return { top: _y, left: _x };
     }
 
     resizeHeight() {
