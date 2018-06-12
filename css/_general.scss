@@ -1000,6 +1000,18 @@ dp-date-picker div {
   padding: 0;
   float: left;
 }
+.docBox{
+  background-color: rgba(0, 0, 0, .05);
+  margin: .5em 0;
+  overflow: auto;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 1em 2em;
+  color: #666;
+  border-width: 1px 1px 1px 20px;
+  border-left-color: rgb(73, 164, 95);
+  max-height: fit-content !important;
+}
 @media screen and (min-width: 768px) {
   .jumbotron {
     padding-top: 48px;
@@ -1459,3 +1471,276 @@ dp-date-picker div {
 .btnTourContainer .btn:last-child {
   margin-right: 0!important;
 }
+
+/* UI - FORM STEPS */
+.fs-container{
+  max-width: 100%;
+  margin: 50px auto;
+  overflow: auto;
+}
+.fs-progressbar{
+  counter-reset: step;
+}
+.fs-progressbar div{
+  float: left;
+  position: relative;
+  text-align: center;
+  font-size: 1.1em;
+  font-weight: 500;
+}
+.fs-progressbar div:before{
+  content:counter(step);
+  position: relative;
+  z-index: 1;
+  counter-increment: step;
+  width: 50px;
+  height: 50px;
+  border: 4px solid #bebebe;
+  display: block;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  line-height: 43px;
+  background: white;
+  color: #bebebe;
+  text-align: center;
+  font-weight: 900;
+  box-sizing: border-box;
+  font-size: 1.4em;
+  cursor: pointer;
+}
+.fs-progressbar div:after{
+  content: '';
+  position: absolute;
+  top: 22px;
+  left: -50%;
+  z-index: 0;
+  width:100%;
+  height: 6px;
+  background: #979797;
+}
+.fs-progressbar div:first-child:after{
+  content: none;
+}
+.fs-progressbar div.fs-active {
+  color: #3aac5d;
+}
+.fs-progressbar div.fs-active + div:after{
+  background: #3aac5d;
+}
+.fs-progressbar div.fs-active:before{
+  border-color: #3aac5d;
+  background: #3aac5d;
+  color: white;
+  //content: "\2713";
+  content: "\2714";
+}
+.fs-slider {
+  width: 100%;
+  overflow: hidden;
+  transition: height ease-out .3s;
+}
+.fs-slider-container {
+  transition: margin-left ease-in-out .5s;
+}
+.fs-slider-container section {
+  float: left;
+}
+.fs-slider-finished {
+  text-align: center;
+  color: green;
+  font-size: 2em;
+  font-weight: 600;
+  padding: 40px;
+}
+.fs-buttons {
+  width: 100%;
+  text-align: center;
+  margin: 20px auto;
+}
+.btPrev, .btNext, .btSubmit {
+  margin: 0 auto;
+}
+.btPrev {
+  margin-right: 20px;
+}
+.txtRed {
+  color: red;
+}
+
+/* progress bar */
+
+.examples {
+  margin-bottom: 60px;
+}
+
+.divPG {
+  display: inline-block;
+}
+
+.divPGIcon {
+  display: inline-block;
+  right: 0;
+  position: relative;
+  top: -4px;
+  left: 10px;
+}
+
+.divPGIcon i {
+  font-size: 1.2em!important;
+  float: none!important;
+  margin-top: 0!important;
+}
+
+.cssProgress {
+  width: 100%;
+}
+
+.cssProgress .progressSquare, .cssProgress .progressRounded, .cssProgress .progressBordered  {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  font-family: "Roboto", sans-serif
+}
+
+.cssProgress .cssProgress-bar {
+  display: block;
+  float: left;
+  width: 0%;
+  height: 100%;
+  background: #3798d9;
+  box-shadow: inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -1px 2px rgba(0,0,0,0.2);
+  -webkit-transition: width 0.8s ease-in-out;
+  transition: width 0.8s ease-in-out;
+}
+
+.cssProgress .cssProgress-label {
+  position: absolute;
+  overflow: hidden;
+  left: 0px;
+  right: 0px;
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 0.8em;
+  text-align: center;
+  text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.2);
+  font-weight: 400;
+}
+
+.cssProgress .cssProgress-info { background-color: #9575cd !important }
+.cssProgressIcon-info { color: #9575cd !important }
+
+.cssProgress .cssProgress-danger { background-color: #ef5350 !important }
+.cssProgressIcon-danger { color: #ef5350 !important }
+
+.cssProgress .cssProgress-success { background-color: #66bb6a !important }
+.cssProgressIcon-success { color: #66bb6a !important }
+
+.cssProgress .cssProgress-warning { background-color: #ffb74d !important }
+.cssProgressIcon-warning { color: #ffb74d !important }
+
+.cssProgress .cssProgress-right { float: right !important }
+
+.cssProgress .cssProgress-label-left {
+  margin-left: 10px;
+  text-align: left !important
+}
+
+.cssProgress .cssProgress-label-right {
+  margin-right: 10px;
+  text-align: right !important
+}
+
+.cssProgress .cssProgress-label2 {
+  display: block;
+  margin: 2px 0;
+  padding: 0 8px;
+  font-size: 0.8em
+}
+
+.cssProgress .cssProgress-label2.cssProgress-label2-right { text-align: right }
+
+.cssProgress .cssProgress-label2.cssProgress-label2-center { text-align: center }
+
+.cssProgress .cssProgress-stripes, .cssProgress .cssProgress-active, .cssProgress .cssProgress-active-right {
+  background-image: -webkit-linear-gradient(135deg, rgba(255,255,255,0.125) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.125) 50%, rgba(255,255,255,0.125) 75%, transparent 75%, transparent);
+  background-image: linear-gradient(-45deg, rgba(255,255,255,0.125) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.125) 50%, rgba(255,255,255,0.125) 75%, transparent 75%, transparent);
+  background-size: 35px 35px
+}
+
+.cssProgress .cssProgress-active {
+  -webkit-animation: cssProgressActive 2s linear infinite;
+  animation: cssProgressActive 2s linear infinite
+}
+
+.cssProgress .cssProgress-active-right {
+  -webkit-animation: cssProgressActiveRight 2s linear infinite;
+  animation: cssProgressActiveRight 2s linear infinite
+}
+@-webkit-keyframes
+cssProgressActive { 0% {
+  background-position:0 0
+}
+  100% {
+    background-position:35px 35px
+  }
+}
+@keyframes
+cssProgressActive { 0% {
+  background-position:0 0
+}
+  100% {
+    background-position:35px 35px
+  }
+}
+@-webkit-keyframes
+cssProgressActiveRight { 0% {
+  background-position:0 0
+}
+  100% {
+    background-position:-35px -35px
+  }
+}
+@keyframes
+cssProgressActiveRight { 0% {
+  background-position:0 0
+}
+  100% {
+    background-position:-35px -35px
+  }
+}
+
+.progressSquare {
+  background-color: #EEE;
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.4)
+}
+
+.progressSquare .cssProgress-bar { height: 18px }
+
+.progressSquare .cssProgress-label { line-height: 18px }
+
+.progressRounded {
+  background-color: #EEE;
+  border-radius: 18px;
+  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.4)
+}
+
+.progressRounded .cssProgress-bar {
+  height: 18px;
+  border-radius: 18px
+}
+
+.progressRounded .cssProgress-label { line-height: 18px }
+
+.progressBordered {
+  width: auto !important;
+  padding: 4px;
+  background-color: rgba(0,0,0,0.1);
+  box-shadow: inset 0px 1px 2px rgba(0,0,0,0.4);
+  border-radius: 18px;
+}
+
+.progressBordered .cssProgress-bar {
+  height: 14px;
+  border-radius: 18px;
+}
+
+.progressBordered .cssProgress-label { line-height: 14px }

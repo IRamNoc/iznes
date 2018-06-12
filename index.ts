@@ -20,6 +20,8 @@ export {UiModalComponent} from './layouts/ui-form/components/modal/modal.compone
 export {UiToasterComponent} from './layouts/ui-form/components/toaster/toaster.component';
 export {UiTranslationsComponent} from './layouts/ui-form/components/translations/translations.component';
 export {UiTooltipsComponent} from './layouts/ui-form/components/tooltips/tooltips.component';
+export {UiFormStepsComponent} from './layouts/ui-form/components/form-steps/formsteps.component';
+export {UiFormPercentComponent} from './layouts/ui-form/components/form-percent/formpercent.component';
 export {UiButtonComponent} from './layouts/ui-form/components/button/button.component';
 
 export {UiColourComponent} from './layouts/ui-form/components/colour/colour.component';

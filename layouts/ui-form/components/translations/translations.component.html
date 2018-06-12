@@ -44,8 +44,11 @@
                 <b>{{'Automatic Implementation' | translate}}:</b>
                 <pre><code>python translate.py ../your_folder_name/</code></pre>
                 <br>
-                <b>{{'Manual Pipes Implementation' | translate}}:</b>
+                <b>{{'Manual Pipes Implementation for static strings' | translate}}:</b>
                 <pre><code>{{'\{\{\'your text here\' | translate\}\}'}}</code></pre>
+                <br>
+                <b>{{'Manual Pipes Implementation for dynamic strings' | translate}}:</b>
+                <pre><code>{{'\{\{\'your @varname@ here\' | translate: \{\'varname\': varname}\}\}'}}</code></pre>
                 <br>
                 <b>{{'Manuel Functions Implementation' | translate}}:</b>
                 <pre><code>{{'&lt;input type=&quot;text&quot; [placeholder]=&quot;_translate.translate(\'your text here\')&quot;&gt;'}}</code></pre>
