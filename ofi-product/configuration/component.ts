@@ -76,8 +76,7 @@ export class ProductConfigurationComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateConfig(config: ProductConfiguration): void {
-        if ((!config.holidayManagement.dates.length) &&
-            config.holidayManagement.dates.length === 0) return;
+        if (!config.holidayManagement.dates) return;
 
         this.config = config;
 
