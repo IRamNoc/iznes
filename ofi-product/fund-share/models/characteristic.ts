@@ -13,7 +13,6 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
             Validators.min(0),
             Validators.max(5),
         ]),
-        required: true,
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_maxdecshares'
     }

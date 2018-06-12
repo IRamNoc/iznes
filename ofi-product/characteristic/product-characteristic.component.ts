@@ -132,6 +132,8 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
                     maxManagementFee: this.numConverter.toFrontEnd(d.maxManagementFee),
                     maxSubscriptionFee: this.numConverter.toFrontEnd(d.maxSubscriptionFee),
                     maxRedemptionFee: this.numConverter.toFrontEnd(d.maxRedemptionFee),
+                    minInitialSubscriptionInAmount: this.numConverter.toFrontEnd(d.minInitialSubscriptionInAmount),
+                    minSubsequentRedemptionInAmount: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInAmount),
                     minInitialSubscriptionInShare: this.numConverter.toFrontEnd(d.minInitialSubscriptionInShare),
                     minSubsequentRedemptionInShare: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInShare),
                     initialNav: this.numConverter.toFrontEnd(d.initialNav),
