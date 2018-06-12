@@ -742,7 +742,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 targetedOrder: this.ordersList[index],
                 title: `Cancel - ${message}`,
                 body: `Are you sure you want to cancel the ${message}?`,
-                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify him.',
+                placeholder: 'Please add a message to justify this cancellation. An internal IZNES message will be sent to the investor to notify them.',
             };
 
         }
