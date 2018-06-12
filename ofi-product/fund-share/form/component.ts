@@ -135,9 +135,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.mode = FundShareMode.Update;
             }
 
-            if (this.mode === FundShareMode.Create) {
-                this.model = FundShareTestData.generate(new FundShare());
-            }
+            // if (this.mode === FundShareMode.Create) {
+            //     this.model = FundShareTestData.generate(new FundShare());
+            // }
 
             this.configureFormForMode();
         }));
