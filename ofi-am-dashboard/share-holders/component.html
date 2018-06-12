@@ -63,17 +63,17 @@
         <div class="panel-body">
             <table style="width: 100%;">
                 <tbody>
-                    <tr>
-                        <td>
-                            <h3 style="margin-bottom: 3px;">{{'Please find a list of all the shares below:' | translate}}
+                <tr>
+                    <td>
+                        <h3 style="margin-bottom: 3px;">{{'Please find a list of all the shares below:' | translate}}
 
-                            </h3>{{'You can access the recordkeeping for a specific Share by clicking on a line in this table.' | translate}}
+                        </h3>{{'You can access the recordkeeping for a specific Share by clicking on a line in this table.' | translate}}
 
-                        </td>
-                        <td class="text-right" valign="middle">
-                            <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="handleHoldersExportButtonClick()">{{'Export this recordkeeping for all these Funds & Shares below' | translate}}</button>
-                        </td>
-                    </tr>
+                    </td>
+                    <td class="text-right" valign="middle">
+                        <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="handleHoldersExportButtonClick()">{{'Export this recordkeeping for all these Funds & Shares below' | translate}}</button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
 
@@ -223,83 +223,90 @@
 
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
-                        <tr>
-                            <td width="20%">
-                                <div class="form-group">
-                                    <label>{{'Number of holders (for this date):' | translate}}
+                    <tr>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>{{'Number of holders (for this date):' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareHolderNumber}}</span>
                                 </div>
-                            </td>
-                            <td width="20%">
-                                <div class="form-group">
-                                    <label>{{'AUM:' | translate}}
+                            </div>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>{{'AUM:' | translate}}
 
-                                    </label>
-                                    <div><span class="readonly-field">{{'€' | translate}} {{shareData.shareAum  | moneyValue:5}}</span></div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{'€' | translate}} {{shareData.shareAum  | moneyValue:5}}</span>
                                 </div>
-                            </td>
-                            <td width="20%">
-                                <div class="form-group">
-                                    <label>{{'Number of units:' | translate}}
+                            </div>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>{{'Number of units:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{shareData.shareUnitNumber  | moneyValue:4}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareUnitNumber  | moneyValue:4}}</span>
                                 </div>
-                            </td>
-                            <td width="20%">
-                                <div class="form-group">
-                                    <label>{{'Latest NAV:' | translate}}
+                            </div>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>{{'Latest NAV:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{shareData.shareNav  | moneyValue:2}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareNav  | moneyValue:2}}</span>
                                 </div>
-                            </td>
-                            <td width="20%">
-                                <div class="form-group">
-                                    <label>{{'Currency:' | translate}}
+                            </div>
+                        </td>
+                        <td width="20%">
+                            <div class="form-group">
+                                <label>{{'Currency:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{shareData.shareCurrency}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{shareData.shareCurrency}}</span>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
             </form>
 
             <clr-datagrid clrDgSortIcon #ordersDataGrid>
-                <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>{{'Ranking' | translate}} 
+                <clr-dg-column [clrDgField]="'ranking'" clrDgSortIcon clrDgSortNoSearch>{{'Ranking' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>{{'Investor name' | translate}} 
+                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>{{'Company Name' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>{{'Quantity' | translate}} 
+                <clr-dg-column [clrDgField]="'investorName'" clrDgSortIcon clrDgSortNoSearch>{{'Portfolio' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch>{{'Asset (€)' | translate}} 
+                <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>{{'Quantity' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
-                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>{{'Ratio (%)' | translate}} 
+                <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon clrDgSortNoSearch>{{'Asset (€)' | translate}}
+                    <span class="column-label"></span>
+                </clr-dg-column>
+
+                <clr-dg-column [clrDgField]="'ratio'" clrDgSortIcon clrDgSortNoSearch>{{'Ratio (%)' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let holderItem of holderDetailData">
                     <clr-dg-cell>{{holderItem.ranking}}</clr-dg-cell>
+                    <clr-dg-cell>{{holderItem.companyName}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.investorName}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.quantity | moneyValue: 4}}</clr-dg-cell>
                     <clr-dg-cell>{{holderItem.amount | moneyValue: 5}}</clr-dg-cell>
