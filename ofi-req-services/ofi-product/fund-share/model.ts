@@ -1,7 +1,7 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface AmAllFundShareListRequestBody extends MemberNodeMessageBody {
-   token: string;
+    token: string;
 }
 
 export interface InvestorFundAccessRequestBody extends MemberNodeMessageBody {
