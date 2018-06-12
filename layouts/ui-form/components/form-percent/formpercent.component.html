@@ -37,7 +37,7 @@
                 <div class="docBox">
                     <h1>{{'Full Form' | translate}}</h1>
                     <!--all field in 1 form-->
-                    <form [formGroup]="myForm1" novalidate (ngSubmit)="myForm1.valid && save1(myForm1.value)">
+                    <form [formGroup]="myForm1" novalidate (ngSubmit)="myForm1.valid && save(myForm1.value)">
                         <div id="formPercent1" style="width: 99%" [formpercent]="{form: myForm1}"></div>
                         <br>
                         <div class="form-group"><input type="text" class="form-control" formControlName="field1" [placeholder]="_translate.translate('type here')"></div>
@@ -53,7 +53,7 @@
                 <div class="docBox">
                     <h1>{{'FormGroups + Full Form' | translate}}</h1>
                     <!--all formgroups in 1 form-->
-                    <form [formGroup]="myForm2" novalidate (ngSubmit)="myForm2.valid && save1(myForm2.value)">
+                    <form [formGroup]="myForm2" novalidate (ngSubmit)="myForm2.valid && save(myForm2.value)">
                         <div style="width: 99%" [formpercent]="{form: myForm2}"></div>
                         <br>
                         <div class="well">

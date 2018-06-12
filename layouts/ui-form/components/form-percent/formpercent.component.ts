@@ -159,7 +159,7 @@ export class UiFormPercentComponent implements OnInit {
         });
     }
 
-    save1(formValues) {
+    save(formValues) {
         console.log('save', formValues);
     }
 
