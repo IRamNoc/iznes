@@ -2,6 +2,7 @@ import {Action} from 'redux';
 import * as MyDetailActions from './actions';
 import {MyDetailState} from './model';
 import * as _ from 'lodash';
+import * as moment from 'moment-timezone';
 
 const initialState: MyDetailState = {
     username: '',
@@ -50,7 +51,16 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const username = _.get(loginedData, 'UserName', '');
             emailAddress = _.get(loginedData, 'EMailAddress', '');
             const userId = _.get(loginedData, 'UserID', 0);
-            const lastLogin = _.get(loginedData, 'last_login', '');
+
+            const l = _.get(loginedData, 'last_login', '');
+            const lastLogin = moment(
+                l ? `${l} UTC+00:00` : moment().local().format('YYYY-MM-DD HH:mm:ss'),
+                'YYYY-MM-DD HH:mm:ss ZZ',
+                'utc',
+            )
+                .tz(moment.tz.guess())
+                .format('YYYY-MM-DD HH:mm:ss');
+
             const userType = _.get(loginedData, 'userType', 0);
             const userTypeStr = UserTypeStr[userType];
             const admin = !!_.get(loginedData, 'admin', 0);
