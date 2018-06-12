@@ -7,10 +7,10 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    Output
+    Output,
 } from '@angular/core';
-import {APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
+import { APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     addWalletNodeInitialSnapshot,
     clearRequestedMailInitial,
@@ -23,10 +23,10 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setMenuShown,
-    setRequestedMailInitial
+    setRequestedMailInitial,
 } from '@setl/core-store';
-import {fromJS} from 'immutable';
-import {MultilingualService} from '@setl/multilingual/multilingual.service';
+import { fromJS } from 'immutable';
+import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
 
 import {
@@ -35,421 +35,438 @@ import {
     MyMessagesService,
     MyUserService,
     MyWalletsService,
-    WalletNodeRequestService
+    WalletNodeRequestService,
 } from '@setl/core-req-services';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
-    selector: 'app-navigation-topbar',
-    templateUrl: './navigation-topbar.component.html',
-    styleUrls: ['./navigation-topbar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-navigation-topbar',
+  templateUrl: './navigation-topbar.component.html',
+  styleUrls: ['./navigation-topbar.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
-    walletSelectItems: Array<any>;
-    searchForm: FormGroup;
-    selectedWalletId = new FormControl();
+  walletSelectItems: any[];
+  searchForm: FormGroup;
+  selectedWalletId = new FormControl();
 
-    connectedToWalletNode: boolean;
+  connectedToWalletNode: boolean;
 
-    remainingSecond: number;
-    showCountdownModal: boolean;
+  remainingSecond: number;
+  showCountdownModal: boolean;
 
-    appConfig: AppConfig;
-    topbarLogoUrl: string;
-    profileMenu: Array<MenuItem>;
+  appConfig: AppConfig;
+  topbarLogoUrl: string;
+  profileMenu: MenuItem[];
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+  subscriptionsArray: Subscription[] = [];
 
-    public hasMail = {};
-    public unreadMessageCount;
+  public hasMail = {};
+  public unreadMessageCount;
 
-    public currentUserDetails;
-    public username;
-    public lastLogin;
-    public menuState;
+  public currentUserDetails;
+  public username;
+  public lastLogin;
+  public menuState;
 
-    public missingTranslations = [];
-    public responsesService = <any>[];
-    showMissingTranslations = false;
-    showHighlightTranslations = true;
-    nbMaxTranslationsToProcess = 60;
+  public missingTranslations = [];
+  public responsesService = <any>[];
+  showMissingTranslations = false;
+  showHighlightTranslations = true;
+  nbMaxTranslationsToProcess = 60;
 
-    isSaving = false;
+  isSaving = false;
 
-    @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
+  @Output() toggleSidebar: EventEmitter<any> = new EventEmitter();
 
-    @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
-    @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
-    @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
-    @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+  @select(['message', 'myMessages', 'requestMailInitial']) requestMailInitial;
+  @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
+  @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
+  @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+  @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
-    constructor(private ngRedux: NgRedux<any>,
-                private myWalletsService: MyWalletsService,
-                private messageService: MyMessagesService,
-                private walletNodeRequestService: WalletNodeRequestService,
-                private fb: FormBuilder,
-                private router: Router,
-                private _myUserService: MyUserService,
-                private walletNodeSocketService: WalletNodeSocketService,
-                private changeDetectorRef: ChangeDetectorRef,
-                public _translate: MultilingualService,
-                private memberSocketService: MemberSocketService,
-                private channelService: ChannelService,
-                private initialisationService: InitialisationService,
-                private logService: LogService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+  constructor(private ngRedux: NgRedux<any>,
+              private myWalletsService: MyWalletsService,
+              private messageService: MyMessagesService,
+              private walletNodeRequestService: WalletNodeRequestService,
+              private fb: FormBuilder,
+              private router: Router,
+              private myUserService: MyUserService,
+              private walletNodeSocketService: WalletNodeSocketService,
+              private changeDetectorRef: ChangeDetectorRef,
+              public translate: MultilingualService,
+              private memberSocketService: MemberSocketService,
+              private channelService: ChannelService,
+              private initialisationService: InitialisationService,
+              private logService: LogService,
+              @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
-        this.searchForm = fb.group({});
+    this.searchForm = fb.group({});
 
-        this.connectedToWalletNode = false;
+    this.connectedToWalletNode = false;
 
-        this.appConfig = appConfig;
-        this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
-        this.showCountdownModal = false;
-        this.unreadMessageCount = 0;
+    this.appConfig = appConfig;
+    this.topbarLogoUrl = this.appConfig.topbarLogoUrl;
+    this.showCountdownModal = false;
+    this.unreadMessageCount = 0;
 
-        ngRedux.subscribe(() => this.updateState());
-        this.updateState();
+    ngRedux.subscribe(() => this.updateState());
+    this.updateState();
+  }
+
+  updateState() {
+    const newState = this.ngRedux.getState();
+    const currentWalletsList = getMyWalletList(newState);
+
+    this.walletSelectItems = walletListToSelectItem(currentWalletsList);
+
+    this.currentUserDetails = getMyDetail(newState);
+    this.username = this.currentUserDetails.firstName;
+
+    if (this.username === '' || this.username === null) {
+      this.username = this.currentUserDetails.username;
     }
 
-    updateState() {
-        const newState = this.ngRedux.getState();
-        const currentWalletsList = getMyWalletList(newState);
+    this.lastLogin = this.currentUserDetails.lastLogin;
 
-        this.walletSelectItems = walletListToSelectItem(currentWalletsList);
+    if (this.lastLogin === '' || this.lastLogin === null) {
+      this.lastLogin = Date.now();
+    }
 
-        this.currentUserDetails = getMyDetail(newState);
-        this.username = this.currentUserDetails.firstName;
+    const chainAccess = getDefaultMyChainAccess(newState);
 
-        if (this.username === '' || this.username === null) {
-            this.username = this.currentUserDetails.username;
-        }
+    if (!this.connectedToWalletNode && chainAccess && this.walletSelectItems.length > 0) {
 
-        this.lastLogin = this.currentUserDetails.lastLogin;
+      this.connectedToWalletNode = true;
 
-        if (this.lastLogin === '' || this.lastLogin === null) {
-            this.lastLogin = Date.now();
-        }
+      const myAuthenData = getAuthentication(newState);
+      const myDetail = getMyDetail(newState);
+      const { userId } = myDetail;
+      const { apiKey } = myAuthenData;
+      const protocol = this.appConfig.production ? 'wss' : 'ws';
+      const hostName = _.get(chainAccess, 'nodeAddress', '');
+      const port = _.get(chainAccess, 'nodePort', 0);
+      const nodePath = _.get(chainAccess, 'nodePath', '');
 
-        const chainAccess = getDefaultMyChainAccess(newState);
-
-        if (!this.connectedToWalletNode && chainAccess && this.walletSelectItems.length > 0) {
-
-            this.connectedToWalletNode = true;
-
-            const myAuthenData = getAuthentication(newState);
-            const myDetail = getMyDetail(newState);
-            const {userId} = myDetail;
-            const {apiKey} = myAuthenData;
-            const protocol = this.appConfig.production ? 'wss' : 'ws';
-            const hostName = _.get(chainAccess, 'nodeAddress', '');
-            const port = _.get(chainAccess, 'nodePort', 0);
-            const nodePath = _.get(chainAccess, 'nodePath', '');
-
-            this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
+      this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
                 .then((res) => {
-                    // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
-                    if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                        this.selectedWalletId.setValue([this.walletSelectItems[0]], {
-                            onlySelf: true,
-                            emitEvent: true,
-                            emitModelToViewChange: true,
-                            emitViewToModelChange: true
-                        });
-                        this.logService.log(this.walletSelectItems[0]);
-                        this.selected(this.walletSelectItems[0]);
+                    // Set connected wallet, if we got the wallet list and
+                  // there is not wallet is chosen.
+                  if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                      onlySelf: true,
+                      emitEvent: true,
+                      emitModelToViewChange: true,
+                      emitViewToModelChange: true,
+                    });
+                    this.logService.log(this.walletSelectItems[0]);
+                    this.selected(this.walletSelectItems[0]);
 
                         /* set the chain id as the connected one in redux store */
-                        const chainId = _.get(chainAccess, 'chainId', '');
-                        this.ngRedux.dispatch(setConnectedChain(chainId));
+                    const chainId = _.get(chainAccess, 'chainId', '');
+                    this.ngRedux.dispatch(setConnectedChain(chainId));
 
-                        this.changeDetectorRef.markForCheck();
-                    }
+                    this.changeDetectorRef.markForCheck();
+                  }
 
-                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
-                        let action = addWalletNodeInitialSnapshot(initialSnapshot);
-                        this.ngRedux.dispatch(action);
+                  this.walletNodeRequestService.requestWalletNodeInitialSnapshot().
+                    then((initialSnapshot: any) => {
+                      const action = addWalletNodeInitialSnapshot(initialSnapshot);
+                      this.ngRedux.dispatch(action);
                     });
                 });
 
-        }
-        this.changeDetectorRef.markForCheck();
-
     }
+    this.changeDetectorRef.markForCheck();
 
-    ngOnInit() {
-        this.subscriptionsArray.push(this._translate.getLanguage.subscribe((data) => {
-            const currentState = this.ngRedux.getState();
-            const currentUserDetails = getMyDetail(currentState);
-            const userType = currentUserDetails.userType;
-            const userTypeStr = {
-                '15': 'system_admin',
-                '25': 'chain_admin',
-                '27': 'bank',
-                '35': 'member_user',
-                '36': 'am',
-                '45': 'standard_user',
-                '46': 'investor',
-                '47': 'valuer',
-                '48': 'custodian',
-                '49': 'cac',
-                '50': 'registrar',
-                '60': 't2s',
-                '65': 'rooster_operator',
-            }[userType];
-            this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
-        }));
+  }
+
+  ngOnInit() {
+    this.subscriptionsArray.push(this.translate.getLanguage.subscribe((data) => {
+      const currentState = this.ngRedux.getState();
+      const currentUserDetails = getMyDetail(currentState);
+      const userType = currentUserDetails.userType;
+      const userTypeStr = {
+        15: 'system_admin',
+        25: 'chain_admin',
+        27: 'bank',
+        35: 'member_user',
+        36: 'am',
+        45: 'standard_user',
+        46: 'investor',
+        47: 'valuer',
+        48: 'custodian',
+        49: 'cac',
+        50: 'registrar',
+        60: 't2s',
+        65: 'rooster_operator',
+      }[userType];
+      this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+    }));
 
         // When membernode reconnect. trigger wallet select.
-        this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
+    this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
 
                 // Subscribe to my connection channel, target for my userId
-                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService)
+      InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
 
-                if (!this.selectedWalletId.value) {
-                    return;
-                }
+      if (!this.selectedWalletId.value) {
+        return;
+      }
 
-                this.selected(this.selectedWalletId.value[0]);
-            }
+      this.selected(this.selectedWalletId.value[0]);
+    },
         ));
-    }
+  }
 
-    ngAfterViewInit() {
-        this.subscriptionsArray.push(this.requestMailInitial.subscribe(
+  ngAfterViewInit() {
+    this.subscriptionsArray.push(this.connectedWalletOb.subscribe(
+              (walletId) => {
+                const selectedItem = this.walletSelectItems.find(
+                  (walletItem) => { return walletItem.id === walletId; },
+                );
+                this.selectedWalletId.patchValue([selectedItem]);
+              },
+          ),
+        );
+    this.subscriptionsArray.push(this.requestMailInitial.subscribe(
             (requestedState) => {
-                this.requestMailInitialCounts(requestedState);
-            }
+              this.requestMailInitialCounts(requestedState);
+            },
         ));
 
-        this.subscriptionsArray.push(this.inboxUnread.subscribe(
+    this.subscriptionsArray.push(this.inboxUnread.subscribe(
             (unreadMessages) => {
-                this.triggerUnreadMessages(unreadMessages);
-            }
+              this.triggerUnreadMessages(unreadMessages);
+            },
         ));
 
-        this.subscriptionsArray.push(this.menuShowOb.subscribe(
+    this.subscriptionsArray.push(this.menuShowOb.subscribe(
             (menuState) => {
-                this.menuState = menuState;
-                this.menuHasChanged();
-            }
+              this.menuState = menuState;
+              this.menuHasChanged();
+            },
         ));
 
-        this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
+    this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
             (memberNodeSessionManager) => {
-                this.showCountdownModal = _.get(memberNodeSessionManager, 'startCountDown', 0);
+              this.showCountdownModal = _.get(memberNodeSessionManager, 'startCountDown', 0);
 
-                const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
-                this.remainingSecond = remainingSecond;
+              const remainingSecond = _.get(memberNodeSessionManager, 'remainingSecond', 0);
+              this.remainingSecond = remainingSecond;
 
-                if (remainingSecond <= 0) {
-                    this.router.navigateByUrl('');
-                    this.logout();
-                }
+              if (remainingSecond <= 0) {
+                this.router.navigateByUrl('');
+                this.logout();
+              }
 
-                this.changeDetectorRef.detectChanges();
-            }
+              this.changeDetectorRef.detectChanges();
+            },
         ));
 
-        this.logService.log(window.innerWidth);
+    this.logService.log(window.innerWidth);
 
-        this.ngRedux.dispatch(setMenuShown(true));
-    }
+    this.ngRedux.dispatch(setMenuShown(true));
+  }
 
-    public getMissingTranslations() {
+  public getMissingTranslations() {
         // reset
-        this.missingTranslations = [];
-        this.responsesService = [];
-        // get translatation
-        const tr = this._translate.getTranslations();
+    this.missingTranslations = [];
+    this.responsesService = [];
+        // get translation
+    const tr = this.translate.getTranslations();
         // clone
-        this.missingTranslations = _.clone(tr);
-        this.showMissingTranslations = true;
+    this.missingTranslations = _.clone(tr);
+    this.showMissingTranslations = true;
 
-        this.doHighlight();
+    this.doHighlight();
 
         // this.changeDetectorRef.markForCheck();
         // this.changeDetectorRef.detectChanges();
-    }
+  }
 
-    doHighlight() {
-        if (this.showHighlightTranslations) {
-            this.highlightMissingTranslations();
-        } else {
-            this._translate.removeHighlightMissingTranslations();
+  doHighlight() {
+    if (this.showHighlightTranslations) {
+      this.highlightMissingTranslations();
+    } else {
+      this.translate.removeHighlightMissingTranslations();
+    }
+  }
+
+  highlightMissingTranslations() {
+    for (const tr of this.missingTranslations) {
+      this.translate.replaceMissingTranslations(tr.translation);
+    }
+  }
+
+  async generateTranslations() {
+    if (this.missingTranslations.length > 0) {
+      const nbMax1 = (this.missingTranslations.length > this.nbMaxTranslationsToProcess) ? this.nbMaxTranslationsToProcess : this.missingTranslations.length;
+      if (nbMax1 > 0) {
+        for (let i = 0; i < nbMax1; i++) {
+          this.responsesService.push({
+            response: await this.translate.addNewTranslation({
+              mltag: this.missingTranslations[i].mltag,
+              value: this.missingTranslations[i].original,
+              location: this.missingTranslations[i].from,
+            }),
+            translation: this.missingTranslations[i],
+          });
         }
-    }
-
-    highlightMissingTranslations(){
-        for (let tr of this.missingTranslations) {
-            this._translate.replaceMissingTranslations(tr.translation);
-        }
-    }
-
-    async generateTranslations() {
-        if (this.missingTranslations.length > 0) {
-            const nbMax1 = (this.missingTranslations.length > this.nbMaxTranslationsToProcess) ? this.nbMaxTranslationsToProcess : this.missingTranslations.length;
-            if (nbMax1 > 0) {
-                for (let i = 0; i < nbMax1; i++) {
-                    this.responsesService.push({
-                        response: await this._translate.addNewTranslation({
-                            mltag: this.missingTranslations[i].mltag,
-                            value: this.missingTranslations[i].original,
-                            location: this.missingTranslations[i].from
-                        }),
-                        translation: this.missingTranslations[i],
-                    });
+        const nbMax2 = this.responsesService.length;
+        if (nbMax2 > 0) {
+          const idList = [];
+          let trFound = undefined;
+          let ix = -1;
+          for (let i = 0; i < nbMax2; i++) {
+            if (this.responsesService[i].response.ok) {
+              trFound = this.missingTranslations.find((item) =>
+                item.original === this.responsesService[i].translation.original,
+              );
+              if (trFound !== undefined) {
+                ix = this.missingTranslations.indexOf(trFound);
+                if (ix !== -1 && ix !== undefined) {
+                  idList.push(ix);
                 }
-                const nbMax2 = this.responsesService.length;
-                if (nbMax2 > 0) {
-                    let idList = [];
-                    let trFound = undefined;
-                    let ix = -1;
-                    for (let i = 0; i < nbMax2; i++) {
-                        if (this.responsesService[i].response.ok) {
-                            trFound = this.missingTranslations.find((item) => item.original === this.responsesService[i].translation.original);
-                            if (trFound !== undefined) {
-                                ix = this.missingTranslations.indexOf(trFound);
-                                if (ix !== -1 && ix !== undefined) {
-                                    idList.push(ix);
-                                }
-                            }
-                        }
-                    }
-                    if (idList.length > 0) {
-                        for (let i = 0; i < idList.length; i++) {
-                            this.missingTranslations.splice(idList[i] - i, 1);
-                        }
-                    }
-                }
+              }
             }
+          }
+          if (idList.length > 0) {
+            for (let i = 0; i < idList.length; i++) {
+              this.missingTranslations.splice(idList[i] - i, 1);
+            }
+          }
         }
-        this.isSaving = false;
-        this.changeDetectorRef.markForCheck();
+      }
+    }
+    this.isSaving = false;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptionsArray) {
+      subscription.unsubscribe();
+    }
+  }
+
+  public triggerUnreadMessages(unreadMessages) {
+
+    let messageState = false;
+
+    if (unreadMessages > 0) {
+      messageState = true;
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-    }
+    this.hasMail = {
+      'has-badge': messageState,
+    };
 
-    public triggerUnreadMessages(unreadMessages) {
+    this.unreadMessageCount = unreadMessages;
 
-        let messageState = false;
+    this.changeDetectorRef.markForCheck();
+  }
 
-        if (unreadMessages > 0) {
-            messageState = true;
-        }
+  public callToggleSidebar(event) {
+    this.toggleSidebar.emit(event);
+  }
 
-        this.hasMail = {
-            'has-badge': messageState
-        };
-
-        this.unreadMessageCount = unreadMessages;
-
-        this.changeDetectorRef.markForCheck();
-    }
-
-    public callToggleSidebar(event) {
-        this.toggleSidebar.emit(event);
-    }
-
-    public selected(value: any): void {
-        this.logService.log('Selected value is: ', value);
-        this.logService.log(this.selectedWalletId);
+  public selected(value: any): void {
+    this.logService.log('Selected value is: ', value);
+    this.logService.log(this.selectedWalletId);
 
         // Set connected wallet in redux state.
-        this.ngRedux.dispatch(setConnectedWallet(value.id));
+    this.ngRedux.dispatch(setConnectedWallet(value.id));
 
         // Create a saga pipe.
-        const asyncTaskPipe = this.myWalletsService.setActiveWallet(
-            value.id
+    const asyncTaskPipe = this.myWalletsService.setActiveWallet(
+            value.id,
         );
 
         // Get response from set active wallet
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe)
+    this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe),
         );
 
         // // Request initial data from wallet node.
-        InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, value.id);
+    InitialisationService.walletnodeInitialisation(
+      this.ngRedux,
+      this.walletNodeRequestService,
+      value.id,
+    );
 
-        this.ngRedux.dispatch(clearRequestedMailInitial());
+    this.ngRedux.dispatch(clearRequestedMailInitial());
+    this.ngRedux.dispatch(clearRequestedWalletLabel());
+  }
 
-        this.ngRedux.dispatch(clearRequestedWalletLabel());
+  public removed(value: any): void {
+    this.logService.log('Removed value is: ', value);
+  }
+
+  logout() {
+    this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+  }
+
+  controlMenu() {
+    this.logService.log('menu pressed');
+
+    if (this.menuState) {
+      this.ngRedux.dispatch(setMenuShown(false));
+    } else {
+      this.ngRedux.dispatch(setMenuShown(true));
     }
+  }
 
-    public removed(value: any): void {
-        this.logService.log('Removed value is: ', value);
-    }
+  menuHasChanged() {
+    this.logService.log('menu has changed');
+    this.logService.log(this.menuState);
+  }
 
-    logout() {
-        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
-    }
-
-    controlMenu() {
-        this.logService.log('menu pressed');
-
-        if (this.menuState) {
-            this.ngRedux.dispatch(setMenuShown(false));
-        } else {
-            this.ngRedux.dispatch(setMenuShown(true));
-        }
-    }
-
-    menuHasChanged() {
-        this.logService.log('menu has changed');
-        this.logService.log(this.menuState);
-    }
-
-    requestMailInitialCounts(requestedState: boolean): void {
+  requestMailInitialCounts(requestedState: boolean): void {
 
         // If the state is false, that means we need to request the list.
-        if (!requestedState) {
+    if (!requestedState) {
             // Set the state flag to true. so we do not request it again.
-            this.ngRedux.dispatch(setRequestedMailInitial());
+      this.ngRedux.dispatch(setRequestedMailInitial());
 
             // Request the list.
-            const asyncTaskPipe = this.messageService.requestMailInit(this.selectedWalletId.value[0].id);
+      const asyncTaskPipe = this.messageService.requestMailInit(this.selectedWalletId.value[0].id);
 
-            this.ngRedux.dispatch(SagaHelper.runAsync(
+      this.ngRedux.dispatch(SagaHelper.runAsync(
                 [SET_MESSAGE_COUNTS],
                 [],
                 asyncTaskPipe,
-                {}
+                {},
             ));
 
-        }
     }
+  }
 
-    handleExtendSession() {
-        this._myUserService.defaultRefreshToken(this.ngRedux);
-    }
+  handleExtendSession() {
+    this.myUserService.defaultRefreshToken(this.ngRedux);
+  }
 }
 
 /**
  * Convert wallet Address to an array the select2 can use to render a list a wallet address.
- * @param walletAddressList
+ * @param walletsList
  * @return {any}
  */
 function walletListToSelectItem(walletsList: object): Array<any> {
-    const walletListImu = fromJS(walletsList);
-    const walletsSelectItem = walletListImu.map(
+  const walletListImu = fromJS(walletsList);
+  const walletsSelectItem = walletListImu.map(
         (thisWallet) => {
-            return {
-                id: thisWallet.get('walletId'),
-                text: thisWallet.get('walletName')
-            };
-        }
+          return {
+            id: thisWallet.get('walletId'),
+            text: thisWallet.get('walletName'),
+          };
+        },
     );
 
-    return walletsSelectItem.toArray();
+  return walletsSelectItem.toArray();
 }
