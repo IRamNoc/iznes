@@ -214,6 +214,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Ignore("need more KYC users")
     public void shouldShowPopUpMoreInformationKYCTG1108() throws InterruptedException, SQLException, IOException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         String compName = "JDN Corp";
 
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
@@ -242,6 +243,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Test
     public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         String[] uShareDetails = generateRandomFundsDetails();
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
