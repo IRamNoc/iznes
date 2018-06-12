@@ -50,13 +50,17 @@ export class CalendarHelper {
     }
 
     get tradeTimeZoneOffset(): any {
-        const timeZonString = {
-            [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
-            E.TimezonesEnum.UTC,
-            [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
-        }[this.orderType];
+        try {
+            const timeZonString = {
+                [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
+                E.TimezonesEnum.UTC,
+                [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
+            }[this.orderType];
 
-        return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
+            return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
+        } catch (e) {
+            return 0;
+        }
 
     }
 
@@ -428,7 +432,7 @@ export class CalendarHelper {
 
     getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
                           tradeTimeZoneOffSet: number): moment {
-        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
         const timeZoneDiff = currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
 
         // work out the current date's cutoff
@@ -442,7 +446,7 @@ export class CalendarHelper {
     }
 
     getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
-        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
         return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
     }
 
