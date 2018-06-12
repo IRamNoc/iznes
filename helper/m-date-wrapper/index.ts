@@ -1,4 +1,4 @@
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 
 /**
  * moment js add wrapper.
@@ -84,4 +84,18 @@ export function convertToLocal(date: Date, formatStr: string) {
  */
 export function convertUtcStrToLocalStr(dateTimeStr: string, formatStr: string) {
     return moment.utc(dateTimeStr, formatStr).local().format(formatStr);
+}
+
+/**
+ * Get a list of timezone moment support, in ng2-select format
+ * @return {Array<{id: string, text: string}>}
+ */
+export function getMomentTimeZoneNameList() {
+    const nameList = [];
+
+    moment.tz.names().map((name) => {
+        nameList.push({ id: name, text: name });
+    });
+
+    return nameList;
 }
