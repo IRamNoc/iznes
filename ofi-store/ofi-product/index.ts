@@ -72,6 +72,7 @@ import {
     SET_PRODUCT_CHARACTERISTICS,
     productCharacteristicsReducer,
     productCharacteristicsState,
+    setProductCharacteristics,
 } from './product-characteristics';
 
 import {
@@ -234,6 +235,7 @@ export {
     // PRODUCT CHARACTERISTICS
     SET_REQUESTED_PRODUCT_CHARACTERISTICS,
     SET_PRODUCT_CHARACTERISTICS,
+    setProductCharacteristics,
 };
 
 export interface OfiProductState {

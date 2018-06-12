@@ -83,6 +83,7 @@ import productConfig from './productConfig';
         DynamicFormsModule,
         SetlComponentsModule,
         FileViewerModule,
+        FileDropModule,
     ],
     providers: [
         FundShareAuditService,

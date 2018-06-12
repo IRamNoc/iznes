@@ -1,4 +1,4 @@
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 
 import * as actions from './actions';
 
@@ -6,12 +6,14 @@ import { productCharacteristics } from './model';
 
 export interface productCharacteristicsState {
     requested: boolean;
-    product: productCharacteristics|Map<any, any>;
+    product: Map<string, any>;
+    productList: List<string>;
 }
 
 const initialState: productCharacteristicsState = {
     requested: false,
     product: Map(),
+    productList: List(),
 };
 
 /**
@@ -24,18 +26,23 @@ const initialState: productCharacteristicsState = {
 export const productCharacteristicsReducer = (state = initialState, action) => {
     switch (action.type) {
     case actions.SET_PRODUCT_CHARACTERISTICS:
+        if (!action.payload[1].Data.length) {
+            return state;
+        }
+
         const data = action.payload[1].Data[0];
-        const product = Map({
+        const newProduct = state.product.set(data.isin, Map({
             ...data,
             distributionPolicy: JSON.parse(data.distributionPolicy),
             srri: JSON.parse(data.srri),
             sri: JSON.parse(data.sri),
             recommendedHoldingPeriod: JSON.parse(data.recommendedHoldingPeriod),
-        });
+        }));
 
         return {
             ...state,
-            product,
+            product: newProduct,
+            productList: state.productList.push(data.isin),
         };
 
     case actions.SET_REQUESTED_PRODUCT_CHARACTERISTICS:

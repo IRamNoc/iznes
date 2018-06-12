@@ -12,6 +12,7 @@ import {
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/product-characteristics/service';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { NumberConverterService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     StatusEnum,
@@ -33,19 +34,20 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
         4: false,
     };
 
+    isin: string;
     legalFormItems = [];
     currentProduct = {
         fundShareName: '',
         isin: '',
         prospectus: {
-            id: '',
+            fileID: '',
             hash: '',
-            filename: '',
+            name: '',
         },
         kiid: {
-            id: '',
+            fileID: '',
             hash: '',
-            filename: '',
+            name: '',
         },
         shareClassCurrency: '',
     };
@@ -61,6 +63,7 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
         private productCharacteristicsService: ProductCharacteristicsService,
         private currenciesService: OfiCurrenciesService,
         private numConverter: NumberConverterService,
+        public translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
         this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
@@ -73,6 +76,7 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
             .subscribe((params) => {
                 if (params.isin) {
                     this.productCharacteristicsService.getProductCharacteristics(params.isin);
+                    this.isin = params.isin;
                 }
             });
 
@@ -80,11 +84,10 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
             .takeUntil(this.unSubscribe)
             .subscribe(([c, p]) => {
                 const currencies = c.toJS();
-                const d = p.toJS();
-
-                if (!currencies.length || !Object.keys(d).length) {
+                if (!currencies.length || !p.get(this.isin)) {
                     return;
                 }
+                const d = p.get(this.isin).toJS();
 
                 const shareClassCurrency = _.find(currencies, { id: d.shareClassCurrency }).text;
                 const prospectus = d.prospectus || '|||';
@@ -105,14 +108,14 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
                     sri: _.get(d.sri, [0, 'text']),
                     distributionPolicy: _.get(d.distributionPolicy, [0, 'text']),
                     prospectus: {
-                        id: prospectus.split('|')[0],
+                        fileID: prospectus.split('|')[0],
                         hash: prospectus.split('|')[1],
-                        filename: prospectus.split('|')[2],
+                        name: prospectus.split('|')[2],
                     },
                     kiid: {
-                        id: kiid.split('|')[0],
+                        fileID: kiid.split('|')[0],
                         hash: kiid.split('|')[1],
-                        filename: kiid.split('|')[2],
+                        name: kiid.split('|')[2],
                     },
                     legalForm,
                     shareClassCurrency,
@@ -131,6 +134,8 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
                     maxRedemptionFee: this.numConverter.toFrontEnd(d.maxRedemptionFee),
                     minInitialSubscriptionInShare: this.numConverter.toFrontEnd(d.minInitialSubscriptionInShare),
                     minSubsequentRedemptionInShare: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInShare),
+                    initialNav: this.numConverter.toFrontEnd(d.initialNav),
+                    latestNav: this.numConverter.toFrontEnd(d.latestNav),
                 };
 
             });

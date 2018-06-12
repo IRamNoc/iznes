@@ -36,6 +36,6 @@ interface setProductCharacteristics extends Action {
 }
 
 export const setProductCharacteristics: ActionCreator<setProductCharacteristics> = payload => ({
-    type: OFI_SET_CURRENT_PRODUCT_CHARACTERISTICS,
+    type: SET_REQUESTED_PRODUCT_CHARACTERISTICS,
     payload,
 });

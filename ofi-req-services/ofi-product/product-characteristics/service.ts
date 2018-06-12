@@ -3,6 +3,7 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { NgRedux, select } from '@angular-redux/store';
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import { SagaHelper } from '@setl/utils';
+import { Location } from '@angular/common';
 import {
     ProductCharacteristicsRequestBody,
 } from './model';
@@ -13,19 +14,31 @@ import {
 
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
+import { List } from 'immutable';
+import * as _ from 'lodash';
 
 @Injectable()
 export class ProductCharacteristicsService implements OnDestroy {
 
+    productList = List();
+
     unSubscribe: Subject<any> = new Subject();
 
-    @select(['ofi', 'ofi-product', 'product-characteristics', 'requested']) productCharacteristicsRequested$;
+    @select(['ofi', 'ofiProduct', 'ofiProductCharacteristics', 'productList']) productList$;
 
     constructor(
         private memberSocketService: MemberSocketService,
+        private location: Location,
         private ngRedux: NgRedux<any>,
     ) {
-
+        this.productList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (!d) {
+                    return;
+                }
+                this.productList = d;
+            });
     }
 
     ngOnDestroy() {
@@ -35,14 +48,10 @@ export class ProductCharacteristicsService implements OnDestroy {
 
     getProductCharacteristics(isin: string) {
 
-        this.productCharacteristicsRequested$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                if (d) {
-                    return;
-                }
-                this.fetchProductCharacteristics(isin);
-            });
+        if (this.productList.includes(isin)) {
+            return;
+        }
+        this.fetchProductCharacteristics(isin);
 
     }
 
@@ -60,7 +69,11 @@ export class ProductCharacteristicsService implements OnDestroy {
             [],
             asyncTaskPipe,
             {},
-            () => {
+            (res) => {
+                if (!res[1].Data.length) {
+                    this.location.back();
+                    return;
+                }
                 this.ngRedux.dispatch({
                     type: SET_REQUESTED_PRODUCT_CHARACTERISTICS,
                 });
