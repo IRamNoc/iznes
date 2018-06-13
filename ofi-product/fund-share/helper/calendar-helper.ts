@@ -1,4 +1,4 @@
-import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import { IznShareDetailWithNav } from './order-helper';
 import { OrderType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as momentTz from 'moment-timezone';
@@ -36,7 +36,7 @@ export const DAY_NUMBER = {
 };
 
 export class CalendarHelper {
-    fundShare: IznesShareDetail;
+    fundShare: IznShareDetailWithNav;
     orderType: OrderType = OrderType.Subscription;
     fundShareHoliday: string [];
 
@@ -109,14 +109,24 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
-    constructor(fundShare: IznesShareDetail, fundShareHoliday: string[] = FRANCE_HOLIDAYS_2018) {
+    constructor(fundShare: IznShareDetailWithNav) {
         this.fundShare = fundShare;
 
-        this.fundShareHoliday = fundShareHoliday;
+        let holidays;
+        try {
+            holidays = JSON.parse(fundShare.holidayMgmtConfig);
+
+            if (!(holidays instanceof Array)) {
+                holidays = FRANCE_HOLIDAYS_2018;
+            }
+
+        } catch (e) {
+            holidays = FRANCE_HOLIDAYS_2018;
+        }
 
         // set holidays
         moment.locale('fr', {
-            holidays: FRANCE_HOLIDAYS_2018,
+            holidays,
             holidayFormat: 'YYYY-MM-DD',
         });
     }
