@@ -231,7 +231,9 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                         return walletItem.id === walletId;
                     },
                 );
-                this.selectedWalletId.patchValue([selectedItem]);
+                if (typeof selectedItem !== 'undefined') {
+                    this.selectedWalletId.patchValue([selectedItem]);
+                }
             },
             ),
         );
@@ -457,7 +459,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
  * @param walletsList
  * @return {any}
  */
-function walletListToSelectItem(walletsList: object): Array<any> {
+function walletListToSelectItem(walletsList: object): any[] {
     const walletListImu = fromJS(walletsList);
     const walletsSelectItem = walletListImu.map(
         (thisWallet) => {
