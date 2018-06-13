@@ -1,49 +1,7 @@
-import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
+import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
-export class ShareKeyFactsMandatory extends DynamicFormsValidator {
-    fundShareName: FormItem = {
-        type: FormItemType.text,
-        label: 'Full Share Name',
-        required: true,
-        mltag: 'txt_fundshare_name'
-    }
-    isin: FormItem = {
-        type: FormItemType.text,
-        label: 'ISIN',
-        required: true,
-        mltag: 'txt_fundshare_isin'
-    }
-    shareClassCode: FormItem = {
-        type: FormItemType.text,
-        label: 'Share Class Code',
-        required: true,
-        mltag: 'txt_fundshare_classcode'        
-    }
-    shareClassCurrency: FormItem = {
-        type: FormItemType.list,
-        label: 'Share Class Currency',
-        required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' }
-        ],
-        mltag: 'txt_fundshare_classcurrency'
-    }
-    subscriptionStartDate: FormItem = {
-        type: FormItemType.date,
-        label: 'Subscription Period Start Date',
-        required: true,
-        style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_substartdate'
-    }
-    shareLaunchDate: FormItem = {
-        type: FormItemType.date,
-        label: 'Share Class Launch Date',
-        required: true,
-        mltag: 'txt_fundshare_launchdate'
-    }
+export class ShareKeyFactsStatus extends DynamicFormsValidator {
     shareClassInvestmentStatus: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Investment Status',
@@ -53,10 +11,55 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.InvestmentStatusEnum.SoftClosed, text: 'Soft closed' },
             { id: E.InvestmentStatusEnum.HardClosed, text: 'Hard Closed' },
             { id: E.InvestmentStatusEnum.ClosedRedemption, text: 'Closed for redemption' },
-            { id: E.InvestmentStatusEnum.ClosedSubscriptionRedemption, text: 'Closed for subscription and redemption' }
+            { id: E.InvestmentStatusEnum.ClosedSubscriptionRedemption, text: 'Closed for subscription and redemption' },
         ],
-        mltag: 'txt_fundshare_classinveststatus'
-    }
+        mltag: 'txt_fundshare_classinveststatus',
+    };
+}
+
+export class ShareKeyFactsMandatory extends DynamicFormsValidator {
+    fundShareName: FormItem = {
+        type: FormItemType.text,
+        label: 'Full Share Name',
+        required: true,
+        mltag: 'txt_fundshare_name',
+    };
+    isin: FormItem = {
+        type: FormItemType.text,
+        label: 'ISIN',
+        required: true,
+        mltag: 'txt_fundshare_isin',
+    };
+    shareClassCode: FormItem = {
+        type: FormItemType.text,
+        label: 'Share Class Code',
+        required: true,
+        mltag: 'txt_fundshare_classcode',
+    };
+    shareClassCurrency: FormItem = {
+        type: FormItemType.list,
+        label: 'Share Class Currency',
+        required: true,
+        listItems: [
+            { id: E.CurrencyEnum.EUR, text: 'EUR' },
+            { id: E.CurrencyEnum.GBP, text: 'GBP' },
+            { id: E.CurrencyEnum.USD, text: 'USD' },
+        ],
+        mltag: 'txt_fundshare_classcurrency',
+    };
+    subscriptionStartDate: FormItem = {
+        type: FormItemType.date,
+        label: 'Subscription Period Start Date',
+        required: true,
+        style: [FormItemStyle.BreakOnAfter],
+        mltag: 'txt_fundshare_substartdate',
+    };
+    shareLaunchDate: FormItem = {
+        type: FormItemType.date,
+        label: 'Share Class Launch Date',
+        required: true,
+        mltag: 'txt_fundshare_launchdate',
+    };
     status: FormItem = {
         type: FormItemType.list,
         label: 'Share Status',
@@ -64,10 +67,10 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         listItems: [
             { id: E.StatusEnum.Master, text: 'Master' },
             { id: E.StatusEnum.Feeder, text: 'Feeder' },
-            { id: E.StatusEnum.NA, text: 'N/A' }
+            { id: E.StatusEnum.NA, text: 'N/A' },
         ],
-        mltag: 'txt_fundshare_status'
-    }
+        mltag: 'txt_fundshare_status',
+    };
     // conditional - status
     feeder: FormItem = {
         type: FormItemType.list,
@@ -78,8 +81,8 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             return (val == undefined || !val[0]) || val[0].id !== E.StatusEnum.Feeder;
         },
         listItems: [],
-        mltag: 'txt_fundshare_feeder'
-    }
+        mltag: 'txt_fundshare_feeder',
+    };
     sharePortfolioCurrencyHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Currency Hedge',
@@ -88,11 +91,11 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.CurrencyHedgeEnum.NoHedge, text: 'No Hedge' },
             { id: E.CurrencyHedgeEnum.FullPortfolioHedge, text: 'Full Portfolio Hedge' },
             { id: E.CurrencyHedgeEnum.CurrencyOverlay, text: 'Currency overlay' },
-            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' }
+            { id: E.CurrencyHedgeEnum.PartialHedge, text: 'Partial Hedge' },
         ],
         style: [FormItemStyle.BreakOnBefore],
-        mltag: 'txt_fundshare_portfoliohedge'
-    }
+        mltag: 'txt_fundshare_portfoliohedge',
+    };
     valuationFrequency: FormItem = {
         type: FormItemType.list,
         label: 'Valuation Frequency',
@@ -107,28 +110,28 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.ValuationFrequencyEnum.TwiceAYear, text: 'Twice a Year' },
             { id: E.ValuationFrequencyEnum.Annually, text: 'Annually' },
             { id: E.ValuationFrequencyEnum.AtLeastAnnualy, text: 'At least Annualy' },
-            { id: E.ValuationFrequencyEnum.Other, text: 'Other' }
+            { id: E.ValuationFrequencyEnum.Other, text: 'Other' },
         ],
         style: [FormItemStyle.BreakOnBefore],
-        mltag: 'txt_fundshare_valuationfreq'
-    }
+        mltag: 'txt_fundshare_valuationfreq',
+    };
     historicOrForwardPricing: FormItem = {
         type: FormItemType.list,
         label: 'Historic or Forward Pricing',
         required: true,
         listItems: [
             { id: E.PricingTypeEnum.Historic, text: 'Historic' },
-            { id: E.PricingTypeEnum.Forward, text: 'Forward' }
+            { id: E.PricingTypeEnum.Forward, text: 'Forward' },
         ],
-        mltag: 'txt_fundshare_historforpricing'
-    }
+        mltag: 'txt_fundshare_historforpricing',
+    };
     hasCoupon: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Coupon',
         required: true,
         style: [FormItemStyle.SingleRow],
-        mltag: 'txt_fundshare_hascoupon'
-    }
+        mltag: 'txt_fundshare_hascoupon',
+    };
     // conditional - hasCoupon
     couponType: FormItem = {
         type: FormItemType.list,
@@ -137,13 +140,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         listItems: [
             { id: E.CouponTypeEnum.Interest, text: 'Interest' },
             { id: E.CouponTypeEnum.CapitalGain, text: 'Capital gain' },
-            { id: E.CouponTypeEnum.InterestCapitalGain, text: 'Interest & Capital gain' }
+            { id: E.CouponTypeEnum.InterestCapitalGain, text: 'Interest & Capital gain' },
         ],
         hidden: () => {
             return this.hasCoupon.value() === false || this.hasCoupon.value() === 0;
         },
-        mltag: 'txt_fundshare_coupontype'
-    }
+        mltag: 'txt_fundshare_coupontype',
+    };
     freqOfDistributionDeclaration: FormItem = {
         type: FormItemType.list,
         label: 'Frequency Of Distribution Declaration',
@@ -156,13 +159,13 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
             { id: E.FrequencyOfDistributionDeclarationEnum.Monthly, text: 'Monthly' },
             { id: E.FrequencyOfDistributionDeclarationEnum.Quartely, text: 'Quartely' },
             { id: E.FrequencyOfDistributionDeclarationEnum.TwiceAYear, text: 'Twice a year' },
-            { id: E.FrequencyOfDistributionDeclarationEnum.Annually, text: 'Annually' }
+            { id: E.FrequencyOfDistributionDeclarationEnum.Annually, text: 'Annually' },
         ],
         hidden: () => {
             return this.hasCoupon.value() === false || this.hasCoupon.value() === 0;
         },
-        mltag: 'txt_fundshare_freqdistdeclare'
-    }
+        mltag: 'txt_fundshare_freqdistdeclare',
+    };
 }
 
 export class ShareKeyFactsOptional {
@@ -170,57 +173,57 @@ export class ShareKeyFactsOptional {
         type: FormItemType.text,
         label: 'CUSIP',
         required: false,
-        mltag: 'txt_fundshare_cusip'
-    }
+        mltag: 'txt_fundshare_cusip',
+    };
     valor: FormItem = {
         type: FormItemType.number,
         label: 'Valor',
         required: false,
-        mltag: 'txt_fundshare_valor'
-    }
+        mltag: 'txt_fundshare_valor',
+    };
     wkn: FormItem = {
         type: FormItemType.text,
         label: 'WKN',
         required: false,
-        mltag: 'txt_fundshare_wkn'
-    }
+        mltag: 'txt_fundshare_wkn',
+    };
     bloombergCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code',
         required: false,
-        mltag: 'txt_fundshare_bloombergcode'
-    }
+        mltag: 'txt_fundshare_bloombergcode',
+    };
     sedol: FormItem = {
         type: FormItemType.text,
         label: 'SEDOL',
         required: false,
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_sedol'
-    }
+        mltag: 'txt_fundshare_sedol',
+    };
     dormantStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant Start Date',
         required: false,
-        mltag: 'txt_fundshare_dormantstartdate'
-    }
+        mltag: 'txt_fundshare_dormantstartdate',
+    };
     dormantEndDate: FormItem = {
         type: FormItemType.date,
         label: 'Dormant End Date',
         required: false,
-        mltag: 'txt_fundshare_dormantenddate'
-    }
+        mltag: 'txt_fundshare_dormantenddate',
+    };
     liquidationStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Liquidation Start Date',
         required: false,
-        mltag: 'txt_fundshare_liqstartdate'
-    }
+        mltag: 'txt_fundshare_liqstartdate',
+    };
     terminationDate: FormItem = {
         type: FormItemType.date,
         label: 'Share Class Termination Date',
         required: false,
-        mltag: 'txt_fundshare_terminationdate'
-    }
+        mltag: 'txt_fundshare_terminationdate',
+    };
     // conditional - classTerminationDate
     terminationDateExplanation: FormItem = {
         type: FormItemType.text,
@@ -229,8 +232,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return (this.terminationDate.value() as string).length === 0;
         },
-        mltag: 'txt_fundshare_termdateexplain'
-    }
+        mltag: 'txt_fundshare_termdateexplain',
+    };
     assetClass: FormItem = {
         type: FormItemType.list,
         label: 'Asset Class',
@@ -245,10 +248,10 @@ export class ShareKeyFactsOptional {
             { id: E.AssetClassEnum.MoneyMarket, text: 'Money Market' },
             { id: E.AssetClassEnum.Options, text: 'Options' },
             { id: E.AssetClassEnum.PrivateEquity, text: 'Private Equity' },
-            { id: E.AssetClassEnum.RealEstate, text: 'Real Estate' }
+            { id: E.AssetClassEnum.RealEstate, text: 'Real Estate' },
         ],
-        mltag: 'txt_fundshare_assetclass'
-    }
+        mltag: 'txt_fundshare_assetclass',
+    };
     geographicalArea: FormItem = {
         type: FormItemType.list,
         label: 'Geographical Area',
@@ -267,10 +270,10 @@ export class ShareKeyFactsOptional {
             { id: E.GeographicalAreaEnum.LatinAmericaEM, text: 'Latin America EM' },
             { id: E.GeographicalAreaEnum.MiddleEastAfricaEM, text: 'Middle East & Africa EM' },
             { id: E.GeographicalAreaEnum.UnitedKingdom, text: 'United Kingdom' },
-            { id: E.GeographicalAreaEnum.USA, text: 'USA' }
+            { id: E.GeographicalAreaEnum.USA, text: 'USA' },
         ],
-        mltag: 'txt_fundshare_geoarea'
-    }
+        mltag: 'txt_fundshare_geoarea',
+    };
     srri: FormItem = {
         type: FormItemType.list,
         label: 'SRRI (Synthetic Risk and Reward Indicator)',
@@ -282,10 +285,10 @@ export class ShareKeyFactsOptional {
             { id: 4, text: '4' },
             { id: 5, text: '5' },
             { id: 6, text: '6' },
-            { id: 7, text: '7' }
+            { id: 7, text: '7' },
         ],
-        mltag: 'txt_fundshare_srri'
-    }
+        mltag: 'txt_fundshare_srri',
+    };
     sri: FormItem = {
         type: FormItemType.list,
         label: 'SRI (Synthetic Risk Indicator)',
@@ -297,10 +300,10 @@ export class ShareKeyFactsOptional {
             { id: 4, text: '4' },
             { id: 5, text: '5' },
             { id: 6, text: '6' },
-            { id: 7, text: '7' }
+            { id: 7, text: '7' },
         ],
-        mltag: 'txt_fundshare_sri'
-    }
+        mltag: 'txt_fundshare_sri',
+    };
     navHedge: FormItem = {
         type: FormItemType.list,
         label: 'Share Class NAV Hedge',
@@ -308,10 +311,10 @@ export class ShareKeyFactsOptional {
         listItems: [
             { id: E.NavHedgeEnum.No, text: 'No' },
             { id: E.NavHedgeEnum.YesNav, text: 'Yes, 100% NAV Hedge' },
-            { id: E.NavHedgeEnum.YesResidual, text: 'Yes, residual hedge' }
+            { id: E.NavHedgeEnum.YesResidual, text: 'Yes, residual hedge' },
         ],
-        mltag: 'txt_fundshare_navhedge'
-    }
+        mltag: 'txt_fundshare_navhedge',
+    };
     distributionPolicy: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Distribution Policy',
@@ -319,10 +322,10 @@ export class ShareKeyFactsOptional {
         listItems: [
             { id: E.DistributionPolicyEnum.Accumulating, text: 'Accumulating' },
             { id: E.DistributionPolicyEnum.Distributing, text: 'Distributing' },
-            { id: E.DistributionPolicyEnum.Both, text: 'Accumulating & distributing' }
+            { id: E.DistributionPolicyEnum.Both, text: 'Accumulating & distributing' },
         ],
-        mltag: 'txt_fundshare_distpolicy'
-    }
+        mltag: 'txt_fundshare_distpolicy',
+    };
     lifecycle: FormItem = {
         type: FormItemType.list,
         label: 'Share Class Lifecycle',
@@ -334,40 +337,40 @@ export class ShareKeyFactsOptional {
             { id: E.LifecycleEnum.Active, text: 'Active' },
             { id: E.LifecycleEnum.Dormant, text: 'Dormant' },
             { id: E.LifecycleEnum.InLiquidation, text: 'In liquidation' },
-            { id: E.LifecycleEnum.Terminated, text: 'Terminated' }
+            { id: E.LifecycleEnum.Terminated, text: 'Terminated' },
         ],
-        mltag: 'txt_fundshare_lifecycle'
-    }
+        mltag: 'txt_fundshare_lifecycle',
+    };
     isClassUCITSEligible: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Share Class Eligible For UCITS',
         required: false,
-        mltag: 'txt_fundshare_isclassucitseligible'
-    }
+        mltag: 'txt_fundshare_isclassucitseligible',
+    };
     isRDRCompliant: FormItem = {
         type: FormItemType.boolean,
         label: 'Is RDR Compliant',
         required: false,
-        mltag: 'txt_fundshare_isrdrcompliant'
-    }
+        mltag: 'txt_fundshare_isrdrcompliant',
+    };
     isRestrictedToSeparateFeeArrangement: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Restricted To Separate Fee Arrangement',
         required: false,
-        mltag: 'txt_fundshare_restricttosepfeearrange'
-    }
+        mltag: 'txt_fundshare_restricttosepfeearrange',
+    };
     hasForcedRedemption: FormItem = {
         type: FormItemType.boolean,
         label: 'Has Forced Redemption',
         required: false,
-        mltag: 'txt_fundshare_hasforcedred'
-    }
+        mltag: 'txt_fundshare_hasforcedred',
+    };
     isETF: FormItem = {
         type: FormItemType.boolean,
         label: 'Is ETF',
         required: false,
-        mltag: 'txt_fundshare_isetf'
-    }
+        mltag: 'txt_fundshare_isetf',
+    };
     indexName: FormItem = {
         type: FormItemType.text,
         label: 'Index Name',
@@ -375,8 +378,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_indexname'
-    }
+        mltag: 'txt_fundshare_indexname',
+    };
     indexCurrency: FormItem = {
         type: FormItemType.list,
         label: 'Index Currency',
@@ -384,13 +387,13 @@ export class ShareKeyFactsOptional {
         listItems: [
             { id: E.CurrencyEnum.EUR, text: 'EUR' },
             { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' }
+            { id: E.CurrencyEnum.USD, text: 'USD' },
         ],
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_indexcurrency'
-    }
+        mltag: 'txt_fundshare_indexcurrency',
+    };
     indexType: FormItem = {
         type: FormItemType.list,
         label: 'Index Type',
@@ -399,14 +402,14 @@ export class ShareKeyFactsOptional {
             { id: E.IndexTypeEnum.Price, text: 'Price' },
             { id: E.IndexTypeEnum.Performance, text: 'Performance' },
             { id: E.IndexTypeEnum.PerformanceNetDividends, text: 'Perfomance net dividends' },
-            { id: E.IndexTypeEnum.PerformanceGrossDividends, text: 'Performance gross dividends' }
+            { id: E.IndexTypeEnum.PerformanceGrossDividends, text: 'Performance gross dividends' },
         ],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_indextype'
-    }
+        mltag: 'txt_fundshare_indextype',
+    };
     bloombergUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Bloomberg Code Of Underlying Index',
@@ -414,8 +417,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_bloomunderlyingindex'
-    }
+        mltag: 'txt_fundshare_bloomunderlyingindex',
+    };
     reutersUnderlyingIndexCode: FormItem = {
         type: FormItemType.text,
         label: 'Reuters Code Of Underlying Index',
@@ -423,8 +426,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_reutersunderlyingindex'
-    }
+        mltag: 'txt_fundshare_reutersunderlyingindex',
+    };
     denominationBase: FormItem = {
         type: FormItemType.number,
         label: 'Denomination Base',
@@ -433,8 +436,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_denombase'
-    }
+        mltag: 'txt_fundshare_denombase',
+    };
     isETC: FormItem = {
         type: FormItemType.boolean,
         label: 'Is ETC',
@@ -442,8 +445,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_isetc'
-    }
+        mltag: 'txt_fundshare_isetc',
+    };
     isShort: FormItem = {
         type: FormItemType.boolean,
         label: 'Is Short',
@@ -451,8 +454,8 @@ export class ShareKeyFactsOptional {
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_isshort'
-    }
+        mltag: 'txt_fundshare_isshort',
+    };
     replicationMethodologyFirstLevel: FormItem = {
         type: FormItemType.list,
         label: 'Replication Methodology First Level',
@@ -460,13 +463,13 @@ export class ShareKeyFactsOptional {
         listItems: [
             { id: E.ReplicationFirstLevelEnum.Physical, text: 'Physical' },
             { id: E.ReplicationFirstLevelEnum.Synthetical, text: 'Synthetical' },
-            { id: E.ReplicationFirstLevelEnum.Others, text: 'Others' }
+            { id: E.ReplicationFirstLevelEnum.Others, text: 'Others' },
         ],
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_replicatemethodologyfirst'
-    }
+        mltag: 'txt_fundshare_replicatemethodologyfirst',
+    };
     replicationMethodologySecondLevel: FormItem = {
         type: FormItemType.list,
         label: 'Replication Methodology Second Level',
@@ -478,44 +481,44 @@ export class ShareKeyFactsOptional {
             { id: E.ReplicationSecondLevelEnum.UnfundedSwap, text: 'Unfunded swap' },
             { id: E.ReplicationSecondLevelEnum.FundedSwap, text: 'Funded swap' },
             { id: E.ReplicationSecondLevelEnum.Combination, text: 'Combination unfunded and funded swap' },
-            { id: E.ReplicationSecondLevelEnum.Futures, text: 'Futures' }
+            { id: E.ReplicationSecondLevelEnum.Futures, text: 'Futures' },
         ],
         hidden: () => {
             return this.isETF.value() !== true;
         },
-        mltag: 'txt_fundshare_replicatemethodologysecond'
-    }
+        mltag: 'txt_fundshare_replicatemethodologysecond',
+    };
     hasPRIIPDataDelivery: FormItem = {
         type: FormItemType.boolean,
         label: 'Has PRIIP Data Delivery',
         required: false,
-        mltag: 'txt_fundshare_haspriipdate'
-    }
+        mltag: 'txt_fundshare_haspriipdate',
+    };
     hasUCITSDataDelivery: FormItem = {
         type: FormItemType.boolean,
         label: 'Has UCITS Data Delivery',
         required: false,
-        mltag: 'txt_fundshare_hasucitsdelivery'
-    }
+        mltag: 'txt_fundshare_hasucitsdelivery',
+    };
     ucitsKiidUrl: FormItem = {
         type: FormItemType.text,
         label: 'UCITS KIID URL',
         required: false,
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_ucitskiidurl'
-    }
+        mltag: 'txt_fundshare_ucitskiidurl',
+    };
     internalReference: FormItem = {
         type: FormItemType.text,
         label: 'Internal Reference',
         required: false,
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_internalref'
-    }
+        mltag: 'txt_fundshare_internalref',
+    };
     additionalComments: FormItem = {
         type: FormItemType.textarea,
         label: 'Additional Comments',
         required: false,
         style: [FormItemStyle.BreakOnAfter],
-        mltag: 'txt_fundshare_additionalcomments'
-    }
+        mltag: 'txt_fundshare_additionalcomments',
+    };
 }
