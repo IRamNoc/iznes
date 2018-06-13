@@ -116,23 +116,6 @@ export class MyOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         {id: 'settlementDate', text: 'SettlementDate'},
     ];
 
-    currencyList = [
-        {id : 0, code: 'EUR', label: 'Euro'},
-        {id : 1, code: 'USD', label: 'US Dollar'},
-        {id : 2, code: 'GBP', label: 'Pound Sterling'},
-        {id : 3, code: 'CHF', label: 'Swiss Franc'},
-        {id : 4, code: 'JPY', label: 'Yen'},
-        {id : 5, code: 'AUD', label: 'Australian Dollar'},
-        {id : 6, code: 'NOK', label: 'Norwegian Krone'},
-        {id : 7, code: 'SEK', label: 'Swedish Krona'},
-        {id : 8, code: 'ZAR', label: 'Rand'},
-        {id : 9, code: 'RUB', label: 'Russian Ruble'},
-        {id : 10, code: 'SGD', label: 'Singapore Dollar'},
-        {id : 11, code: 'AED', label: 'United Arab Emirates Dirham'},
-        {id : 12, code: 'CNY', label: 'Yuan Renminbi'},
-        {id : 13, code: 'PLN', label: 'Zloty'},
-    ];
-
     /* Public Properties */
     public connectedWalletName: string = '';
 
