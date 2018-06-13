@@ -48,7 +48,7 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
         const arr = [];
 
         _.forEach(this.selectedDates, (e: moment.Moment) => {
-            arr.push(e.hours(0).minutes(0).seconds(0).milliseconds(0).toISOString());
+            arr.push(e.format('YYYY-MM-DD'));
         });
 
         return arr;
