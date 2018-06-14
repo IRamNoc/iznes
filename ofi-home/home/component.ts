@@ -134,6 +134,32 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        /* Subscribe for this user's wallets. */
+        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
+            /* Assign list to a property. */
+            this.myWallets = walletsList;
+
+            /* Update wallet name. */
+            this.updateWalletConnection();
+        });
+
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+            /* Assign list to a property. */
+            this.connectedWalletId = connectedWalletId;
+
+            /* Update wallet name. */
+            this.updateWalletConnection();
+        });
+
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((details) => {
+            /* Assign list to a property. */
+
+            this.userType = details.userType;
+            this._changeDetectorRef.detectChanges();
+        });
+
         this.subscriptions.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
         this.subscriptions.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
@@ -148,13 +174,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
 
-        // recordkeeping
-        this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
-        this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
-
-        // inv - my holdings
-        this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
-        this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+        if (this.userType === 36) {
+            // recordkeeping
+            this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
+            this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+        } else if (this.userType === 36) {
+            // inv - my holdings
+            this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
+            this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+        }
 
         /* Do observable subscriptions here. */
         this.subscriptions['message'] = this.nbMessagesObj.subscribe((nb) => {
@@ -201,32 +229,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
         this.subscriptions['home-order-requested'] = this.homeOrdersRequestedOb.subscribe((requested) => {
             this.requestHomeOrderList(requested);
-        });
-
-        /* Subscribe for this user's wallets. */
-        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            /* Assign list to a property. */
-            this.myWallets = walletsList;
-
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
-
-        /* Subscribe for this user's connected info. */
-        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            /* Assign list to a property. */
-            this.connectedWalletId = connectedWalletId;
-
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
-
-        /* Subscribe for this user's connected info. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((details) => {
-            /* Assign list to a property. */
-
-            this.userType = details.userType;
-            this._changeDetectorRef.detectChanges();
         });
 
     }
