@@ -17,6 +17,7 @@ export interface FundShareAccessDetail {
     userStatus: number;
     managementCompany: string;
     price: number;
+    holidayMgmtConfig: string;
 }
 
 export interface FundShareAccessList {
