@@ -27,6 +27,8 @@ import {TextInputListComponent} from './text-input-list/component';
 import {OfiKycAlreadyDoneComponent} from './already-done/component';
 import {FileDropModule} from '@setl/core-filedrop';
 import {FileViewerModule} from "@setl/core-fileviewer";
+import {OfiRedirectTokenComponent} from './invitation-token/redirect-token.component';
+import {OfiConsumeTokenComponent} from './invitation-token/consume-token.component';
 
 /* Constants */
 import config from './config';
@@ -43,6 +45,8 @@ import config from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
+        OfiRedirectTokenComponent,
+        OfiConsumeTokenComponent,
     ],
     exports: [
         OfiInviteInvestorsComponent,
@@ -54,6 +58,8 @@ import config from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
+        OfiRedirectTokenComponent,
+        OfiConsumeTokenComponent,
     ],
     imports: [
         ToasterModule,
