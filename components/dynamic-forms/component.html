@@ -42,6 +42,7 @@
                                            [disabled]="model[item].control.disabled"
                                            placeholder="{{model[item].placeholder}}"
                                            [formControl]="model[item].control"
+                                           [multiple]="model[item].listAllowMultiple || false"
                                            [required]="model[item].required">
                                 </ng-select>
 
