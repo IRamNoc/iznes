@@ -117,6 +117,10 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
         openDropdownAndSelectOption("status", 1);
+        scrollElementIntoViewById("cancelFundShareBottom");
+        Thread.sleep(500);
+        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
+        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
@@ -174,6 +178,10 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("subscriptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForSubscription", 1);
         setTime("13:13", "redemptionCutOffTime");
+        scrollElementIntoViewById("cancelFundShareBottom");
+        Thread.sleep(500);
+        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
+        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");

@@ -55,7 +55,11 @@ import {
     ManageSubPortfolioComponent,
 } from '@setl/core-useradmin';
 /* Product */
-import { OfiFundComponent, OfiManagementCompanyComponent, OfiSicavComponent } from '@ofi/product';
+import {
+    OfiFundComponent,
+    OfiManagementCompanyComponent,
+    OfiSicavComponent,
+} from '@ofi/product';
 import {
     ProductHomeComponent,
     UmbrellaFundComponent,
@@ -63,6 +67,7 @@ import {
     AddNewFundShareComponent,
     FundShareAuditComponent,
     FundComponent,
+    ProductCharacteristicComponent,
 } from '@ofi/ofi-main';
 /* Corporate Actions Components */
 import {
@@ -283,6 +288,11 @@ export const ROUTES: Routes = [
                     {
                         path: 'configuration',
                         component: ProductConfigurationComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product-caracteristic/:isin',
+                        component: ProductCharacteristicComponent,
                         canActivate: [LoginGuardService],
                     },
                 ],
