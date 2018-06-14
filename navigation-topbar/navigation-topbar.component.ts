@@ -28,6 +28,7 @@ import {
 import { fromJS } from 'immutable';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 import {
     ChannelService,
@@ -133,11 +134,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             this.username = this.currentUserDetails.username;
         }
 
-        this.lastLogin = this.currentUserDetails.lastLogin;
-
-        if (this.lastLogin === '' || this.lastLogin === null) {
-            this.lastLogin = Date.now();
-        }
+        this.lastLogin = this.currentUserDetails.lastLogin || moment().format('YYYY-MM-DD HH:mm:ss');
 
         const chainAccess = getDefaultMyChainAccess(newState);
 
