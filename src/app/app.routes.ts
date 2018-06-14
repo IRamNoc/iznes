@@ -44,6 +44,7 @@ import {
     OfiSignUpComponent,
     OfiTaxReportComponent,
     ProductConfigurationComponent,
+    MyHoldingsComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -548,6 +549,11 @@ export const ROUTES: Routes = [
                         component: ManageOrdersComponent,
                     },
                 ],
+            },
+            {
+                path: 'my-holdings',
+                component: MyHoldingsComponent,
+                canActivate: [LoginGuardService],
             },
 
             /**
