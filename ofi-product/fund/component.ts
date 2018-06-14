@@ -732,8 +732,6 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
 
-        console.log('payload', payload);
-
         if (this.param === 'new') {
 
             this.fundService.iznCreateFund(payload)

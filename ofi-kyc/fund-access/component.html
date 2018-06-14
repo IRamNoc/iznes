@@ -122,11 +122,11 @@
                                             </ng-container>
 
                                             <ng-container *ngIf="access[row['id']]['access']">
-                                                <clr-dg-cell>
+                                                <clr-dg-cell class="thin-cell">
                                                     <input name="entry{{row['id']}}" [(ngModel)]="access[row['id']]['entry']" (change)="checkFee(row['id'],'entry');">
                                                 </clr-dg-cell>
 
-                                                <clr-dg-cell>
+                                                <clr-dg-cell class="thin-cell">
                                                     <input name="exit{{row['id']}}" [(ngModel)]="access[row['id']]['exit']" (change)="checkFee(row['id'],'exit');">
                                                 </clr-dg-cell>
 

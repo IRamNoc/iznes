@@ -144,7 +144,8 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             navPeriodForSubscription: item.get('navPeriodForSubscription', 0),
             navPeriodForRedemption: item.get('navPeriodForRedemption', 0),
             kiid: item.get('kiid', ''),
-            prospectus: item.get('prospectus', '')
+            prospectus: item.get('prospectus', ''),
+            holidayMgmtConfig: item.get('holidayMgmtConfig', '[]'),
         };
 
         return result;

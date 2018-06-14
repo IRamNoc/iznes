@@ -1,4 +1,4 @@
-import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
+import { IznShareDetailWithNav } from './order-helper';
 import { OrderType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as momentTz from 'moment-timezone';
@@ -36,7 +36,7 @@ export const DAY_NUMBER = {
 };
 
 export class CalendarHelper {
-    fundShare: IznesShareDetail;
+    fundShare: IznShareDetailWithNav;
     orderType: OrderType = OrderType.Subscription;
     fundShareHoliday: string [];
 
@@ -50,13 +50,17 @@ export class CalendarHelper {
     }
 
     get tradeTimeZoneOffset(): any {
-        const timeZonString = {
-            [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
-            E.TimezonesEnum.UTC,
-            [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
-        }[this.orderType];
+        try {
+            const timeZonString = {
+                [OrderType.Subscription]: this.fundShare.subscriptionCutOffTimeZone ||
+                E.TimezonesEnum.UTC,
+                [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
+            }[this.orderType];
 
-        return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
+            return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
+        } catch (e) {
+            return 0;
+        }
 
     }
 
@@ -105,14 +109,24 @@ export class CalendarHelper {
         }[this.orderType];
     }
 
-    constructor(fundShare: IznesShareDetail, fundShareHoliday: string[] = FRANCE_HOLIDAYS_2018) {
+    constructor(fundShare: IznShareDetailWithNav) {
         this.fundShare = fundShare;
 
-        this.fundShareHoliday = fundShareHoliday;
+        let holidays;
+        try {
+            holidays = JSON.parse(fundShare.holidayMgmtConfig);
+
+            if (!(holidays instanceof Array)) {
+                holidays = FRANCE_HOLIDAYS_2018;
+            }
+
+        } catch (e) {
+            holidays = FRANCE_HOLIDAYS_2018;
+        }
 
         // set holidays
         moment.locale('fr', {
-            holidays: FRANCE_HOLIDAYS_2018,
+            holidays,
             holidayFormat: 'YYYY-MM-DD',
         });
     }
@@ -428,7 +442,7 @@ export class CalendarHelper {
 
     getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
                           tradeTimeZoneOffSet: number): moment {
-        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
         const timeZoneDiff = currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
 
         // work out the current date's cutoff
@@ -442,7 +456,7 @@ export class CalendarHelper {
     }
 
     getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
-        const currentTimeZoneOffsetFromUtc = - Number((new Date().getTimezoneOffset() / 60));
+        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
         return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
     }
 
