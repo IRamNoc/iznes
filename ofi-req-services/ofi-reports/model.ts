@@ -36,3 +36,13 @@ export interface OfiHolderDetailRequestBody extends OfiMemberNodeBody {
     shareId: number;
     selectedFilter: number;
 }
+
+export interface OfiInvHoldingsDetailRequestBody extends OfiMemberNodeBody {
+    token: string;
+    walletID: number;
+    amCompanyID: number;
+}
+
+export interface OfiInvHoldingsDetailRequestData {
+    amCompanyID: number;
+}

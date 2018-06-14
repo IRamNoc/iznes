@@ -27,13 +27,13 @@ import {FileViewerModule} from '@setl/core-fileviewer';
         SetlComponentsModule,
         SetlDirectivesModule,
         FileViewerModule,
-        RouterModule
+        RouterModule,
     ],
     exports: [OfiInvestorFundListComponent],
     declarations: [
         OfiInvestorFundListComponent,
         InvestFundComponent,
-        FundViewComponent
+        FundViewComponent,
     ],
     providers: [CommonService],
 })

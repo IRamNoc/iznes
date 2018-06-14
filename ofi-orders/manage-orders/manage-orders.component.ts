@@ -6,6 +6,7 @@ import {
     Component,
     Inject,
     OnDestroy,
+    Input,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -61,6 +62,7 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
+    selector: 'app-manage-orders',
     styleUrls: ['./manage-orders.component.css'],
     templateUrl: './manage-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -69,6 +71,8 @@ interface SelectedItem {
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     searchForm: FormGroup;
+
+    @Input() isImported: boolean;
 
     /* Datagrid server driven */
     total: number;
@@ -1134,6 +1138,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.logService.log('on message fail: ', error);
             this.toasterService.pop('error', toasterMessages.fail[this.language]);
         });
+    }
+
+    getDisplay() {
+        return (this.isImported) ? 'none' : 'block';
     }
 
     /**

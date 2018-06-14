@@ -398,7 +398,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             token: this.memberSocketService.token,
             shareId,
             userId: this.myDetails.userId,
-            selectedFilter: selectedFilter
+            selectedFilter: selectedFilter,
         });
     }
 

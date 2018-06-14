@@ -1,7 +1,7 @@
 /* Core/Redux imports. */
 import {Action} from 'redux';
 /* Local types. */
-import {AmHoldersDetails, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
+import {AmHoldersDetails, InvHoldingsDetails, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
 import * as ofiAmHoldersActions from './actions';
 import {List} from 'immutable';
 import * as _ from 'lodash';
@@ -10,6 +10,8 @@ import * as _ from 'lodash';
 const initialState: OfiHolderState = {
     amHoldersList: List<AmHoldersDetails>(),
     requested: false,
+    invHoldingsList: List<InvHoldingsDetails>(),
+    invRequested: false,
     holderDetailRequested: false,
     shareHolderDetail: null,
 };
@@ -35,6 +37,15 @@ export const OfiAmHoldersListReducer = (state: OfiHolderState = initialState, ac
         case ofiAmHoldersActions.OFI_GET_SHARE_HOLDER_DETAIL:
             return handleGetShareHolderDetail(state, action);
 
+        case ofiAmHoldersActions.OFI_SET_INV_HOLDINGS_LIST:
+            return handleGetInvHoldings(state, action);
+
+        case ofiAmHoldersActions.OFI_SET_REQUESTED_INV_HOLDINGS:
+            return toggleRequestState(state, true);
+
+        case ofiAmHoldersActions.OFI_CLEAR_REQUESTED_INV_HOLDINGS:
+            return toggleRequestState(state, false);
+
         default:
             return state;
     }
@@ -47,7 +58,21 @@ const handleGetAmHolders = (state, action) => {
         const amHoldersList = formatDataResponse(data);
 
         return Object.assign({}, state, {
-            amHoldersList
+            amHoldersList,
+        });
+    }
+
+    return state;
+};
+
+const handleGetInvHoldings = (state, action) => {
+    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+    if (data.Status !== 'Fail') {
+        const invHoldingsList = formatDataResponse(data);
+
+        return Object.assign({}, state, {
+            invHoldingsList,
         });
     }
 
@@ -83,7 +108,7 @@ const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDet
     }
 
     return response;
-}
+};
 
 function toggleRequestState(state: OfiHolderState, requested: boolean): OfiHolderState {
     return Object.assign({}, state, {requested});
