@@ -104,6 +104,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         this.divFinished.className = 'fs-slider-finished';
         this.divFinished.innerHTML = this._translate.translate('Finished!');
         this.divSliderContainer.appendChild(this.divFinished);
+        this.divFinished.style.width = this.divSliderSize + 'px';
 
         // assign slider container size
         this.divSliderContainer.style.width = (this.divSliderSize * (this.nbSteps + 1)) + 'px'; // +1 because Finished screen
