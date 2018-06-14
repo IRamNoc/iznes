@@ -64,4 +64,14 @@
         float: right;
         margin-top: -42px;
     }
+
+    app-dynamic-form.share-status { width: auto; }
+
+    .share-status-warning {
+        color: #999;
+        float: left;
+        font-size: 12px;
+        margin-left: -120px;
+        padding-top: 40px;
+    }
 }

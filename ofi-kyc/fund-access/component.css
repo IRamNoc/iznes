@@ -52,3 +52,8 @@ label.switch {
 .override-modal-div {
     margin-bottom: 5px;
 }
+
+.thin-cell {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
