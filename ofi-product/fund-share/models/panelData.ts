@@ -1,48 +1,49 @@
 export class PanelData {
-    umbrella = { open: false }
-    fund = { open: false }
+    umbrella = { open: false };
+    fund = { open: false };
     keyFacts = {
+        status: { open: true },
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     characteristic = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     calendar = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     fees = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     profile = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     taxation = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     representation = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     listing = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     priip = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     solvency = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
     documents = {
         mandatory: { open: true },
-        optional: { open: false }
-    }
+        optional: { open: false },
+    };
 }
