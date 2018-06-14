@@ -17,6 +17,15 @@ export interface TranPermGroupDetail {
     canDelegate: boolean;
 }
 
+export interface MenuPermGroupDetail {
+    groupId: number;
+    groupName: string;
+    groupDescription: string;
+    chainId: number;
+    groupIsTx: number;
+    canDelegate: boolean;
+}
+
 export interface PermissionGroupTab {
     title: {
         icon: string;
@@ -33,6 +42,9 @@ export interface PermissionGroupState {
     };
     tranPermList: {
         [key: number]: TranPermGroupDetail
+    };
+    menuPermList: {
+        [key: number]: MenuPermGroupDetail
     };
     openedTabs: Array<PermissionGroupTab>;
 }

@@ -3,7 +3,8 @@ import * as PermissionsActions from './actions';
 import {
     UsersPermissionsState,
     UsersAdminPermissonDetail,
-    UsersTxPermissonDetail
+    UsersTxPermissonDetail,
+    UsersMenuPermissonDetail
 } from './model';
 import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
@@ -12,7 +13,8 @@ import { getAdminPermissions, getTranPermissions } from '@setl/core-store'
 
 const initialState: UsersPermissionsState = {
     usersAdminPermissions: {},
-    usersTxPermissions: {}
+    usersTxPermissions: {},
+    usersMenuPermissions: {}
 };
 
 export const UsersPermissionsReducer = function (state: UsersPermissionsState = initialState,
@@ -25,6 +27,9 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
     };
     let usersTxPermissions: {
         [key: number]: UsersTxPermissonDetail
+    };
+    let usersMenuPermissions: {
+        [key: number]: UsersMenuPermissonDetail
     };
     let newEntityPermissions:any;
 
@@ -76,6 +81,31 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
                 usersTxPermissions
+            });
+
+            /* Return the new state. */
+            return newState;
+
+        /**
+         * Set menu permissions.
+         * ----------------------
+         * Adds permissions for a menu entity to the store.
+         *
+         * @payload {entityPermissions} - an object of permissions for an entity.
+         */
+        case PermissionsActions.SET_USERS_MENU_PERMISSIONS:
+            /* Pull the data from the message body. */
+            newEntityPermissions = _.get(action, 'payload[1].Data', []);
+
+            /* Now tidy the data up. */
+            newEntityPermissions = sortPermissionsArray(newEntityPermissions);
+
+            /* Assign the new permissions with the old ones. */
+            usersMenuPermissions = Object.assign({}, state.usersMenuPermissions, newEntityPermissions );
+
+            /* Generate the new state. */
+            newState = Object.assign({}, state, {
+                usersMenuPermissions
             });
 
             /* Return the new state. */

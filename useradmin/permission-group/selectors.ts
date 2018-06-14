@@ -18,3 +18,8 @@ export const getTranPermissionGroup = createSelector(
     getPermissionGroup,
     (state: PermissionGroupState) => state.tranPermList
 );
+
+export const getMenuPermissionGroup = createSelector(
+    getPermissionGroup,
+    (state: PermissionGroupState) => state.menuPermList
+);

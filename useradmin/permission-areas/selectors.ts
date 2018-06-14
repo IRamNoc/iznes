@@ -20,3 +20,8 @@ export const getTxPermAreaList = createSelector(
     getPermAreaLists,
     (state: PermAreasState) => state.txPermAreaList
 );
+
+export const getMenuPermAreaList = createSelector(
+    getPermAreaLists,
+    (state: PermAreasState) => state.menuPermAreaList
+);
