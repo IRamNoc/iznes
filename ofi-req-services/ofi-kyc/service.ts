@@ -18,7 +18,10 @@ import {
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
+    UseTokenRequestBody,
     fetchInvitationsByUserAmCompanyRequestBody,
+    GetMyKycListRequestBody,
+    createKYCDraftMessageBody, createKYCDraftRequestData,
 } from './model';
 
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -29,6 +32,7 @@ import 'rxjs/add/operator/takeUntil';
 import {SagaHelper} from '@setl/utils';
 import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {
     SET_INVESTOR_INVITATIONS_LIST,
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED
@@ -99,6 +103,18 @@ export class OfiKycService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    useInvitationToken(invitationToken : string){
+
+        const messageBody: UseTokenRequestBody = {
+            RequestName: 'izneskycusetoken',
+            token: this.memberSocketService.token,
+            invitationToken: invitationToken,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
     }
 
     isInvitationTokenUsed(token: string): any {
@@ -204,6 +220,21 @@ export class OfiKycService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getMyKycList(){
+        const messageBody: GetMyKycListRequestBody = {
+            RequestName: 'iznesgetmykyclist',
+            token: this.memberSocketService.token,
+            walletid: 0
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
+        });
     }
 
     getInvitationsByUserAmCompany() {
@@ -312,6 +343,20 @@ export class OfiKycService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    createKYCDraft(requestData : createKYCDraftRequestData){
+
+        const messageBody : createKYCDraftMessageBody = {
+            RequestName: 'izncreatedraftkycrequest',
+            token: this.memberSocketService.token,
+            inviteToken : _.get(requestData, 'inviteToken', ''),
+            managementCompanyID : _.get(requestData, 'managementCompanyID', ''),
+            investorWalletID : _.get(requestData, 'investorWalletID', '')
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
     }
 }
 

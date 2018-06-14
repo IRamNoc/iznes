@@ -1,0 +1,21 @@
+<div class="header-breadcrumbs">
+    <h1 class="text-overflow">
+
+        <i class="fa fa-plus"></i>
+
+        <span id="new-request-title">{{'Make a new request' | translate}}</span>
+    </h1>
+</div>
+
+<div class="well p-1">
+
+    <div [formsteps]="stepsConfig">
+        <section>
+            <kyc-step-select-amc [form]="forms.selection" [preselected]="preselectedManagementCompanyID"></kyc-step-select-amc>
+        </section>
+        <section>
+            <kyc-step-introduction></kyc-step-introduction>
+        </section>
+    </div>
+
+</div>

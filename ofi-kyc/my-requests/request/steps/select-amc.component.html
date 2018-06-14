@@ -1,0 +1,68 @@
+<form [formGroup]="form" id="step-selection" (ngSubmit)="handleFormSubmit($event)">
+
+    POUT
+    {{kycList | json}}
+    POUET
+
+    <div class="row">
+        <div class="col-sm-6">
+            {{'Please select the Asset Management Companies you would like to work with on IZNES.' | translate}}
+
+            <ng-select [items]="filteredManagementCompanies"
+                       [multiple]="true"
+                       [formControl]="form.get('managementCompanies')"
+                       placerholder="Search"
+            ></ng-select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-warning p-1 mb-1 mt-1">
+                <div class="alert-items">
+                    <div class="alert-item static">
+                        <div class="alert-icon-wrapper">
+                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                        </div>
+                        <span class="alert-text text-center">
+                                {{'Warning: if you select Yes in the following table, you will not be able to benefit from all the KYC features of IZNES.' | translate}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Asset Management Companies</th>
+                    <th>Are you already registered?</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngIf="preselectedManagementCompanyID">
+                    <td>{{managementCompanies[preselectedManagementCompanyID]?.companyName}}</td>
+                    <td>
+                        <label class="switch disabled">
+                            <input type="checkbox" name="registered" class="form-control">
+                            <span class="slider round" data-yes="YES" data-no="NO"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr *ngFor="let company of selectedManagementCompanies">
+                    <td>{{company.text}}</td>
+                    <td>
+                        <label class="switch" *ngIf="company.id">
+                            <input type="checkbox" id="registered_{{company.id}}" name="registered" [(ngModel)]="company.registered" [ngModelOptions]="{standalone: true}" class="form-control">
+                            <span class="slider round" data-yes="YES" data-no="NO"></span>
+                        </label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</form>
