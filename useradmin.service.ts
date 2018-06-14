@@ -22,16 +22,20 @@ import {
     /* Permission groups - (fetched on init) */
     getAdminPermissionGroup,
     getTranPermissionGroup,
+    getMenuPermissionGroup,
 
     /* Permission areas. */
     SET_ADMIN_PERM_AREAS_LIST,
     SET_TX_PERM_AREAS_LIST,
+    SET_MENU_PERM_AREAS_LIST,
     getAdminPermAreaList,
     getTxPermAreaList,
+    getMenuPermAreaList,
 
     /* Entity Permissions */
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
+    SET_MENU_PERMISSIONS,
     getPermissions,
     getAdminPermissions,
     getTranPermissions,
@@ -39,6 +43,7 @@ import {
     /* Group permissions */
     SET_USERS_ADMIN_PERMISSIONS,
     SET_USERS_TX_PERMISSIONS,
+    SET_USERS_MENU_PERMISSIONS,
     getUsersPermissions,
     getUsersAdminPermissions,
     getUsersTxPermissions,
@@ -151,6 +156,10 @@ export class UserAdminService {
         {
             'id': '1',
             'text': 'Transactional',
+        },
+        {
+            'id': '2',
+            'text': 'Menu',
         }
     ];
 
@@ -164,11 +173,12 @@ export class UserAdminService {
 
     public adminGroupList: {};
     public txGroupList: {};
+    public menuGroupList: {};
     public allGroupsList: {};
     @Output()
     public allGroupListSubject = new Subject<any>();
 
-    /* Admin and TX group list observable. */
+    /* Admin, TX & Menu group list observable. */
     public getGroupListSubject() {
         return this.allGroupListSubject.asObservable();
     }
@@ -187,6 +197,14 @@ export class UserAdminService {
 
     public getTxPermAreaListSubject() {
         return this.txPermAreaListSubject.asObservable();
+    }
+
+    public menuPermAreaList: {};
+    @Output()
+    public menuPermAreaListSubject = new Subject<any>();
+
+    public getMenuPermAreaListSubject() {
+        return this.menuPermAreaListSubject.asObservable();
     }
 
     public permissionsList: {};
@@ -258,6 +276,15 @@ export class UserAdminService {
             });
         }
 
+        /* Let's request the menu perm area list, this is the saga pipe function. */
+        if (!Object.keys(getMenuPermAreaList(state)).length) {
+            this.adminUsersService.buildRequest({
+                ngRedux: this.ngRedux,
+                taskPipe: this.adminUsersService.getMenuPermAreaList(),
+                successActions: [SET_MENU_PERM_AREAS_LIST]
+            });
+        }
+
         /* Let's subscribe to the accounts list. */
         this.subscriptions['account-list'] = this.accountListOb.subscribe((accountList) => {
             /* Variables. */
@@ -309,9 +336,11 @@ export class UserAdminService {
         this.adminGroupList = getAdminPermissionGroup(state);
         /* Get adminGroupList groups list. */
         this.txGroupList = getTranPermissionGroup(state);
+        /* Get adminGroupList groups list. */
+        this.menuGroupList = getMenuPermissionGroup(state);
 
         /* Combine the groups and emit. */
-        this.allGroupsList = Object.assign({}, this.txGroupList, this.adminGroupList);
+        this.allGroupsList = Object.assign({}, this.txGroupList, this.adminGroupList, this.menuGroupList);
         this.allGroupListSubject.next(this.allGroupsList);
 
         /* Get admin perm area list and send message out. */
@@ -321,6 +350,10 @@ export class UserAdminService {
         /* Get tx perm area list and send message out. */
         this.txPermAreaList = getTxPermAreaList(state);
         this.txPermAreaListSubject.next(this.txPermAreaList);
+
+        /* Get menu perm area list and send message out. */
+        this.menuPermAreaList = getMenuPermAreaList(state);
+        this.menuPermAreaListSubject.next(this.menuPermAreaList);
 
         /* Get permissions list by groupId. */
         this.permissionsList = getPermissions(state);
@@ -633,6 +666,31 @@ export class UserAdminService {
     }
 
     /**
+     * Update Menu Permissions
+     * ----------------
+     * Updates an entity's permissions.
+     *
+     * @param {data} - the permission data.
+     *
+     * @return {void}
+     */
+    updateMenuPermissions(data): Promise<any> {
+        /* Get my detail to add is admin to the request. */
+        const
+            state = this.ngRedux.getState(),
+            myDetail = getMyDetail(state);
+
+        /* Figure the admin bit out. */
+        data.isAdmin = myDetail.admin ? "1" : "0";
+
+        /* Return. */
+        return this.adminUsersService.buildRequest({
+            ngRedux: this.ngRedux,
+            taskPipe: this.adminUsersService.updateMenuPermissions(data)
+        });
+    }
+
+    /**
      * Request Permissions
      * ----------------
      * Requests an entity's permissions or all, used on click for editing a group.
@@ -647,9 +705,12 @@ export class UserAdminService {
             action,
             asynTaskPipe;
 
-        if (entity.isTx) {
+        if (entity.isTx == 1) {
             asynTaskPipe = this.adminUsersService.requestTxPermissions(entity);
             action = SET_TX_PERMISSIONS;
+        } else if (entity.isTx == 2) {
+            asynTaskPipe = this.adminUsersService.requestMenuPermissions(entity);
+            action = SET_MENU_PERMISSIONS;
         } else {
             asynTaskPipe = this.adminUsersService.requestAdminPermissions(entity);
             action = SET_ADMIN_PERMISSIONS;
@@ -672,7 +733,7 @@ export class UserAdminService {
      * @return {any} - returns
      */
     requestUserPermissions(entity): Promise<any> {
-        let action = entity.isTx ? SET_USERS_TX_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS;
+        let action = (entity.isTx == 1 ? SET_USERS_TX_PERMISSIONS : (entity.isTx == 2 ? SET_USERS_MENU_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS));
         /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
