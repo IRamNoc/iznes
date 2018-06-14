@@ -58,7 +58,8 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     @HostListener('window:resize', ['$event']) onResize(event): void {
-        // console.log(this.divSlider.offsetWidth);
+        this.resizeWidth();
+        this.resizeHeight();
     }
 
     ngOnInit() {
@@ -247,7 +248,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         //     }
         // }
         this.btSubmit.onclick = (event) => {
-            console.log(this.isValid());
             if (!this.isValid()) {
                 if (this.isMultiForm) {
                     if (this.config[this.currentStep].form !== undefined) {
@@ -461,15 +461,30 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         return { top: _y, left: _x };
     }
 
+    resizeWidth() {
+        // step size
+        this.divSliderSize = this.divSlider.offsetWidth;
+
+        // move sections into slider container + assign step size on each section
+        const sections = this.el.getElementsByTagName('section');
+        for (let i = sections.length; i > 0; i--) {
+            sections[i - 1].style.width = this.divSliderSize + 'px';
+        }
+        this.divFinished.style.width = this.divSliderSize + 'px';
+
+        // assign slider container size
+        this.divSliderContainer.style.width = (this.divSliderSize * (this.nbSteps + 1)) + 'px'; // +1 because Finished screen
+
+        // move to new position
+        this.move();
+    }
+
     resizeHeight() {
         const steps = this.el.getElementsByTagName('section');
         let marginsTop;
         if (steps[this.currentStep] && window.getComputedStyle(steps[this.currentStep],null)) {
             // calculate screens/sections height
             marginsTop = parseInt(window.getComputedStyle(steps[this.currentStep],null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
-            // console.log('margin', marginsTop);
-            // console.log('height', steps[this.currentStep].offsetHeight);
-            // console.log('scroll', steps[this.currentStep].scrollHeight);
             this.divSlider.style.height = marginsTop + steps[this.currentStep].offsetHeight + (steps[this.currentStep].scrollHeight - steps[this.currentStep].offsetHeight) + 'px';
         } else {
             // calculate finished screen height
