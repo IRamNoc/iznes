@@ -243,17 +243,17 @@
                         <span class="text-center">{{'Actions' | translate}}</span>
                     </clr-dg-column>
 
-                    <clr-dg-row *ngFor="let order of ordersList; let i = index" (click)="buildLink(order, i, $event)" clrDgRowClickable>
-                        <clr-dg-cell>
+                    <clr-dg-row *ngFor="let order of ordersList; let i = index" clrDgRowClickable>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- orderRef -->
                             {{getOrderRef(order.orderID)}}
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- orderType -->
                             <span *ngIf="order.orderType == 3">{{'Subscription' | translate}}</span>
                             <span *ngIf="order.orderType == 4">{{'Redemption' | translate}}</span>
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- investor {{showInvestor(order)}} -->{{order.investorCompanyName}}
 
 
@@ -272,47 +272,47 @@
                             </a>
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- assetManagementCompany -->{{order.amCompanyName}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- shareCurrency -->{{showCurrency(order)}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- quantity -->{{ order.quantity | moneyValue: 5}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- latestNAV -->{{ order.price | moneyValue: 4}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- grossAmount -->{{ order.amountWithCost | moneyValue: 4}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- feesAmount -->{{ order.fee | moneyValue: 4}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- orderDate -->{{getDateTime(order.orderDate)}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- cutOffDate -->{{ getDateTime(order.cutoffDate) }}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- NAVDate -->{{getOnlyDate(order.valuationDate)}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- settlementDate -->{{getOnlyDate(order.settlementDate)}}
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <span *ngIf="order.orderStatus == 1" class="label label-warning">{{'Initiated' | translate}}
 
                             </span>
