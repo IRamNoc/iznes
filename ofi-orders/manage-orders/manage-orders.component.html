@@ -1,5 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-orders"><i class="fa fa-list-ul"></i>{{'Order Book - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
+    <h1 id="manage-orders">
+        <i class="fa fa-list-ul"></i>{{'Order Book - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
     </h1>
 </div>
 
@@ -43,7 +44,8 @@
 
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text" [placeholder]="_translate.translate('ISIN')" style="width: 100% !important">
+                                <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text"
+                                    [placeholder]="_translate.translate('ISIN')" style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
@@ -51,7 +53,8 @@
 
                             </label>
                             <div class="input-button-group">
-                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename" type="text" [placeholder]="_translate.translate('Share Name')" style="width: 100% !important">
+                                <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
+                                    type="text" [placeholder]="_translate.translate('Share Name')" style="width: 100% !important">
                             </div>
                         </div>
                         <div class="form-group col-sm-3">
@@ -59,7 +62,8 @@
 
                             </label>
                             <div>
-                                <ng-select id="orders-search-status" class="fluid-width" [active]="[orderStatuses[0]]" [items]="orderStatuses" [formControl]="tabsControl[0].searchForm.controls['status']" [placeholder]="_translate.translate('Status')">
+                                <ng-select id="orders-search-status" class="fluid-width" [active]="[orderStatuses[0]]" [items]="orderStatuses" [formControl]="tabsControl[0].searchForm.controls['status']"
+                                    [placeholder]="_translate.translate('Status')">
                                 </ng-select>
                             </div>
                         </div>
@@ -68,7 +72,8 @@
 
                             </label>
                             <div>
-                                <ng-select id="orders-search-type" class="fluid-width" [active]="[orderTypes[0]]" [items]="orderTypes" [formControl]="tabsControl[0].searchForm.controls['type']" [placeholder]="_translate.translate('Type')">
+                                <ng-select id="orders-search-type" class="fluid-width" [active]="[orderTypes[0]]" [items]="orderTypes" [formControl]="tabsControl[0].searchForm.controls['type']"
+                                    [placeholder]="_translate.translate('Type')">
                                 </ng-select>
                             </div>
                         </div>
@@ -89,12 +94,24 @@
 
                                 <!-- Panel body -->
                                 <div class="row panel-body" [class.hidden]="!isOptionalFilters">
+                                    <div>
+                                        <div class="form-group col-sm-4">
+                                            <label>{{'Order REF' | translate}}
+
+                                            </label>
+                                            <div class="input-button-group">
+                                                <input id="orders-search-orderid" [formControl]="tabsControl[0].searchForm.controls['orderID']" name="search-sharename" type="number"
+                                                    [placeholder]="_translate.translate('Order ID')" style="width: 100% !important">
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group col-sm-4">
                                         <label>{{'Date Type' | translate}}
 
                                         </label>
                                         <div>
-                                            <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false" [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="_translate.translate('Type')">
+                                            <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false"
+                                                [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="_translate.translate('Type')">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -104,7 +121,8 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
+                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                                mode="day" theme="dp-material">
 
                                         </div>
                                     </div>
@@ -114,7 +132,8 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
+                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                                mode="day" theme="dp-material">
 
                                         </div>
                                     </div>
@@ -151,12 +170,15 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISIN' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            {{'ISIN' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Name' | translate}}
+
+                        <ng-container *clrDgHideableColumn="{hidden: false}">
+                            {{'Share Name' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
@@ -217,7 +239,9 @@
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column><span class="text-center">{{'Actions' | translate}}</span></clr-dg-column>
+                    <clr-dg-column>
+                        <span class="text-center">{{'Actions' | translate}}</span>
+                    </clr-dg-column>
 
                     <clr-dg-row *ngFor="let order of ordersList; let i = index" (click)="buildLink(order, i, $event)" clrDgRowClickable>
                         <clr-dg-cell>
@@ -235,11 +259,17 @@
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- isin -->{{order.isin}}
+                            <!-- isin -->
+                            <a [routerLink]="['/product-module/product-caracteristic', order.isin]">
+                                {{order.isin}}
+                            </a>
 
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <!-- shareName -->{{order.fundShareName}}
+                            <!-- shareName -->
+                            <a [routerLink]="['/product-module/product-caracteristic', order.isin]">
+                                {{order.fundShareName}}
+                            </a>
 
                         </clr-dg-cell>
                         <clr-dg-cell>
@@ -327,7 +357,8 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td><b>{{'Asset Management Company' | translate}}</b>
+                                                    <td>
+                                                        <b>{{'Asset Management Company' | translate}}</b>
                                                     </td>
                                                     <td>{{order.amCompanyName}}</td>
                                                 </tr>
@@ -338,7 +369,9 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td><b>{{'Latest NAV' | translate}}</b></td>
+                                                    <td>
+                                                        <b>{{'Latest NAV' | translate}}</b>
+                                                    </td>
                                                     <td>{{order.price | moneyValue: 4}}</td>
                                                 </tr>
                                             </tbody>
@@ -348,7 +381,9 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td><b>{{'Fees Amount' | translate}}</b></td>
+                                                    <td>
+                                                        <b>{{'Fees Amount' | translate}}</b>
+                                                    </td>
                                                     <td>{{order.fee | moneyValue: 4}}</td>
                                                 </tr>
                                             </tbody>
@@ -358,7 +393,9 @@
                                         <table>
                                             <tbody>
                                                 <tr>
-                                                    <td><b>{{'NAV Date' | translate}}</b></td>
+                                                    <td>
+                                                        <b>{{'NAV Date' | translate}}</b>
+                                                    </td>
                                                     <td>{{getOnlyDate(order.valuationDate)}}</td>
                                                 </tr>
                                             </tbody>
@@ -820,11 +857,8 @@
             <section class="form-block">
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <textarea id="cancelModalTextArea"
-                                  style="min-height: 80px"
-                                  [placeholder]="_translate.translate(amConfirmModal.placeholder)"
-                                  [(ngModel)]="cancelModalMessage"
-                                  [ngModelOptions]="{standalone: true}">
+                        <textarea id="cancelModalTextArea" style="min-height: 80px" [placeholder]="_translate.translate(amConfirmModal.placeholder)"
+                            [(ngModel)]="cancelModalMessage" [ngModelOptions]="{standalone: true}">
                         </textarea>
                     </div>
                 </div>
@@ -833,17 +867,11 @@
     </div>
 
     <div class="modal-footer">
-        <button id='cancelModalBackButton'
-                type="button"
-                class="btn btn-outline"
-                (click)="handleAmModalBackButtonClick()">
+        <button id='cancelModalBackButton' type="button" class="btn btn-outline" (click)="handleAmModalBackButtonClick()">
             {{'Back' | translate}}
         </button>
 
-        <button id='cancelModalConfirmButton'
-                type="button"
-                class="btn btn-danger cancel-modal-confirm-btn"
-                (click)="handleAmModalConfirmButtonClick(amConfirmModal.targetedOrder)">
+        <button id='cancelModalConfirmButton' type="button" class="btn btn-danger cancel-modal-confirm-btn" (click)="handleAmModalConfirmButtonClick(amConfirmModal.targetedOrder)">
             {{'Confirm' | translate}}
         </button>
     </div>

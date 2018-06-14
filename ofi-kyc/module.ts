@@ -25,6 +25,8 @@ import {OfiFundAccessComponent} from './fund-access/component';
 import {OfiAmDocumentsComponent} from './am-documents/component';
 import {TextInputListComponent} from './text-input-list/component';
 import {OfiKycAlreadyDoneComponent} from './already-done/component';
+import {FileDropModule} from '@setl/core-filedrop';
+import {FileViewerModule} from "@setl/core-fileviewer";
 
 /* Constants */
 import config from './config';
@@ -67,11 +69,13 @@ import config from './config';
         SetlComponentsModule,
         SetlDirectivesModule,
         OfiMyInformationsModule,
+        FileDropModule,
+        FileViewerModule
     ],
     providers: [
         MockKYCDocumentsService,
         ToasterService,
-        { provide: 'endpoints', useValue: config },
+        {provide: 'endpoints', useValue: config},
     ]
 })
 

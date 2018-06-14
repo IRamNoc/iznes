@@ -1,4 +1,4 @@
-import {Reducer, combineReducers} from 'redux';
+import { Reducer, combineReducers } from 'redux';
 
 import {
     ManagementCompanyState,
@@ -23,7 +23,7 @@ import {
     UmbrellaFundState,
     UmbrellaFundReducer,
     SET_UMBRELLA_FUND_LIST,
-    setRequestedUmbrellaFund
+    setRequestedUmbrellaFund,
 } from './umbrella-fund';
 
 import {
@@ -54,7 +54,7 @@ import {
     setRequestedNavLatest,
     clearRequestedNavLatest,
     ofiSetCurrentNavLatestRequest,
-    getOfiNavLatestCurrentRequest
+    getOfiNavLatestCurrentRequest,
 } from './nav';
 
 import {
@@ -65,8 +65,16 @@ import {
     clearRequestedNavAudit,
     SET_NAV_AUDIT,
     SET_REQUESTED_NAV_AUDIT,
-    CLEAR_REQUESTED_NAV_AUDIT
+    CLEAR_REQUESTED_NAV_AUDIT,
 } from './nav-audit';
+
+import {
+    SET_REQUESTED_PRODUCT_CHARACTERISTICS,
+    SET_PRODUCT_CHARACTERISTICS,
+    productCharacteristicsReducer,
+    productCharacteristicsState,
+    setProductCharacteristics,
+} from './product-characteristics';
 
 import {
     OfiFundShareListState,
@@ -77,7 +85,7 @@ import {
     setRequestedAmAllFundShare,
     clearRequestedAmAllFundShare,
     setRequestedIznesShares,
-    GET_IZN_SHARES_LIST
+    GET_IZN_SHARES_LIST,
 } from './fund-share-list';
 
 import {
@@ -86,7 +94,7 @@ import {
     OfiFundShareState,
     OfiFundShareReducer,
     setRequestedFundShare,
-    clearRequestedFundShare
+    clearRequestedFundShare,
 } from './fund-share';
 
 import {
@@ -97,7 +105,7 @@ import {
     clearRequestedFundShareAudit,
     SET_FUND_SHARE_AUDIT,
     SET_REQUESTED_FUND_SHARE_AUDIT,
-    CLEAR_REQUESTED_FUND_SHARE_AUDIT
+    CLEAR_REQUESTED_FUND_SHARE_AUDIT,
 } from './fund-share-audit';
 
 import {
@@ -106,7 +114,7 @@ import {
     OfiFundShareDocsState,
     OfiFundShareDocsReducer,
     setRequestedFundShareDocs,
-    clearRequestedFundShareDocs
+    clearRequestedFundShareDocs,
 } from './fund-share-docs';
 
 import {
@@ -114,8 +122,19 @@ import {
     ofiSetCurrentFundShareSelectedFund,
     getOfiFundShareSelectedFund,
     OfiFundShareSelectedFundReducer,
-    OfiFundShareSelectedFundState
+    OfiFundShareSelectedFundState,
 } from './fund-share-sf';
+
+import {
+    ProductConfiguration,
+    SET_PRODUCT_CONFIGURATION,
+    SET_REQUESTED_CONFIGURATION,
+    CLEAR_REQUESTED_CONFIGURATION,
+    setRequestedConfiguration,
+    clearRequestedConfiguration,
+    OfiProductConfigReducer,
+    OfiProductConfigState,
+} from './configuration';
 
 export {
     ManagementCompanyState,
@@ -205,7 +224,20 @@ export {
     OFI_SET_CURRENT_FUND_SHARE_SF,
     ofiSetCurrentFundShareSelectedFund,
     getOfiFundShareSelectedFund,
-    OfiFundShareSelectedFundReducer
+    OfiFundShareSelectedFundReducer,
+    // PRODUCT CONFIGURATION
+    ProductConfiguration,
+    SET_PRODUCT_CONFIGURATION,
+    SET_REQUESTED_CONFIGURATION,
+    CLEAR_REQUESTED_CONFIGURATION,
+    setRequestedConfiguration,
+    clearRequestedConfiguration,
+    OfiProductConfigReducer,
+    OfiProductConfigState,
+    // PRODUCT CHARACTERISTICS
+    SET_REQUESTED_PRODUCT_CHARACTERISTICS,
+    SET_PRODUCT_CHARACTERISTICS,
+    setProductCharacteristics,
 };
 
 export interface OfiProductState {
@@ -219,6 +251,8 @@ export interface OfiProductState {
     ofiFundShareSelectedFund: OfiFundShareSelectedFundState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
+    ofiProductConfiguration: OfiProductConfigState;
+    ofiProductCharacteristics: productCharacteristicsState;
 }
 
 export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiProductState>({
@@ -233,5 +267,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiFundShareSelectedFund: OfiFundShareSelectedFundReducer,
     ofiManageNav: OfiManageNavReducer,
     ofiNavLatest: OfiNavLatestReducer,
-    ofiNavAudit: OfiNavAuditReducer
+    ofiNavAudit: OfiNavAuditReducer,
+    ofiProductConfiguration: OfiProductConfigReducer,
+    ofiProductCharacteristics: productCharacteristicsReducer,
 });

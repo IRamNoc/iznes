@@ -130,6 +130,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
             const holderItem: ShareHolderItem = {
                 ranking: holder.ranking,
                 investorName: holder.investorName,
+                companyName: holder.companyName,
                 quantity: holder.quantity,
                 amount: holder.amount,
                 ratio: holder.ratio,

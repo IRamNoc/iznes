@@ -29,6 +29,7 @@ export { FundShareComponent } from './ofi-product/fund-share/form/component';
 export { AddNewFundShareComponent } from './ofi-product/fund-share/add-new/component';
 export { FundShareAuditComponent } from './ofi-product/fund-share/audit/component';
 export { FundComponent } from './ofi-product/fund/component';
+export { ProductCharacteristicComponent } from './ofi-product/characteristic/product-characteristic.component';
 /**
  * Nav
  */

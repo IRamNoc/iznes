@@ -29,7 +29,10 @@ import 'rxjs/add/operator/takeUntil';
 import {SagaHelper} from '@setl/utils';
 import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import {SET_INVESTOR_INVITATIONS_LIST, SET_INVESTOR_INVITATIONS_LIST_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import {
+    SET_INVESTOR_INVITATIONS_LIST,
+    SET_INVESTOR_INVITATIONS_LIST_REQUESTED
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 
 @Injectable()
 export class OfiKycService {
@@ -303,26 +306,9 @@ export class OfiKycService {
         const messageBody: SaveFundAccessRequestBody = {
             RequestName: 'iznesfundaccessadd',
             token: this.memberSocketService.token,
-            shareArray: _.get(requestData, 'shareArray', ''),
+            access: _.get(requestData, 'access', ''),
             kycID: _.get(requestData, 'kycID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
-            entryFee: 0,
-            exitFee: 0
-        };
-
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
-    }
-
-    removeFundAccess(requestData: SaveFundAccessRequestData): any {
-
-        const messageBody: SaveFundAccessRequestBody = {
-            RequestName: 'iznesfundaccessdelete',
-            token: this.memberSocketService.token,
-            shareArray: _.get(requestData, 'shareArray', ''),
-            kycID: _.get(requestData, 'kycID', ''),
-            investorWalletID: _.get(requestData, 'investorWalletID', ''),
-            entryFee: 0,
-            exitFee: 0
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

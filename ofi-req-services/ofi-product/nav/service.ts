@@ -1,38 +1,33 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {
-    RequestNavMessageBody,
+    DeleteNavMessageBody,
+    RequestNavAuditTrailMessageBody,
     RequestNavFundHistoryMessageBody,
     RequestNavFundLatestMessageBody,
+    RequestNavMessageBody,
     UpdateNavMessageBody,
-    DeleteNavMessageBody,
-    RequestNavAuditTrailMessageBody
+    UploadNavFileMessageBody,
+    UploadNavFileRequestData,
 } from './model';
-import {SagaHelper, Common} from '@setl/utils';
+import {SagaHelper} from '@setl/utils';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {
-    SET_NAV_FUNDS_LIST,
-    setRequestedNavFundsList,
-    ofiSetCurrentNavFundsListRequest,
-    SET_NAV_FUND_VIEW,
-    setRequestedNavFundView,
-    ofiSetCurrentNavFundViewRequest,
     SET_NAV_FUND_HISTORY,
-    setRequestedNavFundHistory,
-    ofiSetCurrentNavFundHistoryRequest,
+    SET_NAV_FUND_VIEW,
+    SET_NAV_FUNDS_LIST,
     SET_NAV_LATEST,
-    setRequestedNavLatest,
-    ofiSetCurrentNavLatestRequest
+    setRequestedNavFundView,
+    setRequestedNavLatest
 } from '../../../ofi-store/ofi-product/nav';
 
-import {
-    SET_NAV_AUDIT,
-    setRequestedNavAudit,
-    clearRequestedNavAudit
-} from '../../../ofi-store/ofi-product/nav-audit';
+import {SET_NAV_AUDIT} from '../../../ofi-store/ofi-product/nav-audit';
+
+const GLOBAL_UPLOAD_MODE = 'global';
+const DETAIL_UPLOAD_MODE = 'detail';
 
 @Injectable()
 export class OfiNavService {
@@ -49,7 +44,7 @@ export class OfiNavService {
      */
     static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedNavFundsList());
+        // ngRedux.dispatch(setRequestedNavFundsList());
 
         // Request the list.
         const asyncTaskPipe = ofiNavService.requestNav(requestData);
@@ -198,10 +193,10 @@ export class OfiNavService {
      * @param requestData
      */
     static defaultRequestNavAuditTrail(ofiNavService: OfiNavService,
-        ngRedux: NgRedux<any>,
-        requestData: any,
-        successCallback: (res) => void,
-        errorCallback: (res) => void) {
+                                       ngRedux: NgRedux<any>,
+                                       requestData: any,
+                                       successCallback: (res) => void,
+                                       errorCallback: (res) => void) {
 
         // Create the request.
         const asyncTaskPipe = ofiNavService.requestNavAuditTrail(requestData);
@@ -292,4 +287,35 @@ export class OfiNavService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    /**
+     * Send the content of csv file as JSON to backend
+     *
+     * @param {string} mode
+     * @param {UploadNavFileRequestData} requestData
+     * @param {NgRedux<any>} ngRedux
+     * @param {(res) => void} successCallback
+     * @param {(err) => void} errorCallback
+     */
+    uploadNavFile(mode = GLOBAL_UPLOAD_MODE, requestData: UploadNavFileRequestData, ngRedux: NgRedux<any>, successCallback: (res) => void, errorCallback: (err) => void) {
+        let messageBody: UploadNavFileMessageBody = {
+            RequestName: (mode === DETAIL_UPLOAD_MODE) ? 'iznuploaddetailnavshares' : 'iznuploadglobalnavshares',
+            token: this.memberSocketService.token,
+            navData: requestData.navData,
+        };
+
+        if (mode === DETAIL_UPLOAD_MODE) {
+            messageBody = { ...messageBody, shareIsin: requestData.shareIsin };
+        }
+
+        ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [],
+                [],
+                createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+                {},
+                res => successCallback(res),
+                err => errorCallback(err),
+            ),
+        );
+    }
 }

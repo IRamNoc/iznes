@@ -64,8 +64,8 @@
                     <clr-dg-column style="min-width: 190px;">{{'Actions' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
-                        <clr-dg-cell>{{fund['isin']}}</clr-dg-cell>
-                        <clr-dg-cell>{{fund['shareName']}}</clr-dg-cell>
+                        <clr-dg-cell><a [routerLink]="['/product-module/product-caracteristic', fund['isin']]">{{fund['isin']}}</a></clr-dg-cell>
+                        <clr-dg-cell><a [routerLink]="['/product-module/product-caracteristic', fund['isin']]">{{fund['shareName']}}</a></clr-dg-cell>
                         <clr-dg-cell>{{fund['assetClass']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['assetManager']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['srri']}}</clr-dg-cell>
