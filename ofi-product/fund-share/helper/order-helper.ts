@@ -45,7 +45,7 @@ export interface OrderRequest {
     comment: string;
 }
 
-interface IznShareDetailWithNav extends IznesShareDetail {
+export interface IznShareDetailWithNav extends IznesShareDetail {
     price: number;
     amCompanyID: number;
     amWalletID: number;
@@ -55,6 +55,7 @@ interface IznShareDetailWithNav extends IznesShareDetail {
     hasShareAccess: number;
     platFormFee: number;
     investorHoling: number;
+    holidayMgmtConfig: string;
 }
 
 interface VerifyResponse {
