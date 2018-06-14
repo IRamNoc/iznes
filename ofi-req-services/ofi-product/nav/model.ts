@@ -55,3 +55,15 @@ export interface RequestNavAuditTrailMessageBody extends MemberNodeMessageBody {
     offset: number;
     limit: number;
 }
+
+export interface UploadNavFileRequestData {
+    navData: string;
+    shareIsin?: string;
+}
+
+export interface UploadNavFileMessageBody extends MemberNodeMessageBody {
+    RequestName: string;
+    token: string;
+    navData: string;
+    shareIsin?: string;
+}
