@@ -51,6 +51,12 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    @HostListener('window:mouseup', ['$event']) onMouseUp(event: MouseEvent): void {
+        setTimeout(() => {
+            this.resizeHeight();
+        }, 50);
+    }
+
     @HostListener('window:resize', ['$event']) onResize(event): void {
         // console.log(this.divSlider.offsetWidth);
     }
@@ -411,7 +417,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     dirty(controls) {
-        console.log(controls);
         Object.keys(controls).forEach((key) => {
             let formControl : FormControl = controls[key];
             if (controls[key].controls) {
@@ -462,7 +467,10 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         if (steps[this.currentStep] && window.getComputedStyle(steps[this.currentStep],null)) {
             // calculate screens/sections height
             marginsTop = parseInt(window.getComputedStyle(steps[this.currentStep],null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
-            this.divSlider.style.height = marginsTop + steps[this.currentStep].offsetHeight + 'px';
+            // console.log('margin', marginsTop);
+            // console.log('height', steps[this.currentStep].offsetHeight);
+            // console.log('scroll', steps[this.currentStep].scrollHeight);
+            this.divSlider.style.height = marginsTop + steps[this.currentStep].offsetHeight + (steps[this.currentStep].scrollHeight - steps[this.currentStep].offsetHeight) + 'px';
         } else {
             // calculate finished screen height
             marginsTop = parseInt(window.getComputedStyle(this.divFinished,null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
