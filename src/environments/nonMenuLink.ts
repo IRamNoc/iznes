@@ -8,6 +8,7 @@ export const nonMenuLink = {
         '\/new-investor\/informations',
         '\/new-investor\/already-done\/[^\/]*',
         '\/product-module\/product-caracteristic\/[^\/]*',
+        '\/my-requests\/[^\/]*',
     ],
     system_admin: [...commonMenuLink],
     am: [
