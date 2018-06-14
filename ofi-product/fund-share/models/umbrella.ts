@@ -73,6 +73,7 @@ export class ShareUmbrellaFund extends DynamicFormsValidator {
         label: 'Investment Advisor',
         required: false,
         disabled: true,
+        listAllowMultiple: true,
         listItems: PC.fundItems.investmentAdvisorItems,
         mltag: 'txt_fundshare_investadvisorid'
     }
@@ -81,6 +82,7 @@ export class ShareUmbrellaFund extends DynamicFormsValidator {
         label: 'Paying Agent',
         required: false,
         disabled: true,
+        listAllowMultiple: true,
         listItems: PC.fundItems.payingAgentItems,
         mltag: 'txt_fundshare_payingagentid'
     }

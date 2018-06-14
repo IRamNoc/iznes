@@ -143,7 +143,7 @@ export class FundComponent implements OnInit, OnDestroy {
     unSubscribe: Subject<any> = new Subject();
 
     currentRoute: {
-        fromShare? : boolean,
+        fromShare?: boolean,
     } = {};
 
     constructor(
@@ -158,8 +158,8 @@ export class FundComponent implements OnInit, OnDestroy {
         private ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private route: ActivatedRoute,
-        private changeDetectorRef : ChangeDetectorRef,
-        private confirmationService : ConfirmationService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private confirmationService: ConfirmationService,
         public _translate: MultilingualService,
         @Inject('product-config') productConfig,
     ) {
@@ -206,9 +206,9 @@ export class FundComponent implements OnInit, OnDestroy {
             });
 
         this.umbrellaForm = fb.group({
-            umbrellaFundName: { value: 'nem', disabled: true },
-            umbrellaLei: { value: 'lei', disabled: true },
-            umbrellaFundDomicile: { value: 'dom', disabled: true },
+            umbrellaFundName: { value: '', disabled: true },
+            umbrellaLei: { value: '', disabled: true },
+            umbrellaFundDomicile: { value: '', disabled: true },
         });
 
         this.umbrellaEditForm = fb.group({
@@ -242,7 +242,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.fundForm = fb.group({
             isFundStructure: { value: '', disabled: true },
-            fundName: [null, Validators.compose([Validators.required, this.validators.alphanumeric])],
+            fundName: ['', Validators.compose([Validators.required, this.validators.alphanumeric])],
             legalEntityIdentifier: [null, this.validators.lei],
             registerOffice: [null, Validators.compose([this.validators.alphanumeric])],
             registerOfficeAddress: [null, Validators.compose([this.validators.alphanumeric])],
@@ -313,7 +313,9 @@ export class FundComponent implements OnInit, OnDestroy {
                 if (!d.length) {
                     this.selectedUmbrella = null;
                     return;
-                } else if (d[0].id === '0') {
+                }
+
+                if (d[0].id === '0') {
                     this.umbrellaForm.controls['umbrellaFundName'].setValue('');
                     this.umbrellaForm.controls['umbrellaLei'].setValue('');
                     this.umbrellaForm.controls['umbrellaFundDomicile'].setValue('');
@@ -350,7 +352,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['giin']
                         .setValue(newUmbrella.giin);
                     this.umbrellaEditForm.controls['investmentAdvisorID']
-                        .setValue(FundComponent.getListItemText(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
+                        .setValue(this.getListItems(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
                     this.umbrellaEditForm.controls['legalAdvisorID']
                         .setValue(FundComponent.getListItemText(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
                     this.umbrellaEditForm.controls['legalEntityIdentifier']
@@ -358,9 +360,9 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.umbrellaEditForm.controls['managementCompanyID']
                         .setValue(FundComponent.getListItemText(newUmbrella.managementCompanyID, this.managementCompanyItems));
                     this.umbrellaEditForm.controls['payingAgentID']
-                        .setValue(FundComponent.getListItemText(newUmbrella.payingAgentID, this.payingAgentItems));
+                        .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
                     this.umbrellaEditForm.controls['principlePromoterID']
-                        .setValue(FundComponent.getListItemText(newUmbrella.principlePromoterID, this.principalPromoterItems));
+                        .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
                     this.umbrellaEditForm.controls['registerOffice']
                         .setValue(newUmbrella.registerOffice);
                     this.umbrellaEditForm.controls['registerOfficeAddress']
@@ -391,9 +393,9 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['custodianBank']
                         .setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
                     this.fundForm.controls['investmentAdvisor']
-                        .setValue(FundComponent.getListItem(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
+                        .setValue(this.getListItems(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
                     this.fundForm.controls['payingAgent']
-                        .setValue(FundComponent.getListItem(newUmbrella.payingAgentID, this.payingAgentItems));
+                        .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
                     this.fundForm.controls['delegatedManagementCompany']
                         .setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
                     this.fundForm.controls['auditor']
@@ -401,11 +403,10 @@ export class FundComponent implements OnInit, OnDestroy {
                     this.fundForm.controls['taxAuditor']
                         .setValue(FundComponent.getListItem(newUmbrella.taxAuditorID, this.taxAuditorItems));
                     this.fundForm.controls['principalPromoter']
-                        .setValue(FundComponent.getListItem(newUmbrella.principlePromoterID, this.principalPromoterItems));
+                        .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
                     this.fundForm.controls['legalAdvisor']
                         .setValue(FundComponent.getListItem(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
                     this.fundForm.controls['directors'].setValue(newUmbrella.directors);
-
                 }
                 this.selectedUmbrella = d[0].id;
                 return;
@@ -556,12 +557,12 @@ export class FundComponent implements OnInit, OnDestroy {
         OfiProductConfigService.defaultRequestProductConfig(this.ofiProductConfigService, this.ngRedux);
     }
 
-    static getListItemText(value: string, list: any[]): string {
+    static getListItemText(value: string, list: { id: string, text: string }[]): string {
         const listItem = FundComponent.getListItem(value, list);
         return listItem.length ? listItem[0].text : '';
     }
 
-    static getListItem(value: string, list: any[]): any[] {
+    static getListItem(value: string, list: { id: string, text: string }[]): { id: string, text: string }[] {
         if (value === null) {
             return [];
         }
@@ -571,6 +572,27 @@ export class FundComponent implements OnInit, OnDestroy {
             return [];
         }
         return [item];
+    }
+
+    getListItems(val: string[], list: { id: string, text: string }[]): { id: string, text: string }[] {
+        if (!val.length) {
+            return [];
+        }
+
+        return val.map((id: string) => {
+            const newItem = FundComponent.getListItem(id, list);
+            if (!newItem.length) {
+                return null;
+            }
+            return newItem[0];
+        }).filter(d => d !== null);
+    }
+
+    getIdsFromList(val: { id: string, text: string }[]): string[] {
+        if (!val.length) {
+            return [];
+        }
+        return val.map(item => item.id);
     }
 
     getEuDirectiveType() {
@@ -603,7 +625,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe((params) => {
             if (params.fromShare) {
                 this.currentRoute.fromShare = true;
             }
@@ -619,7 +641,8 @@ export class FundComponent implements OnInit, OnDestroy {
 
                 if (params.id === 'new') {
                     return;
-                } else if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
+                }
+                if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
                     if (this.fundList[params.id].umbrellaFundID) {
                         this.umbrellaControl.setValue([{
                             id: this.fundList[params.id].umbrellaFundID,
@@ -631,7 +654,10 @@ export class FundComponent implements OnInit, OnDestroy {
                         ]);
                     }
 
-                    const fund = _.omit(this.fundList[params.id], ['fundID', 'umbrellaFundID', 'umbrellaFundName', 'companyName']);
+                    const fund = _.omit(
+                        this.fundList[params.id],
+                        ['fundID', 'umbrellaFundID', 'umbrellaFundName', 'companyName'],
+                    );
 
                     this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
                     this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
@@ -649,10 +675,10 @@ export class FundComponent implements OnInit, OnDestroy {
                         fundAdministrator: FundComponent.getListItem(fund.fundAdministrator, this.fundAdministratorItems),
                         custodianBank: FundComponent.getListItem(fund.custodianBank, this.custodianBankItems),
                         investmentManager: FundComponent.getListItem(fund.investmentManager, this.investmentManagerItems),
-                        principalPromoter: FundComponent.getListItem(fund.principalPromoter, this.principalPromoterItems),
-                        payingAgent: FundComponent.getListItem(fund.payingAgent, this.payingAgentItems),
+                        principalPromoter: this.getListItems(fund.principalPromoter, this.principalPromoterItems),
+                        payingAgent: this.getListItems(fund.payingAgent, this.payingAgentItems),
                         portfolioCurrencyHedge: FundComponent.getListItem(fund.portfolioCurrencyHedge, this.portfolioCurrencyHedgeItems),
-                        investmentAdvisor: FundComponent.getListItem(fund.investmentAdvisor, this.investmentAdvisorItems),
+                        investmentAdvisor: this.getListItems(fund.investmentAdvisor, this.investmentAdvisorItems),
                         auditor: FundComponent.getListItem(fund.auditor, this.auditorItems),
                         taxAuditor: FundComponent.getListItem(fund.taxAuditor, this.taxAuditorItems),
                         legalAdvisor: FundComponent.getListItem(fund.legalAdvisor, this.legalAdvisorItems),
@@ -667,10 +693,11 @@ export class FundComponent implements OnInit, OnDestroy {
                     }
                     this.viewMode = 'FUND';
                     return;
-                } else {
-                    this.router.navigate(['product-module', 'product', 'fund', 'new']);
-                    return;
                 }
+
+                this.router.navigate(['product-module', 'product', 'fund', 'new']);
+                return;
+
             });
     }
 
@@ -678,15 +705,15 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaFundList$
             .filter(umbrellas => umbrellas[umbrellaID])
             .take(1)
-            .subscribe(umbrellas => {
+            .subscribe((umbrellas) => {
                 this.setCurrentUmbrella(umbrellas[umbrellaID]);
             });
     }
 
     setCurrentUmbrella(umbrella) {
         this.umbrellaControl.setValue([{
-            id : umbrella.umbrellaFundID,
-            text : umbrella.umbrellaFundName,
+            id: umbrella.umbrellaFundID,
+            text: umbrella.umbrellaFundName,
         }]);
         const newUrl = this.router.createUrlTree([], {
             queryParams: { umbrella: null },
@@ -712,7 +739,7 @@ export class FundComponent implements OnInit, OnDestroy {
             homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
             fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
             portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
-            investmentAdvisor: _.get(this.fundForm.controls['investmentAdvisor'].value, ['0', 'id'], null),
+            investmentAdvisor: this.getIdsFromList(this.fundForm.controls['investmentAdvisor'].value),
             auditor: _.get(this.fundForm.controls['auditor'].value, ['0', 'id'], null),
             taxAuditor: _.get(this.fundForm.controls['taxAuditor'].value, ['0', 'id'], null),
             legalAdvisor: _.get(this.fundForm.controls['legalAdvisor'].value, ['0', 'id'], null),
@@ -720,8 +747,8 @@ export class FundComponent implements OnInit, OnDestroy {
             fundAdministrator: _.get(this.fundForm.controls['fundAdministrator'].value, ['0', 'id'], null),
             custodianBank: _.get(this.fundForm.controls['custodianBank'].value, ['0', 'id'], null),
             investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
-            principalPromoter: _.get(this.fundForm.controls['principalPromoter'].value, ['0', 'id'], null),
-            payingAgent: _.get(this.fundForm.controls['payingAgent'].value, ['0', 'id'], null),
+            principalPromoter: this.getIdsFromList(this.fundForm.controls['principalPromoter'].value),
+            payingAgent: this.getIdsFromList(this.fundForm.controls['payingAgent'].value),
             managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
             delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
             umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
@@ -759,7 +786,10 @@ export class FundComponent implements OnInit, OnDestroy {
         } else {
             this.fundService.iznUpdateFund(this.param, payload)
                 .then(() => {
-                    this.toasterService.pop('success', `${this.fundForm.controls['fundName'].value} has been successfully updated.`);
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} has been successfully updated.`,
+                    );
                     OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
                     this.location.back();
                     return;
@@ -823,6 +853,16 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     onClickLeiSwitch() {
+        if (this.isLeiVisible) {
+            this.fundForm.controls['legalEntityIdentifier'].disable();
+            this.fundForm.controls['legalEntityIdentifier'].clearValidators();
+        } else {
+            this.fundForm.controls['legalEntityIdentifier'].enable();
+            this.fundForm.controls['legalEntityIdentifier'].setValidators(Validators.compose([
+                Validators.required,
+                this.validators.lei,
+            ]));
+        }
         this.isLeiVisible = !this.isLeiVisible;
     }
 

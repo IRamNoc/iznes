@@ -243,6 +243,9 @@ export class OfiFundService {
             RequestName: 'izncreatefund',
             token: this.memberSocketService.token,
             ...payload,
+            principalPromoter: JSON.stringify(payload.principalPromoter),
+            investmentAdvisor: JSON.stringify(payload.investmentAdvisor),
+            payingAgent: JSON.stringify(payload.payingAgent),
         };
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
@@ -274,6 +277,9 @@ export class OfiFundService {
             token: this.memberSocketService.token,
             fundID: id,
             ...payload,
+            principalPromoter: JSON.stringify(payload.principalPromoter),
+            investmentAdvisor: JSON.stringify(payload.investmentAdvisor),
+            payingAgent: JSON.stringify(payload.payingAgent),
         };
 
         return this.buildRequest({

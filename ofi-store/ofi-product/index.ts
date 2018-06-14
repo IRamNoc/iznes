@@ -20,7 +20,7 @@ import {
 
 import {
     UmbrellaFundState,
-    UmbrellaFundReducer,
+    umbrellaFundReducer,
     SET_UMBRELLA_FUND_LIST,
     setRequestedUmbrellaFund,
 } from './umbrella-fund';
@@ -148,7 +148,7 @@ export {
     SET_FUND_LIST,
     // UMBRELLA FUNDS
     UmbrellaFundState,
-    UmbrellaFundReducer,
+    umbrellaFundReducer,
     SET_UMBRELLA_FUND_LIST,
     // LIST
     SET_NAV_FUNDS_LIST,
@@ -258,7 +258,7 @@ export const OfiProductReducer: Reducer<OfiProductState> = combineReducers<OfiPr
     ofiSicav: SicavReducer,
     ofiFund: FundReducer,
     ofiFundShareList: OfiFundShareListReducer,
-    ofiUmbrellaFund: UmbrellaFundReducer,
+    ofiUmbrellaFund: umbrellaFundReducer,
     ofiFundShare: OfiFundShareReducer,
     ofiFundShareAudit: OfiFundShareAuditReducer,
     ofiFundShareDocs: OfiFundShareDocsReducer,
