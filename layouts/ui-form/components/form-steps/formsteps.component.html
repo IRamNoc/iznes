@@ -226,7 +226,7 @@
                                         <div class="mandatory text-danger">*</div>
                                     </label>
                                     <div>
-                                        <input type="text" class="form-control" formControlName="firstname" [placeholder]="_translate.translate('your first name here')">
+                                        <ng-select id="orders-search-type" class="fluid-width" [items]="names" [formControl]="myFormSteps1.controls.step1.controls.firstname" [placeholder]="_translate.translate('firstname')"></ng-select>
                                     </div>
                                     <div *ngIf="myFormSteps1.controls.step1.controls.firstname.hasError('required') && myFormSteps1.controls.step1.controls.firstname.touched" class="text-danger">{{'This field is required' | translate}}</div>
                                 </div>

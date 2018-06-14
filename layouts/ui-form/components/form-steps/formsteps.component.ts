@@ -22,6 +22,13 @@ export class UiFormStepsComponent implements OnInit {
     myFormSteps2: FormGroup;
     myFormSteps3: FormGroup;
 
+    names = [
+        { id: 1, text: 'Laurent' },
+        { id: 2, text: 'Michel' },
+        { id: 3, text: 'Bob' },
+        { id: 4, text: 'Who?' },
+    ];
+
     showInfoPanes: boolean = true;
     lang: string;
     @select(['user', 'siteSettings', 'language']) language$;
