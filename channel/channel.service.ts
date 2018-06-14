@@ -9,6 +9,7 @@ import {
     SET_ADMIN_USERLIST,
     SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
     SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_MENU_PERMISSION_GROUP_LIST,
     SET_MANAGED_WALLETS,
     SET_OWN_WALLETS,
 
@@ -127,6 +128,14 @@ export class ChannelService {
                 this.ngRedux.dispatch(
                     {
                         type: SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+                        payload: [null, data, null]
+                    }
+                );
+
+                /* and the menu action. */
+                this.ngRedux.dispatch(
+                    {
+                        type: SET_MENU_PERMISSION_GROUP_LIST,
                         payload: [null, data, null]
                     }
                 );
