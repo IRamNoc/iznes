@@ -566,7 +566,9 @@ export class FundComponent implements OnInit, OnDestroy {
             return [];
         }
 
-        const item = _.find(list, { id: value });
+        const val = (typeof value === 'number') ? String(value) : value;
+        const item = _.find(list, { id: val });
+
         if (!item) {
             return [];
         }
