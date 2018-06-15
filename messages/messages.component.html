@@ -137,6 +137,10 @@
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
                 <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID);">Download File</button>
             </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
+                <setl-message-poa [data]="currentMessage.action.data"></setl-message-poa>
+            </p>
         </div>
 
         <div class="message_view_menu">

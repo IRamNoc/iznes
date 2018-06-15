@@ -17,6 +17,7 @@ import { SetlMessageFormActionComponent } from './messages/message-components/me
 import { SetlMessageFormActionService } from './messages/message-components/message-form-action/message-form-action.service';
 import { SetlMessageAttachmentComponent } from './messages/message-components/message-attachment/message-attachment.component';
 import { SetlMessageBodyComponent } from './messages/message-components/message-body/message-body.component';
+import { SetlMessagePOAComponent } from './messages/message-components/message-poa/component';
 import { SetlMessageConnectionComponent } from './messages/message-components/message-connection/message-connection.component';
 import { SetlMessageConnectionService } from './messages/message-components/message-connection/message-connection.service';
 import { SetlMessageKycComponent } from './messages/message-components/message-kyc/message-kyc.component';
@@ -42,6 +43,7 @@ import { RouterModule } from '@angular/router';
         SetlMessagesComponent,
         SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
+        SetlMessagePOAComponent,
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,
@@ -51,6 +53,7 @@ import { RouterModule } from '@angular/router';
         SetlMessagesComponent,
         SetlMessageFormActionComponent,
         SetlMessageBodyComponent,
+        SetlMessagePOAComponent,
         SetlMessageAttachmentComponent,
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,
