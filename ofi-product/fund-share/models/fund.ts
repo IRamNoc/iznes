@@ -157,6 +157,7 @@ export class ShareFund extends DynamicFormsValidator {
         label: 'Principal Promoter',
         required: false,
         disabled: true,
+        listAllowMultiple: true,
         listItems: PC.fundItems.principalPromoterItems,
         mltag: 'txt_fundshare_fund_principlepromoter'
     }
@@ -165,6 +166,7 @@ export class ShareFund extends DynamicFormsValidator {
         label: 'Paying Agent',
         required: false,
         disabled: true,
+        listAllowMultiple: true,
         listItems: PC.fundItems.payingAgentItems,
         mltag: 'txt_fundshare_fund_payingagent'
     }
