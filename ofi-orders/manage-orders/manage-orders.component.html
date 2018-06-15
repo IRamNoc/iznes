@@ -260,17 +260,21 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- isin -->
-                            <a [routerLink]="['/product-module/product-caracteristic', order.isin]">
+                            <button
+                                class="btn btn-link btn-sm"
+                                [routerLink]="['/product-module/product-caracteristic', order.isin]"
+                            >
                                 {{order.isin}}
-                            </a>
-
+                            </button>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- shareName -->
-                            <a [routerLink]="['/product-module/product-caracteristic', order.isin]">
-                                {{order.fundShareName}}
-                            </a>
-
+                            <button
+                                class="btn btn-link btn-sm"
+                                [routerLink]="['/product-module/product-caracteristic', order.isin]"
+                            >
+                                {{order.isin}}
+                            </button>
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- assetManagementCompany -->{{order.amCompanyName}}
