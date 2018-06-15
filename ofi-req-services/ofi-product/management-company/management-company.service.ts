@@ -5,7 +5,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody, DeleteManagementCompanyRequestBody} from './management-company.service.model';
-import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
+import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST, setRequestedINVManagementCompany, clearRequestedINVManagementCompany, SET_INV_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
 interface ManagementCompanyData {
     companyID: any;
@@ -41,14 +41,14 @@ interface DeleteManagementCompany {
 export class OfiManagementCompanyService {
 
     @select(['user', 'myDetail', 'accountId']) getMyAccountId;
-    accountId = 0;
+    accountID = 0;
 
     constructor(private memberSocketService: MemberSocketService) {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
     myAccountId(accountId) {
-        this.accountId  = accountId;
+        this.accountID  = accountId;
     }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -75,11 +75,45 @@ export class OfiManagementCompanyService {
         ));
     }
 
+    static setINVRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if(!boolValue){
+            ngRedux.dispatch(clearRequestedINVManagementCompany());
+        } else {
+            ngRedux.dispatch(setRequestedINVManagementCompany());
+        }
+    }
+
+    static defaultRequestINVManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>, requestAll = false) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedINVManagementCompany());
+
+        // Request the list.
+        const asyncTaskPipe = ofiManagementCompanyService.requestINVManagementCompanyList(requestAll);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_INV_MANAGEMENT_COMPANY_LIST],  // SET est en fait un GETLIST
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    requestINVManagementCompanyList(requestAll): any {
+        const messageBody: ManagementCompanyRequestMessageBody = {
+            RequestName: 'izngetmanagementcompanylistforinvestor',
+            token: this.memberSocketService.token,
+            accountID: requestAll ? 0 : this.accountID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     requestManagementCompanyList(): any {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'getManagementCompanyList',
             token: this.memberSocketService.token,
-            accountId: this.accountId
+            accountID: this.accountID
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -90,7 +124,7 @@ export class OfiManagementCompanyService {
         const messageBody: SaveManagementCompanyRequestBody = {
             RequestName: 'newmanagementcompany',
             token: this.memberSocketService.token,
-            entityId: this.accountId,   // entityId = accountID (name just changed)
+            entityId: this.accountID,   // entityId = accountID (name just changed)
             companyName: mcData.companyName,
             country: mcData.country,
             addressPrefix: mcData.addressPrefix,
@@ -134,7 +168,7 @@ export class OfiManagementCompanyService {
         const messageBody: UpdateManagementCompanyRequestBody = {       // where is the companyID ?
             RequestName: 'updatemanagementcompany',
             token: this.memberSocketService.token,
-            entityId: this.accountId,   // entityId = accountID (name just changed)
+            entityId: this.accountID,   // entityId = accountID (name just changed)
             companyID: mcData.companyID,
             companyName: mcData.companyName,
             country: mcData.country,

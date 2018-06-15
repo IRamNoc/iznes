@@ -1,9 +1,10 @@
 import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
+import {ActivatedRoute} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {isEmpty, isNil, keyBy} from 'lodash';
+import {isEmpty, isNil, keyBy, filter} from 'lodash';
 
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
@@ -19,34 +20,35 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     private unsubscribe: Subject<any> = new Subject();
     private managementCompanies;
-    private filteredManagementCompanies;
     private kycList;
-    preselectedManagementCompanyID;
+    private managementCompaniesExtract;
 
-    @Input() form: FormGroup;
-    @Input('preselected') set preselected(value){
-        this.preselectedManagementCompanyID = value;
+    preselectedManagementCompany : any = {};
 
-        if(!isNil(value)){
-            let formControl = this.form.get('managementCompanies');
-            formControl.clearValidators();
-            formControl.updateValueAndValidity();
+    get filteredManagementCompanies(){
+        let id = this.preselectedManagementCompany.id;
+
+        if(id){
+            return filter(this.managementCompaniesExtract, company => {
+                return company.id !== id;
+            });
         }
-    };
 
-    get preselected(){
-        return this.preselectedManagementCompanyID;
+        return this.managementCompaniesExtract;
     }
 
+    @Input() form: FormGroup;
+
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedManagementCompanyList$;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'requested']) requestedManagementCompanyList$;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     constructor(
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private requestsService: RequestsService,
         private ofiKycService: OfiKycService,
-        private ngRedux: NgRedux<any>
+        private ngRedux: NgRedux<any>,
+        private route: ActivatedRoute
     ) {}
 
     get selectedManagementCompanies() {
@@ -61,6 +63,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initSubscriptions();
         this.getAssetManagementCompanies();
+        this.getQueryParams();
     }
 
     initSubscriptions() {
@@ -77,23 +80,49 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             .takeUntil(this.unsubscribe)
             .subscribe(([managementCompanies, kycList]) => {
                 this.managementCompanies = keyBy(managementCompanies, 'companyID');
-                this.filteredManagementCompanies = this.requestsService.extractManagementCompanyData(managementCompanies, kycList)
+                this.kycList = kycList;
+                this.managementCompaniesExtract = this.requestsService.extractManagementCompanyData(managementCompanies, kycList)
             })
         ;
     }
 
-    getAssetManagementCompanies() {
-        // @todo Use correct call for investor once merging is done
-        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
+    getQueryParams() {
+        this.route.queryParams.subscribe(queryParams => {
+
+            if (queryParams.invitationToken) {
+                this.preselectedManagementCompany = {
+                    id : parseInt(queryParams.amcID),
+                    invitationToken: queryParams.invitationToken
+                };
+                this.disableValidators();
+            }
+
+        });
     }
 
-    handleFormSubmit($event) {
+    disableValidators(){
+        let formControl = this.form.get('managementCompanies');
+        formControl.clearValidators();
+        formControl.updateValueAndValidity();
+    }
+
+    getAssetManagementCompanies() {
+        OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux, true);
+    }
+
+    async handleFormSubmit($event) {
         $event.preventDefault();
         if(!this.form.valid){
             return;
         }
 
-        this.requestsService.createMultipleDrafts(this.form.get('managementCompanies').value);
+        let values = this.form.get('managementCompanies').value;
+
+        if(this.preselectedManagementCompany.id){
+            values = values.concat([this.preselectedManagementCompany]);
+        }
+
+        await this.requestsService.createMultipleDrafts(values);
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }
 

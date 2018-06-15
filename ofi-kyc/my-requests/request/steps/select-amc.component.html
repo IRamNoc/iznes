@@ -1,9 +1,5 @@
 <form [formGroup]="form" id="step-selection" (ngSubmit)="handleFormSubmit($event)">
 
-    POUT
-    {{kycList | json}}
-    POUET
-
     <div class="row">
         <div class="col-sm-6">
             {{'Please select the Asset Management Companies you would like to work with on IZNES.' | translate}}
@@ -11,25 +7,23 @@
             <ng-select [items]="filteredManagementCompanies"
                        [multiple]="true"
                        [formControl]="form.get('managementCompanies')"
-                       placerholder="Search"
+                       placeholder="Search"
             ></ng-select>
         </div>
     </div>
 
     <div class="row">
         <div class="col-sm-12">
-            <div class="alert alert-warning p-1 mb-1 mt-1">
-                <div class="alert-items">
-                    <div class="alert-item static">
-                        <div class="alert-icon-wrapper">
-                            <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
-                        </div>
-                        <span class="alert-text text-center">
-                                {{'Warning: if you select Yes in the following table, you will not be able to benefit from all the KYC features of IZNES.' | translate}}
-                        </span>
-                    </div>
-                </div>
+
+            <div class="text-center p-1">
+                <span class="alert-icon-wrapper text-warning">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </span>
+                <span class="alert-text text-warning">
+                    {{'Warning: if you select Yes in the following table, you will not be able to benefit from all the KYC features of IZNES.' | translate}}
+                </span>
             </div>
+
         </div>
     </div>
     <div class="row">
@@ -42,11 +36,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngIf="preselectedManagementCompanyID">
-                    <td>{{managementCompanies[preselectedManagementCompanyID]?.companyName}}</td>
+                <tr *ngIf="preselectedManagementCompany.id">
+                    <td>{{managementCompanies[preselectedManagementCompany.id]?.companyName}}</td>
                     <td>
-                        <label class="switch disabled">
-                            <input type="checkbox" name="registered" class="form-control">
+                        <label class="switch">
+                            <input type="checkbox" name="registered" class="form-control" [(ngModel)]="preselectedManagementCompany.registered" [ngModelOptions]="{standalone: true}">
                             <span class="slider round" data-yes="YES" data-no="NO"></span>
                         </label>
                     </td>

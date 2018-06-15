@@ -345,14 +345,15 @@ export class OfiKycService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-    createKYCDraft(requestData : createKYCDraftRequestData){
+    createKYCDraftOrWaitingApproval(requestData : createKYCDraftRequestData){
 
         const messageBody : createKYCDraftMessageBody = {
-            RequestName: 'izncreatedraftkycrequest',
+            RequestName: 'izncreatedraftorwaitingapprovalkycrequest',
             token: this.memberSocketService.token,
             inviteToken : _.get(requestData, 'inviteToken', ''),
             managementCompanyID : _.get(requestData, 'managementCompanyID', ''),
-            investorWalletID : _.get(requestData, 'investorWalletID', '')
+            investorWalletID : _.get(requestData, 'investorWalletID', ''),
+            kycStatus: _.get(requestData, 'kycStatus', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

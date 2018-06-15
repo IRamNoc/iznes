@@ -42,7 +42,9 @@ export class OfiConsumeTokenComponent implements OnInit {
     }
 
     async useInvitationToken(token) {
-        return this.ofiKycService.useInvitationToken(token);
+        return this.ofiKycService.useInvitationToken(token).then(response => {
+            this.amcID = getValue(response, [1, 'Data', 0, 'amcID']);
+        });
     }
 
     removeTokenFromURL() {
@@ -61,7 +63,8 @@ export class OfiConsumeTokenComponent implements OnInit {
             queryParams : {}
         };
         if(params.invitationToken){
-            (extras.queryParams as any).invitationToken = params.invitationToken;
+            extras.queryParams['invitationToken'] = params.invitationToken;
+            extras.queryParams['amcID'] = this.amcID;
         }
 
         // If not redirecting to the information page, redirect to my-requests because we have a token

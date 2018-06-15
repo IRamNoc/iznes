@@ -158,6 +158,7 @@ export interface createKYCDraftRequestData{
     inviteToken: string;
     managementCompanyID: number;
     investorWalletID: number;
+    kycStatus: number;
 }
 
 export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
@@ -165,4 +166,5 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
     inviteToken: string;
     managementCompanyID: number;
     investorWalletID: number;
+    kycStatus: number;
 }

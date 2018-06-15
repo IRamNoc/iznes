@@ -42,19 +42,19 @@ export class RequestsService {
         return _.filter(companies, company => !kycList[company.companyID]);
     }
 
-    async createMultipleDrafts(values) {
-        let amcIDs = _.map(values, value => value.id);
-
-        for(let amcID of amcIDs){
-            await this.createDraft(amcID);
+    async createMultipleDrafts(choices) {
+        for(let choice of choices){
+            await this.createDraft(choice);
         }
     }
 
-    createDraft(amcID) {
-        this.ofiKycService.createKYCDraft({
-            inviteToken: '',
-            managementCompanyID: amcID,
-            investorWalletID: 0
+    createDraft(choice) {
+
+        return this.ofiKycService.createKYCDraftOrWaitingApproval({
+            inviteToken: choice.invitationToken ? choice.invitationToken : '',
+            managementCompanyID: choice.id,
+            investorWalletID: 0,
+            kycStatus : choice.registered ? 1 : 0
         });
     }
 

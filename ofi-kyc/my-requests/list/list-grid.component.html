@@ -7,11 +7,11 @@
     <clr-dg-row *clrDgItems="let kyc of kycList">
         <clr-dg-cell>{{kyc.companyName}}</clr-dg-cell>
         <clr-dg-cell [ngSwitch]="kyc.status">
-            <span class="text-danger" *ngSwitchCase="statusList.Rejected">{{'Rejected' | translate}}</span>
-            <span class="text-success" *ngSwitchCase="statusList.Approved">{{'Accepted' | translate}}</span>
-            <span class="text-gray-dark" *ngSwitchCase="statusList.Draft">{{'Draft' | translate}}</span>
-            <span class="text-warning" *ngSwitchCase="statusList.WaitingForApproval">{{'Waiting Approval' | translate}}</span>
-            <span class="text-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{'Waiting Information' | translate}}</span>
+            <span class="label label-danger" *ngSwitchCase="statusList.Rejected">{{'Rejected' | translate}}</span>
+            <span class="label label-success" *ngSwitchCase="statusList.Approved">{{'Accepted' | translate}}</span>
+            <span class="label label-info" *ngSwitchCase="statusList.Draft">{{'Draft' | translate}}</span>
+            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForApproval">{{'Waiting Approval' | translate}}</span>
+            <span class="label label-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{'Waiting Information' | translate}}</span>
         </clr-dg-cell>
 
         <clr-dg-cell>{{kyc.lastUpdated}}</clr-dg-cell>

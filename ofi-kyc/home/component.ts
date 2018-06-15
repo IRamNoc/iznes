@@ -161,7 +161,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             if (queryParams.invitationToken) {
                 this.router.navigate(['my-requests', 'new'], {
                     queryParams: {
-                        invitationToken: queryParams.invitationToken
+                        invitationToken: queryParams.invitationToken,
+                        amcID: queryParams.amcID
                     }
                 });
             } else{
