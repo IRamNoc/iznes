@@ -272,9 +272,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
-        this.showHideButtons(form);
-        this.resizeHeight();
         setTimeout(() => {
+            this.showHideButtons(form);
+            this.resizeHeight();
             this.resizeWidth();
         }, 0);
     }
