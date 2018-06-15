@@ -31,30 +31,47 @@
                 <h3>{{'Slideshow configuration' | translate}}:</h3>
                 <hr>
                 <p>{{'A slideshow needs a collection of objects (one by screen) inside an array. The title is optionnal.' | translate}}</p>
-                <pre><code>{{'[formsteps]=&quot;[{title: \'Title 1\'}, {}, {title: \'Title 3\'}]&quot;'}}</code></pre>
+                <ol>
+                    <li><b>{{'title'}}: string</b> => {{'each screen can have a title. For each screen name those titles like this: title1, title2, etc.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without fill the fields.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</span> Not used in <b>"Slideshows"</b></li>
+                </ol>
+                <br>
+                <pre><code>{{'[formsteps]=&quot;[{title: \'Title 1\'}, {startHere: true}, {title: \'Title 3\'}]&quot;'}}</code></pre>
                 <br>
                 <h3>{{'Single form configuration' | translate}}:</h3>
                 <hr>
                 <p>{{'Single form is based on &lt;section&gt; to separate each screen and FormGroup to valid each screen.' | translate}}</p>
                 <ol>
                     <li><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</span> Not used in <b>"Single Forms"</b></li>
                     <li><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without validators verification.' | translate}} ({{'optional' | translate}})</li>
                     <li><b>{{'titleN'}}: string</b> => {{'each screen can have a title. For each screen name those titles like this: title1, title2, etc.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Single Forms"</b></li>
+                    <li class="txtRed"><span style="text-decoration: line-through"><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}}</span> Not used in <b>"Single Forms"</b></li>
                 </ol>
                 <br>
-                <pre><code>{{'[formsteps]=&quot;[{form: myForm, forceNext: true, title1: \'Intro\', title2: \'Form\', title3: \'Submit\'}]&quot;'}}</code></pre>
+                <pre><code>{{'[formsteps]=&quot;[{form: myForm, forceNext: true, title1: \'Intro\', title2: \'Form\', title3: \'Submit\', redirect: \'ui-layouts/tooltips\'}]&quot;'}}</code></pre>
                 <br>
                 <h3>{{'Mix of forms & texts' | translate}}:</h3>
                 <hr>
                 <p>{{'For a mix of forms and HTML screens, you have almost the same configuration than Slideshows (one object per screen), but this time we have to pass two new parameters: FORM & ID.' | translate}}</p>
                 <ol>
                     <li><b>{{'form'}}: object</b> => {{'used to validate the form and each formGroup.' | translate}}</li>
-                    <li><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'id'}}: string</b> => {{'id of the form tag to link buttons to forms.' | translate}}</li>
                     <li><b>{{'title'}}: string</b> => {{'each screen can have a title.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'startHere'}}: boolean</b> => {{'used to start directly to a specific step.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'redirect'}}: boolean</b> => {{'used to redirect user to a specific url instead of showing "Finished" screen.' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>{{'submitted'}}: boolean</b> => {{'used to avoid re-saving a form.' | translate}} ({{'optional' | translate}})</li>
                     <li class="txtRed"><span style="text-decoration: line-through"><b>{{'forceNext'}}: boolean</b> => {{'boolean to allow user to go to next screen without fill the fields.' | translate}} ({{'optional' | translate}})</span> Not used in <b>"Mix of forms & texts"</b></li>
                 </ol>
                 <br>
-                <pre><code>{{'[formsteps]=&quot;[{title: \'Intro\'}, {form: myForm1, id: \'myForm1\', title: \'Form\'}, {title: \'Outro\'}, {form: myForm2, id: \'myForm2\', title: \'Form again\'}]&quot;'}}</code></pre>
+                <pre><code>{{'[formsteps]=&quot;[{title: \'Intro\'}, {form: myForm1, id: \'myForm1\', title: \'Form\', submitted: true}, {title: \'Outro\', startHere: true}, {form: myForm2, id: \'myForm2\', title: \'Form again\'}]&quot;'}}</code></pre>
                 <br><br>
                 <h2>{{'1. Slideshow' | translate}}</h2>
                 <hr>
@@ -62,25 +79,25 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <b>{{'Implementation' | translate}}:</b>
-                        <pre><code>{{'&lt;div [formsteps]=&quot;[{title: \'Title 1\'}, {}, {title: \'Title 3\'}]&quot;&gt;'}}
+                        <pre><code>{{'&lt;div [formsteps]=&quot;[{title: \'Title 1\'}, {startHere: true}, {title: \'Title 3\'}]&quot;&gt;'}}
     {{'&lt;section&gt;'}}
-        {{'&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+        {{'&lt;p&gt;Screen 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
     {{'&lt;/section&gt;'}}
     {{'&lt;section&gt;'}}
-        {{'&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+        {{'&lt;p&gt;<b>Start directly at screen 2:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
     {{'&lt;/section&gt;'}}
     {{'&lt;section&gt;'}}
-        {{'&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
+        {{'&lt;p&gt;Screen 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.&lt;/p&gt;'}}
     {{'&lt;/section&gt;'}}
 {{'&lt;/div&gt;'}}</code></pre>
                     </div>
                     <div class="col-sm-6">
                         <b>{{'Example' | translate}}:</b>
                         <div class="docBox">
-                            <div [formsteps]="[{title: 'Title 1'}, {}, {title: 'Title 3'}]">
-                                <section><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
-                                <section><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
-                                <section><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                            <div [formsteps]="[{title: 'Title 1'}, {startHere: true}, {title: 'Title 3'}]">
+                                <section><p>Screen 1: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                                <section><p><b>Start directly at screen 2:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
+                                <section><p>Screen 3: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam ullamcorper sodales arcu vestibulum pellentesque. Pellentesque quis tellus vitae neque tincidunt suscipit. Duis mattis lorem ac dapibus tempus. Maecenas quis sollicitudin risus. Sed ullamcorper est sed nulla luctus vulputate.</p></section>
                             </div>
                         </div>
                     </div>
@@ -214,9 +231,11 @@
     {{'&lt;/section&gt;'}}
 {{'&lt;/form&gt;'}}</code></pre>
                 <br>
+                <pre><code>{{'[formsteps]="[{form: myFormSteps1, forceNext: true, title1: \'This is my first step\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
+                <br>
                 <b>{{'Example' | translate}}:</b>
                 <div class="docBox">
-                    <form [formGroup]="myFormSteps1" novalidate id="myFormSteps1" (ngSubmit)="myFormSteps1.valid && save1(myFormSteps1.value)" [formsteps]="[{form: myFormSteps1, forceNext: false, title1: 'This is my first step'}]">
+                    <form [formGroup]="myFormSteps1" novalidate id="myFormSteps1" (ngSubmit)="myFormSteps1.valid && save1(myFormSteps1.value)" [formsteps]="[{form: myFormSteps1, forceNext: true, title1: 'This is my first step', redirect: 'ui-layouts/tooltips'}]">
                         <!--each section is a page of form steps-->
                         <section formGroupName="step1" class="form-block">
                             <div class="row">
@@ -347,11 +366,11 @@
                 <hr>
                 <p>{{'Allow us to have textual screens between form screens.' | translate}}</p>
                 <b>{{'Implementation' | translate}}:</b>
-                <pre><code>...</code></pre>
+                <pre><code>{{'[formsteps]="[{title: \'Introduction\'}, {form: myFormSteps2, id: \'myFormSteps2\', title: \'Form\', submitted: true}, {title: \'Outro\', startHere: true}, {form: myFormSteps3, id: \'myFormSteps3\', title: \'Form again\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
                 <br>
                 <b>{{'Example' | translate}}:</b>
                 <div class="docBox">
-                    <div [formsteps]="[{title: 'Introduction'}, {form: myFormSteps2, id: 'myFormSteps2', title: 'Form'}, {title: 'Outro'}, {form: myFormSteps3, id: 'myFormSteps3', title: 'Form again'}]">
+                    <div [formsteps]="[{title: 'Introduction'}, {form: myFormSteps2, id: 'myFormSteps2', title: 'Form', submitted: true}, {title: 'Outro', startHere: true}, {form: myFormSteps3, id: 'myFormSteps3', title: 'Form again', redirect: 'ui-layouts/tooltips'}]">
                         <section style="padding: 20px; border: 2px dashed lightgray; border-radius: 6px;">
                             <h1>Hello world!</h1>
                             <br>
