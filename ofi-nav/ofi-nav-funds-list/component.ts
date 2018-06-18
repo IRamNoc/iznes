@@ -1,34 +1,34 @@
-import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Router} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import * as model from '../OfiNav';
-import {OfiManageNavPopupService} from '../ofi-manage-nav-popup/service';
+import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
     clearRequestedNavFundsList,
     getOfiNavFundsListCurrentRequest,
     ofiSetCurrentNavFundsListRequest,
-    ofiSetCurrentNavFundViewRequest
+    ofiSetCurrentNavFundViewRequest,
 } from '../../ofi-store/ofi-product/nav';
-import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
-import {APP_CONFIG, AppConfig, FileDownloader, MoneyValuePipe, NumberConverterService} from '@setl/utils';
+import { APP_CONFIG, AppConfig, FileDownloader, MoneyValuePipe, NumberConverterService } from '@setl/utils';
 
-import {MultilingualService} from '@setl/multilingual';
-import {AlertsService} from "@setl/jaspero-ng2-alerts/src/alerts.service";
+import { MultilingualService } from '@setl/multilingual';
+import { AlertsService } from '@setl/jaspero-ng2-alerts/src/alerts.service';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
     selector: 'app-nav-manage-list',
     templateUrl: './component.html',
-    styleUrls: ['./component.scss']
+    styleUrls: ['./component.scss'],
 })
 export class OfiNavFundsList implements OnInit, OnDestroy {
 
@@ -44,7 +44,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: null
+        locale: null,
     };
     isNavUploadModalDisplayed: boolean;
     navCsvFile: any;
@@ -56,10 +56,14 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     navPopupMode: model.NavPopupMode = model.NavPopupMode.ADD;
 
     appConfig: AppConfig;
+    currencyList: any[];
+
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'requested']) navRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundsList', 'navFundsList']) navListOb: Observable<any>;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userOb;
+
     private subscriptionsArray: Subscription[] = [];
 
     constructor(private router: Router,
@@ -71,6 +75,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private alertService: AlertsService,
+                private ofiCurrenciesService: OfiCurrenciesService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
@@ -78,6 +83,7 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
         this.hasResult = true;
+        this.ofiCurrenciesService.getCurrencyList();
     }
 
     ngOnInit() {
@@ -86,46 +92,38 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.initSubscriptions();
     }
 
-    getCurrencySymbol(currency: number): string {
-        let currencyIcon;
-
-        switch (currency) {
-            case CurrencyEnum.GBP:
-                currencyIcon = '£';
-                break;
-            case CurrencyEnum.EUR:
-                currencyIcon = '€';
-                break;
-            case CurrencyEnum.USD:
-                currencyIcon = '$';
-                break;
-            default:
-                currencyIcon = 'N/A';
-                break;
+    /**
+     * Get the list of currencies from redux
+     *
+     * @param {Object[]} data
+     * @memberof OfiNavFundView
+     */
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
         }
-
-        return currencyIcon;
     }
 
-    getCurrencyString(currency: number): string {
-        let currencyString;
+    /**
+     * Get the currency symbol
+     *
+     * @param {number} currencyId
+     * @returns {string}
+     * @memberof OfiNavFundView
+     */
+    getCurrencySymbol(currencyId: number): string {
+        return model.CurrencySymbols[this.getCurrencyString(currencyId)];
+    }
 
-        switch (currency) {
-            case CurrencyEnum.GBP:
-                currencyString = 'GBP';
-                break;
-            case CurrencyEnum.EUR:
-                currencyString = 'EUR';
-                break;
-            case CurrencyEnum.USD:
-                currencyString = 'USD';
-                break;
-            default:
-                currencyString = 'N/A';
-                break;
-        }
-
-        return currencyString;
+    /**
+     * Get the label of the currency (3 characters)
+     *
+     * @param {number} currencyId
+     * @returns {string}
+     * @memberof OfiNavFundView
+     */
+    getCurrencyString(currencyId: number): string {
+        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
     }
 
     getNextValuationClass(nextValuationDate: string): string {
@@ -278,13 +276,15 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.userOb.subscribe(userId => {
             this.userId = userId;
         }));
+
+        this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
     }
 
     private initSearchForm(): void {
         this.searchForm = new FormGroup({
             shareName: new FormControl(''),
             dateType: new FormControl([this.dateTypes[0]]),
-            date: new FormControl(moment().format('YYYY-MM-DD'))
+            date: new FormControl(moment().format('YYYY-MM-DD')),
         });
 
         // this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe(() => {
@@ -314,8 +314,8 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
         return {
             fundName: this.searchForm.value.shareName,
             navDateField: this.searchForm.value.dateType[0].id,
-            navDate: `${this.searchForm.value.date} 00:00:00`
-        }
+            navDate: `${this.searchForm.value.date} 00:00:00`,
+        };
     }
 
     /**
@@ -353,10 +353,10 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
     private initDataTypes(): void {
         this.dateTypes = [{
             id: 'navDate',
-            text: 'NAV Date'
+            text: 'NAV Date',
         }, {
             id: 'navPubDate',
-            text: 'NAV Published Date'
+            text: 'NAV Published Date',
         }];
     }
 }

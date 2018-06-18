@@ -26,11 +26,11 @@ export interface FundDetail {
 
 export interface FundListState {
     fundList: {
-        [key: string]: FundDetail
+        [key: string]: FundDetail,
     };
     requested: boolean;
     iznFundList: {
-        [key: string]: IznesFundDetail
+        [key: string]: IznesFundDetail,
     };
 
     requestedIznesFund: boolean;
@@ -68,8 +68,8 @@ export interface IznesFundDetail {
     fundAdministrator: string;
     custodianBank: string;
     investmentManager: string;
-    principalPromoter: string;
-    payingAgent: string;
+    principalPromoter: string[];
+    payingAgent: string[];
     fundManagers: string;
     transferAgent: string;
     centralizingAgent: string;
@@ -77,7 +77,7 @@ export interface IznesFundDetail {
     portfolioCurrencyHedge: string;
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
-    investmentAdvisor: string;
+    investmentAdvisor: string[];
     auditor: string;
     taxAuditor: string;
     legalAdvisor: string;

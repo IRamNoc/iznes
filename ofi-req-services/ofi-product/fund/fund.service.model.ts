@@ -115,8 +115,8 @@ export interface Fund {
     fundAdministrator: number;
     custodianBank: number;
     investmentManager: number;
-    principalPromoter: number;
-    payingAgent: number;
+    principalPromoter: string|string[];
+    payingAgent: string|string[];
     fundManagers: string;
     transferAgent: number;
     centralizingAgent: number;
@@ -124,7 +124,7 @@ export interface Fund {
     portfolioCurrencyHedge: number; // number enum
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
-    investmentAdvisor: number;
+    investmentAdvisor: string|string[];
     auditor: number;
     taxAuditor: number;
     legalAdvisor: number;
@@ -151,14 +151,19 @@ export interface Fund {
 
 export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
+    principalPromoter: string;
+    payingAgent: string;
+    investmentAdvisor: string;
 }
 
 export interface IznesFundRequestMessageBody extends MemberNodeMessageBody {
     token: string;
 }
 
-
 export interface IznesUpdateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
     fundID: string;
+    principalPromoter: string;
+    payingAgent: string;
+    investmentAdvisor: string;
 }

@@ -9,15 +9,15 @@ export interface UmbrellaFundDetail {
     managementCompanyID: string;
     fundAdministratorID: string;
     custodianBankID: string;
-    investmentAdvisorID: string;
-    payingAgentID: string;
+    investmentAdvisorID: string[];
+    payingAgentID: string[];
     transferAgentID: string;
     centralisingAgentID: string;
     giin: number;
     delegatedManagementCompanyID: string;
     auditorID: string;
     taxAuditorID: string;
-    principlePromoterID: string;
+    principlePromoterID: string[];
     legalAdvisorID: string;
     directors: string;
     internalReference: string;
@@ -26,7 +26,7 @@ export interface UmbrellaFundDetail {
 
 export interface UmbrellaFundListState {
     umbrellaFundList: {
-        [key: string]: UmbrellaFundDetail
+        [key: string]: UmbrellaFundDetail,
     };
     requested: boolean;
 }
