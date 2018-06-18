@@ -1,18 +1,19 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {ToasterService} from 'angular2-toaster';
-import {NgRedux} from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
+import { NgRedux } from '@angular-redux/store';
 
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
+import {
+    MemberSocketService,
+    WalletNodeSocketService,
+} from '@setl/websocket-service';
 
-import {MyUserService} from '../my-user/my-user.service';
-import {WalletnodeChannelService} from '../walletnode-channel/service';
-
+import { MyUserService } from '../my-user/my-user.service';
+import { WalletnodeChannelService } from '../walletnode-channel/service';
 
 @Injectable()
 export class NodeAlertsService {
-
-    private waitTime = 3000;
+    private waitTime = 5000;
     private waitCount = 3;
 
     constructor(
@@ -23,6 +24,7 @@ export class NodeAlertsService {
         private walletNodeSocketService: WalletNodeSocketService,
         private walletNodeChannelService: WalletnodeChannelService,
     ) {
+        this.setNodesCallbacks();
     }
 
     setNodesCallbacks() {
@@ -55,7 +57,11 @@ export class NodeAlertsService {
         });
 
         this.walletNodeSocketService.walletnodeUpdateCallback = (id, message, userData) => {
-            this.walletNodeChannelService.resolveChannelMessage(id, message, userData);
+            this.walletNodeChannelService.resolveChannelMessage(
+                id,
+                message,
+                userData,
+            );
         };
 
         this.walletNodeSocketService.walletnodeClose.subscribe(callbacks.disconnect);
@@ -71,7 +77,9 @@ export class NodeAlertsService {
 
         const disconnectCallback = () => {
             connectionErrors++;
-            clearInterval(timer);
+            if (timer) {
+                clearTimeout(timer);
+            }
 
             if (!poppedDisconnect) {
                 timer = setTimeout(() => {
@@ -88,10 +96,10 @@ export class NodeAlertsService {
                 poppedDisconnect = false;
                 connectionErrors = 0;
             }
-            clearInterval(timer);
+            clearTimeout(timer);
         };
         const popDisconnect = () => {
-            clearInterval(timer);
+            clearTimeout(timer);
             this.toasterService.pop(messages.errorType, messages.error);
             poppedDisconnect = true;
             connectionErrors = 0;
@@ -99,8 +107,7 @@ export class NodeAlertsService {
 
         return {
             disconnect: disconnectCallback,
-            reconnect: reconnectCallback
+            reconnect: reconnectCallback,
         };
     }
-
 }
