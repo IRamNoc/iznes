@@ -114,7 +114,8 @@ describe('SetlMessagesComponent', () => {
                 SetlMessageAttachmentComponent,
                 SetlMessageFormActionComponent,
                 SetlMessageConnectionComponent,
-                SetlMessageKycComponent,
+               	SetlMessagePOAComponent, 
+		SetlMessageKycComponent,
                 SetlMessageAmCancelOrderComponent,
             ],
             imports: [
