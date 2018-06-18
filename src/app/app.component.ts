@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {InitialisationService, MyUserService, WalletnodeChannelService} from '@setl/core-req-services';
+import {InitialisationService, MyUserService, WalletnodeChannelService, NodeAlertsService} from '@setl/core-req-services';
 import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
 import {ToasterService, ToasterConfig} from 'angular2-toaster';
 import {NgRedux} from '@angular-redux/store';
@@ -43,7 +43,8 @@ export class AppComponent implements AfterViewInit, OnInit {
                 private ofiMemberNodeChannelService: OfiMemberNodeChannelService,
                 private ofiPostTxService: OfiPostTxService,
                 private _myUserService: MyUserService,
-                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService) {
+                private _ofiWalletnodeChannelService: OfiWalletnodeChannelService,
+                private nodeAlerts: NodeAlertsService) {
     }
 
     ngOnInit() {
