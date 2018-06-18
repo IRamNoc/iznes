@@ -2,7 +2,10 @@ import {Action} from 'redux';
 import * as MyDetailActions from './actions';
 import {MyDetailState} from './model';
 import * as _ from 'lodash';
-import * as moment from 'moment-timezone';
+import {
+    convertUtcStrToLocalStr,
+    getCurrentUnixTimestampStr,
+} from '@setl/utils/helper/m-date-wrapper';
 
 const initialState: MyDetailState = {
     username: '',
@@ -37,6 +40,8 @@ const UserTypeStr = {
     '65': 'rooster_operator'
 };
 
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
     let newState = {};
     let emailAddress = '';
@@ -53,13 +58,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const userId = _.get(loginedData, 'UserID', 0);
 
             const l = _.get(loginedData, 'last_login', '');
-            const lastLogin = moment(
-                l ? `${l} UTC+00:00` : moment().local().format('YYYY-MM-DD HH:mm:ss'),
-                'YYYY-MM-DD HH:mm:ss ZZ',
-                'utc',
-            )
-                .tz(moment.tz.guess())
-                .format('YYYY-MM-DD HH:mm:ss');
+            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT)
+                : getCurrentUnixTimestampStr(DATE_FORMAT);
 
             const userType = _.get(loginedData, 'userType', 0);
             const userTypeStr = UserTypeStr[userType];
