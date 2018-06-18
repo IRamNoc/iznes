@@ -37,7 +37,8 @@ import {
     PermissionGroupService,
     WalletnodeChannelService,
     WalletNodeRequestService,
-    WalletnodeTxService
+    WalletnodeTxService,
+    NodeAlertsService
 } from '@setl/core-req-services';
 /* Routes. */
 import {ROUTES} from './app.routes';
@@ -148,6 +149,7 @@ export function memberSocketServiceFactory() {
             useValue: environment
         },
 
+        NodeAlertsService,
         CommonRequestService,
         WalletNodeSocketService,
         MyUserService,
