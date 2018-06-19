@@ -456,8 +456,8 @@ export class CalendarHelper {
     }
 
     getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
-        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
-        return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
+        const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
+        return tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
     }
 
     isNonWorkingDate(dateToCheck) {
