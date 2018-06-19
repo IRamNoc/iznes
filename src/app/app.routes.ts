@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
 /* Layouts. */
-import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
-import {UiTranslationsComponent, UiTooltipsComponent, UiFormStepsComponent, UiFormPercentComponent} from '@setl/core-layout';
+import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
+import {
+    UiTranslationsComponent,
+    UiTooltipsComponent,
+    UiFormStepsComponent,
+    UiFormPercentComponent,
+} from '@setl/core-layout';
 /* Components. */
 import { SetlMyAccountComponent } from '@setl/core-account';
 /**
@@ -53,6 +58,13 @@ import {
     AdminWizardComponent,
     ManageSubPortfolioComponent,
 } from '@setl/core-useradmin';
+/* Account Admin Module. */
+import {
+    UsersCreateUpdateComponent,
+    UsersListComponent,
+    UserTeamsCreateUpdateComponent,
+    UserTeamsListComponent,
+} from '@setl/core-account-admin';
 /* Product */
 import {
     OfiFundComponent,
@@ -327,14 +339,14 @@ export const ROUTES: Routes = [
                     {
                         path: 'formsteps',
                         component: UiFormStepsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'formpercent',
                         component: UiFormPercentComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
             {
                 path: 'reports',
@@ -607,6 +619,40 @@ export const ROUTES: Routes = [
                     {
                         path: 'client/:kycId',
                         component: OfiWaitingApprovalComponent,
+                    },
+                ],
+            },
+            {
+                path: 'account-admin',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'users',
+                        component: UsersListComponent,
+                        children: [
+                            {
+                                path: 'new',
+                                component: UsersCreateUpdateComponent,
+                            },
+                            {
+                                path: ':id',
+                                component: UsersCreateUpdateComponent,
+                            },
+                        ],
+                    },
+                    {
+                        path: 'teams',
+                        component: UserTeamsListComponent,
+                        children: [
+                            {
+                                path: 'new',
+                                component: UserTeamsCreateUpdateComponent,
+                            },
+                            {
+                                path: ':id',
+                                component: UserTeamsCreateUpdateComponent,
+                            },
+                        ],
                     },
                 ],
             },
