@@ -5,9 +5,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
     templateUrl: 'component.html',
 })
 export class UserTeamsCreateUpdateComponent implements OnInit, OnDestroy {
-    constructor() {}
+    constructor() { }
 
-    ngOnInit() {}
+    ngOnInit() { }
 
     ngOnDestroy() {}
 }

@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-
-import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
@@ -19,7 +17,6 @@ import {
 
 @NgModule({
     imports: [
-        RouterModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
