@@ -28,7 +28,7 @@ export class SetlMessageAlertComponent implements OnInit {
             'Issuer': '',
             'UnitID': '0',
             'XParams': {
-                'ParamName': 'ParamValue'
+                //'ParamName': 'ParamValue'
             }
         }
     };
