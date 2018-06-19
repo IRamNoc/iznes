@@ -1,4 +1,4 @@
-import {MenuSpec} from '@setl/utils';
+import { MenuSpec } from '@setl/utils';
 
 const home = {
     label: 'Home',
@@ -351,7 +351,30 @@ const productConfiguration = {
     icon_class: 'fa fa-cog',
     element_id: 'menu-product-config',
     router_link: '/product-module/configuration',
-}
+};
+
+const accountAdmin = {
+    label: 'Administration',
+    label_txt: 'txt_administration',
+    icon_class: 'fa fa-align-left',
+    element_id: 'menu-administration',
+    children: [
+        {
+            label: 'Users',
+            label_txt: 'txt_users',
+            icon_class: 'fa fa-users',
+            element_id: 'menu-administration-users',
+            router_link: '/account-admin/users',
+        },
+        {
+            label: 'Teams',
+            label_txt: 'txt_teams',
+            icon_class: 'fa fa-address-book-o',
+            element_id: 'menu-administration-teams',
+            router_link: '/account-admin/teams',
+        },
+    ],
+};
 
 export const menuSpec: MenuSpec = {
     top: {
@@ -418,7 +441,7 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                     reportsCentralization,
                     reportsCentralizationSelect,
-                ]
+                ],
             },
             kycDocuments,
             {
@@ -433,6 +456,7 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             productsManagementCompany,
+            accountAdmin,
         ],
         valuer: [
             home,

@@ -117,9 +117,9 @@ export function memberSocketServiceFactory() {
 
         /* External modules */
         UserAdminModule,
-        CoreAccountAdminModule,
         SetlMessagesModule,
         SetlAccountModule,
+        CoreAccountAdminModule,
         OfiProductModule,
         AssetServicingModule,
         SetlBalancesModule,
