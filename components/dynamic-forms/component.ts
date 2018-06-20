@@ -42,22 +42,22 @@ export class DynamicFormComponent implements OnInit {
     }
 
     /**
-     * Return the value of the form control's `touched` property
+     * Return the value of the form control's `touched` property.
      *
-     * @param {object} formItem - The form control
+     * @param {object} formItem - The form control.
      *
-     * @return {boolean} - The value of `touched`
+     * @return {boolean} - The value of `touched`.
      */
     isTouched(formItem: FormItem): boolean {
         return formItem.control.touched;
     }
 
     /**
-     * Determine whether the form control has errors
+     * Determine whether the form control has errors.
      *
-     * @param {object} formItem - The form control
+     * @param {object} formItem - The form control.
      *
-     * @return {boolean} - True if error, otherwise false
+     * @return {boolean} - True if error, otherwise false.
      */
     hasErrorMessage(formItem: FormItem): boolean {
         if (formItem.control.errors !== null && typeof formItem.control.errors === 'object') {
@@ -67,11 +67,11 @@ export class DynamicFormComponent implements OnInit {
     }
 
     /**
-     * Return the form control's error message
+     * Return the form control's error message.
      *
-     * @param {object} formItem - The form control
+     * @param {object} formItem - The form control.
      *
-     * @return {string} - The error message
+     * @return {string} - The error message.
      */
     getErrorMessage(formItem: FormItem): string {
         if (formItem.control.errors !== null && typeof formItem.control.errors === 'object') {
@@ -96,11 +96,11 @@ export class DynamicFormComponent implements OnInit {
     }
 
     /**
-    * Determine whether the form control is hidden
+    * Determine whether the form control is hidden.
     *
-    * @param {string} item - The name of the form control
+    * @param {string} item - The name of the form control.
     *
-    * @return {boolean} - True if hidden, otherwise false
+    * @return {boolean} - True if hidden, otherwise false.
     */
     isHidden(item: string): boolean {
         if (this.formModel[item].hidden !== undefined) {
