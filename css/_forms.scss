@@ -194,6 +194,12 @@ form, .form {
       }
     }
 
+    .input-group.invalid.touched {
+      + .field-error {
+        display: block
+      }
+    }
+
     .field-error {
       color: red;
       height: 0px;
