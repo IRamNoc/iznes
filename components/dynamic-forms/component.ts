@@ -12,14 +12,14 @@ import { DynamicFormService } from './service';
 
 export class DynamicFormComponent implements OnInit {
 
-    private _model: { [key: string]: FormItem };
+    private formModel: { [key: string]: FormItem };
     @Input() set model(model: { [key: string]: FormItem }) {
-        this._model = model;
+        this.formModel = model;
         this.generateForm();
     }
 
     get model() {
-        return this._model;
+        return this.formModel;
     }
 
     form: FormGroup;
@@ -33,9 +33,9 @@ export class DynamicFormComponent implements OnInit {
     }
 
     private generateForm(): void {
-        this.form = this.service.generateForm(this._model);
-        this.formKeys = this.service.getFormKeys(this._model);
-        this.service.updateModel(this._model, this.form);
+        this.form = this.service.generateForm(this.formModel);
+        this.formKeys = this.service.getFormKeys(this.formModel);
+        this.service.updateModel(this.formModel, this.form);
 
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
@@ -98,13 +98,13 @@ export class DynamicFormComponent implements OnInit {
     /**
     * Determine whether the form control is hidden
     *
-    * @param {object} item - The name of the form control
+    * @param {string} item - The name of the form control
     *
     * @return {boolean} - True if hidden, otherwise false
     */
     isHidden(item: string): boolean {
-        if (this._model[item].hidden !== undefined) {
-            return this._model[item].hidden();
+        if (this.formModel[item].hidden !== undefined) {
+            return this.formModel[item].hidden();
         }
         return false;
     }
