@@ -27,7 +27,7 @@
                                 <div [ngClass]="{ 
                                     'input-group': true,
                                     'invalid': (hasErrorMessage(model[item])),
-                                    touched: (isTouched(model[item]))
+                                    'touched': (isTouched(model[item]))
                                     }">
                                     <span class="fa fa-calendar"></span>
                                     <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
