@@ -24,14 +24,19 @@
                             </ng-container>
 
                             <ng-container *ngSwitchCase="2">
-                                <div class="input-group">
+                                <div [ngClass]="{ 
+                                    'input-group': true,
+                                    'invalid': (showRequiredFieldText(model[item])) || (isFieldValid(model[item])) || (hasErrorMessage(model[item])),
+                                    touched: (touchedDate(model[item]))
+                                    }">
                                     <span class="fa fa-calendar"></span>
                                     <input id="{{item}}" name="{{item}}" placeholder="{{model[item].placeholder}}"
                                            formControlName="{{item}}"
                                            [dpDayPicker]="model[item].dateOptions"
                                            [readonly]="false"
                                            mode="day"
-                                           theme="dp-material"/>
+                                           theme="dp-material"
+                                           autocomplete="off"/>
                                 </div>
                             </ng-container>
 
@@ -64,7 +69,7 @@
                                     <input type="hidden" class="form-control" formControlName="{{item}}">
                                     <setl-file-drop id="{{item}}" [inline]="true" [formControl]="model[item].control" [preset]="model[item].fileData" [filePermission]="model[item].filePermission" (onDrop)="onDropFiles($event, model[item])" ngDefaultControl></setl-file-drop>
                                     <setl-file-viewer *ngIf="model[item].fileData" [fileHash]="model[item].fileData.hash"></setl-file-viewer>
-                                    <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a>                                     -->
+                                    <!-- <a *ngIf="model[item].fileData"class="btn btn-primary" href="/mn/file?method=retrieve&fileHash={{model[item].fileData.hash}}&downloadId={{model[item].fileData.fileID}}" target="_blank">View</a> -->
                                 </div>
                             </ng-container>
 
@@ -85,9 +90,9 @@
                                 </div>
                             </ng-container>
                         </ng-container>
+                       
+                        <span class="field-error" *ngIf="hasErrorMessage(model[item])">{{(getErrorMessage(model[item]))}}</span>
 
-                        <span class="field-error" *ngIf="showRequiredFieldText(model[item])">Field is required</span>
-                        <span class="field-error" *ngIf="isFieldValid(model[item])">Value is incorrect</span>
                     </div>
                     <div class="break" *ngIf="itemHasBreakAfter(model[item])"></div>
                 </ng-container>

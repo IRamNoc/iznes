@@ -1,26 +1,25 @@
-import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-
-import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
-import {DynamicFormService} from './service';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { FormItem, FormItemType, FormItemStyle } from './DynamicForm';
+import { DynamicFormService } from './service';
 
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-dynamic-form',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class DynamicFormComponent implements OnInit {
 
-    private _model: { [key: string]: FormItem };
+    private formModel: { [key: string]: FormItem };
     @Input() set model(model: { [key: string]: FormItem }) {
-        this._model = model;
+        this.formModel = model;
         this.generateForm();
     }
 
     get model() {
-        return this._model;
+        return this.formModel;
     }
 
     form: FormGroup;
@@ -34,39 +33,84 @@ export class DynamicFormComponent implements OnInit {
     }
 
     private generateForm(): void {
-        this.form = this.service.generateForm(this._model);
-        this.formKeys = this.service.getFormKeys(this._model);
-        this.service.updateModel(this._model, this.form);
+        this.form = this.service.generateForm(this.formModel);
+        this.formKeys = this.service.getFormKeys(this.formModel);
+        this.service.updateModel(this.formModel, this.form);
 
         this.changeDetectorRef.markForCheck();
         this.changeDetectorRef.detectChanges();
     }
 
-    showRequiredFieldText(formItem: FormItem): boolean {
-        return (formItem.type === FormItemType.text || formItem.type === FormItemType.number)
-            && formItem.control.hasError('required');
+    /**
+     * Return the value of the form control's `touched` property.
+     *
+     * @param {object} formItem - The form control.
+     *
+     * @return {boolean} - The value of `touched`.
+     */
+    isTouched(formItem: FormItem): boolean {
+        return formItem.control.touched;
     }
 
-    isFieldValid(formItem: FormItem): boolean {
-        if (!(formItem.type === FormItemType.text || formItem.type === FormItemType.number)
-            || formItem.control.hasError('required')
-            || formItem.control.valid
-        ) {
-            return false;
+    /**
+     * Determine whether the form control has errors.
+     *
+     * @param {object} formItem - The form control.
+     *
+     * @return {boolean} - True if error, otherwise false.
+     */
+    hasErrorMessage(formItem: FormItem): boolean {
+        if (formItem.control.errors !== null && typeof formItem.control.errors === 'object') {
+            return true;
         }
-        return true;
+        return false;
     }
 
+    /**
+     * Return the form control's error message.
+     *
+     * @param {object} formItem - The form control.
+     *
+     * @return {string} - The error message.
+     */
+    getErrorMessage(formItem: FormItem): string {
+        if (formItem.control.errors !== null && typeof formItem.control.errors === 'object') {
+            let errorMessage = Object.keys(formItem.control.errors)[0];
+
+            const ngValidatorErrorMessages = {
+                email: 'Invalid email.',
+                min: 'Value is too small.',
+                max: 'Value is too large.',
+                minlength: 'Value is too short.',
+                maxlength: 'Value is too long.',
+                pattern: 'Invalid format.',
+                required: 'Field is required.',
+            };
+
+            if (ngValidatorErrorMessages.hasOwnProperty(errorMessage)) {
+                errorMessage = ngValidatorErrorMessages[errorMessage];
+            }
+            return errorMessage;
+        }
+        return '';
+    }
+
+    /**
+    * Determine whether the form control is hidden.
+    *
+    * @param {string} item - The name of the form control.
+    *
+    * @return {boolean} - True if hidden, otherwise false.
+    */
     isHidden(item: string): boolean {
-        if (this._model[item].hidden !== undefined) {
-            return this._model[item].hidden();
+        if (this.formModel[item].hidden !== undefined) {
+            return this.formModel[item].hidden();
         }
-
         return false;
     }
 
     itemHasBreakAfter(item: FormItem): boolean {
-        return (item.style) && item.style.indexOf(FormItemStyle.BreakOnAfter) != -1;
+        return (item.style) && item.style.indexOf(FormItemStyle.BreakOnAfter) !== -1;
     }
 
     trackFormItemByFn(index: number, item: FormItem): number {
@@ -80,5 +124,4 @@ export class DynamicFormComponent implements OnInit {
     showDropdown(item: FormItem): boolean {
         return (!!item.listItems) && item.listItems.length > 0;
     }
-
 }
