@@ -78,13 +78,13 @@ export class DynamicFormComponent implements OnInit {
             let errorMessage = Object.keys(formItem.control.errors)[0];
 
             const ngValidatorErrorMessages = {
+                email: 'Invalid email.',
                 min: 'Value is too small.',
                 max: 'Value is too large.',
-                required: 'Field is required.',
-                email: 'Invalid email.',
                 minlength: 'Value is too short.',
                 maxlength: 'Value is too long.',
                 pattern: 'Invalid format.',
+                required: 'Field is required.',
             };
 
             if (ngValidatorErrorMessages.hasOwnProperty(errorMessage)) {
