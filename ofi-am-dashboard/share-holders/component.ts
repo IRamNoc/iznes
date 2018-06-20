@@ -392,11 +392,13 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     handleHolderDetailExportButtonClick(): void {
         const shareId = this.searchListForm.get('search').value[0].id;
         const selectedFilter = this.searchInShareForm.get('top').value[0].id;
+        const shareIsin = this.holdersList.find((item) => item.shareId === this.shareID).shareIsin;
 
         this._fileDownloader.downLoaderFile({
             method: 'exportShareHolderDetail',
             token: this.memberSocketService.token,
             shareId,
+            shareIsin,
             userId: this.myDetails.userId,
             selectedFilter: selectedFilter,
         });

@@ -1,31 +1,31 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Inject} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {fromJS} from 'immutable';
-import {select, NgRedux} from '@angular-redux/store';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Location} from '@angular/common';
+import { fromJS } from 'immutable';
+import { select, NgRedux } from '@angular-redux/store';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 /* Internal */
-import {Subscription} from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 
 /* Services */
-import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 
 /* Alert service. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ToasterService} from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ToasterService } from 'angular2-toaster';
 
 /* Models */
-import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 /* Utils. */
-import {SagaHelper, NumberConverterService, LogService, ConfirmationService} from '@setl/utils';
-import {FundComponent} from '../fund/component';
-import {validators} from "../productConfig";
-import {MultilingualService} from '@setl/multilingual';
+import { SagaHelper, NumberConverterService, LogService, ConfirmationService } from '@setl/utils';
+import { FundComponent } from '../fund/component';
+import { validators } from "../productConfig";
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -77,9 +77,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     legalAdvisorOptions = [];
     transferAgentOptions = [];
     centralizingAgentOptions = [];
-    currentRoute : {
-        fromFund? : boolean,
-        fromShare? : boolean
+    currentRoute: {
+        fromFund?: boolean,
+        fromShare?: boolean
     } = {};
 
     /* Private properties. */
@@ -169,10 +169,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
             legalEntityIdentifier: [
                 '',
-                Validators.compose([
-                    Validators.required,
-                    productConfig.validators.lei,
-                ])
             ],
             domicile: [
                 '',
@@ -279,10 +275,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this._activatedRoute.queryParams.subscribe(params => {
-            if(params.fromFund){
+            if (params.fromFund) {
                 this.currentRoute.fromFund = true;
             }
-            if(params.fromShare){
+            if (params.fromShare) {
                 this.currentRoute.fromShare = true;
             }
         });
@@ -320,6 +316,26 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    getListItems(
+        val: string[],
+        list: { id: string, text: string }[],
+    ): { id: string, text: string }[] {
+        if (!val.length) {
+            return [];
+        }
+
+        return val.map((id) => {
+            return _.find(list, { id });
+        });
+    }
+
+    getIdsFromList(val: { id: string, text: string }[]): string[] {
+        if (!val.length) {
+            return [];
+        }
+        return val.map(item => item.id);
+    }
+
     getUmbrellaFundList(list) {
         const listImu = fromJS(list);
 
@@ -339,8 +355,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 custodianBankID: item.get('custodianBankID', '0'),
 
                 // optional on save
-                investmentAdvisorID: item.get('investmentAdvisorID') || '0',
-                payingAgentID: item.get('payingAgentID') || '0',
+                investmentAdvisorID: this.getListItems(
+                    item.get('investmentAdvisorID').toJS(),
+                    this.investmentAdvisorOptions,
+                ),
+                payingAgentID: this.getListItems(item.get('payingAgentID').toJS(), this.payingagentOptions),
                 transferAgentID: item.get('transferAgentID') || '0',
                 centralisingAgentID: item.get('centralisingAgentID') || '0',
                 transferAgent: item.get('transferAgentID') || '0',
@@ -349,7 +368,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 delegatedManagementCompanyID: item.get('delegatedManagementCompanyID') || '0',
                 auditorID: item.get('auditorID') || '0',
                 taxAuditorID: item.get('taxAuditorID') || '0',
-                principlePromoterID: item.get('principlePromoterID') || '0',
+                principlePromoterID: this.getListItems(
+                    item.get('principlePromoterID').toJS(),
+                    this.principalPromoterOptions,
+                ),
                 legalAdvisorID: item.get('legalAdvisorID') || '0',
                 directors: item.get('directors') || '',
                 internalReference: item.get('internalReference') || '',
@@ -395,70 +417,68 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     fillForm(): void {
         this.umbrellaFund = this.umbrellaFundList.filter(element => element.umbrellaFundID.toString() === this.umbrellaFundID.toString());
 
-        this.umbrellaFundForm.get('umbrellaFundID').patchValue(this.umbrellaFund[0].umbrellaFundID, {emitEvent: false});
-        this.umbrellaFundForm.get('umbrellaFundName').patchValue(this.umbrellaFund[0].umbrellaFundName, {emitEvent: false});
-        this.umbrellaFundForm.get('registerOffice').patchValue(this.umbrellaFund[0].registerOffice, {emitEvent: false});
-        this.umbrellaFundForm.get('registerOfficeAddress').patchValue(this.umbrellaFund[0].registerOfficeAddress, {emitEvent: false});
+        this.umbrellaFundForm.get('umbrellaFundID').patchValue(this.umbrellaFund[0].umbrellaFundID, { emitEvent: false });
+        this.umbrellaFundForm.get('umbrellaFundName').patchValue(this.umbrellaFund[0].umbrellaFundName, { emitEvent: false });
+        this.umbrellaFundForm.get('registerOffice').patchValue(this.umbrellaFund[0].registerOffice, { emitEvent: false });
+        this.umbrellaFundForm.get('registerOfficeAddress').patchValue(this.umbrellaFund[0].registerOfficeAddress, { emitEvent: false });
         if (this.umbrellaFund[0].legalEntityIdentifier) {
             this.isLeiVisible = true;
         }
-        this.umbrellaFundForm.get('legalEntityIdentifier').patchValue(this.umbrellaFund[0].legalEntityIdentifier, {emitEvent: false});
+        this.umbrellaFundForm.get('legalEntityIdentifier').patchValue(this.umbrellaFund[0].legalEntityIdentifier, { emitEvent: false });
         const domicile = this.countries.filter(element => element.id.toString() === this.umbrellaFund[0].domicile.toString());
         if (domicile.length > 0) {
-            this.umbrellaFundForm.get('domicile').patchValue(domicile, {emitEvent: true});
+            this.umbrellaFundForm.get('domicile').patchValue(domicile, { emitEvent: true });
         }
-        this.umbrellaFundForm.get('umbrellaFundCreationDate').patchValue(this.umbrellaFund[0].umbrellaFundCreationDate, {emitEvent: false});
+        this.umbrellaFundForm.get('umbrellaFundCreationDate').patchValue(this.umbrellaFund[0].umbrellaFundCreationDate, { emitEvent: false });
         const managementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].managementCompanyID, this.managementCompanyList);
         if (managementCompany.length > 0) {
-            this.umbrellaFundForm.get('managementCompanyID').patchValue(managementCompany, {emitEvent: false});
+            this.umbrellaFundForm.get('managementCompanyID').patchValue(managementCompany, { emitEvent: false });
         }
         const fundAdministrator = this.fundAdminOptions.filter(element => element.id.toString() === this.umbrellaFund[0].fundAdministratorID.toString());
         if (fundAdministrator.length > 0) {
-            this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, {emitEvent: false});
+            this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, { emitEvent: false });
         }
         const custodianBank = this.custodianBankOptions.filter(element => element.id.toString() === this.umbrellaFund[0].custodianBankID.toString());
         if (custodianBank.length > 0) {
-            this.umbrellaFundForm.get('custodianBankID').patchValue(custodianBank, {emitEvent: false});
+            this.umbrellaFundForm.get('custodianBankID').patchValue(custodianBank, { emitEvent: false });
         }
-        const investmentAdvisor = this.investmentAdvisorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].investmentAdvisorID.toString());
-        if (investmentAdvisor.length > 0) {
-            this.umbrellaFundForm.get('investmentAdvisorID').patchValue(investmentAdvisor, {emitEvent: false});
-        }
-        const payingAgent = this.payingagentOptions.filter(element => element.id.toString() === this.umbrellaFund[0].payingAgentID.toString());
-        if (payingAgent.length > 0) {
-            this.umbrellaFundForm.get('payingAgentID').patchValue(payingAgent, {emitEvent: false});
-        }
+
+        this.umbrellaFundForm.get('investmentAdvisorID')
+            .patchValue(this.umbrellaFund[0].investmentAdvisorID, { emitEvent: false });
+
+        this.umbrellaFundForm.get('payingAgentID').patchValue(this.umbrellaFund[0].payingAgentID, { emitEvent: false });
 
         const transferAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].transferAgentID, this.transferAgentOptions);
         const centralizingAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].centralisingAgentID, this.centralizingAgentOptions);
-        this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, {emitEvent: false});
-        this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, {emitEvent: false});
-        this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, {emitEvent: false});
+        this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, { emitEvent: false });
+        this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, { emitEvent: false });
+        this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, { emitEvent: false });
         const delegatedManagementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].delegatedManagementCompanyID.toString(), this.managementCompanyList);
         if (delegatedManagementCompany.length > 0) {
-            this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, {emitEvent: false});
+            this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, { emitEvent: false });
         }
         const auditor = this.auditorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].auditorID.toString());
         if (auditor.length > 0) {
-            this.umbrellaFundForm.get('auditorID').patchValue(auditor, {emitEvent: false});
+            this.umbrellaFundForm.get('auditorID').patchValue(auditor, { emitEvent: false });
         }
         const taxAuditor = this.taxAuditorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].taxAuditorID.toString());
         if (taxAuditor.length > 0) {
-            this.umbrellaFundForm.get('taxAuditorID').patchValue(auditor, {emitEvent: false});
+            this.umbrellaFundForm.get('taxAuditorID').patchValue(auditor, { emitEvent: false });
         }
-        const principlePromoter = this.principalPromoterOptions.filter(element => element.id.toString() === this.umbrellaFund[0].principlePromoterID.toString());
-        if (principlePromoter.length > 0) {
-            this.umbrellaFundForm.get('principlePromoterID').patchValue(principlePromoter, {emitEvent: false});
-        }
+
+        this.umbrellaFundForm.get('principlePromoterID')
+            .patchValue(this.umbrellaFund[0].principlePromoterID, { emitEvent: false });
+
         const legalAdvisor = this.legalAdvisorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].legalAdvisorID.toString());
         if (legalAdvisor.length > 0) {
-            this.umbrellaFundForm.get('legalAdvisorID').patchValue(legalAdvisor, {emitEvent: false});
+            this.umbrellaFundForm.get('legalAdvisorID').patchValue(legalAdvisor, { emitEvent: false });
         }
-        this.umbrellaFundForm.get('directors').patchValue(this.umbrellaFund[0].directors, {emitEvent: false});
-        this.umbrellaFundForm.get('internalReference').patchValue(this.umbrellaFund[0].internalReference, {emitEvent: false});
-        this.umbrellaFundForm.get('additionnalNotes').patchValue(this.umbrellaFund[0].additionnalNotes, {emitEvent: false});
+        this.umbrellaFundForm.get('directors').patchValue(this.umbrellaFund[0].directors, { emitEvent: false });
+        this.umbrellaFundForm.get('internalReference').patchValue(this.umbrellaFund[0].internalReference, { emitEvent: false });
+        this.umbrellaFundForm.get('additionnalNotes').patchValue(this.umbrellaFund[0].additionnalNotes, { emitEvent: false });
 
-        this.umbrellaFundForm.updateValueAndValidity({emitEvent: false}); // emitEvent = true cause infinite loop (make a valueChange)
+        this.umbrellaFundForm.updateValueAndValidity({ emitEvent: false }); // emitEvent = true cause infinite loop (make a valueChange)
+
     }
 
     cancel() {
@@ -476,15 +496,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             managementCompanyID: formValues.managementCompanyID[0].id,
             fundAdministratorID: formValues.fundAdministratorID[0].id,
             custodianBankID: formValues.custodianBankID[0].id,
-            investmentAdvisorID: (formValues.investmentAdvisorID.length > 0) ? formValues.investmentAdvisorID[0].id : null,
-            payingAgentID: (formValues.payingAgentID.length > 0) ? formValues.payingAgentID[0].id : null,
+            investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
+            payingAgentID: this.getIdsFromList(formValues.payingAgentID),
             transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
             centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
             giin: formValues.giin || null,
             delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : null,
             auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : null,
             taxAuditorID: (formValues.taxAuditorID.length > 0) ? formValues.taxAuditorID[0].id : null,
-            principlePromoterID: (formValues.principlePromoterID.length > 0) ? formValues.principlePromoterID[0].id : null,
+            principlePromoterID: this.getIdsFromList(formValues.principlePromoterID),
             legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
             directors: formValues.directors,
             internalReference: formValues.internalReference,
@@ -532,13 +552,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
 
-                    if(!_.isUndefined(umbrellaFundID)){
-                        if(this.currentRoute.fromFund){
+                    if (!_.isUndefined(umbrellaFundID)) {
+                        if (this.currentRoute.fromFund) {
                             this.redirectToFund(umbrellaFundID);
-                        } else{
-                            this.displayFundPopup(umbrellaFundName, umbrellaFundID );
+                        } else {
+                            this.displayFundPopup(umbrellaFundName, umbrellaFundID);
                         }
-                    } else{
+                    } else {
                         this.creationSuccess(umbrellaFundName);
                     }
                 },
@@ -555,10 +575,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    redirectToFund(umbrellaID?){
+    redirectToFund(umbrellaID?) {
         let extras = {};
 
-        if(umbrellaID){
+        if (umbrellaID) {
             extras = {
                 queryParams: {
                     umbrella: umbrellaID,
@@ -574,29 +594,34 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     onClickLeiSwitch() {
         if (this.isLeiVisible) {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].clearValidators();
         } else {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].enable();
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].setValidators(Validators.compose([
+                Validators.required,
+                validators.lei,
+            ]));
         }
         this.isLeiVisible = !this.isLeiVisible;
     }
 
-    displayFundPopup(umbrellaFundName, umbrellaFundID){
+    displayFundPopup(umbrellaFundName, umbrellaFundID) {
         const message = `<span>By clicking "Yes", you will be able to create a fund directly linked to ${umbrellaFundName}.</span>`;
 
         this.confirmationService.create(
             '<span>Do you want to create a fund?</span>',
             message,
-            {confirmText: 'Yes', declineText: 'No'}
+            { confirmText: 'Yes', declineText: 'No' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.redirectToFund(umbrellaFundID);
-            } else{
+            } else {
                 this.creationSuccess(umbrellaFundName);
             }
         });
     }
 
-    creationSuccess(umbrellaFundName){
+    creationSuccess(umbrellaFundName) {
         this._toasterService.pop('success', `${umbrellaFundName} has been successfully created!`);
         this._location.back();
     }

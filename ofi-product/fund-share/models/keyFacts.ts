@@ -40,13 +40,9 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Share Class Currency',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-        ],
-        mltag: 'txt_fundshare_classcurrency',
-    };
+        listItems: [],
+        mltag: 'txt_fundshare_classcurrency'
+    }
     subscriptionStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Subscription Period Start Date',
@@ -384,11 +380,7 @@ export class ShareKeyFactsOptional {
         type: FormItemType.list,
         label: 'Index Currency',
         required: false,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-        ],
+        listItems: [],
         hidden: () => {
             return this.isETF.value() !== true;
         },

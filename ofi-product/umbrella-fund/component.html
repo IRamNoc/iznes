@@ -164,7 +164,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_investmentAdvisor" class="control-label">{{'Investment Advisor' | translate}}</label>
-                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="investmentAdvisorID">
+                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="investmentAdvisorID">
 
 
 
@@ -175,7 +175,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_payingAgent" class="control-label">{{'Paying Agent' | translate}}</label>
-                                <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="payingAgentID">
+                                <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="payingAgentID">
 
 
 
@@ -271,7 +271,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_principalPromoter" class="control-label">{{'Principal Promoter' | translate}}</label>
-                                <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
+                                <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
 
 
 

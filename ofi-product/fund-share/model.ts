@@ -341,8 +341,8 @@ export class FundShare {
         this.setListItemPreset(this.fund.fundAdministrator, fund.fundAdministrator);
         this.setListItemPreset(this.fund.custodianBank, fund.custodianBank);
         this.setListItemPreset(this.fund.investmentManager, fund.investmentManager);
-        this.setListItemPreset(this.fund.principalPromoter, fund.principalPromoter);
-        this.setListItemPreset(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemPresetMultiple(this.fund.principalPromoter, fund.principalPromoter);
+        this.setListItemPresetMultiple(this.fund.payingAgent, fund.payingAgent);
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
         this.fund.isDedicatedFund.preset = fund.isDedicatedFund;
         this.setListItemPreset(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
@@ -358,8 +358,8 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
         this.setListItemPreset(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
-        this.setListItemPreset(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
-        this.setListItemPreset(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+        this.setListItemPresetMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
+        this.setListItemPresetMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
@@ -413,6 +413,18 @@ export class FundShare {
         (field.preset as any) = [_.find(field.listItems, (item) => {
             return item.id == value;
         })];
+    }
+
+    private setListItemPresetMultiple(field: FormItem, value: number[]): void {
+        if (!value.length) return;
+        (field.preset as any) = value.map((id: number) => {
+            const newItem = _.find(field.listItems, { id });
+            if (!newItem) {
+                return null;
+            }
+            return newItem;
+        }).filter(d => d !== null);
+        console.log('setListItemPresetMultiple', field.preset, field.listItems, value);
     }
 
     private setFeederPreset(value: any): void {
