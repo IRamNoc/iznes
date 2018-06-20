@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
-import {Injectable, ChangeDetectorRef} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux} from '@angular-redux/store';
-import {FileService} from '@setl/core-req-services/file/file.service';
+import { Injectable, ChangeDetectorRef } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux } from '@angular-redux/store';
+import { FileService } from '@setl/core-req-services/file/file.service';
 import * as SagaHelper from '@setl/utils/sagaHelper';
-import {ToasterService} from 'angular2-toaster';
+import { ToasterService } from 'angular2-toaster';
 
-import {FormItem, FormItemType, FormItemStyle} from './DynamicForm';
+import { FormItem, FormItemType, FormItemStyle } from './DynamicForm';
 
 @Injectable()
 export class DynamicFormService {
@@ -32,8 +32,8 @@ export class DynamicFormService {
         let preset;
 
         if (item.preset !== undefined) {
-            if (item.type === FormItemType.boolean && (item.preset === "1" || item.preset === "0")) {
-                preset = item.preset === "1" ? true : false;
+            if (item.type === FormItemType.boolean && (item.preset === '1' || item.preset === '0')) {
+                preset = item.preset === '1' ? true : false;
             } else {
                 preset = item.preset;
             }
@@ -68,7 +68,8 @@ export class DynamicFormService {
             };
 
             model[index].isValid = function (val?: any) {
-                return (((model[index].hidden) && model[index].hidden()) || form.controls[index].disabled) ? true : form.controls[index].valid;
+                return (((model[index].hidden) && model[index].hidden()) 
+                || form.controls[index].disabled) ? true : form.controls[index].valid;
             };
 
             model[index].cssClass = this.getFormItemStyles(item);
@@ -79,14 +80,14 @@ export class DynamicFormService {
                     format: 'YYYY-MM-DD',
                     closeOnSelect: true,
                     disableKeypress: true,
-                    locale: null
-                }
+                    locale: null,
+                };
             }
 
             if (item.type === FormItemType.time && !item.timeOptions) {
                 item.timeOptions = {
-                    showSeconds: false
-                }
+                    showSeconds: false,
+                };
             }
         });
 
@@ -136,7 +137,7 @@ export class DynamicFormService {
 
     uploadFile(event, modelItem, changeDetectorRef: ChangeDetectorRef): void {
         const asyncTaskPipe = this.fileService.addFile({
-            files: _.filter(event.files, function (file) {
+            files: _.filter(event.files, (file) => {
                 return file.status !== 'uploaded-file';
             }),
         });
@@ -157,8 +158,8 @@ export class DynamicFormService {
                             modelItem.fileData = {
                                 fileID: file[0].fileID,
                                 hash: file[0].fileHash,
-                                name: file[0].fileTitle
-                            }
+                                name: file[0].fileTitle,
+                            };
                         }
                     });
 
@@ -190,7 +191,7 @@ export class DynamicFormService {
                         this.toaster.pop('error', errorMessage);
                     }
                 }
-            })
+            }),
         );
     }
 }

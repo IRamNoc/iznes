@@ -1,5 +1,5 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
-import {FilePermission} from '@setl/core-filedrop/drophandler/drophandler.component';
+import { FilePermission } from '@setl/core-filedrop/drophandler/drophandler.component';
 
 export interface FormItem {
     cssClass?: string;
@@ -39,7 +39,7 @@ export enum FormItemType {
     boolean,
     file,
     textarea,
-    time
+    time,
 }
 
 export enum FormItemStyle {
@@ -47,7 +47,7 @@ export enum FormItemStyle {
     BreakOnBefore,
     BreakOnAfter,
     WidthThird,
-    WidthFourth
+    WidthFourth,
 }
 
 export interface FormItemDropdown {

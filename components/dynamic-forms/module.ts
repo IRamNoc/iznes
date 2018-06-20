@@ -1,15 +1,15 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import {MultilingualModule} from '@setl/multilingual/multilingual.module';
-import {DpDatePickerModule} from '../ng2-date-picker/date-picker.module';
-import {SelectModule} from '../ng2-select/select.module';
-import {FileDropModule} from '@setl/core-filedrop';
-import {FileViewerModule} from '@setl/core-fileviewer/fileviewer.module';
+import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { DpDatePickerModule } from '../ng2-date-picker/date-picker.module';
+import { SelectModule } from '../ng2-select/select.module';
+import { FileDropModule } from '@setl/core-filedrop';
+import { FileViewerModule } from '@setl/core-fileviewer/fileviewer.module';
 
-import {DynamicFormComponent} from './component';
-import {DynamicFormService} from './service';
+import { DynamicFormComponent } from './component';
+import { DynamicFormService } from './service';
 
 @NgModule({
     imports: [
@@ -20,15 +20,17 @@ import {DynamicFormService} from './service';
         DpDatePickerModule,
         SelectModule,
         FileDropModule,
-        FileViewerModule
+        FileViewerModule,
     ],
     declarations: [
-        DynamicFormComponent
+        DynamicFormComponent,
     ],
     exports: [
-        DynamicFormComponent
+        DynamicFormComponent,
     ],
-    providers: [DynamicFormService]
+    providers: [
+        DynamicFormService,
+    ],
 })
 export class DynamicFormsModule {
 
