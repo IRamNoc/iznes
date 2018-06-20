@@ -1,20 +1,20 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {SagaHelper, LogService} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
-import {PersistService} from '@setl/core-persist';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { SagaHelper, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
+import { PersistService } from '@setl/core-persist';
 
 // Alerts and confirms
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService} from '@setl/utils';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 
 // Internal
-import {Subscription} from 'rxjs/Subscription';
+import { Subscription } from 'rxjs/Subscription';
 // Services
-import {AdminUsersService} from '@setl/core-req-services/useradmin/useradmin.service';
-import {ChainService} from '@setl/core-req-services/chain/service';
-import {MultilingualService} from '@setl/multilingual';
+import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
+import { ChainService } from '@setl/core-req-services/chain/service';
+import { MultilingualService } from '@setl/multilingual';
 
 // Set default Node Address and Port
 let defaultNodeAddress = null;
@@ -67,7 +67,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-search"></i> Search',
                 chainId: -1,
-                active: true
+                active: true,
             },
             {
                 title: '<i class="fa fa-plus"></i> Add New Wallet Node',
@@ -79,10 +79,10 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                         nodePath: new FormControl(),
                         nodePort: new FormControl(defaultNodePort, Validators.compose([Validators.required, this.isInteger])),
                         chainId: new FormControl('', Validators.required)
-                    }
+                    },
                 )),
-                active: false
-            }
+                active: false,
+            },
         ];
 
         // language
@@ -115,20 +115,22 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     getWalletNodesListFromRedux(walletNodesList) {
         const listImu = fromJS(walletNodesList);
 
-        this.walletNodesList = listImu.reduce((result, item) => {
+        this.walletNodesList = listImu.reduce(
+            (result, item) => {
 
-            result.push({
-                walletNodeId: item.get('walletNodeId', 0),
-                walletNodeName: item.get('walletNodeName', ''),
-                chainId: item.get('chainId', 0),
-                chainName: item.get('chainName', ''),
-                nodeAddress: item.get('nodeAddress', ''),
-                nodePath: '',
-                nodePort: item.get('nodePort', 0),
-            });
+                result.push({
+                    walletNodeId: item.get('walletNodeId', 0),
+                    walletNodeName: item.get('walletNodeName', ''),
+                    chainId: item.get('chainId', 0),
+                    chainName: item.get('chainName', ''),
+                    nodeAddress: item.get('nodeAddress', ''),
+                    nodePath: item.get('nodePath', ''),
+                    nodePort: item.get('nodePort', 0),
+                });
 
-            return result;
-        }, []);
+                return result;
+            },
+            []);
 
         this.markForCheck();
     }
@@ -378,15 +380,15 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         // this.logService.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
