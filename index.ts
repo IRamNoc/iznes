@@ -6,6 +6,10 @@ export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-li
  */
 export { OfiHomeComponent } from './ofi-home/home/component';
 /**
+ * My Asset Managers - My Documents
+ */
+export { OfiInvMyDocumentsComponent } from './ofi-kyc/inv-my-documents/component';
+/**
  * Invite Investors
  */
 export { OfiInviteInvestorsComponent } from './ofi-kyc/invite-investors/component';
