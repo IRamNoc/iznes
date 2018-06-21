@@ -1,0 +1,10 @@
+:host {
+    .row.buttons {
+        &.bottom {
+            justify-content: flex-end;
+            padding: 10px 0 0;
+        }
+
+        .btn { margin-bottom: 0; }
+    }
+}

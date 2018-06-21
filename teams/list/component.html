@@ -1,1 +1,58 @@
-component
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{ 'Teams' | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdminTeamsButton">{{'List' | translate}}</button>
+        <clr-tab-content class="outer">
+            <div class="row buttons">
+                <div class="col">
+                    <a [routerLink]="'/account-admin/teams/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
+                </div>
+
+                <div class="col">
+                    <a [routerLink]="'/account-admin/teams/new'" class="btn btn-primary">{{ 'Add New Team' | translate }}</a>
+                </div>
+            </div>
+
+            <clr-datagrid #dataGrid>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminColRef">{{'Ref' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-name">
+                    <span id="accountAdminColName">{{'Name' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-desc">
+                    <span id="accountAdminColDescription">{{'Description' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-status">
+                    <span id="accountAdminColStatus">{{'Status' | translate}}</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let team of teams; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
+                    <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
+                        (click)="navigateToEntity(team.userTeamID)">
+                        {{team.reference}}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellName' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{team.name}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellDescription' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{team.description}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" class="col-status"
+                        (click)="navigateToEntity(team.userTeamID)">
+                        {{(team.status) ? 'Active' : 'Disabled'}}
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+            <div class="row buttons bottom">
+                <div class="col">
+                    <button class="btn" (click)="exportEntitiesAsCSV()">{{ 'Export Teams as CSV' | translate }}</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

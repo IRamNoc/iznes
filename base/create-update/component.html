@@ -1,0 +1,33 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{
+        (isCreateMode()) ?
+        'Create a New ' + noun :
+        'Update ' + noun
+        | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
+        <clr-tab-content class="outer">
+            <h3>{{ noun + ' Details' | translate }}</h3>
+
+            <app-dynamic-form [model]="form"></app-dynamic-form>
+
+            <div class="row actions bottom">
+                <div class="col">
+                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Back' | translate }}</a>
+                </div>
+
+                <div class="col">
+                    <button class="btn btn-primary">{{
+                        (isCreateMode()) ?
+                        'Create ' + noun :
+                        'Update ' + noun
+                        | translate }}</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+    
