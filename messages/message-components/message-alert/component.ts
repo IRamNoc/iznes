@@ -34,15 +34,19 @@ export class SetlMessageAlertComponent implements OnInit {
         }
     };
 
+    private templateDetails;
+
     constructor (private walletNodeSocketService: WalletNodeSocketService,
                  private _ngRedux: NgRedux<any>,
                  private alertsService: AlertsService,
                  private _coreWorkflowService: CoreWorkflowEngineService) {
-
     }
 
     ngOnInit() {
-console.log(this.data);
+        this.templateDetails = JSON.parse(this['data']['TemplateDetails']);
+        this.xparam['Header']['Transaction'] = this.templateDetails['transaction'];
+        this.xparam['Header']['Issuer'] = this.data['Address'];
+        this.xparam['Header']['UnitID'] = this.data['UnitID'];
         this.xparam['userid'] = this.userId;
     }
 
@@ -52,9 +56,13 @@ console.log(this.data);
 
     sendXparam(type) {
         this.xparam['Header']['XParams'] = {};
-        this.xparam['Header']['XParams'][this.data['XParam']] = type;
+        this.xparam['Header']['XParams'][this.data['Xparam']] = type;
 
-        this.performPost(this.xparam, () => {
+        this.performPost(this.xparam, (r) => {
+            if (r[1]['Data'] && r[1]['Data'][0] && r[1]['Data'][0]['error']) {
+                console.error(r[1]['Data'][0]);
+                return this.showSuccessResponse('Server error occurred.');
+            }
             this.showSuccessResponse('Workflow engine notified of your choice.');
         }, (e) => {
             console.error(e);
