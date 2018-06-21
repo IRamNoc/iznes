@@ -416,7 +416,7 @@ export class FundShare {
     }
 
     private setListItemPresetMultiple(field: FormItem, value: number[]): void {
-        if (!value.length) return;
+        if (!value || !value.length) return;
         (field.preset as any) = value.map((id: number) => {
             const newItem = _.find(field.listItems, { id });
             if (!newItem) {
@@ -424,7 +424,6 @@ export class FundShare {
             }
             return newItem;
         }).filter(d => d !== null);
-        console.log('setListItemPresetMultiple', field.preset, field.listItems, value);
     }
 
     private setFeederPreset(value: any): void {
