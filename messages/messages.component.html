@@ -143,7 +143,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
-                <setl-message-alert [data]="currentMessage.action.data"></setl-message-alert>
+                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId"></setl-message-alert>
             </p>
         </div>
 

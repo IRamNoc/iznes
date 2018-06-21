@@ -17,6 +17,7 @@ import {CoreWorkflowEngineService} from '../../../../core-req-services';
 export class SetlMessageAlertComponent implements OnInit {
 
     @Input() data;
+    @Input() userId;
     messageBody: string = '';
 
     public xparam = {
@@ -42,6 +43,7 @@ export class SetlMessageAlertComponent implements OnInit {
 
     ngOnInit() {
 console.log(this.data);
+        this.xparam['userid'] = this.userId;
     }
 
     canShowButton(option) {
