@@ -1,0 +1,11 @@
+:host {
+    .row.buttons {
+        justify-content: flex-end;
+        padding: 0 0 10px 0;
+
+        &.bottom { padding: 10px 0 0; }
+    }
+
+    .col-ref { width: 200px; }
+    .col-status { width: 100px; }
+}
