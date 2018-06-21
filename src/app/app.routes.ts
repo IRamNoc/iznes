@@ -49,6 +49,7 @@ import {
     OfiSignUpComponent,
     OfiTaxReportComponent,
     ProductConfigurationComponent,
+    OfiInvMyDocumentsComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -175,6 +176,16 @@ export const ROUTES: Routes = [
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
                         data: { state: 'my-account' },
+                    },
+                ],
+            },
+            {
+                path: 'my-asset-managers',
+                children: [
+                    {
+                        path: 'my-documents',
+                        component: OfiInvMyDocumentsComponent,
+                        canActivate: [LoginGuardService],
                     },
                 ],
             },

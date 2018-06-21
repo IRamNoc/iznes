@@ -345,6 +345,22 @@ const kycDocuments = {
     ],
 };
 
+const MyAssetManagers = {
+    label: 'My Asset Managers',
+    label_txt: 'txt_my_asset_managers',
+    icon_class: 'fa fa-users',
+    element_id: 'top-menu-my-asset-managers',
+    children: [
+        {
+            label: 'My documents',
+            label_txt: 'txt_my-documents',
+            icon_class: 'fa fa-copy',
+            element_id: 'top-menu-my-documents',
+            router_link: '/my-asset-managers/my-documents',
+        },
+    ],
+};
+
 const productConfiguration = {
     label: 'Configuration',
     label_txt: 'txt_productconfig',
@@ -415,6 +431,7 @@ export const menuSpec: MenuSpec = {
         investor: [
             home,
             orderBook,
+            MyAssetManagers,
             // dashboard,
             subPortfolio,
             // messages,
