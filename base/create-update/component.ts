@@ -11,6 +11,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
     entityId: number;
     mode: 0 | 1; // 0 - create, 1 - update
+    noun: string;
 
     private subscriptions: Subscription[];
 
@@ -23,8 +24,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
      * @param noun string
      * @param route ActivatedRoute
      */
-    constructor(public noun: string,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private redux: NgRedux<any>) {}
 
     ngOnInit() {
