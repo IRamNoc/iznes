@@ -11,7 +11,7 @@ import { FileDownloader } from '@setl/utils';
 export class AccountAdminListBase implements OnInit, OnDestroy {
 
     private token: string;
-    private subscriptions: Subscription[];
+    protected subscriptions: Subscription[] = [];
 
     @select(['user', 'authentication', 'token']) tokenOb;
 
@@ -48,8 +48,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscriptions.forEach((sub: Subscription) => {
-            sub.unsubscribe();
-        });
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach((sub: Subscription) => {
+                sub.unsubscribe();
+            });
+        }
     }
 }

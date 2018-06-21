@@ -1,6 +1,7 @@
 import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
 
 export class AccountAdminUser {
+    userId?: number;
     firstName: string;
     lastName: string;
     email: string;

@@ -21,6 +21,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
 
         this.users = [
             {
+                userId: 1,
                 firstName: 'User',
                 lastName: 'One',
                 email: 'user_one@email.com',
@@ -29,6 +30,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
                 reference: 'USERONE1',
             },
             {
+                userId: 2,
                 firstName: 'User',
                 lastName: 'Two',
                 email: 'user_two@email.com',
@@ -37,6 +39,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
                 reference: 'USERTWO2',
             },
             {
+                userId: 3,
                 firstName: 'User',
                 lastName: 'Three',
                 email: 'user_three@email.com',

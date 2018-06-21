@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 
 import { FileDownloader } from '@setl/utils';
 
 import * as Model from '../model';
+import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
 
 @Component({
@@ -16,7 +17,11 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    constructor(router: Router,
+    @select(['accountAdmin', 'requestedAccountAdminTeams']) teamsRequestedOb;
+    @select(['accountAdmin', 'accountAdminTeams']) teamsOb;
+
+    constructor(private service: UserTeamsService,
+                router: Router,
                 redux: NgRedux<any>,
                 fileDownloader: FileDownloader) {
         super('Team', router, redux, fileDownloader);
@@ -49,7 +54,23 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         ];
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        super.ngOnInit();
+
+        this.subscriptions.push(this.teamsRequestedOb.subscribe((requested: boolean) => {
+            this.requestTeams(requested);
+        }));
+
+        this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
+            this.teams = teams;
+        }));
+    }
+
+    private requestTeams(requested: boolean): void {
+        if (requested) return;
+
+        this.service.readUserTeams(null, () => {}, () => {});
+    }
 
     ngOnDestroy() {}
 }
