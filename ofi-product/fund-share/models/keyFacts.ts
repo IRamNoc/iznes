@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
@@ -29,6 +30,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'ISIN',
         required: true,
         mltag: 'txt_fundshare_isin',
+        validator: validateISIN,
     };
     shareClassCode: FormItem = {
         type: FormItemType.text,
@@ -41,8 +43,8 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'Share Class Currency',
         required: true,
         listItems: [],
-        mltag: 'txt_fundshare_classcurrency'
-    }
+        mltag: 'txt_fundshare_classcurrency',
+    };
     subscriptionStartDate: FormItem = {
         type: FormItemType.date,
         label: 'Subscription Period Start Date',
@@ -512,5 +514,15 @@ export class ShareKeyFactsOptional {
         required: false,
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_additionalcomments',
+    };
+}
+
+function validateISIN(c: FormControl) {
+    const ISIN_REGEXP =  new RegExp(/\b^[A-Za-z]{2}[0-9]{10}\b/);
+
+    return ISIN_REGEXP.test(c.value) ? null : {
+        isin: {
+            valid: false,
+        },
     };
 }
