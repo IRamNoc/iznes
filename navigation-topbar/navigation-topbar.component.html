@@ -13,7 +13,7 @@
     </form>
     <div class="header-actions">
 
-        <div class="user" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
+        <div class="user iznes" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
             <div class="last-login">
@@ -103,10 +103,12 @@
             <span class="mltranslated">{{'Session expiring soon' | translate}}</span></h4>
     </div>
     <div class="modal-body">
-        <p>{{'Your session will expire in' | translate}} <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{'seconds.' | translate}}
+        <p>{{'Your session will expire in' | translate}}
+            <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{'seconds.' | translate}}
 
         </p>
-        <p>{{'Press' | translate}} <span class="text-primary font-weight-bold mltranslated">{{'continue' | translate}}</span> {{'to continue using this site.' | translate}}
+        <p>{{'Press' | translate}}
+            <span class="text-primary font-weight-bold mltranslated">{{'continue' | translate}}</span> {{'to continue using this site.' | translate}}
 
         </p>
     </div>
