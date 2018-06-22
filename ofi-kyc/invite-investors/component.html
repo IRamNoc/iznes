@@ -115,6 +115,7 @@
             <clr-dg-column [clrDgField]="'firstName'">{{'First Name' | translate}}</clr-dg-column>
             <clr-dg-column [clrDgField]="'invitedBy'">{{'Invitation Sent By' | translate}}</clr-dg-column>
             <clr-dg-column [clrDgField]="'kycStarted'">{{'Date KYC Started' | translate}}</clr-dg-column>
+            <clr-dg-column [clrDgField]="'initationLink'">{{'Invitation Link' | translate}}</clr-dg-column>
             <clr-dg-column [clrDgField]="'status'">{{'KYC Status' | translate}}</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let item of inviteItems">
@@ -126,6 +127,10 @@
                 <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
                 <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
                 <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
+                <clr-dg-cell class="action">
+                    <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
+                        <i class="fa fa-copy"></i> {{'Copy link' | translate}}</button>
+                </clr-dg-cell>
                 <clr-dg-cell><span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span></clr-dg-cell>
             </clr-dg-row>
 

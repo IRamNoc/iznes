@@ -78,12 +78,12 @@
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
                         <clr-dg-cell>
-                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-caracteristic', fund['isin']]">
+                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
                                 {{fund['isin']}}
                             </button>
                         </clr-dg-cell>
                         <clr-dg-cell>
-                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-caracteristic', fund['isin']]">
+                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
                                 {{fund['shareName']}}
                             </button>
                         </clr-dg-cell>
