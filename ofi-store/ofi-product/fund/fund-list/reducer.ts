@@ -150,7 +150,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             openOrCloseEnded: fund.openOrCloseEnded.toString(),
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
             isFundOfFund: fund.isFundOfFund.toString(),
-            managementCompanyID: fund.managementCompanyID.toString(),
+            managementCompanyID: fund.managementCompanyID,
             principalPromoter: JSON.parse(fund.principalPromoter),
             payingAgent: JSON.parse(fund.payingAgent),
             isDedicatedFund: fund.isDedicatedFund.toString(),

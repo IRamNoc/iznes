@@ -1,18 +1,18 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {Location} from '@angular/common';
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
-import {immutableHelper} from '@setl/utils';
-import {select, NgRedux} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
-import {Subject} from 'rxjs/Subject';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Location } from '@angular/common';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { immutableHelper } from '@setl/utils';
+import { select, NgRedux } from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ToasterService} from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 
-import {investorInvitation} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
-import {MultilingualService} from '@setl/multilingual';
+import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import { MultilingualService } from '@setl/multilingual';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -119,23 +119,24 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this._ofiKycService.getInvitationsByUserAmCompany();
 
         this.investorInvitations$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d: investorInvitation[]) => {
-                this.inviteItems = d;
-                if (this.inviteItems.length) {
-                    this.inviteItems = this.inviteItems.map((invite) => {
-                        const tokenUsedAt = invite.tokenUsedAt ? `Account created - ${moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss')}` : `Account not created`;
-                        const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
-                        return {
-                            ...invite,
-                            inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
-                            tokenUsedAt,
-                            kycStarted,
-                        };
-                    })
-                }
-                this.markForCheck();
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((d: investorInvitation[]) => {
+            this.inviteItems = d;
+            if (this.inviteItems.length) {
+                this.inviteItems = this.inviteItems.map((invite) => {
+                    const tokenUsedAt = invite.tokenUsedAt ? `Account created - ${moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss')}` : `Account not created`;
+                    const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
+                    return {
+                        ...invite,
+                        invitationLink: `${window.location.origin}/#/signup/${invite.lang}/${invite.invitationToken}`,
+                        inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
+                        tokenUsedAt,
+                        kycStarted,
+                    };
+                })
+            }
+            this.markForCheck();
+        });
     }
 
     ngOnDestroy(): void {
@@ -270,6 +271,20 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
     markForCheck() {
         this._changeDetectorRef.markForCheck();
+    }
+
+    copyToClipboard(val: string) {
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = val;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
     }
 }
 
