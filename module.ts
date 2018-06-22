@@ -13,6 +13,12 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
 
 import {
+    AccountAdminCreateUpdateBase,
+    AccountAdminAuditBase,
+    AccountAdminListBase,
+} from './base';
+
+import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
@@ -40,6 +46,9 @@ import {
         MultilingualModule,
     ],
     declarations: [
+        AccountAdminCreateUpdateBase,
+        AccountAdminAuditBase,
+        AccountAdminListBase,
         UserTeamsAuditComponent,
         UserTeamsCreateUpdateComponent,
         UserTeamsListComponent,
