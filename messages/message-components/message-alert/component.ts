@@ -3,7 +3,7 @@ import {SagaHelper} from '@setl/utils/index';
 import {WalletNodeSocketService} from '@setl/websocket-service';
 import {NgRedux} from '@angular-redux/store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
-import {CoreWorkflowEngineService} from '../../../../core-req-services';
+import {CoreWorkflowEngineService} from '@setl/core-req-services';
 /**
  * SETL Message Body Component
  *
