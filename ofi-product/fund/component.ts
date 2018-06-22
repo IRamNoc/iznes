@@ -532,7 +532,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 }
                 this.managementCompanyItems = values.map((item) => {
                     return {
-                        id: item.companyID.toString(),
+                        id: item.companyID,
                         text: item.companyName,
                     };
                 });
@@ -557,18 +557,22 @@ export class FundComponent implements OnInit, OnDestroy {
         OfiProductConfigService.defaultRequestProductConfig(this.ofiProductConfigService, this.ngRedux);
     }
 
-    static getListItemText(value: string, list: { id: string, text: string }[]): string {
+    static getListItemText(value: string|number, list: { id: string|number, text: string }[]): string {
         const listItem = FundComponent.getListItem(value, list);
+        if (!listItem.length) console.log('getListItemText ', value, list);
         return listItem.length ? listItem[0].text : '';
     }
 
-    static getListItem(value: string, list: { id: string, text: string }[]): { id: string, text: string }[] {
+    static getListItem(
+        value: string|number,
+        list: { id: string|number, text: string }[],
+    ): { id: any, text: string }[] {
         if (value === null) {
             return [];
         }
 
-        const val = (typeof value === 'number') ? String(value) : value;
-        const item = _.find(list, { id: val });
+        // const val = (typeof value === 'number') ? String(value) : value;
+        const item = _.find(list, { id: value });
 
         if (!item) {
             return [];
@@ -576,12 +580,12 @@ export class FundComponent implements OnInit, OnDestroy {
         return [item];
     }
 
-    getListItems(val: string[], list: { id: string, text: string }[]): { id: string, text: string }[] {
+    getListItems(val: number[], list: { id: number, text: string }[]): { id: number, text: string }[] {
         if (!val.length) {
             return [];
         }
 
-        return val.map((id: string) => {
+        return val.map((id: number) => {
             const newItem = FundComponent.getListItem(id, list);
             if (!newItem.length) {
                 return null;
