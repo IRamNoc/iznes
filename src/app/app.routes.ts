@@ -302,7 +302,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product-caracteristic/:isin',
+                        path: 'product-characteristic/:isin',
                         component: ProductCharacteristicComponent,
                         canActivate: [LoginGuardService],
                     },
