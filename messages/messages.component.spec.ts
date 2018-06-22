@@ -9,7 +9,6 @@ import { SetlMessageConnectionComponent } from './message-components/message-con
 import { SetlMessagePOAComponent } from './message-components/message-poa/component';
 import { SetlMessageAlertComponent } from './message-components/message-alert/component';
 import { SetlMessageKycComponent } from './message-components/message-kyc/message-kyc.component';
-import { SetlMessagePOAComponent } from './message-components/message-poa/component';
 import { SetlMessageAmCancelOrderComponent } from './message-components/message-cancel-order/message-cancel-order.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,7 +23,7 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MessagesService } from '../messages.service';
 import {
     MessageAction,
-    MessageActionsConfig
+    MessageActionsConfig,
 } from './message-components/message-form-action/message-form-action.model';
 import { MockMailHelper } from './mockMailHelper';
 import { ActivatedRoute, RouterModule } from '@angular/router';
@@ -35,7 +34,7 @@ import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { ToasterService } from 'angular2-toaster';
-import { FileDownloader } from "@setl/utils";
+import { FileDownloader } from '@setl/utils';
 
 const routes = [
     {
@@ -44,7 +43,7 @@ const routes = [
     },
     {
         path: 'messages',
-        redirectTo: '/messages/inbox'
+        redirectTo: '/messages/inbox',
     },
 ];
 
@@ -55,30 +54,30 @@ const environment = {
             desc: 'View your global inbox',
             icon: 'inbox',
             type: 'inbox',
-            active: true
+            active: true,
         },
         {
             name: 'Action Messages',
             desc: 'Messages that require actions',
             icon: 'balance',
             type: 'action',
-            active: false
+            active: false,
         },
         {
             name: 'Sent Messages',
             desc: 'Messages sent by your account',
             icon: 'pop-out',
             type: 'sent',
-            active: false
+            active: false,
         },
         {
             name: 'Deleted Messages',
             desc: 'View messages that you deleted',
             icon: 'trash',
             type: 'deleted',
-            active: false
+            active: false,
         },
-    ]
+    ],
 };
 
 describe('SetlMessagesComponent', () => {
@@ -100,10 +99,10 @@ describe('SetlMessagesComponent', () => {
         action: '',
         date: '2017-12-07 09:41:00',
         isRead: false,
-        isDecrypted: false
+        isDecrypted: false,
     };
     const messageList = [
-        exampleMessage
+        exampleMessage,
     ];
 
     const mailHelperMock = new MockMailHelper('', '');
@@ -118,8 +117,8 @@ describe('SetlMessagesComponent', () => {
                 SetlMessageAttachmentComponent,
                 SetlMessageFormActionComponent,
                 SetlMessageConnectionComponent,
-               	SetlMessagePOAComponent, 
-		SetlMessageKycComponent,
+               	SetlMessagePOAComponent,
+                SetlMessageKycComponent,
                 SetlMessageAmCancelOrderComponent,
             ],
             imports: [
@@ -135,19 +134,19 @@ describe('SetlMessagesComponent', () => {
                 RouterModule.forRoot(routes),
             ],
             providers: [
-                {provide: MyMessagesService},
-                {provide: MemberSocketService},
+                { provide: MyMessagesService },
+                { provide: MemberSocketService },
                 AlertsService,
                 ToasterService,
-                {provide: ActivatedRoute, useValue: {params: Observable.of({category: 'inbox'})}},
-                {provide: APP_BASE_HREF, useValue: '/'},
+                { provide: ActivatedRoute, useValue: { params: Observable.of({ category: 'inbox' }) } },
+                { provide: APP_BASE_HREF, useValue: '/' },
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
-                {provide: LogService, useClass: LogServiceMock},
-                {provide: FileDownloader}
-            ]
+                { provide: LogService, useClass: LogServiceMock },
+                { provide: FileDownloader },
+            ],
         }).compileComponents();
         MockNgRedux.reset();
     }));
@@ -174,20 +173,20 @@ describe('SetlMessagesComponent', () => {
 
     it('should be able to set the message list', () => {
         component.mailCounts = {
-            inbox: 1
+            inbox: 1,
         };
         component.walletDirectoryList = {
             1: {
-                walletName: 'Sender Wallet'
+                walletName: 'Sender Wallet',
             },
             2: {
-                walletName: 'Receiver Wallet'
-            }
+                walletName: 'Receiver Wallet',
+            },
         };
         component.currentCategory = 'inbox';
         component.categories[component.currentCategory] = {
             type: 'inbox',
-            name: 'Inbox'
+            name: 'Inbox',
         };
         component.currentMessage = messageList[0];
         component.messagesList(messageList);
@@ -198,7 +197,7 @@ describe('SetlMessagesComponent', () => {
         component.currentCategory = 'inbox';
         component.categories[component.currentCategory] = {
             type: 'inbox',
-            name: 'Inbox'
+            name: 'Inbox',
         };
         component.onPageChange(1);
         expect(component.requestMailboxByCategory).toHaveBeenCalled();
@@ -209,12 +208,11 @@ describe('SetlMessagesComponent', () => {
         component.currentCategory = 'inbox';
         component.categories[component.currentCategory] = {
             type: 'inbox',
-            name: 'Inbox'
+            name: 'Inbox',
         };
         component.refreshMailbox(0);
         expect(component.requestMailboxByCategory).toHaveBeenCalled();
     });
-
 
     it('should call mailHelper deleteMessage and refreshMailBox when deleteMessage is called', () => {
         spyOn(component.mailHelper, 'deleteMessage');
@@ -229,6 +227,6 @@ describe('SetlMessagesComponent', () => {
         expect(component.messages).toEqual([]);
         expect(component.currentCategory).toBe(0);
         expect(component.currentPage).toBe(0);
-        expect(component.currentMessage).toEqual({id: 0});
+        expect(component.currentMessage).toEqual({ id: 0 });
     });
 });
