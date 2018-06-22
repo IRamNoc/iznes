@@ -6,7 +6,6 @@ import { FileDownloader } from '@setl/utils';
 
 import {
     clearRequestedAccountAdminTeams,
-    setRequestedAccountAdminTeams,
 } from '@setl/core-store';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
@@ -50,8 +49,6 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         if (requested) return;
 
         this.service.readUserTeams(null, () => {}, () => {});
-
-        this.redux.dispatch(setRequestedAccountAdminTeams());
     }
 
     ngOnDestroy() {}

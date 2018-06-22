@@ -30,6 +30,25 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
 
     ngOnInit() {
         super.ngOnInit();
+
+        if (this.isUpdateMode()) {
+            this.service.readUserTeams(this.entityId,
+                                       (data: any) => this.onReadTeamSuccess(data),
+                                       (e: any) => this.onReadTeamError(e));
+        }
+    }
+
+    private onReadTeamSuccess(data): void {
+        const team: Model.AccountAdminTeam = data[1].Data[0];
+
+        this.form.description.control.setValue(team.description);
+        this.form.name.control.setValue(team.name);
+        this.form.reference.control.setValue(team.reference);
+        this.form.status.control.setValue(team.status);
+    }
+
+    private onReadTeamError(e): void {
+
     }
 
     save(): void {
@@ -54,7 +73,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
 
     private updateTeam(): void {
         this.service.updateUserTeam(
-            1,
+            this.entityId,
             this.form.status.value(),
             this.form.name.value(),
             this.form.reference.value(),

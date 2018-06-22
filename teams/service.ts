@@ -42,8 +42,8 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
-                                 SET_ACCOUNT_ADMIN_TEAMS,
+                                 (userTeamId) ? undefined : setRequestedAccountAdminTeams,
+                                 (userTeamId) ? undefined : SET_ACCOUNT_ADMIN_TEAMS,
                                  onSuccess,
                                  onError);
     }
@@ -80,7 +80,7 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
@@ -118,7 +118,7 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
@@ -144,7 +144,7 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
@@ -164,7 +164,8 @@ export class UserTeamsService {
                                 successType: any,
                                 successCallback: (data) => void,
                                 errorCallback: (e) => void): void {
-        this.redux.dispatch(setRequestedMethod());
+
+        if (setRequestedMethod) this.redux.dispatch(setRequestedMethod());
 
         this.redux.dispatch(SagaHelper.runAsync(
             [successType],
