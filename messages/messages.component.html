@@ -141,6 +141,10 @@
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
                 <setl-message-poa [data]="currentMessage.action.data"></setl-message-poa>
             </p>
+
+            <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
+                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId"></setl-message-alert>
+            </p>
         </div>
 
         <div class="message_view_menu">
