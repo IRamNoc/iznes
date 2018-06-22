@@ -2,6 +2,8 @@ import { Map } from 'immutable';
 
 export interface productCharacteristics {
     fundShareID: number;
+    umbrellaFundName: string|null;
+    fundName: string;
     fundShareName: string;
     isin: string;
     launchDate: string;

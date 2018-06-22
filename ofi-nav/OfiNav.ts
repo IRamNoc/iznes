@@ -39,3 +39,20 @@ export class NavFundHistoryItem {
 }
 
 export interface NavInfoModel extends ShareModel, NavModel {}
+
+export enum CurrencySymbols {
+    EUR = '€',
+    USD = '$',
+    GBP = '£',
+    CHF = 'CHF',
+    JPY = '¥',
+    AUD = '$',
+    NOK = 'kr',
+    SEK = 'kr',
+    ZAR = 'R',
+    RUB = '₽',
+    SGD = '$',
+    AED = 'د.إ',
+    CNY = '¥',
+    PLN = 'zł',
+};

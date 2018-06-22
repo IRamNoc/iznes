@@ -18,7 +18,6 @@ import {
     clearRequestedNavLatest
 } from '../../ofi-store/ofi-product/nav';
 import {CurrencyValue} from '../../ofi-product/fund-share/fundShareValue';
-import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {NumberConverterService, MoneyValuePipe} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
 

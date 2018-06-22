@@ -442,8 +442,8 @@ export class CalendarHelper {
 
     getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
                           tradeTimeZoneOffSet: number): moment {
-        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
-        const timeZoneDiff = currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
+        const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
+        const timeZoneDiff = tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
 
         // work out the current date's cutoff
         return dateToCheck.clone().set(
@@ -456,8 +456,8 @@ export class CalendarHelper {
     }
 
     getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
-        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
-        return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
+        const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
+        return tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
     }
 
     isNonWorkingDate(dateToCheck) {

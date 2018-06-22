@@ -60,7 +60,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
 
     addressObject: any;
-    addressList: Array<any>;
+    addressList: Array<any> = [];
     requestedWalletAddress: boolean;
 
     /* Public properties. */
@@ -299,7 +299,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                     this.nbTotalHolders += data.fundHolderNumber;
                 }
             }
-
 
             this._changeDetectorRef.markForCheck();
         }

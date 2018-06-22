@@ -1,35 +1,34 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as UmbrellaFundActions from './actions';
-import {UmbrellaFundDetail, UmbrellaFundListState} from './model';
+import { UmbrellaFundDetail, UmbrellaFundListState } from './model';
 import * as _ from 'lodash';
-import {fromJS, Map} from 'immutable';
-
+import { fromJS, Map } from 'immutable';
 
 const initialState: UmbrellaFundListState = {
     umbrellaFundList: {},
-    requested: false
+    requested: false,
 };
 
-export const UmbrellaFundListReducer = function (state: UmbrellaFundListState = initialState, action: Action) {
+export const umbrellaFundListReducer = function (state: UmbrellaFundListState = initialState, action: Action) {
 
     switch (action.type) {
-        case UmbrellaFundActions.SET_UMBRELLA_FUND_LIST:
+    case UmbrellaFundActions.SET_UMBRELLA_FUND_LIST:
 
-            const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const ufdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
-            return Object.assign({}, state, {
-                umbrellaFundList
-            });
+        const umbrellaFundList = formatUmbrellaFundDataResponse(ufdata);
+        return Object.assign({}, state, {
+            umbrellaFundList,
+        });
 
-        case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
-            return handleSetRequested(state, action);
+    case UmbrellaFundActions.SET_REQUESTED_UMBRELLA_FUND:
+        return handleSetRequested(state, action);
 
-        case UmbrellaFundActions.CLEAR_REQUESTED_UMBRELLA_FUND:
-            return handleClearRequested(state, action);
+    case UmbrellaFundActions.CLEAR_REQUESTED_UMBRELLA_FUND:
+        return handleClearRequested(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -38,7 +37,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
     const rawUmbrellaFundDataList = fromJS(rawUmbrellaFundData);
 
     const umbrellaFundDetailList = Map(rawUmbrellaFundDataList.reduce(
-        function (result, item) {
+        (result, item) => {
             result[item.get('umbrellaFundID')] = {
                 umbrellaFundID: item.get('umbrellaFundID').toString(),
                 umbrellaFundName: item.get('umbrellaFundName'),
@@ -50,15 +49,15 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 managementCompanyID: item.get('managementCompanyID').toString(),
                 fundAdministratorID: item.get('fundAdministratorID').toString(),
                 custodianBankID: item.get('custodianBankID').toString(),
-                investmentAdvisorID: item.get('investmentAdvisorID'),
-                payingAgentID: item.get('payingAgentID'),
+                investmentAdvisorID: JSON.parse(item.get('investmentAdvisorID')),
+                payingAgentID: JSON.parse(item.get('payingAgentID')),
                 transferAgentID: item.get('transferAgentID'),
                 centralisingAgentID: item.get('centralisingAgentID'),
                 giin: item.get('giin'),
                 delegatedManagementCompanyID: item.get('delegatedManagementCompanyID'),
                 auditorID: item.get('auditorID'),
                 taxAuditorID: item.get('taxAuditorID'),
-                principlePromoterID: item.get('principlePromoterID'),
+                principlePromoterID: JSON.parse(item.get('principlePromoterID')),
                 legalAdvisorID: item.get('legalAdvisorID'),
                 directors: item.get('directors'),
                 internalReference: item.get('internalReference'),
@@ -81,7 +80,7 @@ function handleSetRequested(state: UmbrellaFundListState, action: Action): Umbre
     const requested = true;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
@@ -95,6 +94,6 @@ function handleClearRequested(state: UmbrellaFundListState, action: Action): Umb
     const requested = false;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
