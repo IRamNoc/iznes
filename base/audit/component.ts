@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class AccountAdminAuditBase implements OnInit, OnDestroy {
 
-    private subscriptions: Subscription[];
+    private subscriptions: Subscription[] = [];
 
     /**
      *
@@ -30,8 +30,10 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscriptions.forEach((sub: Subscription) => {
-            sub.unsubscribe();
-        });
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach((sub: Subscription) => {
+                sub.unsubscribe();
+            });
+        }
     }
 }

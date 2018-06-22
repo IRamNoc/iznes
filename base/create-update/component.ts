@@ -3,6 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
+import { ToasterService } from 'angular2-toaster';
+
 @Component({
     selector: 'app-account-admin-crud-base',
     templateUrl: 'component.html',
@@ -13,7 +17,10 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     mode: 0 | 1; // 0 - create, 1 - update
     noun: string;
 
-    private subscriptions: Subscription[];
+    protected accountId: number;
+    private subscriptions: Subscription[] = [];
+
+    @select(['user', 'myDetail', 'accountId']) accountIdOb;
 
     /**
      *
@@ -21,11 +28,13 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
      * This method is used so to stop replication of common code between the two components.
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      *
-     * @param noun string
      * @param route ActivatedRoute
      */
     constructor(private route: ActivatedRoute,
-                private redux: NgRedux<any>) {}
+                private redux: NgRedux<any>,
+                private alerts: AlertsService,
+                private toaster: ToasterService,
+                private confirmationService: ConfirmationService) {}
 
     ngOnInit() {
         this.processParams();
@@ -46,7 +55,9 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        //
+        this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
+            this.accountId = accountId;
+        }));
     }
 
     isCreateMode(): boolean {
@@ -61,9 +72,41 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
+    save(): void {
+        console.error('Method not implemented');
+    }
+
+    protected onSaveSuccess(entityName: string): void {
+        let message = `${entityName} successfully `;
+
+        if (this.isCreateMode()) {
+            message += 'created';
+        } else if (this.isUpdateMode()) {
+            message += 'updated';
+        }
+
+        this.toaster.pop('success', message);
+    }
+
+    protected onSaveError(entityName: string, error: string): void {
+        let message = `${entityName} failed to be `;
+
+        if (this.isCreateMode()) {
+            message += 'created';
+        } else if (this.isUpdateMode()) {
+            message += 'updated';
+        }
+
+        message += `.<br /><i>${error}</i>`;
+
+        this.alerts.create('error', message);
+    }
+
     ngOnDestroy() {
-        this.subscriptions.forEach((sub: Subscription) => {
-            sub.unsubscribe();
-        });
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach((sub: Subscription) => {
+                sub.unsubscribe();
+            });
+        }
     }
 }
