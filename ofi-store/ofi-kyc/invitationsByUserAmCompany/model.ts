@@ -7,5 +7,7 @@ export interface investorInvitation {
     firstName?: string;
     invitedBy: string;
     kycStarted?: string; // date
+    invitationToken?: string;
+    lang?: string;
     status: number;
 }
