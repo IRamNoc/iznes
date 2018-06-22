@@ -7,6 +7,7 @@ import { FileDownloader } from '@setl/utils';
 
 @Component({
     selector: 'app-account-admin-list-base',
+    template: '',
 })
 export class AccountAdminListBase implements OnInit, OnDestroy {
 

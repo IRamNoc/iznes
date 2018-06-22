@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'app-account-admin-audit-base',
+    template: '',
 })
 export class AccountAdminAuditBase implements OnInit, OnDestroy {
 
