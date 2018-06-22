@@ -6,6 +6,8 @@ import { SetlMessageBodyComponent } from './message-components/message-body/mess
 import { SetlMessageAttachmentComponent } from './message-components/message-attachment/message-attachment.component';
 import { SetlMessageFormActionComponent } from './message-components/message-form-action/message-form-action.component';
 import { SetlMessageConnectionComponent } from './message-components/message-connection/message-connection.component';
+import { SetlMessagePOAComponent } from './message-components/message-poa/component';
+import { SetlMessageAlertComponent } from './message-components/message-alert/component';
 import { SetlMessageKycComponent } from './message-components/message-kyc/message-kyc.component';
 import { SetlMessageAmCancelOrderComponent } from './message-components/message-cancel-order/message-cancel-order.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -109,6 +111,8 @@ describe('SetlMessagesComponent', () => {
         TestBed.configureTestingModule({
             declarations: [
                 SetlMessagesComponent,
+                SetlMessagePOAComponent,
+                SetlMessageAlertComponent,
                 SetlMessageBodyComponent,
                 SetlMessageAttachmentComponent,
                 SetlMessageFormActionComponent,
