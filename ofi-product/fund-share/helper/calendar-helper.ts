@@ -57,6 +57,11 @@ export class CalendarHelper {
                 [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
             }[this.orderType];
 
+            // Handle old timezoneString, it was number;
+            if (!isNaN(Number(timeZonString))) {
+                return 0;
+            }
+
             return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
         } catch (e) {
             return 0;
@@ -360,7 +365,8 @@ export class CalendarHelper {
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
+        dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
+        if (!this.isWorkingDate(dateTimeToChecks)) {
             return false;
         }
 
@@ -371,7 +377,8 @@ export class CalendarHelper {
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
+        dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
+        if (!this.isWorkingDate(dateTimeToChecks)) {
             return false;
         }
 
