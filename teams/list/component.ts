@@ -4,6 +4,10 @@ import { NgRedux, select } from '@angular-redux/store';
 
 import { FileDownloader } from '@setl/utils';
 
+import {
+    clearRequestedAccountAdminTeams,
+    setRequestedAccountAdminTeams,
+} from '@setl/core-store';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
@@ -17,8 +21,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    @select(['accountAdmin', 'requestedAccountAdminTeams']) teamsRequestedOb;
-    @select(['accountAdmin', 'accountAdminTeams']) teamsOb;
+    @select(['accountAdmin', 'accountAdminTeams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'accountAdminTeams', 'teams']) teamsOb;
 
     constructor(private service: UserTeamsService,
                 router: Router,
@@ -26,33 +30,6 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 fileDownloader: FileDownloader) {
         super(router, redux, fileDownloader);
         this.noun = 'Team';
-
-        this.teams = [
-            {
-                userTeamID: 1,
-                name: 'Team 1',
-                accountId: 1,
-                status: false,
-                reference: 'TEAM1REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 2,
-                name: 'Team 2',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM2REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 3,
-                name: 'Team 3',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM3REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-        ];
     }
 
     ngOnInit() {
@@ -65,12 +42,16 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
             this.teams = teams;
         }));
+
+        this.redux.dispatch(clearRequestedAccountAdminTeams());
     }
 
     private requestTeams(requested: boolean): void {
         if (requested) return;
 
         this.service.readUserTeams(null, () => {}, () => {});
+
+        this.redux.dispatch(setRequestedAccountAdminTeams());
     }
 
     ngOnDestroy() {}

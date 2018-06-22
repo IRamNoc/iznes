@@ -14,11 +14,11 @@ import { ToasterService } from 'angular2-toaster';
 export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
     entityId: number;
+    form;
     mode: 0 | 1; // 0 - create, 1 - update
     noun: string;
 
     protected accountId: number;
-    protected form;
     private subscriptions: Subscription[] = [];
 
     @select(['user', 'myDetail', 'accountId']) accountIdOb;
