@@ -7,7 +7,8 @@ import {
     CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS,
     UserTeam,
     UserTeamsState,
-    getAccountAdminUserTeams,
+    getAccountAdmin,
+    getAccountAdminTeams,
     userTeamsReducer,
 } from './teams';
 
@@ -18,7 +19,8 @@ export {
     CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS,
     UserTeam,
     UserTeamsState,
-    getAccountAdminUserTeams,
+    getAccountAdmin,
+    getAccountAdminTeams,
     userTeamsReducer,
 };
 

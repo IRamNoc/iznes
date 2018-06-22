@@ -8,4 +8,4 @@ export {
     clearRequestedAccountAdminTeams,
     CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS,
 } from './actions';
-export { getAccountAdminUserTeams } from './selectors';
+export { getAccountAdmin, getAccountAdminTeams } from './selectors';
