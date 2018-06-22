@@ -18,6 +18,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     noun: string;
 
     protected accountId: number;
+    protected form;
     private subscriptions: Subscription[] = [];
 
     @select(['user', 'myDetail', 'accountId']) accountIdOb;
