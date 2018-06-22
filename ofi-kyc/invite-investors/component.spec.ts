@@ -83,6 +83,7 @@ describe('OfiInviteInvestorsComponent', () => {
                 firstName: "albert",
                 invitedBy: "am erica",
                 kycStarted: "2018-05-22",
+                invitationLink: 'link',
                 status: 2,
             },
         ]
