@@ -128,7 +128,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
                     return {
                         ...invite,
-                        initationLink: `${window.location.origin}/#/signup/${invite.lang}/${invite.invitationToken}`,
+                        invitationLink: `${window.location.origin}/#/signup/${invite.lang}/${invite.invitationToken}`,
                         inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
                         tokenUsedAt,
                         kycStarted,
