@@ -1,12 +1,14 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-list"></i> {{'Place an Order' | translate}}</h1>
+    <h1>
+        <i class="fa fa-list"></i> {{'Place an Order' | translate}}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
             <button clrTabLink id="link{{id}}" [routerLink]="['/list-of-funds', id]">
-                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+                <span class="{{tabdata.title.colorClass}}">
+                    <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
             </button>
 
             <clr-tab-content *clrIfActive="tabdata.active">
@@ -15,11 +17,13 @@
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'subscribe'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)"
+                        [type]="'subscribe'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'redeem'">
-                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)" [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
+                    <app-invest-fund [shareId]="tabdata.fundShareId" [initialFormData]="tabdata.formData" (formDataChange)="updateFormData(id, $event)"
+                        [type]="'redeem'" (close)="closeTab(id)" [doValidate]="production" [walletBalance]="walletBalances"></app-invest-fund>
                 </ng-container>
 
                 <ng-container *ngIf="tabdata.actionType === 'view'">
@@ -36,26 +40,36 @@
         <div class="panel-body">
             <div>
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{'ISIN' | translate}}<span class="column-label"></span>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>{{'ISIN' | translate}}
+                        <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon>{{'Share Name' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetClass'" clrDgSortIcon clrDgSortNoSearch>{{'Asset Class' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManager'" clrDgSortIcon>{{'Asset Manager' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'srri'" clrDgSortIcon clrDgSortNoSearch>{{'SRRI' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'sri'" clrDgSortIcon clrDgSortNoSearch>{{'SRI' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'currency'" clrDgSortIcon clrDgSortNoSearch>{{'Share Currency' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
-                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>{{'Last NAV' | translate}}<span class="column-label"></span>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon>{{'Last NAV' | translate}}
+                        <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'subscriptionDate'" clrDgSortIcon>{{'Subscription Cut-off Date' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{'Redemption Cut-off Date' | translate}}
-                        <span class="column-label"></span></clr-dg-column>
+                        <span class="column-label"></span>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>{{'Position' | translate}}
 
 
@@ -64,8 +78,16 @@
                     <clr-dg-column style="min-width: 190px;">{{'Actions' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let fund of fundList; let i = index">
-                        <clr-dg-cell><a [routerLink]="['/product-module/product-caracteristic', fund['isin']]">{{fund['isin']}}</a></clr-dg-cell>
-                        <clr-dg-cell><a [routerLink]="['/product-module/product-caracteristic', fund['isin']]">{{fund['shareName']}}</a></clr-dg-cell>
+                        <clr-dg-cell>
+                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
+                                {{fund['isin']}}
+                            </button>
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <button class="btn btn-link btn-sm" [routerLink]="['/product-module/product-characteristic', fund['isin']]">
+                                {{fund['shareName']}}
+                            </button>
+                        </clr-dg-cell>
                         <clr-dg-cell>{{fund['assetClass']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['assetManager']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['srri']}}</clr-dg-cell>

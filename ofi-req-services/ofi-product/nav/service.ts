@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
     DeleteNavMessageBody,
     RequestNavAuditTrailMessageBody,
@@ -10,9 +10,9 @@ import {
     UploadNavFileMessageBody,
     UploadNavFileRequestData,
 } from './model';
-import {SagaHelper} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
+import { SagaHelper } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {
@@ -21,10 +21,11 @@ import {
     SET_NAV_FUNDS_LIST,
     SET_NAV_LATEST,
     setRequestedNavFundView,
-    setRequestedNavLatest
+    setRequestedNavLatest,
+    setRequestedNavFundsList
 } from '../../../ofi-store/ofi-product/nav';
 
-import {SET_NAV_AUDIT} from '../../../ofi-store/ofi-product/nav-audit';
+import { SET_NAV_AUDIT } from '../../../ofi-store/ofi-product/nav-audit';
 
 const GLOBAL_UPLOAD_MODE = 'global';
 const DETAIL_UPLOAD_MODE = 'detail';
@@ -44,7 +45,7 @@ export class OfiNavService {
      */
     static defaultRequestNavList(ofiNavService: OfiNavService, ngRedux: NgRedux<any>, requestData: any) {
         // Set the state flag to true. so we do not request it again.
-        // ngRedux.dispatch(setRequestedNavFundsList());
+        ngRedux.dispatch(setRequestedNavFundsList());
 
         // Request the list.
         const asyncTaskPipe = ofiNavService.requestNav(requestData);
@@ -304,7 +305,7 @@ export class OfiNavService {
         };
 
         if (mode === DETAIL_UPLOAD_MODE) {
-            messageBody = { ...messageBody, shareIsin: requestData.shareIsin };
+            messageBody = {...messageBody, shareIsin: requestData.shareIsin};
         }
 
         ngRedux.dispatch(

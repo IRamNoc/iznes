@@ -33,6 +33,16 @@
                             <clr-dg-column class="col-xs-6">{{'Information' | translate}}</clr-dg-column>
                             <clr-dg-column class="col-xs-6">{{'Value' | translate}}</clr-dg-column>
 
+                            <clr-dg-row *ngIf="currentProduct.umbrellaFundName">
+                                <clr-dg-cell class="col-xs-6">{{'Umbrella Name' | translate}}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.umbrellaFundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{'Fund Name' | translate}}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.fundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
                             <clr-dg-row>
                                 <clr-dg-cell class="col-xs-6">{{'Share Name' | translate}}</clr-dg-cell>
                                 <clr-dg-cell class="col-xs-6">{{currentProduct.fundShareName}}</clr-dg-cell>
@@ -98,7 +108,7 @@
                 <div class="row panel-header">
                     <div class="col-xs-12">
                         <a href="#" (click)="panels[2] = !panels[2]; $event.preventDefault();">
-                            <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[2]"></i>
                             <h2>{{'Characteristics & Fees' | translate}}</h2>
                         </a>
                     </div>
@@ -159,7 +169,7 @@
                 <div class="row panel-header">
                     <div class="col-xs-12">
                         <a href="#" (click)="panels[3] = !panels[3]; $event.preventDefault();">
-                            <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[3]"></i>
                             <h2>{{'Subscription & Redemption Method' | translate}}</h2>
                         </a>
                     </div>
@@ -259,7 +269,7 @@
                 <div class="row panel-header">
                     <div class="col-xs-12">
                         <a href="#" (click)="panels[4] = !panels[4]; $event.preventDefault();">
-                            <i class="fa fa-chevron-right" [class.rotate]="panels[1]"></i>
+                            <i class="fa fa-chevron-right" [class.rotate]="panels[4]"></i>
                             <h2>{{'Regulatory & Reports Documents' | translate}}</h2>
                         </a>
                     </div>

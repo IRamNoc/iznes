@@ -157,7 +157,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             row['id'] = id;
             id++;
 
-            tables[rowStatus].push(row);
+            if(tables[rowStatus]){
+                tables[rowStatus].push(row);
+            }
 
             if (row['isInvited'] === 1) {
                 tables['invited'].push(row);

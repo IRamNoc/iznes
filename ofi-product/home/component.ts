@@ -91,7 +91,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             sortable: true,
         },
         country: {
-            label: 'Country',
+            label: 'Domicile',
             dataSource: 'domicile',
             sortable: true,
         },

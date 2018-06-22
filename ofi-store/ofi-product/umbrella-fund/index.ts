@@ -1,23 +1,23 @@
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
 import {
     UmbrellaFundListState,
-    UmbrellaFundListReducer,
+    umbrellaFundListReducer,
     SET_UMBRELLA_FUND_LIST,
-    setRequestedUmbrellaFund
+    setRequestedUmbrellaFund,
 } from './umbrella-fund-list';
 
 export {
     UmbrellaFundListState,
-    UmbrellaFundListReducer,
+    umbrellaFundListReducer,
     SET_UMBRELLA_FUND_LIST,
-    setRequestedUmbrellaFund
+    setRequestedUmbrellaFund,
 };
 
 export interface UmbrellaFundState {
     umbrellaFundList: UmbrellaFundListState;
 }
 
-export const UmbrellaFundReducer: Reducer<UmbrellaFundState> = combineReducers<UmbrellaFundState>({
-    umbrellaFundList: UmbrellaFundListReducer,
+export const umbrellaFundReducer: Reducer<UmbrellaFundState> = combineReducers<UmbrellaFundState>({
+    umbrellaFundList: umbrellaFundListReducer,
 });
