@@ -537,7 +537,6 @@ export class FundComponent implements OnInit, OnDestroy {
                     };
                 });
             });
-        });
 
         this.currencyList$
         .takeUntil(this.unSubscribe)
@@ -581,7 +580,7 @@ export class FundComponent implements OnInit, OnDestroy {
         return [item];
     }
 
-    getListItems(val: string[], list: {id: string, text: string}[]): {id: string, text: string}[] {
+    getListItems(val: any[], list: {id: string, text: string}[]): {id: string, text: string}[] {
         try {
             if (!val.length) {
                 return [];
