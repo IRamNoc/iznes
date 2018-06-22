@@ -769,7 +769,6 @@ The IZNES Team.</p>`;
 
         if (type === 'cutoff') {
 
-            // const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
             const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
                 .format('YYYY-MM-DD HH:mm');
 
