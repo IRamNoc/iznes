@@ -148,6 +148,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
+            this.callHolders();
+
             /* Update wallet name. */
             this.updateWalletConnection();
         });
@@ -157,6 +159,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             /* Assign list to a property. */
 
             this.userType = details.userType;
+
+            this.callHolders();
+
             this._changeDetectorRef.detectChanges();
         });
 
@@ -173,16 +178,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
-
-        if (this.userType === 36) {
-            // recordkeeping
-            this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
-            this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
-        } else if (this.userType === 36) {
-            // inv - my holdings
-            this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
-            this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
-        }
 
         /* Do observable subscriptions here. */
         this.subscriptions['message'] = this.nbMessagesObj.subscribe((nb) => {
@@ -233,15 +228,29 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
     }
 
+    callHolders() {
+        if (this.userType !== 0 && this.connectedWalletId !== 0) {
+            if (this.userType === 36) {
+                // recordkeeping
+                this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
+                this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+            } else if (this.userType === 46) {
+                // inv - my holdings
+                this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
+                this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+            }
+        }
+    }
+
     getInvHoldingsRequested(requested): void {
         // this.logService.log('requested', requested);
         if (!requested) {
-            OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this._ngRedux, {amCompanyID: 0});
+            const payload = {amCompanyID: 0, walletID: this.connectedWalletId};
+            OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this._ngRedux, payload);
         }
     }
 
     getInvHoldingsListFromRedux(list) {
-
         const listImu = fromJS(list);
 
         this.holdingsList = listImu.reduce((result, item) => {
@@ -258,6 +267,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
                 portfolioLabel: item.get('portfolioLabel', ''),
                 quantity: item.get('quantity', 0),
                 amount: item.get('amount', 0),
+                ratio: item.get('ratio', 0),
             });
 
             return result;
@@ -373,7 +383,7 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     updateAddressList(addressList) {
-        this.logService.log('addressList: ', addressList);
+        // this.logService.log('addressList: ', addressList);
         this.addressObject = addressList;
         // const
 

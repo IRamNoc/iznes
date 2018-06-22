@@ -44,5 +44,6 @@ export interface OfiInvHoldingsDetailRequestBody extends OfiMemberNodeBody {
 }
 
 export interface OfiInvHoldingsDetailRequestData {
-    amCompanyID: number;
+    walletID: any;
+    amCompanyID: any;
 }

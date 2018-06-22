@@ -297,6 +297,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Update wallet name. */
             this.updateWalletConnection();
+
+            if (this.isInvestorUser && this.connectedWalletId) {
+                this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe((requested) => this.requestMyFundAccess(requested)));
+                this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
+            }
         }));
 
         let orderStream$;
@@ -311,10 +316,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             orderStream$ = this.requestedOfiInvOrdersOb;
             orderListStream$ = this.OfiInvOrdersListOb;
             this.subscriptions.push(orderListStream$.subscribe((list) => this.getInvOrdersListFromRedux(list)));
-            this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe(
-                (requested) => this.requestMyFundAccess(requested)));
-            this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
         }
+
 
         this.createForm();
         this.setInitialTabs();

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import 'rxjs/add/operator/takeUntil';
@@ -21,11 +21,11 @@ interface SelectedItem {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyHoldingsComponent implements OnDestroy {
+export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
 
     unknownValue = '???';
 
-    managementCompanyList: Array<any> = [{id:1, text: 'yo'}];
+    managementCompanyList: Array<any> = [];
 
     selectedManagementCompany = 0;
 
@@ -54,9 +54,12 @@ export class MyHoldingsComponent implements OnDestroy {
     private appConfig: any = {};
     private subscriptions: Array<any> = [];
 
+    private connectedWalletId: any = 0;
+
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'invRequested']) requestedINVManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) invManagementCompanyAccessListOb;
     @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedOfiInvHoldingsObj;
@@ -72,11 +75,20 @@ export class MyHoldingsComponent implements OnDestroy {
         private _translate: MultilingualService,
     ) {
         this.createsearchForm();
+    }
 
-        this.subscriptions.push(this.requestedINVManagementCompanyListOb.subscribe(invRequested => this.getINVManagementCompanyListRequested(invRequested)));
-        this.subscriptions.push(this.invManagementCompanyAccessListOb.subscribe(investorManagementCompanyList => this.getINVManagementCompanyListFromRedux(investorManagementCompanyList)));
-        this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
-        this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+    ngAfterViewInit() {
+        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+            /* Assign list to a property. */
+            this.connectedWalletId = connectedWalletId;
+
+            if (this.connectedWalletId !== 0) {
+                this.subscriptions.push(this.requestedINVManagementCompanyListOb.subscribe(invRequested => this.getINVManagementCompanyListRequested(invRequested)));
+                this.subscriptions.push(this.invManagementCompanyAccessListOb.subscribe(investorManagementCompanyList => this.getINVManagementCompanyListFromRedux(investorManagementCompanyList)));
+                this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
+                this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+            }
+        });
     }
 
     getINVManagementCompanyListRequested(requested): void {
@@ -87,7 +99,6 @@ export class MyHoldingsComponent implements OnDestroy {
     }
 
     getINVManagementCompanyListFromRedux(managementCompanyList) {
-
         const managementCompanyListImu = fromJS(managementCompanyList);
 
         this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
@@ -127,13 +138,12 @@ export class MyHoldingsComponent implements OnDestroy {
     getInvHoldingsRequested(requested): void {
         // this.logService.log('requested', requested);
         if (!requested) {
-            const payload = {amCompanyID: this.selectedManagementCompany};
+            const payload = {amCompanyID: this.selectedManagementCompany, walletID: this.connectedWalletId};
             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
         }
     }
 
     getInvHoldingsListFromRedux(list) {
-
         const listImu = fromJS(list);
 
         this.holdingsList = listImu.reduce((result, item) => {
@@ -162,7 +172,7 @@ export class MyHoldingsComponent implements OnDestroy {
     requestSearch(form) {
         if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
             this.selectedManagementCompany = this.searchForm.get('search').value[0].id;
-            const payload = {amCompanyID: this.selectedManagementCompany};
+            const payload = {amCompanyID: this.selectedManagementCompany, walletID: this.connectedWalletId};
             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
         }
     }
