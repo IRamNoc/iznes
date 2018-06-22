@@ -24,7 +24,8 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmationService: ConfirmationService) {
-        super('Team', route, redux, alerts, toaster, confirmationService);
+        super(route, redux, alerts, toaster, confirmationService);
+        this.noun = 'Team';
     }
 
     ngOnInit() {

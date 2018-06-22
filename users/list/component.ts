@@ -17,7 +17,8 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     users: Model.AccountAdminUser[];
 
     constructor(router: Router, redux: NgRedux<any>, fileDownloader: FileDownloader) {
-        super('User', router, redux, fileDownloader);
+        super(router, redux, fileDownloader);
+        this.noun = 'User';
 
         this.users = [
             {

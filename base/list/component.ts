@@ -10,6 +10,8 @@ import { FileDownloader } from '@setl/utils';
 })
 export class AccountAdminListBase implements OnInit, OnDestroy {
 
+    noun: string;
+
     private token: string;
     protected subscriptions: Subscription[] = [];
 
@@ -21,8 +23,7 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
      * This method is used so to stop replication of common code between the two components.
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      */
-    constructor(public noun: string,
-                private router: Router,
+    constructor(private router: Router,
                 private redux: NgRedux<any>,
                 private fileDownloader: FileDownloader) {}
 

@@ -24,7 +24,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 router: Router,
                 redux: NgRedux<any>,
                 fileDownloader: FileDownloader) {
-        super('Team', router, redux, fileDownloader);
+        super(router, redux, fileDownloader);
+        this.noun = 'Team';
 
         this.teams = [
             {

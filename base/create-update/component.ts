@@ -15,6 +15,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
     entityId: number;
     mode: 0 | 1; // 0 - create, 1 - update
+    noun: string;
 
     protected accountId: number;
     private subscriptions: Subscription[] = [];
@@ -27,11 +28,9 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
      * This method is used so to stop replication of common code between the two components.
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      *
-     * @param noun string
      * @param route ActivatedRoute
      */
-    constructor(public noun: string,
-                private route: ActivatedRoute,
+    constructor(private route: ActivatedRoute,
                 private redux: NgRedux<any>,
                 private alerts: AlertsService,
                 private toaster: ToasterService,

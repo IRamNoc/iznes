@@ -22,7 +22,8 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmationService: ConfirmationService) {
-        super('User', route, redux, alerts, toaster, confirmationService);
+        super(route, redux, alerts, toaster, confirmationService);
+        this.noun = 'User';
     }
 
     ngOnInit() {
