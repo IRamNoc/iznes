@@ -17,8 +17,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    @select(['accountAdmin', 'requestedAccountAdminTeams']) teamsRequestedOb;
-    @select(['accountAdmin', 'accountAdminTeams']) teamsOb;
+    @select(['accountAdmin', 'accountAdminTeams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'accountAdminTeams', 'teams']) teamsOb;
 
     constructor(private service: UserTeamsService,
                 router: Router,
@@ -26,33 +26,6 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 fileDownloader: FileDownloader) {
         super(router, redux, fileDownloader);
         this.noun = 'Team';
-
-        this.teams = [
-            {
-                userTeamID: 1,
-                name: 'Team 1',
-                accountId: 1,
-                status: false,
-                reference: 'TEAM1REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 2,
-                name: 'Team 2',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM2REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 3,
-                name: 'Team 3',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM3REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-        ];
     }
 
     ngOnInit() {
