@@ -25,7 +25,7 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      */
     constructor(private router: Router,
-                private redux: NgRedux<any>,
+                protected redux: NgRedux<any>,
                 private fileDownloader: FileDownloader) {}
 
     ngOnInit() {

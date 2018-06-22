@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class AccountAdminAuditBase implements OnInit, OnDestroy {
 
-    protected audit;
+    audit;
     private subscriptions: Subscription[] = [];
 
     /**

@@ -4,6 +4,10 @@ import { NgRedux, select } from '@angular-redux/store';
 
 import { FileDownloader } from '@setl/utils';
 
+import {
+    clearRequestedAccountAdminTeams,
+    setRequestedAccountAdminTeams,
+} from '@setl/core-store';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
@@ -38,12 +42,16 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
             this.teams = teams;
         }));
+
+        this.redux.dispatch(clearRequestedAccountAdminTeams());
     }
 
     private requestTeams(requested: boolean): void {
         if (requested) return;
 
         this.service.readUserTeams(null, () => {}, () => {});
+
+        this.redux.dispatch(setRequestedAccountAdminTeams());
     }
 
     ngOnDestroy() {}
