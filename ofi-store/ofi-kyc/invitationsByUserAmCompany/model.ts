@@ -8,6 +8,7 @@ export interface investorInvitation {
     invitedBy: string;
     kycStarted?: string; // date
     invitationToken?: string;
+    invitationLink?: string;
     lang?: string;
     status: number;
 }

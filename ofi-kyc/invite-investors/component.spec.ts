@@ -130,7 +130,8 @@ describe('OfiInviteInvestorsComponent', () => {
                 expect(datagridColumnEls[5].nativeNode.innerText).toContain('First Name');
                 expect(datagridColumnEls[6].nativeNode.innerText).toContain('Invitation Sent By');
                 expect(datagridColumnEls[7].nativeNode.innerText).toContain('Date KYC Started');
-                expect(datagridColumnEls[8].nativeNode.innerText).toContain('KYC Status');
+                expect(datagridColumnEls[8].nativeNode.innerText).toContain('Invitation Link');
+                expect(datagridColumnEls[9].nativeNode.innerText).toContain('KYC Status');
             });
         })
     });
@@ -153,7 +154,8 @@ describe('OfiInviteInvestorsComponent', () => {
                 expect(datagridRowEls[5].nativeNode.innerText).toContain(comp.inviteItems[0].firstName);
                 expect(datagridRowEls[6].nativeNode.innerText).toContain(comp.inviteItems[0].invitedBy);
                 expect(datagridRowEls[7].nativeNode.innerText).toContain(comp.inviteItems[0].kycStarted);
-                expect(datagridRowEls[8].nativeNode.innerText).toContain(comp.enums.status[comp.inviteItems[0].status].label);
+                expect(datagridRowEls[8].nativeNode.innerText).toContain(comp.inviteItems[0].invitationLink);
+                expect(datagridRowEls[9].nativeNode.innerText).toContain(comp.enums.status[comp.inviteItems[0].status].label);
             });
         });
     });

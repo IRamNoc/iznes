@@ -128,7 +128,7 @@
                 <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
                 <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
                 <clr-dg-cell class="action">
-                    <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.initationLink)">
+                    <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
                         <i class="fa fa-copy"></i> {{'Copy link' | translate}}</button>
                 </clr-dg-cell>
                 <clr-dg-cell><span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span></clr-dg-cell>
