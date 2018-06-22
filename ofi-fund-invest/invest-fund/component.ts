@@ -769,7 +769,9 @@ The IZNES Team.</p>`;
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            // const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
+                .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
@@ -786,7 +788,9 @@ The IZNES Team.</p>`;
         } else if (type === 'valuation') {
 
             const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
+
 
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
@@ -797,7 +801,8 @@ The IZNES Team.</p>`;
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
             const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
