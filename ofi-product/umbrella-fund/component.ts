@@ -1,5 +1,13 @@
 // Vendor
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    AfterViewInit,
+    Inject
+} from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fromJS } from 'immutable';
 import { select, NgRedux } from '@angular-redux/store';
@@ -248,21 +256,21 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.subscriptionsArray.push(
             this.umbrellaFundForm.controls['domicile'].valueChanges
-                .subscribe(() => {
-                    this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
-                    this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
-                })
+            .subscribe(() => {
+                this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
+                this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
+            })
         );
 
         this.subscriptionsArray.push(
             this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
-                .subscribe((name) => {
-                    const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
-                    if (registerOffice.dirty || this.editForm) {
-                        return;
-                    }
-                    this.umbrellaFundForm.controls['registerOffice'].setValue(name);
-                })
+            .subscribe((name) => {
+                const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
+                if (registerOffice.dirty || this.editForm) {
+                    return;
+                }
+                this.umbrellaFundForm.controls['registerOffice'].setValue(name);
+            })
         );
 
         // language
@@ -320,7 +328,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         val: string[],
         list: { id: string, text: string }[],
     ): { id: string, text: string }[] {
-        if (!val.length) {
+        try {
+            if (!val.length) {
+                return [];
+            }
+        } catch (e) {
             return [];
         }
 
@@ -329,7 +341,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    getIdsFromList(val: { id: string, text: string }[]): string[] {
+    getIdsFromList(val: { id: number, text: string }[]): number[] {
         if (!val.length) {
             return [];
         }
@@ -341,6 +353,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.umbrellaFundList = listImu.reduce((result, item) => {
 
+            let investmentAdvisorID;
+            try {
+                investmentAdvisorID = item.get('investmentAdvisorID').toJS();
+            } catch (e) {
+                investmentAdvisorID = item.get('investmentAdvisorID');
+            }
+
             result.push({
                 // required on save
                 umbrellaFundID: item.get('umbrellaFundID', '0'),
@@ -350,26 +369,29 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 registerOfficeAddress: item.get('registerOfficeAddress', ''),
                 domicile: item.get('domicile', '0'),
                 umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
-                managementCompanyID: item.get('managementCompanyID', '0'),
-                fundAdministratorID: item.get('fundAdministratorID', '0'),
-                custodianBankID: item.get('custodianBankID', '0'),
+                managementCompanyID: item.get('managementCompanyID', null),
+                fundAdministratorID: item.get('fundAdministratorID', null),
+                custodianBankID: item.get('custodianBankID', null),
 
                 // optional on save
                 investmentAdvisorID: this.getListItems(
-                    item.get('investmentAdvisorID').toJS(),
+                    investmentAdvisorID,
                     this.investmentAdvisorOptions,
                 ),
-                payingAgentID: this.getListItems(item.get('payingAgentID').toJS(), this.payingagentOptions),
+                payingAgentID: this.getListItems(
+                    (item.get('payingAgentID').toJS) ? item.get('payingAgentID').toJS() : 0,
+                    this.payingagentOptions
+                ),
                 transferAgentID: item.get('transferAgentID') || '0',
                 centralisingAgentID: item.get('centralisingAgentID') || '0',
                 transferAgent: item.get('transferAgentID') || '0',
                 centralizingAgent: item.get('centralisingAgentID') || '0',
                 giin: item.get('giin'),
-                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID') || '0',
+                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID') || null,
                 auditorID: item.get('auditorID') || '0',
                 taxAuditorID: item.get('taxAuditorID') || '0',
                 principlePromoterID: this.getListItems(
-                    item.get('principlePromoterID').toJS(),
+                    (item.get('principlePromoterID') && item.get('principlePromoterID').toJS) ? item.get('principlePromoterID').toJS() : 0,
                     this.principalPromoterOptions,
                 ),
                 legalAdvisorID: item.get('legalAdvisorID') || '0',
@@ -398,9 +420,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         const listImu = fromJS(list);
 
         this.managementCompanyList = listImu.reduce((result, item) => {
-
+            if (!item.get('companyID')) return null;
             result.push({
-                id: item.get('companyID', '0').toString(),
+                id: item.get('companyID'),
                 text: item.get('companyName', ''),
             });
 
@@ -434,17 +456,17 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         if (managementCompany.length > 0) {
             this.umbrellaFundForm.get('managementCompanyID').patchValue(managementCompany, { emitEvent: false });
         }
-        const fundAdministrator = this.fundAdminOptions.filter(element => element.id.toString() === this.umbrellaFund[0].fundAdministratorID.toString());
-        if (fundAdministrator.length > 0) {
-            this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, { emitEvent: false });
-        }
+        const fundAdministrator = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].fundAdministratorID, this.fundAdminOptions);
+
+        this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, { emitEvent: false });
+
         const custodianBank = this.custodianBankOptions.filter(element => element.id.toString() === this.umbrellaFund[0].custodianBankID.toString());
         if (custodianBank.length > 0) {
             this.umbrellaFundForm.get('custodianBankID').patchValue(custodianBank, { emitEvent: false });
         }
 
         this.umbrellaFundForm.get('investmentAdvisorID')
-            .patchValue(this.umbrellaFund[0].investmentAdvisorID, { emitEvent: false });
+        .patchValue(this.umbrellaFund[0].investmentAdvisorID, { emitEvent: false });
 
         this.umbrellaFundForm.get('payingAgentID').patchValue(this.umbrellaFund[0].payingAgentID, { emitEvent: false });
 
@@ -467,7 +489,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.umbrellaFundForm.get('principlePromoterID')
-            .patchValue(this.umbrellaFund[0].principlePromoterID, { emitEvent: false });
+        .patchValue(this.umbrellaFund[0].principlePromoterID, { emitEvent: false });
 
         const legalAdvisor = this.legalAdvisorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].legalAdvisorID.toString());
         if (legalAdvisor.length > 0) {
@@ -586,7 +608,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 },
                 queryParamsHandling: "merge"
             }
-        };
+        }
+        ;
 
         this._router.navigate(['/product-module/product/fund/new'], extras);
     }
@@ -652,14 +675,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+        .replace('DD', this.numPad(dateObj.getDate().toString()))
+        .replace('hh', this.numPad(dateObj.getHours()))
+        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+        .replace('mm', this.numPad(dateObj.getMinutes()))
+        .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     /**
