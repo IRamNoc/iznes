@@ -40,12 +40,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomISIN() {
-        String n = randomNumeric(7);
-        String randomISIN = "1661" + n;
+        String n = randomNumeric(6);
+        String a = randomAlphabetic(2);
+        String randomISIN = a + "1661" + n;
         return new String[]{randomISIN};
     }
 
-    public static String[] generateRandomDetails() {
+    public static String[] generateRandomDetails(){
         String str = randomAlphabetic(5);
         String random = str;
         return new String[]{random};
@@ -624,7 +625,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
     }
 
     public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
