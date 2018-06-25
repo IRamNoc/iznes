@@ -918,8 +918,9 @@ The IZNES Team.</p>`;
         Object.keys(form.controls).forEach((key) => {
             resetList.forEach((field) => {
                 if (key === field.field) {
-                    this.form.get(key).patchValue(field.value, { emitEvent: false });
+                    this.form.get(key).patchValue(field.value, { emitEvent: true });
                     this.form.get(key).markAsPristine();
+                    this.form.get(key).markAsUntouched();
                 }
             });
         });
