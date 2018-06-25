@@ -9,10 +9,10 @@ import {
     ComponentRef,
     ViewChild
 } from '@angular/core';
-import {Router} from '@angular/router';
-import {AlertsService} from './alerts.service';
-import {AlertSettings} from './interfaces/alert-settings';
-import {AlertComponent} from './alert.component';
+import { Router } from '@angular/router';
+import { AlertsService } from './alerts.service';
+import { AlertSettings } from './interfaces/alert-settings';
+import { AlertComponent } from './alert.component';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -28,7 +28,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
                 private _router: Router) {
     }
 
-    @ViewChild('comp', {read: ViewContainerRef}) compViewContainerRef: ViewContainerRef;
+    @ViewChild('comp', { read: ViewContainerRef }) compViewContainerRef: ViewContainerRef;
 
     @Input() set defaultSettings(settings: AlertSettings) {
         this.settings = Object.assign({}, this.settings, settings);
@@ -62,16 +62,16 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
             for (let key in this.settings) {
                 let toUse = alert.override[key] !== undefined ? alert.override[key] : this.settings[key];
-                settingsFinalAsArray.push({key: key, value: toUse});
+                settingsFinalAsArray.push({ key: key, value: toUse });
             }
 
             let inputProviders = [
-                    {key: 'titleMessage', value: alert.titleMessage},
-                    {key: 'message', value: alert.message},
-                    {key: 'type', value: alert.type},
+                    { key: 'titleMessage', value: alert.titleMessage },
+                    { key: 'message', value: alert.message },
+                    { key: 'type', value: alert.type },
                     ...settingsFinalAsArray
                 ].map((input) => {
-                    return {provide: input.key, useValue: input.value};
+                    return { provide: input.key, useValue: input.value };
                 }),
                 resolvedInputs = ReflectiveInjector.resolve(inputProviders),
                 injector = ReflectiveInjector.fromResolvedProviders(resolvedInputs, this.compViewContainerRef.parentInjector),
@@ -113,6 +113,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
             this._current = null;
         }
         this._latestSub.unsubscribe();
+        this._listener.unsubscribe();
     }
 
     ngOnDestroy() {
