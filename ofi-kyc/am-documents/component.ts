@@ -4,20 +4,20 @@ import {
     OnInit
 } from '@angular/core';
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
-import {Subpanel} from './models';
-import {fromJS} from 'immutable';
-import {ToasterService} from 'angular2-toaster';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { Subpanel } from './models';
+import { fromJS } from 'immutable';
+import { ToasterService } from 'angular2-toaster';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
 
 /* Ofi orders request service. */
-import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
-import {setInformations, KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
+import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
+import { setInformations, KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
+import { Observable } from 'rxjs/Observable';
 
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 
-import {immutableHelper} from '@setl/utils';
+import { immutableHelper } from '@setl/utils';
 import { Router } from '@angular/router';
 
 @Component({
@@ -67,14 +67,12 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 dataSource: 'status',
                 sortable: true,
                 hasLink: true,
-                kycDocLink: '/kyc-documents/client/:kycID',
-                kycFundAccessLink: '/fund-access/:kycID',
             },
             2: {
                 id: 'CompName',
                 label: 'Company Name',
                 dataSource: 'investorCompanyName',
-                sortable: true,
+                sortable: true
             },
             3: {
                 id: 'DateModification',
@@ -157,7 +155,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             row['id'] = id;
             id++;
 
-            if(tables[rowStatus]){
+            if (tables[rowStatus]) {
                 tables[rowStatus].push(row);
             }
 
@@ -232,9 +230,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
             !event.target.classList.contains('datagrid-expandable-caret-icon')
         ) {
-            let ret = row.status === 'Accepted' ? column.kycFundAccessLink : column.kycDocLink;
-            const linkKey = row.status === -1 ? 'kycFundAccessLink' : 'kycDocLink';
-            column[linkKey].match(/:\w+/g).forEach((match) => {
+            let ret = row.status === 'Accepted' ? '/fund-access/:kycID' : '/kyc-documents/client/:kycID';
+            const link = row.status === -1 ? '/fund-access/:kycID' : '/kyc-documents/client/:kycID';
+            link.match(/:\w+/g).forEach((match) => {
                 const key = match.substring(1);
                 const regex = new RegExp(match);
                 ret = ret.replace(regex, row[key]);
