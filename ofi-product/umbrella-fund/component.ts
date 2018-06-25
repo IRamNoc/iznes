@@ -475,7 +475,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, { emitEvent: false });
         this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, { emitEvent: false });
         this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, { emitEvent: false });
-        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].delegatedManagementCompanyID.toString(), this.managementCompanyList);
+
+        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(_.get(this.umbrellaFund, [0].delegatedManagementCompanyID, '').toString(), this.managementCompanyList);
         if (delegatedManagementCompany.length > 0) {
             this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, { emitEvent: false });
         }
