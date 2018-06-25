@@ -326,5 +326,35 @@ public class DatabaseHelper {
         conn.close();
         stmt.close();
     }
+
+    public static void validateTimeZoneUpdate(String fundShareName, String currentTimeZoneUpdate) throws SQLException {
+        conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
+        //for the query
+        Statement stmt = conn.createStatement();
+        ResultSet rs = null;
+        try {
+            rs = stmt.executeQuery("SELECT subscriptionCutOffTimeZone FROM setlnet.tblIznFundShare WHERE fundShareName =  " + "\"" + fundShareName + "\"");
+
+
+            if (rs.last()) {
+
+                String dbTimeZone = rs.getString("subscriptionCutOffTimeZone");
+
+                // Move to back to the beginning
+
+                assertEquals(dbTimeZone, currentTimeZoneUpdate);
+
+                rs.beforeFirst();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        } finally {
+            conn.close();
+            stmt.close();
+            rs.close();
+        }
+    }
+
 }
 
