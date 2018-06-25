@@ -639,7 +639,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             if (this.amountTooBig) {
                 this.sendMessageToAM({
-                    walletID: this.shareData.walletID,
+                    walletID: this.shareData.amDefaultWalletId,
                     orderTypeLabel: this.orderTypeLabel,
                     orderID: orderId,
                     orderRef: orderRef
