@@ -29,17 +29,6 @@ import {FileDropModule} from '@setl/core-filedrop';
 import {FileViewerModule} from "@setl/core-fileviewer";
 import {OfiRedirectTokenComponent} from './invitation-token/redirect-token.component';
 import {OfiConsumeTokenComponent} from './invitation-token/consume-token.component';
-
-import {MyRequestsContainerComponent} from './my-requests/my-requests-container.component';
-import {MyRequestsComponent} from './my-requests/list/my-requests.component';
-import {MyRequestComponent} from './my-requests/list/my-request.component';
-import {MyRequestsGridComponent} from './my-requests/list/list-grid.component';
-import {NewKycRequestComponent} from './my-requests/request/new-request.component';
-import {NewKycSelectAmcComponent} from './my-requests/request/steps/select-amc.component';
-import {NewKycIntroductionComponent} from './my-requests/request/steps/introduction.component';
-
-import {RequestsService} from './my-requests/requests.service';
-
 /* Constants */
 import config from './config';
 
@@ -56,14 +45,7 @@ import config from './config';
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent,
-        MyRequestsComponent,
-        MyRequestComponent,
-        MyRequestsGridComponent,
-        NewKycRequestComponent,
-        NewKycSelectAmcComponent,
-        NewKycIntroductionComponent,
-        MyRequestsContainerComponent
+        OfiConsumeTokenComponent
     ],
     exports: [
         OfiInviteInvestorsComponent,
@@ -76,11 +58,7 @@ import config from './config';
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent,
-        MyRequestsComponent,
-        MyRequestComponent,
-        NewKycRequestComponent,
-        MyRequestsContainerComponent
+        OfiConsumeTokenComponent
     ],
     imports: [
         ToasterModule,
@@ -100,7 +78,6 @@ import config from './config';
         FileViewerModule
     ],
     providers: [
-        RequestsService,
         MockKYCDocumentsService,
         ToasterService,
         {provide: 'endpoints', useValue: config},

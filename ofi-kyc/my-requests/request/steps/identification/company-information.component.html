@@ -1,0 +1,300 @@
+<div [formGroup]="form" class="well">
+    <div class="row panel-header">
+        <div class="col-sm-9">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>Company information</h2>
+            </a>
+        </div>
+        <div class="col-sm-3 text-right">
+            <div class="pgContainer" [formpercent]="{form: form}"></div>
+        </div>
+    </div>
+
+    <div class="row panel-body" [class.hidden]="!open">
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="activities">{{'Activities' | translate}}</label>
+                    <ng-select id="activities" [items]="companyActivitiesList" [allowClear]="true" [formControl]="form.get('activities')" placeholder="{{'Please select your company activity' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('activities')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6" *ngIf="shouldDisplay('ownAccountinvestor')">
+                    <label class="control-label" for="ownAccountinvestor">{{'Own-account investor' | translate}}</label>
+                    <ng-select id="ownAccountinvestor" [items]="ownAccountInvestorList" [allowClear]="true" [formControl]="form.get('ownAccountinvestor')" placeholder="{{'Please select an own-account investor type' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('ownAccountinvestor')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-6" *ngIf="shouldDisplay('onBehalfOfThirdParties')">
+                    <label class="control-label" for="investorOnBehalfList">{{'Investor on behalf of third parties' | translate}}</label>
+                    <ng-select id="investorOnBehalfList" [items]="investorOnBehalfList" [allowClear]="true" [formControl]="form.get('investorOnBehalfThirdParties')" placeholder="{{'Please select the type of third parties your company manages' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('investorOnBehalfThirdParties')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-3">
+                    <label class="control-label" for="geographicalAreaOfActivity">{{'Geographical area of the activity' | translate}}</label>
+                    <ng-select id="geographicalAreaOfActivity" [items]="geographicalAreaList" [allowClear]="true" [formControl]="form.get('geographicalAreaOfActivity')" placeholder="{{'Please select your company area of activity' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('geographicalAreaOfActivity')">{{'Field is required' | translate}}</span>
+                </div>
+
+                <div class="form-group col-sm-3 flex-items-xs-bottom" *ngIf="shouldDisplay('geographicalAreaOfActivitySpecification')">
+                    <label>&nbsp;</label>
+                    <input type="text" id="geographicalAreaOfActivitySpecification" formControlName="geographicalAreaOfActivitySpecification" placeholder="{{'Please specify' | translate }}">
+                    <span class="field-error" *ngIf="hasError('geographicalAreaOfActivitySpecification')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="activityRegulated">{{'Is the activity regulated ?' | translate}}</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="activityRegulated" formControlName="activityRegulated">
+                        <label for="activityRegulated"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="shouldDisplay('activityRegulatedInputs')">
+                <div class="form-group col-sm-6">
+                    <input type="text" id="regulator" formControlName="regulator" placeholder="{{'Please fill in a regulator or a supervisory authority' | translate }}">
+                    <span class="field-error" *ngIf="hasError('regulator')">{{'Field is required' | translate}}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <input type="text" id="approvalNumber" formControlName="approvalNumber" placeholder="{{'Please fill in the approval number' | translate }}">
+                    <span class="field-error" *ngIf="hasError('approvalNumber')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="companyListed">{{'Is the company listed ?' | translate}}</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="companyListed" formControlName="companyListed">
+                        <label for="companyListed"></label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="shouldDisplay('companyListedInputs')">
+                <div class="form-group col-sm-4">
+                    <input type="text" id="listingMarkets" formControlName="listingMarkets" placeholder="{{'Please fill in the listing market(s)' | translate }}">
+                    <span class="field-error" *ngIf="hasError('listingMarkets')">{{'Field is required' | translate}}</span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <input type="text" id="bloombergCode" formControlName="bloombergCode" placeholder="{{'Please fill in the Bloomberg\'s code' | translate }}">
+                    <span class="field-error" *ngIf="hasError('bloombergCode')">{{'Field is required' | translate}}</span>
+                </div>
+                <div class="form-group col-sm-4">
+                    <input type="text" id="isinCode" formControlName="isinCode" placeholder="{{'Please fill in the ISIN code of the listed share' | translate }}">
+                    <span class="field-error" *ngIf="hasError('isinCode')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="keyFinancialData">{{'Key Financial Data' | translate}}</label>
+                    <input type="text" id="keyFinancialData" formControlName="keyFinancialData" placeholder="{{'Please fill in your company key financial data' | translate}}">
+                    <span class="field-error" *ngIf="hasError('keyFinancialData')">{{'Field is required' | translate}}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="balanceSheetTotal">{{'Balance Sheet Total' | translate}}</label>
+                    <input type="text" id="balanceSheetTotal" formControlName="balanceSheetTotal" placeholder="{{'€' | translate}}">
+                    <span class="field-error" *ngIf="hasError('balanceSheetTotal')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="balanceSheetTotal">{{'Net Revenues or Net Income' | translate}}</label>
+                    <input type="text" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="{{'€' | translate}}">
+                    <span class="field-error" *ngIf="hasError('netRevenuesNetIncome')">{{'Field is required' | translate}}</span>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label class="control-label" for="shareholderEquity">{{'Shareholder\'s Equity' | translate}}</label>
+                    <input type="text" id="shareholderEquity" formControlName="shareholderEquity" placeholder="{{'€' | translate}}">
+                    <span class="field-error" *ngIf="hasError('shareholderEquity')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+
+            <h4>{{'Actual beneficiaries' | translate}}</h4>
+
+            <div class="beneficiaries mb-2">
+                <div class="my-1 pl-1 beneficiary" *ngFor="let beneficiary of beneficiaries; let i = index" formArrayName="beneficiaries">
+                    <div [formGroupName]="i">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="firstName">{{'First name' | translate}}</label>
+                                <input type="text" id="firstName" formControlName="firstName">
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'firstName'])">{{'Field is required' | translate}}</span>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="lastName">{{'Last name' | translate}}</label>
+                                <input type="text" id="lastName" formControlName="lastName">
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'lastName'])">{{'Field is required' | translate}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="address">{{'Address' | translate}}</label>
+                                <input type="text" id="address" formControlName="address">
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'address'])">{{'Field is required' | translate}}</span>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="nationality">{{'Nationality' | translate}}</label>
+                                <ng-select id="nationality" [items]="countries" formControlName="nationality" placeholder="{{'Select a country' | translate}}"></ng-select>
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'firstName'])">{{'Field is required' | translate}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group required-field col-sm-6">
+                                <label for="dateOfBirth-{{i}}" class="control-label">{{'Date of birth' | translate}}</label>
+
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input [dpDayPicker]="configDate" id="dateOfBirth-{{i}}" formControlName="dateOfBirth" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                                </div>
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'dateOfBirth'])">{{'Field is required' | translate}}</span>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="cityOfBirth-{{i}}">{{'City of birth' | translate}}</label>
+                                <input type="text" id="cityOfBirth-{{i}}" formControlName="cityOfBirth">
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'cityOfBirth'])">{{'Field is required' | translate}}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="control-label" for="countryOfBirth-{{i}}">{{'Country of birth' | translate}}</label>
+                                <ng-select id="countryOfBirth-{{i}}" [items]="countries" formControlName="countryOfBirth" placeholder="{{'Select a country' | translate}}"></ng-select>
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'countryOfBirth'])">{{'Field is required' | translate}}</span>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label for="beneficiary-document-{{i}}" class="control-label">{{'Document' | translate}}</label>
+                                <div class="filedrop-wrapper">
+                                    <setl-file-drop class="form-control" id="beneficiary-document-{{i}}"
+                                                    (onDrop)="uploadFile($event, i)"
+                                                    ngDefaultControl
+                                    ></setl-file-drop>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="holdingPercentage">{{'Holding percentage' | translate}}</label>
+                                <input id="holdingPercentage" type="number" formControlName="holdingPercentage">
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'holdingPercentage'], ['required'])">{{'Field is required' | translate}}</span>
+                                <span class="field-error" *ngIf="hasError(['beneficiaries', i, 'holdingPercentage'], ['min', 'max'])">{{'Value must be between 0 and 100' | translate}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-12">
+                    <button class="btn btn-primary" (click)="addBeneficiary()">
+                        {{'Add another beneficiary' | translate}}
+                    </button>
+                </div>
+            </div>
+
+            <div class="row" formGroupName="capitalNature">
+
+                <div class="form-group col-sm-2">
+                    <label for="equityandreserves">
+                        {{'Equity & reserves' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="equityandreserves" formControlName="equityAndReserves" value="equityAndReserves">
+                        <label for="equityandreserves"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <label for="generalAssets">
+                        {{'General assets (insurance contracts)' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="generalAssets" formControlName="generalAssets">
+                        <label for="generalAssets"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <label for="premiumsAndContributions">
+                        {{'Premiums & contributions' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="premiumsAndContributions" formControlName="premiumsAndContributions">
+                        <label for="premiumsAndContributions"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <label for="saleGoodsServices">
+                        {{'Sale of goods and services' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="saleGoodsServices" formControlName="saleGoodsServices">
+                        <label for="saleGoodsServices"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <label for="treasury">
+                        {{'Treasury' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="treasury" formControlName="treasury">
+                        <label for="treasury"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2">
+                    <label for="others">
+                        {{'Others' | translate}}
+                    </label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="others" formControlName="others">
+                        <label for="others"></label>
+                    </div>
+                </div>
+
+                <div class="form-group col-sm-2" *ngIf="shouldDisplay('othersText')">
+                    <label for="othersText"></label>
+                    <input id="othersText" type="text" formControlName="othersText" placeholder="{{'Please specify' | translate}}">
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="geographicalOrigin1">{{'Geographical origin (specify by area or country)' | translate}}</label>
+                    <ng-select id="geographicalOrigin1" [items]="geographicalOriginTypeList" formControlName="geographicalOrigin1" placeholder="{{'Please select a type of geographical origin' | translate}}"></ng-select>
+                </div>
+                <div class="form-group col-sm-6" *ngIf="shouldDisplay('geographicalOriginCountries')">
+                    <label for="geographicalOrigin2">{{'Country' | translate}}</label>
+                    <ng-select id="geographicalOrigin2" [items]="countries" formControlName="geographicalOrigin2"></ng-select>
+                </div>
+                <div class="form-group col-sm-6" *ngIf="shouldDisplay('geographicalOriginArea')">
+                    <label for="geographicalOrigin2">{{'Area' | translate}}</label>
+                    <ng-select id="geographicalOrigin2" [items]="geographicalAreaList" formControlName="geographicalOrigin2"></ng-select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-sm-6">
+                    <label for="totalFinancialAssetsAlreadyInvested">{{'Total Financial assets already invested' | translate}}</label>
+                    <ng-select [items]="financialAssetsInvestedList" id="totalFinancialAssetsAlreadyInvested" formControlName="totalFinancialAssetsAlreadyInvested" placeholder="{{'Please select a range' | translate}}"></ng-select>
+                    <span class="field-error" *ngIf="hasError('totalFinancialAssetsAlreadyInvested')">{{'Field is required' | translate}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

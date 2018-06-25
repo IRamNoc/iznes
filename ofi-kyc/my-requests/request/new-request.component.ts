@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from '@angular/forms';
 
+import {NewRequestService} from './new-request.service';
+
 @Component({
     templateUrl: './new-request.component.html'
 })
@@ -10,7 +12,8 @@ export class NewKycRequestComponent implements OnInit {
     forms: any = {};
 
     constructor(
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private newRequestService : NewRequestService
     ) {
     }
 
@@ -20,11 +23,7 @@ export class NewKycRequestComponent implements OnInit {
     }
 
     initForm() {
-        let selectionForm = this.formBuilder.group({
-            managementCompanies: [[], Validators.required]
-        });
-
-        this.forms.selection = selectionForm;
+        this.forms = this.newRequestService.createRequestForm();
     }
 
     initFormSteps() {
@@ -36,6 +35,12 @@ export class NewKycRequestComponent implements OnInit {
             },
             {
                 title: 'Introduction'
+            },
+            {
+                title : 'Identification',
+                id : 'step-identification',
+                form : this.forms.get('identification'),
+                startHere : true
             }
         ];
 

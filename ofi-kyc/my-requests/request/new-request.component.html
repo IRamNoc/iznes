@@ -7,15 +7,22 @@
     </h1>
 </div>
 
-<div class="well p-1">
-
-    <div [formsteps]="stepsConfig">
-        <section>
-            <kyc-step-select-amc [form]="forms.selection"></kyc-step-select-amc>
-        </section>
-        <section>
-            <kyc-step-introduction></kyc-step-introduction>
-        </section>
-    </div>
-
+<div class="p-1">
+    <p class="text-danger">
+        {{ 'Please note that the information provided will remain stictly confidential and will only be shared with the Asset Management Companies you selected.' | translate }}
+    </p>
 </div>
+
+<div [formsteps]="stepsConfig">
+    <section>
+        <kyc-step-select-amc [form]="forms.get('selection')"></kyc-step-select-amc>
+    </section>
+    <section>
+        <kyc-step-introduction></kyc-step-introduction>
+    </section>
+    <section>
+        <kyc-step-identification [form]="forms.get('identification')"></kyc-step-identification>
+    </section>
+</div>
+
+
