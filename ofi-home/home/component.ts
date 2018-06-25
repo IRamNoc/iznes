@@ -1,5 +1,5 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {Router} from '@angular/router';
 /* Redux */
@@ -41,7 +41,7 @@ import {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiHomeComponent implements AfterViewInit, OnDestroy {
+export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // products
     fundList = [];
@@ -60,7 +60,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     appConfig: AppConfig;
 
     addressObject: any;
-    addressList: Array<any> = [];
+    addressList: Array<any>;
+    addressListFix = [];
     requestedWalletAddress: boolean;
 
     /* Public properties. */
@@ -100,8 +101,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     // rekordkeeping
     @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
     @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
-    @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
-    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
+    // @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
+    // @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
 
     // inv my holdings
     @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedOfiInvHoldingsObj;
@@ -110,7 +111,6 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     /* Constructor. */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private ofiOrdersService: OfiOrdersService,
         private _numberConverterService: NumberConverterService,
         private _ngRedux: NgRedux<any>,
         private _moneyValuePipe: MoneyValuePipe,
@@ -120,20 +120,21 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         private logService: LogService,
         private _myWalletService: MyWalletsService,
         private _memberService: MemberService,
+        private memberSocketService: MemberSocketService,
         private _walletnodeTxService: WalletnodeTxService,
         private _walletNodeRequestService: WalletNodeRequestService,
         private _ofiFundService: OfiFundService,
         private _ofiFundShareService: OfiFundShareService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
-        private memberSocketService: MemberSocketService,
+        private ofiOrdersService: OfiOrdersService,
         private ofiReportsService: OfiReportsService,
-        @Inject(APP_CONFIG) appConfig: AppConfig
+        @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
 
     }
 
-    ngAfterViewInit() {
+    ngOnInit() {
         /* Subscribe for this user's wallets. */
         this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
             /* Assign list to a property. */
@@ -165,10 +166,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             this._changeDetectorRef.detectChanges();
         });
 
-        this.subscriptions.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
-        this.subscriptions.push(this.requestedAddressListOb.subscribe(requested => {
-            this.requestAddressList(requested);
-        }));
+        this.subscriptions.push(this.addressListOb.subscribe(addressList => this.updateAddressList(addressList)));
+        this.subscriptions.push(this.requestedAddressListOb.subscribe(requested => this.requestAddressList(requested)));
         this.subscriptions.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
 
         // prodcuts
@@ -186,6 +185,9 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             this.nbUnreadMessages = (nb) ? nb : 0;
             this._changeDetectorRef.detectChanges();
         });
+    }
+
+    ngAfterViewInit() {
 
         /* Orders list. */
         this.subscriptions['home-orders-list'] = this.homeOrdersListOb.subscribe((orderList) => {
@@ -412,6 +414,8 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
             return result;
         }, []);
+
+        this.addressListFix = this.addressList;
 
         this._changeDetectorRef.markForCheck();
     }
