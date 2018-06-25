@@ -47,19 +47,16 @@ interface CentralizationHistoryData {
 }
 
 interface InvHoldingsData {
+    walletID: any;
     amCompanyID: any;
 }
 
 @Injectable()
 export class OfiReportsService {
 
-    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
-    walletID = 0;
-
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>) {
-        this.getConnectedWallet.subscribe((getConnectedWallet) => this.myWalletID(getConnectedWallet));
     }
 
     static setRequestedCentralizationReportsList(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -158,10 +155,6 @@ export class OfiReportsService {
         ));
     }
 
-    myWalletID(walletID) {
-        this.walletID = walletID;
-    }
-
     requestCentralizationReportsList(data: CentralizationReportsData): any {
 
         const messageBody: OfiCentralizationReportsRequestBody = {
@@ -223,7 +216,7 @@ export class OfiReportsService {
         const messageBody: OfiInvHoldingsDetailRequestBody = {
             RequestName: 'izngetinvestorholding',
             token: this.memberSocketService.token,
-            walletID: this.walletID,
+            walletID: data.walletID,
             amCompanyID: data.amCompanyID,
         };
 

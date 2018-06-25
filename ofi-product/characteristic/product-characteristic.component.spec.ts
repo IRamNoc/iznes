@@ -106,6 +106,7 @@ describe('ProductCharacteristicComponent', () => {
         comp = fixture.componentInstance;
 
         comp.currentProduct = {
+            umbrellaFundName: 'fake umbrella',
             fundShareName: 'fake share name',
             isin: 'fake isin',
             prospectus: {

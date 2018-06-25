@@ -37,6 +37,7 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     isin: string;
     legalFormItems = [];
     currentProduct = {
+        umbrellaFundName: '',
         fundShareName: '',
         isin: '',
         prospectus: {
