@@ -72,7 +72,10 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 id: 'CompName',
                 label: 'Company Name',
                 dataSource: 'investorCompanyName',
-                sortable: true
+                sortable: true,
+                hasLink: true,
+                kycDocLink: '/kyc-documents/client/:kycID',
+                kycFundAccessLink: '/fund-access/:kycID',
             },
             3: {
                 id: 'DateModification',
@@ -85,6 +88,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 label: 'Date KYC started',
                 dataSource: 'dateEntered',
                 sortable: true,
+                hasLink: true,
+                kycDocLink: '/kyc-documents/client/:kycID',
+                kycFundAccessLink: '/fund-access/:kycID',
             },
             5: {
                 id: 'DateApproval',
@@ -109,6 +115,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 label: 'Reviewed by',
                 dataSource: 'amFirstName',
                 sortable: true,
+                hasLink: true,
+                kycDocLink: '/kyc-documents/client/:kycID',
+                kycFundAccessLink: '/fund-access/:kycID',
             },
             9: {
                 id: 'DateRejection',
@@ -127,6 +136,9 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 label: 'Date of latest modification',
                 dataSource: 'lastUpdated',
                 sortable: true,
+                hasLink: true,
+                kycDocLink: '/kyc-documents/client/:kycID',
+                kycFundAccessLink: '/fund-access/:kycID',
             }
         };
 
@@ -225,6 +237,7 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     }
 
     buildLink(column, row, event) {
+        console.log(column, row, event);
         if (
             !event.target.classList.contains('datagrid-expandable-caret') &&
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
