@@ -10,6 +10,7 @@ import 'rxjs/add/operator/takeUntil';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
@@ -27,8 +28,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
     languages = [
-        {id: 'fr', text: 'Français'},
-        {id: 'en', text: 'English'},
+        { id: 'fr', text: 'Français' },
+        { id: 'en', text: 'English' },
         // {id: 'tch', text: '繁體中文'},
         // {id: 'sch', text: '中文'}
     ];
@@ -55,8 +56,13 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 label: 'Awaiting Informations',
                 type: 'warning',
             },
-        }
-    }
+        },
+    };
+
+    investorTypes = [
+        { id: 45, text: 'Institutional Investor' },
+        { id: 55, text: 'Retail Investor' },
+    ];
 
     inviteItems: investorInvitation[];
 
@@ -91,6 +97,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                         ])
                     ],
                     clientReference: [
+                        '',
+                    ],
+                    investorType: [
                         '',
                     ],
                     firstName: [
@@ -158,7 +167,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             return item['email'];
         });
         if (emails.indexOf(control.value) !== -1) {
-            return {'notUnique': true};
+            return { 'notUnique': true };
         }
         return;
     }
@@ -285,6 +294,18 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         selBox.select();
         document.execCommand('copy');
         document.body.removeChild(selBox);
+    }
+
+    isRetailInvestor(investorType: FormControl): boolean {
+        const val = investorType.value;
+        const userType = _.get(val, '[0].id');
+        if (userType === 55) {
+            investorType.setErrors({ investorType: true });
+            return true;
+        }
+
+        investorType.setErrors(null);
+        return false;
     }
 }
 
