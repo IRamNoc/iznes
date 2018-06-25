@@ -101,7 +101,7 @@ public class SetUp {
     public static final String[] fundsHeadings = new String[]{"Fund name", "LEI", "Management company", "Country", "Law status", "Umbrella fund (to which the fund belongs)", "Currency of the fund"};
 
     //Datagrid Headings - Umbrella Funds
-    public static final String[] umbrellaFundsHeadings = new String[]{"Umbrella fund name", "LEI", "Management company", "Country"};
+    public static final String[] umbrellaFundsHeadings = new String[]{"Umbrella fund name", "LEI", "Management company", "Domicile"};
 
     //Datagrid Headings - NAV
     public static final String[] NAVHeadings = new String[]{"Share Name", "ISIN", "NAV Date", "NAV\n" +

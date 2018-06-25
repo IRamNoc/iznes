@@ -61,8 +61,10 @@ import {
 } from '@setl/core-useradmin';
 /* Account Admin Module. */
 import {
+    UsersAuditComponent,
     UsersCreateUpdateComponent,
     UsersListComponent,
+    UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
 } from '@setl/core-account-admin';
@@ -313,7 +315,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product-caracteristic/:isin',
+                        path: 'product-characteristic/:isin',
                         component: ProductCharacteristicComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -639,31 +641,43 @@ export const ROUTES: Routes = [
                 children: [
                     {
                         path: 'users',
+                        canActivate: [LoginGuardService],
                         component: UsersListComponent,
-                        children: [
-                            {
-                                path: 'new',
-                                component: UsersCreateUpdateComponent,
-                            },
-                            {
-                                path: ':id',
-                                component: UsersCreateUpdateComponent,
-                            },
-                        ],
+                    },
+                    {
+                        path: 'users/audit',
+                        canActivate: [LoginGuardService],
+                        component: UsersAuditComponent,
+                    },
+                    {
+                        path: 'users/new',
+                        canActivate: [LoginGuardService],
+                        component: UsersCreateUpdateComponent,
+                    },
+                    {
+                        path: 'users/:id',
+                        canActivate: [LoginGuardService],
+                        component: UsersCreateUpdateComponent,
                     },
                     {
                         path: 'teams',
+                        canActivate: [LoginGuardService],
                         component: UserTeamsListComponent,
-                        children: [
-                            {
-                                path: 'new',
-                                component: UserTeamsCreateUpdateComponent,
-                            },
-                            {
-                                path: ':id',
-                                component: UserTeamsCreateUpdateComponent,
-                            },
-                        ],
+                    },
+                    {
+                        path: 'teams/audit',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsAuditComponent,
+                    },
+                    {
+                        path: 'teams/new',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsCreateUpdateComponent,
+                    },
+                    {
+                        path: 'teams/:id',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsCreateUpdateComponent,
                     },
                 ],
             },

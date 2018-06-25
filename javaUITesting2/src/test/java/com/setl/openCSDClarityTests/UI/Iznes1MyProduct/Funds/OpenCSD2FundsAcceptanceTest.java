@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -88,8 +89,9 @@ public class OpenCSD2FundsAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], randomLei, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
-        driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
+        driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
 
         driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
@@ -415,7 +417,7 @@ public class OpenCSD2FundsAcceptanceTest {
         }
 
         private void createFund () throws InterruptedException {
-
+            WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
             driver.findElement(By.id("new-fund-btn")).click();
             driver.findElement(By.xpath("//*[@id=\"fund-umbrellaControl-select-1\"]/div")).click();
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
@@ -436,6 +438,7 @@ public class OpenCSD2FundsAcceptanceTest {
             } catch (Exception e) {
                 fail(e.getMessage());
             }
+            wait.until(invisibilityOfElementLocated(By.className("toast-title")));
             getFundTableRow(0, uFundDetails[0], "16616748475934858531", "EUR", "Management Company", "Afghanistan", "Contractual Fund", "");
 
 
