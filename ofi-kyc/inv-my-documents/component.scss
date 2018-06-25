@@ -43,3 +43,10 @@
 .label clr-icon {
   cursor: pointer;
 }
+
+.uploadContainer setl-file-drop{
+  width: 95%;
+}
+.inline-filedrop .drop-file-nofile {
+  z-index: inherit;
+}

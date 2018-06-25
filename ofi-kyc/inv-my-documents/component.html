@@ -9,314 +9,222 @@
         {{'These documents can be used for your next identification requests to management companies.' | translate }}
     </p>
 
-    {{'I want to share all these documents to all asset managers' | translate}}
+    <form [formGroup]="uploadMyDocumentsForm">
 
-    <form [formGroup]="formGroup">
-        <setl-file-drop [formControl]="formGroup.controls['upload1']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload1']" ngDefaultControl></setl-file-drop>
+        {{'I want to share all these documents to all asset managers' | translate}}
+
+        <div class="switch-container" style="position: relative">
+            <label class="switch">
+                <input type="checkbox" id="shareAllDocsToAllAM" formControlName="shareAll">
+                <span class="slider round"></span>
+            </label>
+        </div>
+
+        <div class="ml-1 mr-1">
+            <div class="hr-line-dashed"></div>
+
+            <h3>{{'If you have an authorisation or are authorised by decree or are a listed company on a European market' | translate}}:</h3>
+
+            <br>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Proof of approval or copy of order (if applicable)' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload1']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload1" formControlName="shareUpload1">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'ISIN code of the listed share (if applicable)' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload2']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload2" formControlName="shareUpload2">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Wolfsberg questionnaire or equivalent' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload3']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload3" formControlName="shareUpload3">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"></div>
+            </div>
+            <div class="hr-line-dashed"></div>
+
+            <h3>{{'If this is not the case' | translate}}:</h3>
+
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Statuses "certified" by the duly authorized representative of the client' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload4']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload4" formControlName="shareUpload4">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload5']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload5" formControlName="shareUpload5">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Latest audited annual report' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload6']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload6" formControlName="shareUpload6">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'National identity card or valid passport or residence card of the signatory with photograph' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload7']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload7" formControlName="shareUpload7">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+
+            <h3>{{'Document to upload in both cases' | translate}}:</h3>
+
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Official documents listing the shareholders with their % of ownership if greater than 25%.' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload8']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload8" formControlName="shareUpload8">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'Official document (or equivalent) listing the directors' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload9']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload9" formControlName="shareUpload9">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'List of persons authorised to give instructions' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload10']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload10" formControlName="shareUpload10">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'List of beneficial owners' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload11']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload11" formControlName="shareUpload11">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <b>{{'Tax self certification form (CRS)' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload12']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload12']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload12" formControlName="shareUpload12">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <b>{{'Form W-8BEN-E (FACTA) if available' | translate}}</b>
+                    <br>
+                    <div class="uploadContainer">
+                        <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload13']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload13']" ngDefaultControl></setl-file-drop>
+                        <div class="switch-container">
+                            <label class="switch">
+                                <input type="checkbox" id="shareUpload13" formControlName="shareUpload13">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
-
-    <div class="switch-container" style="position: relative">
-        <label class="switch">
-            <input type="checkbox" [(ngModel)]="shareAllDocsToAllAM" id="shareAllDocsToAllAM" (change)="assignShareAllDocsToAllAM('opened')">
-            <span class="slider round"></span>
-        </label>
-    </div>
-
-    <div class="ml-1 mr-1">
-        <div class="hr-line-dashed"></div>
-
-        <h3>{{'If you have an authorisation or are authorised by decree or are a listed company on a European market' | translate}}:</h3>
-
-        <br>
-
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Proof of approval or copy of order (if applicable)' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload1 id="upload1" name="upload1" type="file" (change)="processUpload('upload1',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload1" id="shareUpload1">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload1']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload1'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload1')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'ISIN code of the listed share (if applicable)' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload2 id="upload2" name="upload2" type="file" (change)="processUpload('upload2',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload2" id="shareUpload2">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload2']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload2'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload2')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Wolfsberg questionnaire or equivalent' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload3 id="upload3" name="upload3" type="file" (change)="processUpload('upload3',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload3" id="shareUpload3">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload3']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload3'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload3')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6"></div>
-        </div>
-        <div class="hr-line-dashed"></div>
-
-        <h3>{{'If this is not the case' | translate}}:</h3>
-
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Statuses "certified" by the duly authorized representative of the client' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload4 id="upload4" name="upload4" type="file" (change)="processUpload('upload4',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload4" id="shareUpload4">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload4']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload4'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload4')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'Kbis extract (or equivalent) less than 3 month old' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload5 id="upload5" name="upload5" type="file" (change)="processUpload('upload5',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload5" id="shareUpload5">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload5']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload5'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload5')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Latest audited annual report' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload6 id="upload6" name="upload6" type="file" (change)="processUpload('upload6',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload6" id="shareUpload6">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload6']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload6'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload6')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'National identity card or valid passport or residence card of the signatory with photograph' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload7 id="upload7" name="upload7" type="file" (change)="processUpload('upload7',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload7" id="shareUpload7">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload7']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload7'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload7')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="hr-line-dashed"></div>
-
-        <h3>{{'Document to upload in both cases' | translate}}:</h3>
-
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Official documents listing the shareholders with their % of ownership if greater than 25%.' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload8 id="upload8" name="upload8" type="file" (change)="processUpload('upload8',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload8" id="shareUpload8">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload8']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload8'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload8')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'Official document (or equivalent) listing the directors' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload9 id="upload9" name="upload9" type="file" (change)="processUpload('upload9',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload9" id="shareUpload9">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload9']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload9'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload9')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'List of persons authorised to give instructions' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload10 id="upload10" name="upload10" type="file" (change)="processUpload('upload10',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload10" id="shareUpload10">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload10']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload10'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload10')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'List of beneficial owners' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload11 id="upload11" name="upload11" type="file" (change)="processUpload('upload11',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload11" id="shareUpload11">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload11']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload11'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload11')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="row">
-            <div class="col-md-6">
-                <b>{{'Tax self certification form (CRS)' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload12 id="upload12" name="upload12" type="file" (change)="processUpload('upload12',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload12" id="shareUpload12">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload12']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload12'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload12')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <b>{{'Form W-8BEN-E (FACTA) if available' | translate}}</b>
-                <br>
-                <div class="upload-btn-wrapper">
-                    <button class="btn">{{'Drag and drop file here, or click to upload' | translate}}</button>
-                    <input #upload13 id="upload13" name="upload13" type="file" (change)="processUpload('upload13',  $event.target.files[0])"/>
-                </div>
-                <div class="switch-container">
-                    <label class="switch">
-                        <input type="checkbox" [(ngModel)]="shareUpload13" id="shareUpload13">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
-                <br>
-                <div *ngIf="allUploadsFiles['upload13']">
-                    <div class="label label-success">
-                        {{allUploadsFiles['upload13'].file.name}} <clr-icon shape="window-close" (click)="removeFile('upload13')"></clr-icon>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
