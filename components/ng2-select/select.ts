@@ -74,7 +74,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     @Input()
     public set active(selectedItems: Array<any>) {
-        selectedItems = this.removeNonExistOptions(selectedItems);
+        this.handleNonExistOptions(selectedItems);
         if (!selectedItems || selectedItems.length === 0) {
             this._active = [];
         } else {
@@ -83,7 +83,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             this._active = selectedItems.map((item: any) => {
                 const data = areItemsStrings
                     ? item
-                    : {id: item[this.idField], text: item[this.textField]};
+                    : { id: item[this.idField], text: item[this.textField] };
 
                 return new SelectItem(data);
             });
@@ -387,24 +387,22 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     /**
-     * Remove options that are not within the possible options
+     * handle options that are not within the possible options, if it is not there, add it in.
      *
      * @param {SelectItem[]} selected
-     * @return {SelectItem[]}
+     * @return void
      */
-    private removeNonExistOptions(selected: SelectItem[]): SelectItem[] {
+    private handleNonExistOptions(selected: SelectItem[]): SelectItem[] {
         try {
-            if (!selected) {
-                return selected;
-            }
-
             const optionIds = this.itemObjects.reduce((result, item) => {
                 result.push(item.id);
                 return result;
             }, []);
 
-            return selected.filter((item: SelectItem) => {
-                return optionIds.indexOf(item.id) !== -1;
+            this.itemObjects.map((item) => {
+                if (optionIds.indexOf(item.id) === -1) {
+                    this.itemObjects.push(item);
+                }
             });
         } catch (e) {
             return null;
