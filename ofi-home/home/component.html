@@ -21,12 +21,8 @@
         <app-counter-tile name="contracts" icon="envelope" [count]="nbUnreadMessages" color="blue" route="messages/inbox">{{'My Messages' | translate}}</app-counter-tile>
     </app-dashboard>
 
-    <hr class="dashed" style="clear: both;">
-
     <div *ngIf="userType == 46">
         <app-investor-fund-list [isImported]="true"></app-investor-fund-list>
-        <br>
-        <hr class="dashed mt-2" style="clear: both;">
     </div>
 
     <app-manage-orders [isImported]="true"></app-manage-orders>

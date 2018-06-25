@@ -226,6 +226,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             this.requestHomeOrderList(requested);
         });
 
+        const allUlNav = document.getElementsByClassName('nav') as HTMLCollectionOf<HTMLElement>;
+        for (let i in allUlNav) {
+            if (allUlNav[i] && allUlNav[i] !== undefined) {
+                if (allUlNav[i].tagName === 'UL') {
+                    allUlNav[i].style.display = 'none';
+                }
+            }
+        }
+
     }
 
     callHolders() {
