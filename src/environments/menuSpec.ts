@@ -53,6 +53,13 @@ const orderBook = {
         },
     ],
 };
+const myHoldings = {
+    label: 'My Holdings',
+    label_txt: 'txt_myholdings',
+    icon_class: 'fa fa-sitemap',
+    element_id: 'menu-investor-my-holdings',
+    router_link: '/my-holdings',
+};
 const fundHoldings = {
     label: 'Fund Holdings',
     label_txt: 'txt_fundholdings',
@@ -417,6 +424,7 @@ export const menuSpec: MenuSpec = {
         investor: [
             home,
             orderBook,
+            myHoldings,
             // dashboard,
             subPortfolio,
             // messages,
