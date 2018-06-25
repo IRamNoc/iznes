@@ -365,6 +365,7 @@ const accountAdmin = {
             icon_class: 'fa fa-users',
             element_id: 'menu-administration-users',
             router_link: '/account-admin/users',
+            dynamic_link: '/account-admin/users/[^\/]*',
         },
         {
             label: 'Teams',
@@ -372,6 +373,7 @@ const accountAdmin = {
             icon_class: 'fa fa-address-book-o',
             element_id: 'menu-administration-teams',
             router_link: '/account-admin/teams',
+            dynamic_link: '/account-admin/teams/[^\/]*',
         },
     ],
 };
