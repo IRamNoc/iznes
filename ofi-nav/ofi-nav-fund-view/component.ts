@@ -19,7 +19,6 @@ import {
     setRequestedNavFundHistory,
     setRequestedNavFundView
 } from '../../ofi-store/ofi-product/nav';
-import {CurrencyEnum} from '../../ofi-product/fund-share/FundShareEnum';
 import {
     APP_CONFIG,
     AppConfig,
@@ -30,6 +29,7 @@ import {
 } from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
 import {AlertsService} from "@setl/jaspero-ng2-alerts/src/alerts.service";
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
     selector: 'app-nav-fund-view',
@@ -67,6 +67,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     isNavUploadModalDisplayed: boolean;
     navCsvFile: any;
     hasResult: boolean;
+    currencyList: any[];
 
     @ViewChild('detailNavCsvFile')
     detailNavCsvFile: any;
@@ -74,6 +75,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundView', 'navFundView']) navFundOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'requested']) navFundHistoryRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManageNav', 'ofiNavFundHistory', 'navFundHistory']) navFundHistoryOb: Observable<any>;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userOb;
     private subscriptionsArray: Subscription[] = [];
@@ -87,6 +89,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
                 private moneyPipe: MoneyValuePipe,
                 private popupService: OfiManageNavPopupService,
                 private alertService: AlertsService,
+                private ofiCurrenciesService: OfiCurrenciesService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
@@ -94,6 +97,7 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.isNavUploadModalDisplayed = false;
         this.navCsvFile = null;
         this.hasResult = true;
+        this.ofiCurrenciesService.getCurrencyList();
     }
 
     ngOnInit() {
@@ -104,46 +108,38 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.redux.dispatch(clearRequestedNavFundView());
     }
 
-    getCurrencySymbol(currency: number): string {
-        let currencyIcon;
-
-        switch (currency) {
-            case CurrencyEnum.GBP:
-                currencyIcon = '£';
-                break;
-            case CurrencyEnum.EUR:
-                currencyIcon = '€';
-                break;
-            case CurrencyEnum.USD:
-                currencyIcon = '$';
-                break;
-            default:
-                currencyIcon = 'N/A';
-                break;
+    /**
+     * Get the list of currencies from redux
+     *
+     * @param {Object[]} data
+     * @memberof OfiNavFundView
+     */
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
         }
-
-        return currencyIcon;
     }
 
-    getCurrencyString(currency: number): string {
-        let currencyString;
+    /**
+     * Get the currency symbol
+     *
+     * @param {number} currencyId
+     * @returns {string}
+     * @memberof OfiNavFundView
+     */
+    getCurrencySymbol(currencyId: number): string {
+        return model.CurrencySymbols[this.getCurrencyString(currencyId)];
+    }
 
-        switch (currency) {
-            case CurrencyEnum.GBP:
-                currencyString = 'GBP';
-                break;
-            case CurrencyEnum.EUR:
-                currencyString = 'EUR';
-                break;
-            case CurrencyEnum.USD:
-                currencyString = 'USD';
-                break;
-            default:
-                currencyString = 'N/A';
-                break;
-        }
-
-        return currencyString;
+    /**
+     * Get the label of the currency (3 characters)
+     *
+     * @param {number} currencyId
+     * @returns {string}
+     * @memberof OfiNavFundView
+     */
+    getCurrencyString(currencyId: number): string {
+        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
     }
 
     getFilteredByDateText(): string {
@@ -309,6 +305,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.userOb.subscribe(userId => {
             this.userId = userId;
         }));
+
+        this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
     }
 
     private initNavHistoryForm(): void {

@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
@@ -29,6 +30,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         label: 'ISIN',
         required: true,
         mltag: 'txt_fundshare_isin',
+        validator: validateISIN,
     };
     shareClassCode: FormItem = {
         type: FormItemType.text,
@@ -40,11 +42,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Share Class Currency',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-        ],
+        listItems: [],
         mltag: 'txt_fundshare_classcurrency',
     };
     subscriptionStartDate: FormItem = {
@@ -384,11 +382,7 @@ export class ShareKeyFactsOptional {
         type: FormItemType.list,
         label: 'Index Currency',
         required: false,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-        ],
+        listItems: [],
         hidden: () => {
             return this.isETF.value() !== true;
         },
@@ -520,5 +514,13 @@ export class ShareKeyFactsOptional {
         required: false,
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_additionalcomments',
+    };
+}
+
+function validateISIN(c: FormControl) {
+    const ISIN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[0-9]{10}\b/);
+
+    return ISIN_REGEXP.test(c.value) ? null : {
+        'ISIN must meet ISO 6166 format (12 characters).': c.value,
     };
 }

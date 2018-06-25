@@ -1,14 +1,14 @@
-import {OfiFundAccessMyState} from './model';
-import {Action} from 'redux';
+import { OfiFundAccessMyState } from './model';
+import { Action } from 'redux';
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 import {
     SET_FUND_ACCESS_MY,
     SET_REQUESTED_FUND_ACCESS_MY,
     CLEAR_REQUESTED_FUND_ACCESS_MY,
 } from './actions';
-import {commonHelper} from '@setl/utils';
+import { commonHelper } from '@setl/utils';
 
 const initialState: OfiFundAccessMyState = {
     fundAccessList: {},
@@ -25,17 +25,17 @@ const initialState: OfiFundAccessMyState = {
  */
 export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action): OfiFundAccessMyState {
     switch (action.type) {
-        case SET_FUND_ACCESS_MY:
-            return handleSetFundAccessMy(state, action);
+    case SET_FUND_ACCESS_MY:
+        return handleSetFundAccessMy(state, action);
 
-        case SET_REQUESTED_FUND_ACCESS_MY:
-            return handleSetRequestedFundAccessMy(state, action);
+    case SET_REQUESTED_FUND_ACCESS_MY:
+        return handleSetRequestedFundAccessMy(state, action);
 
-        case CLEAR_REQUESTED_FUND_ACCESS_MY:
-            return handleClearRequestedFundAccessMy(state, action);
+    case CLEAR_REQUESTED_FUND_ACCESS_MY:
+        return handleClearRequestedFundAccessMy(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -79,6 +79,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             fundID: item.get('fundID', 0),
             isin: item.get('isin', 'N/A'),
             walletID: item.get('walletID', 0),
+            amDefaultWalletId: item.get('amDefaultWalletID', 0),
             shareClassCode: item.get('shareClassCode', 0),
             shareClassInvestmentStatus: item.get('shareClassInvestmentStatus', 0),
             shareClassCurrency: item.get('shareClassCurrency', 0),

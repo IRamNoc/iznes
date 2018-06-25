@@ -34,8 +34,8 @@ import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-produ
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
 import * as Enum from '../FundShareEnum';
-import { FundShareTradeCycleModel } from './trade-cycle/model';
-import { FundShareTestData } from './TestData';
+import {FundShareTradeCycleModel} from './trade-cycle/model';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -45,7 +45,6 @@ import { FundShareTestData } from './TestData';
 })
 
 export class FundShareComponent implements OnInit, OnDestroy {
-
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
     isReady: boolean = false;
@@ -76,6 +75,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb: Observable<any>;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs: Observable<any>;
     @select(['user', 'siteSettings', 'production']) productionOb;
 
     constructor(private router: Router,
@@ -88,7 +88,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 private ofiFundShareService: OfiFundShareService,
                 private ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
-                private ofiFundService: OfiFundService) {
+                private ofiFundService: OfiFundService,
+                private ofiCurrenciesService: OfiCurrenciesService) {
+        this.ofiCurrenciesService.getCurrencyList();
     }
 
     ngOnInit() {
@@ -142,6 +144,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.configureFormForMode();
         }));
 
+        this.subscriptionsArray.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
         this.subscriptionsArray.push(this.requestedOfiManagementCompanyListOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
         this.subscriptionsArray.push(this.managementCompanyAccessListOb.subscribe((list) => this.getManagementCompanyList(list)));
 
@@ -252,6 +255,22 @@ export class FundShareComponent implements OnInit, OnDestroy {
                            this.changeDetectorRef.detectChanges();
                        });
 
+    }
+
+    private getCurrencyList(data): void {
+        if (data) {
+            const currencies = data.toJS();
+
+            // Key facts
+            this.model.keyFacts.mandatory.shareClassCurrency.listItems = currencies;
+            this.model.keyFacts.optional.indexCurrency.listItems = currencies;
+
+            // Characteristics
+            this.model.characteristic.mandatory.subscriptionCurrency.listItems = currencies;
+            this.model.characteristic.mandatory.redemptionCurrency.listItems = currencies;
+
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     private generateListItems(fundShareList): any[] {

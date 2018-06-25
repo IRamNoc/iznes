@@ -32,11 +32,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Currency of Subscription',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' }
-        ],
+        listItems: [],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
@@ -104,11 +100,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Currency of Redemption',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' }
-        ],
+        listItems: [],
         style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);

@@ -1,10 +1,10 @@
-import {CurrentRequest, OfiNavFundsListState} from './model';
-import {Action} from 'redux';
+import { CurrentRequest, OfiNavFundsListState } from './model';
+import { Action } from 'redux';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {fromJS} from 'immutable';
-import {immutableHelper, NavHelperService} from '@setl/utils';
-import {ValuationFrequencyEnum} from '../../../../ofi-product/fund-share/FundShareEnum';
+import { fromJS } from 'immutable';
+import { immutableHelper, NavHelperService } from '@setl/utils';
+import { ValuationFrequencyEnum } from '../../../../ofi-product/fund-share/FundShareEnum';
 
 import {
     SET_NAV_FUNDS_LIST,
@@ -13,7 +13,7 @@ import {
     SET_REQUESTED_NAV_FUNDS_LIST
 } from './actions';
 
-import {NavDetail} from './model';
+import { NavDetail } from './model';
 
 const initialState: OfiNavFundsListState = {
     navFundsList: [],
@@ -34,20 +34,20 @@ const initialState: OfiNavFundsListState = {
  */
 export const OfiNavFundsListReducer = function (state: OfiNavFundsListState = initialState, action: Action): OfiNavFundsListState {
     switch (action.type) {
-        case SET_NAV_FUNDS_LIST:
-            return handleSetOfiNavFundsList(state, action);
+    case SET_NAV_FUNDS_LIST:
+        return handleSetOfiNavFundsList(state, action);
 
-        case OFI_SET_CURRENT_NAV_FUNDS_LIST:
-            return handleSetCurrentRequest(state, action);
+    case OFI_SET_CURRENT_NAV_FUNDS_LIST:
+        return handleSetCurrentRequest(state, action);
 
-        case SET_REQUESTED_NAV_FUNDS_LIST:
-            return toggleRequested(state, true);
+    case SET_REQUESTED_NAV_FUNDS_LIST:
+        return toggleRequested(state, true);
 
-        case CLEAR_REQUESTED_NAV_FUNDS_LIST:
-            return toggleRequested(state, false);
+    case CLEAR_REQUESTED_NAV_FUNDS_LIST:
+        return toggleRequested(state, false);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 

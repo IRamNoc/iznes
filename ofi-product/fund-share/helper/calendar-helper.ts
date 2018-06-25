@@ -57,6 +57,11 @@ export class CalendarHelper {
                 [OrderType.Redemption]: this.fundShare.redemptionCutOffTimeZone || 'UTC',
             }[this.orderType];
 
+            // Handle old timezoneString, it was number;
+            if (!isNaN(Number(timeZonString))) {
+                return 0;
+            }
+
             return momentTz.tz(timeZonString).hours() - momentTz.utc().hours();
         } catch (e) {
             return 0;
@@ -360,7 +365,8 @@ export class CalendarHelper {
 
     isValidSettlementDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
+        dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
+        if (!this.isWorkingDate(dateTimeToChecks)) {
             return false;
         }
 
@@ -371,7 +377,8 @@ export class CalendarHelper {
 
     isValidValuationDateTime(dateTimeToChecks: any, orderType: OrderType): boolean {
         // check if the date is working date
-        if (!this.isWorkingDate(this.momentToMomentBusiness(dateTimeToChecks))) {
+        dateTimeToChecks = this.momentToMomentBusiness(dateTimeToChecks);
+        if (!this.isWorkingDate(dateTimeToChecks)) {
             return false;
         }
 
@@ -442,8 +449,8 @@ export class CalendarHelper {
 
     getSpecificDateCutOff(dateToCheck: moment, cutoffTime: moment,
                           tradeTimeZoneOffSet: number): moment {
-        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
-        const timeZoneDiff = currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
+        const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
+        const timeZoneDiff = tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
 
         // work out the current date's cutoff
         return dateToCheck.clone().set(
@@ -456,8 +463,8 @@ export class CalendarHelper {
     }
 
     getTimeZoneDiff(tradeTimeZoneOffSet: number): number {
-        const currentTimeZoneOffsetFromUtc = -Number((new Date().getTimezoneOffset() / 60));
-        return currentTimeZoneOffsetFromUtc - tradeTimeZoneOffSet;
+        const currentTimeZoneOffsetFromUtc = moment().hours() - momentTz.utc().hours();
+        return tradeTimeZoneOffSet - currentTimeZoneOffsetFromUtc;
     }
 
     isNonWorkingDate(dateToCheck) {
