@@ -19,6 +19,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     private subscriptions: Array<any> = [];
 
     allUploadsFiles: Array<any> = [];
+    nbUploads = 13;
 
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
@@ -26,33 +27,33 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         private _ngRedux: NgRedux<any>,
     ) {
         this.uploadMyDocumentsForm = new FormGroup({
-            shareAll: new FormControl([]),
+            shareAll: new FormControl(false),
             upload1: new FormControl([]),
-            shareUpload1: new FormControl([]),
+            shareUpload1: new FormControl(false),
             upload2: new FormControl([]),
-            shareUpload2: new FormControl([]),
+            shareUpload2: new FormControl(false),
             upload3: new FormControl([]),
-            shareUpload3: new FormControl([]),
+            shareUpload3: new FormControl(false),
             upload4: new FormControl([]),
-            shareUpload4: new FormControl([]),
+            shareUpload4: new FormControl(false),
             upload5: new FormControl([]),
-            shareUpload5: new FormControl([]),
+            shareUpload5: new FormControl(false),
             upload6: new FormControl([]),
-            shareUpload6: new FormControl([]),
+            shareUpload6: new FormControl(false),
             upload7: new FormControl([]),
-            shareUpload7: new FormControl([]),
+            shareUpload7: new FormControl(false),
             upload8: new FormControl([]),
-            shareUpload8: new FormControl([]),
+            shareUpload8: new FormControl(false),
             upload9: new FormControl([]),
-            shareUpload9: new FormControl([]),
+            shareUpload9: new FormControl(false),
             upload10: new FormControl([]),
-            shareUpload10: new FormControl([]),
+            shareUpload10: new FormControl(false),
             upload11: new FormControl([]),
-            shareUpload11: new FormControl([]),
+            shareUpload11: new FormControl(false),
             upload12: new FormControl([]),
-            shareUpload12: new FormControl([]),
+            shareUpload12: new FormControl(false),
             upload13: new FormControl([]),
-            shareUpload13: new FormControl([]),
+            shareUpload13: new FormControl(false),
         });
 
 
@@ -64,10 +65,24 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     ngAfterViewInit() {
-
+        const allFileDrop = document.getElementsByClassName('drop-file-nofile') as HTMLCollectionOf<HTMLElement>;
+        for (let i in allFileDrop) {
+            if (allFileDrop[i] && allFileDrop[i] !== undefined) {
+                if (allFileDrop[i].tagName === 'DIV') {
+                    allFileDrop[i].style.zIndex = '0';
+                }
+            }
+        }
     }
 
-    getUpload(event) {
+    assignShareAll() {
+        for (let i=0; i < this.nbUploads; i++) {
+            this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).patchValue(this.uploadMyDocumentsForm.get('shareAll').value, { emitEvent: false });
+        }
+        this._changeDetectorRef.markForCheck();
+    }
+
+    getUpload(formResults) {
         console.log(event);
     }
 

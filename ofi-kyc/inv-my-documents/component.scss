@@ -44,9 +44,17 @@
   cursor: pointer;
 }
 
-.uploadContainer setl-file-drop{
-  width: 95%;
+.tableUpload{
+  width: 100%;
+  margin-bottom: 10px;
 }
-.inline-filedrop .drop-file-nofile {
-  z-index: inherit;
+.tableUpload td:first-child {
+  width: 90%;
+}
+.tableUpload td:nth-child(2) {
+  vertical-align: middle;
+}
+.switch-container {
+  position: inherit;
+  padding-left: 6px;
 }
