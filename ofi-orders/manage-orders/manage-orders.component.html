@@ -253,7 +253,7 @@
                             <span *ngIf="order.orderType == 3">{{'Subscription' | translate}}</span>
                             <span *ngIf="order.orderType == 4">{{'Redemption' | translate}}</span>
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- investor {{showInvestor(order)}} -->{{order.investorCompanyName}}
 
 
