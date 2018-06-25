@@ -10,7 +10,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
+            <button [style.display]="getDisplay()" clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
                 <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
@@ -37,7 +37,7 @@
         <div class="panel-body">
 
             <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form" (keydown.enter)="$event.preventDefault()">
-                <div class="form-horizontal">
+                <div *ngIf="!isImported" class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
                             <label>{{'ISIN' | translate}}

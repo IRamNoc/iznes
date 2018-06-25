@@ -12,6 +12,30 @@ import {ofiSetRequestedHomeOrder} from '@ofi/ofi-main/ofi-store';
 import * as math from 'mathjs';
 import {LogService} from "@setl/utils";
 
+// product
+import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+
+// recordkeeping
+import {MemberSocketService} from '@setl/websocket-service';
+import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+
+import * as _ from 'lodash';
+import {fromJS} from 'immutable';
+
+// Internal
+import {
+    MyWalletsService,
+    MemberService,
+    WalletnodeTxService,
+    WalletNodeRequestService,
+    InitialisationService
+} from '@setl/core-req-services';
+import {
+    setRequestedWalletAddresses,
+} from '@setl/core-store';
+
 @Component({
     styleUrls: ['./component.css'],
     templateUrl: './component.html',
@@ -19,7 +43,25 @@ import {LogService} from "@setl/utils";
 })
 export class OfiHomeComponent implements AfterViewInit, OnDestroy {
 
+    // products
+    fundList = [];
+    shareList = [];
+    umbrellaFundList = [];
+    filteredShareList = [];
+    managementCompanyAccessList = [];
+
+    // recordkeeping
+    dataListForSearch: Array<any> = [];
+    holdersList: Array<any> = [];
+    holderDetailData: any;
+    nbTotalHolders = 0;
+    holdingsList: Array<any> = [];
+
     appConfig: AppConfig;
+
+    addressObject: any;
+    addressList: Array<any> = [];
+    requestedWalletAddress: boolean;
 
     /* Public properties. */
     public myDetails: any = {};
@@ -32,12 +74,38 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     private connectedWalletId: any = 0;
     userType: number;
 
+    nbUnreadMessages = 0;
+
     /* Observables. */
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
+
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
+
     @select(['user', 'myDetail']) myDetailOb: any;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderList']) homeOrdersListOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'requested']) homeOrdersRequestedOb: any;
+    @select(['message', 'myMessages', 'counts',  'inboxUnread']) nbMessagesObj: any;
+
+    // products
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedFundListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
+    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
+
+    // rekordkeeping
+    @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
+    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
+    @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
+    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
+
+    // inv my holdings
+    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedOfiInvHoldingsObj;
+    @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) ofiInvHoldingsListObj;
 
     /* Constructor. */
     constructor(
@@ -50,6 +118,15 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
         private _router: Router,
         public _translate: MultilingualService,
         private logService: LogService,
+        private _myWalletService: MyWalletsService,
+        private _memberService: MemberService,
+        private _walletnodeTxService: WalletnodeTxService,
+        private _walletNodeRequestService: WalletNodeRequestService,
+        private _ofiFundService: OfiFundService,
+        private _ofiFundShareService: OfiFundShareService,
+        private _ofiUmbrellaFundService: OfiUmbrellaFundService,
+        private memberSocketService: MemberSocketService,
+        private ofiReportsService: OfiReportsService,
         @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
@@ -57,7 +134,58 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
+        /* Subscribe for this user's wallets. */
+        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
+            /* Assign list to a property. */
+            this.myWallets = walletsList;
+
+            /* Update wallet name. */
+            this.updateWalletConnection();
+        });
+
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+            /* Assign list to a property. */
+            this.connectedWalletId = connectedWalletId;
+
+            this.callHolders();
+
+            /* Update wallet name. */
+            this.updateWalletConnection();
+        });
+
+        /* Subscribe for this user's connected info. */
+        this.subscriptions['my-details'] = this.myDetailOb.subscribe((details) => {
+            /* Assign list to a property. */
+
+            this.userType = details.userType;
+
+            this.callHolders();
+
+            this._changeDetectorRef.detectChanges();
+        });
+
+        this.subscriptions.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
+        this.subscriptions.push(this.requestedAddressListOb.subscribe(requested => {
+            this.requestAddressList(requested);
+        }));
+        this.subscriptions.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+
+        // prodcuts
+        this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
+        this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
+        this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+        this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
+        this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
+        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
+
         /* Do observable subscriptions here. */
+        this.subscriptions['message'] = this.nbMessagesObj.subscribe((nb) => {
+            /* Assign list to a property. */
+
+            this.nbUnreadMessages = (nb) ? nb : 0;
+            this._changeDetectorRef.detectChanges();
+        });
 
         /* Orders list. */
         this.subscriptions['home-orders-list'] = this.homeOrdersListOb.subscribe((orderList) => {
@@ -98,32 +226,218 @@ export class OfiHomeComponent implements AfterViewInit, OnDestroy {
             this.requestHomeOrderList(requested);
         });
 
-        /* Subscribe for this user's wallets. */
-        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            /* Assign list to a property. */
-            this.myWallets = walletsList;
+        const allUlNav = document.getElementsByClassName('nav') as HTMLCollectionOf<HTMLElement>;
+        for (let i in allUlNav) {
+            if (allUlNav[i] && allUlNav[i] !== undefined) {
+                if (allUlNav[i].tagName === 'UL') {
+                    allUlNav[i].style.display = 'none';
+                }
+            }
+        }
 
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
+    }
 
-        /* Subscribe for this user's connected info. */
-        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            /* Assign list to a property. */
-            this.connectedWalletId = connectedWalletId;
+    callHolders() {
+        if (this.userType !== 0 && this.connectedWalletId !== 0) {
+            if (this.userType === 36) {
+                // recordkeeping
+                this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
+                this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+            } else if (this.userType === 46) {
+                // inv - my holdings
+                this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
+                this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+            }
+        }
+    }
 
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
+    getInvHoldingsRequested(requested): void {
+        // this.logService.log('requested', requested);
+        if (!requested) {
+            const payload = {amCompanyID: 0, walletID: this.connectedWalletId};
+            OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this._ngRedux, payload);
+        }
+    }
 
-        /* Subscribe for this user's connected info. */
-        this.subscriptions['my-details'] = this.myDetailOb.subscribe((details) => {
-            /* Assign list to a property. */
+    getInvHoldingsListFromRedux(list) {
+        const listImu = fromJS(list);
 
-            this.userType = details.userType;
-            this._changeDetectorRef.detectChanges();
-        });
+        this.holdingsList = listImu.reduce((result, item) => {
 
+            result.push({
+                amManagementCompanyID: item.get('amManagementCompanyID', 0),
+                companyName: item.get('companyName', ''),
+                shareID: item.get('shareID', 0),
+                fundShareName: item.get('fundShareName', ''),
+                isin: item.get('isin', ''),
+                shareClassCurrency: item.get('shareClassCurrency', ''),
+                latestNav: item.get('latestNav', 0),
+                portfolioAddr: item.get('portfolioAddr', ''),
+                portfolioLabel: item.get('portfolioLabel', ''),
+                quantity: item.get('quantity', 0),
+                amount: item.get('amount', 0),
+                ratio: item.get('ratio', 0),
+            });
+
+            return result;
+        }, []);
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Run the process for requesting the list of holders
+     *
+     * @param requested
+     */
+    getAmHoldersRequested(requested): void {
+        if (!requested) {
+            OfiReportsService.defaultRequestAmHoldersList(this.ofiReportsService, this._ngRedux);
+        }
+    }
+
+    /**
+     * Get the actual list of holders from redux
+     *
+     * @param holderList
+     */
+    getAmHoldersListFromRedux(holderList) {
+        if (holderList) {
+            this.holdersList = holderList.toJS() || [];
+
+            this.dataListForSearch = this.holdersList.filter(it => !it.isFund).map((holder) => {
+                return {
+                    id: holder.shareId,
+                    text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
+                };
+            });
+
+            this.nbTotalHolders = 0;    // reset
+            for (let data of this.holdersList) {
+                if (data.isFund) {
+                    this.nbTotalHolders += data.fundHolderNumber;
+                }
+            }
+
+            this._changeDetectorRef.markForCheck();
+        }
+    }
+
+    requestFundList(requested): void {
+        if (!requested) {
+            OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+        }
+    }
+
+    getFundList(funds: any): void {
+        const fundList = [];
+        if (_.values(funds).length > 0) {
+            _.values(funds).map((fund) => {
+                fundList.push({
+                    fundID: fund.fundID,
+                });
+            });
+
+        }
+
+        this.fundList = _.orderBy(fundList, ['fundID'], ['desc']);
+        this._changeDetectorRef.markForCheck();
+    }
+
+    requestShareList(requested): void {
+        if (!requested) {
+            OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
+        }
+    }
+
+    getShareList(shares): void {
+        const shareList = [];
+
+        if ((shares !== undefined) && Object.keys(shares).length > 0) {
+            Object.keys(shares).map((key) => {
+                const share = shares[key];
+                shareList.push({
+                    fundShareID: share.fundShareID,
+                });
+            });
+        }
+
+        this.filteredShareList = _.orderBy(shareList.filter((share) => {
+            return share.status !== 5;
+        }), ['fundShareID'], ['desc']);
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    getUmbrellaFundRequested(requested): void {
+        if (!requested) {
+            OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+        }
+    }
+
+    getUmbrellaFundList(umbrellaFunds) {
+        const data = fromJS(umbrellaFunds).toArray();
+        const umbrellaFundList = [];
+
+        if (data.length > 0) {
+            data.map((item) => {
+
+                umbrellaFundList.push({
+                    umbrellaFundID: item.get('umbrellaFundID', 0),
+                });
+            });
+        }
+        this.umbrellaFundList = _.orderBy(umbrellaFundList, ['umbrellaFundID'], ['desc']);
+        this._changeDetectorRef.markForCheck();
+    }
+
+    updateAddressList(addressList) {
+        // this.logService.log('addressList: ', addressList);
+        this.addressObject = addressList;
+        // const
+
+        this.addressList = immutableHelper.reduce(addressList, (result, item) => {
+
+            const addressItem = {
+                address: item.get('addr', ''),
+                label: item.get('label', ''),
+                iban: item.get('iban', ''),
+                editing: false
+            };
+
+            if (addressItem.iban !== '' && addressItem.address !== '') {
+                result.push(addressItem);
+            }
+
+
+            return result;
+        }, []);
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    requestAddressList(requestedState) {
+        this.requestedWalletAddress = requestedState;
+        this.logService.log('requested wallet address', this.requestedWalletAddress);
+
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+            // Set the state flag to true. so we do not request it again.
+            this._ngRedux.dispatch(setRequestedWalletAddresses());
+
+            // Request the list.
+            InitialisationService.requestWalletAddresses(this._ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    requestWalletLabel(requestedState) {
+
+        this.logService.log('checking requested', this.requestedWalletAddress);
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId !== 0) {
+
+            MyWalletsService.defaultRequestWalletLabel(this._ngRedux, this._myWalletService, this.connectedWalletId);
+        }
     }
 
     requestHomeOrderList(requested: boolean): void {

@@ -3,20 +3,28 @@
         <i class="fa fa-home"></i> {{'Home - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
     </h1>
 
+    <!--AM-->
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 36">
-        <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="manage-orders/list">{{'Order Book' | translate}}</app-counter-tile>
-        <app-counter-tile name="connections" icon="sitemap" [count]="" color="green" route="reports/holders-list/list">{{'Recordkeeping' | translate}}</app-counter-tile>
+        <app-counter-tile name="actions" icon="sitemap" [count]="fundList.length + filteredShareList.length + umbrellaFundList.length" color="red" route="product-module/product">{{'My Products' | translate}}</app-counter-tile>
+        <app-counter-tile name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="book" [count]="" color="orange" route="reports/centralization">{{'Precentralization Report' | translate}}</app-counter-tile>
-        <app-counter-tile name="contracts" icon="ellipsis-h" [count]="" color="blue" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
+        <app-counter-tile name="messages" icon="list-ul" [count]="" color="orange" route="reports/centralization">{{'Precentralization Report' | translate}}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="book" [count]="nbTotalHolders" color="blue" route="reports/holders-list/list">{{'Recordkeeping' | translate}}</app-counter-tile>
     </app-dashboard>
 
+    <!--INV-->
     <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 46">
-        <app-counter-tile name="actions" icon="university" [count]="" color="red" route="list-of-funds/0">{{'Place Order' | translate}}</app-counter-tile>
-        <app-counter-tile name="connections" icon="book" [count]="" color="green" route="order-book/my-orders/list">{{'My Orders' | translate}}</app-counter-tile>
+        <app-counter-tile name="actions" icon="list-ul" [count]="holdingsList.length" color="red" route="my-holdings">{{'My Holdings' | translate}}</app-counter-tile>
+        <app-counter-tile name="connections" icon="id-badge" [count]="addressList.length" color="green" route="user-administration/subportfolio">{{'Sub-portfolio' | translate}}</app-counter-tile>
 
-        <app-counter-tile name="messages" icon="id-badge" [count]="" color="orange" route="user-administration/subportfolio">{{'Sub-portfolio' | translate}}</app-counter-tile>
-        <app-counter-tile name="contracts" icon="user" [count]="" color="blue" route="profile/my-information">{{'My Information' | translate}}</app-counter-tile>
+        <app-counter-tile name="messages" icon="user" [count]="" color="orange" route="profile/my-information">{{'My Information' | translate}}</app-counter-tile>
+        <app-counter-tile name="contracts" icon="envelope" [count]="nbUnreadMessages" color="blue" route="messages/inbox">{{'My Messages' | translate}}</app-counter-tile>
     </app-dashboard>
+
+    <div *ngIf="userType == 46">
+        <app-investor-fund-list [isImported]="true"></app-investor-fund-list>
+    </div>
+
+    <app-manage-orders [isImported]="true"></app-manage-orders>
 
 </div>
