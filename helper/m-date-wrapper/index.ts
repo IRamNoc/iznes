@@ -80,10 +80,11 @@ export function convertToLocal(date: Date, formatStr: string) {
  *  convert utc date time string to local date time.
  * @param dateTimeStr
  * @param format
+ * @param outFormat
  * @return {string}
  */
-export function convertUtcStrToLocalStr(dateTimeStr: string, formatStr: string) {
-    return moment.utc(dateTimeStr, formatStr).local().format(formatStr);
+export function convertUtcStrToLocalStr(dateTimeStr: string, formatStr: string, outFormat: string = null) {
+    return moment.utc(dateTimeStr, formatStr).local().format((outFormat || formatStr));
 }
 
 /**
