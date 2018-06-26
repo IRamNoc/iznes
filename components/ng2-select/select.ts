@@ -74,19 +74,23 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     @Input()
     public set active(selectedItems: Array<any>) {
-        this.handleNonExistOptions(selectedItems);
-        if (!selectedItems || selectedItems.length === 0) {
+        try {
+            this.handleNonExistOptions(selectedItems);
+            if (!selectedItems || selectedItems.length === 0) {
+                this._active = [];
+            } else {
+                const areItemsStrings = typeof selectedItems[0] === 'string';
+
+                this._active = selectedItems.map((item: any) => {
+                    const data = areItemsStrings
+                        ? item
+                        : { id: item[this.idField], text: item[this.textField] };
+
+                    return new SelectItem(data);
+                });
+            }
+        } catch (e) {
             this._active = [];
-        } else {
-            const areItemsStrings = typeof selectedItems[0] === 'string';
-
-            this._active = selectedItems.map((item: any) => {
-                const data = areItemsStrings
-                    ? item
-                    : { id: item[this.idField], text: item[this.textField] };
-
-                return new SelectItem(data);
-            });
         }
     }
 
