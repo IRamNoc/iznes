@@ -15,7 +15,7 @@
 
         <div class="switch-container" style="position: relative">
             <label class="switch">
-                <input type="checkbox" id="shareAllDocsToAllAM" formControlName="shareAll" (change)="assignShareAll()">
+                <input type="checkbox" id="shareAllDocsToAllAM" formControlName="shareAll" (change)="assignAllToggles()">
                 <span class="slider round"></span>
             </label>
         </div>
@@ -33,16 +33,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload1']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload1']" (onDrop)="getUpload($event, 1)" [inline]="true" [preset]="allUploadsFiles['upload1']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload1" formControlName="shareUpload1">
+                                        <input type="checkbox" id="shareUpload1" formControlName="shareUpload1" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[1].fileID !== 0" [fileHash]="allUploadsFiles[1].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -51,16 +54,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload2']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload2']" (onDrop)="getUpload($event, 2)" [inline]="true" [preset]="allUploadsFiles['upload2']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload2" formControlName="shareUpload2">
+                                        <input type="checkbox" id="shareUpload2" formControlName="shareUpload2" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[2].fileID !== 0" [fileHash]="allUploadsFiles[2].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -71,16 +77,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload3']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload3']" (onDrop)="getUpload($event, 3)" [inline]="true" [preset]="allUploadsFiles['upload3']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload3" formControlName="shareUpload3">
+                                        <input type="checkbox" id="shareUpload3" formControlName="shareUpload3" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[3].fileID !== 0" [fileHash]="allUploadsFiles[3].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -98,16 +107,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload4']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload4']" (onDrop)="getUpload($event, 4)" [inline]="true" [preset]="allUploadsFiles['upload4']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload4" formControlName="shareUpload4">
+                                        <input type="checkbox" id="shareUpload4" formControlName="shareUpload4" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[4].fileID !== 0" [fileHash]="allUploadsFiles[4].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -116,16 +128,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload5']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload5']" (onDrop)="getUpload($event, 5)" [inline]="true" [preset]="allUploadsFiles['upload5']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload5" formControlName="shareUpload5">
+                                        <input type="checkbox" id="shareUpload5" formControlName="shareUpload5" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[5].fileID !== 0" [fileHash]="allUploadsFiles[5].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -136,16 +151,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload6']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload6']" (onDrop)="getUpload($event, 6)" [inline]="true" [preset]="allUploadsFiles['upload6']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload6" formControlName="shareUpload6">
+                                        <input type="checkbox" id="shareUpload6" formControlName="shareUpload6" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[6].fileID !== 0" [fileHash]="allUploadsFiles[6].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -154,16 +172,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload7']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload7']" (onDrop)="getUpload($event, 7)" [inline]="true" [preset]="allUploadsFiles['upload7']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload7" formControlName="shareUpload7">
+                                        <input type="checkbox" id="shareUpload7" formControlName="shareUpload7" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[7].fileID !== 0" [fileHash]="allUploadsFiles[7].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -179,16 +200,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload8']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload8']" (onDrop)="getUpload($event, 8)" [inline]="true" [preset]="allUploadsFiles['upload8']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload8" formControlName="shareUpload8">
+                                        <input type="checkbox" id="shareUpload8" formControlName="shareUpload8" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[8].fileID !== 0" [fileHash]="allUploadsFiles[8].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -197,16 +221,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload9']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload9']" (onDrop)="getUpload($event, 9)" [inline]="true" [preset]="allUploadsFiles['upload9']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload9" formControlName="shareUpload9">
+                                        <input type="checkbox" id="shareUpload9" formControlName="shareUpload9" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[9].fileID !== 0" [fileHash]="allUploadsFiles[9].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -218,16 +245,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload10']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload10']" (onDrop)="getUpload($event, 10)" [inline]="true" [preset]="allUploadsFiles['upload10']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload10" formControlName="shareUpload10">
+                                        <input type="checkbox" id="shareUpload10" formControlName="shareUpload10" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[10].fileID !== 0" [fileHash]="allUploadsFiles[10].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -236,16 +266,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload11']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload11']" (onDrop)="getUpload($event, 11)" [inline]="true" [preset]="allUploadsFiles['upload11']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload11" formControlName="shareUpload11">
+                                        <input type="checkbox" id="shareUpload11" formControlName="shareUpload11" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[11].fileID !== 0" [fileHash]="allUploadsFiles[11].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -257,16 +290,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload12']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload12']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload12']" (onDrop)="getUpload($event, 12)" [inline]="true" [preset]="allUploadsFiles['upload12']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload12" formControlName="shareUpload12">
+                                        <input type="checkbox" id="shareUpload12" formControlName="shareUpload12" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[12].fileID !== 0" [fileHash]="allUploadsFiles[12].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
@@ -275,16 +311,19 @@
                     <table class="tableUpload">
                         <tr>
                             <td>
-                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload13']" (onDrop)="getUpload($event)" [inline]="true" [preset]="allUploadsFiles['upload13']" ngDefaultControl></setl-file-drop>
+                                <setl-file-drop [formControl]="uploadMyDocumentsForm.controls['upload13']" (onDrop)="getUpload($event, 13)" [inline]="true" [preset]="allUploadsFiles['upload13']" ngDefaultControl></setl-file-drop>
                             </td>
                             <td>
                                 <div class="switch-container">
                                     <label class="switch">
-                                        <input type="checkbox" id="shareUpload13" formControlName="shareUpload13">
+                                        <input type="checkbox" id="shareUpload13" formControlName="shareUpload13" (change)="checkToggles()">
                                         <span class="slider round"></span>
                                     </label>
                                 </div>
                             </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><setl-file-viewer *ngIf="allUploadsFiles[13].fileID !== 0" [fileHash]="allUploadsFiles[13].hash"></setl-file-viewer></td>
                         </tr>
                     </table>
                 </div>
