@@ -58,8 +58,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const userId = _.get(loginedData, 'UserID', 0);
 
             const l = _.get(loginedData, 'last_login', '');
-            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT)
-                : getCurrentUnixTimestampStr(DATE_FORMAT);
+            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT, 'YYYY-MM-DD HH:mm')
+                : getCurrentUnixTimestampStr('YYYY-MM-DD HH:mm');
 
             const userType = _.get(loginedData, 'userType', 0);
             const userTypeStr = UserTypeStr[userType];
