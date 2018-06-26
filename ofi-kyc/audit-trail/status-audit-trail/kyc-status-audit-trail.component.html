@@ -1,0 +1,47 @@
+<div class="status-header">
+    <div>
+        <h2>Request Status Audit Trail</h2>
+        <p>Please find below the audit trail regarding the status of your request:</p>
+    </div>
+    <button class="btn btn-primary">Export Status Audi Trail</button>
+</div>
+
+<clr-datagrid class="expandable">
+    <clr-dg-column>
+        {{'Old Status' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'New Status' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Modified By' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Date' | translate}}
+    </clr-dg-column>
+
+
+    <clr-dg-row *clrDgItems="let item of statusAuditItems">
+        <clr-dg-cell>{{item.oldStatus}}</clr-dg-cell>
+        <clr-dg-cell>{{item.newStatus}}</clr-dg-cell>
+        <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
+        <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
+
+        <div *ngIf="item.message">
+
+            <clr-dg-row-detail *clrIfExpanded>
+                <div class="additionalInfos">
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <p>{{item.message}}</p>
+                        </div>
+                    </div>
+                </div>
+            </clr-dg-row-detail>
+        </div>
+    </clr-dg-row>
+
+    <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>

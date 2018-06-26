@@ -46,9 +46,10 @@ export { OfiNavAuditComponent } from './ofi-nav/ofi-nav-audit/component';
 export { OfiManageNavPopup } from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**
- * Waiting for approval
+ * Kyc
  */
 export { OfiWaitingApprovalComponent } from './ofi-kyc/waiting-approval/component';
+export { KycAuditTrailComponent } from './ofi-kyc/audit-trail/kyc-audit-trail.component';
 
 /**
  * Services

@@ -1,0 +1,19 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-home"></i> {{'My Request Audit Trail:' | translate}} {{'[Asset Management\'s Company Name]'}}
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button id="demoOptimisedDatagridBtn" clrTabLink>
+            <i class="fa fa-th-list"></i> {{'Audit Trail' | translate}}
+        </button>
+        <clr-tab-content *clrIfActive>
+
+            <kyc-status-audit-trail></kyc-status-audit-trail>
+            <kyc-information-audit-trail></kyc-information-audit-trail>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

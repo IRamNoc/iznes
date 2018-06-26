@@ -1,0 +1,42 @@
+<h2>Request Information Audit Trail</h2>
+<p>Please find below the audit trail regarding the status of your request:</p>
+
+<clr-datagrid class="expandable">
+    <clr-dg-column>
+        {{'Section' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Subsection' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Information' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Old Value' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'New Value' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Modified By' | translate}}
+    </clr-dg-column>
+    <clr-dg-column>
+        {{'Date' | translate}}
+    </clr-dg-column>
+
+
+    <clr-dg-row *clrDgItems="let item of informationAuditItems">
+        <clr-dg-cell></clr-dg-cell>
+        <clr-dg-cell>{{item.subsection}}</clr-dg-cell>
+        <clr-dg-cell>{{item.modifiedField}}</clr-dg-cell>
+        <clr-dg-cell>{{item.oldValue}}</clr-dg-cell>
+        <clr-dg-cell>{{item.newValue}}</clr-dg-cell>
+        <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
+        <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
+
+    </clr-dg-row>
+
+    <clr-dg-footer>
+        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+    </clr-dg-footer>
+</clr-datagrid>
