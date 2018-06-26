@@ -14,6 +14,9 @@ import {MultilingualModule} from '@setl/multilingual';
 import {OfiHomeComponent} from './home/component';
 import {SetlLayoutModule} from '@setl/core-layout';
 
+import {OfiFundInvestModule} from '@ofi/ofi-main/ofi-fund-invest/module';
+import {OfiOrdersModule} from '@ofi/ofi-main/ofi-orders/ofi-orders.module';
+
 /* Decorator. */
 @NgModule({
     declarations: [
@@ -34,7 +37,9 @@ import {SetlLayoutModule} from '@setl/core-layout';
         SetlPipesModule,
         SetlComponentsModule,
         SetlDirectivesModule,
-        SetlLayoutModule
+        SetlLayoutModule,
+        OfiFundInvestModule,
+        OfiOrdersModule,
     ],
     providers: []
 })

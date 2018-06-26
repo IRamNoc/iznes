@@ -2,7 +2,7 @@ import {MemberNodeMessageBody} from '@setl/utils/common';
 
 export interface ManagementCompanyRequestMessageBody extends MemberNodeMessageBody {
     token: any;
-    accountId: any;
+    accountID: any;
 }
 
 export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {
