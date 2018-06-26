@@ -39,6 +39,7 @@ export interface AppConfig {
     logoUrl: string;
     logoID: string;
     platform: string;
+    platformLegal?: string;
     topbarLogoUrl: string;
     applyRestrictUrl?: boolean;
 }
