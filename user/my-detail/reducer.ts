@@ -2,6 +2,10 @@ import {Action} from 'redux';
 import * as MyDetailActions from './actions';
 import {MyDetailState} from './model';
 import * as _ from 'lodash';
+import {
+    convertUtcStrToLocalStr,
+    getCurrentUnixTimestampStr,
+} from '@setl/utils/helper/m-date-wrapper';
 
 const initialState: MyDetailState = {
     username: '',
@@ -36,6 +40,8 @@ const UserTypeStr = {
     '65': 'rooster_operator'
 };
 
+const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
+
 export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
     let newState = {};
     let emailAddress = '';
@@ -50,7 +56,11 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const username = _.get(loginedData, 'UserName', '');
             emailAddress = _.get(loginedData, 'EMailAddress', '');
             const userId = _.get(loginedData, 'UserID', 0);
-            const lastLogin = _.get(loginedData, 'last_login', '');
+
+            const l = _.get(loginedData, 'last_login', '');
+            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT, 'YYYY-MM-DD HH:mm')
+                : getCurrentUnixTimestampStr('YYYY-MM-DD HH:mm');
+
             const userType = _.get(loginedData, 'userType', 0);
             const userTypeStr = UserTypeStr[userType];
             const admin = !!_.get(loginedData, 'admin', 0);

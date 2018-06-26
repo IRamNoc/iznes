@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 import {setDecryptedContent} from './actions';
 import {commonHelper} from '@setl/utils';
+import * as moment from 'moment-timezone';
 
 const initialState: MyMessagesState = {
     messageList: [],
@@ -188,8 +189,9 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
     let messageDetailList = List<MessageDetail>();
 
     messageDetailList = rawMessagesDataList.map(
-        function (thisMessageDetail) {
-            let subject, content;
+        (thisMessageDetail) => {
+            let subject;
+            let content;
             try {
                 subject = commonHelper.b64DecodeUnicode(thisMessageDetail.get('subject'));
             } catch (e) {
@@ -198,6 +200,13 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
             }
 
             content = thisMessageDetail.get('mailBody');
+            const date = moment(
+                `${thisMessageDetail.get('mailDate')} UTC+00:00`,
+                'YYYY-MM-DD HH:mm:ss ZZ',
+                'utc',
+            )
+                .tz(moment.tz.guess())
+                .format('YYYY-MM-DD HH:mm:ss');
 
             return {
                 mailId: thisMessageDetail.get('mailID'),
@@ -207,14 +216,14 @@ function formatMessagesDataResponse(rawMessagesData: Array<any>): Array<MessageD
                 recipientId: thisMessageDetail.get('receipientID'),
                 recipientPub: thisMessageDetail.get('recipientPub'),
                 recipientImg: thisMessageDetail.get('recipientPub'),
-                subject: subject,
-                date: thisMessageDetail.get('mailDate'),
+                subject,
+                date,
                 isActive: thisMessageDetail.get('isActive'),
                 isRead: thisMessageDetail.get('isRead'),
                 isActed: thisMessageDetail.get('isActed'),
-                content: content,
-                action: {type: null},
-                isDecrypted: false
+                content,
+                action: { type: null },
+                isDecrypted: false,
             };
         }
     );
