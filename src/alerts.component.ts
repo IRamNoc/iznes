@@ -7,7 +7,7 @@ import {
     ReflectiveInjector,
     ComponentFactoryResolver,
     ComponentRef,
-    ViewChild
+    ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertsService } from './alerts.service';
@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs/Subscription';
     selector: 'jaspero-alerts',
     entryComponents: [AlertComponent],
     template: `
-        <div #comp></div>`
+        <div #comp></div>`,
 })
 export class AlertsComponent implements OnInit, OnDestroy {
     constructor(private _service: AlertsService,
@@ -39,7 +39,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
         overlayClickToClose: true,
         showCloseButton: true,
         duration: 3000,
-        buttonMessage: 'Close'
+        buttonMessage: 'Close',
     };
 
     private _current: ComponentRef<AlertComponent>;
@@ -58,18 +58,18 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
             if (alert.close) return;
 
-            let settingsFinalAsArray = [];
+            const settingsFinalAsArray = [];
 
-            for (let key in this.settings) {
-                let toUse = alert.override[key] !== undefined ? alert.override[key] : this.settings[key];
-                settingsFinalAsArray.push({ key: key, value: toUse });
+            for (const key in this.settings) {
+                const toUse = alert.override[key] !== undefined ? alert.override[key] : this.settings[key];
+                settingsFinalAsArray.push({ key, value: toUse });
             }
 
-            let inputProviders = [
+            const inputProviders = [
                     { key: 'titleMessage', value: alert.titleMessage },
                     { key: 'message', value: alert.message },
                     { key: 'type', value: alert.type },
-                    ...settingsFinalAsArray
+                    ...settingsFinalAsArray,
                 ].map((input) => {
                     return { provide: input.key, useValue: input.value };
                 }),
@@ -89,7 +89,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
             });
 
             this._routerOb = this._router.events.subscribe((event) => {
-                this._current.instance.closeSelf();
+                if (this._current) this._current.instance.closeSelf();
             });
         });
 
@@ -100,7 +100,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
             }
         });
     }
-
 
     private _destroy() {
         /*
