@@ -1,14 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
+import { AccountAdminErrorResponse } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
@@ -20,11 +19,10 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
 
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
-                redux: NgRedux<any>,
+                router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService,
-                confirmationService: ConfirmationService) {
-        super(route, redux, alerts, toaster, confirmationService);
+                toaster: ToasterService) {
+        super(route, router, alerts, toaster);
         this.noun = 'Team';
     }
 
@@ -67,7 +65,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
             this.form.reference.value(),
             this.form.description.value(),
             () => this.onSaveSuccess(this.form.name.value()),
-            (e: string) => this.onSaveError(this.form.name.value(), e),
+            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
     }
 
@@ -79,7 +77,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
             this.form.reference.value(),
             this.form.description.value(),
             () => this.onSaveSuccess(this.form.name.value()),
-            (e: string) => this.onSaveError(this.form.name.value(), e),
+            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
     }
 

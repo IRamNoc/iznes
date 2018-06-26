@@ -1,9 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
@@ -18,11 +16,10 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
     form: Model.AccountAdminUserForm = new Model.AccountAdminUserForm();
 
     constructor(route: ActivatedRoute,
-                redux: NgRedux<any>,
+                router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService,
-                confirmationService: ConfirmationService) {
-        super(route, redux, alerts, toaster, confirmationService);
+                toaster: ToasterService) {
+        super(route, router, alerts, toaster);
         this.noun = 'User';
     }
 
