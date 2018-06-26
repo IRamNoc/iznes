@@ -113,7 +113,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
             this._current = null;
         }
         this._latestSub.unsubscribe();
-        this._listener.unsubscribe();
+        // this._listener.unsubscribe();
     }
 
     ngOnDestroy() {
