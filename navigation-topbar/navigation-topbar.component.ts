@@ -134,7 +134,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             this.username = this.currentUserDetails.username;
         }
 
-        this.lastLogin = this.currentUserDetails.lastLogin || moment().format('YYYY-MM-DD HH:mm:ss');
+        this.lastLogin = this.currentUserDetails.lastLogin || moment().format('YYYY-MM-DD HH:mm');
 
         const chainAccess = getDefaultMyChainAccess(newState);
 
