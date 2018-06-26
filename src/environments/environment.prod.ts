@@ -50,5 +50,6 @@ export const environment = {
     logoUrl: 'assets/images/logo-iznes-only.png',
     logoID: 'logo-iznes',
     platform: 'IZNES',
+    platformLegal: 'IZNES',
     topbarLogoUrl: 'assets/images/logo-iznes-only.png',
 };
