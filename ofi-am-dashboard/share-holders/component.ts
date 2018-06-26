@@ -400,7 +400,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             shareId,
             shareIsin,
             userId: this.myDetails.userId,
-            selectedFilter: selectedFilter
+            selectedFilter: selectedFilter,
         });
     }
 

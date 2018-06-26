@@ -1,5 +1,6 @@
 export interface ManagementCompanyDetail {
     companyID: string;
+    entityID?: string;
     companyName: string;
     country: string;
     addressPrefix: string;
@@ -24,9 +25,16 @@ export interface ManagementCompanyDetail {
     logoURL: string;
 }
 
-export interface ManagementCompanyListState {
+export interface managementCompanyListState {
     managementCompanyList: {
-        [key: string]: ManagementCompanyDetail
+        [key: string]: ManagementCompanyDetail;
     };
     requested: boolean;
+}
+
+export interface invManagementCompanyListState {
+    investorManagementCompanyList: {
+        [key: string]: ManagementCompanyDetail;
+    };
+    invRequested: boolean;
 }

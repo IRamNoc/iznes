@@ -6,9 +6,8 @@
 <div class="wrapper wrapper-content">
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="link{{id}}" [routerLink]="['/list-of-funds', id]">
-                <span class="{{tabdata.title.colorClass}}">
-                    <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
+            <button [style.display]="getDisplay()" clrTabLink id="link{{id}}" [routerLink]="['/list-of-funds', id]">
+                <span class="{{tabdata.title.colorClass}}"><i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}</span>
             </button>
 
             <clr-tab-content *clrIfActive="tabdata.active">

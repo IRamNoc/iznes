@@ -4,6 +4,7 @@ import {
     ManagementCompanyState,
     ManagementCompanyReducer,
     SET_MANAGEMENT_COMPANY_LIST,
+    SET_INV_MANAGEMENT_COMPANY_LIST,
 } from './management-company';
 
 import {
@@ -139,6 +140,7 @@ export {
     ManagementCompanyState,
     ManagementCompanyReducer,
     SET_MANAGEMENT_COMPANY_LIST,
+    SET_INV_MANAGEMENT_COMPANY_LIST,
     SicavState,
     SicavReducer,
     SET_SICAV_LIST,

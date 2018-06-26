@@ -518,11 +518,9 @@ export class ShareKeyFactsOptional {
 }
 
 function validateISIN(c: FormControl) {
-    const ISIN_REGEXP =  new RegExp(/\b^[A-Za-z]{2}[0-9]{10}\b/);
+    const ISIN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[0-9]{10}\b/);
 
     return ISIN_REGEXP.test(c.value) ? null : {
-        isin: {
-            valid: false,
-        },
+        'ISIN must meet ISO 6166 format (12 characters).': c.value,
     };
 }

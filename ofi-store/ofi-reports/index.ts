@@ -14,10 +14,13 @@ export {
 
 export {
     OFI_SET_AM_HOLDERS_LIST,
+    OFI_SET_INV_HOLDINGS_LIST,
     ofiClearRequestedAmHolders,
     ofiSetRequestedAmHolders,
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
+    ofiSetRequestedInvHoldings,
+    ofiClearRequestedInvHoldings,
     OFI_GET_SHARE_HOLDER_DETAIL,
 } from './holders';
 
