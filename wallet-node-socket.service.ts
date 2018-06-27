@@ -1,13 +1,13 @@
-import {Injectable} from '@angular/core';
-import {SetlCallbackRegister, SetlWebSocket} from '@setl/vanilla-websocket-wrapper';
-import {ToasterService} from 'angular2-toaster';
+import { Injectable } from '@angular/core';
+import { SetlCallbackRegister, SetlWebSocket } from '@setl/vanilla-websocket-wrapper';
+import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable()
-export class WalletNodeSocketService{
-    private closeSubject: Subject<string> = new Subject<string>();
-    private openSubject: Subject<string> = new Subject<string>();
+export class WalletNodeSocketService {
+    public closeSubject: Subject<string> = new Subject<string>();
+    public openSubject: Subject<string> = new Subject<string>();
 
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
@@ -160,7 +160,7 @@ export class WalletNodeSocketService{
         const messageId = this.callBackRegister.uniqueIDValue;
         this.callBackRegister.addHandler(messageId, callBack, {});
 
-        const thisRequest = Object.assign({}, request, {requestID: messageId});
+        const thisRequest = Object.assign({}, request, { requestID: messageId });
 
         this.websocket.sendRequest(thisRequest);
     }
