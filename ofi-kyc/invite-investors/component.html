@@ -118,6 +118,8 @@
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
+            <p class="subhead">Please find below invitations that have been sent to investors:</p>
+
             <clr-datagrid #dataGrid>
                 <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
                 <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Account Status' | translate}}</clr-dg-column>
