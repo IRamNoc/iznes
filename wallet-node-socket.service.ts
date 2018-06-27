@@ -1,12 +1,13 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {SetlCallbackRegister, SetlWebSocket} from '@setl/vanilla-websocket-wrapper';
 import {ToasterService} from 'angular2-toaster';
 import * as _ from 'lodash';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class WalletNodeSocketService{
-    public walletnodeClose: EventEmitter<any> = new EventEmitter();
-    public walletnodeOpen: EventEmitter<any> = new EventEmitter();
+    private closeSubject: Subject<string> = new Subject<string>();
+    private openSubject: Subject<string> = new Subject<string>();
 
     private websocket: SetlWebSocket;
     private callBackRegister: SetlCallbackRegister;
@@ -17,6 +18,14 @@ export class WalletNodeSocketService{
     public walletnodeUpdateCallback: any = () => true;
 
     constructor(private toasterService: ToasterService) {
+    }
+
+    get open() {
+        return this.openSubject.asObservable();
+    }
+
+    get close() {
+        return this.closeSubject.asObservable();
     }
 
     /**
@@ -38,7 +47,7 @@ export class WalletNodeSocketService{
             (ID, message, UserData) => {
                 if (this.websocket) {
                     console.log('reconnect to wallet node');
-                    this.walletnodeClose.emit(message);
+                    this.closeSubject.next(message);
                     setTimeout(() => this.websocket.openWebSocket(), 2000);
                 }
             }, {}
@@ -68,7 +77,7 @@ export class WalletNodeSocketService{
                                     if (thisToken !== '') {
                                         this.walletNodeSubscribeForUpdate(ID1, message1, UserData1);
                                     }
-                                    this.walletnodeOpen.emit(message1);
+                                    this.openSubject.next(message1);
                                     // Done connection and authenticate. can resolve here.
                                     resolveConnect();
 
