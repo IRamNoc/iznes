@@ -1,12 +1,17 @@
-import {AfterViewInit, Component, HostListener, OnInit} from '@angular/core';
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {InitialisationService, MyUserService, WalletnodeChannelService, NodeAlertsService} from '@setl/core-req-services';
-import {OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService} from '@ofi/ofi-main';
-import {ToasterService, ToasterConfig} from 'angular2-toaster';
-import {NgRedux} from '@angular-redux/store';
+import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
+import {
+    InitialisationService,
+    MyUserService,
+    WalletnodeChannelService,
+    NodeAlertsService
+} from '@setl/core-req-services';
+import { OfiMemberNodeChannelService, OfiPostTxService, OfiWalletnodeChannelService } from '@ofi/ofi-main';
+import { ToasterService, ToasterConfig } from 'angular2-toaster';
+import { NgRedux } from '@angular-redux/store';
 import 'rxjs/add/operator/throttleTime';
 
-import {setLanguage, setMenuShown} from '@setl/core-store';
+import { setLanguage, setMenuShown } from '@setl/core-store';
 
 @Component({
     selector: 'app-root',
@@ -60,7 +65,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             this._ofiWalletnodeChannelService.resolveChannelMessage(id, message, userData);
         };
 
-        this.walletNodeSocketService.walletnodeClose.throttleTime(2000).subscribe((message) => {
+        this.walletNodeSocketService.closeSubject.throttleTime(2000).subscribe((message) => {
             // commented out as the wallet connection close when no activities to walletnode for 2 minutes.
             // this.toasterService.pop('warning', 'Wallet node connection is closed');
         });
