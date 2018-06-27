@@ -187,7 +187,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
 
         this.filterForm.controls['period'].setValue([this.periodList[0]]);
-        
+
         this.dateTo = this.reformatDate(moment().add(1, 'weeks'));
         this.dateFrom = this.reformatDate(moment().subtract(1, 'weeks'));
 
@@ -527,7 +527,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     exportHistory(historyRow): void {
 
         if (historyRow !== undefined) {
-            const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const navDate = moment(historyRow.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
                 shareName: this.centralizationReportsList[0].text,
                 isin: null,
@@ -537,9 +537,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 rowOffSet: 0,
                 sortByField: 'userEntered',
                 sortOrder: 'desc',
-                dateSearchField: 'cutoffDate',
-                fromDate: cutoffDate,
-                toDate: cutoffDate + ' 23:59',
+                dateSearchField: 'navDate',
+                fromDate: navDate,
+                toDate: navDate + ' 23:59',
             };
 
             this._fileDownloader.downLoaderFile({
@@ -565,7 +565,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 sharename: this.baseCentralizationHistory.fundShareName,
                 status: {id : -3},
                 type: {id : 0},
-                dateType: {id : 'cutOffDate'},
+                dateType: {id : 'navDate'},
                 fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
                 toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
