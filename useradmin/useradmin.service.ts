@@ -599,7 +599,7 @@ export class AdminUsersService {
             RequestName: 'gug',
             token: this.memberSocketService.token,
             entityId: entity.entityId,
-            isTx: entity.isTx ? 1 : 0,
+            isTx: entity.isTx,
         };
 
         this.logService.log('SENDING GUG: ', messageBody);
