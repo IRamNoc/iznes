@@ -25,6 +25,7 @@ import {OfiFundAccessComponent} from './fund-access/component';
 import {OfiAmDocumentsComponent} from './am-documents/component';
 import {TextInputListComponent} from './text-input-list/component';
 import {OfiKycAlreadyDoneComponent} from './already-done/component';
+import {OfiKycRequestDetailsComponent} from './request-details/component';
 import {FileDropModule} from '@setl/core-filedrop';
 import {FileViewerModule} from "@setl/core-fileviewer";
 
@@ -42,6 +43,7 @@ import config from './config';
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
+        OfiKycRequestDetailsComponent,
         TextInputListComponent,
     ],
     exports: [
@@ -54,6 +56,7 @@ import config from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
+        OfiKycRequestDetailsComponent,
     ],
     imports: [
         ToasterModule,
