@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef, Input, OnChanges } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -10,7 +10,7 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
     templateUrl: './kyc-status-audit-trail.component.html',
     styleUrls: ['./kyc-status-audit-trail.component.scss'],
 })
-export class KycStatusAuditTrailComponent implements OnInit, OnDestroy {
+export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChanges {
 
     statusAuditItems = [];
     statusEnum = {};
@@ -28,13 +28,15 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        console.log('input: ', this.kycID);
-        this.kycService.fetchStatusAuditByKycID(this.kycID);
 
         this.statusAuditTrail$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                this.statusAuditItems = d.map(item => ({
+                if (!this.kycID || !Object.keys(d).length) {
+                    return;
+                }
+
+                this.statusAuditItems = d[this.kycID].map(item => ({
                     oldStatus: this.statusEnum[item.oldStatus || 0],
                     newStatus: this.statusEnum[item.newStatus],
                     modifiedBy: item.modifiedBy,
@@ -43,6 +45,12 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy {
                 }));
                 this.changeDetectorRef.markForCheck();
             });
+    }
+
+    ngOnChanges(changes) {
+        if (changes.kycID.currentValue !== changes.kycID.previousValue && changes.kycID.currentValue) {
+            this.kycService.getStatusAuditByKycID(changes.kycID.currentValue);
+        }
     }
 
     ngOnDestroy() {

@@ -39,11 +39,11 @@ import {
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import {
-    SET_STATUS_AUDIT_TRAIL,
+    setStatusAuditTrail,
     SET_STATUS_AUDIT_TRAIL_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
 import {
-    SET_INFORMATION_AUDIT_TRAIL,
+    setInformationAuditTrail,
     SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/information-audit-trail';
 
@@ -51,9 +51,13 @@ import {
 export class OfiKycService {
 
     isListeningGetInvitationsByUserAmCompany;
+    informationAuditTrailList;
+    statusAuditTrailList;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
+    @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
     @select(['user', 'authentication', 'isLogin']) isLogin$;
 
     constructor(
@@ -67,6 +71,18 @@ export class OfiKycService {
             this.unSubscribe.next();
             this.unSubscribe.complete();
         });
+
+        this.informationAuditTrailList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((list) => {
+                this.informationAuditTrailList = list;
+            });
+
+        this.statusAuditTrailList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((list) => {
+                this.statusAuditTrailList = list;
+            });
     }
 
     /**
@@ -375,6 +391,13 @@ export class OfiKycService {
 
     }
 
+    getStatusAuditByKycID(kycID: number) {
+        if (this.statusAuditTrailList.indexOf(kycID) !== -1) {
+            return;
+        }
+        this.fetchStatusAuditByKycID(kycID);
+    }
+
     fetchStatusAuditByKycID(kycID: number) {
         const messageBody = {
             RequestName: 'getkycstatusauditbykycid',
@@ -382,10 +405,32 @@ export class OfiKycService {
             kycID,
         };
 
-        return this.buildRequest({
-            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            successActions: [SET_STATUS_AUDIT_TRAIL, SET_STATUS_AUDIT_TRAIL_REQUESTED],
-        });
+        // return this.buildRequest({
+        //     taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+        //     successActions: [SET_STATUS_AUDIT_TRAIL, SET_STATUS_AUDIT_TRAIL_REQUESTED],
+        // });
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => {
+                this.ngRedux.dispatch(setStatusAuditTrail(kycID, res));
+                this.ngRedux.dispatch({
+                    type: SET_STATUS_AUDIT_TRAIL_REQUESTED,
+                });
+            },
+        ));
+    }
+
+    getInformationAuditByKycID(kycID: number) {
+        if (this.informationAuditTrailList.indexOf(kycID) !== -1) {
+            return;
+        }
+        this.fetchInformationAuditByKycID(kycID);
     }
 
     fetchInformationAuditByKycID(kycID: number) {
@@ -395,9 +440,19 @@ export class OfiKycService {
             kycID,
         };
 
-        return this.buildRequest({
-            taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            successActions: [SET_INFORMATION_AUDIT_TRAIL, SET_INFORMATION_AUDIT_TRAIL_REQUESTED],
-        });
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => {
+                this.ngRedux.dispatch(setInformationAuditTrail(kycID, res));
+                this.ngRedux.dispatch({
+                    type: SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
+                });
+            },
+        ));
     }
 }

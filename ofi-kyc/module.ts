@@ -7,7 +7,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 /* Pipes. */
-import { SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
+import {
+    SelectModule,
+    SetlComponentsModule,
+    SetlDirectivesModule,
+    SetlPipesModule,
+    DpDatePickerModule,
+} from '@setl/utils';
 
 /* Clarity module. */
 import { ClarityModule } from '@clr/angular';
@@ -109,6 +115,7 @@ import config, { kycEnums } from './config';
         OfiMyInformationsModule,
         FileDropModule,
         FileViewerModule,
+        DpDatePickerModule,
     ],
     providers: [
         RequestsService,

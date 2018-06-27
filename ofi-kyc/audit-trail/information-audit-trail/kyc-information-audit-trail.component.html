@@ -1,6 +1,52 @@
 <h2>Request Information Audit Trail</h2>
 <p>Please find below the audit trail regarding the status of your request:</p>
 
+<div>
+    <form [formGroup]="searchForm" id="searchForm">
+        <div class="row bordered form-group">
+            <div class="col-sm-3">
+                <label>{{'Search a section or subsection' | translate}}
+
+                </label>
+                <div class="input-button-group">
+                    <input id="orders-search-fundname" formControlName="search" name="search-fundname" type="text" [placeholder]="translate.translate('Search a section or subsection')">
+
+                    <button (click)="requestSearch()" style="margin-top: 0;">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <label for="orders-search-from-date">{{'Date From' | translate}}
+
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                    <input id="orders-search-from-date" formControlName="startDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
+                        mode="day" theme="dp-material">
+
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <label for="orders-search-to-date">{{'Date To' | translate}}
+
+                </label>
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                    <input id="orders-search-to-date" formControlName="endDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
+                        mode="day" theme="dp-material">
+
+                </div>
+            </div>
+            <div class="col-sm-3 export-btn-container">
+                <button class="btn btn-primary">Export Information Audit Trail</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
 <clr-datagrid class="expandable">
     <clr-dg-column>
         {{'Section' | translate}}
@@ -25,7 +71,7 @@
     </clr-dg-column>
 
 
-    <clr-dg-row *clrDgItems="let item of informationAuditItems">
+    <clr-dg-row *clrDgItems="let item of filteredInformationAuditItems">
         <clr-dg-cell>{{item.section}}</clr-dg-cell>
         <clr-dg-cell>{{item.subsection}}</clr-dg-cell>
         <clr-dg-cell>{{item.modifiedField}}</clr-dg-cell>

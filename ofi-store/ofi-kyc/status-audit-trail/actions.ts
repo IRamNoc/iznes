@@ -8,13 +8,19 @@ export const SET_STATUS_AUDIT_TRAIL_RESET = `${name}/SET_STATUS_AUDIT_TRAIL_RESE
 
 export interface statusAuditTrailAction extends Action {
     type: string;
-    payload: statusAuditTrailItem[];
+    payload: {
+        kycID: number;
+        data: statusAuditTrailItem[];
+    };
 }
 
-export function setStatusAuditTrail(d: statusAuditTrailItem[]) {
+export function setStatusAuditTrail(kycID: number, data) {
     return {
         type: SET_STATUS_AUDIT_TRAIL,
-        payload: d,
+        payload: {
+            kycID,
+            data,
+        },
     };
 }
 

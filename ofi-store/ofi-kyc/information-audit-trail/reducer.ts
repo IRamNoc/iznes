@@ -12,12 +12,16 @@ import {
 
 export interface kycInformationAuditTrailState {
     requested: boolean;
-    data: informationAuditTrailItem[];
+    data: {
+        [kycID: number]: informationAuditTrailItem[];
+    };
+    list: number[];
 }
 
 const initialState = {
     requested: false,
-    data: [],
+    data: {},
+    list: [],
 };
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -28,7 +32,7 @@ export function kycInformationAuditTrailReducer(
 ): kycInformationAuditTrailState {
     switch (action.type) {
     case SET_INFORMATION_AUDIT_TRAIL:
-        let data = _.get(action.payload, [1, 'Data'], []);
+        let data = _.get(action.payload.data, [1, 'Data'], []);
         if (data.length) {
             data = data.map(item => ({
                 ..._.omit(item, ['Status']),
@@ -38,7 +42,11 @@ export function kycInformationAuditTrailReducer(
 
         return {
             ...state,
-            data,
+            data: {
+                ...state.data,
+                [action.payload.kycID]: data,
+            },
+            list: _.uniq(state.list.concat([action.payload.kycID])),
         };
     case SET_INFORMATION_AUDIT_TRAIL_REQUESTED:
         return {

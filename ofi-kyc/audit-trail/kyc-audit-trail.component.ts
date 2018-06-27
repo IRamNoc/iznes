@@ -22,7 +22,7 @@ export class KycAuditTrailComponent implements OnInit, OnDestroy {
         this.activatedRoute.params
             .takeUntil(this.unSubscribe)
             .subscribe((params) => {
-                this.kycID = params.kycID;
+                this.kycID = Number(params.kycID);
             });
 
     }

@@ -8,13 +8,19 @@ export const SET_INFORMATION_AUDIT_TRAIL_RESET = `${name}/SET_INFORMATION_AUDIT_
 
 export interface informationAuditTrailAction extends Action {
     type: string;
-    payload: informationAuditTrailItem[];
+    payload: {
+        kycID: number;
+        data: informationAuditTrailItem[];
+    };
 }
 
-export function setInformationAuditTrail(d: informationAuditTrailItem[]) {
+export function setInformationAuditTrail(kycID: number, data) {
     return {
         type: SET_INFORMATION_AUDIT_TRAIL,
-        payload: d,
+        payload: {
+            kycID,
+            data,
+        },
     };
 }
 
