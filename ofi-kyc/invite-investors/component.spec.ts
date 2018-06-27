@@ -110,11 +110,11 @@ describe('OfiInviteInvestorsComponent', () => {
             it('should have a header with text: "Invites recap:"', () => {
                 const headerEl = fixture.debugElement.queryAllNodes(By.css('h2'));
                 expect(headerEl.length).toBe(1);
-                expect(headerEl[0].nativeNode.innerText).toEqual('Invites recap:');
+                expect(headerEl[0].nativeNode.innerText).toEqual('Invites Recap');
             });
 
             it('should have a subtitle with text: "Please find below invitations that have been sent to investors:"', () => {
-                const subtitleEl = fixture.debugElement.queryAllNodes(By.css('h2 + p'));
+                const subtitleEl = fixture.debugElement.queryAllNodes(By.css('p.subhead'));
                 expect(subtitleEl.length).toBe(1);
                 expect(subtitleEl[0].nativeNode.innerText).toEqual('Please find below invitations that have been sent to investors:');
             });
