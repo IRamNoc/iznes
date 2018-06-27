@@ -43,6 +43,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -414,6 +415,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     logout() {
         this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+        console.log('Disconnected from wallet node');
     }
 
     controlMenu() {
