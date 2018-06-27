@@ -99,7 +99,7 @@ export class NodeAlertsService {
         this.walletNodeSocketService.close.subscribe(callbacks.disconnect);
         this.walletNodeSocketService.open.subscribe((message) => {
             this.deathSubject.next(false);
-            callbacks.reconnect(message);
+            callbacks.reconnect();
         });
     }
 
