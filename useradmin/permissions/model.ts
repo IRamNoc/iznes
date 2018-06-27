@@ -34,6 +34,7 @@ export interface MenuPermissonDetail {
         entityId: string;
         isGroup: string;
         permissionId: string;
+        menuOrder: string;
     }
 }
 

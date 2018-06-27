@@ -32,6 +32,7 @@ export {
     getSiteSettings,
     SET_PRODUCTION,
     SET_LANGUAGE,
+    SET_SITE_MENU
 
 } from './user';
 

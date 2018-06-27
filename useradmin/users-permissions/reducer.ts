@@ -9,7 +9,7 @@ import {
 import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
-import { getAdminPermissions, getTranPermissions } from '@setl/core-store'
+import {getAdminPermissions, getTranPermissions} from '@setl/core-store'
 
 const initialState: UsersPermissionsState = {
     usersAdminPermissions: {},
@@ -18,7 +18,7 @@ const initialState: UsersPermissionsState = {
 };
 
 export const UsersPermissionsReducer = function (state: UsersPermissionsState = initialState,
-                                                action: Action) {
+                                                 action: Action) {
 
     /* Local variables. */
     let newState: UsersPermissionsState;
@@ -31,7 +31,7 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
     let usersMenuPermissions: {
         [key: number]: UsersMenuPermissonDetail
     };
-    let newEntityPermissions:any;
+    let newEntityPermissions: any;
 
     /* Swicth the action type. */
     switch (action.type) {
@@ -51,7 +51,7 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
             /* Assign the new permissions with the old ones. */
-            usersAdminPermissions = Object.assign({}, state.usersAdminPermissions, newEntityPermissions );
+            usersAdminPermissions = Object.assign({}, state.usersAdminPermissions, newEntityPermissions);
 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
@@ -76,7 +76,7 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
             /* Assign the new permissions with the old ones. */
-            usersTxPermissions = Object.assign({}, state.usersTxPermissions, newEntityPermissions );
+            usersTxPermissions = Object.assign({}, state.usersTxPermissions, newEntityPermissions);
 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
@@ -101,7 +101,7 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
             newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
             /* Assign the new permissions with the old ones. */
-            usersMenuPermissions = Object.assign({}, state.usersMenuPermissions, newEntityPermissions );
+            usersMenuPermissions = Object.assign({}, state.usersMenuPermissions, newEntityPermissions);
 
             /* Generate the new state. */
             newState = Object.assign({}, state, {
@@ -112,10 +112,10 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
             return newState;
 
         /**
-        * Default
-        * -------
-        * Returns the original state.
-        */
+         * Default
+         * -------
+         * Returns the original state.
+         */
         default:
             return state;
     }
@@ -137,19 +137,19 @@ export const UsersPermissionsReducer = function (state: UsersPermissionsState = 
  *     }
  * }
  */
-function sortPermissionsArray ( permissions ) {
+function sortPermissionsArray(permissions) {
     /* New data. */
     let
-    i,
-    newStructure = {};
+        i,
+        newStructure = {};
 
     /* Let's flatten the array into an object of permissions by permission ID. */
-    for ( i = 0; i < permissions.length; i++ ) {
+    for (i = 0; i < permissions.length; i++) {
         /* Handle the entity object not existing. */
-        if ( ! newStructure[ permissions[i].userID ] ) newStructure[ permissions[i].userID ] = {};
+        if (!newStructure[permissions[i].userID]) newStructure[permissions[i].userID] = {};
 
         /* Assign the permission by ID. */
-        newStructure[ permissions[i].userID ][ permissions[i].groupID ] = permissions[i];
+        newStructure[permissions[i].userID][permissions[i].groupID] = permissions[i];
     }
 
     /* Return. */

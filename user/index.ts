@@ -28,7 +28,14 @@ import {
     resetHomepage
 } from './authentication';
 
-export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD, CLEAR_MUST_CHANGE_PASSWORD, resetHomepage};
+export {
+    SET_AUTH_LOGIN_DETAIL,
+    RESET_AUTH_LOGIN_DETAIL,
+    getAuthentication,
+    SET_NEW_PASSWORD,
+    CLEAR_MUST_CHANGE_PASSWORD,
+    resetHomepage
+};
 
 // connected
 import {
@@ -62,7 +69,8 @@ import {
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
-    SET_LANGUAGE
+    SET_LANGUAGE,
+    SET_SITE_MENU
 } from './site-settings';
 
 export {
@@ -70,7 +78,8 @@ export {
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
-    SET_LANGUAGE
+    SET_LANGUAGE,
+    SET_SITE_MENU
 };
 
 export interface UserState {
