@@ -58,7 +58,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         }
     }
 
-    panel: {};
+    panel: any;
 
     inviteItems: investorInvitation[];
 
@@ -104,6 +104,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 })
             ])
         });
+
+        this.panel = {
+            title: 'Invites Recap',
+            open: true
+        };
     }
 
     /**
@@ -139,11 +144,6 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             }
             this.markForCheck();
         });
-
-        this.panel = {
-            title: 'Invites Recap',
-            open: true
-        };
     }
 
     ngOnDestroy(): void {
