@@ -692,11 +692,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.fundShare.decimalization = currentFundShare.maximumNumDecimal;
-        this.fundShare.mifiidChargesOneOff = currentFundShare.mifiidChargesOneOff;
-        this.fundShare.mifiidChargesOngoing = currentFundShare.mifiidChargesOngoing;
-        this.fundShare.mifiidTransactionCosts = currentFundShare.mifiidTransactionCosts;
-        this.fundShare.mifiidServicesCosts = currentFundShare.mifiidServicesCosts;
-        this.fundShare.mifiidIncidentalCosts = currentFundShare.mifiidIncidentalCosts;
+        this.fundShare.mifiidChargesOneOff = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOneOff);
+        this.fundShare.mifiidChargesOngoing = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOngoing);
+        this.fundShare.mifiidTransactionCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidTransactionCosts);
+        this.fundShare.mifiidServicesCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidServicesCosts);
+        this.fundShare.mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidIncidentalCosts);
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
         this.detectChanges();
 
