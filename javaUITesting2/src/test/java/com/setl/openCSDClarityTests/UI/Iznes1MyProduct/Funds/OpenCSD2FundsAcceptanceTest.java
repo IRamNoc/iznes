@@ -216,23 +216,16 @@ public class OpenCSD2FundsAcceptanceTest {
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
-        selectAddUmbrellaFund();
-        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
-        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857451");
-        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
-        submitUmbrellaFund();
-        assertPopupNextFundNo("Fund");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         wait.until(elementToBeClickable(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
-        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", uFundDetails[0]);
+        searchAndSelectTopDropdown("fund-umbrellaControl-select-1", "none");
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText());
-        String fundName = split(fundNameText, " ");
-        assertTrue(fundName.equals(uFundDetails[0]));
+        String fundName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/clr-tabs/clr-tab/clr-tab-content/form/div[1]/div[1]/div/a/h2")).getText();
+        assertTrue(fundName.equals("No Umbrella Fund"));
     }
 
     @Test

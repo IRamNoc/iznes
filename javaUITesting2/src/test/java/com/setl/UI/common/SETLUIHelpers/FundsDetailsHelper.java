@@ -480,7 +480,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void verifyUmbrellaFundMainInfoPageContents() {
 
-        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/section/div[1]/div[1]/div/a/h2"));
         mainInfo.click();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -509,6 +509,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
     }
+
 
     public static void verifyFundMainInfoPageContents() {
 

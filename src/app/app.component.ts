@@ -49,23 +49,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     ngOnInit() {
 
-        this.memberSocketService.disconnectCallback = () => {
-            this.toasterService.pop('error', 'Member node connection disconnected');
-
-        };
-
-        // memberSocketService.errorCallback = () => {
-        //     this.toasterService.pop('warning', 'Member node connection error');
-        // };
-
-        this.memberSocketService.reconnectCallback = () => {
-            this.toasterService.pop('success', 'Member node connection reconnected');
-
-            // If this connection is connected, let backend know about it, by sending the backend a request(in the case,
-            // extend session call would do here).
-            this._myUserService.defaultRefreshToken(this.ngRedux);
-        };
-
         /**
          * Handle walletnode update message.
          * @param id

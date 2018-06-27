@@ -18,6 +18,5 @@ export const nonMenuLink = {
         '\/centralization-history\/[^\/]*',
         '\/kyc-documents\/client\/[^\/]*',
         '\/fund-access\/[^\/]*',
-        '\/product-module\/product-characteristic\/[^\/]*',
     ],
 };
