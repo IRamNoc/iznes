@@ -9,8 +9,8 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService } from '@setl/utils';
-import { NgRedux, select } from '@angular-redux/store';
+import {APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService} from '@setl/utils';
+import {NgRedux, select} from '@angular-redux/store';
 import {
     addWalletNodeInitialSnapshot,
     clearRequestedMailInitial,
@@ -25,8 +25,8 @@ import {
     setMenuShown,
     setRequestedMailInitial,
 } from '@setl/core-store';
-import { fromJS } from 'immutable';
-import { MultilingualService } from '@setl/multilingual/multilingual.service';
+import {fromJS} from 'immutable';
+import {MultilingualService} from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -38,10 +38,11 @@ import {
     MyWalletsService,
     WalletNodeRequestService,
 } from '@setl/core-req-services';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
+import {Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -103,6 +104,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 public translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
+                private menuSpecService: MenuSpecService,
                 private initialisationService: InitialisationService,
                 private logService: LogService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
@@ -144,8 +146,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
             const myAuthenData = getAuthentication(newState);
             const myDetail = getMyDetail(newState);
-            const { userId } = myDetail;
-            const { apiKey } = myAuthenData;
+            const {userId} = myDetail;
+            const {apiKey} = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
@@ -203,20 +205,23 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 60: 't2s',
                 65: 'rooster_operator',
             }[userType];
-            this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                this.profileMenu = menuSpec.top.profile[userTypeStr];
+            });
         }));
 
         // When membernode reconnect. trigger wallet select.
         this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
                 // Subscribe to my connection channel, target for my userId
-            InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
+                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
 
-            if (!this.selectedWalletId.value) {
-                return;
-            }
+                if (!this.selectedWalletId.value) {
+                    return;
+                }
 
-            this.selected(this.selectedWalletId.value[0]);
-        }),
+                this.selected(this.selectedWalletId.value[0]);
+            }),
         );
     }
 
@@ -408,7 +413,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
     }
 
     controlMenu() {
