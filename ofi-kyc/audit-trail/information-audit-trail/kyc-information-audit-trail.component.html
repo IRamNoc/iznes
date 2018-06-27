@@ -26,13 +26,13 @@
 
 
     <clr-dg-row *clrDgItems="let item of informationAuditItems">
-        <clr-dg-cell></clr-dg-cell>
+        <clr-dg-cell>{{item.section}}</clr-dg-cell>
         <clr-dg-cell>{{item.subsection}}</clr-dg-cell>
         <clr-dg-cell>{{item.modifiedField}}</clr-dg-cell>
         <clr-dg-cell>{{item.oldValue}}</clr-dg-cell>
         <clr-dg-cell>{{item.newValue}}</clr-dg-cell>
         <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
-        <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
+        <clr-dg-cell>{{item.dateModified}}</clr-dg-cell>
 
     </clr-dg-row>
 

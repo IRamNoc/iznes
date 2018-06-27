@@ -38,6 +38,14 @@ import {
     SET_INVESTOR_INVITATIONS_LIST,
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import {
+    SET_STATUS_AUDIT_TRAIL,
+    SET_STATUS_AUDIT_TRAIL_REQUESTED,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
+import {
+    SET_INFORMATION_AUDIT_TRAIL,
+    SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/information-audit-trail';
 
 @Injectable()
 export class OfiKycService {
@@ -376,7 +384,7 @@ export class OfiKycService {
 
         return this.buildRequest({
             taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            successActions: [],
+            successActions: [SET_STATUS_AUDIT_TRAIL, SET_STATUS_AUDIT_TRAIL_REQUESTED],
         });
     }
 
@@ -389,7 +397,7 @@ export class OfiKycService {
 
         return this.buildRequest({
             taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            successActions: [],
+            successActions: [SET_INFORMATION_AUDIT_TRAIL, SET_INFORMATION_AUDIT_TRAIL_REQUESTED],
         });
     }
 }

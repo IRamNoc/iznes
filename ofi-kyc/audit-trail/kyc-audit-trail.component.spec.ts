@@ -15,8 +15,15 @@ const fetchStatusAuditByKycID = jasmine.createSpy('fetchStatusAuditByKycID')
             resolve();
         }),
     );
+const fetchInformationAuditByKycID = jasmine.createSpy('fetchInformationAuditByKycID')
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
+);
 const ofiKycServiceSpy = {
     fetchStatusAuditByKycID,
+    fetchInformationAuditByKycID,
 };
 
 // Stub for translate

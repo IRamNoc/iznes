@@ -1,7 +1,9 @@
-import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, ChangeDetectorRef, Input } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { kycEnums } from '../../config';
 
 @Component({
     selector: 'kyc-status-audit-trail',
@@ -13,6 +15,10 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy {
     statusAuditItems = [];
     statusEnum = {};
 
+    unSubscribe: Subject<any> = new Subject();
+    @Input('kycID') kycID;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'data']) statusAuditTrail$;
+
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private kycService: OfiKycService,
@@ -22,20 +28,27 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.kycService.fetchStatusAuditByKycID(1)
-            .then(((d) => {
-                this.statusAuditItems = d[1].Data.map(item => ({
-                    oldStatus: this.statusEnum[item.oldStatus],
+        console.log('input: ', this.kycID);
+        this.kycService.fetchStatusAuditByKycID(this.kycID);
+
+        this.statusAuditTrail$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                this.statusAuditItems = d.map(item => ({
+                    oldStatus: this.statusEnum[item.oldStatus || 0],
                     newStatus: this.statusEnum[item.newStatus],
                     modifiedBy: item.modifiedBy,
                     dateEntered: item.dateEntered,
                     message: item.message,
                 }));
                 this.changeDetectorRef.markForCheck();
-            }).bind(this));
+            });
     }
 
     ngOnDestroy() {
-
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
     }
 }

@@ -27,21 +27,22 @@
         <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
         <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
 
-        <div *ngIf="item.message">
-
+        <ng-container ngProjectAs="clr-dg-row-detail" *ngIf="item.message">
             <clr-dg-row-detail *clrIfExpanded>
                 <div class="additionalInfos">
                     <div class="row">
                         <div class="form-group col-sm-12">
-                            <p>{{item.message}}</p>
+                            <p>Here is the message associated with the status change:</p>
+                            <textarea readonly>{{item.message}}</textarea>
                         </div>
                     </div>
                 </div>
             </clr-dg-row-detail>
-        </div>
+        </ng-container>
+
     </clr-dg-row>
 
     <clr-dg-footer>
-        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+        <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
     </clr-dg-footer>
 </clr-datagrid>
