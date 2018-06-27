@@ -37,6 +37,7 @@ import {
     MyUserService,
     MyWalletsService,
     WalletNodeRequestService,
+    NodeAlertsService
 } from '@setl/core-req-services';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
@@ -75,6 +76,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
+    public walletNodeDead: Observable<boolean>;
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
@@ -105,6 +107,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private channelService: ChannelService,
                 private initialisationService: InitialisationService,
                 private logService: LogService,
+                private nodeAlertsService: NodeAlertsService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -119,6 +122,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+
+        this.walletNodeDead = this.nodeAlertsService.dead;
     }
 
     updateState() {
