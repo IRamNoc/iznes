@@ -107,6 +107,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 for (let i=0; i < this.nbUploads; i++) {
                     this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).patchValue(this.uploadMyDocumentsForm.get('shareAll').value, { emitEvent: false });
                 }
+            } else {
+                this.uploadMyDocumentsForm.get('shareAll').patchValue(true, { emitEvent: false });
             }
         } else {
             this.uploadMyDocumentsForm.get('shareAll').patchValue(false, { emitEvent: false });
