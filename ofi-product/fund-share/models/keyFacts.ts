@@ -72,7 +72,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     // conditional - status
     feeder: FormItem = {
         type: FormItemType.list,
-        label: 'Feeder',
+        label: 'Master', // previously was displayed was Feeder
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
