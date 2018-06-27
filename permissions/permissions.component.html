@@ -146,12 +146,12 @@
                                 (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid
+                        <setl-menu-permission-grid
                                 *ngSwitchCase="'2'"
                                 [permissionAreas]="filteredMenuAreaList"
-                                [permissionLevels]="permissionLevelsList"
+                                [permissionLevels]="menuPermissionLevelsList"
                                 (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                        ></setl-menu-permission-grid>
 
                     </div>
 
@@ -247,13 +247,13 @@
                                 (updateEvent)="formControl.controls['permissions'].patchValue($event)"
                         ></setl-permission-grid>
 
-                        <setl-permission-grid
+                        <setl-menu-permission-grid
                                 *ngSwitchCase="'2'"
                                 [initData]="permissionsEmitter"
                                 [permissionAreas]="filteredMenuAreaList"
-                                [permissionLevels]="permissionLevelsList"
+                                [permissionLevels]="menuPermissionLevelsList"
                                 (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                        ></setl-menu-permission-grid>
 
                     </div>
 

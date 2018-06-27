@@ -54,6 +54,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Filtered groups list. */
     public filteredAdminGroupsList = [];
     public filteredTxGroupsList = [];
+    public filteredMenuGroupsList = [];
 
     @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
     public chainList: { [chainId: number]: { chainId: number | string, chainName: string } } = {};
@@ -111,6 +112,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                     'filteredTxList': [], // filtered groups of this chainid.
                     'selectedTxList': [], // groups to show as selected.
                     'allocatedTxList': [], // all groups assigned to the user.
+                    'selectedMenuList': [], // groups to show as selected.
                     'filteredWalletsByAccount': [], // filtered wallets by account.
                     'oldChainAccess': {},
                     'active': false
@@ -276,7 +278,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Now let's filter the groups list to just groups assigned to this chain. */
         let groupsOfThisChain = this.allGroupList.filter((group) => {
             /* Check if group is tx. */
-            if (group.groupIsTx) {
+            if (group.groupIsTx == 1) {
                 /* If we're admin, ignore chainId... */
                 if (this.myDetail.admin == 1) return true;
 
@@ -490,6 +492,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Trash lists. */
         this.filteredTxGroupsList = [];
         this.filteredAdminGroupsList = [];
+        this.filteredMenuGroupsList = [];
 
         /* If we have the groups list... */
         if (Array.isArray(this.allGroupList)) {
@@ -503,12 +506,17 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 };
 
                 /* Push into correct filtered list. */
-                if (this.allGroupList[index].groupIsTx) {
+                if (this.allGroupList[index].groupIsTx == 1) {
                     this.filteredTxGroupsList.push(group);
+                } else if (this.allGroupList[index].groupIsTx == 2) {
+                    this.filteredMenuGroupsList.push(group);
                 } else {
                     this.filteredAdminGroupsList.push(group);
                 }
             }
+            this.filteredMenuGroupsList.sort((a, b) => {
+                return (a.text > b.text ? 1 : -1);
+            });
         }
     }
 
@@ -585,6 +593,19 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             }).catch((error) => {
                 /* Handle Error. */
                 this.showError('Failed to save this user\'s transactional groups.');
+            });
+
+            /* Save admin group access. */
+            this.userAdminService.updateUserGroups({
+                userId: userId,
+                toAdd: this.arrayToGroups(newUser.menuGroups),
+                toDelete: [],
+                chainId: '0'
+            }).then((response) => {
+                /* Stub. */
+            }).catch((error) => {
+                /* Handle Error. */
+                this.showError('Failed to save this user\'s menu groups.');
             });
 
             /* Save wallet access. */
@@ -669,7 +690,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Now we've edited the user, we need to send any changes to the groups. */
             let
                 adminGroupChanges = this.diffUserGroups(thisTab.oldAdminGroups, this.arrayToGroups(formData.adminGroups)),
-                txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups));
+                txGroupChanges = this.diffUserGroups(thisTab.oldTxGroups, this.arrayToGroups(formData.txGroups)),
+                menuGroupChanges = this.diffUserGroups(thisTab.oldMenuGroups, this.arrayToGroups(formData.menuGroups));
 
             /* Save admin group access. */
             this.userAdminService.updateUserGroups({
@@ -696,6 +718,23 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.logService.log('error updating user tx groups.', error);
                 this.showError('Failed to update this user\'s transactional groups.');
             });
+
+            console.log('TEST - thisTab.oldMenuGroups', thisTab.oldMenuGroups);
+            console.log('TEST - this.arrayToGroups(formData.menuGroups)', this.arrayToGroups(formData.menuGroups));
+
+            /* Save menu group access. */
+            this.userAdminService.updateUserGroups({
+                userId: thisTab.userId.toString(),
+                toAdd: menuGroupChanges.toAdd,
+                toDelete: menuGroupChanges.toDelete,
+                chainId: 0
+            }).then((response) => {
+                this.logService.log('updated user menu groups.', response);
+            }).catch((error) => {
+                this.logService.log('error updating user menu groups.', error);
+                this.showError('Failed to update this user\'s menu groups.');
+            });
+
 
             /* Save wallet access, first diff, then set the new ones to the old ones. */
             let
@@ -1049,10 +1088,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             'formControl': this.getNewUserFormGroup('edit'),
             'oldAdminGroups': {},
             'oldTxGroups': {},
+            'oldMenuGroups': {},
             'selectedChain': 0,
             'filteredTxList': [], // filtered groups of this chainid.
             'selectedTxList': [], // groups to show as selected.
             'allocatedTxList': [], // all groups assigned to the user.
+            'selectedMenuList': [], // groups to show as selected.
             'filteredWalletsByAccount': [], // filtered wallets by account.
             'oldWalletAccess': {},
             'oldGroupWalletAccess': {},
@@ -1072,7 +1113,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Get Admin permissions. */
         this.userAdminService.requestUserPermissions({
             entityId: user.userID,
-            isTx: false,
+            isTx: 0,
         }).then((response) => {
             /* So now we can select the user's permissions. */
             const userAdminPermissions = this.usersPermissionsList['usersAdminPermissions'][user.userID] || {};
@@ -1089,7 +1130,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Get Tx permissions. */
         this.userAdminService.requestUserPermissions({
             entityId: user.userID,
-            isTx: true,
+            isTx: 1,
         }).then((response) => {
             /* So now we can select the user's permissions. */
             const userTxPermissions = this.usersPermissionsList['usersTxPermissions'][user.userID] || {};
@@ -1104,6 +1145,23 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* Handle the error message */
             this.logService.log('Editing user, tx permissions error: ', error);
             this.showError('Failed to fetch this user\'s transactional permissions.');
+        });
+
+        /* Get Menu permissions. */
+        this.userAdminService.requestUserPermissions({
+            entityId: user.userID,
+            isTx: 2,
+        }).then((response) => {
+            /* So now we can select the user's permissions. */
+            const userMenuPermissions = this.usersPermissionsList['usersMenuPermissions'][user.userID] || {};
+
+            /* Next we can set it to the old and current groups. */
+            this.tabsControl[newTabId].formControl.controls['menuGroups'].patchValue(this.groupsToArray(userMenuPermissions));
+            this.tabsControl[newTabId]['oldMenuGroups'] = userMenuPermissions;
+        }).catch((error) => {
+            /* handle the error message */
+            this.logService.log('Editing user, menu permissions error: ', error);
+            this.showError('Failed to fetch this user\'s menu permissions.');
         });
 
         this.userAdminService.requestUserWalletPermissions({
@@ -1365,6 +1423,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 'passwordConfirm': new FormControl('', [Validators.required]),
                 'adminGroups': new FormControl([]),
                 'txGroups': new FormControl([]),
+                'menuGroups': new FormControl([]),
                 'walletsFull': new FormControl([]),
                 'walletsRead': new FormControl([]),
                 'groupWalletsFull': new FormControl([]),

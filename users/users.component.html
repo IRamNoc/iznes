@@ -419,6 +419,24 @@
                     </div>
                 </clr-tab-content>
             </clr-tab>
+
+            <clr-tab>
+                <a clrTabLink><i class="fa fa-bars"></i> <span mltag="txt_menu">Menu</span></a>
+                <clr-tab-content *clrIfActive>
+                    <div class="panel-body">
+                        <span mltag="txt_menu">Menu</span>
+                        <ng-select
+                                [items]="filteredMenuGroupsList"
+                                [multiple]="false"
+                                [allowClear]="true"
+                                placeholder="Choose Menu..."
+                                [containerWidth]="'100%'"
+                                [formControl]="formControl.controls['menuGroups']"
+                                mltag="txt_choosemenu"
+                        ></ng-select>
+                    </div>
+                </clr-tab-content>
+            </clr-tab>
         </clr-tabs>
     </ng-template>
 </div>

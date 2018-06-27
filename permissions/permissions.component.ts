@@ -80,10 +80,31 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         },
     ];
 
+    public menuPermissionLevelsList = [
+        {
+            'id': 'topProfileAccess',
+            'text': 'Top - Profile Access'
+        },
+        {
+            'id': 'sideAccess',
+            'text': 'Side Access'
+        },
+        {
+            'id': 'disabledAccess',
+            'text': 'Disable Access'
+        },
+    ];
+
     /* Filtered areas list. */
     public filteredAdminAreaList = [];
     public filteredTxAreaList = [];
     public filteredMenuAreaList = [];
+
+    public oldMenuPermission = {};
+    public currentTab = '';
+    public relationships = {};
+    public new = false;
+    public duplicateEvent = {};
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -158,6 +179,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'permissionid', 0);
             this.setTabActive(tabId);
+            this.currentTab = tabId;
         });
     }
 
@@ -239,8 +261,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }
 
         /* And finally the menu areas. */
-        if (Array.isArray(this.menuPermAreasList)) {
-            this.filteredMenuAreaList = this.menuPermAreasList.map(this.extractArea);
+        if (Array.isArray(this.menuPermAreasList) && this.filteredMenuAreaList.length == 0) {
+            this.filteredMenuAreaList = this.menuPermAreasList.map(this.extractAreaMenu);
         }
     }
 
@@ -258,6 +280,15 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         return {
             'id': area.permissionID,
             'text': area.permissionName
+        };
+    }
+
+    private extractAreaMenu(area): { id: string, text: string, parentID: string } {
+        /* Return a new object. */
+        return {
+            'id': area.permissionID,
+            'text': area.permissionName,
+            'parentID': area.parentID
         };
     }
 
@@ -529,7 +560,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             let
                 differences = this.userAdminService.getPermissionsDiff(
                     oldPermissions,
-                    newPermissions
+                    newPermissions,
+                    dataToSend['type']
                 );
 
             /* Assign all the data. */
@@ -740,7 +772,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
           `);
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy()
+        :
+        void {
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
 

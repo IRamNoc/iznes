@@ -239,6 +239,14 @@ export class UserAdminService {
         return this.usersChainAccessSubject.asObservable();
     }
 
+    public usersMenuAccess: {};
+    @Output()
+    public usersMenuAccessSubject = new Subject<any>();
+
+    public getUsersMenuAccessSubject() {
+        return this.usersMenuAccessSubject.asObservable();
+    }
+
     private subscriptions = {};
 
     @select(['account', 'accountList', 'accountList']) accountListOb: any;
@@ -1070,7 +1078,7 @@ export class UserAdminService {
      *
      * @return {diff}
      */
-    public getPermissionsDiff(oldPermissions, newPermissions) {
+    public getPermissionsDiff(oldPermissions, newPermissions, type) {
         var toAdd = {};
         var toUpdate = {};
         var toDelete = [];
@@ -1087,7 +1095,8 @@ export class UserAdminService {
                     oldPermissions[i]['canDelete'] != newPermissions[i]['canDelete'] ||
                     oldPermissions[i]['canInsert'] != newPermissions[i]['canInsert'] ||
                     oldPermissions[i]['canRead'] != newPermissions[i]['canRead'] ||
-                    oldPermissions[i]['canUpdate'] != newPermissions[i]['canUpdate']
+                    oldPermissions[i]['canUpdate'] != newPermissions[i]['canUpdate'] ||
+                    type == 2
                 ) {
                     toUpdate[i] = newPermissions[i];
                 }
