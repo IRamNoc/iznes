@@ -158,19 +158,19 @@
             </form>
 
             <clr-datagrid class="expandable" clrDgSortIcon #ordersDataGrid>
-                <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>{{'NAV date' | translate}} 
+                <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>{{'NAV date' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>{{'NAV' | translate}} 
+                <clr-dg-column [clrDgField]="'nav'" clrDgSortIcon clrDgSortNoSearch>{{'NAV' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>{{'AUM' | translate}} 
+                <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>{{'AUM' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'netPosition'" clrDgSortIcon clrDgSortNoSearch>{{'Net Amount (CCY)' | translate}} 
+                <clr-dg-column [clrDgField]="'netPosition'" clrDgSortIcon clrDgSortNoSearch>{{'Net Amount (CCY)' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column [clrDgField]="'netPositionPercentage'" clrDgSortIcon clrDgSortNoSearch>{{'Net Amount (% AUM)' | translate}} 
+                <clr-dg-column [clrDgField]="'netPositionPercentage'" clrDgSortIcon clrDgSortNoSearch>{{'Net Amount (% AUM)' | translate}}
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <!--ACTIONS-->
@@ -195,7 +195,7 @@
 
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" (click)="viewOrder(getOnlyDate(data.subCutoffDate))">{{'View Orders' | translate}}</button>
+                        <button id="view-order-page-btn-{{i}}" type="button" class="btn btn-info btn-sm" (click)="viewOrder(getOnlyDate(data.navDate))">{{'View Orders' | translate}}</button>
                     </clr-dg-cell>
                     <clr-dg-cell>
                         <button id="download-order-btn-{{i}}" type="button" class="btn btn-success btn-sm" (click)="exportHistory(data)">{{'Download Orders' | translate}}</button>
