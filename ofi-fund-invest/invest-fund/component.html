@@ -66,7 +66,7 @@
                                             <span class="">{{'One-off charges' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidChargesOneOff, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidChargesOneOff, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                                             <span class="">{{'One-going charges' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidChargesOngoing, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidChargesOngoing, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
                                             <span class="">{{'Costs related to transactions initiated' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidTransactionCosts, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                                             <span class="">{{'Charges related to ancillary services' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidServicesCosts, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidServicesCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -112,7 +112,7 @@
                                             <span class="">{{'Incidental costs' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(shareData.mifiidIncidentalCosts, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidIncidentalCosts, 2) + '%'" [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
