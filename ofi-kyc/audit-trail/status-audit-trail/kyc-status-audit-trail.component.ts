@@ -4,6 +4,8 @@ import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { FileDownloader } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
 
 @Component({
     selector: 'kyc-status-audit-trail',
@@ -13,18 +15,20 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChanges {
 
     statusAuditItems = [];
-    statusEnum = {};
+    myDetails;
 
     unSubscribe: Subject<any> = new Subject();
     @Input('kycID') kycID;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'data']) statusAuditTrail$;
+    @select(['user', 'myDetail']) myDetail$;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private kycService: OfiKycService,
-        @Inject('kycEnums') kycEnums,
+        private fileDownloader: FileDownloader,
+        private memberSocketService: MemberSocketService,
     ) {
-        this.statusEnum = kycEnums.status;
+
     }
 
     ngOnInit() {
@@ -37,13 +41,19 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChange
                 }
 
                 this.statusAuditItems = d[this.kycID].map(item => ({
-                    oldStatus: this.statusEnum[item.oldStatus || 0],
-                    newStatus: this.statusEnum[item.newStatus],
+                    oldStatus: item.oldStatus,
+                    newStatus: item.newStatus,
                     modifiedBy: item.modifiedBy,
                     dateEntered: item.dateEntered,
                     message: item.message,
                 }));
                 this.changeDetectorRef.markForCheck();
+            });
+
+        this.myDetail$
+            .takeUntil(this.unSubscribe)
+            .subscribe((myDetails) => {
+                this.myDetails = myDetails;
             });
     }
 
@@ -58,5 +68,17 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChange
         this.unSubscribe.complete();
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
+    }
+
+    exportCsv() {
+        const config = {
+            method: 'getKycStatusAudit',
+            token: this.memberSocketService.token,
+            userId: this.myDetails.userId,
+            kycID: this.kycID,
+            timezoneoffset: new Date().getTimezoneOffset(),
+        };
+
+        this.fileDownloader.downLoaderFile(config);
     }
 }

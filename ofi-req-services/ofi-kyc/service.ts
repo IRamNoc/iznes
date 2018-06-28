@@ -57,6 +57,7 @@ export class OfiKycService {
 
     @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'requested']) statusAuditTrailRequested$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
     @select(['user', 'authentication', 'isLogin']) isLogin$;
 
@@ -82,6 +83,16 @@ export class OfiKycService {
             .takeUntil(this.unSubscribe)
             .subscribe((list) => {
                 this.statusAuditTrailList = list;
+            });
+
+        this.statusAuditTrailRequested$
+            .takeUntil(this.unSubscribe)
+            .subscribe((b) => {
+                if (!b) {
+                    this.statusAuditTrailList.map((kycID) => {
+                        this.fetchStatusAuditByKycID(kycID);
+                    });
+                }
             });
     }
 

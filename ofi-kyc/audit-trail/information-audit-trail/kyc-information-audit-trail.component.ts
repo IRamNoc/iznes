@@ -6,6 +6,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MultilingualService } from '@setl/multilingual';
+import { FileDownloader } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
 
 @Component({
     selector: 'kyc-information-audit-trail',
@@ -17,6 +19,8 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
     informationAuditItems = [];
     filteredInformationAuditItems = [];
     subsectionEnums;
+    informationEnums;
+    myDetails;
     searchForm: FormGroup;
 
     // Locale
@@ -34,15 +38,16 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
     unSubscribe: Subject<any> = new Subject();
     @Input('kycID') kycID;
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'data']) informationAuditTrail$;
+    @select(['user', 'myDetail']) myDetail$;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private kycService: OfiKycService,
         private fb: FormBuilder,
         public translate: MultilingualService,
-        @Inject('kycEnums') kycEnums,
+        private fileDownloader: FileDownloader,
+        private memberSocketService: MemberSocketService,
     ) {
-        this.subsectionEnums = kycEnums.subsection;
 
         this.searchForm = this.fb.group({
             search: [
@@ -59,7 +64,6 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
         this.searchForm.valueChanges
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                console.log(d);
                 this.filterInformationAuditItems(d);
             });
     }
@@ -116,7 +120,7 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
                 }
 
                 this.informationAuditItems = d[this.kycID].map(item => ({
-                    section: this.subsectionEnums[item.subsection],
+                    section: item.section,
                     subsection: item.subsection,
                     modifiedField: item.modifiedField,
                     oldValue: item.oldValue,
@@ -127,6 +131,14 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
                 this.filterInformationAuditItems(this.searchForm.value);
                 this.changeDetectorRef.markForCheck();
             });
+
+        this.myDetail$
+            .takeUntil(this.unSubscribe)
+            .subscribe((myDetails) => {
+                this.myDetails = myDetails;
+            });
+
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnChanges(changes) {
@@ -141,4 +153,17 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
     }
+
+    exportCsv() {
+        const config = {
+            method: 'getKycInformationAudit',
+            token: this.memberSocketService.token,
+            userId: this.myDetails.userId,
+            kycID: this.kycID,
+            timezoneoffset: new Date().getTimezoneOffset(),
+        };
+
+        this.fileDownloader.downLoaderFile(config);
+    }
+
 }

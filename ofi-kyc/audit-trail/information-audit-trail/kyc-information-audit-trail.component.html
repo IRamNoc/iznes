@@ -40,34 +40,41 @@
                 </div>
             </div>
             <div class="col-sm-3 export-btn-container">
-                <button class="btn btn-primary">Export Information Audit Trail</button>
+                <button class="btn btn-primary" (click)="exportCsv()">Export Information Audit Trail</button>
             </div>
         </div>
 
     </form>
 </div>
 
-<clr-datagrid class="expandable">
-    <clr-dg-column>
+<clr-datagrid class="expandable" clrDgSortIcon>
+    <clr-dg-column [clrDgField]="'section'" clrDgSortIcon clrDgSortNoSearch>
         {{'Section' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'subsection'" clrDgSortIcon clrDgSortNoSearch>
         {{'Subsection' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'information'" clrDgSortIcon clrDgSortNoSearch>
         {{'Information' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'oldValue'" clrDgSortIcon clrDgSortNoSearch>
         {{'Old Value' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'newValue'" clrDgSortIcon clrDgSortNoSearch>
         {{'New Value' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon clrDgSortNoSearch>
         {{'Modified By' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'date'" clrDgSortIcon clrDgSortNoSearch>
         {{'Date' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
 
 

@@ -8,30 +8,27 @@ export default {
     alreadyDoneConfirmation: '/new-investor/already-done/confirmation',
 };
 
-const section = {
-    IDENTIFICATION: 'Identification',
-    RISK_PROFILE: 'Risk Profile',
-    DOCUMENTS: 'Documents',
-};
-
 export const kycEnums = {
     status: {
-        [-2]: 'rejected',
-        [-1]: 'accepted',
-        [0]: 'draft',
-        [1]: 'waiting for approval',
-        [2]: 'awaiting informations',
-    },
-    section,
-    subsection: {
-        ['general information']: section.IDENTIFICATION,
-        ['company information']: section.IDENTIFICATION,
-        ['beneficiaries']: section.IDENTIFICATION,
-        ['banking information']: section.IDENTIFICATION,
-        ['classification confirmation']: section.IDENTIFICATION,
-        ['investments nature']: section.RISK_PROFILE,
-        ['investments objectives']: section.RISK_PROFILE,
-        ['investments constraints']: section.RISK_PROFILE,
-        ['documents']: section.DOCUMENTS,
+        [-2]: {
+            label: 'Rejected',
+            type: 'danger',
+        },
+        [-1]: {
+            label: 'Accepted',
+            type: 'success',
+        },
+        [0]: {
+            label: 'Draft',
+            type: 'info',
+        },
+        [1]: {
+            label: 'Waiting For Approval',
+            type: 'warning',
+        },
+        [2]: {
+            label: 'Awaiting Information',
+            type: 'warning',
+        },
     },
 };

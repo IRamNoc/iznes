@@ -3,27 +3,35 @@
         <h2>Request Status Audit Trail</h2>
         <p>Please find below the audit trail regarding the status of your request:</p>
     </div>
-    <button class="btn btn-primary">Export Status Audit Trail</button>
+    <button class="btn btn-primary" (click)="exportCsv()">Export Status Audit Trail</button>
 </div>
 
-<clr-datagrid class="expandable">
-    <clr-dg-column>
+<clr-datagrid class="expandable" clrDgSortIcon>
+    <clr-dg-column [clrDgField]="'oldStatus.label'" clrDgSortIcon clrDgSortNoSearch>
         {{'Old Status' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'newStatus.label'" clrDgSortIcon clrDgSortNoSearch>
         {{'New Status' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon clrDgSortNoSearch>
         {{'Modified By' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column>
+    <clr-dg-column [clrDgField]="'dateEntered'" clrDgSortIcon clrDgSortNoSearch>
         {{'Date' | translate}}
+        <span class="column-label"></span>
     </clr-dg-column>
 
 
     <clr-dg-row *clrDgItems="let item of statusAuditItems">
-        <clr-dg-cell>{{item.oldStatus}}</clr-dg-cell>
-        <clr-dg-cell>{{item.newStatus}}</clr-dg-cell>
+        <clr-dg-cell>
+            <span class="label label-{{item.oldStatus.type}}">{{item.oldStatus.label}}</span>
+        </clr-dg-cell>
+        <clr-dg-cell>
+            <span class="label label-{{item.newStatus.type}}">{{item.newStatus.label}}</span>
+        </clr-dg-cell>
         <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
         <clr-dg-cell>{{item.dateEntered}}</clr-dg-cell>
 

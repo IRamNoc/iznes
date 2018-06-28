@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
@@ -34,35 +34,14 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         // {id: 'sch', text: '中文'}
     ];
 
-    enums = {
-        status: {
-            [-2]: {
-                label: 'Rejected',
-                type: 'danger',
-            },
-            [-1]: {
-                label: 'Accepted',
-                type: 'success',
-            },
-            [0]: {
-                label: 'Draft',
-                type: 'info',
-            },
-            [1]: {
-                label: 'Waiting For Approval',
-                type: 'warning',
-            },
-            [2]: {
-                label: 'Awaiting Informations',
-                type: 'warning',
-            },
-        },
-    };
-
     investorTypes = [
         { id: 45, text: 'Institutional Investor' },
         { id: 55, text: 'Retail Investor' },
     ];
+
+    enums = {
+        status: {},
+    };
 
     panel: any;
 
@@ -80,7 +59,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
                 public _translate: MultilingualService,
+                @Inject('kycEnums') kycEnums,
                 private redux: NgRedux<any>) {
+
+        this.enums.status = kycEnums.status;
 
         this.invitationForm = this._fb.group({
             investors: this._fb.array([
