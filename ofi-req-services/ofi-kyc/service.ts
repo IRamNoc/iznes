@@ -416,11 +416,6 @@ export class OfiKycService {
             kycID,
         };
 
-        // return this.buildRequest({
-        //     taskPipe: createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-        //     successActions: [SET_STATUS_AUDIT_TRAIL, SET_STATUS_AUDIT_TRAIL_REQUESTED],
-        // });
-
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
