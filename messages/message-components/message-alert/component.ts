@@ -44,9 +44,9 @@ export class SetlMessageAlertComponent implements OnInit {
 
     ngOnInit() {
         this.templateDetails = JSON.parse(this['data']['TemplateDetails']);
-        this.xparam['Header']['Transaction'] = this.templateDetails['transaction'];
-        this.xparam['Header']['Issuer'] = this.data['Address'];
-        this.xparam['Header']['UnitID'] = this.data['UnitID'];
+        this.xparam['Header']['Transaction'] = this.templateDetails && this.templateDetails['transaction'] || '';
+        this.xparam['Header']['Issuer'] = this.data['Address'] || '';
+        this.xparam['Header']['UnitID'] = this.data['UnitID'] || '';
         this.xparam['userid'] = this.userId;
     }
 
@@ -57,7 +57,6 @@ export class SetlMessageAlertComponent implements OnInit {
     sendXparam(type) {
         this.xparam['Header']['XParams'] = {};
         this.xparam['Header']['XParams'][this.data['Xparam']] = type;
-
         this.performPost(this.xparam, (r) => {
             if (r[1]['Data'] && r[1]['Data'][0] && r[1]['Data'][0]['error']) {
                 console.error(r[1]['Data'][0]);

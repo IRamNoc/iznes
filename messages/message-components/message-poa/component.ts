@@ -26,6 +26,7 @@ export class SetlMessagePOAComponent implements OnInit {
     }
 
     ngOnInit() {
+
     }
 
     public txNames = {
@@ -71,7 +72,7 @@ export class SetlMessagePOAComponent implements OnInit {
 
     acceptPoa () {
 
-        const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.data['PoA']);
+        const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.data);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             (d) => {
