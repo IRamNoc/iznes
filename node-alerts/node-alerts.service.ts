@@ -11,22 +11,14 @@ import {
 import { MyUserService } from '../my-user/my-user.service';
 import { WalletnodeChannelService } from '../walletnode-channel/service';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { timer } from 'rxjs/observable/timer';
-import { merge } from 'rxjs/observable/merge';
-import { of } from 'rxjs/observable/of';
-import { mapTo } from 'rxjs/operators/mapTo';
-import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
-import { switchMap } from 'rxjs/operators/switchMap';
-import { map } from 'rxjs/operators/map';
-import { filter } from 'rxjs/operators/filter';
-import { switchAll } from 'rxjs/operators/switchAll';
+import { BehaviorSubject,  timer,  merge,  of } from 'rxjs';
+import { mapTo,  distinctUntilChanged,  switchMap,  map,  filter,  switchAll } from 'rxjs/operators';
 
 @Injectable()
 export class NodeAlertsService {
     private waitTime = 10000;
     private waitCount = 3;
-    private deathTimeout = 30000;
+    private walletNodeTTL = 30000;
     private deathSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
@@ -89,7 +81,7 @@ export class NodeAlertsService {
             switchMap((ob) => {                                     // 5.  Create inner observable for each event
                 return of(ob).pipe(                                 // 6.  Create duplicate observable
                     filter(e => e === 'close'),                     // 7.  Only listen to close events
-                    map(x => timer(this.deathTimeout)),             // 8.  Start timer
+                    map(x => timer(this.walletNodeTTL)),            // 8.  Start timer
                     switchAll(),                                    // 9.  Reset timer each time we get an event
                 );                                                  //
             })                                                      //
