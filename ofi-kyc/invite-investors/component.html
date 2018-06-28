@@ -108,16 +108,14 @@
             </a>
         </div>
         <div class="col-xs-6 text-right">
-            <button *ngIf="panel.action" class="btn btn-primary action-button" (click)="panel.action.callback()">
-                <i class="fa fa-{{panel.action.icon}}">
-                </i> {{panel.action.title}}
-            </button>
         </div>
     </div>
 
     <!-- Panel body -->
     <div class="row panel-body" [class.hidden]="!panel.open">
         <div class="col-xs-12">
+            <p class="subhead">Please find below invitations that have been sent to investors:</p>
+
             <clr-datagrid #dataGrid>
                 <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
                 <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Account Status' | translate}}</clr-dg-column>
