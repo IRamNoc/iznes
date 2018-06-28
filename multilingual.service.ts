@@ -1,8 +1,8 @@
 /* Angular/vendor imports. */
 import {Injectable} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {select} from '@angular-redux/store';
-import {Http, Headers, Response, RequestOptions} from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Translations} from './translations';
 
@@ -23,7 +23,7 @@ export class MultilingualService {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private http: Http,
+        private http: HttpClient,
     ) {
         /* Stub. */
         this.subscriptionsArray.push(this.getLanguage.subscribe((language) => this.language = language));
@@ -205,13 +205,12 @@ export class MultilingualService {
         // this.apiUrl = 'http://10.0.25.87:8000'; // debug on D.D
         this.apiUrl = 'http://10.0.2.72:8000'; // prod
         try {
-            const myHeaders = new Headers();
-            myHeaders.append('Content-Type', 'application/json');
-            const options = new RequestOptions({ headers: myHeaders});
-            const response = await this.http
-                .post(this.apiUrl + '/api/sites/1/whitelist-translations', formData, options)
+            const httpOptions = {
+                headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+            }
+            return await this.http
+                .post(this.apiUrl + '/api/sites/1/whitelist-translations', formData, httpOptions)
                 .toPromise();
-            return response.json();
         } catch (error) {
             return await this.handleError(error);
         }
