@@ -13,7 +13,7 @@ import {
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {PersistService} from '@setl/core-persist';
 
 @Component({
