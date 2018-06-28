@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
 import { PdfService } from './pdf.service';
 
-Injectable();
 export class PdfMockService extends PdfService {
     public constructor(memberSocketService, ngRedux) {
         const callConstructor = false;

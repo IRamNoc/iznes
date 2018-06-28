@@ -1,3 +1,5 @@
+
+import {timer as observableTimer, Observable, Subscription} from 'rxjs';
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
@@ -15,9 +17,6 @@ import {
     GetLanguageRequestBody
 } from './my-user.service.model';
 import {NgRedux} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/timer';
-import {Subscription} from 'rxjs/Subscription';
 import {
     setMembernodeSessionManager,
     resetMembernodeSessionManager
@@ -105,7 +104,7 @@ export class MyUserService implements OnDestroy {
 
                 ngRedux.dispatch(resetMembernodeSessionManager());
 
-                const timer = Observable.timer(TIMEOUT, 1000);
+                const timer = observableTimer(TIMEOUT, 1000);
                 // // subscribing to a observable returns a subscription object
                 this.subscriptionsArray.push(timer.subscribe((t) => {
                     if (t > 60) {

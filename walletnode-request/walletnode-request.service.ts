@@ -1,6 +1,6 @@
 import {Injectable, Inject} from '@angular/core';
-import {Http} from '@angular/http';
-import {Observable} from 'rxjs/Observable';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
 import {NgRedux, select} from '@angular-redux/store';
 
 import {WalletNodeSocketService} from '@setl/websocket-service';
@@ -43,7 +43,7 @@ interface RequestWalletInstrument {
 export class WalletNodeRequestService {
 
     constructor(private walletNodeSocketService: WalletNodeSocketService,
-                private http: Http,
+                private http: HttpClient,
                 @Inject(APP_CONFIG) public appConfig: AppConfig) {
     }
 
