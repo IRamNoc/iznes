@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AlertEmit, UpdateEmit} from './interfaces/alert-emit';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {AlertSettings} from './interfaces/alert-settings';
 import {AlertType} from './interfaces/alert-type';
 
