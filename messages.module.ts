@@ -15,6 +15,7 @@ import { MyMessagesService } from '@setl/core-req-services';
 import { FileViewerModule } from '@setl/core-fileviewer';
 import { SetlMessageFormActionComponent } from './messages/message-components/message-form-action/message-form-action.component';
 import { SetlMessageFormActionService } from './messages/message-components/message-form-action/message-form-action.service';
+import { SetlIssueAssetActionComponent } from './messages/message-components/issue-asset-action/issue-asset-action';
 import { SetlMessageAttachmentComponent } from './messages/message-components/message-attachment/message-attachment.component';
 import { SetlMessageBodyComponent } from './messages/message-components/message-body/message-body.component';
 import { SetlMessagePOAComponent } from './messages/message-components/message-poa/component';
@@ -50,6 +51,7 @@ import { RouterModule } from '@angular/router';
         SetlMessageConnectionComponent,
         SetlMessageKycComponent,
         SetlMessageAmCancelOrderComponent,
+        SetlIssueAssetActionComponent,
     ],
     exports: [
         SetlMessagesComponent,

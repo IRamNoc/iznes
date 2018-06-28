@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Common, SagaHelper} from '@setl/utils';
 import {WalletNodeSocketService} from '@setl/websocket-service';
