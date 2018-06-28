@@ -152,6 +152,16 @@ export class MoneyValuePipe implements PipeTransform {
     }
 }
 
+@Pipe({ name: 'numberConvert' })
+export class NumberConvertPipe implements PipeTransform {
+    transform(value: number, decimals): number {
+        if (value === 0) {
+            return 0;
+        }
+        return value / decimals;
+    }
+}
+
 @Pipe({name: 'capitalize'})
 export class CapitalizePipe implements PipeTransform {
 
@@ -197,6 +207,7 @@ export class PercentagePipe implements PipeTransform {
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,
+        NumberConvertPipe,
         CapitalizePipe,
         PaddingPipe,
         DateXPipe,
@@ -207,6 +218,7 @@ export class PercentagePipe implements PipeTransform {
         TruncatePipe,
         AssetPipe,
         MoneyValuePipe,
+        NumberConvertPipe,
         CapitalizePipe,
         PaddingPipe,
         DateXPipe,
