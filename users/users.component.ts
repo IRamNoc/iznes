@@ -7,13 +7,13 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import 'rxjs/add/operator/map';
+
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService, immutableHelper} from '@setl/utils';
 /* User Admin Service. */
 import {UserAdminService} from '../useradmin.service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {PersistService} from '@setl/core-persist';
 import {userAdminActions} from '@setl/core-store';
 import {LogService} from '@setl/utils';

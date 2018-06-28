@@ -2,7 +2,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {select, NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 

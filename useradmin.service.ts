@@ -1,7 +1,6 @@
 import {Injectable, Output, EventEmitter} from '@angular/core';
 
-import {Observable} from 'rxjs/Observable'
-import {Subject} from 'rxjs/Subject'
+import {Observable, Subject} from 'rxjs'
 
 import {SagaHelper} from '@setl/utils';
 
