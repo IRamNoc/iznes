@@ -39,7 +39,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (35000);
+    public Timeout globalTimeout = new Timeout (65000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -111,6 +111,50 @@ public class OpenCSDSprint8AcceptanceTest {
         assertTrue(currentTimeZoneUpdate.equals("Europe/London"));
         String fundShareName = uShareDetails[0];
         validateTimeZoneUpdate(fundShareName, currentTimeZoneUpdate);
+    }
+
+    @Test
+    public void shouldShowDataGridOnHomePageTG1376() throws InterruptedException, SQLException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        loginAndVerifySuccess("am", "alex01");
+        String cssNav = driver.findElement(By.id("menu-home")).getAttribute("class");
+        assertTrue(cssNav.contains("nav-link active"));
+        String Home = driver.findElement(By.id("menu-home")).getText();
+        assertTrue(Home.equals(Home));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[2]/span/i[2]")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/div/input")).sendKeys("AssetManagerWallet");
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[2]")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/app-navigation-topbar/header/div[2]/div[2]/div/ng-select/div/div[3]/ul/li[1]")).click();
+        String headerHome = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
+        assertTrue(headerHome.contains("AssetManagerWallet"));
+        String orderBookWalletID = driver.findElement(By.xpath("//*[@id=\"manage-orders\"]")).getText();
+        assertTrue(orderBookWalletID.contains("AssetManagerWallet"));
+        String orderRef = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText();
+        assertTrue(orderRef.equals("Order REF"));
+        String orderType = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText();
+        assertTrue(orderType.equals("Order type"));
+        String investor = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText();
+        assertTrue(investor.equals("Investor"));
+        String iSIN = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText();
+        assertTrue(iSIN.equals("ISIN"));
+        String shareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText();
+        assertTrue(shareName.equals("Share Name"));
+        String shareCurrency = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText();
+        assertTrue(shareCurrency.equals("Share Currency"));
+        String quantity = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/button")).getText();
+        assertTrue(quantity.equals("Quantity"));
+        String tradeAmount = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/button")).getText();
+        assertTrue(tradeAmount.equals("Trade Amount"));
+        String orderDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/button")).getText();
+        assertTrue(orderDate.equals("Order Date"));
+        String cutOffDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[13]/div/button")).getText();
+        assertTrue(cutOffDate.equals("Cut-off date"));
+        String settlementDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[15]/div/button")).getText();
+        assertTrue(settlementDate.equals("Settlement Date"));
+        String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[16]/div/button")).getText();
+        assertTrue(status.equals("Status"));
+        String actions = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[17]/div/span/span")).getText();
+        assertTrue(actions.equals("Actions"));
     }
 
 }
