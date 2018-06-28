@@ -1,10 +1,11 @@
+
+import {first,  distinctUntilChanged, share, map } from 'rxjs/operators';
 import {Component, ViewChild, AfterViewInit, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
 import {ReportingService} from '@setl/core-balances/reporting.service';
 import {WalletTxHelperModel} from '@setl/utils';
 import {ActivatedRoute} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {TabControl, Tab} from '../tabs';
 import {select} from '@angular-redux/store';
 import {isEqual} from 'lodash';
@@ -37,18 +38,13 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         let previous = [];
         this.balances$ = this.reportingService
             .getBalances()
-            .distinctUntilChanged((oldAssets, newAssets) => isEqual(oldAssets, newAssets))
-            .map(assets => {
-                let result = this.markUpdated([previous, assets]);
-                previous = assets;
-                return result;
-            })
-            .share()
-        ;
-
-        this.balances$.subscribe(balances => {
-            this.balances = balances;
-        });
+            .pipe(
+                map((assets) => {
+                    const updated = this.markUpdated([previous, assets]);
+                    previous = assets;
+                    return updated;
+                })
+            );
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
@@ -106,7 +102,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
     private findAsset(hash: string) {
         return new Promise((resolve) => {
-            return this.reportingService.getBalances().first().subscribe((assets) => {
+            return this.reportingService.getBalances().pipe(first()).subscribe((assets) => {
                 resolve(assets.find(asset => asset.hash === hash));
             });
         });
@@ -206,7 +202,13 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     private markUpdated([prev, next]) {
         return next.map((asset) => {
-            const updatedAsset = {...asset, isNew: false, totalChange: false, encumberChange: false, freeChange: false};
+            const updatedAsset = {
+                ...asset,
+                isNew: false,
+                totalChange: false,
+                encumberChange: false,
+                freeChange: false,
+            };
             if (!prev.length) {
                 return updatedAsset;
             }
@@ -214,12 +216,11 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
             if (!oldAsset) {
                 updatedAsset.isNew = true;
-            }
-            if (oldAsset) {
+            } else {
                 if (oldAsset.total !== asset.total) {
                     updatedAsset.totalChange = true;
                 }
-                if (oldAsset.encumbered !== asset.encumbered) {
+                if (oldAsset.totalencumbered !== asset.totalencumbered) {
                     updatedAsset.encumberChange = true;
                 }
                 if (oldAsset.free !== asset.free) {
