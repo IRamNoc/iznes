@@ -43,9 +43,8 @@ import {
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
+import { Subscription ,  Observable } from 'rxjs';
 
 @Component({
     selector: 'app-navigation-topbar',
