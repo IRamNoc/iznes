@@ -10,7 +10,7 @@ import {LogService} from '@setl/utils';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
 // Internal
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
 
 /* Types. */
