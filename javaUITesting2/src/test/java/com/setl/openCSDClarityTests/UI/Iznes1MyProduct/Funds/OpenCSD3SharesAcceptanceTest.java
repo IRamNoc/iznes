@@ -80,6 +80,7 @@ public class OpenCSD3SharesAcceptanceTest {
         searchFundsTable(uFundDetails[0]);
         getFundTableRow(0, uFundDetails[0], randomLEI, "EUR", "Management Company", "Afghanistan","Contractual Fund", "");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
 
         validateDatabaseShareExists(1, uShareDetails[0]);
@@ -99,6 +100,7 @@ public class OpenCSD3SharesAcceptanceTest {
         fillOutFundDetailsStep2(uFundDetails[0], randomLEI);
         assertPopupNextFundYes("Share");
         createShareFromYesPopup(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        searchSharesTable(uShareDetails[0]);
         getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
     }
 

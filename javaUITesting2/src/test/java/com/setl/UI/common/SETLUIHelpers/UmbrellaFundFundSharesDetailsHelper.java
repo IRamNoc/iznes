@@ -189,9 +189,6 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
         openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
-        driver.findElement(By.id("subscriptionRedemptionCalendar")).clear();
-        driver.findElement(By.id("subscriptionRedemptionCalendar")).sendKeys("testCalendar");
-
     }
 
     public static void shareCreationFees() throws SQLException, InterruptedException {
