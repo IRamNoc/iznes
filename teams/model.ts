@@ -34,6 +34,18 @@ export class AccountAdminTeamForm {
     };
 }
 
+export class AccountAdminTeamAuditEntry {
+    userTeamID: number;
+    reference: string;
+    name: string;
+    description: string;
+    field: string;
+    oldValue: any;
+    newValue: any;
+    userName: string;
+    dateModified: string;
+}
+
 export type RequestCallback = (data) => void;
 
 export interface ReadUserTeamsRequest extends MemberNodeMessageBody {
@@ -62,4 +74,11 @@ export interface UpdateUserTeamRequest extends MemberNodeMessageBody {
 export interface DeleteUserTeamRequest extends MemberNodeMessageBody {
     token: string;
     userTeamID: number;
+}
+
+export interface ReadUserTeamsAuditRequest extends MemberNodeMessageBody {
+    token: string;
+    userTeamID: number;
+    dateFrom: string;
+    dateTo: string;
 }

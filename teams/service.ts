@@ -4,6 +4,8 @@ import { NgRedux } from '@angular-redux/store';
 import {
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
 } from '@setl/core-store';
 import { SagaHelper } from '@setl/utils';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -15,6 +17,7 @@ import {
     CreateUserTeamRequest,
     UpdateUserTeamRequest,
     DeleteUserTeamRequest,
+    ReadUserTeamsAuditRequest,
 } from './model';
 
 @Injectable()
@@ -151,6 +154,36 @@ export class UserTeamsService {
     }
 
     /**
+     * Read User Teams
+     *
+     * @param userTeamId pass null to retrieve all teams
+     * @param onSuccess
+     * @param onError
+     */
+    readUserTeamsAudit(userTeamId: number,
+                       dateFrom: string,
+                       dateTo: string,
+                       onSuccess: RequestCallback,
+                       onError: RequestCallback): void {
+
+        const request: ReadUserTeamsAuditRequest = {
+            RequestName: 'readUserTeamsAudit',
+            token: this.memberSocketService.token,
+            userTeamID: userTeamId,
+            dateFrom,
+            dateTo,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 setRequestedAccountAdminTeamsAudit,
+                                 SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+                                 onSuccess,
+                                 onError);
+    }
+
+    /**
      * Make API Call
      *
      * @param asyncTaskPipe
@@ -165,14 +198,15 @@ export class UserTeamsService {
                                 successCallback: (data) => void,
                                 errorCallback: (e) => void): void {
 
-        if (setRequestedMethod) this.redux.dispatch(setRequestedMethod());
-
         this.redux.dispatch(SagaHelper.runAsync(
             [successType],
             [],
             asyncTaskPipe,
             {},
-            successCallback,
+            (data) => {
+                successCallback(data);
+                if (setRequestedMethod) this.redux.dispatch(setRequestedMethod());
+            },
             errorCallback,
         ));
     }

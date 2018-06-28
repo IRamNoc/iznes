@@ -8,6 +8,7 @@ import {
     SetlDirectivesModule,
     SetlPipesModule,
     DynamicFormsModule,
+    DpDatePickerModule,
 } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
@@ -36,6 +37,7 @@ import {
         RouterModule,
         CommonModule,
         FormsModule,
+        DpDatePickerModule,
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
