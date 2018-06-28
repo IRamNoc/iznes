@@ -1,13 +1,12 @@
 
-import {combineLatest as observableCombineLatest, BehaviorSubject, Observable} from 'rxjs';
-
-import {first, filter, tap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-wallet-holding';
-import {isEmpty, isArray, some} from 'lodash';
-import {InitialisationService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
-import {SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService} from '@setl/utils';
+import { combineLatest as observableCombineLatest, BehaviorSubject, Observable } from 'rxjs';
+import { first, filter, tap, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
+import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
+import { isEmpty, isArray, some } from 'lodash';
+import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
+import { SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService } from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
@@ -17,9 +16,9 @@ import {
     SET_ALL_TRANSACTIONS,
     SET_ASSET_TRANSACTIONS,
 } from '@setl/core-store';
-import {WalletIssuerDetail} from '@setl/core-store/assets/my-issuers';
-import {Transaction} from '@setl/core-store/wallet/transactions/model';
-import {TransactionsByAsset} from '@setl/core-store/wallet/transactions';
+import { WalletIssuerDetail } from '@setl/core-store/assets/my-issuers';
+import { Transaction } from '@setl/core-store/wallet/transactions/model';
+import { TransactionsByAsset } from '@setl/core-store/wallet/transactions';
 
 export interface Asset {
     asset: string;
@@ -28,6 +27,8 @@ export interface Asset {
     free: number;
     hash: string;
 }
+
+const refetchFilter = x => x === false;
 
 @Injectable()
 export class ReportingService {
@@ -101,9 +102,10 @@ export class ReportingService {
 
         const idStream$ = observableCombineLatest(
                 [
-                    this.connectedWalletId$.filter(id => id > 0).distinctUntilChanged(),
-                    this.connectedChain$.filter(id => id > 0).distinctUntilChanged()
-                ]
+                    this.connectedWalletId$.pipe(
+                        filter(id => id > 0), distinctUntilChanged()),
+                    this.connectedChain$.pipe(filter(id => id > 0), distinctUntilChanged()),
+                ],
             ).pipe(
             tap(([connectedWalletId, connectedChainId]) => {
                 this.connectedWalletId = connectedWalletId;
@@ -143,9 +145,9 @@ export class ReportingService {
     }
 
     private initRefetchData() {
-        this.walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
-        this.walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
-        this.labelRequested$.filter(req => req === false).subscribe(() => this.requestWalletData());
+        this.walletHoldingRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletHolding());
+        this.walletIssuerRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletIssuer());
+        this.labelRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletData());
     }
 
     public initSubscriptions() {
@@ -216,7 +218,10 @@ export class ReportingService {
     }
 
     public getBalances(): Observable<Asset[]> {
-        this.initialised$.pipe(filter(init => !!init),first(),).subscribe(() => this.requestWalletHolding());
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => this.requestWalletHolding());
         return new Observable<any>((observer) => {
             const sub = this.holdingsByAssetSubject.subscribe(observer);
             return () => sub.unsubscribe();
