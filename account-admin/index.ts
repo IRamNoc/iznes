@@ -24,10 +24,32 @@ export {
     userTeamsReducer,
 };
 
+import {
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
+    clearRequestedAccountAdminTeamsAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    UserTeamsAuditState,
+    getAccountAdminTeamsAudit,
+    userTeamsAuditReducer,
+} from './teams-audit';
+
+export {
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
+    clearRequestedAccountAdminTeamsAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    UserTeamsAuditState,
+    getAccountAdminTeamsAudit,
+    userTeamsAuditReducer,
+};
+
 export interface AccountAdminState {
     accountAdminTeams: UserTeamsState;
+    accountAdminTeamsAudit: UserTeamsAuditState;
 }
 
 export const accountAdminReducer: Reducer<AccountAdminState> = combineReducers<AccountAdminState>({
     accountAdminTeams: userTeamsReducer,
+    accountAdminTeamsAudit: userTeamsAuditReducer,
 });

@@ -298,4 +298,12 @@ export {
     userTeamsReducer,
     AccountAdminState,
     accountAdminReducer,
+    // audit
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
+    clearRequestedAccountAdminTeamsAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    UserTeamsAuditState,
+    getAccountAdminTeamsAudit,
+    userTeamsAuditReducer,
 } from './account-admin/';
