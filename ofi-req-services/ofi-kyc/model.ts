@@ -142,3 +142,12 @@ export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
 export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMessageBody {
     token: string;
 }
+
+export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
+    kycID: number;
+}
+
+export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+}

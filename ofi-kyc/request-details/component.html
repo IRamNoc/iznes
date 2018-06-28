@@ -100,12 +100,12 @@
                     </clr-dg-column>
                     <clr-dg-row *clrDgItems="let data of panel.data">
                         <clr-dg-cell *ngFor="let dataCol of data">
-                            {{dataCol}}
+                            <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
+                            <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
+                            <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
+                            <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
                         </clr-dg-cell>
                     </clr-dg-row>
-                    <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                    </clr-dg-footer>
                 </clr-datagrid>
 
                 <!--Childs-->
@@ -129,12 +129,12 @@
                                 </clr-dg-column>
                                 <clr-dg-row *clrDgItems="let data of child.data">
                                     <clr-dg-cell *ngFor="let dataCol of data">
-                                        {{dataCol}}
+                                        <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
+                                        <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
+                                        <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
+                                        <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
                                     </clr-dg-cell>
                                 </clr-dg-row>
-                                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                                </clr-dg-footer>
                             </clr-datagrid>
                         </div>
                     </div>
@@ -144,7 +144,40 @@
     </div>
 </ng-container>
 
+<!-- NAV upload modal -->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'lg'" [clrModalClosable]="true">
+    <h3 class="modal-title">
+        {{'Beneficiaries Details' | translate}}
+    </h3>
+
+    <div class="modal-body">
+        <ng-container *ngIf="beneficariesData.length > 0">
+            <div *ngFor="let bloc of beneficariesData" class="mb-1">
+                <h3 style="margin-bottom: 10px"><i class="fa fa-user"></i> {{bloc.title | translate}}</h3>
+                <clr-datagrid *ngIf="bloc.data.length > 0">
+                    <clr-dg-column *ngFor="let column of bloc.columns">
+                        {{column.label | translate}}
+                    </clr-dg-column>
+                    <clr-dg-row *clrDgItems="let data of bloc.data">
+                        <clr-dg-cell *ngFor="let dataCol of data">
+                            <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
+                            <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
+                            <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
+                            <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </clr-datagrid>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-info" (click)="showModal = false;">{{'Close' | translate}}</button>
+    </div>
+</clr-modal>
+
 <div id="debug" *ngIf="isDebug">
+    <div class="text-center mb-1">TEST/DEBUG</div>
     <button class="btn btn-success btn-sm" (click)="requestDetailStatus = 'accepted'; isKYCFull = true;">AFull</button>
     <button class="btn btn-success btn-sm" (click)="requestDetailStatus = 'accepted'; isKYCFull = false;">ALight</button>
     <button class="btn btn-danger btn-sm" (click)="requestDetailStatus = 'rejected'; isKYCFull = true;">RFull</button>
