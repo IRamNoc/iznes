@@ -18,7 +18,7 @@ import {SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
 @NgModule({
     declarations: [
         SetlLoginComponent,
-        SetlLogoutComponent
+        SetlLogoutComponent,
     ],
     imports: [
         ToasterModule,
@@ -29,26 +29,12 @@ import {SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
         MultilingualModule,
         SetlDirectivesModule,
         SetlPipesModule,
-        RouterModule.forChild([
-            {
-                path: 'login',
-                component: SetlLoginComponent,
-            },
-            {
-                path: 'logout',
-                component: SetlLogoutComponent,
-            },
-            {
-                path: 'reset/:token',
-                component: SetlLoginComponent,
-            },
-        ]),
     ],
     exports: [
-        SetlLoginComponent
+        SetlLoginComponent,
     ],
     providers: [
-        ToasterService
+        ToasterService,
     ],
 })
 

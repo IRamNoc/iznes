@@ -6,11 +6,10 @@ import {
     RouterStateSnapshot, CanDeactivate,
 
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  Subscription } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import { MyUserService } from '@setl/core-req-services';
-import { Subscription } from 'rxjs/Subscription';
 import { APP_CONFIG, AppConfig, immutableHelper, MenuItem } from '@setl/utils';
 import * as _ from 'lodash';
 
