@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {ConfirmSettings} from './interfaces/confirm-settings';
 import {ConfirmEmit} from './interfaces/comfirm-emit'
 import {ResolveEmit} from './interfaces/resolve-emit';

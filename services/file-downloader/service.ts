@@ -1,6 +1,6 @@
 import {HttpClient, HttpHandler, HttpHeaders} from '@angular/common/http';
 import {Inject, Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {AppConfig} from '../../appConfig/appConfig.model';
 import {APP_CONFIG} from '../../appConfig/appConfig';
 
