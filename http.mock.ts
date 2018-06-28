@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Http, RequestOptionsArgs} from '@angular/http';
+import {HttpClient, RequestOptionsArgs} from '@angular/common/http';
 
 Injectable();
 
-export class HttpMock extends Http {
+export class HttpMock extends HttpClient {
     public constructor() {
         super(null, null);
     }
