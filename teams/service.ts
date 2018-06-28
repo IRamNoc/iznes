@@ -160,7 +160,7 @@ export class UserTeamsService {
      * @param onSuccess
      * @param onError
      */
-    readUserTeamsAudit(userTeamId: number,
+    readUserTeamsAudit(search: string,
                        dateFrom: string,
                        dateTo: string,
                        onSuccess: RequestCallback,
@@ -169,7 +169,7 @@ export class UserTeamsService {
         const request: ReadUserTeamsAuditRequest = {
             RequestName: 'readUserTeamsAudit',
             token: this.memberSocketService.token,
-            userTeamID: userTeamId,
+            search,
             dateFrom,
             dateTo,
         };

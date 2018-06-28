@@ -46,7 +46,7 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
 
     private initForm(): void {
         this.searchForm = new FormGroup({
-            entity: new FormControl(),
+            entitySearch: new FormControl(''),
             dateFrom: new FormControl(moment().add('-1', 'month').format('YYYY-MM-DD')),
             dateTo: new FormControl(moment().format('YYYY-MM-DD')),
         });
@@ -62,7 +62,7 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
 
     protected getSearchRequest(entityIdField: string): any {
         return {
-            [entityIdField]: this.searchForm.value.entity,
+            search: this.searchForm.value.entitySearch,
             dateFrom: moment(this.searchForm.value.dateFrom).format('YYYY-MM-DD 00:00:00'),
             dateTo: moment(this.searchForm.value.dateTo).format('YYYY-MM-DD 23:59:59'),
         };

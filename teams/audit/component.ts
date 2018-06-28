@@ -48,7 +48,7 @@ export class UserTeamsAuditComponent extends AccountAdminAuditBase implements On
 
         const request = this.getSearchRequest('userTeamID');
 
-        this.service.readUserTeamsAudit(request.userTeamID,
+        this.service.readUserTeamsAudit(request.search,
                                         request.dateFrom,
                                         request.dateTo,
                                         () => {},
@@ -59,5 +59,7 @@ export class UserTeamsAuditComponent extends AccountAdminAuditBase implements On
         this.redux.dispatch(clearRequestedAccountAdminTeamsAudit());
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
 }

@@ -78,7 +78,7 @@ export interface DeleteUserTeamRequest extends MemberNodeMessageBody {
 
 export interface ReadUserTeamsAuditRequest extends MemberNodeMessageBody {
     token: string;
-    userTeamID: number;
+    search: string;
     dateFrom: string;
     dateTo: string;
 }
