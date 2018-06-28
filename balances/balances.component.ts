@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, ViewChild, AfterViewInit, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
@@ -11,7 +10,7 @@ import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { FileService } from '@setl/core-req-services';
 import { isEqual } from 'lodash';
-import { distinctUntilChanged, share, map } from 'rxjs/operators';
+import { first, distinctUntilChanged, share, map } from 'rxjs/operators';
 
 @Component({
     selector: 'setl-balances',
@@ -148,7 +147,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     private findAsset(hash: string) {
         return new Promise((resolve) => {
-            return this.reportingService.getBalances().first().subscribe((assets) => {
+            return this.reportingService.getBalances().pipe(first()).subscribe((assets) => {
                 resolve(assets.find(asset => asset.hash === hash));
             });
         });
