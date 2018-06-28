@@ -63,7 +63,6 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 map((assets) => {
                     const updated = this.markUpdated([previous, assets]);
                     previous = assets;
-                    console.log('updated', updated);
                     return updated;
                 })
             );
