@@ -1,6 +1,7 @@
+
+import {combineLatest as observableCombineLatest, Subscription, Observable} from 'rxjs';
 import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs/Subscription';
 import {NgRedux, select} from '@angular-redux/store';
 import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
 import {setRequestedMailList} from '@setl/core-store';
@@ -9,8 +10,7 @@ import {MessagesService} from "../messages.service";
 import {MailHelper} from './mailHelper';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ToasterService} from 'angular2-toaster';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/observable/combineLatest';
+
 import {FileDownloader} from "@setl/utils";
 
 @Component({
@@ -119,7 +119,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.currentBox = this.categories[0];
 
         this.subscriptionsArray.push(
-            Observable.combineLatest(
+            observableCombineLatest(
                 this.getConnectedWallet.distinctUntilChanged().filter(walletId => walletId > 0),
                 this.getWalletDirectoryList
             )
@@ -152,7 +152,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.userId = userId;
         }));
 
-        Observable.combineLatest([
+        observableCombineLatest([
             this.getMailCounts,
             this.getMessageList
         ]).subscribe((subs) => {

@@ -1,13 +1,13 @@
 /* Angular/vendor imports. */
 import { Injectable } from '@angular/core';
 /* Package Imports. */
-import { Observable } from 'rxjs';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
 import { SagaHelper } from '@setl/utils/index';
 import { MyMessagesService } from '@setl/core-req-services';
 import { commonHelper } from '@setl/utils';
+import {IssueAssetActionModel} from "./messages/message-components/issue-asset-action/issue-asset-action.model";
 import {
     MessageActionsConfig,
     MessageCancelOrderConfig,
@@ -59,7 +59,7 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | MessageCancelOrderConfig = null) {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | IssueAssetActionModel | MessageCancelOrderConfig = null) {
         const bodyObj = {
             general: commonHelper.b64EncodeUnicode(bodyStr),
             action: JSON.stringify(action),

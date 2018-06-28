@@ -1,7 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {setRequestedWalletAddresses} from '@setl/core-store';
 import {InitialisationService, MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
 
