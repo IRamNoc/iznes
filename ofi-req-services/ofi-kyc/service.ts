@@ -19,6 +19,8 @@ import {
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
     fetchInvitationsByUserAmCompanyRequestBody,
+    SaveKycDocumentRequestData,
+    SaveKycDocumentRequestBody,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -315,6 +317,21 @@ export class OfiKycService {
             access: _.get(requestData, 'access', ''),
             kycID: _.get(requestData, 'kycID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    saveKycDocument(requestData: SaveKycDocumentRequestData): any {
+
+        const messageBody: SaveKycDocumentRequestBody = {
+            RequestName: 'updatekycdocument',
+            token: this.memberSocketService.token,
+            walletID: _.get(requestData, 'walletID', 0),
+            name: _.get(requestData, 'name', ''),
+            hash: _.get(requestData, 'hash', ''),
+            type: _.get(requestData, 'type', ''),
+            common: _.get(requestData, 'common', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

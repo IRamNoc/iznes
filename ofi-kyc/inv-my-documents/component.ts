@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { ToasterService } from 'angular2-toaster';
 import { FileService } from '@setl/core-req-services/file/file.service';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service'
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -18,6 +19,8 @@ import { FileService } from '@setl/core-req-services/file/file.service';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewInit {
+
+    private kycEnums;
 
     private uploadMyDocumentsForm:FormGroup;
 
@@ -30,8 +33,10 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         private _changeDetectorRef: ChangeDetectorRef,
         private _translate: MultilingualService,
         private fileService: FileService,
+        private _ofiKycService: OfiKycService,
         private toaster: ToasterService,
         private ngRedux: NgRedux<any>,
+        @Inject('kycEnums') kycEnums,
     ) {
         for (let i = 0; i < this.nbUploads; i++) {
             this.allUploadsFiles[i+1] = {
@@ -40,6 +45,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                     name: '',
             };
         }
+
+        this.kycEnums = kycEnums.documents;
 
         this.uploadMyDocumentsForm = new FormGroup({
             shareAll: new FormControl(false),
@@ -138,6 +145,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                             errorMessage = file.error;
                             event.target.updateFileStatus(file.id, 'file-error');
                         } else {
+                            console.log(file);
                             event.target.updateFileStatus(file[0].id, 'uploaded-file');
                             this.allUploadsFiles[ix] = {
                                 fileID: file[0].fileID,

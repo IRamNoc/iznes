@@ -30,7 +30,7 @@ import {FileViewerModule} from "@setl/core-fileviewer";
 import {OfiInvMyDocumentsComponent} from "./inv-my-documents/component";
 
 /* Constants */
-import config from './config';
+import config, { kycEnums } from './config';
 
 /* Decorator. */
 @NgModule({
@@ -79,6 +79,7 @@ import config from './config';
         MockKYCDocumentsService,
         ToasterService,
         {provide: 'endpoints', useValue: config},
+        {provide: 'kycEnums', useValue: kycEnums},
     ]
 })
 
