@@ -40,6 +40,7 @@ import {
     OfiInviteInvestorsComponent,
     OfiKycAlreadyDoneComponent,
     OfiKycHomeComponent,
+    KycAuditTrailComponent,
     OfiManageCsvComponent,
     OfiNavFundsList,
     OfiNavFundView,
@@ -207,6 +208,11 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc-am-documents',
                 component: OfiAmDocumentsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'kyc-audit-trail/:kycID',
+                component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
             },
             {
