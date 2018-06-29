@@ -1,15 +1,18 @@
 /* Core/Redux imports. */
 import {Action} from 'redux';
 /* Local types. */
-import {AmHoldersDetails, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
+import {AmHoldersDetails, InvHoldingsDetails, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
 import * as ofiAmHoldersActions from './actions';
 import {List} from 'immutable';
+import {fromJS, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
 const initialState: OfiHolderState = {
     amHoldersList: List<AmHoldersDetails>(),
     requested: false,
+    invHoldingsList: List<InvHoldingsDetails>(),
+    invRequested: false,
     holderDetailRequested: false,
     shareHolderDetail: null,
 };
@@ -35,6 +38,15 @@ export const OfiAmHoldersListReducer = (state: OfiHolderState = initialState, ac
         case ofiAmHoldersActions.OFI_GET_SHARE_HOLDER_DETAIL:
             return handleGetShareHolderDetail(state, action);
 
+        case ofiAmHoldersActions.OFI_SET_INV_HOLDINGS_LIST:
+            return handleGetInvHoldings(state, action);
+
+        case ofiAmHoldersActions.OFI_SET_REQUESTED_INV_HOLDINGS:
+            return toggleInvRequestState(state, true);
+
+        case ofiAmHoldersActions.OFI_CLEAR_REQUESTED_INV_HOLDINGS:
+            return toggleInvRequestState(state, false);
+
         default:
             return state;
     }
@@ -44,10 +56,11 @@ const handleGetAmHolders = (state, action) => {
     const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
     if (data.Status !== 'Fail' && data.Message !== 'No holders found') {
+
         const amHoldersList = formatDataResponse(data);
 
         return Object.assign({}, state, {
-            amHoldersList
+            amHoldersList,
         });
     }
 
@@ -56,7 +69,6 @@ const handleGetAmHolders = (state, action) => {
 
 const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDetails> => {
     let response: List<AmHoldersDetails> = List();
-
     if (rawData.length > 0) {
         rawData.forEach((iteratee) => {
             const holderItem = {
@@ -77,16 +89,53 @@ const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDet
                 shareHolderNumber: iteratee.shareHolderNumber,
                 shareRatio: iteratee.shareRatio
             };
-
             response = response.push(holderItem);
         });
     }
-
     return response;
 }
 
+const handleGetInvHoldings = (state, action) => {
+    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+    const invHoldingsList = formatDataResponseInv(data);
+
+    return Object.assign({}, state, {
+        invHoldingsList,
+    });
+};
+
+const formatDataResponseInv = (rawData: Array<AmHoldersDetails>): List<AmHoldersDetails> => {
+    const response = fromJS(rawData);
+
+    const invHoldingsList = Map(response.reduce(
+        function (result, item, idx) {
+            result[idx] = {
+                amManagementCompanyID: item.get('amManagementCompanyID', 0),
+                companyName: item.get('companyName', ''),
+                shareID: item.get('shareID', 0),
+                fundShareName: item.get('fundShareName', ''),
+                isin: item.get('isin', ''),
+                shareClassCurrency: item.get('shareClassCurrency', ''),
+                latestNav: item.get('latestNav', 0),
+                portfolioAddr: item.get('portfolioAddr', ''),
+                portfolioLabel: item.get('portfolioLabel', ''),
+                quantity: item.get('quantity', 0),
+                amount: item.get('amount', 0),
+                ratio: item.get('ratio', 0),
+            };
+            return result;
+        },
+        {}));
+
+    return invHoldingsList.toJS();
+};
+
 function toggleRequestState(state: OfiHolderState, requested: boolean): OfiHolderState {
     return Object.assign({}, state, {requested});
+}
+
+function toggleInvRequestState(state: OfiHolderState, invRequested: boolean): OfiHolderState {
+    return Object.assign({}, state, {invRequested});
 }
 
 // Holder detail
@@ -105,6 +154,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
             const holderItem: ShareHolderItem = {
                 ranking: holder.ranking,
                 investorName: holder.investorName,
+                companyName: holder.companyName,
                 quantity: holder.quantity,
                 amount: holder.amount,
                 ratio: holder.ratio,

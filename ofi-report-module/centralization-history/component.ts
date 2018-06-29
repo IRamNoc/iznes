@@ -8,25 +8,27 @@ import {
     OnDestroy,
     OnInit
 } from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {MemberSocketService} from '@setl/websocket-service';
+import { MemberSocketService } from '@setl/websocket-service';
 
-import {NgRedux, select} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {fromJS} from 'immutable';
+import { NgRedux, select } from '@angular-redux/store';
+import { Unsubscribe } from 'redux';
+import { fromJS } from 'immutable';
 /* Alert service. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Utils. */
-import {ConfirmationService, immutableHelper, NumberConverterService} from '@setl/utils';
+import { ConfirmationService, immutableHelper, NumberConverterService } from '@setl/utils';
 /* Ofi service */
-import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 /* Core redux */
-import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
-import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
+import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
+import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
 import * as moment from 'moment';
-import {mDateHelper} from '@setl/utils';
+import { mDateHelper } from '@setl/utils';
+import { OfiCurrenciesService } from "../../ofi-req-services/ofi-currencies/service";
+import { MultilingualService } from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -84,7 +86,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
     /* Ui Lists. */
     periodList: Array<SelectedItem> = [
-        {id: 'custom', text: 'Choose specific dates'},
+        { id: 'custom', text: 'Choose specific dates' },
         // {id: 'inception', text: 'Since inception'},
         // {id: 'lastcutoff', text: 'Since last cut-off'},
         // {id: 'currentweek', text: 'Current week'},
@@ -92,29 +94,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         // {id: 'currentquarter', text: 'Current quarter'},
         // {id: 'currentsemester', text: 'Current semester'},
         // {id: 'currentyear', text: 'Current year'},
-        {id: 'week', text: 'Last week'},
-        {id: 'month', text: 'Last month'},
-        {id: 'quarter', text: 'Last quarter'},
-        {id: 'semester', text: 'Last semester'},
-        {id: 'year', text: 'Last year'},
+        { id: 'week', text: 'Last week' },
+        { id: 'month', text: 'Last month' },
+        { id: 'quarter', text: 'Last quarter' },
+        { id: 'semester', text: 'Last semester' },
+        { id: 'year', text: 'Last year' },
     ];
 
-    currencyList = [
-        {id: 0, text: 'EUR'},
-        {id: 1, text: 'USD'},
-        {id: 2, text: 'GBP'},
-        {id: 3, text: 'CHF'},
-        {id: 4, text: 'JPY'},
-        {id: 5, text: 'AUD'},
-        {id: 6, text: 'NOK'},
-        {id: 7, text: 'SEK'},
-        {id: 8, text: 'ZAR'},
-        {id: 9, text: 'RUB'},
-        {id: 10, text: 'SGD'},
-        {id: 11, text: 'AED'},
-        {id: 12, text: 'CNY'},
-        {id: 13, text: 'PLN'},
-    ];
+    currencyList = [];
 
     /* Private Properties. */
     private myDetails: any = {};
@@ -131,6 +118,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'baseCentralizationHistory']) OfiBaseCentralizationHistoryObj;
     @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationHistory']) OfiCentralizationHistoryObj;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -143,14 +131,21 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 private _fb: FormBuilder,
                 private _confirmationService: ConfirmationService,
                 private _fileDownloader: FileDownloader,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                public _translate: MultilingualService,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
+                private ofiCurrenciesService: OfiCurrenciesService) {
+
+        this.ofiCurrenciesService.getCurrencyList();
+
         this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.OfiBaseCentralizationHistoryObj.subscribe((requested) => this.getBaseCentralizationHistoryFromRedux(requested)));
         this.subscriptions.push(this.OfiCentralizationHistoryObj.subscribe((requested) => this.getCentralizationHistoryFromRedux(requested)));
 
         /* Subscribe for this user's details. */
-        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {this.myDetails = myDetails;}));
+        this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {
+            this.myDetails = myDetails;
+        }));
 
         this.createsearchForm();
         this.createFilterForm();
@@ -181,10 +176,12 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 }
                 this.setTabActive(this.shareID);
             } else {
-                this.searchForm.get('search').patchValue(null, {emitEvent: false});
-                this.router.navigateByUrl('/reports/centralization');
+                this.searchForm.get('search').patchValue(null, { emitEvent: false });
+                this.router.navigateByUrl('/reports/select-centralization');
             }
         }));
+
+        this.subscriptions.push(this.currenciesObs.subscribe((c) => this.getCurrencyList(c)));
     }
 
     public ngOnInit() {
@@ -192,7 +189,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.subscriptions.push(this.filterForm.valueChanges.subscribe((form) => this.requestFilters(form)));
 
         this.filterForm.controls['period'].setValue([this.periodList[0]]);
-        
+
         this.dateTo = this.reformatDate(moment().add(1, 'weeks'));
         this.dateFrom = this.reformatDate(moment().subtract(1, 'weeks'));
 
@@ -202,18 +199,24 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     public ngAfterViewInit() {
     }
 
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
+        }
+    }
+
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
@@ -241,7 +244,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         if (this.centralizationReportsList.length > 0) {
             const obj = this.centralizationReportsList.find(o => o.id.toString() === this.shareID.toString());
             if (obj !== undefined) {
-                this.searchForm.get('search').patchValue([{id: obj.id, text: obj.text}], {emitEvent: false});
+                this.searchForm.get('search').patchValue([{ id: obj.id, text: obj.text }], { emitEvent: false });
             }
         }
 
@@ -286,17 +289,17 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             result.push({
                 walletID: item.get('walletID'),
                 latestNav: item.get('latestNav'),
-                navDate: (item.get('navDate') == null) ? '' : mDateHelper.convertToLocal(item.get('navDate'),'YYYY-MM-DD'),
+                navDate: (item.get('navDate') == null) ? '' : mDateHelper.convertToLocal(item.get('navDate'), 'YYYY-MM-DD'),
                 latestNavBackup: item.get('latestNavBackup'),
                 navDateBackup: item.get('navDateBackup'),
                 subQuantity: item.get('subQuantity'),
                 subAmount: item.get('subAmount'),
-                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'),'YYYY-MM-DD'),
+                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'), 'YYYY-MM-DD'),
                 redQuantity: item.get('redQuantity'),
                 redAmount: item.get('redAmount'),
-                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'),'YYYY-MM-DD'),
-                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
-                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'),'YYYY-MM-DD HH:mm:ss'),
+                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'), 'YYYY-MM-DD'),
+                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
+                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
                 aum: item.get('aum'),
                 netPosition: item.get('netPosition'),
                 netPositionPercentage: item.get('netPositionPercentage'),
@@ -378,14 +381,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
         /* Return the formatted string. */
         return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+        .replace('DD', this.numPad(dateObj.getDate().toString()))
+        .replace('hh', this.numPad(dateObj.getHours()))
+        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+        .replace('mm', this.numPad(dateObj.getMinutes()))
+        .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     showCurrency(currency) {
@@ -441,26 +444,26 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 //     this.dateFrom = this.reformatDate(new Date(y + '-' + '01' + '-' + '01'));
                 //     this.dateTo = this.reformatDate(today);
                 //     break;
-                case 'week':
-                    this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'weeks'));
-                    break;
-                case 'month':
-                    this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'months'));
-                    break;
-                case 'quarter':
-                    this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'quarters'));
-                    break;
-                case 'semester':
-                    this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(15, 'weeks'));
-                    break;
-                case 'year':
-                    this.dateTo = this.reformatDate(today);
-                    this.dateFrom = this.reformatDate(moment(today).subtract(1, 'years'));
-                    break;
+            case 'week':
+                this.dateTo = this.reformatDate(today);
+                this.dateFrom = this.reformatDate(moment(today).subtract(1, 'weeks'));
+                break;
+            case 'month':
+                this.dateTo = this.reformatDate(today);
+                this.dateFrom = this.reformatDate(moment(today).subtract(1, 'months'));
+                break;
+            case 'quarter':
+                this.dateTo = this.reformatDate(today);
+                this.dateFrom = this.reformatDate(moment(today).subtract(1, 'quarters'));
+                break;
+            case 'semester':
+                this.dateTo = this.reformatDate(today);
+                this.dateFrom = this.reformatDate(moment(today).subtract(15, 'weeks'));
+                break;
+            case 'year':
+                this.dateTo = this.reformatDate(today);
+                this.dateFrom = this.reformatDate(moment(today).subtract(1, 'years'));
+                break;
             }
 
             // check dates are valid
@@ -484,9 +487,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
 
         // emitEvent = true to not propage to valueChanges
-        this.filterForm.get('period').updateValueAndValidity({emitEvent: false});
-        this.filterForm.get('dateFrom').updateValueAndValidity({emitEvent: false});
-        this.filterForm.get('dateTo').updateValueAndValidity({emitEvent: false});
+        this.filterForm.get('period').updateValueAndValidity({ emitEvent: false });
+        this.filterForm.get('dateFrom').updateValueAndValidity({ emitEvent: false });
+        this.filterForm.get('dateTo').updateValueAndValidity({ emitEvent: false });
 
         const dateRange = (this.filterForm.get('period').value && this.filterForm.get('period').value[0] && this.filterForm.get('period').value[0].id) ? this.filterForm.get('period').value[0].id : '';
 
@@ -526,19 +529,19 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     exportHistory(historyRow): void {
 
         if (historyRow !== undefined) {
-            const cutoffDate = moment(historyRow.subCutoffDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+            const navDate = moment(historyRow.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
-                shareName: this.centralizationReportsList[0].text,
-                isin: null,
+                shareName: this.baseCentralizationHistory.fundShareName,
+                isin: this.baseCentralizationHistory.isin,
                 status: null,
                 orderType: null,
                 pageSize: 1000,
                 rowOffSet: 0,
                 sortByField: 'userEntered',
                 sortOrder: 'desc',
-                dateSearchField: 'cutoffDate',
-                fromDate: cutoffDate,
-                toDate: cutoffDate + ' 23:59',
+                dateSearchField: 'navDate',
+                fromDate: navDate,
+                toDate: navDate + ' 23:59',
             };
 
             this._fileDownloader.downLoaderFile({
@@ -562,14 +565,14 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             filters: {
                 isin: this.baseCentralizationHistory.isin,
                 sharename: this.baseCentralizationHistory.fundShareName,
-                status: {id : -3},
-                type: {id : 0},
-                dateType: {id : 'cutOffDate'},
+                status: { id: -3 },
+                type: { id: 0 },
+                dateType: { id: 'navDate' },
                 fromDate: moment(cutoffDate).format('YYYY-MM-DD'),
                 toDate: moment(cutoffDate).format('YYYY-MM-DD')
             }
         };
-        this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+        this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
         this.router.navigateByUrl('manage-orders/list');
     }
 

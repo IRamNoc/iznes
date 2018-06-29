@@ -139,8 +139,6 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
             minSubsequentSubscriptionInAmount: convertBlockchainNumber(share.minSubsequentSubscriptionInAmount),
             redemptionCategory: share.redemptionCategory,
             redemptionCurrency: share.redemptionCurrency,
-            minInitialRedemptionInShare: convertBlockchainNumber(share.minInitialRedemptionInShare),
-            minInitialRedemptionInAmount: convertBlockchainNumber(share.minInitialRedemptionInAmount),
             minSubsequentRedemptionInShare: convertBlockchainNumber(share.minSubsequentRedemptionInShare),
             minSubsequentRedemptionInAmount: convertBlockchainNumber(share.minSubsequentRedemptionInAmount),
             portfolioCurrencyHedge: share.portfolioCurrencyHedge,

@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1 id="my-orders"><i class="fa fa-list-ul"></i>
-        <span mltag="txt_myorders">My Orders</span> - {{ connectedWalletName }}</h1>
+    <h1 id="my-orders"><i class="fa fa-list-ul"></i>{{'My Orders - @connectedWalletName@' | translate: {'connectedWalletName': connectedWalletName} }}
+    </h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -33,44 +33,29 @@
             <form id="search-orders-form">
                 <div class="row bordered form-group">
                     <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_sharename">Share Name</span>
+                        <label>{{'Share Name' | translate}}
+
                         </label>
                         <div class="input-button-group">
-                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-sharename" type="text" placeholder="Share Name" mltag="txt_sharename">
+                            <input id="orders-search-fundname" (keyup)="requestSearch()" [formControl]="tabsControl[0].searchForm.controls['name']" name="search-sharename" type="text" [placeholder]="_translate.translate('Share Name')">
                             <button (click)="requestSearch()" style="margin-top: 0 !important"><i class="fa fa-search"></i></button>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_status">Status</span>
+                        <label>{{'Status' | translate}}
+
                         </label>
                         <div>
-                            <ng-select id="orders-search-status" class="fluid-width"
-                                [items]="orderStatuses"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch(false, $event)"
-                                (removed)="getOrdersBySearch(false, $event)"
-                                [formControl]="tabsControl[0].searchForm.controls['status']"
-                                placeholder="Status"
-                                mltag="txt_status">
+                            <ng-select id="orders-search-status" class="fluid-width" [items]="orderStatuses" [allowClear]="true" (selected)="getOrdersBySearch(false, $event)" (removed)="getOrdersBySearch(false, $event)" [formControl]="tabsControl[0].searchForm.controls['status']" [placeholder]="_translate.translate('Status')">
                             </ng-select>
                         </div>
                     </div>
                     <div class="col-sm-4">
-                        <label>
-                            <span mltag="txt_type">Type</span>
+                        <label>{{'Type' | translate}}
+
                         </label>
                         <div>
-                            <ng-select id="orders-search-type" class="fluid-width" 
-                                [active]=""
-                                [items]="orderTypes"
-                                [allowClear]="true"
-                                (selected)="getOrdersBySearch()"
-                                (removed)="getOrdersBySearch()"
-                                [formControl]="tabsControl[0].searchForm.controls['type']"
-                                placeholder="Type"
-                                mltag="txt_type">
+                            <ng-select id="orders-search-type" class="fluid-width" [active]="" [items]="orderTypes" [allowClear]="true" (selected)="getOrdersBySearch()" (removed)="getOrdersBySearch()" [formControl]="tabsControl[0].searchForm.controls['type']" [placeholder]="_translate.translate('Type')">
                             </ng-select>
                         </div>
                     </div>
@@ -80,77 +65,77 @@
 
                 <clr-datagrid #ordersDataGrid>
                     <clr-dg-column [clrDgField]="'orderRef'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_orderref">Order Ref</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Ref' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_ordertype">Order Type</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Type' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareName'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_sharename">Share Name</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Name' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'assetManagementCompany'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_assetmanagementcompany">Asset Management Company</span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Asset Management Company' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_sharecurrency">Share Currency</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Currency' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_quantity">Quantity</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Quantity' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNAV'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_latestnav">Latest NAV</span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Latest NAV' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'grossAmount'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_grossamount">Gross Amount</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Gross Amount' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'feesAmount'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_feesamount">Fees Amount</span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'Fees Amount' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'orderDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_orderdate">Order Date</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'cutOffDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_cutoffdate">Cut-off Date</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Cut-off Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'navDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: true}">
-                            <span mltag="txt_navdate">NAV Date</span>
+                        <ng-container *clrDgHideableColumn="{hidden: true}">{{'NAV Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'settlementDate'">
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_settlementdate">Settlement Date</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Settlement Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span mltag="txt_status">Status</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Status' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
+                    <clr-dg-column>{{'Action' | translate}}</clr-dg-column>
 
                     <!--<clr-dg-column style="min-width: 180px;"><span mltag="txt_investor">Investor</span></clr-dg-column>-->
                     <!--<clr-dg-column style="min-width: 120px;"><span mltag="txt_ordertype">Order type</span>-->
@@ -223,24 +208,25 @@
                         </clr-dg-cell>
                         <clr-dg-cell>
                             <!-- Actions -->
-                            <button type="button" class="btn btn-info" mltag="txt_cancel">Cancel</button>
+
+                            <button type="button" class="btn btn-info">{{'Cancel' | translate}}</button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
-                                <b><span mltag="txt_additionalinformations">Additional informations</span>:</b>
+                                <b>{{'Additional informations:' | translate}}</b>
                                 <br><br>
                                 <table>
                                     <tr>
-                                        <th mltag="txt_assetmanagementcompany">Asset Management Company</th>
-                                        <th mltag="txt_latestnav">Latest NAV</th>
-                                        <th mltag="txt_feesamount">Fees Amount</th>
-                                        <th mltag="txt_navdate">NAV Date</th>
+                                        <th>{{'Asset Management Company' | translate}}</th>
+                                        <th>{{'Latest NAV' | translate}}</th>
+                                        <th>{{'Fees Amount' | translate}}</th>
+                                        <th>{{'NAV Date' | translate}}</th>
                                     </tr>
                                     <tr>
-                                        <td mltag="txt_yo">Yo</td>
-                                        <td mltag="txt_yo">Yo</td>
-                                        <td mltag="txt_yo">Yo</td>
-                                        <td mltag="txt_yo">Yo</td>
+                                        <td>{{'Yo' | translate}}</td>
+                                        <td>{{'Yo' | translate}}</td>
+                                        <td>{{'Yo' | translate}}</td>
+                                        <td>{{'Yo' | translate}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -331,8 +317,8 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>
-                                <span><span mltag="txt_showhidefields">Show/hide fields</span>:</span>
+                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}
+
                             </clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
@@ -362,8 +348,8 @@
                     <div class="col-sm-12">
                         <div>
                             <!-- Order type -->
-                            <h2 *ngIf="orderData.type == 3" mltag="txt_subscription">Subscription</h2>
-                            <h2 *ngIf="orderData.type == 4" mltag="txt_redemption">Redemption</h2>
+                            <h2 *ngIf="orderData.type == 3">{{'Subscription' | translate}}</h2>
+                            <h2 *ngIf="orderData.type == 4">{{'Redemption' | translate}}</h2>
                         </div>
                     </div>
                 </div>
@@ -372,32 +358,32 @@
 
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_registrar">Registrar</span>
+                        <label>{{'Registrar' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.registrar}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_fundshare">Fund share</span>
+                        <label>{{'Fund share' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.asset}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_isincode">ISIN Code</span>
+                        <label>{{'ISIN Code' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.assetISIN}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_currency">Currency</span>
+                        <label>{{'Currency' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.currency}}</span>
@@ -409,16 +395,16 @@
 
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_quantity">Quantity</span>
+                        <label>{{'Quantity' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.units | moneyValue: 5}}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_netassetvalue">Net Asset Value</span>
+                        <label>{{'Net Asset Value' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.price | moneyValue: 2}}</span>
@@ -430,8 +416,8 @@
 
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_grossamount">Gross Amount</span>
+                        <label>{{'Gross Amount' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{orderData.metaData.total | moneyValue: 4}}</span>
@@ -443,18 +429,18 @@
 
                 <div class="row form-group">
                     <div class="col-sm-12">
-                        <label>
-                            <span mltag="txt_cutoffdate">Cut-Off Date</span>
+                        <label>{{'Cut-Off Date' | translate}}
+
                         </label>
                     </div>
-                    <div class="col-sm-6">
-                        <span mltag="txt_date">Date</span>
+                    <div class="col-sm-6">{{'Date' | translate}}
+
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.cutoffDate ) }}</span>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <span mltag="txt_time">Time</span>
+                    <div class="col-sm-6">{{'Time' | translate}}
+
                         <div>
                             <span class="readonly-field">{{ getOrderTime( orderData.cutoffDate ) }}</span>
                         </div>
@@ -465,16 +451,16 @@
 
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_valuationdate">Valuation Date</span>
+                        <label>{{'Valuation Date' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.valuationDate ) }}</span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_settlementdate">Settlement Date</span>
+                        <label>{{'Settlement Date' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{ getOrderDate( orderData.deliveryDate ) }}</span>
@@ -486,8 +472,8 @@
 
                 <div class="row form-group">
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_entryfee375">Entry Fee (3.75%)</span>
+                        <label>{{'Entry Fee (3.75%)' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{ calcEntryFee((orderData.metaData.units * orderData.price)) | moneyValue: 5 }}</span>
@@ -495,8 +481,8 @@
                     </div>
 
                     <div class="col-sm-6">
-                        <label>
-                            <span mltag="txt_comment">Comment</span>
+                        <label>{{'Comment' | translate}}
+
                         </label>
                         <div>
                             <span class="readonly-field">{{ orderData.metaData.ref }}</span>
@@ -508,8 +494,8 @@
 
                 <div class="form-group button-group">
                     <div class="col-sm-12">
-                        <a (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close</a>
-                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning" mltag="txt_cancel">Cancel</button>
+                        <a (click)="closeTab(tabid)" class="btn btn-secondary">{{'Close' | translate}}</a>
+                        <button *ngIf="orderData.status == 1" id="order-cancel-{{orderData.arrangementID}}" (click)="handleCancelOrder(orderData.arrangementID)" class="btn btn-warning">{{'Cancel' | translate}}</button>
                     </div>
                 </div>
             </form>

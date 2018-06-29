@@ -1,6 +1,7 @@
 :host {
     clr-tabs {
         margin: 20px 0;
+        position: relative;
 
         button .required {
             color: red;
@@ -8,6 +9,8 @@
         }
     }
     clr-tab-content {
+        padding-bottom: 95px;
+
         &.outer {
             padding-right: 0;
         }
@@ -34,6 +37,20 @@
         }
     }
 
+    .previous-next {
+        border-top: 1px solid #DDD;
+        bottom: 15px;
+        display: flex;
+        padding-top: 15px;
+        position: absolute;
+        width: calc(100% - 20px);
+
+        .buttons {
+            margin: 0 auto;
+            width: 190px;
+        }
+    }
+
     app-ofi-am-trade-cycle {
         border: 1px solid #dce1eb;
         border-radius: 4px;
@@ -46,5 +63,15 @@
     .btn-audit-trail {
         float: right;
         margin-top: -42px;
+    }
+
+    app-dynamic-form.share-status { width: auto; }
+
+    .share-status-warning {
+        color: #999;
+        float: left;
+        font-size: 12px;
+        margin-left: -120px;
+        padding-top: 40px;
     }
 }

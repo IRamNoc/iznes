@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, NumberConverterService, LogService} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
-import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, NumberConverterService, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import {
     AmAllFundShareListRequestBody,
     InvestorFundAccessRequestBody,
     FundShareRequestBody,
     CreateFundShareRequestData,
-    IznesShareListRequestMessageBody
+    IznesShareListRequestMessageBody,
 } from './model';
 import {
     SET_FUND_SHARE,
@@ -25,7 +25,7 @@ import {
     clearRequestedFundShareDocs,
     SET_FUND_SHARE_AUDIT,
     setRequestedFundShareAudit,
-    clearRequestedFundShareAudit
+    clearRequestedFundShareAudit,
 } from '@ofi/ofi-main/ofi-store/ofi-product';
 
 export interface RequestInvestorFundAccessData {
@@ -35,7 +35,13 @@ export interface RequestInvestorFundAccessData {
 @Injectable()
 export class OfiFundShareService {
 
-    constructor(private memberSocketService: MemberSocketService, private logService: LogService, private numberService: NumberConverterService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private logService: LogService,
+        private numberService: NumberConverterService,
+        private ngRedux: NgRedux<any>,
+    ) {
+
     }
 
     static defaultRequestAmAllFundShareList(ofiFundService: OfiFundShareService, ngRedux: NgRedux<any>) {
@@ -332,8 +338,6 @@ export class OfiFundShareService {
     }
 
     private convertNumbersForBlockchain(request: any): void {
-        request.minInitialRedemptionInAmount = this.numberService.toBlockchain(request.minInitialRedemptionInAmount);
-        request.minInitialRedemptionInShare = this.numberService.toBlockchain(request.minInitialRedemptionInShare);
         request.minInitialSubscriptionInAmount = this.numberService.toBlockchain(request.minInitialSubscriptionInAmount);
         request.minInitialSubscriptionInShare = this.numberService.toBlockchain(request.minInitialSubscriptionInShare);
         request.minSubsequentRedemptionInAmount = this.numberService.toBlockchain(request.minSubsequentRedemptionInAmount);

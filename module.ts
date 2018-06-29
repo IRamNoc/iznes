@@ -15,7 +15,7 @@ import {OfiNavModule} from './ofi-nav/module';
 import {OfiReportModule} from './ofi-report-module';
 import {OfiAmDashboardModule} from './ofi-am-dashboard/module';
 import {MultilingualModule} from '@setl/multilingual';
-import {DynamicFormsModule, SelectModule, SetlComponentsModule} from '@setl/utils';
+import {SetlDirectivesModule, SetlPipesModule, DynamicFormsModule, SelectModule, SetlComponentsModule} from '@setl/utils';
 import {SetlLayoutModule} from '@setl/core-layout';
 
 /* Decorator. */
@@ -37,7 +37,9 @@ import {SetlLayoutModule} from '@setl/core-layout';
         MultilingualModule,
         SelectModule,
         DynamicFormsModule,
-        SetlLayoutModule
+        SetlLayoutModule,
+        SetlDirectivesModule,
+        SetlPipesModule,
     ],
     exports: [
         OfiFundInvestModule,

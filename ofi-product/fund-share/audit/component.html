@@ -1,42 +1,32 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-bars"></i>
-        <span mltag="txt_shareaudittrail">Share Audit Trail</span>
+        <i class="fa fa-bars"></i>{{'Share Audit Trail' | translate}}
+        <ng-container *ngIf="fundShare && fundShare.fundShareName"> - {{fundShare.fundShareName}}</ng-container>
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabFundShareButton">
-            <span mltag="txt_audit">Audit</span>
+        <button clrTabLink id="tabFundShareButton">{{'Audit' | translate}}
+
         </button>
         <clr-tab-content class="outer">
             <form [formGroup]="searchForm" novalidate>
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-4">
-                            <label class="control-label" mltag="txt_datefrom">Date from</label>
+                            <label class="control-label">{{'Date from' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateFrom" name="auditDateFrom" placeholder="Choose a date"
-                                    formControlName="dateFrom"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_chooseadate">
+                                <input id="auditDateFrom" name="auditDateFrom" [placeholder]="_translate.translate('Choose a date')" formControlName="dateFrom" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
 
                         <div class="form-group col-sm-4">
-                            <label class="control-label" mltag="txt_dateto">Date to</label>
+                            <label class="control-label">{{'Date to' | translate}}</label>
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar"></span>
-                                <input id="auditDateTo" name="auditDateTo" placeholder="Choose a date"
-                                    formControlName="dateTo"
-                                    [dpDayPicker]="dateConfig"
-                                    mode="day"
-                                    theme="dp-material"
-                                    mltag="txt_chooseadate">
+                                <input id="auditDateTo" name="auditDateTo" [placeholder]="_translate.translate('Choose a date')" formControlName="dateTo" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -44,26 +34,26 @@
             </form>
 
             <clr-datagrid #dataGrid *ngIf="fundShareAuditData">
-                <clr-dg-column class="col-fundname">
-                    <span mltag="txt_fundname">Fund name</span>
+                <clr-dg-column class="col-fundname">{{'Fund name' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundsharename">
-                    <span mltag="txt_sharename">Share name</span>
+                <clr-dg-column class="col-fundsharename">{{'Share name' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundsharefield">
-                    <span mltag="txt_field">Field</span>
+                <clr-dg-column class="col-fundsharefield">{{'Field' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundshareoldvalue">
-                    <span mltag="txt_oldvalue">Old value</span>
+                <clr-dg-column class="col-fundshareoldvalue">{{'Old value' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundsharenewvalue">
-                    <span mltag="txt_newvalue">New value</span>
+                <clr-dg-column class="col-fundsharenewvalue">{{'New value' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundsharemodifiedby">
-                    <span mltag="txt_modifiedby">Modified by</span>
+                <clr-dg-column class="col-fundsharemodifiedby">{{'Modified by' | translate}}
+
                 </clr-dg-column>
-                <clr-dg-column class="col-fundsharemodifieddate">
-                    <span mltag="txt_modifieddate">Date</span>
+                <clr-dg-column class="col-fundsharemodifieddate">{{'Date' | translate}}
+
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of fundShareAuditData" id="{{'product-shares-audit-row' + i}}">
@@ -76,15 +66,15 @@
                     <clr-dg-cell class="col-fundsharemodifieddate">{{item.dateModified}}</clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>
-                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
 
             <div class="row actions">
                 <div class="col-sm-12">
-                    <button class="btn btn-default" (click)="returnToShare()">Cancel</button>
+                    <button class="btn btn-default" (click)="returnToShare()">{{'Cancel' | translate}}</button>
                 </div>
             </div>
         </clr-tab-content>

@@ -1,53 +1,53 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as FundActions from './actions';
-import {FundDetail, FundListState, IznesFundDetail} from './model';
+import { FundDetail, FundListState, IznesFundDetail } from './model';
 import * as _ from 'lodash';
-import {fromJS, Map} from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 const initialState: FundListState = {
     fundList: {},
     requested: false,
     iznFundList: {},
-    requestedIznesFund: false
+    requestedIznesFund: false,
 };
 
 export const FundListReducer = function (state: FundListState = initialState, action: Action) {
     switch (action.type) {
-        case FundActions.SET_FUND_LIST:
+    case FundActions.SET_FUND_LIST:
 
-            const fdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const fdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const fundList = formatFundDataResponse(fdata);
-            return Object.assign({}, state, {
-                fundList
-            });
+        const fundList = formatFundDataResponse(fdata);
+        return Object.assign({}, state, {
+            fundList,
+        });
 
-        case FundActions.SET_FUND_SHARE_LIST:
+    case FundActions.SET_FUND_SHARE_LIST:
 
-            const fsdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const fsdata = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
-            const fundShareList = formatFundshareDataResponse(fsdata);
-            return Object.assign({}, state, {
-                fundShareList
-            });
+        const fundShareList = formatFundshareDataResponse(fsdata);
+        return Object.assign({}, state, {
+            fundShareList,
+        });
 
-        case FundActions.SET_REQUESTED_FUND:
-            return handleSetRequested(state, action);
+    case FundActions.SET_REQUESTED_FUND:
+        return handleSetRequested(state, action);
 
-        case FundActions.CLEAR_REQUESTED_FUND:
-            return handleClearRequested(state, action);
+    case FundActions.CLEAR_REQUESTED_FUND:
+        return handleClearRequested(state, action);
 
-        case FundActions.SET_REQUESTED_IZN_FUNDS:
-            return handleSetIznesFundsRequested(state);
+    case FundActions.SET_REQUESTED_IZN_FUNDS:
+        return handleSetIznesFundsRequested(state);
 
-        case FundActions.CLEAR_REQUESTED_IZN_FUNDS:
-            return clearSetIznesFundsRequested(state);
+    case FundActions.CLEAR_REQUESTED_IZN_FUNDS:
+        return clearSetIznesFundsRequested(state);
 
-        case FundActions.GET_IZN_FUND_LIST:
-            return handleGetIznesFunds(state, action);
+    case FundActions.GET_IZN_FUND_LIST:
+        return handleGetIznesFunds(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -102,7 +102,7 @@ function handleSetRequested(state: FundListState, action: Action): FundListState
     const requested = true;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
@@ -116,19 +116,19 @@ function handleClearRequested(state: FundListState, action: Action): FundListSta
     const requested = false;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
 function handleSetIznesFundsRequested(state: FundListState): FundListState {
     return Object.assign({}, state, {
-        requestedIznesFund: true
+        requestedIznesFund: true,
     });
 }
 
 function clearSetIznesFundsRequested(state: FundListState): FundListState {
     return Object.assign({}, state, {
-        requestedIznesFund: false
+        requestedIznesFund: false,
     });
 }
 
@@ -147,28 +147,17 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm !== null ? fund.nationalNomenclatureOfLegalForm.toString() : null,
             fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
             fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-            fundCurrency: fund.fundCurrency.toString(),
             openOrCloseEnded: fund.openOrCloseEnded.toString(),
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
             isFundOfFund: fund.isFundOfFund.toString(),
-            managementCompanyID: fund.managementCompanyID.toString(),
-            fundAdministrator: fund.fundAdministrator.toString(),
-            custodianBank: fund.custodianBank.toString(),
-            investmentManager: fund.investmentManager !== null ? fund.investmentManager.toString() : null,
-            principalPromoter: fund.principalPromoter !== null ? fund.principalPromoter.toString() : null,
-            payingAgent: fund.payingAgent !== null ? fund.payingAgent.toString() : null,
-            transferAgent: fund.transferAgent !== null ? fund.transferAgent.toString() : null,
-            centralizingAgent: fund.centralizingAgent !== null ? fund.centralizingAgent.toString() : null,
+            managementCompanyID: fund.managementCompanyID,
+            principalPromoter: JSON.parse(fund.principalPromoter),
+            payingAgent: JSON.parse(fund.payingAgent),
             isDedicatedFund: fund.isDedicatedFund.toString(),
-            portfolioCurrencyHedge: fund.portfolioCurrencyHedge.toString(),
 
-            investmentAdvisor: fund.investmentAdvisor !== null ? fund.investmentAdvisor.toString() : null,
-            auditor: fund.auditor !== null ? fund.auditor.toString() : null,
-            taxAuditor: fund.taxAuditor !== null ? fund.taxAuditor.toString() : null,
-            legalAdvisor: fund.legalAdvisor !== null ? fund.legalAdvisor.toString() : null,
+            investmentAdvisor: JSON.parse(fund.investmentAdvisor),
             hasEmbeddedDirective: fund.hasEmbeddedDirective !== null ? fund.hasEmbeddedDirective.toString() : null,
             hasCapitalPreservation: fund.hasCapitalPreservation !== null ? fund.hasCapitalPreservation.toString() : null,
-            capitalPreservationPeriod: fund.capitalPreservationPeriod !== null ? fund.capitalPreservationPeriod.toString() : null,
             hasCppi: fund.hasCppi !== null ? fund.hasCppi.toString() : null,
             hasHedgeFundStrategy: fund.hasHedgeFundStrategy !== null ? fund.hasHedgeFundStrategy.toString() : null,
             isLeveraged: fund.isLeveraged !== null ? fund.isLeveraged.toString() : null,
@@ -179,12 +168,14 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             hasSecurityiesLending: fund.hasSecurityiesLending !== null ? fund.hasSecurityiesLending.toString() : null,
             hasSwap: fund.hasSwap !== null ? fund.hasSwap.toString() : null,
             hasDurationHedge: fund.hasDurationHedge !== null ? fund.hasDurationHedge.toString() : null,
+            useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt !== null ? fund.useDefaultHolidayMgmt.toString() : null,
+            holidayMgmtConfig: fund.holidayMgmtConfig !== null ? fund.holidayMgmtConfig : null,
         };
         return {
             ...sum,
-            [fund.fundID]: fundData
+            [fund.fundID]: fundData,
         };
-    }, {});
+    },                              {});
 
     return {
         ...state,

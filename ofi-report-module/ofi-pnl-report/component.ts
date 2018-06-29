@@ -19,6 +19,7 @@ import {
     setRequestedWalletAddresses
 } from '@setl/core-store';
 import * as math from 'mathjs';
+import {MultilingualService} from '@setl/multilingual';
 
 interface ActiveBalanceListItem {
     fundName: string;
@@ -84,6 +85,7 @@ export class OfiPnlReportComponent implements OnInit, OnDestroy {
                 private _myWalletService: MyWalletsService,
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
+                public _translate: MultilingualService,
                 private _changeDetectorRef: ChangeDetectorRef) {
     }
 

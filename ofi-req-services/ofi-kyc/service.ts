@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 
-import {MemberSocketService} from '@setl/websocket-service';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
     ApprovedKycMessageBody,
     ApprovedKycRequestData,
@@ -18,20 +18,42 @@ import {
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
+    fetchInvitationsByUserAmCompanyRequestBody,
 } from './model';
 
-import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import * as _ from 'lodash';
-import {SagaHelper} from '@setl/utils';
-import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
-import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
+import { SagaHelper } from '@setl/utils';
+import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {
+    SET_INVESTOR_INVITATIONS_LIST,
+    SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 
 @Injectable()
 export class OfiKycService {
-    constructor(private memberSocketService: MemberSocketService,
-                private ngRedux: NgRedux<any>) {
 
+    isListeningGetInvitationsByUserAmCompany;
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
+    @select(['user', 'authentication', 'isLogin']) isLogin$;
+
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
+        this.isLogin$.subscribe((isLogin) => {
+            if (isLogin) {
+                return;
+            }
+            this.unSubscribe.next();
+            this.unSubscribe.complete();
+        });
     }
 
     /**
@@ -44,7 +66,7 @@ export class OfiKycService {
     static defaultRequestAmKycList(ofiKycService: OfiKycService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: SET_REQUESTED
+            type: SET_REQUESTED,
         });
 
         // Request the list.
@@ -75,8 +97,19 @@ export class OfiKycService {
 
         const messageBody: VerifyInvitationTokenRequestBody = {
             RequestName: 'iznesverifytoken',
-            token: token,
-            source: ''
+            token,
+            source: '',
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    isInvitationTokenUsed(token: string): any {
+
+        const messageBody: VerifyInvitationTokenRequestBody = {
+            RequestName: 'iznesistokenused',
+            token,
+            source: '',
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -91,7 +124,7 @@ export class OfiKycService {
             password: _.get(requestData, 'password', ''),
             accountName: _.get(requestData, 'email', ''),
             accountDescription: _.get(requestData, 'email', '') + '_account',
-            lang: _.get(requestData, 'lang', '')
+            lang: _.get(requestData, 'lang', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -113,7 +146,7 @@ export class OfiKycService {
             investorCompanyName: _.get(requestData, 'investorCompanyName', ''),
             amCompanyName: _.get(requestData, 'amCompanyName', ''),
             lang: _.get(requestData, 'lang', ''),
-            invitedID: _.get(requestData, 'invitedID', '')
+            invitedID: _.get(requestData, 'invitedID', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -170,10 +203,47 @@ export class OfiKycService {
 
         const messageBody: GetAmKycListRequestBody = {
             RequestName: 'iznesgetamkyclist',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getInvitationsByUserAmCompany() {
+
+        if (this.isListeningGetInvitationsByUserAmCompany) {
+            return;
+        }
+        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (d) {
+                    return;
+                }
+                this.fetchInvitationsByUserAmCompany();
+            });
+
+    }
+
+    fetchInvitationsByUserAmCompany() {
+        const messageBody: fetchInvitationsByUserAmCompanyRequestBody = {
+            RequestName: 'getinvitationsbyuseramcompany',
+            token: this.memberSocketService.token,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_INVESTOR_INVITATIONS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch({
+                    type: SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
+                });
+            },
+        ));
     }
 
     fetchInvestor() {
@@ -201,7 +271,7 @@ export class OfiKycService {
             amCompanyName: options.amCompanyName,
             investorCompanyName: options.investorCompanyName,
             investorEmail: options.investorEmail,
-            investorPhoneNumber: options.investorPhoneNumber
+            investorPhoneNumber: options.investorPhoneNumber,
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -242,26 +312,9 @@ export class OfiKycService {
         const messageBody: SaveFundAccessRequestBody = {
             RequestName: 'iznesfundaccessadd',
             token: this.memberSocketService.token,
-            shareArray: _.get(requestData, 'shareArray', ''),
+            access: _.get(requestData, 'access', ''),
             kycID: _.get(requestData, 'kycID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
-            entryFee: 0,
-            exitFee: 0
-        };
-
-        return createMemberNodeRequest(this.memberSocketService, messageBody);
-    }
-
-    removeFundAccess(requestData: SaveFundAccessRequestData): any {
-
-        const messageBody: SaveFundAccessRequestBody = {
-            RequestName: 'iznesfundaccessdelete',
-            token: this.memberSocketService.token,
-            shareArray: _.get(requestData, 'shareArray', ''),
-            kycID: _.get(requestData, 'kycID', ''),
-            investorWalletID: _.get(requestData, 'investorWalletID', ''),
-            entryFee: 0,
-            exitFee: 0
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

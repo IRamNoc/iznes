@@ -1,13 +1,13 @@
 <div class="header-breadcrumbs">
     <h1>
-        <span>Precentralisation Report: All Shares</span>
+        <i class="fa fa-book"></i>{{'Precentralisation Report: All Shares' | translate}}
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
         <button id="demoOptimisedDatagridBtn" clrTabLink>
-            <i class="fa fa-th-list"></i> <span>List</span>
+            <i class="fa fa-th-list"></i> {{'List' | translate}}
         </button>
         <clr-tab-content *clrIfActive>
             <section class="form-block">
@@ -17,13 +17,13 @@
                         <tbody>
                         <tr>
                             <td>
-                                <h3 style="margin-bottom: 3px;">
-                                    <span mltag="">Please find below the precentralisation reports by Share</span>:
-                                </h3>
-                                <span mltag="">You can see precentralisation report</span>
+                                <h3 style="margin-bottom: 3px;">{{'Please find below the precentralisation reports by Share:' | translate}}
+
+                                </h3>{{'You can see precentralisation report' | translate}}
+
                             </td>
                             <td class="text-right" valign="middle">
-                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" mltag="" (click)="onClickExportCentralizationReport()">Export precentralisation report</button>
+                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="onClickExportCentralizationReport()">{{'Export precentralisation report' | translate}}</button>
                             </td>
                         </tr>
                         </tbody>
@@ -34,43 +34,43 @@
 
                 <clr-datagrid class="expandable">
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>ISIN</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISIN' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Share Name</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Name' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>NAV Date</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'NAV Date' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareClassCurrency'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Share Currency</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Currency' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNav'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Latest NAV</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Latest NAV' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>AUM</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUM' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'netPositionShareCurrency'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Net Amount</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'netPositionPerCentAum'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">
-                            <span>Net Amount (% AUM)</span>
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (% AUM)' | translate}}
+
                         </ng-container>
                     </clr-dg-column>
 
@@ -83,7 +83,7 @@
                         <clr-dg-cell>{{data.latestNav | moneyValue: 2 }}</clr-dg-cell>
                         <clr-dg-cell>{{data.aum | moneyValue: 5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netPosition | moneyValue: 5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netPositionPercentage | moneyValue: 2}}%</clr-dg-cell>
+                        <clr-dg-cell>{{data.netPositionPercentage | moneyValue: 2}}{{'%' | translate}}</clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
@@ -92,22 +92,22 @@
                                             <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Quantity</th>
-                                                <th>Amount</th>
-                                                <th>Cut-off Date</th>
-                                                <th>Settlement Date</th>
+                                                <th>{{'Quantity' | translate}}</th>
+                                                <th>{{'Amount' | translate}}</th>
+                                                <th>{{'Cut-off Date' | translate}}</th>
+                                                <th>{{'Settlement Date' | translate}}</th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr>
-                                                <td><b>Subscriptions</b></td>
+                                                <td><b>{{'Subscriptions' | translate}}</b></td>
                                                 <td>{{data.subQuantity | moneyValue: 4 }}</td>
                                                 <td>{{data.subAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.subCutoffDate}}</td>
                                                 <td>{{data.subSettlementDate}}</td>
                                             </tr>
                                             <tr>
-                                                <td><b>Redemptions</b></td>
+                                                <td><b>{{'Redemptions' | translate}}</b></td>
                                                 <td>{{data.redQuantity | moneyValue: 4 }}</td>
                                                 <td>{{data.redAmount | moneyValue: 5 }}</td>
                                                 <td>{{data.redCutoffDate}}</td>
@@ -119,12 +119,12 @@
 
                                     <div class="form-group col-sm-5 flex-container-column">
                                         <div class="flex-container-row">
-                                            <button class="btn btn-primary" type="button" (click)="onClickViewCorrespondingOrders(data.fundShareID)">View corresponding orders</button>
+                                            <button class="btn btn-primary" type="button" (click)="onClickViewCorrespondingOrders(data.fundShareID)">{{'View corresponding orders' | translate}}</button>
                                             <button class="btn btn-default" type="button" (click)="onClickDownloadCorrespondingOrders(data.fundShareID)">
                                                 <i class="fa fa-download"></i></button>
                                         </div>
                                         <div class="flex-container-row">
-                                            <button class="btn btn-primary" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">View centralsation history</button>
+                                            <button class="btn btn-primary" type="button" (click)="onClickViewCentralizationHistory(data.fundShareID)">{{'View centralsation history' | translate}}</button>
                                             <button class="btn btn-default" type="button" (click)="onClickDownloadCentralizationHistory(data.fundShareID)">
                                                 <i class="fa fa-download"></i></button>
                                         </div>
@@ -137,7 +137,7 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>Show/hide fields:</clr-dg-column-toggle-title>
+                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
                             <!--<clr-dg-column-toggle-button clrType="selectAll">-->
                             <!--<button type="button" class="btn btn-primary">-->
                             <!--Select All-->
@@ -150,6 +150,7 @@
                             </clr-dg-column-toggle-button>
                         </clr-dg-column-toggle>
                         {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
                         <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
                     </clr-dg-footer>
                 </clr-datagrid>

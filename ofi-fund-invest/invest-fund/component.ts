@@ -7,12 +7,14 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output
+    Output,
+    ViewChild,
+    ElementRef
 } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 // Internal
@@ -24,17 +26,19 @@ import {
     MoneyValuePipe,
     NumberConverterService
 } from '@setl/utils';
-import {InitialisationService, MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
-import {setRequestedWalletAddresses} from '@setl/core-store';
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
+import { setRequestedWalletAddresses } from '@setl/core-store';
+import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
-import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderHelper, OrderRequest} from '../../ofi-product/fund-share/helper/order-helper';
-import {OrderByType} from '../../ofi-orders/order.model';
-import {ToasterService} from 'angular2-toaster';
-import {Router} from '@angular/router';
-import {LogService} from '@setl/utils';
+import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
+import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderByType } from '../../ofi-orders/order.model';
+import { ToasterService } from 'angular2-toaster';
+import { Router } from '@angular/router';
+import { LogService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
+import { MessagesService } from '@setl/core-messages';
 
 @Component({
     selector: 'app-invest-fund',
@@ -45,8 +49,12 @@ import {LogService} from '@setl/utils';
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
+    @ViewChild('quantityInput') quantityInput: ElementRef;
+    @ViewChild('subportfolio') subportfolio: ElementRef;
+
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
+    quantityDecimalSize = 5;
 
     @Input() shareId: number;
     @Input() type: string;
@@ -132,6 +140,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     netAmount: FormControl;
     address: FormControl;
     disclaimer: FormControl;
+    navStrControl: FormControl;
+    feeControl: FormControl;
 
     addressSelected: any;
 
@@ -143,6 +153,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     subPortfolio;
     addressListObj;
+
+    amountLimit: number = 15000000;
 
     panels = {
         1: true,
@@ -156,8 +168,37 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     orderHelper: OrderHelper;
     calenderHelper: CalendarHelper;
 
+    redeemedAll: Boolean;
+
+    /**
+     * This function pads floats as string with zeros
+     * @param value {float} the value to pad with zeros
+     * @param size {int} the wanted decimal size
+     */
+
+    static padWithZeros(value: string, size: number): string {
+        const isInt = value.split('.').length === 1;
+        const len = !isInt && value.split('.')[1].length;
+        if (len === size) {
+            return value;
+        }
+        if (len < size) {
+            let newValue = isInt ? value + '.' : value;
+
+            while (newValue.split('.')[1].length < size) {
+                newValue += '0';
+            }
+            return newValue;
+        }
+
+        const newValue = value.split('.');
+        return `${newValue[0]}.${newValue[1].slice(0, size)}`;
+
+    }
+
     get feePercentage(): number {
-        return this._numberConverterService.toFrontEnd(this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
+        return (this.type === 'subscribe' ? this._numberConverterService.toFrontEnd(this.shareData['entryFee']) :
+            this._numberConverterService.toFrontEnd(this.shareData['exitFee']));
     }
 
     get cutoffTime(): string {
@@ -297,7 +338,40 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
-        return Boolean(redeeming >= balance);
+        return Boolean(redeeming > balance);
+    }
+
+    get amountTooBig() {
+        let value = this.amount.value;
+        let quantity = this._moneyValuePipe.parse(value, 4);
+
+        if (isNaN(quantity)) {
+            quantity = 0;
+        }
+
+        return quantity > this.amountLimit;
+    }
+
+    get feeFrontend(): {
+        mifiidChargesOneOff: number;
+        mifiidChargesOngoing: number;
+        mifiidTransactionCosts: number;
+        mifiidServicesCosts: number;
+        mifiidIncidentalCosts: number;
+    } {
+        const mifiidChargesOneOff = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
+        const mifiidChargesOngoing = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
+        const mifiidTransactionCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
+        const mifiidServicesCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
+        const mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
+
+        return {
+            mifiidChargesOneOff,
+            mifiidChargesOngoing,
+            mifiidTransactionCosts,
+            mifiidServicesCosts,
+            mifiidIncidentalCosts,
+        };
     }
 
     constructor(private _changeDetectorRef: ChangeDetectorRef,
@@ -311,7 +385,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private _toaster: ToasterService,
                 private _router: Router,
                 private logService: LogService,
-                private _ngRedux: NgRedux<any>) {
+                public _translate: MultilingualService,
+                private _ngRedux: NgRedux<any>,
+                private _messagesService: MessagesService) {
     }
 
     ngOnDestroy() {
@@ -336,6 +412,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
+        this.navStrControl = new FormControl('');
+        this.feeControl = new FormControl('');
+
         // Subscription form
         this.form = new FormGroup({
             quantity: this.quantity,
@@ -347,7 +426,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             cutoffDate: this.cutoffDate,
             valuationDate: this.valuationDate,
             settlementDate: this.settlementDate,
-            disclaimer: this.disclaimer
+            disclaimer: this.disclaimer,
+            navStrControl: this.navStrControl,
+            feeControl: this.feeControl,
         });
 
         // this.setInitialFormValue();
@@ -375,7 +456,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             this.updateDateInputs();
 
-
         }));
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
@@ -396,6 +476,24 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.addressSelected = this.initialFormData.address[0];
             this.actionBy = this.initialFormData.actionBy;
         }
+    }
+
+    redeemAll($event) {
+        $event.preventDefault();
+
+        if (!this.addressSelected) {
+            this.redeemedAll = true;
+            this.subportfolio.nativeElement.scrollIntoView();
+            this.form.get('address').markAsDirty();
+            this.form.get('address').markAsTouched();
+            return false;
+        }
+
+        let quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
+
+        this.quantityInput.nativeElement.focus();
+        this.form.get('quantity').setValue(quantity);
+        this.quantityInput.nativeElement.blur();
     }
 
     updateDateInputs() {
@@ -553,7 +651,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-        `, {showCloseButton: false, overlayClickToClose: false});
+        `, { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
@@ -561,12 +659,36 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
             this.handleClose();
 
+            if (this.amountTooBig) {
+                this.sendMessageToAM({
+                    walletID: this.shareData.amDefaultWalletId,
+                    orderTypeLabel: this.orderTypeLabel,
+                    orderID: orderId,
+                    orderRef: orderRef
+                });
+            }
+
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
             const errorMessage = _.get(data, ['1', 'Data', '0', 'Message'], '');
             this._toaster.pop('warning', errorMessage);
+
+            this._alertsService.close();
         });
 
+    }
+
+    //this.shareData.walletId
+
+    sendMessageToAM(params) {
+        const amWalletID = params.walletID;
+        const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
+        const body = `<p>Hello,<br /><br />
+Please be aware that the ${params.orderTypeLabel} order ${params.orderRef} has exceeded the limit of 15 million.<br />
+<a href="/#/manage-orders/list?orderID=${params.orderID}" class="btn btn-secondary">Go to this order</a><br /><br />
+The IZNES Team.</p>`;
+
+        this._messagesService.sendMessage([amWalletID], subject, body, null);
     }
 
     subscribeForChange(type: string): void {
@@ -583,12 +705,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         const callBack = {
             'quantity': (value) => {
-                const newValue = this._moneyValuePipe.parse(value, this.shareData.maximumNumDecimal);
 
+                const val = Number(value.toString().replace(/\s+/g, ''));
                 /**
                  * amount = unit * nav
                  */
-                const amount = math.format(math.chain(newValue).multiply(this.nav).done(), 14);
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
                 beTriggered.setValue(this._moneyValuePipe.transform(amount.toString(), 4));
 
                 // calculate fee
@@ -610,7 +732,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                  */
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14);
-                beTriggered.setValue(this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal));
+                const newQuantity = InvestFundComponent.padWithZeros(
+                    this._moneyValuePipe.transform(quantity, this.shareData.maximumNumDecimal),
+                    this.quantityDecimalSize,
+                );
+                beTriggered.setValue(newQuantity);
 
                 // calculate fee
                 const fee = calFee(newValue, this.feePercentage);
@@ -665,7 +791,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
@@ -674,67 +801,35 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
 
-            triggering.setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[0].setValue(valuationDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(settlementDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            triggering.setValue(cutoffDateStr);
+            beTriggered[0].setValue(valuationDateStr);
+            beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
 
             const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
+
 
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(settlementDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(settlementDateStr);
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
             const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
-            beTriggered[0].setValue(cutoffDateStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
-            beTriggered[1].setValue(valuationStr, {
-                onlySelf: true,
-                emitEvent: false,
-                emitModelToViewChange: true,
-                emitViewToModelChange: false
-            });
+            beTriggered[0].setValue(cutoffDateStr);
+            beTriggered[1].setValue(valuationStr);
 
             this.dateBy = 'settlement';
         }
@@ -750,11 +845,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const quantity = this._moneyValuePipe.parse(this.quantity.value);
         const amountStr = this._moneyValuePipe.transform(amount, 4);
         const quantityStr = this._moneyValuePipe.transform(quantity, Number(this.shareData.maximumNumDecimal));
+        const amountMessage = this.amountTooBig ? '<p class="mb-1"><span class="text-danger blink_me">Order amount above 15 million</span></p>' : '';
 
-        this._confirmationService.create(
-            '<span>Order confirmation</span>',
-            `
+        let conditionalMessage;
+        if (this.type === 'redeem') {
+            const quantityBlockchain = this._numberConverterService.toBlockchain(quantity);
+            conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
+        }
+
+        let message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
+            ${conditionalMessage ? conditionalMessage : ''}
+            ${amountMessage}
             <table class="table grid">
                 <tbody>
                     <tr>
@@ -795,8 +897,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-            `,
-            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
+            `;
+
+        this._confirmationService.create(
+            '<span>Order confirmation</span>',
+            message,
+            { confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.handleSubmit();
@@ -808,12 +914,39 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.shareData.kiid;
     }
 
+    unSubscribeQuantity() {
+        const newValue = InvestFundComponent.padWithZeros(this.quantity.value, this.quantityDecimalSize);
+
+        this.quantity.setValue(newValue);
+        this.unSubscribeForChange();
+    }
+
     unSubscribeForChange(): void {
         if (this.inputSubscription) {
             this.inputSubscription.unsubscribe();
         }
     }
 
+    resetForm(form) {
+        const resetList = [
+            { field: 'address', value: null },
+            { field: 'cutoffDate', value: null },
+            { field: 'valuationDate', value: null },
+            { field: 'settlementDate', value: null },
+            { field: 'quantity', value: 0 },
+            { field: 'amount', value: 0 },
+            { field: 'comment', value: null },
+        ];
+        Object.keys(form.controls).forEach((key) => {
+            resetList.forEach((field) => {
+                if (key === field.field) {
+                    this.form.get(key).patchValue(field.value, { emitEvent: true });
+                    this.form.get(key).markAsPristine();
+                    this.form.get(key).markAsUntouched();
+                }
+            });
+        });
+    }
 
     findPortFolioBalance(balances) {
         const breakDown = _.get(balances, ['breakdown'], []);
@@ -829,6 +962,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     getDate(dateString: string): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    }
+
+    roundAmount() {
+        const moneyParsedValue = this._moneyValuePipe.parse(this.amount.value);
+        const newValue = Math.ceil(
+            moneyParsedValue /
+            (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)))
+        ) * (this.nav / Math.pow(10, Number(this.shareData.maximumNumDecimal)));
+        const paddedNewValue = InvestFundComponent.padWithZeros(newValue.toString(), 4);
+
+        this.amount.setValue(paddedNewValue);
+        this.unSubscribeForChange();
     }
 }
 
@@ -847,7 +992,7 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
 
     if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
-        return {invalidNumber: true};
+        return { invalidNumber: true };
     }
 }
 
@@ -861,7 +1006,7 @@ function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
 
     const formValue = control.value;
     if (formValue instanceof Array && control.value.length === 0) {
-        return {required: true};
+        return { required: true };
     }
 }
 
@@ -893,7 +1038,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
+    return Number(math.format(math.chain(amount).multiply((feePercent / 100)).done(), 14));
 }
 
 /**

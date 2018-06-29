@@ -19,6 +19,10 @@ export interface AmHoldersDetails {
     shareRatio: number;
 }
 
+export interface InvHoldingsDetails {
+
+}
+
 export interface HolderDetailStructure {
     id: number;
     name: string;
@@ -35,6 +39,7 @@ export interface HolderDetailStructure {
 export interface ShareHolderItem {
     ranking: number;
     investorName: string;
+    companyName: string;
     quantity: number;
     amount: number;
     ratio: number;
@@ -45,4 +50,6 @@ export interface OfiHolderState {
     requested: boolean;
     holderDetailRequested: boolean;
     shareHolderDetail: HolderDetailStructure;
+    invHoldingsList: List<InvHoldingsDetails>;
+    invRequested: boolean;
 }

@@ -38,6 +38,7 @@ import {
 import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
 
 import * as moment from 'moment';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'app-nav',
@@ -88,6 +89,7 @@ export class OfiManageCsvComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _numberConverterService: NumberConverterService,
                 private _ofiCorpActionService: OfiCorpActionService,
+                public _translate: MultilingualService,
                 private fileService: FileService) {
     }
 

@@ -16,6 +16,8 @@ import {ActionDirection} from './pnlHelper/class';
 import {OfiManageCsvComponent} from './ofi-csv-report/component';
 import {MultilingualModule} from '@setl/multilingual';
 import {CentralizationReportComponent} from './centralization/component';
+import {CentralizationSelectComponent} from './centralization-select/component';
+import {MyHoldingsComponent} from './my-holdings/component';
 
 @Pipe({name: 'txType'})
 export class TxTypePipe implements PipeTransform {
@@ -53,6 +55,8 @@ export class TxTypePipe implements PipeTransform {
         OfiManageCsvComponent,
         CentralizationReportComponent,
         OfiCentralizationHistoryComponent,
+        CentralizationSelectComponent,
+        MyHoldingsComponent,
         TxTypePipe,
     ],
     providers: [],

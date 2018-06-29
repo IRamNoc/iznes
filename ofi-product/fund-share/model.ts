@@ -1,25 +1,25 @@
 import * as _ from 'lodash';
 
-import {FormItem, FormItemDropdown, FormItemType} from '@setl/utils';
-import {OfiFundShare, OfiFundShareDocuments} from '@ofi/ofi-main';
+import { FormItem, FormItemDropdown, FormItemType } from '@setl/utils';
+import { OfiFundShare, OfiFundShareDocuments } from '@ofi/ofi-main';
 import * as FundShareEnum from './FundShareEnum';
-import {ShareCharacteristicMandatory} from './models/characteristic';
-import {ShareCalendarMandatory} from './models/calendar';
-import {ShareFeesMandatory, ShareFeesOptional} from './models/fees';
-import {ShareKeyFactsMandatory, ShareKeyFactsOptional} from './models/keyFacts';
-import {ShareListingOptional} from './models/listing';
-import {SharePRIIPOptional} from './models/priip';
-import {ShareProfileMandatory, ShareProfileOptional} from './models/profile';
-import {ShareRepresentationOptional} from './models/representation';
-import {ShareSolvencyOptional} from './models/solvency';
-import {ShareTaxationOptional} from './models/taxation';
-import {ShareFund} from './models/fund';
-import {ShareUmbrellaFund} from './models/umbrella';
-import {ShareDocumentsMandatory, ShareDocumentsOptional} from './models/documents';
-import {FundShareTradeCycleModel} from './form/trade-cycle/model';
+import { ShareCharacteristicMandatory } from './models/characteristic';
+import { ShareCalendarMandatory } from './models/calendar';
+import { ShareFeesMandatory, ShareFeesOptional } from './models/fees';
+import { ShareKeyFactsStatus, ShareKeyFactsMandatory, ShareKeyFactsOptional } from './models/keyFacts';
+import { ShareListingOptional } from './models/listing';
+import { SharePRIIPOptional } from './models/priip';
+import { ShareProfileMandatory, ShareProfileOptional } from './models/profile';
+import { ShareRepresentationOptional } from './models/representation';
+import { ShareSolvencyOptional } from './models/solvency';
+import { ShareTaxationOptional } from './models/taxation';
+import { ShareFund } from './models/fund';
+import { ShareUmbrellaFund } from './models/umbrella';
+import { ShareDocumentsMandatory, ShareDocumentsOptional } from './models/documents';
+import { FundShareTradeCycleModel } from './form/trade-cycle/model';
 import * as PC from '../productConfig';
 
-export {PanelData} from './models/panelData';
+export { PanelData } from './models/panelData';
 
 export class FundShare {
     fundID: number;
@@ -33,42 +33,43 @@ export class FundShare {
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,
-        redemptionTradeCycle: null
-    }
+        redemptionTradeCycle: null,
+    };
     characteristic = {
-        mandatory: new ShareCharacteristicMandatory()
-    }
+        mandatory: new ShareCharacteristicMandatory(),
+    };
     fees = {
         mandatory: new ShareFeesMandatory(),
-        optional: new ShareFeesOptional()
-    }
+        optional: new ShareFeesOptional(),
+    };
     keyFacts = {
+        status: new ShareKeyFactsStatus(),
         mandatory: new ShareKeyFactsMandatory(),
-        optional: new ShareKeyFactsOptional()
-    }
+        optional: new ShareKeyFactsOptional(),
+    };
     listing = {
-        optional: new ShareListingOptional()
-    }
+        optional: new ShareListingOptional(),
+    };
     priip = {
-        optional: new SharePRIIPOptional()
-    }
+        optional: new SharePRIIPOptional(),
+    };
     profile = {
         mandatory: new ShareProfileMandatory(),
-        optional: new ShareProfileOptional()
-    }
+        optional: new ShareProfileOptional(),
+    };
     representation = {
-        optional: new ShareRepresentationOptional()
-    }
+        optional: new ShareRepresentationOptional(),
+    };
     solvency = {
-        optional: new ShareSolvencyOptional()
-    }
+        optional: new ShareSolvencyOptional(),
+    };
     taxation = {
-        optional: new ShareTaxationOptional()
-    }
+        optional: new ShareTaxationOptional(),
+    };
     documents = {
         mandatory: new ShareDocumentsMandatory(),
-        optional: new ShareDocumentsOptional()
-    }
+        optional: new ShareDocumentsOptional(),
+    };
 
     constructor() {}
 
@@ -79,7 +80,7 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {        
+    getRequest(): OfiFundShare {
         return {
             accountId: this.accountId,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
@@ -87,7 +88,7 @@ export class FundShare {
             fundID: this.fundID,
             isin: this.keyFacts.mandatory.isin.value(),
             shareClassCode: this.keyFacts.mandatory.shareClassCode.value(),
-            shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.mandatory.shareClassInvestmentStatus),
+            shareClassInvestmentStatus: this.getSelectValue(this.keyFacts.status.shareClassInvestmentStatus),
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
@@ -108,8 +109,6 @@ export class FundShare {
             minSubsequentSubscriptionInAmount: this.characteristic.mandatory.minSubsequentSubscriptionInAmount.value(),
             redemptionCategory: this.getSelectValue(this.characteristic.mandatory.redemptionCategory),
             redemptionCurrency: this.getSelectValue(this.characteristic.mandatory.redemptionCurrency),
-            minInitialRedemptionInShare: this.characteristic.mandatory.minInitialRedemptionInShare.value(),
-            minInitialRedemptionInAmount: this.characteristic.mandatory.minInitialRedemptionInAmount.value(),
             minSubsequentRedemptionInShare: this.characteristic.mandatory.minSubsequentRedemptionInShare.value(),
             minSubsequentRedemptionInAmount: this.characteristic.mandatory.minSubsequentRedemptionInAmount.value(),
             portfolioCurrencyHedge: this.getSelectValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge),
@@ -119,7 +118,7 @@ export class FundShare {
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.redemptionCutOffTimeZone),
             redemptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.redemptionSettlementPeriod),
-            subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
+            subscriptionRedemptionCalendar: '0',
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
@@ -129,16 +128,32 @@ export class FundShare {
             mifiidTransactionCosts: this.fees.mandatory.mifiidTransactionCosts.value(),
             mifiidServicesCosts: this.fees.mandatory.mifiidServicesCosts.value(),
             mifiidIncidentalCosts: this.fees.mandatory.mifiidIncidentalCosts.value(),
-            subscriptionTradeCyclePeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
-            numberOfPossibleSubscriptionsWithinPeriod: (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
-            monthlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
-            yearlySubscriptionDealingDays: this.convertArrayToJSON((this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
-            redemptionTradeCyclePeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
-            numberOfPossibleRedemptionsWithinPeriod: (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
-            weeklyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
-            monthlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
-            yearlyRedemptionDealingDays: this.convertArrayToJSON((this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
+            subscriptionTradeCyclePeriod:
+                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            numberOfPossibleSubscriptionsWithinPeriod:
+                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            weeklySubscriptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
+            monthlySubscriptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
+            yearlySubscriptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
+            redemptionTradeCyclePeriod:
+                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            numberOfPossibleRedemptionsWithinPeriod:
+                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            weeklyRedemptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
+            monthlyRedemptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays),
+            yearlyRedemptionDealingDays:
+                this.convertArrayToJSON(
+                    (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             navPeriodForSubscription: this.getSelectValue(this.calendar.mandatory.navPeriodForSubscription),
             navPeriodForRedemption: this.getSelectValue(this.calendar.mandatory.navPeriodForRedemption),
             keyFactOptionalData: this.generateJSONString(this.keyFacts.optional),
@@ -147,8 +162,8 @@ export class FundShare {
             listingOptionalData: this.generateJSONString(this.listing.optional),
             taxationOptionalData: this.generateJSONString(this.taxation.optional),
             solvencyIIOptionalData: this.generateJSONString(this.solvency.optional),
-            representationOptionalData: this.generateJSONString(this.representation.optional)
-        }
+            representationOptionalData: this.generateJSONString(this.representation.optional),
+        };
     }
 
     setFundShare(fundShare: OfiFundShare): void {
@@ -156,7 +171,7 @@ export class FundShare {
         this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
-        this.setListItemPreset(this.keyFacts.mandatory.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
+        this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
         this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
@@ -164,7 +179,10 @@ export class FundShare {
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
         this.setListItemPreset(this.keyFacts.mandatory.couponType, fundShare.couponType);
-        this.setListItemPreset(this.keyFacts.mandatory.freqOfDistributionDeclaration, fundShare.freqOfDistributionDeclaration);
+        this.setListItemPreset(
+            this.keyFacts.mandatory.freqOfDistributionDeclaration,
+            fundShare.freqOfDistributionDeclaration,
+        );
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
         this.setFeederPreset(fundShare.feeder);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
@@ -172,22 +190,33 @@ export class FundShare {
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
         this.characteristic.mandatory.minInitialSubscriptionInShare.preset = fundShare.minInitialSubscriptionInShare;
         this.characteristic.mandatory.minInitialSubscriptionInAmount.preset = fundShare.minInitialSubscriptionInAmount;
-        this.characteristic.mandatory.minSubsequentSubscriptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
-        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset = fundShare.minSubsequentSubscriptionInAmount;
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.preset =
+            fundShare.minSubsequentRedemptionInShare;
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.preset =
+            fundShare.minSubsequentSubscriptionInAmount;
         this.setListItemPreset(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
-        this.characteristic.mandatory.minInitialRedemptionInShare.preset = fundShare.minInitialRedemptionInShare;
-        this.characteristic.mandatory.minInitialRedemptionInAmount.preset = fundShare.minInitialRedemptionInAmount;
         this.characteristic.mandatory.minSubsequentRedemptionInShare.preset = fundShare.minSubsequentRedemptionInShare;
-        this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset = fundShare.minSubsequentRedemptionInAmount;
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
+            fundShare.minSubsequentRedemptionInAmount;
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
-        this.setListItemPreset(this.calendar.mandatory.subscriptionCutOffTimeZone, fundShare.subscriptionCutOffTimeZone);
-        this.setListItemPreset(this.calendar.mandatory.subscriptionSettlementPeriod, fundShare.subscriptionSettlementPeriod);
+        this.setListItemPreset(
+            this.calendar.mandatory.subscriptionCutOffTimeZone,
+            fundShare.subscriptionCutOffTimeZone,
+        );
+        this.setListItemPreset(
+            this.calendar.mandatory.subscriptionSettlementPeriod,
+            fundShare.subscriptionSettlementPeriod,
+        );
         this.calendar.mandatory.redemptionCutOffTime.preset = fundShare.redemptionCutOffTime;
         this.setListItemPreset(this.calendar.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
-        this.setListItemPreset(this.calendar.mandatory.redemptionSettlementPeriod, fundShare.redemptionSettlementPeriod);
-        this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
+        this.setListItemPreset(
+            this.calendar.mandatory.redemptionSettlementPeriod,
+            fundShare.redemptionSettlementPeriod,
+        );
+        // removed by PZ 28/06/2018
+        // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
         this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
         this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
         this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
@@ -197,7 +226,7 @@ export class FundShare {
         this.fees.mandatory.mifiidTransactionCosts.preset = fundShare.mifiidTransactionCosts;
         this.fees.mandatory.mifiidServicesCosts.preset = fundShare.mifiidServicesCosts;
         this.fees.mandatory.mifiidIncidentalCosts.preset = fundShare.mifiidIncidentalCosts;
-        
+
         this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
         this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
         this.applyOptionalData((this.priip.optional as any), JSON.parse(fundShare.priipOptionalData));
@@ -205,24 +234,32 @@ export class FundShare {
         this.applyOptionalData((this.taxation.optional as any), JSON.parse(fundShare.taxationOptionalData));
         this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
         this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
-        
+
         this.fundID = fundShare.fundID;
     }
 
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklySubscriptionDealingDays);
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlySubscriptionDealingDays);
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlySubscriptionDealingDays);
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays =
+            JSON.parse(fundShare.weeklySubscriptionDealingDays);
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays =
+            JSON.parse(fundShare.monthlySubscriptionDealingDays);
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays =
+            JSON.parse(fundShare.yearlySubscriptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
-        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod = fundShare.subscriptionTradeCyclePeriod;
+        (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod =
+            fundShare.subscriptionTradeCyclePeriod;
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays = JSON.parse(fundShare.weeklyRedemptionDealingDays);
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays = JSON.parse(fundShare.monthlyRedemptionDealingDays);
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays = JSON.parse(fundShare.yearlyRedemptionDealingDays);
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays =
+            JSON.parse(fundShare.weeklyRedemptionDealingDays);
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).monthlyDealingDays =
+            JSON.parse(fundShare.monthlyRedemptionDealingDays);
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays =
+            JSON.parse(fundShare.yearlyRedemptionDealingDays);
         this.setListItemPreset(this.calendar.mandatory.navPeriodForRedemption, fundShare.navPeriodForRedemption);
-        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod = fundShare.redemptionTradeCyclePeriod;
+        (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod =
+            fundShare.redemptionTradeCyclePeriod;
     }
 
     getDocumentsRequest(fundShareId: number): OfiFundShareDocuments {
@@ -246,29 +283,38 @@ export class FundShare {
             statutoryAuditorsCertification: this.documents.optional.statutoryAuditorsCertification.value(),
             ept: this.documents.optional.ept.value(),
             emt: this.documents.optional.emt.value(),
-            tpts2: this.documents.optional.tpts2.value()
-        }
+            tpts2: this.documents.optional.tpts2.value(),
+        };
     }
 
     setFundShareDocs(fundShareDocs: OfiFundShareDocuments): void {
         this.setDocumentItem(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
         this.setDocumentItem(this.documents.mandatory.kiid, fundShareDocs.kiid);
-        
+
         this.setDocumentItem(this.documents.optional.annualActivityReport, fundShareDocs.annualActivityReport);
         this.setDocumentItem(this.documents.optional.businessLetter, fundShareDocs.businessLetter);
         this.setDocumentItem(this.documents.optional.emt, fundShareDocs.emt);
         this.setDocumentItem(this.documents.optional.ept, fundShareDocs.ept);
         this.setDocumentItem(this.documents.optional.kid, fundShareDocs.kid);
         this.setDocumentItem(this.documents.optional.letterToShareholders, fundShareDocs.letterToShareholders);
-        this.setDocumentItem(this.documents.optional.monthlyExtraFinancialReport, fundShareDocs.monthlyExtraFinancialReport);
+        this.setDocumentItem(
+            this.documents.optional.monthlyExtraFinancialReport,
+            fundShareDocs.monthlyExtraFinancialReport,
+        );
         this.setDocumentItem(this.documents.optional.monthlyFinancialReport, fundShareDocs.monthlyFinancialReport);
         this.setDocumentItem(this.documents.optional.productSheet, fundShareDocs.productSheet);
-        this.setDocumentItem(this.documents.optional.quarterlyExtraFinancialReport, fundShareDocs.quarterlyExtraFinancialReport);
+        this.setDocumentItem(
+            this.documents.optional.quarterlyExtraFinancialReport,
+            fundShareDocs.quarterlyExtraFinancialReport,
+        );
         this.setDocumentItem(this.documents.optional.quarterlyFinancialReport, fundShareDocs.quarterlyFinancialReport);
         this.setDocumentItem(this.documents.optional.semiAnnualSummary, fundShareDocs.semiAnnualSummary);
         this.setDocumentItem(this.documents.optional.sharesAllocation, fundShareDocs.sharesAllocation);
         this.setDocumentItem(this.documents.optional.sriPolicy, fundShareDocs.sriPolicy);
-        this.setDocumentItem(this.documents.optional.statutoryAuditorsCertification, fundShareDocs.statutoryAuditorsCertification);
+        this.setDocumentItem(
+            this.documents.optional.statutoryAuditorsCertification,
+            fundShareDocs.statutoryAuditorsCertification,
+        );
         this.setDocumentItem(this.documents.optional.tpts2, fundShareDocs.tpts2);
         this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
     }
@@ -296,8 +342,8 @@ export class FundShare {
         this.setListItemPreset(this.fund.fundAdministrator, fund.fundAdministrator);
         this.setListItemPreset(this.fund.custodianBank, fund.custodianBank);
         this.setListItemPreset(this.fund.investmentManager, fund.investmentManager);
-        this.setListItemPreset(this.fund.principalPromoter, fund.principalPromoter);
-        this.setListItemPreset(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemPresetMultiple(this.fund.principalPromoter, fund.principalPromoter);
+        this.setListItemPresetMultiple(this.fund.payingAgent, fund.payingAgent);
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
         this.fund.isDedicatedFund.preset = fund.isDedicatedFund;
         this.setListItemPreset(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
@@ -313,23 +359,23 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
         this.setListItemPreset(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
-        this.setListItemPreset(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
-        this.setListItemPreset(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+        this.setListItemPresetMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
+        this.setListItemPresetMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
-        if(!str) return null;
-        
+        if (!str) return null;
+
         const arr = str.split('|');
 
         formItem.preset = arr[0];
         formItem.fileData = {
             fileID: arr[0],
             hash: arr[1],
-            name: arr[2]
-        }
+            name: arr[2],
+        };
 
-        if(!this.isProduction) formItem.required = false;
+        if (!this.isProduction) formItem.required = false;
     }
 
     private generateJSONString(model): string {
@@ -349,9 +395,9 @@ export class FundShare {
     }
 
     private applyValueToExistingFormItem(field: FormItem, value: any): void {
-        if(!field) return;
-        
-        if(field.type === FormItemType.list) {
+        if (!field) return;
+
+        if (field.type === FormItemType.list) {
             this.setListItemPresetFromOptional(field, value);
         } else {
             field.preset = value;
@@ -359,29 +405,40 @@ export class FundShare {
     }
 
     private setListItemPresetFromOptional(field: FormItem, value: any): void {
-        if(value == undefined) return;
+        if (value == undefined) return;
         (field.preset as any) = value;
     }
 
     private setListItemPreset(field: FormItem, value: any): void {
-        if(value == undefined) return;
+        if (value == undefined) return;
         (field.preset as any) = [_.find(field.listItems, (item) => {
             return item.id == value;
         })];
     }
 
+    private setListItemPresetMultiple(field: FormItem, value: number[]): void {
+        if (!value || !value.length) return;
+        (field.preset as any) = value.map((id: number) => {
+            const newItem = _.find(field.listItems, { id });
+            if (!newItem) {
+                return null;
+            }
+            return newItem;
+        }).filter(d => d !== null);
+    }
+
     private setFeederPreset(value: any): void {
         const preset = (!value || value === 0) ?
             [this.keyFacts.mandatory.feeder.listItems[0]] :
-            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
-                return item.id == value;
-            })];
-            
+        [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+            return item.id == value;
+        })];
+
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
     }
 
     private convertArrayToJSON(arr: any[]): string {
-        if((!arr) || arr.length === 0) return null;
+        if ((!arr) || arr.length === 0) return null;
 
         return JSON.stringify(arr);
     }
@@ -391,7 +448,7 @@ export class FundShare {
     }
 
     private getStatusFeederValue(): number {
-        if(parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;
@@ -407,5 +464,5 @@ export class FundShare {
 
 export enum FundShareMode {
     Create,
-    Update
+    Update,
 }

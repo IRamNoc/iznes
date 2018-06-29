@@ -127,16 +127,18 @@ interface Shares {
 }
 
 export interface SaveFundAccessRequestData {
-    shareArray: Array<Shares>;
+    access: object;
     kycID: number;
     investorWalletID: number;
 }
 
 export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
-    shareArray: Array<Shares>;
+    access: object;
     kycID: number;
     investorWalletID: number;
-    entryFee: number;
-    exitFee: number;
+}
+
+export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMessageBody {
+    token: string;
 }

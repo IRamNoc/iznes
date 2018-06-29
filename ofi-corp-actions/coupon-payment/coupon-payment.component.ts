@@ -34,6 +34,7 @@ import {immutableHelper, LogService} from '@setl/utils';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import * as _ from 'lodash';
 import {ofiCouponActions} from '@ofi/ofi-main/ofi-store';
+import {MultilingualService} from '@setl/multilingual';
 
 /* Decorator. */
 @Component({
@@ -81,6 +82,7 @@ export class CouponPaymentComponent implements OnInit, AfterViewInit, OnDestroy 
                 private router: Router,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
+                public _translate: MultilingualService,
                 private _confirmationService: ConfirmationService,) {
     }
 

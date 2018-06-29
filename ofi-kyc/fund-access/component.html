@@ -1,6 +1,7 @@
 <div class="header-breadcrumbs">
-    <h1 id="am-fund-holdings"><i class="fa fa-align-left"></i>
-        <span><span mltag="txt_clientfolderfundssharesaccessa1c2656ad8e">Client folder - Funds' Shares access authorisation</span>:</span> - {{investorData['companyName']}}
+    <h1 id="am-fund-holdings">
+        <i class="fa fa-align-left"></i>{{'Client folder - Funds\' Shares access authorisation: - @investorData[\'companyName\']@' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}
+
     </h1>
 </div>
 
@@ -9,53 +10,53 @@
     <clr-tabs>
         <clr-tab>
             <button clrTabLink id="am-fund-holdings-tab">
-                <i class="fa fa-user"></i> <span mltag="txt_fundssharesaccessauthorisation55e4a20f24">Funds' Shares Access Authorisation</span>
+                <i class="fa fa-user"></i> {{'Funds\' Shares Access Authorisation' | translate}}
             </button>
             <clr-tab-content>
                 <div class="panel-body">
 
-                    <div>Please select the funds you would like {{investorData['companyName']}} to have access to:</div>
-                    <h2>Professional Investor Details</h2>
+                    <div>{{'Please select the funds you would like @investorData[\'companyName\']@ to have access to:' | translate: {'investorData[\'companyName\']': investorData['companyName']} }}</div>
+                    <h2>{{'Professional Investor Details' | translate}}</h2>
                     <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label for="companyName">Company name:</label>
+                                <label for="companyName">{{'Company name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="companyName" class="form-control" formControlName="companyName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="clientReference">Client reference:</label>
+                                <label for="clientReference">{{'Client reference:' | translate}}</label>
                                 <div>
                                     <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="firstName">First name:</label>
+                                <label for="firstName">{{'First name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="firstName" class="form-control" formControlName="firstName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="lastName">Last name:</label>
+                                <label for="lastName">{{'Last name:' | translate}}</label>
                                 <div>
                                     <input type="text" id="lastName" class="form-control" formControlName="lastName">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="email">Email address:</label>
+                                <label for="email">{{'Email address:' | translate}}</label>
                                 <div>
                                     <input type="text" id="email" class="form-control" formControlName="email">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="phoneNumber">Phone number:</label>
+                                <label for="phoneNumber">{{'Phone number:' | translate}}</label>
                                 <div>
                                     <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
                                 </div>
                             </div>
                             <div class="form-group col-sm-6">
-                                <label for="approvalDateRequest">Date of approval request:</label>
+                                <label for="approvalDateRequest">{{'Date of approval request:' | translate}}</label>
                                 <div>
                                     <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
                                 </div>
@@ -63,51 +64,89 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
-                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">Save</button>
+                                <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{'Save' | translate}}</button>
                             </div>
                         </div>
                     </form>
                     <div class="hr-line-dashed"></div>
 
                     <div>
-                        <h2 mltag="txt_fundsshareaccessauthorisation">Funds' Share Access Authorisation</h2>
+                        <h2 id="fund_share_access_auth">{{'Funds\' Share Access Authorisation' | translate}}</h2>
 
                         <form>
-                            <div class="row form-group">We {{this.amCompany}}, wish to authorize {{investorData['companyName']}} to be able to invest in the following funds' shares:
+                            <div class="row form-group">{{'We @this.amCompany@, wish to authorize @investorData[\'companyName\']@ to be able to invest in the following funds\' shares:' | translate: {'this.amCompany': this.amCompany,'investorData[\'companyName\']': investorData['companyName']} }}
 
                                 <clr-datagrid #myDataGrid class="fund-table">
-                                    <clr-dg-column mltag="txt_fundname">Fund Name</clr-dg-column>
-                                    <clr-dg-column mltag="txt_sharename">Share Name</clr-dg-column>
-                                    <clr-dg-column mltag="txt_isin">ISIN</clr-dg-column>
-                                    <clr-dg-column mltag="txt_grantaccesstothisshare">Grant Access to this Share?</clr-dg-column>
-                                    <clr-dg-row *clrDgItems="let row of tableData">
-                                        <clr-dg-cell>{{row['fundName']}}
+                                    <clr-dg-column id="client_folder_fund_name">{{'Fund Name' | translate}}</clr-dg-column>
+                                    <clr-dg-column id="client_folder_share_name">{{'Share Name' | translate}}</clr-dg-column>
+                                    <clr-dg-column id="client_folder_isin_number">{{'ISIN' | translate}}</clr-dg-column>
+                                    <clr-dg-column id="client_folder_access_slider">{{'Grant Access to this Share?' | translate}}</clr-dg-column>
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>{{row['shareName']}}
+                                    <clr-dg-column id="client_folder_entry_fee">{{'Non Acquired Entry access %' | translate}}</clr-dg-column>
+                                    <clr-dg-column id="client_folder_exit_fee">{{'Non Acquired Exit access %' | translate}}</clr-dg-column>
+                                    <clr-dg-column id="client_folder_minimum_investment_amount">{{'Minimum Investment Amount' | translate}}</clr-dg-column>
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>{{row['isin']}}
+                                    <clr-dg-row *clrDgItems="let row of tableData; let i = index">
+                                        <ng-container *ngIf="!!access[row['id']]">
 
-                                        </clr-dg-cell>
-                                        <clr-dg-cell>
-                                            <div class="switch-container">
-                                                <label class="switch">
-                                                    <input type="checkbox"
-                                                           id="{{row['isin'] + '-access'}}"
-                                                           [checked]="access[row['id']]['access']"
-                                                           (click)="onClickAccess(access[row['id']])"
-                                                    >
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </div>
-                                        </clr-dg-cell>
+                                            <clr-dg-cell id="fund_name_row_{{i}}">{{row['fundName']}}
+
+                                            </clr-dg-cell>
+                                            <clr-dg-cell id="share_name_row_{{i}}">{{row['shareName']}}
+
+                                            </clr-dg-cell>
+                                            <clr-dg-cell id="isin_number_row_{{i}}">{{row['isin']}}
+
+                                            </clr-dg-cell>
+                                            <clr-dg-cell id="access_slider_row_{{i}}">
+                                                <div class="switch-container">
+                                                    <label class="switch">
+                                                        <input type="checkbox" id="{{row['isin'] + '-access'}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
+                                                        <span class="slider round"></span>
+                                                    </label>
+                                                </div>
+                                            </clr-dg-cell>
+
+                                            <ng-container *ngIf="!access[row['id']]['access']">
+                                                <clr-dg-cell id="entry_fee_row_{{i}}">
+                                                    {{access[row['id']]['entry']}}
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell id="exit_fee_row_{{i}}">
+                                                    {{access[row['id']]['exit']}}
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell id="min_invest_amount_row_{{i}}">
+                                                    {{access[row['id']]['minInvestment']}}
+                                                </clr-dg-cell>
+                                            </ng-container>
+
+                                            <ng-container *ngIf="access[row['id']]['access']">
+                                                <clr-dg-cell id="extry_fee_field_row_{{i}}" class="thin-cell">
+                                                    <input name="entry{{row['id']}}" [(ngModel)]="access[row['id']]['entry']" (change)="checkFee(row['id'],'entry');">
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell id="exit_fee_field_row_{{i}}" class="thin-cell">
+                                                    <input name="exit{{row['id']}}" [(ngModel)]="access[row['id']]['exit']" (change)="checkFee(row['id'],'exit');">
+                                                </clr-dg-cell>
+
+                                                <clr-dg-cell id="min_invest_amount_btn_row_{{i}}">
+                                                    {{(access[row['id']]['override'] ? access[row['id']]['overrideAmount'] : access[row['id']]['minInvestment'])}}
+                                                    <ng-container *ngIf="access[row['id']]['override']">
+                                                        <span id="override_txt_row_{{i}}" class="override-text">[{{'Override' | translate}}]</span>
+                                                        <i *ngIf="access[row['id']]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o override-icon"></i>
+                                                        <setl-file-viewer id="override_row_file_viewer_{{i}}" *ngIf="!access[row['id']]['newOverride']" [fileHash]="access[row['id']]['overrideDocument']" [viewType]="1"></setl-file-viewer>
+                                                    </ng-container>
+                                                    <button id="override_row_{{i}}" class="btn btn-sm btn-primary override-button" (click)="openOverrideModal(row['id'])">{{'Override' | translate}}</button>
+                                                </clr-dg-cell>
+                                            </ng-container>
+                                        </ng-container>
                                     </clr-dg-row>
                                 </clr-datagrid>
                             </div>
                             <div class="row">
-                                <button class="btn btn-info" routerLink="/kyc-am-documents" mltag="txt_back">Back</button>
-                                <button class="btn btn-primary" (click)="displayModal();" mltag="txt_validate">Validate</button>
+                                <button id="client_folder_back" class="btn btn-info" routerLink="/kyc-am-documents">{{'Back' | translate}}</button>
+                                <button id="client_folder_validate" class="btn btn-primary" (click)="displayModal();">{{'Validate' | translate}}</button>
                             </div>
                         </form>
                     </div>
@@ -116,3 +155,53 @@
         </clr-tab>
     </clr-tabs>
 </div>
+
+<clr-modal [(clrModalOpen)]="showOverrideModal">
+    <h3 id="override_header" class="modal-title">{{'Override Minimum Investment Amount' | translate}}</h3>
+    <div class="modal-body" *ngIf="currentOverride != 0">
+
+        <div class="row override-modal-row-margin">
+            <div id="share_specific_amount" class="col-sm-4">
+                {{'Share Specified Amount' | translate}}
+            </div>
+            <div class="col-sm-8">
+                {{access[currentOverride]['minInvestment']}}
+            </div>
+        </div>
+
+        <div class="row override-modal-row-margin" *ngIf="access[currentOverride]['override']">
+            <div class="col-sm-4">
+                {{'Current Override' | translate}}
+            </div>
+            <div class="col-sm-8">
+                <div class="override-modal-div">
+                    <span id="override_current">{{access[currentOverride]['overrideAmount'] | moneyValue: 5 }}</span>
+                    <i *ngIf="access[currentOverride]['overrideDocumentTitle'] != ''" class="fa fa-lg fa-file-o override-modal-icon"></i>
+                    <span id="override_upload_name">{{access[currentOverride]['overrideDocumentTitle']}}</span>
+                    <setl-file-viewer id="override_file_viewer" *ngIf="!access[currentOverride]['newOverride']" [fileHash]="access[currentOverride]['overrideDocument']" [viewType]="1"></setl-file-viewer>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="new_override_amount" class="col-sm-4">
+                {{'New Override' | translate}}
+            </div>
+            <div class="col-sm-8">
+                <input name="newOverrideAmount" value="{{0  | moneyValue: 5}}" [(ngModel)]="newOverride['amount']">
+                <div class="font-80">{{'Upload a file below to justify this change for the customer' | translate}}.</div>
+                <setl-file-drop id="override_file_upload" name="override_file_upload" (onDrop)="onDropFiles($event)" ngDefaultControl></setl-file-drop>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer" *ngIf="currentOverride != 0">
+        <button id="override_remove_override" *ngIf="access[currentOverride]['override']" type="button" class="btn btn-warning" (click)="closeOverrideModal(2);">
+            {{'Remove Override' | translate}}
+        </button>
+        <button id="override_cancel" type="button" class="btn btn-outline" (click)="closeOverrideModal(0);">
+            {{'Cancel' | translate}}
+        </button>
+        <button id="override_save" type="button" class="btn btn-primary" (click)="closeOverrideModal(1);">
+            {{'Override' | translate}}
+        </button>
+    </div>
+</clr-modal>

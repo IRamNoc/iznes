@@ -17,6 +17,7 @@ import {
     clearRequestedNavAudit,
     setRequestedNavAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product/nav-audit';
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -58,6 +59,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
                 private service: OfiNavAuditService,
                 private numberConverterService: NumberConverterService,
                 private moneyPipe: MoneyValuePipe,
+                public _translate: MultilingualService,
                 private ofiNavService: OfiNavService) {
     }
 

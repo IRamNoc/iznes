@@ -1,6 +1,6 @@
 import * as math from 'mathjs';
 
-import { CalendarHelper, getTimeZoneDiff } from './calendar-helper';
+import { CalendarHelper } from './calendar-helper';
 import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
@@ -45,14 +45,17 @@ export interface OrderRequest {
     comment: string;
 }
 
-interface IznShareDetailWithNav extends IznesShareDetail {
+export interface IznShareDetailWithNav extends IznesShareDetail {
     price: number;
     amCompanyID: number;
     amWalletID: number;
     amAddress: string;
     entryFee: number;
     exitFee: number;
+    hasShareAccess: number;
     platFormFee: number;
+    investorHoling: number;
+    holidayMgmtConfig: string;
 }
 
 interface VerifyResponse {
@@ -201,8 +204,6 @@ export class OrderHelper {
     minInitialSubscriptionInShare: number;
     minSubsequentSubscriptionInAmount: number;
     minSubsequentSubscriptionInShare: number;
-    minInitialRedemptionInAmount: number;
-    minInitialRedemptionInShare: number;
     minSubsequentRedemptionInAmount: number;
     minSubsequentRedemptionInShare: number;
 
@@ -231,10 +232,6 @@ export class OrderHelper {
             [OrderType.Subscription]: {
                 [OrderByType.Amount]: (this.fundShare.minInitialSubscriptionInAmount || 0),
                 [OrderByType.Quantity]: (this.fundShare.minInitialSubscriptionInShare || 0),
-            },
-            [OrderType.Redemption]: {
-                [OrderByType.Amount]: (this.fundShare.minInitialRedemptionInAmount || 0),
-                [OrderByType.Quantity]: (this.fundShare.minInitialRedemptionInShare || 0),
             }
         }[this.orderType] || {})[this.orderBy] || 0;
     }
@@ -377,7 +374,7 @@ export class OrderHelper {
             toAddress,
             namespace,
             instrument,
-            amount
+            amount,
         );
     }
 
@@ -466,7 +463,7 @@ export class OrderHelper {
         return totalHolding - encumbered;
     }
 
-    static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse) {
+    static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse | IznShareDetailWithNav) {
         const walletId = order.amWalletID;
         const namespace = order.isin;
         const instrument = order.fundShareName;
@@ -476,16 +473,27 @@ export class OrderHelper {
             messagebody: {
                 topic: 'holders',
                 walletid: walletId,
-                namespace: namespace,
-                instrument: instrument,
+                namespace,
+                instrument,
             },
         };
     }
 
-
     buildContractData(): VerifyResponse | ContractData {
 
         let arrangementData;
+
+        // check if nav for the share is exist
+        const navCheck = this.checkShareNavIsValid();
+        if (!OrderHelper.isResponseGood(navCheck)) {
+            return OrderHelper.getChildErrorMessage(navCheck);
+        }
+
+        // check if fund access for the share is exist
+        const shareAccessCheck = this.checkHasShareAccess();
+        if (!OrderHelper.isResponseGood(shareAccessCheck)) {
+            return OrderHelper.getChildErrorMessage(shareAccessCheck);
+        }
 
         if (this.orderType === OrderType.Subscription) {
             arrangementData = this.buildSubscriptionArrangementData();
@@ -494,7 +502,7 @@ export class OrderHelper {
         } else {
             return {
                 orderValid: false,
-                errorMessage: 'Invalid order type.'
+                errorMessage: 'Invalid order type.',
             };
         }
 
@@ -645,59 +653,59 @@ export class OrderHelper {
         let cutoff, valuation, settlement;
 
         switch (this.orderRequest.dateby) {
-            case 'cutoff':
-                dateValid = this.calendarHelper.isValidCutoffDateTime(this.dateValue, this.orderType);
-                if (!dateValid) {
-                    return {
-                        orderValid: false,
-                        errorMessage: 'Invalid date'
-                    };
-                }
-
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
-                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-                break;
-
-            case 'valuation':
-                dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
-                if (!dateValid) {
-                    return {
-                        orderValid: false,
-                        errorMessage: 'Invalid date'
-                    };
-                }
-
-                cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-                break;
-
-
-            case 'settlement':
-                dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
-                if (!dateValid) {
-                    return {
-                        orderValid: false,
-                        errorMessage: 'Invalid date'
-                    };
-                }
-
-                cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
-                cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
-                valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
-                settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
-
-                break;
-
-            default:
+        case 'cutoff':
+            dateValid = this.calendarHelper.isValidCutoffDateTime(this.dateValue, this.orderType);
+            if (!dateValid) {
                 return {
                     orderValid: false,
-                    errorMessage: 'Invalid date',
+                    errorMessage: 'Invalid date'
                 };
+            }
+
+            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(this.dateValue, this.orderType);
+            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+            break;
+
+        case 'valuation':
+            dateValid = this.calendarHelper.isValidValuationDateTime(this.dateValue, this.orderType);
+            if (!dateValid) {
+                return {
+                    orderValid: false,
+                    errorMessage: 'Invalid date'
+                };
+            }
+
+            cutoff = this.calendarHelper.getCutoffDateFromValuation(this.dateValue, this.orderType);
+            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
+            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+            break;
+
+
+        case 'settlement':
+            dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
+            if (!dateValid) {
+                return {
+                    orderValid: false,
+                    errorMessage: 'Invalid date'
+                };
+            }
+
+            cutoff = this.calendarHelper.getCutoffDateFromSettlement(this.dateValue, this.orderType);
+            cutoff = this.calendarHelper.getCutoffTimeForSpecificDate(cutoff, this.orderType);
+            valuation = this.calendarHelper.getValuationDateFromCutoff(cutoff, this.orderType);
+            settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
+
+            break;
+
+        default:
+            return {
+                orderValid: false,
+                errorMessage: 'Invalid date',
+            };
         }
 
         if (settlement.diff(moment(), 'days') > orderSettlementThreshold) {
@@ -757,51 +765,51 @@ export class OrderHelper {
         }
 
         switch (this.orderBy) {
-            case OrderByType.Quantity:
-                quantity = this.orderValue;
-                estimatedQuantity = this.orderValue;
+        case OrderByType.Quantity:
+            quantity = this.orderValue;
+            estimatedQuantity = this.orderValue;
 
-                /**
-                 * amount = unit * nav
-                 */
-                amount = 0;
-                estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+            /**
+             * amount = unit * nav
+             */
+            amount = 0;
+            estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
 
-                // calculate fee
-                fee = calFee(estimatedAmount, this.feePercentage);
+            // calculate fee
+            fee = calFee(estimatedAmount, this.feePercentage);
 
-                // net amount
-                estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
-                amountWithCost = 0;
+            // net amount
+            estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            amountWithCost = 0;
 
-                break;
+            break;
 
-            case OrderByType.Amount:
-                /**
-                 * quantity = amount / nav
-                 */
-                // if redemption amount will always be estimated.
-                amount = this.orderType === OrderType.Subscription ? this.orderValue : 0;
-                estimatedAmount = this.orderValue;
+        case OrderByType.Amount:
+            /**
+             * quantity = amount / nav
+             */
+            // if redemption amount will always be estimated.
+            amount = this.orderType === OrderType.Subscription ? this.orderValue : 0;
+            estimatedAmount = this.orderValue;
 
-                // if redemption amount will always be estimated.
-                estimatedQuantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
-                quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
+            // if redemption amount will always be estimated.
+            estimatedQuantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+            quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
 
-                // calculate fee
-                fee = calFee(estimatedAmount, this.feePercentage);
+            // calculate fee
+            fee = calFee(estimatedAmount, this.feePercentage);
 
-                // net amount
-                estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
-                amountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            // net amount
+            estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            amountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
 
-                break;
+            break;
 
-            default:
-                return {
-                    orderValid: false,
-                    errorMessage: 'Invalid orderBy type'
-                };
+        default:
+            return {
+                orderValid: false,
+                errorMessage: 'Invalid orderBy type'
+            };
         }
 
         return {
@@ -822,6 +830,54 @@ export class OrderHelper {
             settleTimeStamp,
             expiryTimeStamp
         };
+    }
+
+    checkShareNavIsValid(): VerifyResponse {
+
+        let orderValid = true;
+        let errorMessage = '';
+
+        if (Number(this.fundShare.price) <= 0) {
+            orderValid = false;
+            errorMessage = 'Nav less than or equal 0';
+        }
+
+        return {
+            orderValid,
+            errorMessage,
+        };
+    }
+
+    checkHasShareAccess(): VerifyResponse {
+        let orderValid = true;
+        let errorMessage = '';
+
+        if (Number(this.fundShare.hasShareAccess) !== 1) {
+            orderValid = false;
+            errorMessage = 'Fund access is not exist';
+        }
+
+        return {
+            orderValid,
+            errorMessage,
+        };
+
+    }
+
+    checkRedemptionOrderValue(orderFigures: OrderFigures): VerifyResponse {
+        let orderValid = true;
+        let errorMessage = '';
+
+        if (Number(this.fundShare.investorHoling) < orderFigures.quantity) {
+            orderValid = false;
+            errorMessage = 'Insufficient number of share to redeem.';
+        }
+
+        return {
+            orderValid,
+            errorMessage,
+        };
+
     }
 
     buildSubscriptionArrangementData(): ArrangementData | VerifyResponse {
@@ -850,7 +906,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -944,11 +1000,17 @@ export class OrderHelper {
 
         if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDate);
-        } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
+        }
+        if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDate);
-        } else {
-            orderDate = orderDate as OrderDates;
-            orderFigures = orderFigures as OrderFigures;
+        }
+
+        orderDate = orderDate as OrderDates;
+        orderFigures = orderFigures as OrderFigures;
+
+        const figureCheck = this.checkRedemptionOrderValue(orderFigures);
+        if (!OrderHelper.isResponseGood(figureCheck)) {
+            return OrderHelper.getChildErrorMessage(figureCheck);
         }
 
         const settleTimeStamp = Number(orderDate.settlement.valueOf() / 1000);
@@ -961,7 +1023,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -984,7 +1046,7 @@ export class OrderHelper {
             actionData = [
                 {
                     actionData: {
-                        amount: orderFigures.quantity,
+                        amount: `${orderFigures.quantity} + nav * 0`,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],

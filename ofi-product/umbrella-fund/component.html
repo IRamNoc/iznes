@@ -1,25 +1,25 @@
 <div class="header-breadcrumbs">
     <h1 class="text-overflow">
         <i class="fa fa-umbrella"></i>
-        <span *ngIf="!editForm; else editTitle" id="add-fund-title" mltag="txt_addanewumbrellafund">Add a New Umbrella Fund</span>
+        <span *ngIf="!editForm; else editTitle" id="add-fund-title">{{'Add a New Umbrella Fund' | translate}}</span>
 
         <ng-template #editTitle>
-            <span *ngIf="umbrellaFund" id="edit-fund-title">Umbrella fund: {{umbrellaFund[0].umbrellaFundName}}</span>
+            <span *ngIf="umbrellaFund" id="edit-fund-title">{{'Umbrella fund: @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}</span>
         </ng-template>
     </h1>
 </div>
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink id="tabUfButton">
-            <span mltag="txt_umbrellafund">Umbrella fund</span>
+        <button clrTabLink id="tabUfButton">{{'Umbrella fund' | translate}}
+
         </button>
 
         <clr-tab-content>
-            <p *ngIf="editForm && umbrellaFund" class="text-overflow">Please find below all the information for the umbrella fund {{umbrellaFund[0].umbrellaFundName}}
+            <p *ngIf="editForm && umbrellaFund" class="text-overflow">{{'Please find below all the information for the umbrella fund @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}
 
             </p>
-            <p id="new-fund-text-span" *ngIf="!editForm" mltag="txt_pleasefillupthefollowinginform0003eead0d">Please fill up the following information to create a new Umbrella Fund
+            <p id="new-fund-text-span" *ngIf="!editForm">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
 
             </p>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
@@ -31,7 +31,7 @@
                                 <a href="#" (click)="mainInformationOpen = !mainInformationOpen; $event.preventDefault();">
 
                                     <i class="fa fa-chevron-right" [class.rotate]="mainInformationOpen"></i>
-                                    <h2 mltag="txt_maininformation">Main Information</h2>
+                                    <h2>{{'Main Information' | translate}}</h2>
                                 </a>
                             </div>
                         </div>
@@ -39,46 +39,54 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!mainInformationOpen">
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_umbrellaFundName" class="control-label" mltag="txt_umbrellafundname">Umbrella Fund Name</label>
+                                <label for="uf_umbrellaFundName" class="control-label">{{'Umbrella Fund Name' | translate}}</label>
                                 <input type="text" id="uf_umbrellaFundName" formControlName="umbrellaFundName">
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundName'].touched && umbrellaFundForm.controls['umbrellaFundName'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
+                                <div class="field-error">{{'This field is required' | translate}}</div>
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundName'].touched && umbrellaFundForm.controls['umbrellaFundName'].hasError('pattern')" class="field-error">{{'Incorrect entry' | translate}}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_lei" class="control-label" mltag="txt_legalentityidentifierlei">Legal Entity Identifier (LEI)</label>
-                                <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
-                                <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
-                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')" mltag="txt_thisfieldisrequired">This field is required</span>
-                                    <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')" mltag="txt_incorrectlei">Incorrect LEI</span>
+                                <label for="uf_lei" class="control-label">{{'Legal Entity Identifier (LEI)' | translate}}</label>
+                                <div class="lei">
+                                    <label class="switch">
+                                        <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}" (click)="onClickLeiSwitch()">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <div *ngIf="isLeiVisible">
+                                        <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
+                                        <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{'This field is required' | translate}}</span>
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{'Incorrect LEI' | translate}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_registerOffice" class="control-label" mltag="txt_nameoftheregistredofficeoftheu705177ce5d">Name of the Registered Office of the Umbrella Fund
+                                <label for="uf_registerOffice" class="control-label">{{'Name of the Registered Office of the Umbrella Fund' | translate}}
 
                                 </label>
                                 <input type="text" id="uf_registerOffice" formControlName="registerOffice">
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
-                                <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
+                                <div class="field-error">{{'This field is required' | translate}}</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOffice'].touched && umbrellaFundForm.controls['registerOffice'].hasError('pattern')" class="field-error">{{'Incorrect entry' | translate}}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_registerOfficeAddress" class="control-label" mltag="txt_addressoftheregistredofficeoft134f796680">Address of the Registered Office of the Umbrella Fund
+                                <label for="uf_registerOfficeAddress" class="control-label">{{'Address of the Registered Office of the Umbrella Fund' | translate}}
 
                                 </label>
                                 <input type="text" id="uf_registerOfficeAddress" formControlName="registerOfficeAddress">
 
-                                <div class="field-error" mltag="txt_thisfieldisrequired">This field is required</div>
-                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error" mltag="txt_incorrectentry">Incorrect entry</div>
+                                <div class="field-error">{{'This field is required' | translate}}</div>
+                                <div *ngIf="umbrellaFundForm.controls['registerOfficeAddress'].touched && umbrellaFundForm.controls['registerOfficeAddress'].hasError('pattern')" class="field-error">{{'Incorrect entry' | translate}}</div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_domicile" class="control-label" mltag="txt_umbrellafunddomicilecountry">Umbrella Fund Domicile (country)
+                                <label for="uf_domicile" class="control-label">{{'Umbrella Fund Domicile (country)' | translate}}
 
                                 </label>
 
-                                <ng-select id="uf_domicile" [items]="countries" [allowClear]="true" placeholder="Select a country" formControlName="domicile" mltag="txt_selectacountry">
+                                <ng-select id="uf_domicile" [items]="countries" [allowClear]="true" [placeholder]="_translate.translate('Select a country')" formControlName="domicile">
 
 
 
@@ -86,48 +94,48 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+                                <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger">{{'This field is required' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_umbrellaFundCreationDate" class="control-label" mltag="txt_umbrellafundcreationdate">Umbrella Fund Creation Date
+                                <label for="uf_umbrellaFundCreationDate" class="control-label">{{'Umbrella Fund Creation Date' | translate}}
 
                                 </label>
 
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                    <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" placeholder="Choose a date" mode="day" theme="dp-material" mltag="txt_chooseadate">
+                                    <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
 
 
                                 </div>
 
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('required') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger">{{'This field is required' | translate}}
 
                                 </div>
-                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger" mltag="txt_incorrectdate">Incorrect date
+                                <div *ngIf="umbrellaFundForm.controls['umbrellaFundCreationDate'].hasError('pattern') && umbrellaFundForm.controls['umbrellaFundCreationDate'].touched" class="text-danger">{{'Incorrect date' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_managementCompany" class="control-label" mltag="txt_managementcompany">Management Company</label>
-                                <ng-select id="uf_managementCompany" [items]="managementCompanyList" [allowClear]="true" placeholder="Select" formControlName="managementCompanyID" mltag="txt_select">
+                                <label for="uf_managementCompany" class="control-label">{{'Management Company' | translate}}</label>
+                                <ng-select id="uf_managementCompany" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="managementCompanyID">
 
 
 
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+                                <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger">{{'This field is required' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_fundAdministrator" class="control-label" mltag="txt_fundadministrator">Fund Administrator</label>
-                                <ng-select id="uf_fundAdministrator" [items]="fundAdminOptions" [allowClear]="true" placeholder="Select" formControlName="fundAdministratorID" mltag="txt_select">
+                                <label for="uf_fundAdministrator" class="control-label">{{'Fund Administrator' | translate}}</label>
+                                <ng-select id="uf_fundAdministrator" [items]="fundAdminOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="fundAdministratorID">
 
 
 
@@ -135,28 +143,28 @@
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+                                <div *ngIf="umbrellaFundForm.controls['fundAdministratorID'].hasError('required') && umbrellaFundForm.controls['fundAdministratorID'].touched" class="text-danger">{{'This field is required' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group required-field col-sm-6">
-                                <label for="uf_custodian" class="control-label" mltag="txt_custodianbank">Custodian Bank</label>
-                                <ng-select id="uf_custodian" [items]="custodianBankOptions" [allowClear]="true" placeholder="Select" formControlName="custodianBankID" mltag="txt_select">
+                                <label for="uf_custodian" class="control-label">{{'Custodian Bank' | translate}}</label>
+                                <ng-select id="uf_custodian" [items]="custodianBankOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="custodianBankID">
 
 
 
 
                                 </ng-select>
 
-                                <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required
+                                <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger">{{'This field is required' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_investmentAdvisor" class="control-label" mltag="txt_investmentadvisor">Investment Advisor</label>
-                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" placeholder="Select" formControlName="investmentAdvisorID" mltag="txt_select">
+                                <label for="uf_investmentAdvisor" class="control-label">{{'Investment Advisor' | translate}}</label>
+                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="investmentAdvisorID">
 
 
 
@@ -166,8 +174,8 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_payingAgent" class="control-label" mltag="txt_payingagent">Paying Agent</label>
-                                <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" placeholder="Select" formControlName="payingAgentID" mltag="txt_select">
+                                <label for="uf_payingAgent" class="control-label">{{'Paying Agent' | translate}}</label>
+                                <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="payingAgentID">
 
 
 
@@ -177,8 +185,8 @@
                             </div>
 
                             <div *ngIf="isTransferAgentActive()" class="form-group col-sm-6">
-                                <label for="uf_transferAgent" class="control-label" mltag="txt_transferagent">Transfer Agent</label>
-                                <ng-select id="uf_transferAgent" [items]="transferAgentOptions" [allowClear]="true" placeholder="Select" [formControl]="umbrellaFundForm.controls['transferAgentID']" mltag="txt_select">
+                                <label for="uf_transferAgent" class="control-label">{{'Transfer Agent' | translate}}</label>
+                                <ng-select id="uf_transferAgent" [items]="transferAgentOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['transferAgentID']">
 
 
 
@@ -189,8 +197,8 @@
                             </div>
 
                             <div *ngIf="isCentralizingAgentActive()" class="form-group col-sm-6">
-                                <label for="uf_centralizingAgent" class="control-label" mltag="txt_centralisingagent">Centralising Agent</label>
-                                <ng-select id="uf_centralizingAgent" [items]="centralizingAgentOptions" [allowClear]="true" placeholder="Select" [formControl]="umbrellaFundForm.controls['centralisingAgentID']" mltag="txt_select">
+                                <label for="uf_centralizingAgent" class="control-label">{{'Centralising Agent' | translate}}</label>
+                                <ng-select id="uf_centralizingAgent" [items]="centralizingAgentOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['centralisingAgentID']">
 
 
 
@@ -209,7 +217,7 @@
                                 <a href="#" (click)="optionalInformationOpen = !optionalInformationOpen; $event.preventDefault();">
 
                                     <i class="fa fa-chevron-right" [class.rotate]="optionalInformationOpen"></i>
-                                    <h2 mltag="txt_optionalinformation">Optional Information</h2>
+                                    <h2>{{'Optional Information' | translate}}</h2>
                                 </a>
                             </div>
                         </div>
@@ -217,21 +225,21 @@
                         <!-- Panel body -->
                         <div class="row panel-body" [class.hidden]="!optionalInformationOpen">
                             <div class="form-group col-sm-6">
-                                <label for="uf_giin" class="control-label" mltag="txt_globalintermediaryidentificatif680906e8a">Global Intermediary Identification Number (GIIN)
+                                <label for="uf_giin" class="control-label">{{'Global Intermediary Identification Number (GIIN)' | translate}}
 
                                 </label>
                                 <input type="text" id="uf_giin" formControlName="giin" maxlength="19">
-                                <div *ngIf="umbrellaFundForm.controls['giin'].hasError('pattern') && umbrellaFundForm.controls['giin'].touched" class="text-danger" mltag="txt_incorrectgiin">Incorrect GIIN
+                                <div *ngIf="umbrellaFundForm.controls['giin'].hasError('pattern') && umbrellaFundForm.controls['giin'].touched" class="text-danger">{{'Incorrect GIIN' | translate}}
 
                                 </div>
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_delegatedManagementCompany" class="control-label" mltag="txt_delegatedmanagementcompany">Delegated Management Company
+                                <label for="uf_delegatedManagementCompany" class="control-label">{{'Delegated Management Company' | translate}}
 
                                 </label>
 
-                                <ng-select id="uf_delegatedManagementCompany" [items]="managementCompanyList" [allowClear]="true" placeholder="Select" formControlName="delegatedManagementCompanyID" mltag="txt_select">
+                                <ng-select id="uf_delegatedManagementCompany" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="delegatedManagementCompanyID">
 
 
 
@@ -240,19 +248,8 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_auditor" class="control-label" mltag="txt_auditor">Auditor</label>
-                                <ng-select id="uf_auditor" [items]="auditorOptions" [allowClear]="true" placeholder="Select" formControlName="auditorID" mltag="txt_select">
-
-
-
-
-
-                                </ng-select>
-                            </div>
-
-                            <div class="form-group col-sm-6">
-                                <label for="uf_taxAuditor" class="control-label" mltag="txt_taxauditor">Tax Auditor</label>
-                                <ng-select id="uf_taxAuditor" [items]="taxAuditorOptions" [allowClear]="true" placeholder="Select" formControlName="taxAuditorID" mltag="txt_select">
+                                <label for="uf_auditor" class="control-label">{{'Auditor' | translate}}</label>
+                                <ng-select id="uf_auditor" [items]="auditorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="auditorID">
 
 
 
@@ -262,8 +259,19 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_principalPromoter" class="control-label" mltag="txt_principalpromoter">Principal Promoter</label>
-                                <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" placeholder="Select" formControlName="principlePromoterID" mltag="txt_select">
+                                <label for="uf_taxAuditor" class="control-label">{{'Tax Auditor' | translate}}</label>
+                                <ng-select id="uf_taxAuditor" [items]="taxAuditorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="taxAuditorID">
+
+
+
+
+
+                                </ng-select>
+                            </div>
+
+                            <div class="form-group col-sm-6">
+                                <label for="uf_principalPromoter" class="control-label">{{'Principal Promoter' | translate}}</label>
+                                <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
 
 
 
@@ -274,8 +282,8 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_legalAdvisor" class="control-label" mltag="txt_legaladvisor">Legal Advisor</label>
-                                <ng-select id="uf_legalAdvisor" [items]="legalAdvisorOptions" [allowClear]="true" placeholder="Select" formControlName="legalAdvisorID" mltag="txt_select">
+                                <label for="uf_legalAdvisor" class="control-label">{{'Legal Advisor' | translate}}</label>
+                                <ng-select id="uf_legalAdvisor" [items]="legalAdvisorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="legalAdvisorID">
 
 
 
@@ -285,16 +293,16 @@
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label for="uf_directors" class="control-label" mltag="txt_directors">Directors</label>
+                                <label for="uf_directors" class="control-label">{{'Directors' | translate}}</label>
                                 <input type="text" id="uf_directors" formControlName="directors">
                             </div>
 
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_internalReference" mltag="txt_internalreference">Internal Reference</label>
+                                <label class="control-label" for="uf_internalReference">{{'Internal Reference' | translate}}</label>
                                 <input type="text" id="uf_internalReference" formControlName="internalReference" maxlength="50">
                             </div>
                             <div class="form-group col-sm-6">
-                                <label class="control-label" for="uf_additionnalNotes" mltag="txt_additionalnotes">Additional Notes</label>
+                                <label class="control-label" for="uf_additionnalNotes">{{'Additional Notes' | translate}}</label>
                                 <textarea id="uf_additionnalNotes" class="form-control" formControlName="additionnalNotes" maxlength="500"></textarea>
                             </div>
                         </div>
@@ -306,8 +314,8 @@
 
 
 
-                            <div *ngIf="!editForm; else editCloseButton"><span mltag="txt_cancel">Cancel</span></div>
-                            <ng-template #editCloseButton><span mltag="txt_close">Close</span></ng-template>
+                            <div *ngIf="!editForm; else editCloseButton">{{'Cancel' | translate}}</div>
+                            <ng-template #editCloseButton>{{'Close' | translate}}</ng-template>
                         </button>
 
                         <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
@@ -316,13 +324,13 @@
 
 
                             <div *ngIf="!editForm; else editUfFBtSubmit">
-                                <i class="fa fa-save"></i>
-                                <span mltag="txt_save">Save</span>
+                                <i class="fa fa-save"></i>{{'Save' | translate}}
+
                             </div>
 
                             <ng-template #editUfFBtSubmit>
-                                <i class="fa fa-save"></i>
-                                <span mltag="txt_update">Update</span>
+                                <i class="fa fa-save"></i>{{'Update' | translate}}
+
                             </ng-template>
                         </button>
                     </div>
@@ -339,23 +347,23 @@
         <p>{{modalText}}</p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" (click)="showModal = false" mltag="txt_close">Close</button>
+        <button type="button" class="btn btn-outline" (click)="showModal = false">{{'Close' | translate}}</button>
     </div>
 </clr-modal>
 
 <!--CONFIRM MODALS-->
 <clr-modal [(clrModalOpen)]="showConfirmModal">
-    <h3 class="modal-title" mltag="txt_deletingmanagementcompany">Deleting Management Company</h3>
+    <h3 class="modal-title">{{'Deleting Management Company' | translate}}</h3>
     <div class="modal-body">
-        <p><span mltag="txt_areyousureyouwanttodelete">Are you sure you want to delete</span>:<br>
-            <strong mltag="txt_inserthere">INSERT HERE</strong>
+        <p>{{'Are you sure you want to delete:' | translate}}<br>
+            <strong>{{'INSERT HERE' | translate}}</strong>
         </p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)" mltag="txt_no">No
+        <button type="button" class="btn btn-outline" id="mcConfirmModalBtnYes" (click)="confirmModal(0)">{{'No' | translate}}
 
         </button>
-        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)" mltag="txt_yes">Yes
+        <button type="button" class="btn btn-primary" id="mcConfirmModalBtnNo" (click)="confirmModal(1)">{{'Yes' | translate}}
 
         </button>
     </div>

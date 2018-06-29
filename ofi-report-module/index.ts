@@ -5,4 +5,5 @@ export {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component'
 export {OfiManageCsvComponent} from './ofi-csv-report/component';
 export {CentralizationReportComponent} from './centralization/component';
 export {OfiCentralizationHistoryComponent} from './centralization-history/component';
-
+export {CentralizationSelectComponent} from './centralization-select/component';
+export {MyHoldingsComponent} from './my-holdings/component';

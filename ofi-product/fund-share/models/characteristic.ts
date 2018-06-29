@@ -1,12 +1,18 @@
 import * as _ from 'lodash';
 import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
 import * as E from '../FundShareEnum';
+import { Validators } from '@angular/forms';
 
 export class ShareCharacteristicMandatory extends DynamicFormsValidator {
     maximumNumDecimal: FormItem = {
         type: FormItemType.number,
         label: 'Maximal Number Of Possible Decimals Shares',
         required: true,
+        validator: Validators.compose([
+            Validators.required,
+            Validators.min(0),
+            Validators.max(5),
+        ]),
         style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_maxdecshares'
     }
@@ -26,11 +32,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Currency of Subscription',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.USD, text: 'USD' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' }
-        ],
+        listItems: [],
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
@@ -98,39 +100,13 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         type: FormItemType.list,
         label: 'Currency of Redemption',
         required: true,
-        listItems: [
-            { id: E.CurrencyEnum.EUR, text: 'EUR' },
-            { id: E.CurrencyEnum.GBP, text: 'GBP' },
-            { id: E.CurrencyEnum.USD, text: 'USD' }
-        ],
+        listItems: [],
         style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
             return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_redcurrency'
-    }
-    minInitialRedemptionInShare: FormItem = {
-        type: FormItemType.number,
-        label: 'Minimal Initial Redemption In Shares',
-        required: true,
-        hidden: () => {
-            const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        },
-        mltag: 'txt_fundshare_minredinshare',
-        isBlockchainValue: true
-    }
-    minInitialRedemptionInAmount: FormItem = {
-        type: FormItemType.number,
-        label: 'Minimal Initial Redemption In Amount',
-        required: true,
-        hidden: () => {
-            const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
-        },
-        mltag: 'txt_fundshare_minredinamount',
-        isBlockchainValue: true
     }
     minSubsequentRedemptionInShare: FormItem = {
         type: FormItemType.number,
