@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1>{{'Precentralisation Report: All Shares' | translate}}
-
+    <h1>
+        <i class="fa fa-book"></i>{{'Precentralisation Report: All Shares' | translate}}
     </h1>
 </div>
 
@@ -15,17 +15,17 @@
 
                     <table style="width: 100%;">
                         <tbody>
-                            <tr>
-                                <td>
-                                    <h3 style="margin-bottom: 3px;">{{'Please find below the precentralisation reports by Share:' | translate}}
+                        <tr>
+                            <td>
+                                <h3 style="margin-bottom: 3px;">{{'Please find below the precentralisation reports by Share:' | translate}}
 
-                                    </h3>{{'You can see precentralisation report' | translate}}
+                                </h3>{{'You can see precentralisation report' | translate}}
 
-                                </td>
-                                <td class="text-right" valign="middle">
-                                    <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="onClickExportCentralizationReport()">{{'Export precentralisation report' | translate}}</button>
-                                </td>
-                            </tr>
+                            </td>
+                            <td class="text-right" valign="middle">
+                                <button id="holders-export-list-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="onClickExportCentralizationReport()">{{'Export precentralisation report' | translate}}</button>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
 
@@ -90,29 +90,29 @@
                                     <div class="form-group col-sm-7">
                                         <table class="table table-noborder">
                                             <thead>
-                                                <tr>
-                                                    <th></th>
-                                                    <th>{{'Quantity' | translate}}</th>
-                                                    <th>{{'Amount' | translate}}</th>
-                                                    <th>{{'Cut-off Date' | translate}}</th>
-                                                    <th>{{'Settlement Date' | translate}}</th>
-                                                </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th>{{'Quantity' | translate}}</th>
+                                                <th>{{'Amount' | translate}}</th>
+                                                <th>{{'Cut-off Date' | translate}}</th>
+                                                <th>{{'Settlement Date' | translate}}</th>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td><b>{{'Subscriptions' | translate}}</b></td>
-                                                    <td>{{data.subQuantity | moneyValue: 4 }}</td>
-                                                    <td>{{data.subAmount | moneyValue: 5 }}</td>
-                                                    <td>{{data.subCutoffDate}}</td>
-                                                    <td>{{data.subSettlementDate}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td><b>{{'Redemptions' | translate}}</b></td>
-                                                    <td>{{data.redQuantity | moneyValue: 4 }}</td>
-                                                    <td>{{data.redAmount | moneyValue: 5 }}</td>
-                                                    <td>{{data.redCutoffDate}}</td>
-                                                    <td>{{data.redSettlementDate}}</td>
-                                                </tr>
+                                            <tr>
+                                                <td><b>{{'Subscriptions' | translate}}</b></td>
+                                                <td>{{data.subQuantity | moneyValue: 4 }}</td>
+                                                <td>{{data.subAmount | moneyValue: 5 }}</td>
+                                                <td>{{data.subCutoffDate}}</td>
+                                                <td>{{data.subSettlementDate}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>{{'Redemptions' | translate}}</b></td>
+                                                <td>{{data.redQuantity | moneyValue: 4 }}</td>
+                                                <td>{{data.redAmount | moneyValue: 5 }}</td>
+                                                <td>{{data.redCutoffDate}}</td>
+                                                <td>{{data.redSettlementDate}}</td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -148,7 +148,8 @@
                                     <clr-icon shape="check"></clr-icon>
                                 </button>
                             </clr-dg-column-toggle-button>
-                        </clr-dg-column-toggle>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        </clr-dg-column-toggle>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
 
                         <clr-dg-pagination #pagination [clrDgPageSize]="20"></clr-dg-pagination>
                     </clr-dg-footer>

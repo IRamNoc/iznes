@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="manage-orders"><i class="fa fa-calendar"></i>{{'Centralisation History' | translate}}
+    <h1><i class="fa fa-calendar"></i>{{'Centralisation History' | translate}}
 
         <span *ngIf="baseCentralizationHistory.length > 0">{{baseCentralizationHistory.fundShareName}} - {{baseCentralizationHistory.isin}}</span>
     </h1>
@@ -12,21 +12,27 @@
             <button clrTabLink id="-{{id}}" [routerLink]="['/am-reports-section/centralization-history', (id === 0) ? shareID :  id]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
             </button>
-            <clr-tab-content *clrIfActive="tabdata.active">
 
+
+            <clr-tab-content *clrIfActive="tabdata.active">
                 <form [formGroup]="searchForm" id="search-orders-form">
                     <div class="form-horizontal">
+
                         <div class="row bordered">
                             <div class="form-group col-sm-6">
                                 <label style="margin: 10px 0;">
-                                    <h3>{{'Please find below the Centralisation history for @baseCentralizationHistory.fundShareName@' | translate: {'baseCentralizationHistory.fundShareName': baseCentralizationHistory.fundShareName} }}</h3>
+                                    <span>{{'Please find below the Centralisation history for @baseCentralizationHistory.fundShareName@' | translate: {'baseCentralizationHistory.fundShareName': baseCentralizationHistory.fundShareName} }}</span>
                                 </label>
+
                                 <br>
+
                                 <div class="input-button-group">
                                     <ng-select id="holders-search-field" [items]="centralizationReportsList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" [formControl]="searchForm.controls['search']"></ng-select>
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
                 </form>
 
@@ -58,93 +64,93 @@
 
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
-                        <tr>
-                            <td [ngStyle]="{'width': '40%'}">
-                                <div class="form-group">
-                                    <label>{{'Fund name:' | translate}}
+                    <tr>
+                        <td [ngStyle]="{'width': '40%'}">
+                            <div class="form-group">
+                                <label>{{'Fund name:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{baseCentralizationHistory.fundName}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{baseCentralizationHistory.fundName}}</span>
                                 </div>
-                            </td>
-                            <td [ngStyle]="{'width': '40%'}">
-                                <div class="form-group">
-                                    <label>{{'Umbrella fund:' | translate}}
+                            </div>
+                        </td>
+                        <td [ngStyle]="{'width': '40%'}">
+                            <div class="form-group">
+                                <label>{{'Umbrella fund:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{baseCentralizationHistory.umbrellaFundName}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{baseCentralizationHistory.umbrellaFundName}}</span>
                                 </div>
-                            </td>
-                            <td [ngStyle]="{'width': '20%'}">
-                                <div class="form-group">
-                                    <label>{{'Currency:' | translate}}
+                            </div>
+                        </td>
+                        <td [ngStyle]="{'width': '20%'}">
+                            <div class="form-group">
+                                <label>{{'Currency:' | translate}}
 
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{showCurrency(baseCentralizationHistory.shareClassCurrency)}}</span>
-                                    </div>
+                                </label>
+                                <div>
+                                    <span class="readonly-field">{{showCurrency(baseCentralizationHistory.shareClassCurrency)}}</span>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
-                <h3 class="mb-1">{{'Please choose the NAV dates for which you would like  to see this share\'s centralisation history' | translate}}
+                <h3 class="mb-1">{{'Please choose the NAV dates for which you would like to see this share\'s centralisation history' | translate}}
 
                 </h3>
 
                 <table style="width: 100%;" class="tableShareDetails">
                     <tbody>
-                        <tr>
-                            <td style="width: 400px;">
-                                <div class="form-group">
-                                    <label for="perdiod-search-field">{{'Choose a period:' | translate}}
+                    <tr>
+                        <td style="width: 400px;">
+                            <div class="form-group">
+                                <label for="perdiod-search-field">{{'Choose a period:' | translate}}
 
-                                    </label>
-                                    <div class="input-button-group">
-                                        <ng-select id="perdiod-search-field" [items]="periodList" name="top" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="filterForm.controls['period']"></ng-select>
-                                    </div>
+                                </label>
+                                <div class="input-button-group">
+                                    <ng-select id="perdiod-search-field" [items]="periodList" name="top" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="filterForm.controls['period']"></ng-select>
                                 </div>
-                            </td>
-                            <td style="width: 30px; padding: 0;">
-                                <div class="form-group">
-                                    <label>{{'or' | translate}}
+                            </div>
+                        </td>
+                        <td style="width: 30px; padding: 0;">
+                            <div class="form-group">
+                                <label>{{'or' | translate}}
 
-                                    </label>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label for="search-date-from">{{'Date from:' | translate}}
+                                </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label for="search-date-from">{{'Date from:' | translate}}
 
-                                    </label>
-                                    <div class="input-group date-pick-wrapper">
-                                        <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="search-date-from" [(ngModel)]="dateFrom" formControlName="dateFrom" [disabled]="hideCalendars" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
-                                    </div>
+                                </label>
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="search-date-from" [(ngModel)]="dateFrom" formControlName="dateFrom" [disabled]="hideCalendars" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                                 </div>
-                            </td>
-                            <td>
-                                <div class="form-group">
-                                    <label for="search-date-to">{{'Date to:' | translate}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label for="search-date-to">{{'Date to:' | translate}}
 
-                                    </label>
-                                    <div class="input-group date-pick-wrapper">
-                                        <span class="fa fa-calendar" aria-hidden="true"></span>
-                                        <input id="search-date-to" [(ngModel)]="dateTo" formControlName="dateTo" [disabled]="hideCalendars" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
-                                    </div>
+                                </label>
+                                <div class="input-group date-pick-wrapper">
+                                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                                    <input id="search-date-to" [(ngModel)]="dateTo" formControlName="dateTo" [disabled]="hideCalendars" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                                 </div>
-                            </td>
-                            <td>
-                                <div class="text-right">
-                                    <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportAllHistory()">{{'Export Centralisation history for these dates' | translate}}</button>
-                                </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-right">
+                                <button id="export-centralization-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportAllHistory()">{{'Export Centralisation history for these dates' | translate}}</button>
+                            </div>
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
 
@@ -206,29 +212,29 @@
                                 <div class="form-group col-sm-7">
                                     <table class="table table-noborder">
                                         <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th>{{'Quantity' | translate}}</th>
-                                                <th>{{'Amount' | translate}}</th>
-                                                <th>{{'Cut-off Date' | translate}}</th>
-                                                <th>{{'Settlement Date' | translate}}</th>
-                                            </tr>
+                                        <tr>
+                                            <th></th>
+                                            <th>{{'Quantity' | translate}}</th>
+                                            <th>{{'Amount' | translate}}</th>
+                                            <th>{{'Cut-off Date' | translate}}</th>
+                                            <th>{{'Settlement Date' | translate}}</th>
+                                        </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><b>{{'Subscriptions' | translate}}</b></td>
-                                                <td>{{data.subQuantity | moneyValue: 4 }}</td>
-                                                <td>{{data.subAmount | moneyValue: 5 }}</td>
-                                                <td>{{data.subCutoffDate}}</td>
-                                                <td>{{data.subSettlementDate}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td><b>{{'Redemptions' | translate}}</b></td>
-                                                <td>{{data.redQuantity | moneyValue: 4 }}</td>
-                                                <td>{{data.redAmount | moneyValue: 5 }}</td>
-                                                <td>{{data.redCutoffDate}}</td>
-                                                <td>{{data.redSettlementDate}}</td>
-                                            </tr>
+                                        <tr>
+                                            <td><b>{{'Subscriptions' | translate}}</b></td>
+                                            <td>{{data.subQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.subAmount | moneyValue: 5 }}</td>
+                                            <td>{{data.subCutoffDate}}</td>
+                                            <td>{{data.subSettlementDate}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><b>{{'Redemptions' | translate}}</b></td>
+                                            <td>{{data.redQuantity | moneyValue: 4 }}</td>
+                                            <td>{{data.redAmount | moneyValue: 5 }}</td>
+                                            <td>{{data.redCutoffDate}}</td>
+                                            <td>{{data.redSettlementDate}}</td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>

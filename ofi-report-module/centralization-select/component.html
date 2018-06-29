@@ -1,21 +1,36 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-book"></i> {{'Centralisation History' | translate}}
+        <i class="fa fa-book"></i>{{'Centralisation History' | translate}}
     </h1>
 </div>
 
-<clr-tabs>
-    <clr-tab>
-        <button id="demoOptimisedDatagridBtn" clrTabLink>
-            <i class="fa fa-book"></i> {{'History' | translate}}
-        </button>
-        <clr-tab-content>
+<section class="wrapper wrapper-content">
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink>
+                <i class="fa fa-book"></i> {{'History' | translate}}
+            </button>
+            <clr-tab-content>
+                <form>
+                    <div class="form-horizontal">
+                        <div class="row bordered">
+                            <div class="form-group col-sm-6">
+                                <label style="margin: 10px 0;">
+                                    <b><span>{{'Search for the centralisation history for a specific share:' | translate}}</span></b>
+                                </label>
 
-            <b>{{'Search for the centralisation history for a specific share:' | translate}}</b>
+                                <br>
 
-            <ng-select id="shareName-isin" [items]="shareList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" (selected)="loadHistory($event)">
-            </ng-select>
+                                <div class="input-button-group">
+                                    <ng-select id="shareName-isin" [items]="shareList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or ISIN')" (selected)="loadHistory($event)">
+                                    </ng-select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
-        </clr-tab-content>
-    </clr-tab>
-</clr-tabs>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+</section>
