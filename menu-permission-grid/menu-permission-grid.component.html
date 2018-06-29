@@ -1,0 +1,36 @@
+<div class="permission-grid">
+    <table class="table">
+        <thead *ngIf="permissionLevels.length">
+        <th>Permission Area</th>
+        <!-- Permission Levels Headers. -->
+        <th *ngFor="let level of permissionLevels">
+            {{level.text}}
+        </th>
+        </thead>
+
+        <tbody *ngIf="permissionAreasCopy.length">
+        <!-- Each Permission Row. -->
+        <tr *ngFor="let area of permissionAreasCopy">
+            <td class="menu-areas">
+                <button *ngIf="area.parentID > -1" type="button" class="btn btn-sm" (click)="changeOrder(area.id,-1)">
+                    <i class="fa fa-arrow-up"></i>
+                </button>
+                <button *ngIf="area.parentID > -1" type="button" class="btn btn-sm" (click)="changeOrder(area.id,1)">
+                    <i class="fa fa-arrow-down"></i>
+                </button>
+                <span class="menu-text">
+                    {{indent[area.level].concat(area.text) + (!!relationships[area.id]['children']? ' [menu group]' : (area.parentID == -1 ? ' [hidden link]' : ''))}}
+                </span>
+            </td>
+            <td *ngFor="let level of permissionLevels; let i = index">
+                <!-- Option List, defaults to this grid. -->
+                <menu-options-list *ngIf="area.parentID > -1 || i == 0"
+                                   (selected)="updateValue( area.id, level.id, $event.id)"
+                                   [initData]="rawComponentData[area.id][level.id]"
+                                   [metaData]="{ 'permissionId': area.id, 'levelId': level.id }"
+                ></menu-options-list>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
