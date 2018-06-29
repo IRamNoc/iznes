@@ -112,6 +112,10 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
 
     ngOnInit() {
 
+        if (this.kycID) {
+            this.kycService.getInformationAuditByKycID(this.kycID);
+        }
+
         this.informationAuditTrail$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
@@ -161,6 +165,9 @@ export class KycInformationAuditTrailComponent implements OnInit, OnDestroy, OnC
             userId: this.myDetails.userId,
             kycID: this.kycID,
             timezoneoffset: new Date().getTimezoneOffset(),
+            search: this.searchForm.value.search,
+            dateFrom: this.searchForm.value.startDate,
+            dateTo: this.searchForm.value.endDate,
         };
 
         this.fileDownloader.downLoaderFile(config);

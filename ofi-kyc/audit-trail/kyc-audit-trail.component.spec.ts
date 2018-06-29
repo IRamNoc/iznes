@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement, Pipe, PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { of } from 'rxjs/observable/of';
+import { Subject } from 'rxjs/Subject';
 
 import { KycAuditTrailComponent } from './kyc-audit-trail.component';
 import { KycStatusAuditTrailComponent } from './status-audit-trail/kyc-status-audit-trail.component';
@@ -8,22 +10,45 @@ import { KycInformationAuditTrailComponent } from './information-audit-trail/kyc
 import { kycEnums } from '../config';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { ClarityModule } from '@clr/angular';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { DpDatePickerModule } from '@setl/utils/index';
+import { ActivatedRoute } from '@angular/router';
+import { FileDownloader } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
+import { MultilingualService } from '@setl/multilingual';
 
-const fetchStatusAuditByKycID = jasmine.createSpy('fetchStatusAuditByKycID')
+const getStatusAuditByKycID = jasmine.createSpy('getStatusAuditByKycID')
     .and.returnValue(
         new Promise((resolve, reject) => {
             resolve();
         }),
     );
-const fetchInformationAuditByKycID = jasmine.createSpy('fetchInformationAuditByKycID')
+const getInformationAuditByKycID = jasmine.createSpy('getInformationAuditByKycID')
 .and.returnValue(
     new Promise((resolve, reject) => {
         resolve();
     }),
 );
 const ofiKycServiceSpy = {
-    fetchStatusAuditByKycID,
-    fetchInformationAuditByKycID,
+    getStatusAuditByKycID,
+    getInformationAuditByKycID,
+};
+
+const fileDownloaderStub = {
+    downLoaderFile: jasmine.createSpy('downLoaderFile'),
+};
+
+const memberSocketServiceStub = {
+    token: 'fake token',
+};
+
+const multilingualServiceStub = jasmine.createSpyObj('MultilingualService', ['translate']);
+
+const fakeKycID = 1;
+const activatedRouteStub = {
+    params: of({
+        kycID: fakeKycID.toString(),
+    }),
 };
 
 // Stub for translate
@@ -34,7 +59,7 @@ export class TranslatePipe implements PipeTransform {
     }
 }
 
-fdescribe('KycAuditTrailComponent', () => {
+describe('KycAuditTrailComponent', () => {
 
     let comp: KycAuditTrailComponent;
     let fixture: ComponentFixture<KycAuditTrailComponent>;
@@ -54,9 +79,16 @@ fdescribe('KycAuditTrailComponent', () => {
             ],
             imports: [
                 ClarityModule,
+                FormsModule,
+                ReactiveFormsModule,
+                DpDatePickerModule,
             ],
             providers: [
                 { provide: OfiKycService, useValue: ofiKycServiceSpy },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: FileDownloader, useValue: fileDownloaderStub },
+                { provide: MemberSocketService, useValue: memberSocketServiceStub },
+                { provide: MultilingualService, useValue: multilingualServiceStub },
                 { provide: 'kycEnums', useValue: kycEnums },
             ],
         }).compileComponents();
@@ -86,6 +118,30 @@ fdescribe('KycAuditTrailComponent', () => {
     describe('structure', () => {
         it('should have a header with wording: "My Request Audit Trail:"', () => {
             expect(el.innerText).toContain('My Request Audit Trail:');
+        });
+
+        it('should have an status audit trail component', () => {
+            const statusEl = fixture.debugElement.queryAll(By.css('kyc-information-audit-trail'));
+            expect(statusEl.length).toEqual(1);
+        });
+
+        it('should have an information audit trail component', () => {
+            const informationEl = fixture.debugElement.queryAll(By.css('kyc-information-audit-trail'));
+            expect(informationEl.length).toEqual(1);
+        });
+
+        it('should retrieve the kycID from the route', () => {
+            expect(comp.kycID).toEqual(fakeKycID);
+        });
+
+        it('should pass the kycID value to the status audit trail component', () => {
+            const statusEl = fixture.debugElement.query(By.css('kyc-status-audit-trail'));
+            expect(statusEl.componentInstance.kycID).toEqual(comp.kycID);
+        });
+
+        it('should pass the kycID value to the information audit trail component', () => {
+            const informationEl = fixture.debugElement.query(By.css('kyc-information-audit-trail'));
+            expect(informationEl.componentInstance.kycID).toEqual(comp.kycID);
         });
     });
 

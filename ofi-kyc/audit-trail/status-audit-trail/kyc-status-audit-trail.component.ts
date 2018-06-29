@@ -33,6 +33,10 @@ export class KycStatusAuditTrailComponent implements OnInit, OnDestroy, OnChange
 
     ngOnInit() {
 
+        if (this.kycID) {
+            this.kycService.getStatusAuditByKycID(this.kycID);
+        }
+
         this.statusAuditTrail$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {

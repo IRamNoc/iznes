@@ -9,7 +9,7 @@
 
                 </label>
                 <div class="input-button-group">
-                    <input id="orders-search-fundname" formControlName="search" name="search-fundname" type="text" [placeholder]="translate.translate('Search a section or subsection')">
+                    <input id="input-search" formControlName="search" name="input-search" type="text" [placeholder]="translate.translate('Search a section or subsection')">
 
                     <button (click)="requestSearch()" style="margin-top: 0;">
                         <i class="fa fa-search"></i>
@@ -18,23 +18,23 @@
             </div>
 
             <div class="col-sm-3">
-                <label for="orders-search-from-date">{{'Date From' | translate}}
+                <label for="input-startdate">{{'Date From' | translate}}
 
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="orders-search-from-date" formControlName="startDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
+                    <input id="input-startdate" formControlName="startDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
                         mode="day" theme="dp-material">
 
                 </div>
             </div>
             <div class="col-sm-3">
-                <label for="orders-search-to-date">{{'Date To' | translate}}
+                <label for="input-enddate">{{'Date To' | translate}}
 
                 </label>
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input id="orders-search-to-date" formControlName="endDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
+                    <input id="input-enddate" formControlName="endDate" [dpDayPicker]="configDate" [placeholder]="translate.translate('Choose a date')"
                         mode="day" theme="dp-material">
 
                 </div>
@@ -48,31 +48,31 @@
 </div>
 
 <clr-datagrid class="expandable" clrDgSortIcon>
-    <clr-dg-column [clrDgField]="'section'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'section'" clrDgSortIcon>
         {{'Section' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'subsection'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'subsection'" clrDgSortIcon>
         {{'Subsection' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'information'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'modifiedField'" clrDgSortIcon>
         {{'Information' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'oldValue'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'oldValue'" clrDgSortIcon>
         {{'Old Value' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'newValue'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'newValue'" clrDgSortIcon>
         {{'New Value' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'modifiedBy'" clrDgSortIcon>
         {{'Modified By' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
-    <clr-dg-column [clrDgField]="'date'" clrDgSortIcon clrDgSortNoSearch>
+    <clr-dg-column [clrDgField]="'dateModified'" clrDgSortIcon>
         {{'Date' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
