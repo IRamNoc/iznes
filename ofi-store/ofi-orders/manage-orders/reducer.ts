@@ -65,6 +65,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 estimatedAmount: item.get('estimatedAmountWithCost'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
+                latestNav: item.get('latestNav'),
                 estimatedQuantity: item.get('estimatedQuantity'),
                 feePercentage: item.get('feePercentage'),
                 firstName: item.get('firstName'),
