@@ -172,9 +172,6 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
         // Reduce observable subscription
         Observable.combineLatest(this.authenticationOb, this.siteMenuOb).subscribe(([authentication, siteMenu]) => {
-
-            console.log('site menu', siteMenu);
-
             if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
         });
 

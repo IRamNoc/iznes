@@ -75,6 +75,7 @@ export class LoginGuardService implements CanActivate {
             const applyRestrictUrl = this.appConfig.applyRestrictUrl || false;
             if (applyRestrictUrl) {
                 const allowedUrls = this.getUserAllowUrl();
+
                 if (!isUrlAllow(allowedUrls, state['url'])) {
                     return false;
                 }
@@ -97,7 +98,7 @@ export class LoginGuardService implements CanActivate {
         const topProfileMenu = _.get(menuSpecs, ['top', 'profile', this.userTypeStr], []);
         const sideMenu = _.get(menuSpecs, ['side', this.userTypeStr], []);
         const disabledMenu = _.get(menuSpecs, 'disabled', []);
-        const nonMenuLink = _.get(this.appConfig, ['nonMenuLink', this.userTypeStr], []);
+        const nonMenuLink = _.get(menuSpecs, ['hidden', this.userTypeStr], []);
 
         // top profile menu urls
         topProfileMenu.forEach((item) => {
