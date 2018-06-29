@@ -14,7 +14,8 @@
     "author": "SETL.io",
     "license": "UNLICENSED",
     "dependencies": {
-        "libsodium-wrappers": "^0.5.2",
+        "libsodium-wrappers": "^0.7.3",
+        "path": "^0.12.7",
         "lodash": "^4.17.4",
         "sha256": "^0.2.0",
         "socketcluster-client": "^6.3.0"
