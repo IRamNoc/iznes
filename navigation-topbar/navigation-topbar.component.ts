@@ -37,11 +37,14 @@ import {
     MyUserService,
     MyWalletsService,
     WalletNodeRequestService,
+    NodeAlertsService
 } from '@setl/core-req-services';
+
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
+import {Observable} from 'rxjs/Observable';
 import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
 
 @Component({
@@ -76,6 +79,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
+    public walletNodeDead: Observable<boolean>;
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
@@ -107,6 +111,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private menuSpecService: MenuSpecService,
                 private initialisationService: InitialisationService,
                 private logService: LogService,
+                private nodeAlertsService: NodeAlertsService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -121,6 +126,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+
+        this.walletNodeDead = this.nodeAlertsService.dead;
     }
 
     updateState() {
@@ -414,6 +421,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     logout() {
         this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+        console.log('Disconnected from wallet node');
     }
 
     controlMenu() {
