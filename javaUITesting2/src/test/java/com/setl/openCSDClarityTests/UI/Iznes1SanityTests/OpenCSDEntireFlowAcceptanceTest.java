@@ -174,9 +174,6 @@ public class OpenCSDEntireFlowAcceptanceTest {
         System.out.println(reviewedByColumn);
 
         driver.findElement(By.id("AllClients-Status-KYC-0")).click();
-
-        wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
-
         driver.findElement(By.id("checkbox")).click();
 
         try{

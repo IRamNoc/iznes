@@ -37,6 +37,8 @@ node {
                         rm -rf /var/lib/jenkins/Deploy/dist &&
                         rsync -a ./dist /var/lib/jenkins/Deploy/'''
 
+                sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes dev /var/lib/jenkins/Deploy/dist'
+
             }
 
             stage('Sonar Scan') {

@@ -466,7 +466,7 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             productsManagementCompany,
-            accountAdmin,
+            //accountAdmin,
         ],
         valuer: [
             home,
