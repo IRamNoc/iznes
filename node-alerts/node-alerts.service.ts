@@ -11,10 +11,23 @@ import {
 import { MyUserService } from '../my-user/my-user.service';
 import { WalletnodeChannelService } from '../walletnode-channel/service';
 
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { timer } from 'rxjs/observable/timer';
+import { merge } from 'rxjs/observable/merge';
+import { of } from 'rxjs/observable/of';
+import { mapTo } from 'rxjs/operators/mapTo';
+import { distinctUntilChanged } from 'rxjs/operators/distinctUntilChanged';
+import { switchMap } from 'rxjs/operators/switchMap';
+import { map } from 'rxjs/operators/map';
+import { filter } from 'rxjs/operators/filter';
+import { switchAll } from 'rxjs/operators/switchAll';
+
 @Injectable()
 export class NodeAlertsService {
-    private waitTime = 5000;
+    private waitTime = 10000;
     private waitCount = 3;
+    private deathTimeout = 30000;
+    private deathSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
     constructor(
         private toasterService: ToasterService,
@@ -25,6 +38,10 @@ export class NodeAlertsService {
         private walletNodeChannelService: WalletnodeChannelService,
     ) {
         this.setNodesCallbacks();
+    }
+
+    get dead() {
+        return this.deathSubject.asObservable();
     }
 
     setNodesCallbacks() {
@@ -64,8 +81,26 @@ export class NodeAlertsService {
             );
         };
 
-        this.walletNodeSocketService.walletnodeClose.subscribe(callbacks.disconnect);
-        this.walletNodeSocketService.walletnodeOpen.subscribe(callbacks.reconnect);
+        merge(
+            this.walletNodeSocketService.open.pipe(mapTo('open')),  // 1.  Listen to open and emit "open"
+            this.walletNodeSocketService.close.pipe(mapTo('close')) // 2.  Listen to close and emit "close"
+        ).pipe(                                                     // 3.  Merge them in to single stream
+            distinctUntilChanged(),                                 // 4.  Only emit if it has changed
+            switchMap((ob) => {                                     // 5.  Create inner observable for each event
+                return of(ob).pipe(                                 // 6.  Create duplicate observable
+                    filter(e => e === 'close'),                     // 7.  Only listen to close events
+                    map(x => timer(this.deathTimeout)),             // 8.  Start timer
+                    switchAll(),                                    // 9.  Reset timer each time we get an event
+                );                                                  //
+            })                                                      //
+        ).subscribe(x => this.deathSubject.next(true));             // 10. Emit true to deathSubject
+        // The switchMap above causes the inner observable (ob) to complete each time a new event is received. This means
+        // if the connection has closed, and then re-opens, the timer is stopped and will not emit that it is dead.
+        this.walletNodeSocketService.close.subscribe(callbacks.disconnect);
+        this.walletNodeSocketService.open.subscribe((message) => {
+            this.deathSubject.next(false);
+            callbacks.reconnect();
+        });
     }
 
     setTimers(messages) {
