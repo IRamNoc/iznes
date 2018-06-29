@@ -2,7 +2,6 @@ import {Action} from 'redux';
 import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU} from './actions';
 import {SiteSettingsState} from './model';
 import * as _ from 'lodash';
-import {backupMenuSpec} from './backupMenuSpec'
 
 let defaultLanguage;
 switch (window.navigator.language) {
@@ -21,7 +20,7 @@ const initialState: SiteSettingsState = {
     language: defaultLanguage,
     menuShown: true,
     production: true,
-    siteMenu: {}
+    siteMenu: {},
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
