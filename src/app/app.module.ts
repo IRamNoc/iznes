@@ -56,7 +56,6 @@ import {CorpActionsModule} from '@setl/core-corp-actions';
 import {ConnectionsModule} from '@setl/core-connections/connections.module';
 import {SetlLayoutModule} from '@setl/core-layout';
 import {LogService} from '@setl/utils';
-import {MenuPermissionGridModule} from '@setl/menu-permission-grid';
 
 /* OFI Modules */
 import {OfiProductModule} from '@ofi/product';
@@ -127,7 +126,6 @@ export function memberSocketServiceFactory() {
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,
-        MenuPermissionGridModule,
         SetlPipesModule,
         CoreManageMemberModule,
         SetlComponentsModule,
