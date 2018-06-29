@@ -146,14 +146,14 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
-        verifyCorrectPageById("Net asset value");
+        verifyCorrectPageById("Net Asset Value");
     }
 
     @Test
     public void shouldNavigateToNAVHomepage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[2]/div/a")).click();
-        assertTrue(driver.findElement(By.id("NAV-Title")).getText().equals("Net asset value"));
+        assertTrue(driver.findElement(By.id("NAV-Title")).getText().equals("Net Asset Value"));
     }
 
     @Test

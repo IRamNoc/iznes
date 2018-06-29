@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -253,11 +254,11 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/h2")).getText());
+        String fundNameText = (driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a/h2")).getText());
         String fundName = split(fundNameText, " ");
         assertTrue(fundName.equals(uFundDetails[0] + "TG445"));
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[2]/div[1]/div/a/i")).click();
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[1]/div/a/i")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a")).click();
         wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
 
         String LEIActual = driver.findElement(By.id("umbrellaEditLei")).getAttribute("value");
@@ -405,6 +406,9 @@ public class OpenCSD2FundsAcceptanceTest {
 
             wait.until(visibilityOfElementLocated(By.className("toast-title")));
             assertTrue(driver.findElement(By.className("toast-title")).getText().contains("has been successfully updated."));
+            String test2 = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
+            System.out.println(test2);
+            System.out.println(umbFundNamePrev + "Updated");
             assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
 
         }

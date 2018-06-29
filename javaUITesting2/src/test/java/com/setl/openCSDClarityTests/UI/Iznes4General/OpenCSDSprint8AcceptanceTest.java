@@ -39,7 +39,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (65000);
+    public Timeout globalTimeout = new Timeout (75000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
