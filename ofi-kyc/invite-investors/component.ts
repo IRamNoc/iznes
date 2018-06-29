@@ -27,8 +27,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
     investor: any;
     languages = [
-        {id: 'fr', text: 'Français'},
-        {id: 'en', text: 'English'},
+        { id: 'fr', text: 'Français' },
+        { id: 'en', text: 'English' },
         // {id: 'tch', text: '繁體中文'},
         // {id: 'sch', text: '中文'}
     ];
@@ -57,6 +57,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             },
         }
     }
+
+    panel: any;
 
     inviteItems: investorInvitation[];
 
@@ -102,6 +104,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 })
             ])
         });
+
+        this.panel = {
+            title: 'Invites Recap',
+            open: true
+        };
     }
 
     /**
@@ -158,7 +165,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             return item['email'];
         });
         if (emails.indexOf(control.value) !== -1) {
-            return {'notUnique': true};
+            return { 'notUnique': true };
         }
         return;
     }

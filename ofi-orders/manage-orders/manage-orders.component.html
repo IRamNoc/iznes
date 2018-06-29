@@ -258,7 +258,7 @@
 
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- isin -->
                             <button
                                 class="btn btn-link btn-sm"
@@ -267,7 +267,11 @@
                                 {{order.isin}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                            <!-- isin -->
+                            {{order.isin}}
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- shareName -->
                             <button
                                 class="btn btn-link btn-sm"
@@ -275,6 +279,10 @@
                             >
                                 {{order.fundShareName}}
                             </button>
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                            <!-- shareName -->
+                            {{order.fundShareName}}
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- assetManagementCompany -->{{order.amCompanyName}}
