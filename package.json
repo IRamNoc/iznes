@@ -9,6 +9,7 @@
   "author": "",
   "license": "UNLICENCED",
   "dependencies": {
-    "libsodium-wrappers": "^0.5.2"
+    "libsodium-wrappers": "^0.7.3",
+    "path": "^0.12.7"
   }
 }
