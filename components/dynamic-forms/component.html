@@ -11,6 +11,7 @@
                                 <input id="{{item}}" name="{{item}}" class="form-control"
                                        [class.required-field]="model[item].required"
                                        type="text"
+                                       maxlength="{{model[item].maxLength}}"
                                        placeholder="{{model[item].placeholder}}"
                                        formControlName="{{item}}"/>
                             </ng-container>
