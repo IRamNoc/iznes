@@ -188,7 +188,7 @@ public class OpenCSDNavigationAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("top-menu-my-info")));
         wait.until(elementToBeClickable(By.id("top-menu-my-info")));
         driver.findElement(By.id("top-menu-my-info")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]")).getText().equals("MY INFORMATION"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]")).getText().equals("My Information"));
     }
 
     @Test
