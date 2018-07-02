@@ -287,6 +287,15 @@ export {
 } from './wallet-nodes/';
 
 export {
+    // users
+    SET_ACCOUNT_ADMIN_USERS,
+    setRequestedAccountAdminUsers,
+    clearRequestedAccountAdminUsers,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS,
+    User,
+    UsersState,
+    usersReducer,
+    // teams
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
     clearRequestedAccountAdminTeams,

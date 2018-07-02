@@ -1,6 +1,26 @@
 import { combineReducers, Reducer } from 'redux';
 
 import {
+    SET_ACCOUNT_ADMIN_USERS,
+    setRequestedAccountAdminUsers,
+    clearRequestedAccountAdminUsers,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS,
+    User,
+    UsersState,
+    usersReducer,
+} from './users';
+
+export {
+    SET_ACCOUNT_ADMIN_USERS,
+    setRequestedAccountAdminUsers,
+    clearRequestedAccountAdminUsers,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS,
+    User,
+    UsersState,
+    usersReducer,
+};
+
+import {
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
     clearRequestedAccountAdminTeams,
@@ -44,12 +64,36 @@ export {
     userTeamsAuditReducer,
 };
 
+import {
+    SET_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    setRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    PermissionAreasState,
+    getAccountAdminPermissions,
+    permissionAreasReducer,
+} from './permissions';
+
+export {
+    SET_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    setRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    PermissionAreasState,
+    getAccountAdminPermissions,
+    permissionAreasReducer,
+};
+
 export interface AccountAdminState {
-    accountAdminTeams: UserTeamsState;
-    accountAdminTeamsAudit: UserTeamsAuditState;
+    users: UsersState;
+    teams: UserTeamsState;
+    teamsAudit: UserTeamsAuditState;
+    permissionAreas: PermissionAreasState;
 }
 
 export const accountAdminReducer: Reducer<AccountAdminState> = combineReducers<AccountAdminState>({
-    accountAdminTeams: userTeamsReducer,
-    accountAdminTeamsAudit: userTeamsAuditReducer,
+    users: usersReducer,
+    teams: userTeamsReducer,
+    teamsAudit: userTeamsAuditReducer,
+    permissionAreas: permissionAreasReducer,
 });

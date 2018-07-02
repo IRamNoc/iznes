@@ -5,7 +5,7 @@ const getUserTeams = (state): AccountAdminState => state.accountAdminTeams;
 
 export const getAccountAdmin = createSelector(
     getUserTeams,
-    (state: AccountAdminState) => state.accountAdminTeamsAudit,
+    (state: AccountAdminState) => state.teamsAudit,
 );
 
 export const getAccountAdminTeamsAudit = createSelector(

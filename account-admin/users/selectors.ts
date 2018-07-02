@@ -1,14 +1,14 @@
 import { createSelector } from 'reselect';
-import { AccountAdminState, UserTeamsState } from '../index';
+import { AccountAdminState, UsersState } from '../index';
 
 const getUserTeams = (state): AccountAdminState => state.accountAdmin;
 
 export const getAccountAdmin = createSelector(
     getUserTeams,
-    (state: AccountAdminState) => state.teams,
+    (state: AccountAdminState) => state.users,
 );
 
-export const getAccountAdminTeams = createSelector(
+export const getAccountAdminUsers = createSelector(
     getAccountAdmin,
-    (state: UserTeamsState) => state.teams,
+    (state: UsersState) => state.users,
 );
