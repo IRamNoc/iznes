@@ -5,15 +5,34 @@ import {
     WalletNodeRequestService
 } from '../index';
 import {
-    clearRequestedAllInstruments, clearRequestedWalletAddresses, clearRequestedWalletHolding,
-    clearRequestedWalletInstrument, clearRequestedWalletIssuer, clearRequestedWalletLabel,
-    clearContractNeedHandle, SET_ACCOUNT_LIST,
-    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_ALL_INSTRUMENTS_LIST, SET_MANAGED_WALLETS, SET_MY_CHAIN_ACCESS,
-    SET_MY_INSTRUMENTS_LIST, SET_OWN_WALLETS, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST, SET_USER_DETAILS,
-    SET_WALLET_ADDRESSES, SET_WALLET_DIRECTORY, SET_WALLET_HOLDING, SET_WALLET_TO_RELATIONSHIP,
+    clearRequestedAllInstruments,
+    clearRequestedWalletAddresses,
+    clearRequestedWalletHolding,
+    clearRequestedWalletInstrument,
+    clearRequestedWalletIssuer,
+    clearRequestedWalletLabel,
+    clearContractNeedHandle,
+    SET_ACCOUNT_LIST,
+    SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST,
+    SET_ALL_INSTRUMENTS_LIST,
+    SET_MANAGED_WALLETS,
+    SET_MY_CHAIN_ACCESS,
+    SET_MY_INSTRUMENTS_LIST,
+    SET_OWN_WALLETS,
+    SET_TRANSACTIONAL_PERMISSION_GROUP_LIST,
+    SET_USER_DETAILS,
+    SET_WALLET_ADDRESSES,
+    SET_WALLET_DIRECTORY,
+    SET_WALLET_HOLDING,
+    SET_WALLET_TO_RELATIONSHIP,
+    SET_MENU_PERMISSION_GROUP_LIST,
     setUpdatedContractList,
-    setRequesteAllInstruments, setRequestedAccountList, setRequestedMyChainAccess, updateLastCreatedContractDetail,
-    updateLastCreatedRegisterIssuerDetail, SET_LANGUAGE,
+    setRequesteAllInstruments,
+    setRequestedAccountList,
+    setRequestedMyChainAccess,
+    updateLastCreatedContractDetail,
+    updateLastCreatedRegisterIssuerDetail,
+    SET_LANGUAGE,
     addWalletNodeSnapshot
 } from '@setl/core-store';
 import * as _ from 'lodash';
@@ -274,7 +293,7 @@ export class InitialisationService {
         const asyncTaskPipes = permissionGroupService.requestPermissionGroupList();
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST],
+            [SET_ADMINISTRATIVE_PERMISSION_GROUP_LIST, SET_TRANSACTIONAL_PERMISSION_GROUP_LIST, SET_MENU_PERMISSION_GROUP_LIST],
             [],
             asyncTaskPipes,
             {}

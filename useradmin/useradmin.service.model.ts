@@ -132,6 +132,16 @@ export interface UpdateTxPermissionsBody extends MemberNodeMessageBody {
     isAdmin: string;
 }
 
+export interface UpdateMenuPermissionsBody extends MemberNodeMessageBody {
+    token: string;
+    entityId: number;
+    isGroup: number;
+    toAdd: any;
+    toUpdate: any;
+    toDelete: any;
+    isAdmin: string;
+}
+
 export interface RequestAdminPermissionBody extends MemberNodeMessageBody {
     token: string;
     entityId: string;
@@ -144,6 +154,14 @@ export interface RequestTxPermissionBody extends MemberNodeMessageBody {
     token: string;
     entityId: string;
     chainId: string;
+    isGroup: string;
+    permissionId: string;
+    includeGroup: string;
+}
+
+export interface RequestMenuPermissionBody extends MemberNodeMessageBody {
+    token: string;
+    entityId: string;
     isGroup: string;
     permissionId: string;
     includeGroup: string;

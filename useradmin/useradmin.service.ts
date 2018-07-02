@@ -19,6 +19,7 @@ import {
     GetPermissionAreaListBody,
     UpdateAdminPermissionsBody,
     UpdateTxPermissionsBody,
+    UpdateMenuPermissionsBody,
 
     /* Groups. */
     CreateNewGroupBody,
@@ -50,7 +51,7 @@ import {
 
     /* Account wallet permission */
     RequestUserAccountWalletPermission,
-    UpdateUserAccountWalletPermissions
+    UpdateUserAccountWalletPermissions, RequestMenuPermissionBody
 } from './useradmin.service.model';
 import {
     SET_WALLET_NODE_LIST,
@@ -99,6 +100,7 @@ export class AdminUsersService {
             {},
         ));
     }
+
     /**
      * Default static call to get chain list.
      * @param adminUserService
@@ -306,6 +308,17 @@ export class AdminUsersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    public getMenuPermAreaList(): any {
+        /* Setup the message body. */
+        const messageBody: GetPermissionAreaListBody = {
+            RequestName: 'gmpal',
+            token: this.memberSocketService.token
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
     /*
      Permission Groups.
      ==================
@@ -387,10 +400,29 @@ export class AdminUsersService {
             toUpdate: data.toUpdate,
             toDelete: data.toDelete,
             isAdmin: data.isAdmin
-
         };
 
         this.logService.log('SENDING UDTP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public updateMenuPermissions(data): any {
+        /* Setup the message body. */
+        this.logService.log(data);
+        const messageBody: UpdateMenuPermissionsBody = {
+            RequestName: 'udmp',
+            token: this.memberSocketService.token,
+            entityId: data.entityId,
+            isGroup: data.isGroup,
+            toAdd: data.toAdd,
+            toUpdate: data.toUpdate,
+            toDelete: data.toDelete,
+            isAdmin: data.isAdmin
+        };
+
+        this.logService.log('SENDING UDMP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -430,6 +462,23 @@ export class AdminUsersService {
         };
 
         this.logService.log('SENDING GTP: ', messageBody);
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestMenuPermissions(entity): any {
+        /* Setup the message body. */
+        const messageBody: RequestMenuPermissionBody = {
+            RequestName: 'gmp',
+            token: this.memberSocketService.token,
+            entityId: entity.entityId,
+            isGroup: entity.isGroup,
+            permissionId: entity.permissionId,
+            includeGroup: entity.includeGroup
+        };
+
+        this.logService.log('SENDING GMP: ', messageBody);
 
         /* Return the new member node saga request. */
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -550,7 +599,7 @@ export class AdminUsersService {
             RequestName: 'gug',
             token: this.memberSocketService.token,
             entityId: entity.entityId,
-            isTx: entity.isTx ? 1 : 0,
+            isTx: entity.isTx,
         };
 
         this.logService.log('SENDING GUG: ', messageBody);

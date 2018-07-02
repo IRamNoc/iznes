@@ -12,7 +12,8 @@ import {
     ValidTokenRequestBody,
     SetNewPasswordFromTokenRequestBody,
     SetLanguageRequestBody,
-    GetLanguageRequestBody
+    GetLanguageRequestBody,
+    GetSiteMenuRequestBody
 } from './my-user.service.model';
 import {NgRedux} from '@angular-redux/store';
 import {Observable} from 'rxjs/Observable';
@@ -226,6 +227,16 @@ export class MyUserService implements OnDestroy {
             RequestName: 'getlanguage',
             token: this.memberSocketService.token,
             userID: data.userID
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getSiteMenu(redux: NgRedux<any>): any {
+        const token = redux.getState().user.authentication.token;
+        const messageBody: GetSiteMenuRequestBody = {
+            RequestName: 'getmenuspec',
+            token,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

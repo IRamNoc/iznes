@@ -72,3 +72,7 @@ export interface GetLanguageRequestBody extends MemberNodeMessageBody {
     userID: string;
 }
 
+export interface GetSiteMenuRequestBody extends MemberNodeMessageBody {
+    token: string;
+}
+
