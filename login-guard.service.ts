@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
+import {Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
 import {
     Router,
     CanActivate,
@@ -6,13 +6,14 @@ import {
     RouterStateSnapshot, CanDeactivate,
 
 } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { NgRedux, select } from '@angular-redux/store';
-import { ToasterService } from 'angular2-toaster';
-import { MyUserService } from '@setl/core-req-services';
-import { Subscription } from 'rxjs/Subscription';
-import { APP_CONFIG, AppConfig, immutableHelper, MenuItem } from '@setl/utils';
+import {Observable} from 'rxjs/Observable';
+import {NgRedux, select} from '@angular-redux/store';
+import {ToasterService} from 'angular2-toaster';
+import {MyUserService} from '@setl/core-req-services';
+import {Subscription} from 'rxjs/Subscription';
+import {APP_CONFIG, AppConfig, immutableHelper, MenuItem} from '@setl/utils';
 import * as _ from 'lodash';
+import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
@@ -24,6 +25,7 @@ export class LoginGuardService implements CanActivate {
     subscriptionsArray: Subscription[] = [];
 
     userTypeStr: string;
+    menuSpec: {};
 
     @select(['user', 'authentication', 'isLogin']) isLoginOb;
     @select(['user', 'myDetail', 'userTypeStr']) userTypeOb;
@@ -32,6 +34,7 @@ export class LoginGuardService implements CanActivate {
                 @Inject(APP_CONFIG) public appConfig: AppConfig,
                 private toasterService: ToasterService,
                 private router: Router,
+                private menuSpecService: MenuSpecService,
                 private myUserService: MyUserService) {
         this.isLogin = false;
 
@@ -42,6 +45,10 @@ export class LoginGuardService implements CanActivate {
 
         this.subscriptionsArray.push(this.userTypeOb.subscribe((userTypeStr) => {
             this.userTypeStr = userTypeStr;
+        }));
+
+        this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+            this.menuSpec = menuSpec;
         }));
     }
 
@@ -68,6 +75,7 @@ export class LoginGuardService implements CanActivate {
             const applyRestrictUrl = this.appConfig.applyRestrictUrl || false;
             if (applyRestrictUrl) {
                 const allowedUrls = this.getUserAllowUrl();
+
                 if (!isUrlAllow(allowedUrls, state['url'])) {
                     return false;
                 }
@@ -78,17 +86,19 @@ export class LoginGuardService implements CanActivate {
     }
 
     isMenuDisabled(url: string): boolean {
-        const disabledMenus: string[] = _.get(this.appConfig, ['menuSpec', 'disabled'], []);
+        const disabledMenus: string[] = _.get(this.menuSpec, ['disabled'], []);
         return disabledMenus.indexOf(url) !== -1;
     }
 
-    getUserAllowUrl(): {static_link: string, dynamic_link: string}[] {
-        let allowUrls: {static_link: string, dynamic_link: string}[] = [];
-        const menuSpecs = this.appConfig.menuSpec;
+    getUserAllowUrl(): { static_link: string, dynamic_link: string }[] {
+        let allowUrls: { static_link: string, dynamic_link: string }[] = [];
+
+        const menuSpecs = this.menuSpec;
+
         const topProfileMenu = _.get(menuSpecs, ['top', 'profile', this.userTypeStr], []);
         const sideMenu = _.get(menuSpecs, ['side', this.userTypeStr], []);
         const disabledMenu = _.get(menuSpecs, 'disabled', []);
-        const nonMenuLink = _.get(this.appConfig, ['nonMenuLink', this.userTypeStr], []);
+        const nonMenuLink = _.get(menuSpecs, ['hidden', this.userTypeStr], []);
 
         // top profile menu urls
         topProfileMenu.forEach((item) => {
@@ -127,8 +137,8 @@ export class LoginGuardService implements CanActivate {
  * @param {MenuItem} sideMenu
  * @return {string[]}
  */
-function getSideMenuUrl(sideMenu: MenuItem): {static_link: string, dynamic_link: string}[] {
-    const urls: {static_link: string, dynamic_link: string}[] = [];
+function getSideMenuUrl(sideMenu: MenuItem): { static_link: string, dynamic_link: string }[] {
+    const urls: { static_link: string, dynamic_link: string }[] = [];
 
     if (typeof sideMenu.children === 'undefined') {
         urls.push({
@@ -153,7 +163,7 @@ function getSideMenuUrl(sideMenu: MenuItem): {static_link: string, dynamic_link:
  * @param {string} urlToCheck
  * @return {boolean}
  */
-function isUrlAllow(allowUrls: {static_link: string, dynamic_link: string}[],
+function isUrlAllow(allowUrls: { static_link: string, dynamic_link: string }[],
                     urlToCheck: string): boolean {
     let rVal = false;
 
