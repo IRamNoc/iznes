@@ -3,6 +3,7 @@ import {KycMyInformationsReducer, KycMyInformationsState} from './my-information
 import {AmKycListReducer, AmKycListState} from './ofi-am-kyc-list';
 import {investorInvitationState, investorInvitationReducer} from './invitationsByUserAmCompany';
 import {MyKycListState, MyKycListReducer} from './kyc-list';
+import {MyKycRequestedState, MyKycRequestedReducer, MyKycSetRequestedKycs} from './kyc-request';
 
 export {
     KycMyInformations,
@@ -23,16 +24,22 @@ export * from './invitationsByUserAmCompany';
 
 export * from './kyc-list';
 
+export {
+    MyKycSetRequestedKycs
+} from './kyc-request';
+
 export interface KycState {
     myInformations: KycMyInformationsState;
     amKycList: AmKycListState;
     investorInvitations: investorInvitationState;
     myKycList: MyKycListState;
+    myKycRequested : MyKycRequestedState
 }
 
 export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     myInformations: KycMyInformationsReducer,
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
-    myKycList: MyKycListReducer
+    myKycList: MyKycListReducer,
+    myKycRequested : MyKycRequestedReducer
 });

@@ -23,6 +23,13 @@
     <section>
         <kyc-step-identification [form]="forms.get('identification')"></kyc-step-identification>
     </section>
+    <section>
+        <kyc-step-risk-profile [form]="forms.get('riskProfile')"></kyc-step-risk-profile>
+    </section>
+    <section>
+        <kyc-step-documents [form]="forms.get('documents')" [isListedCompany]="isListedCompany"></kyc-step-documents>
+    </section>
+    <section>
+        <kyc-step-validation [form]="forms.get('validation')"></kyc-step-validation>
+    </section>
 </div>
-
-

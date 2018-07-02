@@ -56,7 +56,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 type: 'warning',
             },
         }
-    }
+    };
 
     inviteItems: investorInvitation[];
 

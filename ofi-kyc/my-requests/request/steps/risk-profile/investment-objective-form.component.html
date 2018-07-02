@@ -1,0 +1,120 @@
+<div *ngIf="amc.companyID">
+    <div class="row panel-header">
+        <div class="col-sm-12">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>{{amc.companyName}}</h2>
+            </a>
+        </div>
+    </div>
+</div>
+
+
+<div class="panel-body" [ngClass]="{hidden : !open, 'multiple pl-1' : amc.companyID}" [formGroup]="form">
+
+
+    <div class="row">
+        <div class="col-sm-6 p-0" formGroupName="performanceProfile">
+            <p>
+                {{'Investment objective(s)? Performance profile' | translate}}
+            </p>
+
+            <div>
+                <span class="checkbox-inline pr-1 pb-1" *ngFor="let performanceProfile of performanceProfileList">
+                    <input type="checkbox" id="{{performanceProfile.id}}" formControlName="{{performanceProfile.id}}">
+                    <label for="{{performanceProfile.id}}">
+                        {{performanceProfile.text | translate}}
+                    </label>
+                </span>
+            </div>
+        </div>
+
+        <div class="col-sm-6 p-0" formGroupName="clientNeeds">
+            <p>
+                {{'Client needs (purpose of the investment)' | translate}}
+            </p>
+
+            <div>
+                <span class="checkbox-inline pr-1 pb-1" *ngFor="let clientNeed of clientNeeds">
+                    <input type="checkbox" id="{{clientNeed.id}}" formControlName="{{clientNeed.id}}">
+                    <label for="{{clientNeed.id}}">
+                        {{clientNeed.text | translate}}
+                    </label>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <p>
+                {{'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation :' | translate}}
+            </p>
+            <textarea formControlName="otherFinancialInformation"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <p class="form-group col-sm-12">
+            {{'Investment horizons wanted' | translate}}
+        </p>
+
+        <div class="form-group col-sm-4" *ngFor="let horizon of investmentHorizonList">
+            <div class="checkbox-inline">
+                <input type="checkbox" id="{{horizon.id}}" [formControl]="form.get(['investmentHorizonWanted', horizon.id])">
+                <label for="{{horizon.id}}">
+                    {{horizon.text | translate}}
+                </label>
+            </div>
+
+            <div *ngIf="horizon.id === 'specific' && !isDisabled('investmentHorizonWantedSpecificPeriod')">
+                <div class="input-group date-pick-wrapper">
+                    <span class="fa fa-calendar" aria-hidden="true"></span>
+                    <input [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                </div>
+                <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="riskProfile">
+                {{'Risk profile: ability to incur losses' | translate}}
+            </label>
+            <ng-select id="riskProfile" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
+            <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
+
+            <div class="form-group mt-1" *ngIf="!isDisabled('riskProfileCapital')">
+                <input type="text" placeholder="{{'Please specify' | translate}}" formControlName="riskProfileCapital">
+                <span class="field-error" *ngIf="hasError('riskProfileCapital')">{{'Field is required' | translate}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th class="left">{{'Your preference' | translate}}</th>
+                <th>{{'Risk profile' | translate}}</th>
+                <th>{{'Corresponding volatility' | translate}}</th>
+                <th>{{'SRRI' | translate}}</th>
+                <th>{{'SRI' | translate}}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let riskAcceptance of riskAcceptanceList; let i = index">
+                <td class="left">
+                    <input type="number" placeholder="%" formControlName="riskAcceptanceLevel{{i + 1}}">
+                </td>
+                <td>{{riskAcceptance.profile | translate}}</td>
+                <td>{{riskAcceptance.volatility | translate}}</td>
+                <td>{{riskAcceptance.srri}}</td>
+                <td>{{riskAcceptance.sri}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

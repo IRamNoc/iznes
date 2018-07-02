@@ -72,13 +72,18 @@ export const sectorActivityList = [
 
 export const legalStatusList = [
     {id: "pensionOrMutualInsurance", text: "Pension fund/mutual insurance institution"},
-    {id: "bankingInstitution", text: "Banking Institution"},
+    {id : "bankingInstitution", text: "Banking Institution"},
     {id: "insurer", text: "Insurer"},
     {text: "Local authorities/states"},
     {text: "Public Institution"},
     {id: "publicEstablishment", text: "Public establishment"},
     {id: "listedCompany", text: "Listed company"},
+    {text: "Approved or regulated institutional investors"},
     {text: "Foundation/association"},
+    {text: "Asset management company"},
+    {text: "Supranational organization"},
+    {text: "SICAV"},
+    {text: "Financial Institution authorised or regulated under EU or national law of a member state"},
     {id: "other", text: "Other"}
 ];
 
@@ -89,7 +94,7 @@ export const legalStatusInsurerTypeList = [
 
 export const publicEstablishmentList = [
     {text: "Council house"},
-    {text: "Others"}
+    {id : "other", text: "Others"}
 ];
 
 export const companyActivitiesList = [
@@ -237,4 +242,89 @@ export const volumeOfTransactionsList = [
     {text: "50 to 100 transactions"},
     {text: "100 to 500 transactions"},
     {text: "Beyond"}
+];
+
+export const investmentVehiclesList = [
+    {text: "Money market securities (Treasury)"},
+    {text: "Bonds"},
+    {text: "Convertible bonds"},
+    {text: "Listed shares"},
+    {text: "Unlisted shares"},
+    {text: "UCITS"},
+    {text: "FIA"},
+    {text: "Not rated"},
+    {text: "Pierre Papier"},
+    {text: "Foreign exchange market"},
+    {text: "Swaps"},
+    {text: "IFT"},
+    {text: "Other derivatives and complex products (structured products, EMTN, etc.)"},
+    {id: "other", text: "Other"}
+];
+
+export const frequencyList = [
+    {text: "Daily"},
+    {text: "Weekly"},
+    {text: "Monthly"},
+    {text: "Quarterly"},
+    {text: "Semi-annual"},
+    {text: "Annual"},
+    {text: "Punctual"}
+];
+
+export const performanceProfileList = [
+    {text: "Capital preservation"},
+    {text: "Performance"},
+    {text: "Income"},
+    {text: "Hedge"},
+    {text: "Leverage effect"},
+    {text: "Others (e.g. liability(s) related)"}
+];
+
+export const clientNeedsList = [
+    {text: "Standalone investment"},
+    {text: "Portfolio Component (Diversification)"},
+    {text: "Specific investment need"}
+];
+
+export const investmentHorizonList = [
+    {text: "No time constraints"},
+    {text: "Very short term (<1 year)"},
+    {text: "Short term (>1 year < 3 years)"},
+    {text: "Medium term (>3years <5 years)"},
+    {text: "Long-term (>5 years)"},
+    {id: "specific", text: "Specific timeframe"}
+];
+
+export const riskProfileList = [
+    {text: "Guaranteed Capital"},
+    {id : "partiallyProtected",text: "Partially protected capital"},
+    {text: "No capital guarantee (capital loss up to the amount invested)"},
+    {text: "Risk of loss beyond the invested capital"}
+];
+
+export const riskAcceptanceList = [
+    {
+        profile : "Level 1: Basic",
+        volatility : "Volatility less than 0.5%",
+        srri : "1",
+        sri : "1"
+    },
+    {
+        profile : "Level 2: Middleman",
+        volatility : "Volatility between 0.5% and 5%",
+        srri : "2 & 3",
+        sri : "2"
+    },
+    {
+        profile : "Level 3: Advanced",
+        volatility : "Volatility between 5% and 25%",
+        srri : "4 to 6",
+        sri : "3 to 5"
+    },
+    {
+        profile : "Level 4: Expert",
+        volatility : "Volatility greater than 25%",
+        srri : "6",
+        sri : "6 & 7"
+    }
 ];

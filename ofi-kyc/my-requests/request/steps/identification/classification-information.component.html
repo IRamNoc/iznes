@@ -7,7 +7,7 @@
             </a>
         </div>
         <div class="col-sm-3 text-right">
-            <div class="pgContainer" [formpercent]="{form: form}"></div>
+            <div class="pgContainer" [formpercent]="{form: form, stripes: false}"></div>
         </div>
     </div>
 
@@ -35,12 +35,11 @@
                 </div>
                 <div class="row">
                     <div class="form-group col-sm-6">
-                        <label for="changeProfessionalStatus">
-                            {{'As a professional customer, you can opt for non professional status:' | translate}}
-                        </label>
-                        <div class="toggle-switch">
+                        <div class="checkbox-inline">
                             <input type="checkbox" id="changeProfessionalStatus" formControlName="changeProfessionalStatus">
-                            <label for="changeProfessionalStatus"></label>
+                            <label for="changeProfessionalStatus">
+                                {{'As a professional customer, you can opt for non professional status:' | translate}}
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -95,7 +94,7 @@
                         <ng-select id="financialInstruments" [items]="financialInstrumentsList" [formControl]="form.get(['nonPro', 'financialInstruments'])" [multiple]="true"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstruments'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="shouldDisplay('financialInstrumentsSpecification')">
+                    <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
                         <label>
                             &nbsp;
                         </label>
@@ -129,20 +128,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="activitiesBenefitFromExperience">
-                            {{'Do your activities/ professions allow you to benefit from experience in the financial field?' | translate}}
-                        </label>
-                        <div class="toggle-switch">
-                            <input id="activitiesBenefitFromExperience" type="checkbox" id="activitiesBenefitFromExperience" formControlName="activitiesBenefitFromExperience">
-                            <label for="activitiesBenefitFromExperience"></label>
+                    <div class="form-group col-sm-6 flex-items-xs-middle">
+                        <div class="checkbox-inline">
+                            <input type="checkbox" id="activitiesBenefitFromExperience" formControlName="activitiesBenefitFromExperience">
+                            <label for="activitiesBenefitFromExperience">
+                                {{'Do your activities/ professions allow you to benefit from experience in the financial field?' | translate}}
+                            </label>
                         </div>
+
                         <span class="field-error" *ngIf="hasError(['nonPro', 'activitiesBenefitFromExperience'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6" *ngIf="shouldDisplay('activitiesBenefitFromExperienceSpecification')">
-                        <label>
-                            &nbsp;
-                        </label>
+                    <div class="form-group col-sm-6" *ngIf="!isDisabled(['nonPro', 'activitiesBenefitFromExperienceSpecification'])">
                         <input type="text" formControlName="activitiesBenefitFromExperienceSpecification" placeholder="{{'Please provide an explanation regarding the previous answer' | translate}}">
                         <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification')">{{'Field is required' | translate}}</span>
                     </div>

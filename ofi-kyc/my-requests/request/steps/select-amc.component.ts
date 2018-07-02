@@ -6,6 +6,7 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {isEmpty, isNil, keyBy, filter} from 'lodash';
 
+import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
 import {OfiKycService} from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
@@ -122,7 +123,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             values = values.concat([this.preselectedManagementCompany]);
         }
 
-        await this.requestsService.createMultipleDrafts(values);
+        let ids = await this.requestsService.createMultipleDrafts(values);
+        let requestedKycs = MyKycSetRequestedKycs(ids);
+        this.ngRedux.dispatch(requestedKycs);
+
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }
 

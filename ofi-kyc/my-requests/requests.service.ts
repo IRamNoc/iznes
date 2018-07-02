@@ -44,9 +44,21 @@ export class RequestsService {
     }
 
     async createMultipleDrafts(choices) {
+        let ids = [];
+
         for (let choice of choices) {
-            await this.createDraft(choice);
+            await this.createDraft(choice).then(response => {
+                let kycID = _.get(response, [1, 'Data', 0, 'kycID']);
+                let amcID = choice.id;
+
+                ids.push({
+                    kycID,
+                    amcID
+                });
+            });
         }
+
+        return ids;
     }
 
     createDraft(choice) {

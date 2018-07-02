@@ -1,0 +1,96 @@
+<div [formGroup]="form" class="well">
+    <div class="row panel-header">
+        <div class="col-sm-9">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>{{'Investments\' nature' | translate}}</h2>
+            </a>
+        </div>
+        <div class="col-sm-3 text-right">
+            <div class="pgContainer" [formpercent]="{form: form, stripes : false}"></div>
+        </div>
+    </div>
+
+    <div class="row panel-body" [class.hidden]="!open">
+
+        <div class="col-xs-12">
+
+            <div class="row">
+
+                <div class="col-sm-6" formGroupName="financialAssetManagementMethod">
+
+                    <p>
+                        {{'Financial asset management method' | translate}}
+                    </p>
+
+                    <div class="row">
+
+                        <span class="checkbox-inline pr-1 pb-1">
+                            <input type="checkbox" id="internalManagement" formControlName="internalManagement">
+                            <label for="internalManagement">
+                                {{'Internal management' | translate}}
+                            </label>
+                        </span>
+
+                        <span class="checkbox-inline pr-1 pb-1">
+                            <input type="checkbox" id="withAdviceOfAuthorisedThirdPartyInstiution" formControlName="withAdviceOfAuthorisedThirdPartyInstiution">
+                            <label for="withAdviceOfAuthorisedThirdPartyInstiution">
+                                {{'With the advice of an authorised third party institution' | translate}}
+                            </label>
+                        </span>
+
+                        <span class="checkbox-inline pr-1 pb-1">
+                            <input type="checkbox" id="mandateEntrustedToManagers" formControlName="mandateEntrustedToManagers">
+                            <label for="mandateEntrustedToManagers">
+                                {{'By mandate(s) entrusted to a manager(s)' | translate}}
+                            </label>
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6" formGroupName="frequencyFinancialTransactions">
+
+                    <p>
+                        {{'Frequency of financial transactions' | translate}}
+                    </p>
+
+                    <div>
+                        <span class="checkbox-inline pr-1 pb-1" *ngFor="let frequency of frequencyList">
+                            <input type="checkbox" id="{{frequency.id}}" formControlName="{{frequency.id}}">
+                            <label for="{{frequency.id}}">
+                                {{frequency.text | translate}}
+                            </label>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12" formGroupName="investmentvehiclesAlreadyUsed">
+
+                    <p>
+                        {{'Investment vehicles already used' | translate}}
+                    </p>
+
+                    <div>
+                        <span class="checkbox-inline pr-1 pb-1" *ngFor="let vehicle of investmentVehicleList" [class.inline]="vehicle.id === 'other'">
+                            <input type="checkbox" id="{{vehicle.id}}" formControlName="{{vehicle.id}}">
+                            <label for="{{vehicle.id}}">
+                                {{vehicle.text | translate}}
+                            </label>
+                            <input class="pl-1" type="text" *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>

@@ -48,6 +48,22 @@ export class GeneralInformationComponent implements OnInit {
 
             this.formCheckSectorActivity(sectorActivityValue);
         });
+
+        this.form.get('legalStatusPublicEstablishmentType').valueChanges.subscribe(data => {
+            let legalStatusPublicEstablishmentTypeValue = getValue(data, [0, 'id']);
+
+            this.formCheckLegalStatusPublicEstablishmentType(legalStatusPublicEstablishmentTypeValue);
+        });
+    }
+
+    formCheckLegalStatusPublicEstablishmentType(value){
+        let legalStatusPublicEstablishmentOtherControl = this.form.get('legalStatusPublicEstablishmentTypeOther');
+
+        if(value === 'other'){
+            legalStatusPublicEstablishmentOtherControl.enable();
+        } else{
+            legalStatusPublicEstablishmentOtherControl.disable();
+        }
     }
 
     formCheckSectorActivity(value) {
@@ -63,7 +79,7 @@ export class GeneralInformationComponent implements OnInit {
 
     formCheckLegalStatus(value) {
         let form = this.form;
-        let controls = ['legalStatusListingMarkets', 'legalStatusInsurerType', 'legalStatusPublicEstablishmentType', 'legalStatusListingOther'];
+        let controls = ['legalStatusListingMarkets', 'legalStatusInsurerType', 'legalStatusPublicEstablishmentType', 'legalStatusListingOther', 'legalStatusPublicEstablishmentTypeOther'];
 
         for (const control of controls) {
             form.get(control).disable();
@@ -84,31 +100,14 @@ export class GeneralInformationComponent implements OnInit {
                 break;
         }
     }
-
-    shouldDisplay(controlName) {
-        const form = this.form;
-
-        const legalStatusControl = form.get('legalStatus');
-        const legalStatusValue = getValue(legalStatusControl, ['value', 0, 'id']);
-
-        const sectorActivityControl = form.get('sectorActivity');
-        const sectorActivityValue = getValue(sectorActivityControl, ['value', 0, 'id']);
-
-        switch (controlName) {
-            case 'legalStatusListingMarkets':
-                return legalStatusValue === 'listedCompany';
-            case 'legalStatusInsurerType':
-                return legalStatusValue === 'insurer';
-            case 'legalStatusPublicEstablishmentType' :
-                return legalStatusValue === 'publicEstablishment';
-            case 'legalStatusListingOther' :
-                return legalStatusValue === 'other';
-            case 'sectorActivityText' :
-                return sectorActivityValue === 'other';
-        }
-    }
     
     hasError(control, error = []){
         return this.newRequestService.hasError(this.form, control, error);
+    }
+
+    isDisabled(path) {
+        let control = this.form.get(path);
+
+        return control.disabled;
     }
 }

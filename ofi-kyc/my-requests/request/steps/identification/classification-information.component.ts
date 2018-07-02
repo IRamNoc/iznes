@@ -13,6 +13,7 @@ export class ClassificationInformationComponent implements OnInit{
     @Input() form;
     @Input() investorType;
 
+    open: boolean = false;
     countries = countries;
     financialInstrumentsList;
     geographicalAreaList;
@@ -30,13 +31,7 @@ export class ClassificationInformationComponent implements OnInit{
             let changeProfessionalStatus = this.form.get('pro.changeProfessionalStatus').value;
 
             if(!changeProfessionalStatus){
-                if(investorType === 'nonPro'){
-                    this.form.get('pro').disable();
-                    this.form.get('nonPro').enable();
-                } else{
-                    this.form.get('pro').enable();
-                    this.form.get('nonPro').disable();
-                }
+                this.toggleForm(investorType);
             }
         }
     }
@@ -52,6 +47,18 @@ export class ClassificationInformationComponent implements OnInit{
         this.volumeOfTransactionsList = this.newRequestService.volumeOfTransactionsList;
 
         this.initCheckForm();
+    }
+
+    toggleForm(investorType){
+        if(investorType === 'nonPro'){
+            this.form.get('pro').disable();
+            this.form.get('nonPro').enable();
+            this.form.get('nonPro.activitiesBenefitFromExperienceSpecification').disable();
+            this.form.get('nonPro.financialInstrumentsSpecification').disable();
+        } else{
+            this.form.get('pro').enable();
+            this.form.get('nonPro').disable();
+        }
     }
 
     initCheckForm(){
@@ -99,19 +106,10 @@ export class ClassificationInformationComponent implements OnInit{
         }
     }
 
-    shouldDisplay(control){
-        let financialInstrumentsControl = this.form.get('nonPro.financialInstruments');
-        let financialInstrumentsValue = getValue(financialInstrumentsControl, ['value', 0, 'id']);
+    isDisabled(path) {
+        let control = this.form.get(path);
 
-        let experienceFinancialFieldControl = this.form.get('nonPro.activitiesBenefitFromExperience');
-        let experienceFinancialFieldValue = experienceFinancialFieldControl.value;
-
-        switch(control){
-            case 'financialInstrumentsSpecification':
-                return financialInstrumentsValue === 'other';
-            case 'activitiesBenefitFromExperienceSpecification':
-                return experienceFinancialFieldValue;
-        }
+        return control.disabled;
     }
 
     hasError(control, error = []){

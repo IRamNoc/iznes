@@ -1,11 +1,8 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {FormGroup, FormArray} from '@angular/forms';
 import {get as getValue, filter} from 'lodash';
-import {NgRedux} from '@angular-redux/store';
-import {FileService} from '@setl/core-req-services/file/file.service';
-import * as SagaHelper from '@setl/utils/sagaHelper';
 
-import {NewRequestService} from '../../new-request.service';
+import {NewRequestService, configDate} from '../../new-request.service';
 import {countries} from "../../../requests.config";
 
 @Component({
@@ -25,18 +22,10 @@ export class CompanyInformationComponent implements OnInit {
     financialAssetsInvestedList;
     geographicalAreaList;
     custodianHolderAccountList;
-    configDate = {
-        firstDayOfWeek: 'mo',
-        format: 'YYYY-MM-DD',
-        closeOnSelect: true,
-        disableKeypress: true,
-        locale: 'en',
-    };
+    configDate;
 
     constructor(
-        private newRequestService: NewRequestService,
-        private ngRedux: NgRedux<any>,
-        private fileService: FileService
+        private newRequestService: NewRequestService
     ) {
     }
 
@@ -50,6 +39,8 @@ export class CompanyInformationComponent implements OnInit {
         this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
 
         this.initFormCheck();
+
+        this.configDate = configDate;
     }
 
     initFormCheck() {
@@ -88,6 +79,10 @@ export class CompanyInformationComponent implements OnInit {
         return (this.form.get('beneficiaries') as FormArray).controls;
     }
 
+    get geographicalOrigin(){
+        return getValue(this.form.get('geographicalOrigin1').value, [0, 'id']);
+    }
+
     formCheckActivity(value) {
         let form = this.form;
         let ownAccountControl = form.get('ownAccountinvestor');
@@ -109,7 +104,7 @@ export class CompanyInformationComponent implements OnInit {
     formCheckNatureAndOrigin(value){
         let natureAndOriginOfTheCapitalOthersControl = this.form.get('capitalNature.othersText');
 
-        if(value.others){
+        if(value){
             natureAndOriginOfTheCapitalOthersControl.enable();
         } else{
             natureAndOriginOfTheCapitalOthersControl.disable();
@@ -165,48 +160,6 @@ export class CompanyInformationComponent implements OnInit {
         }
     }
 
-
-    shouldDisplay(controlName) {
-        const form = this.form;
-
-        const activitiesControl = form.get('activities');
-        const activitiesValue = getValue(activitiesControl, ['value', 0, 'id']);
-
-        const activityGeographicalControl = form.get('geographicalAreaOfActivity');
-        const activityGeographicalValue = getValue(activityGeographicalControl, ['value', 0, 'id']);
-
-        const activityRegulatedControl = form.get('activityRegulated');
-        const activityRegulatedValue = getValue(activityRegulatedControl, ['value']);
-
-        const companyListedControl = form.get('companyListed');
-        const companyListedValue = getValue(companyListedControl, ['value']);
-
-        const natureAndOriginOfTheCapitalControl = form.get('capitalNature');
-        const natureAndOriginOfTheCapitalValue = getValue(natureAndOriginOfTheCapitalControl, ['value']);
-
-        const geographicalOriginTypeControl = form.get('geographicalOrigin1');
-        const geographicalOriginTypeValue = getValue(geographicalOriginTypeControl, ['value', 0, 'id']);
-
-        switch (controlName) {
-            case 'ownAccountinvestor':
-                return activitiesValue === 'ownAccount';
-            case 'onBehalfOfThirdParties':
-                return activitiesValue === 'onBehalfOfThirdParties';
-            case 'geographicalAreaOfActivitySpecification':
-                return activityGeographicalValue === 'oecd' || activityGeographicalValue === 'outsideOecd';
-            case 'activityRegulatedInputs':
-                return activityRegulatedValue;
-            case 'companyListedInputs':
-                return companyListedValue;
-            case 'othersText':
-                return natureAndOriginOfTheCapitalValue.others;
-            case 'geographicalOriginCountries':
-                return geographicalOriginTypeValue === 'country';
-            case 'geographicalOriginArea':
-                return geographicalOriginTypeValue === 'area';
-        }
-    }
-
     hasError(control, error = []){
         return this.newRequestService.hasError(this.form, control, error);
     }
@@ -217,24 +170,22 @@ export class CompanyInformationComponent implements OnInit {
 
         // @todo Change the random hash when file drop implemented
         formControl.patchValue('13514e618f32132b030c3103b3030a302');
-        /*const asyncTaskPipe = this.fileService.addFile({
-            files: filter(event.files, file => {
-                return file.status !== 'uploaded-file'
-            })
-        });
 
-        let saga = SagaHelper.runAsyncCallback(asyncTaskPipe, response => {
-            let fileID = getValue(response, [1, 'Data', 0, 'fileID']);
-            formControl.patchValue(fileID);
-        }, data => {
-            debugger;
-        });
-
-        this.ngRedux.dispatch(saga);*/
+        this.newRequestService.uploadFile(event);
     }
 
     addBeneficiary() {
         let control = this.form.get('beneficiaries') as FormArray;
         control.push(this.newRequestService.createBeneficiary());
+    }
+    removeBeneficiary(i){
+        let control = this.form.get('beneficiaries') as FormArray;
+        control.removeAt(i);
+    }
+
+    isDisabled(path) {
+        let control = this.form.get(path);
+
+        return control.disabled;
     }
 }

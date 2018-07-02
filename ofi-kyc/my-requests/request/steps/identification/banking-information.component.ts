@@ -1,22 +1,32 @@
 import {Component, OnInit, Input} from '@angular/core';
+import {FormArray} from '@angular/forms';
 import {get as getValue} from 'lodash';
+
 
 import {NewRequestService} from '../../new-request.service';
 import {countries} from "../../../requests.config";
 
 @Component({
     selector : 'banking-information',
-    templateUrl : './banking-information.component.html'
+    templateUrl : './banking-information.component.html',
+    styleUrls : ['./banking-information.component.scss']
 })
 export class BankingInformationComponent implements OnInit{
 
     @Input() form;
+
+    open: boolean = false;
+
     countries = countries;
     custodianHolderAccountList;
 
     constructor(
         private newRequestService : NewRequestService
     ){}
+
+    get holders() {
+        return (this.form.get('custodianHolderCustom') as FormArray).controls;
+    }
 
     ngOnInit(){
         this.initFormCheck();
@@ -29,23 +39,32 @@ export class BankingInformationComponent implements OnInit{
     }
 
     initFormCheck(){
+        let holderCustom = this.form.get('custodianHolderCustom');
+        holderCustom.disable();
+
         this.form.get('custodianHolderAccount').valueChanges.subscribe(data => {
             let value = getValue(data, [0, 'id']);
-            let control = this.form.get('custodianHolderCustom');
             if(value === 'other'){
-                control.enable();
+                holderCustom.enable();
             } else{
-                control.disable();
+                holderCustom.disable();
             }
         });
     }
 
-    shouldDisplay(){
-        let control = this.form.get('custodianHolderAccount');
-        let value = getValue(control, ['value', 0, 'id']);
+    isDisabled(path) {
+        let control = this.form.get(path);
 
-        return value === 'other';
+        return control.disabled;
     }
 
+    addHolder() {
+        let control = this.form.get('custodianHolderCustom') as FormArray;
+        control.push(this.newRequestService.createHolderCustom());
+    }
+    removeHolder(i){
+        let control = this.form.get('custodianHolderCustom') as FormArray;
+        control.removeAt(i);
+    }
 
 }
