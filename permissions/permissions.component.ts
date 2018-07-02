@@ -53,6 +53,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public allGroupList: any; // All lists.
     public adminPermAreasList: any;
     public txPermAreasList: any;
+    public menuPermAreasList: any;
     public permissionsList: any;
 
     /* The permission levels list. */
@@ -79,9 +80,31 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         },
     ];
 
+    public menuPermissionLevelsList = [
+        {
+            'id': 'topProfileAccess',
+            'text': 'Top - Profile Access'
+        },
+        {
+            'id': 'sideAccess',
+            'text': 'Side Access'
+        },
+        {
+            'id': 'disabledAccess',
+            'text': 'Disable Access'
+        },
+    ];
+
     /* Filtered areas list. */
     public filteredAdminAreaList = [];
     public filteredTxAreaList = [];
+    public filteredMenuAreaList = [];
+
+    public oldMenuPermission = {};
+    public currentTab = '';
+    public relationships = {};
+    public new = false;
+    public duplicateEvent = {};
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -134,6 +157,17 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.changeDetectorRef.detectChanges();
         });
 
+        this.subscriptions['menuPermAreaList'] = this.userAdminService.getMenuPermAreaListSubject().subscribe((list) => {
+            /* Set the list. */
+            this.menuPermAreasList = list;
+
+            /* Call to filter lists for UI. */
+            this.filterAreaLists();
+
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
+
         this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
             /* Set the list. */
             this.permissionsList = list;
@@ -145,6 +179,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'permissionid', 0);
             this.setTabActive(tabId);
+            this.currentTab = tabId;
         });
     }
 
@@ -224,6 +259,11 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         if (Array.isArray(this.txPermAreasList)) {
             this.filteredTxAreaList = this.txPermAreasList.map(this.extractArea);
         }
+
+        /* And finally the menu areas. */
+        if (Array.isArray(this.menuPermAreasList) && this.filteredMenuAreaList.length == 0) {
+            this.filteredMenuAreaList = this.menuPermAreasList.map(this.extractAreaMenu);
+        }
     }
 
     /**
@@ -240,6 +280,15 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         return {
             'id': area.permissionID,
             'text': area.permissionName
+        };
+    }
+
+    private extractAreaMenu(area): { id: string, text: string, parentID: string } {
+        /* Return a new object. */
+        return {
+            'id': area.permissionID,
+            'text': area.permissionName,
+            'parentID': area.parentID
         };
     }
 
@@ -366,14 +415,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             isGroup: 1,
             permissionId: 0, // get all.
             includeGroup: 0,  // not sure what this is.
-            isTx: group.groupIsTx === 1 ? true : false,
+            isTx: group.groupIsTx,
             chainId: 0,
         }).then(() => {
             /* Then let's find the tab and emit the data to the
              permission component using that event emitter. */
             let
                 i,
-                location = group.groupIsTx === 1 ? 'transPermissions' : 'adminPermissions';
+                location = (group.groupIsTx === 1 ? 'transPermissions' : (group.groupIsTx === 2 ? 'menuPermissions' : 'adminPermissions'));
 
             /* Loop over tabs and find this group tab. */
             for (i = 0; i < this.tabsControl.length; i++) {
@@ -421,10 +470,12 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             formData = this.tabsControl[tabid].formControl.value,
             dataToSend = {};
 
+        let acceptedTypes = ['0', '1', '2'];
+
         /* Assign the data to send. */
         dataToSend['name'] = formData.name;
         dataToSend['description'] = formData.description;
-        dataToSend['type'] = formData.type[0].id === '0' ? '0' : '1';
+        dataToSend['type'] = acceptedTypes.indexOf(formData.type[0].id) === -1 ? '0' : formData.type[0].id;
 
         /* Let's trigger the creation of the group. */
         this.userAdminService.createNewGroup(dataToSend).then((response) => {
@@ -445,7 +496,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
             /* Figure out which function to call. */
-            let functionCall = dataToSend['type'] == 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
+            let functionCall = (dataToSend['type'] == 1 ? 'updateTxPermissions' : (dataToSend['type'] == 2 ? 'updateMenuPermissions' : 'updateAdminPermissions'));
 
             /* Then send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
@@ -509,7 +560,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             let
                 differences = this.userAdminService.getPermissionsDiff(
                     oldPermissions,
-                    newPermissions
+                    newPermissions,
+                    dataToSend['type']
                 );
 
             /* Assign all the data. */
@@ -521,7 +573,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = differences['toDelete'];
 
             /* Figure out which call to make. */
-            let functionCall = dataToSend['type'] == 1 ? 'updateTxPermissions' : 'updateAdminPermissions';
+            let functionCall = (dataToSend['type'] == 1 ? 'updateTxPermissions' : (dataToSend['type'] == 2 ? 'updateMenuPermissions' : 'updateAdminPermissions'));
 
             /* Send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
@@ -720,7 +772,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
           `);
     }
 
-    ngOnDestroy(): void {
+    ngOnDestroy()
+        :
+        void {
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
 
