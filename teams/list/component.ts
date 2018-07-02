@@ -20,8 +20,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    @select(['accountAdmin', 'accountAdminTeams', 'requested']) teamsRequestedOb;
-    @select(['accountAdmin', 'accountAdminTeams', 'teams']) teamsOb;
+    @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
     constructor(private service: UserTeamsService,
                 router: Router,

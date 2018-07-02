@@ -31,6 +31,7 @@ import {
     UsersAuditComponent,
     UsersCreateUpdateComponent,
     UsersListComponent,
+    UsersService,
 } from './users';
 
 @NgModule({
@@ -60,7 +61,7 @@ import {
         UsersCreateUpdateComponent,
         UsersListComponent,
     ],
-    providers: [UserTeamsService],
+    providers: [UserTeamsService, UsersService],
     exports: [],
 })
 export class CoreAccountAdminModule {

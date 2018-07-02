@@ -20,8 +20,8 @@ export class UserTeamsAuditComponent extends AccountAdminAuditBase implements On
 
     audit: Model.AccountAdminTeamAuditEntry[];
 
-    @select(['accountAdmin', 'accountAdminTeamsAudit', 'requested']) teamsRequestedOb;
-    @select(['accountAdmin', 'accountAdminTeamsAudit', 'teams']) teamsOb;
+    @select(['accountAdmin', 'teamsAudit', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teamsAudit', 'teams']) teamsOb;
 
     constructor(private service: UserTeamsService,
                 redux: NgRedux<any>,
