@@ -317,8 +317,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             this.access[row['id']] = {
                 access: !!this.investorWalletData[row['id']],
                 changed: false,
-                entry: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['entryFee'] : 0) / 100000,
-                exit: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['exitFee'] : 0) / 100000,
+                entry: this.toFrontEndPecent((!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['entryFee'] : 0)),
+                exit: this.toFrontEndPecent((!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['exitFee'] : 0)),
                 max: row['max'],
                 minInvestment: row['minInvestment'],
                 override: (!!this.investorWalletData[row['id']] ? (this.investorWalletData[row['id']]['minInvestOverride'] == 1 ? 1 : 0) : false),
@@ -329,6 +329,16 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             };
         });
         this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * convert blockchain scale (100000) to front-end number.
+     * as we are show percentage we need to times it by 100.
+     *
+     * @param percent: the raw percentage number in blockchain scale.
+     */
+    toFrontEndPecent(percent: number): number{
+       return percent / 100000 * 100;
     }
 
     onClickAccess(item) {

@@ -62,7 +62,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
                 contractStartTs: item.get('contractStartTs'),
                 currency: item.get('currency'),
                 cutoffDate: item.get('cutoffDate'),
-                estimatedAmount: item.get('estimatedAmountWithCost'),
+                estimatedAmount: item.get('estimatedAmount'),
                 estimatedAmountWithCost: item.get('estimatedAmountWithCost'),
                 estimatedPrice: item.get('estimatedPrice'),
                 estimatedQuantity: item.get('estimatedQuantity'),

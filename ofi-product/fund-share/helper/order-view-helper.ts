@@ -62,23 +62,23 @@ export function getOrderFigures(order: OrderFiguresModel): FigureResponse {
         quantity = Number(toNormalScale(estimatedQuantityRaw, ShareUnitDecimal));
         amount = Number(toNormalScale(estimatedAmountRaw, MoneyUnitDecimal));
         amountWithCost = Number(toNormalScale(estimatedAmountWithCostRaw, MoneyUnitDecimal));
-        fee = Number(toNormalScale(plus(multiply(estimatedAmountRaw, feePercentRaw / 100), platFormFeeRaw), MoneyUnitDecimal));
+        fee = Number(toNormalScale(plus(multiply(estimatedAmountRaw, feePercentRaw), platFormFeeRaw), MoneyUnitDecimal));
         price = Number(toNormalScale(estimatedPriceRaw, MoneyUnitDecimal));
     } else if (orderStatus === Number(OrderStatus.Canceled)) {
         quantity = Number(toNormalScale(getNonZeroValue(quantityRaw, estimatedQuantityRaw), ShareUnitDecimal));
         amount = Number(toNormalScale(getNonZeroValue(amountRaw, estimatedAmountRaw), MoneyUnitDecimal));
         amountWithCost = Number(toNormalScale(getNonZeroValue(amountWithCostRaw, estimatedAmountWithCostRaw), MoneyUnitDecimal));
-        fee = Number(toNormalScale(plus(multiply(getNonZeroValue(amountRaw, estimatedAmountRaw), platFormFeeRaw), feePercentRaw / 100), MoneyUnitDecimal));
+        fee = Number(toNormalScale(plus(multiply(getNonZeroValue(amountRaw, estimatedAmountRaw), platFormFeeRaw), feePercentRaw), MoneyUnitDecimal));
         price = Number(toNormalScale(getNonZeroValue(priceRaw, estimatedPriceRaw), MoneyUnitDecimal));
     } else {
         quantity = Number(toNormalScale(quantityRaw, ShareUnitDecimal));
         amount = Number(toNormalScale(amountRaw, MoneyUnitDecimal));
         amountWithCost = Number(toNormalScale(amountWithCostRaw, MoneyUnitDecimal));
-        fee = Number(toNormalScale(plus(multiply(amountRaw, feePercentRaw / 100), platFormFeeRaw), MoneyUnitDecimal));
+        fee = Number(toNormalScale(plus(multiply(amountRaw, feePercentRaw), platFormFeeRaw), MoneyUnitDecimal));
         price = Number(toNormalScale(priceRaw, MoneyUnitDecimal));
     }
 
-    feePercentage = Number(toNormalScale(feePercentRaw, 2));
+    feePercentage = Number(toNormalScale(feePercentRaw * 100, 2));
     platFormFee = Number(toNormalScale(platFormFeeRaw, MoneyUnitDecimal));
 
     return {
