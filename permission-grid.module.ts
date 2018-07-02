@@ -11,19 +11,26 @@ import {ClarityModule} from '@clr/angular';
 /* Components. */
 import {PermissionGridComponent} from './permission-grid/permission-grid.component';
 import {OptionListComponent} from './option-list/option-list.component';
+import {MenuPermissionGridComponent} from './menu-permission-grid/menu-permission-grid.component';
+import {MenuOptionListComponent} from './menu-option-list/menu-option-list.component';
 
 /* Services. */
 import {OptionListService} from './option-list/option-list.service';
+import {MenuOptionListService} from './menu-option-list/menu-option-list.service';
 
 /* User admin service. */
 @NgModule({
     declarations: [
         PermissionGridComponent,
-        OptionListComponent
+        MenuPermissionGridComponent,
+        OptionListComponent,
+        MenuOptionListComponent
     ],
     exports: [
         PermissionGridComponent,
-        OptionListComponent
+        MenuPermissionGridComponent,
+        OptionListComponent,
+        MenuOptionListComponent
     ],
     imports: [
         CommonModule,
@@ -32,7 +39,10 @@ import {OptionListService} from './option-list/option-list.service';
         FormsModule,
         ClarityModule,
     ],
-    providers: [ OptionListService ]
+    providers: [
+        OptionListService,
+        MenuOptionListService
+    ]
 })
 
 export class PermissionGridModule {

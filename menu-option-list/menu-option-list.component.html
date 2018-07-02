@@ -1,0 +1,36 @@
+<!-- The wrapper, holds everything in. -->
+<div class="option-wrap">
+
+    <!-- The option box, shows the value and is the toggle to show the list. -->
+    <div class="option-box"
+         (click)="toggleOpen()">
+
+        <!-- Icon of the value. -->
+        <i class="fa"
+           [ngClass]="optionSelect.icon"
+           [ngStyle]="{'color': optionSelect.color}"
+        ></i>
+
+    </div>
+
+    <!-- The option list. -->
+    <ul class="option-list"
+        [ngClass]="{'open': uiListOpen}">
+
+        <!-- Each option. -->
+        <li *ngFor="let option of optionsList"
+            (click)="handleSelection(option)">
+
+            <!-- Option Icon. -->
+            <i class="fa"
+               [ngClass]="option.icon"
+               [ngStyle]="{'color': option.color}"
+            ></i>
+
+            <!-- Option text. -->
+            <span [innerHTML]="option.text"
+                  [ngClass]="{'selected': optionSelect.id === option.id}"
+            ></span>
+        </li>
+    </ul>
+</div>
