@@ -385,6 +385,26 @@ const accountAdmin = {
     ],
 };
 
+const myKYCRequests = {
+    label : 'My Requests',
+    label_txt : 'txt_my_requests',
+    icon_class : 'fa fa-file-text',
+    element_id : 'top-menu-my-requests',
+    router_link : '/my-requests/list',
+    dynamic_link: '/my-requests/list[^\/]*',
+};
+
+const myAssetManagers = {
+    label: 'My Asset Managers',
+    label_txt: 'txt_my_asset_managers',
+    icon_class: 'fa fa-users',
+    element_id: 'top-menu-my-asset-managers',
+    always_displayed: true,
+    children: [
+        myKYCRequests,
+    ],
+};
+
 export const menuSpec: MenuSpec = {
     top: {
         profile: {
@@ -427,6 +447,7 @@ export const menuSpec: MenuSpec = {
             myHoldings,
             // dashboard,
             subPortfolio,
+            myAssetManagers,
             // messages,
             // {
             //     label: 'Reports',
