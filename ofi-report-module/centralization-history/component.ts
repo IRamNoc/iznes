@@ -531,8 +531,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         if (historyRow !== undefined) {
             const navDate = moment(historyRow.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
-                shareName: this.centralizationReportsList[0].text,
-                isin: null,
+                shareName: this.baseCentralizationHistory.fundShareName,
+                isin: this.baseCentralizationHistory.isin,
                 status: null,
                 orderType: null,
                 pageSize: 1000,

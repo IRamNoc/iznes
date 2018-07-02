@@ -1,23 +1,11 @@
-import { Injectable } from '@angular/core';
-import { MemberSocketService } from '@setl/websocket-service';
-import { SagaHelper, Common } from '@setl/utils';
-import { NgRedux, select } from '@angular-redux/store';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import {Injectable} from '@angular/core';
+import {MemberSocketService} from '@setl/websocket-service';
+import {SagaHelper, Common} from '@setl/utils';
+import {NgRedux, select} from '@angular-redux/store';
+import {createMemberNodeSagaRequest} from '@setl/utils/common';
 
-import {
-    ManagementCompanyRequestMessageBody,
-    SaveManagementCompanyRequestBody,
-    UpdateManagementCompanyRequestBody,
-    DeleteManagementCompanyRequestBody
-} from './management-company.service.model';
-import {
-    setRequestedManagementCompany,
-    clearRequestedManagementCompany,
-    SET_MANAGEMENT_COMPANY_LIST,
-    setRequestedINVManagementCompany,
-    clearRequestedINVManagementCompany,
-    SET_INV_MANAGEMENT_COMPANY_LIST
-} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
+import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody, DeleteManagementCompanyRequestBody} from './management-company.service.model';
+import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST, setRequestedINVManagementCompany, clearRequestedINVManagementCompany, SET_INV_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
 interface ManagementCompanyData {
     companyID: any;
@@ -60,7 +48,7 @@ export class OfiManagementCompanyService {
     }
 
     myAccountId(accountId) {
-        this.accountID = accountId;
+        this.accountID  = accountId;
     }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -89,19 +77,19 @@ export class OfiManagementCompanyService {
 
     static setINVRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
-        if (!boolValue) {
+        if(!boolValue){
             ngRedux.dispatch(clearRequestedINVManagementCompany());
         } else {
             ngRedux.dispatch(setRequestedINVManagementCompany());
         }
     }
 
-    static defaultRequestINVManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>) {
+    static defaultRequestINVManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>, requestAll = false) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(setRequestedINVManagementCompany());
 
         // Request the list.
-        const asyncTaskPipe = ofiManagementCompanyService.requestINVManagementCompanyList();
+        const asyncTaskPipe = ofiManagementCompanyService.requestINVManagementCompanyList(requestAll);
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_INV_MANAGEMENT_COMPANY_LIST],  // SET est en fait un GETLIST
@@ -111,11 +99,11 @@ export class OfiManagementCompanyService {
         ));
     }
 
-    requestINVManagementCompanyList(): any {
+    requestINVManagementCompanyList(requestAll): any {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'izngetmanagementcompanylistforinvestor',
             token: this.memberSocketService.token,
-            accountID: 0,
+            accountID: requestAll ? 0 : this.accountID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -125,7 +113,7 @@ export class OfiManagementCompanyService {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'getManagementCompanyList',
             token: this.memberSocketService.token,
-            accountID: this.accountID,
+            accountID: this.accountID
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

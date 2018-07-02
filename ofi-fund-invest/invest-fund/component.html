@@ -123,7 +123,7 @@
                                             <span class="ml_translated">{{'@metadata.feeLabel@ fee' | translate: {'metadata.feeLabel': metadata.feeLabel} }}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform(feePercentage,2) + '%' " [readonly]="true">
+                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' " [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
