@@ -1,21 +1,21 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {NgRedux, select} from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 /* Alert service. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Clarity */
-import {ClrDatagridStateInterface} from '@clr/angular';
+import { ClrDatagridStateInterface } from '@clr/angular';
 /* Utils. */
-import {immutableHelper, NumberConverterService, FileDownloader} from '@setl/utils';
+import { immutableHelper, NumberConverterService, FileDownloader } from '@setl/utils';
 /* services */
-import {MemberSocketService} from '@setl/websocket-service';
-import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
-import {Subscription} from 'rxjs/Subscription';
-import {APP_CONFIG, AppConfig} from "@setl/utils/index";
-import {MultilingualService} from '@setl/multilingual';
+import { MemberSocketService } from '@setl/websocket-service';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
+import { Subscription } from 'rxjs/Subscription';
+import { APP_CONFIG, AppConfig } from "@setl/utils/index";
+import { MultilingualService } from '@setl/multilingual';
 
 /* Types. */
 interface SelectedItem {
@@ -62,11 +62,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     /* Ui Lists. */
     holderFilters: Array<SelectedItem> = [
-        {id: 1, text: 'All'},
-        {id: 2, text: 'Top 10 holders'},
-        {id: 3, text: 'Top 20 holders'},
-        {id: 4, text: 'Top 50 holders'},
-        {id: 5, text: 'Top 100 holders'},
+        { id: 1, text: 'All' },
+        { id: 2, text: 'Top 10 holders' },
+        { id: 3, text: 'Top 20 holders' },
+        { id: 4, text: 'Top 50 holders' },
+        { id: 5, text: 'Top 100 holders' },
     ];
 
     shareTabTitle: string;
@@ -121,7 +121,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], {emitEvent: false});
+        this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], { emitEvent: false });
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
@@ -158,8 +158,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 }
 
                 this.tabsControl[0].active = true;
-                this.searchListForm.get('search').patchValue(null, {emitEvent: false});
-                this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], {emitEvent: false});
+                this.searchListForm.get('search').patchValue(null, { emitEvent: false });
+                this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], { emitEvent: false });
             }
         }));
 
@@ -181,15 +181,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
@@ -240,9 +240,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param data
      */
     getHolderDetail(data) {
+
+        console.log(data);
+
         if (data) {
             this.holderDetailData = data.holders.toJS() || [];
         }
+
+        console.log(this.holderDetailData);
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -328,15 +334,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         const selectedShareName = this.getShareNameByShareId(shareId);
 
-        this.searchListForm.get('search').patchValue([{id: shareId, text: selectedShareName}], {emitEvent: false});
+        this.searchListForm.get('search').patchValue([{ id: shareId, text: selectedShareName }], { emitEvent: false });
 
         OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
 
         OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
 
-        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
-
         this.buildLink(shareId);
+
+        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
     }
 
     buildLink(id) {
@@ -349,7 +355,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (state.filters) {
             for (const filter of state.filters) {
-                const {property, value} = <{ property: string, value: string }>filter;
+                const { property, value } = <{ property: string, value: string }>filter;
                 filters[property] = [value];
             }
         }
@@ -400,7 +406,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             shareId,
             shareIsin,
             userId: this.myDetails.userId,
-            selectedFilter: selectedFilter
+            selectedFilter: selectedFilter,
         });
     }
 

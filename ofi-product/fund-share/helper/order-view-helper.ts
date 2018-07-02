@@ -48,7 +48,7 @@ export function getOrderFigures(order: OrderFiguresModel): FigureResponse {
 
     const feePercentRaw = Number(_.get(order, 'feePercentage', 0));
     const priceRaw = Number(_.get(order, 'price', 0));
-    const estimatedPriceRaw = Number(_.get(order, 'estimatedPrice', 0));
+    const estimatedPriceRaw = Number(_.get(order, 'latestNav', 0));
     const quantityRaw = Number(_.get(order, 'quantity', 0));
     const estimatedQuantityRaw = Number(_.get(order, 'estimatedQuantity', 0));
     const amountRaw = Number(_.get(order, 'amount', 0));
@@ -78,7 +78,7 @@ export function getOrderFigures(order: OrderFiguresModel): FigureResponse {
         price = Number(toNormalScale(priceRaw, MoneyUnitDecimal));
     }
 
-    feePercentage = Number(toNormalScale(feePercentRaw, 2));
+    feePercentage = Number(toNormalScale(feePercentRaw * 100, 2));
     platFormFee = Number(toNormalScale(platFormFeeRaw, MoneyUnitDecimal));
 
     return {

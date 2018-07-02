@@ -53,7 +53,7 @@
 
                 </clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let item of navAuditData; let idx = index;" id="{{'product-nav-audit-row' + i}}">
+                <clr-dg-row *ngFor="let item of navAuditData; let idx = index;" id="{{'product-nav-audit-row' + i}}">
                     <clr-dg-cell class="col-logtype" id="{{'nav-audit-row'+idx+'-col-logtype'}}">
                         <span class="label label-success" *ngIf="isLogTypeInsert(item)">{{'Insert' | translate}}</span>
                         <span class="label label-warning" *ngIf="isLogTypeUpdate(item)">{{'Update' | translate}}</span>

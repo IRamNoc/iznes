@@ -52,7 +52,7 @@ export class FundShareTestData {
         model.calendar.mandatory.subscriptionCutOffTime.preset = '12:00:00';
         (model.calendar.mandatory.subscriptionCutOffTimeZone.preset as any) =
             [{ id: E.TimezonesEnum.UTC, text: 'UTC' }];
-        model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
+        // model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
         (model.calendar.mandatory.subscriptionSettlementPeriod.preset as any) =
             [{ id: E.BusinessDaysEnum.One, text: '1' }];
 

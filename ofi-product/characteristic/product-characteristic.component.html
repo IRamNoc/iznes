@@ -33,6 +33,16 @@
                             <clr-dg-column class="col-xs-6">{{'Information' | translate}}</clr-dg-column>
                             <clr-dg-column class="col-xs-6">{{'Value' | translate}}</clr-dg-column>
 
+                            <clr-dg-row *ngIf="currentProduct.umbrellaFundName">
+                                <clr-dg-cell class="col-xs-6">{{'Umbrella Name' | translate}}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.umbrellaFundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-row>
+                                <clr-dg-cell class="col-xs-6">{{'Fund Name' | translate}}</clr-dg-cell>
+                                <clr-dg-cell class="col-xs-6">{{currentProduct.fundName}}</clr-dg-cell>
+                            </clr-dg-row>
+
                             <clr-dg-row>
                                 <clr-dg-cell class="col-xs-6">{{'Share Name' | translate}}</clr-dg-cell>
                                 <clr-dg-cell class="col-xs-6">{{currentProduct.fundShareName}}</clr-dg-cell>

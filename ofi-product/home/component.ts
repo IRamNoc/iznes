@@ -91,7 +91,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             sortable: true,
         },
         country: {
-            label: 'Country',
+            label: 'Domicile',
             dataSource: 'domicile',
             sortable: true,
         },
@@ -213,8 +213,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             link: '/product-module/product/fund-share/',
             linkIdent: 'fundShareID',
             open: true,
-            data: this.shareList,
-            count: this.shareList.length,
+            data: this.filteredShareList,
+            count: this.filteredShareList.length,
             columnLink: 'shareName',
         },
     ];
@@ -261,6 +261,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.countryItems = productConfig.fundItems.domicileItems;
         this.legalFormItems = productConfig.fundItems.fundLegalFormItems;
+
+        this.showOnlyActive = !this.showOnlyActive;
     }
 
     ngOnInit() {
@@ -268,17 +270,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
         this.subscriptions.push(this.requestManagementCompanyAccessListOb
-            .subscribe((d: any) => this.requestManagementCompanyAccessList(d)));
+        .subscribe((d: any) => this.requestManagementCompanyAccessList(d)));
         this.subscriptions.push(this.managementCompanyAccessListOb
-            .subscribe(d => this.managementCompanyAccessList = d));
+        .subscribe(d => this.managementCompanyAccessList = d));
         this.subscriptions.push(this.userDetailObs
-            .subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
+        .subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
         this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
         this.subscriptions.push(this.requestedOfiUmbrellaFundListOb
-            .subscribe((requested: any) => this.getUmbrellaFundRequested(requested)));
+        .subscribe((requested: any) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
@@ -375,9 +377,8 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             });
         }
 
-        this.filteredShareList = _.orderBy(shareList.filter((share) => {
-            return share.status !== 5;
-        }),                                ['fundShareID'], ['desc']);
+        this.shareList = shareList;
+        this.filteredShareList = this.shareList;
 
         this.panelDefs[2].data = this.filteredShareList;
         this.panelDefs[2].count = this.filteredShareList.length;
@@ -444,12 +445,17 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     handleShareToggleClick() {
         this.showOnlyActive = !this.showOnlyActive;
 
+        console.log(this.showOnlyActive);
+        console.log(this.shareList);
+        console.log(this.filteredShareList);
+
+
         this.filteredShareList = this.shareList.filter((share) => {
-            return (this.showOnlyActive) ? share.status !== 5 : share.status;
+            return (this.showOnlyActive) ? share.status !== 'Closed for subscription and redemption' : share.status;
         });
 
-        this.panelDefs[0].data = this.filteredShareList;
-        this.panelDefs[0].count = this.filteredShareList.length;
+        this.panelDefs[2].data = this.filteredShareList;
+        this.panelDefs[2].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
     }
 
@@ -530,14 +536,14 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()));
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+        .replace('DD', this.numPad(dateObj.getDate().toString()))
+        .replace('hh', this.numPad(dateObj.getHours()))
+        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+        .replace('mm', this.numPad(dateObj.getMinutes()))
+        .replace('ss', this.numPad(dateObj.getSeconds()));
     }
 
     /**

@@ -1,5 +1,5 @@
 // Vendor
-import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {fromJS} from 'immutable';
 import * as _ from 'lodash';
@@ -32,6 +32,8 @@ import has = Reflect.has;
 })
 
 export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
+    @Input() isImported: boolean;
+
     tabsControl: Array<any>;
 
     fundListObj: any;
@@ -66,6 +68,10 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 private _alerts: AlertsService,
                 private reportingService: ReportingService,
                 private _ofiFundInvestService: OfiFundInvestService) {
+    }
+
+    getDisplay() {
+        return (this.isImported) ? 'none' : 'block';
     }
 
     ngOnInit() {

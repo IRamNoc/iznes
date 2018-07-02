@@ -11,10 +11,10 @@ import {
     ViewChild,
     ElementRef
 } from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
 // Internal
@@ -26,19 +26,19 @@ import {
     MoneyValuePipe,
     NumberConverterService
 } from '@setl/utils';
-import {InitialisationService, MyWalletsService, WalletNodeRequestService} from '@setl/core-req-services';
-import {setRequestedWalletAddresses} from '@setl/core-store';
-import {OfiOrdersService} from '../../ofi-req-services/ofi-orders/service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
+import { setRequestedWalletAddresses } from '@setl/core-store';
+import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
-import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderHelper, OrderRequest} from '../../ofi-product/fund-share/helper/order-helper';
-import {OrderByType} from '../../ofi-orders/order.model';
-import {ToasterService} from 'angular2-toaster';
-import {Router} from '@angular/router';
-import {LogService} from '@setl/utils';
-import {MultilingualService} from '@setl/multilingual';
-import {MessagesService} from '@setl/core-messages';
+import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
+import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderByType } from '../../ofi-orders/order.model';
+import { ToasterService } from 'angular2-toaster';
+import { Router } from '@angular/router';
+import { LogService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
+import { MessagesService } from '@setl/core-messages';
 
 @Component({
     selector: 'app-invest-fund',
@@ -197,7 +197,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return (this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
+        return (this.type === 'subscribe' ? this._numberConverterService.toFrontEnd(this.shareData['entryFee']) :
+            this._numberConverterService.toFrontEnd(this.shareData['exitFee']));
     }
 
     get cutoffTime(): string {
@@ -351,6 +352,28 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return quantity > this.amountLimit;
     }
 
+    get feeFrontend(): {
+        mifiidChargesOneOff: number;
+        mifiidChargesOngoing: number;
+        mifiidTransactionCosts: number;
+        mifiidServicesCosts: number;
+        mifiidIncidentalCosts: number;
+    } {
+        const mifiidChargesOneOff = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
+        const mifiidChargesOngoing = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
+        const mifiidTransactionCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
+        const mifiidServicesCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
+        const mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
+
+        return {
+            mifiidChargesOneOff,
+            mifiidChargesOngoing,
+            mifiidTransactionCosts,
+            mifiidServicesCosts,
+            mifiidIncidentalCosts,
+        };
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
                 public _moneyValuePipe: MoneyValuePipe,
                 private _myWalletService: MyWalletsService,
@@ -364,8 +387,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 private logService: LogService,
                 public _translate: MultilingualService,
                 private _ngRedux: NgRedux<any>,
-                private _messagesService: MessagesService
-    ) {
+                private _messagesService: MessagesService) {
     }
 
     ngOnDestroy() {
@@ -629,7 +651,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-        `, {showCloseButton: false, overlayClickToClose: false});
+        `, { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
             const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
@@ -639,7 +661,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             if (this.amountTooBig) {
                 this.sendMessageToAM({
-                    walletID: this.shareData.walletID,
+                    walletID: this.shareData.amDefaultWalletId,
                     orderTypeLabel: this.orderTypeLabel,
                     orderID: orderId,
                     orderRef: orderRef
@@ -656,7 +678,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     }
 
-//this.shareData.walletId
+    //this.shareData.walletId
 
     sendMessageToAM(params) {
         const amWalletID = params.walletID;
@@ -769,7 +791,8 @@ The IZNES Team.</p>`;
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = momentDateValue.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
@@ -786,7 +809,9 @@ The IZNES Team.</p>`;
         } else if (type === 'valuation') {
 
             const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
+
 
             const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
@@ -797,7 +822,8 @@ The IZNES Team.</p>`;
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
             const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = mCutoffDate.format('YYYY-MM-DD') + ' ' + cutoffHour;
+            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
@@ -876,7 +902,7 @@ The IZNES Team.</p>`;
         this._confirmationService.create(
             '<span>Order confirmation</span>',
             message,
-            {confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary'}
+            { confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.handleSubmit();
@@ -903,18 +929,20 @@ The IZNES Team.</p>`;
 
     resetForm(form) {
         const resetList = [
-            {field: 'address', value: null},
-            {field: 'cutoffDate', value: null},
-            {field: 'valuationDate', value: null},
-            {field: 'settlementDate', value: null},
-            {field: 'quantity', value: 0},
-            {field: 'amount', value: 0},
-            {field: 'comment', value: null},
+            { field: 'address', value: null },
+            { field: 'cutoffDate', value: null },
+            { field: 'valuationDate', value: null },
+            { field: 'settlementDate', value: null },
+            { field: 'quantity', value: 0 },
+            { field: 'amount', value: 0 },
+            { field: 'comment', value: null },
         ];
         Object.keys(form.controls).forEach((key) => {
             resetList.forEach((field) => {
                 if (key === field.field) {
-                    this.form.get(key).patchValue(field.value, {emitEvent: false});
+                    this.form.get(key).patchValue(field.value, { emitEvent: true });
+                    this.form.get(key).markAsPristine();
+                    this.form.get(key).markAsUntouched();
                 }
             });
         });
@@ -964,7 +992,7 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
     const numberParsed = Number.parseInt(testString.replace(/[.,\s]/, ''));
 
     if (!/^\d+$|^\d+[\d,. ]+\d$/.test(testString) || numberParsed === 0) {
-        return {invalidNumber: true};
+        return { invalidNumber: true };
     }
 }
 
@@ -978,7 +1006,7 @@ function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
 
     const formValue = control.value;
     if (formValue instanceof Array && control.value.length === 0) {
-        return {required: true};
+        return { required: true };
     }
 }
 
@@ -1010,7 +1038,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent / 100)).done(), 14));
+    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
 }
 
 /**
