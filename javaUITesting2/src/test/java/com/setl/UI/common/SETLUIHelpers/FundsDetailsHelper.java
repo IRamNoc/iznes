@@ -40,12 +40,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomISIN() {
-        String n = randomNumeric(7);
-        String randomISIN = "1661" + n;
+        String n = randomNumeric(6);
+        String a = randomAlphabetic(2);
+        String randomISIN = a + "1661" + n;
         return new String[]{randomISIN};
     }
 
-    public static String[] generateRandomDetails() {
+    public static String[] generateRandomDetails(){
         String str = randomAlphabetic(5);
         String random = str;
         return new String[]{random};
@@ -479,7 +480,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void verifyUmbrellaFundMainInfoPageContents() {
 
-        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/section/div[1]/div[1]/div/a/h2"));
+        WebElement mainInfo = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/section/div[1]/div[1]/div/a/h2"));
         mainInfo.click();
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -508,6 +509,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         wait.until(invisibilityOfElementLocated(By.id("uf_investmentAdvisor")));
         wait.until(invisibilityOfElementLocated(By.id("uf_payingAgent")));
     }
+
 
     public static void verifyFundMainInfoPageContents() {
 
@@ -624,7 +626,6 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")));
         assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText().contentEquals(umbrellaFundsHeadings[2]));
         assertTrue(isElementPresent(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")));
-        assertTrue(driver.findElement(By.xpath("//app-ofi-am-product-home/div[2]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText().contentEquals(umbrellaFundsHeadings[3]));
     }
 
     public static void validateNAVDataGridHeadings(String[] NAVHeadings) {
@@ -676,8 +677,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validateNAVPageLayout() {
-        assertTrue(isElementPresent(By.id("pageTitle")));
-        assertTrue(driver.findElement(By.id("pageTitle")).getText().contains("Net asset value"));
+        assertTrue(isElementPresent(By.id("NAV-Title")));
+        assertTrue(driver.findElement(By.id("NAV-Title")).getText().contains("Net Asset Value"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
             "You will have access to the NAV's history of a specific share in clicking on the corresponding row."));

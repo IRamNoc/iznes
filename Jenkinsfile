@@ -35,7 +35,10 @@ node {
             stage('Copy code to deployment folder') {
                 sh '''rsync -avzh /var/lib/jenkins/Deploy/* /var/lib/jenkins/Deploy_old/ &&
                         rm -rf /var/lib/jenkins/Deploy/dist &&
+                        cp VERSION ./dist &&
                         rsync -a ./dist /var/lib/jenkins/Deploy/'''
+
+                sh 'php /var/lib/jenkins/build/tools/move-code.php opencsd-iznes dev /var/lib/jenkins/Deploy/dist'
 
             }
 

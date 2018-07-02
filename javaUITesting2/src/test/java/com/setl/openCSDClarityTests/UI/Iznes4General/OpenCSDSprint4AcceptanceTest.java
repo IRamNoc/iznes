@@ -55,6 +55,7 @@ public class OpenCSDSprint4AcceptanceTest {
     }
 
     @Test
+    @Ignore ("Waiting for ID's to be placed on Expandable fields as Xpath is dynamic")
     public void shouldAssertThatUmbrellaFundsHas2ExpandableFields() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();

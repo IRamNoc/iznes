@@ -1,7 +1,12 @@
 import { Routes } from '@angular/router';
 /* Layouts. */
-import {BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent} from '@setl/core-layout';
-import {UiTranslationsComponent, UiTooltipsComponent, UiFormStepsComponent, UiFormPercentComponent} from '@setl/core-layout';
+import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
+import {
+    UiTranslationsComponent,
+    UiTooltipsComponent,
+    UiFormStepsComponent,
+    UiFormPercentComponent,
+} from '@setl/core-layout';
 /* Components. */
 import { SetlMyAccountComponent } from '@setl/core-account';
 /**
@@ -48,7 +53,8 @@ import {
     OfiConsumeTokenComponent,
     MyRequestsComponent,
     NewKycRequestComponent,
-    MyRequestsContainerComponent
+    MyRequestsContainerComponent,
+    MyHoldingsComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
 import {
@@ -58,6 +64,15 @@ import {
     AdminWizardComponent,
     ManageSubPortfolioComponent,
 } from '@setl/core-useradmin';
+/* Account Admin Module. */
+import {
+    UsersAuditComponent,
+    UsersCreateUpdateComponent,
+    UsersListComponent,
+    UserTeamsAuditComponent,
+    UserTeamsCreateUpdateComponent,
+    UserTeamsListComponent,
+} from '@setl/core-account-admin';
 /* Product */
 import {
     OfiFundComponent,
@@ -303,7 +318,7 @@ export const ROUTES: Routes = [
                         canActivate: [LoginGuardService],
                     },
                     {
-                        path: 'product-caracteristic/:isin',
+                        path: 'product-characteristic/:isin',
                         component: ProductCharacteristicComponent,
                         canActivate: [LoginGuardService],
                     },
@@ -340,14 +355,14 @@ export const ROUTES: Routes = [
                     {
                         path: 'formsteps',
                         component: UiFormStepsComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
                     {
                         path: 'formpercent',
                         component: UiFormPercentComponent,
-                        canActivate: [LoginGuardService]
+                        canActivate: [LoginGuardService],
                     },
-                ]
+                ],
             },
             {
                 path: 'reports',
@@ -572,6 +587,11 @@ export const ROUTES: Routes = [
                     },
                 ],
             },
+            {
+                path: 'my-holdings',
+                component: MyHoldingsComponent,
+                canActivate: [LoginGuardService],
+            },
 
             /**
              * Ofi report
@@ -624,17 +644,63 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path : 'my-requests',
+                path: 'my-requests',
                 canActivate: [LoginGuardService],
-                component : MyRequestsContainerComponent,
-                children : [
+                component: MyRequestsContainerComponent,
+                children: [
                     {
-                        path : 'list',
-                        component : MyRequestsComponent,
+                        path: 'list',
+                        component: MyRequestsComponent,
                     },
                     {
-                        path : 'new',
-                        component : NewKycRequestComponent,
+                        path: 'new',
+                        component: NewKycRequestComponent,
+                    },
+                ],
+            },
+            {
+                path: 'account-admin',
+                canActivate: [LoginGuardService],
+                children: [
+                    {
+                        path: 'users',
+                        canActivate: [LoginGuardService],
+                        component: UsersListComponent,
+                    },
+                    {
+                        path: 'users/audit',
+                        canActivate: [LoginGuardService],
+                        component: UsersAuditComponent,
+                    },
+                    {
+                        path: 'users/new',
+                        canActivate: [LoginGuardService],
+                        component: UsersCreateUpdateComponent,
+                    },
+                    {
+                        path: 'users/:id',
+                        canActivate: [LoginGuardService],
+                        component: UsersCreateUpdateComponent,
+                    },
+                    {
+                        path: 'teams',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsListComponent,
+                    },
+                    {
+                        path: 'teams/audit',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsAuditComponent,
+                    },
+                    {
+                        path: 'teams/new',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsCreateUpdateComponent,
+                    },
+                    {
+                        path: 'teams/:id',
+                        canActivate: [LoginGuardService],
+                        component: UserTeamsCreateUpdateComponent,
                     },
                 ],
             },

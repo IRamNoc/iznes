@@ -22,6 +22,8 @@ import {
     WorkflowReducer,
     HighlightListState,
     HighlightListReducer,
+    AccountAdminState,
+    accountAdminReducer,
 } from '@setl/core-store';
 
 import { OfiReducer, OfiState } from '@ofi/ofi-main';
@@ -33,6 +35,7 @@ export interface AppState {
     userAdmin: AdminUsersState;
     asset: AssetState;
     account: AccountState;
+    accountAdmin: AccountAdminState;
     member: MemberState;
     chain: ChainState;
     workflow: WorkflowState;
@@ -47,12 +50,13 @@ const appReducer: Reducer<any> = combineReducers<any>({
     userAdmin: adminUserReducer,
     asset: assetReducer,
     account: AccountReducer,
+    accountAdmin: accountAdminReducer,
     member: MemberReducer,
     chain: ChainReducer,
     connection: ConnectionReducer,
     workflow: WorkflowReducer,
     highlight: HighlightListReducer,
-    ofi: OfiReducer
+    ofi: OfiReducer,
 });
 
 export const rootReducer: Reducer<any> = (state, action) => {

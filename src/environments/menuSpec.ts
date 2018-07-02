@@ -1,4 +1,4 @@
-import {MenuSpec} from '@setl/utils';
+import { MenuSpec } from '@setl/utils';
 
 const home = {
     label: 'Home',
@@ -52,6 +52,13 @@ const orderBook = {
             dynamic_link: '/order-book/my-orders/[^\/]*',
         },
     ],
+};
+const myHoldings = {
+    label: 'My Holdings',
+    label_txt: 'txt_myholdings',
+    icon_class: 'fa fa-sitemap',
+    element_id: 'menu-investor-my-holdings',
+    router_link: '/my-holdings',
 };
 const fundHoldings = {
     label: 'Fund Holdings',
@@ -351,7 +358,32 @@ const productConfiguration = {
     icon_class: 'fa fa-cog',
     element_id: 'menu-product-config',
     router_link: '/product-module/configuration',
-}
+};
+
+const accountAdmin = {
+    label: 'Administration',
+    label_txt: 'txt_administration',
+    icon_class: 'fa fa-align-left',
+    element_id: 'menu-administration',
+    children: [
+        {
+            label: 'Users',
+            label_txt: 'txt_users',
+            icon_class: 'fa fa-users',
+            element_id: 'menu-administration-users',
+            router_link: '/account-admin/users',
+            dynamic_link: '/account-admin/users/[^\/]*',
+        },
+        {
+            label: 'Teams',
+            label_txt: 'txt_teams',
+            icon_class: 'fa fa-address-book-o',
+            element_id: 'menu-administration-teams',
+            router_link: '/account-admin/teams',
+            dynamic_link: '/account-admin/teams/[^\/]*',
+        },
+    ],
+};
 
 const myKYCRequests = {
     label : 'My Requests',
@@ -412,6 +444,7 @@ export const menuSpec: MenuSpec = {
         investor: [
             home,
             orderBook,
+            myHoldings,
             // dashboard,
             subPortfolio,
             myAssetManagers,
@@ -439,7 +472,7 @@ export const menuSpec: MenuSpec = {
                     reportsCollectsArchives,
                     reportsCentralization,
                     reportsCentralizationSelect,
-                ]
+                ],
             },
             kycDocuments,
             {
@@ -454,6 +487,7 @@ export const menuSpec: MenuSpec = {
                 ],
             },
             productsManagementCompany,
+            //accountAdmin,
         ],
         valuer: [
             home,
