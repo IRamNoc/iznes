@@ -1,19 +1,19 @@
 /* Core/Angular imports. */
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 /* Redux */
-import { NgRedux, select } from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 
-import { ToasterService } from 'angular2-toaster';
-import { APP_CONFIG, AppConfig, ConfirmationService, immutableHelper, mDateHelper } from '@setl/utils';
-import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
-import { MessagesService } from '@setl/core-messages';
-import { ActivatedRoute } from '@angular/router';
-import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
-import { AllFundShareDetail } from '../../ofi-store/ofi-product/fund-share-list/model';
+import {ToasterService} from 'angular2-toaster';
+import {APP_CONFIG, AppConfig, ConfirmationService, immutableHelper, mDateHelper} from '@setl/utils';
+import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
+import {MessagesService} from '@setl/core-messages';
+import {ActivatedRoute} from '@angular/router';
+import {OfiFundShareService} from '../../ofi-req-services/ofi-product/fund-share/service';
+import {AllFundShareDetail} from '../../ofi-store/ofi-product/fund-share-list/model';
 import * as _ from 'lodash';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { FileService } from '@setl/core-req-services';
-import { SagaHelper } from '@setl/utils';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {FileService} from '@setl/core-req-services';
+import {SagaHelper} from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
@@ -72,13 +72,13 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
     ) {
         this.appConfig = appConfig;
         this.investorForm = this._fb.group({
-            companyName: { value: '', disabled: true },
+            companyName: {value: '', disabled: true},
             clientReference: '',
-            firstName: { value: '', disabled: true },
-            lastName: { value: '', disabled: true },
-            email: { value: '', disabled: true },
-            phoneNumber: { value: '', disabled: true },
-            approvalDateRequest: { value: '', disabled: true },
+            firstName: {value: '', disabled: true},
+            lastName: {value: '', disabled: true},
+            email: {value: '', disabled: true},
+            phoneNumber: {value: '', disabled: true},
+            approvalDateRequest: {value: '', disabled: true},
         });
     }
 
@@ -129,7 +129,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
         let message = '';
         if (!this.changes['add'] && !this.changes['remove']) {
-            message += 'No changes have been made to the Investors\' Fund Access permissions.';
+            message += 'No changes have been made to the Investors\' Fund Access permissions.<br><br>Changes may have been made to the fee information and overrides.';
         }
         if (this.changes['add']) {
             message += `<br>You are giving ${this.investorData['companyName']} permission to invest in the following funds' shares:<br><br>
@@ -172,12 +172,12 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             invitedID: this.currentInvestor.invitedID,
         };
         this._ofiKycService.updateInvestor(payload)
-        .then(() => {
-            this.toasterService.pop('success', 'Client reference updated');
-        })
-        .catch(() => {
-            this.toasterService.pop('success', 'Failed to update client reference');
-        });
+            .then(() => {
+                this.toasterService.pop('success', 'Client reference updated');
+            })
+            .catch(() => {
+                this.toasterService.pop('success', 'Failed to update client reference');
+            });
     }
 
     saveAccess() {
@@ -280,7 +280,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             this.investorWalletId = kyc.investorWalletID;
 
             // Get the fund access for investor walletID and render it.
-            this._ofiFundShareService.requestInvestorFundAccess({ investorWalletId: this.investorWalletId }).then((data) => {
+            this._ofiFundShareService.requestInvestorFundAccess({investorWalletId: this.investorWalletId}).then((data) => {
                 _.get(data, '[1].Data', []).forEach((row) => {
                     this.investorWalletData[row['shareID']] = row;
                 });
