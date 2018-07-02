@@ -677,8 +677,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static void validateNAVPageLayout() {
-        assertTrue(isElementPresent(By.id("pageTitle")));
-        assertTrue(driver.findElement(By.id("pageTitle")).getText().contains("Net asset value"));
+        assertTrue(isElementPresent(By.id("NAV-Title")));
+        assertTrue(driver.findElement(By.id("NAV-Title")).getText().contains("Net Asset Value"));
         assertTrue(isElementPresent(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")));
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/div/span")).getText().contentEquals("Please select a date type and a date to access to the available NAVs.\n" +
             "You will have access to the NAV's history of a specific share in clicking on the corresponding row."));
