@@ -1,18 +1,20 @@
 /* Core/Angular imports. */
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 /* Pipes. */
-import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
+import { SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule } from '@setl/utils';
 /* Clarity module. */
-import {ClarityModule} from '@clr/angular';
+import { ClarityModule } from '@clr/angular';
 
-import {MultilingualModule} from '@setl/multilingual';
+import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
-import {OfiMyInformationsComponent} from './my-informations/component';
+import { OfiMyInformationsComponent } from './my-informations/component';
+
+import config from './config';
 
 /* Decorator. */
 @NgModule({
@@ -36,8 +38,8 @@ import {OfiMyInformationsComponent} from './my-informations/component';
         SetlDirectivesModule,
     ],
     providers: [
-
-    ]
+        { provide: 'my-information-config', useValue: config },
+    ],
 })
 
 /* Class. */
