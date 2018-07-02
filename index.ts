@@ -106,6 +106,7 @@ export {
     OfiManageCsvComponent,
     CentralizationReportComponent,
     CentralizationSelectComponent,
+    MyHoldingsComponent,
 } from './ofi-report-module';
 
 /*

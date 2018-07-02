@@ -53,7 +53,7 @@ export class OfiManagementCompanyService {
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
-        if(!boolValue){
+        if (!boolValue) {
             ngRedux.dispatch(clearRequestedManagementCompany());
         } else {
             ngRedux.dispatch(setRequestedManagementCompany());

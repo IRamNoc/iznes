@@ -118,7 +118,7 @@ export class FundShare {
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.redemptionCutOffTimeZone),
             redemptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.redemptionSettlementPeriod),
-            subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
+            subscriptionRedemptionCalendar: '0',
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
@@ -215,7 +215,8 @@ export class FundShare {
             this.calendar.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
         );
-        this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
+        // removed by PZ 28/06/2018
+        // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
         this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
         this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
         this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;
@@ -416,7 +417,7 @@ export class FundShare {
     }
 
     private setListItemPresetMultiple(field: FormItem, value: number[]): void {
-        if (!value.length) return;
+        if (!value || !value.length) return;
         (field.preset as any) = value.map((id: number) => {
             const newItem = _.find(field.listItems, { id });
             if (!newItem) {
@@ -424,7 +425,6 @@ export class FundShare {
             }
             return newItem;
         }).filter(d => d !== null);
-        console.log('setListItemPresetMultiple', field.preset, field.listItems, value);
     }
 
     private setFeederPreset(value: any): void {
