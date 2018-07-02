@@ -70,12 +70,18 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     isTokenExpired = false;
     changePassword = false;
 
+    private queryParams: any;
+
     @ViewChild('usernameInput') usernameEl: ElementRef;
     @ViewChild('passwordInput') passwordEl: ElementRef;
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'authentication']) authenticationOb;
+
+    set loginValue(email) {
+        this.loginForm.get('username').patchValue(email);
+    }
 
     /* Constructor. */
     constructor(private ngRedux: NgRedux<any>,
@@ -113,7 +119,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
          */
         this.loginForm = new FormGroup({
             username: new FormControl(
-                _activatedRoute.snapshot.params['email'] || '',
+                '',
                 Validators.required,
             ),
             password: new FormControl('', Validators.required)
@@ -159,6 +165,8 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     ngOnInit() {
         this.isLogin = false;
+
+        this.getQueryParams();
 
         this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
             this.resetToken = params['token'];
@@ -247,8 +255,20 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             //     this.router.navigateByUrl(redirect);
             // }
 
-            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            this.router.navigateByUrl(redirect);
+            const redirect:any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+
+            if (this.queryParams.invitationToken) {
+                let extras = {
+                    queryParams: {
+                        invitationToken: this.queryParams.invitationToken,
+                        redirect: redirect
+                    }
+                };
+
+                this.router.navigate(['consume'], extras);
+            } else {
+                this.router.navigateByUrl(redirect);
+            }
 
             this.isLogin = true;
 
@@ -275,6 +295,25 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             };
         }
 
+    }
+
+    getQueryParams() {
+        this._activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = params;
+
+            if (params.email) {
+                this.loginValue = params.email;
+            }
+            if (params.error) {
+                this.displayError();
+            }
+        });
+    }
+
+    displayError() {
+        setTimeout(() => {
+            this.toasterService.pop('error', 'This link is no longer valid. Please try to login again.');
+        }, 0);
     }
 
     passwordValidator(g: FormGroup) {
