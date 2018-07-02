@@ -1,9 +1,11 @@
-import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, QueryList, ViewChildren} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
 import {Subject} from 'rxjs/Subject';
 import {MultilingualService} from '@setl/multilingual';
+
+import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
 
 @Component({
     selector: 'app-ui-layouts-formsteps',
@@ -17,6 +19,8 @@ import {MultilingualService} from '@setl/multilingual';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiFormStepsComponent implements OnInit {
+
+    @ViewChildren(FormStepsDirective) formSteps: any;
 
     myFormSteps1: FormGroup;
     myFormSteps2: FormGroup;
@@ -212,6 +216,18 @@ export class UiFormStepsComponent implements OnInit {
 
     save3(formValues) {
         console.log('save3: ' + JSON.stringify(formValues));
+    }
+
+    addField() {
+        (this.myFormSteps1.get('step1') as FormGroup).addControl('nickname', new FormControl('', Validators.required));
+        // send to my 2nd directive on 3
+        this.formSteps.toArray()[1].refreshFormSteps();
+    }
+
+    removeField() {
+        (this.myFormSteps1.get('step1') as FormGroup).removeControl('nickname');
+        // send to my 2nd directive on 3
+        this.formSteps.toArray()[1].refreshFormSteps();
     }
 
     toggleInfoPanes(event: Event): void {
