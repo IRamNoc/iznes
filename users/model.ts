@@ -1,4 +1,5 @@
 import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export class AccountAdminUser {
     userId?: number;
@@ -47,4 +48,10 @@ export class AccountAdminUserForm {
         type: FormItemType.text,
         required: true,
     };
+}
+
+export interface ReadUsersRequest extends MemberNodeMessageBody {
+    token: string;
+    userID?: number;
+    accountID?: number;
 }

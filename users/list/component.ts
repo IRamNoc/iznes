@@ -19,36 +19,6 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     constructor(router: Router, redux: NgRedux<any>, fileDownloader: FileDownloader) {
         super(router, redux, fileDownloader);
         this.noun = 'User';
-
-        this.users = [
-            {
-                userId: 1,
-                firstName: 'User',
-                lastName: 'One',
-                email: 'user_one@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERONE1',
-            },
-            {
-                userId: 2,
-                firstName: 'User',
-                lastName: 'Two',
-                email: 'user_two@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERTWO2',
-            },
-            {
-                userId: 3,
-                firstName: 'User',
-                lastName: 'Three',
-                email: 'user_three@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERTHREE3',
-            },
-        ];
     }
 
     ngOnInit() {}

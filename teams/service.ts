@@ -7,12 +7,13 @@ import {
     SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
     setRequestedAccountAdminTeamsAudit,
 } from '@setl/core-store';
-import { SagaHelper } from '@setl/utils';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { MemberSocketService } from '@setl/websocket-service';
 
+import { RequestCallback } from '../base/model';
+import { AccountAdminBaseService } from '../base/service';
+
 import {
-    RequestCallback,
     ReadUserTeamsRequest,
     CreateUserTeamRequest,
     UpdateUserTeamRequest,
@@ -21,9 +22,11 @@ import {
 } from './model';
 
 @Injectable()
-export class UserTeamsService {
-    constructor(private redux: NgRedux<any>,
-                private memberSocketService: MemberSocketService) {}
+export class UserTeamsService extends AccountAdminBaseService {
+    constructor(redux: NgRedux<any>,
+                private memberSocketService: MemberSocketService) {
+        super(redux);
+    }
 
     /**
      * Read User Teams
@@ -181,34 +184,6 @@ export class UserTeamsService {
                                  SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
                                  onSuccess,
                                  onError);
-    }
-
-    /**
-     * Make API Call
-     *
-     * @param asyncTaskPipe
-     * @param setRequestedMethod
-     * @param successType
-     * @param successCallback
-     * @param errorCallback
-     */
-    private callAccountAdminAPI(asyncTaskPipe: { [key: string]: any },
-                                setRequestedMethod: () => any,
-                                successType: any,
-                                successCallback: (data) => void,
-                                errorCallback: (e) => void): void {
-
-        this.redux.dispatch(SagaHelper.runAsync(
-            [successType],
-            [],
-            asyncTaskPipe,
-            {},
-            (data) => {
-                successCallback(data);
-                if (setRequestedMethod) this.redux.dispatch(setRequestedMethod());
-            },
-            errorCallback,
-        ));
     }
 
 }

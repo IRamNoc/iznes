@@ -9,3 +9,5 @@ export type AccountAdminErrorResponse = [
     },
     undefined
 ];
+
+export type RequestCallback = (data) => void;

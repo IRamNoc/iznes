@@ -46,8 +46,6 @@ export class AccountAdminTeamAuditEntry {
     dateModified: string;
 }
 
-export type RequestCallback = (data) => void;
-
 export interface ReadUserTeamsRequest extends MemberNodeMessageBody {
     token: string;
     userTeamID?: number;

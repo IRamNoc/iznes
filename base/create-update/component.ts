@@ -1,6 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgRedux, select } from '@angular-redux/store';
+import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -19,6 +20,10 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     form;
     mode: 0 | 1; // 0 - create, 1 - update
     noun: string;
+    permissionAreas: any[] = [];
+    permissionLevels: any[] = [];
+    permissionsEmitter: EventEmitter<any> = new EventEmitter();
+    permissionsForm: FormGroup;
 
     protected accountId: number;
     private subscriptions: Subscription[] = [];
@@ -41,6 +46,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     ngOnInit() {
         this.processParams();
         this.initSubscriptions();
+        this.initPermissions();
     }
 
     private processParams(): void {
@@ -60,6 +66,12 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
             this.accountId = accountId;
         }));
+    }
+
+    private initPermissions(): void {
+        this.permissionsForm = new FormGroup({
+            permissions: new FormControl(),
+        });
     }
 
     isCreateMode(): boolean {

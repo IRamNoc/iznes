@@ -12,6 +12,7 @@ import {
 } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { PermissionGridModule } from '@setl/permission-grid';
 
 import {
     AccountAdminCreateUpdateBase,
@@ -46,6 +47,7 @@ import {
         DynamicFormsModule,
         SetlDirectivesModule,
         MultilingualModule,
+        PermissionGridModule,
     ],
     declarations: [
         AccountAdminCreateUpdateBase,
