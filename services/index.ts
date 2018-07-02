@@ -5,6 +5,7 @@ import {NavHelperService} from './nav/service';
 import {LogService} from './log/service';
 import {FileDownloader} from './file-downloader/service';
 import {HttpClientModule} from '@angular/common/http';
+import {MenuSpecService} from "./menuSpec/service";
 
 @NgModule({
     declarations: [],
@@ -16,7 +17,8 @@ import {HttpClientModule} from '@angular/common/http';
         BlockchainContractService,
         NavHelperService,
         LogService,
-        FileDownloader
+        FileDownloader,
+        MenuSpecService,
     ]
 })
 

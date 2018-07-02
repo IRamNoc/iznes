@@ -18,6 +18,9 @@ export interface MenuSpec {
         [userType: string]: Array<MenuItem>;
     };
     disabled?: Array<string>;
+    hidden?: {
+        [userType: string]: Array<String>;
+    };
 }
 
 interface MemberNodeConnection {
