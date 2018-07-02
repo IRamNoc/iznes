@@ -8,12 +8,12 @@
                 <h1>{{'Tooltips' | translate}}</h1>
                 <hr>
                 <p>
-                    <span class="label label-success" id="tooltip-label-directives" [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: true}">Directives</span>
+                    <span class="label label-success" id="tooltip-label-directives" appHighlight [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: false}">Directives</span>
                 </p>
                 <p>{{'Tooltips provides a description of a UI element.' | translate}}</p>
                 <h1>{{'How to use' | translate}}</h1>
                 <hr>
-                <p>{{'Just add the directives [tooltip] and give params via an object' | translate}} {{'{'}}{{'}'}}: <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <p>{{'Just add the directives [tooltip] and give params via an object' | translate}} {{'{'}}{{'}'}}: <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
                 <ol>
                     <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
@@ -23,7 +23,7 @@
                 <br>
                 <h2>{{'Sizes' | translate}}</h2>
                 <hr>
-                <p>{{'There is several possible sizes you can force for the tooltips.' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <p>{{'There is several possible sizes you can force for the tooltips.' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
                 <ol>
                     <li><b>small:</b> {{'limited to 50 chars. If more, medium size is automatically applied.' | translate}}</li>
                     <li><b>medium:</b> {{'if more than 50 chars or specified (width 320px)' | translate}}</li>
@@ -32,7 +32,7 @@
                 <br>
                 <h2>{{'Sizes Rules' | translate}}</h2>
                 <hr>
-                <p>{{'If you don\'t apply a size to your tooltip, some rules are auto applied:' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
+                <p>{{'If you don\'t apply a size to your tooltip, some rules are auto applied:' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
                 <ol>
                     <li><b>small:</b> {{'if no title and max 50 chars.' | translate}}</li>
                     <li><b>medium:</b> {{'if title and/or more than 50 chars.' | translate}}</li>
@@ -44,7 +44,7 @@
                 <p>{{'A tooltip with autoshow will be visible directly on the page without over it.' | translate}}</p>
                 <ol>
                     <li>{{'These tooltips can be closed manually by clicking the close button.' | translate}}</li>
-                    <li>{{'Once a tooltip has been closed, it becomes a classic tooltip (mouseover/mouseout).' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></li>
+                    <li>{{'Once a tooltip has been closed, it becomes a classic tooltip (mouseover/mouseout).' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></li>
                     <li>{{'Clicking on the element toggle the autoshow property.' | translate}}</li>
                 </ol>
                 <br>
@@ -54,7 +54,7 @@
                 <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{text: _translate.translate(\'Your text here\')}&quot;&gt;&lt;/i&gt;'}}</code></pre>
                 <br>
                 <b>{{'Full implementation' | translate}}:</b>
-                <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{title: _translate.translate(\'Your title here\'), text: _translate.translate(\'Your text here\'), size: \'large\', autoshow: true}&quot;&gt;&lt;/i&gt;'}}</code></pre>
+                <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{title: _translate.translate(\'Your title here\'), text: _translate.translate(\'Your text here\'), size: \'large\', autoshow: false}&quot;&gt;&lt;/i&gt;'}}</code></pre>
                 <br>
                 <h2>{{'Examples' | translate}}</h2>
                 <hr>
@@ -64,7 +64,7 @@
                         {{'Example' | translate}} 1
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title - autoshow'), size: 'small', autoshow: true}"></div>
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title - autoshow'), size: 'small', autoshow: false}"></div>
                         {{'Example' | translate}} 2
                     </div>
                     <div class="d-inline-block text-center mr-3">
@@ -84,7 +84,7 @@
                         {{'Example' | translate}} 6
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip + autoshow'), text: _translate.translate('This is a medium tooltip autoshown'), autoshow: true}"></div>
+                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip + autoshow'), text: _translate.translate('This is a medium tooltip autoshown'), autoshow: false}"></div>
                         Example 7
                     </div>
                     <div class="d-inline-block text-center">
@@ -128,7 +128,7 @@
                 <hr>
                 <p>{{'Based on the standard tooltip behavior, the tooltip directives check if the inputs passed in config is a single or a multiple object. A multiple object is detected automatically as a User Tour.' | translate}}</p>
                 <div class="mt-2">
-                    <button type="button" class="btn btn-success" id="tooltip-tour-btn" (click)="launchTour()">{{'Launch your tutorial Tour' | translate}}</button>
+                    <button type="button" class="btn btn-success" id="tooltip-tour-btn" appHighlight (click)="launchTour()">{{'Launch your tutorial Tour' | translate}}</button>
                     <div *ngIf="showTour">
                         <i [tooltip]="tourObject"></i>
                     </div>
@@ -137,6 +137,16 @@
                 <b>{{'HTML Implementation' | translate}}:</b>
                 <pre><code>{{'&lt;button (click)=&quot;launchTour()&quot;&gt;\{\{\'Launch your tutorial Tour\' | translate\}\}&lt;/button&gt;'}}
 {{'&lt;div *ngIf=&quot;showTour&quot;&gt; &lt;i [tooltip]=&quot;tourObject&quot;&gt;&lt;/i&gt; &lt;/div&gt;'}}</code></pre>
+                <br>
+                <b>{{'TourObject details' | translate}}:</b>
+                <br>
+                <ol>
+                    <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
+                    <li><b>target:</b> {{'\'the ID of the targeted element\'' | translate}}</li>
+                    <li><b>duration:</b> {{'\in milliseconds (default 5000) \'' | translate}} ({{'optional' | translate}})</li>
+                    <li><b>redirect:</b> {{'to redirect to a page' | translate}} ({{'optional' | translate}})</li>
+                </ol>
                 <br>
                 <b>{{'TS Implementation' | translate}}:</b>
                 <pre><code>{{'launchTour() {'}}
@@ -164,6 +174,7 @@
                 {{'title: this._translate.translate(\'User Infos\'),'}}
                 {{'text: this._translate.translate(\'Here you can see you last connection.\'),'}}
                 {{'target: \'topBarMenu\','}}
+                {{'redirect: \'/home\','}}
             {{'},'}}
         {{');'}}
         {{'this.showTour = true;'}}

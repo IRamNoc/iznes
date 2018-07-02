@@ -13,7 +13,7 @@
     </form>
     <div class="header-actions">
 
-        <div class="user iznes" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
+        <div class="user iznes" id="topBarMenu" appHighlight *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
             <div class="last-login">
@@ -44,7 +44,7 @@
         </div>
 
         <div class="right-buttons">
-            <div id="translation-report-button" class="dropdown" *ngIf="!appConfig.production">
+            <div id="translation-report-button" appHighlight class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
                     <clr-icon shape="warning-standard" class="icon text-warning"></clr-icon>
                     <!--style="stroke: orange"-->
