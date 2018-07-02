@@ -216,11 +216,12 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
 
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
+            const alreadyInitiatedList = response[1].Data[0].alreadyInitiatedEmailAddresses;
             const validEmailList = [];
             const invalidEmailList = [];
 
             formValues.investors.map(investor => {
-                if (emailAddressList.indexOf(investor.email) === -1) {
+                if ((emailAddressList.indexOf(investor.email) === -1) && alreadyInitiatedList.indexOf(investor.email) === -1) {
                     validEmailList.push(investor.email);
                 } else {
                     invalidEmailList.push(investor.email);
