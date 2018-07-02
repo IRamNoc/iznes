@@ -270,13 +270,13 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(CentralHeader.equals("Centralisation History"));
         wait.until(elementToBeClickable(By.cssSelector("i.special:nth-child(3)")));
         driver.findElement(By.cssSelector("i.special:nth-child(3)")).click();
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")).sendKeys(uShareDetails[0]);
+        wait.until(elementToBeClickable(By.cssSelector("input.form-control")));
+        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uShareDetails[0]);
 
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-15\"]/ng-select/div/div[3]/ul/li[2]")));
 
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+        wait.until(visibilityOfElementLocated(By.cssSelector(".ui-select-choices-row")));
+        driver.findElement(By.cssSelector(".ui-select-choices-row > a:nth-child(1) > div:nth-child(1)")).click();
 
 
         String ShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/form/div/div/div/div/ng-select/div/div[2]/span/span")).getText();
