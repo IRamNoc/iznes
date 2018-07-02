@@ -24,6 +24,7 @@ import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.submitUmbrellaFund;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByClassName;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.assertPopupNextFundNo;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchFundsTable;
@@ -92,7 +93,9 @@ public class OpenCSD2FundsAcceptanceTest {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(invisibilityOfElementLocated(By.className("toast-title")));
-        driver.findElement(By.id("product-dashboard-link-fundID-0")).click();
+        scrollElementIntoViewById("product-dashboard-fundID-0-fundName");
+        wait.until(elementToBeClickable(By.id("product-dashboard-fundID-0-fundName")));
+        driver.findElement(By.id("product-dashboard-fundID-0-fundName")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
 
         driver.findElement(By.id("fundName")).sendKeys(updateChars[0]);
@@ -258,7 +261,7 @@ public class OpenCSD2FundsAcceptanceTest {
         String fundName = split(fundNameText, " ");
         assertTrue(fundName.equals(uFundDetails[0] + "TG445"));
 
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-2\"]/form/div[1]/div[1]/div/a")).click();
+        driver.findElement(By.cssSelector(".fundForm > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
         wait.until(visibilityOfElementLocated(By.id("umbrellaEditLei")));
 
         String LEIActual = driver.findElement(By.id("umbrellaEditLei")).getAttribute("value");
@@ -267,9 +270,9 @@ public class OpenCSD2FundsAcceptanceTest {
         String DomicileActual = driver.findElement(By.id("umbrellaEditFundDomicile")).getAttribute("value");
         assertTrue(DomicileActual.equals("Jordan"));
 
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-1\"]/form/div[1]/div[2]/form/div[2]/div[1]/div/a/i")).click();
-        scrollElementIntoViewById("uf_payingAgent");
-        wait.until(visibilityOfElementLocated(By.id("uf_payingAgent")));
+        driver.findElement(By.cssSelector(".fundForm > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
+        scrollElementIntoViewById("payingAgent");
+        wait.until(visibilityOfElementLocated(By.id("payingAgent")));
 
         String UmbNameActual = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
         assertTrue(UmbNameActual.equals(uFundDetails[0] + "TG445"));
@@ -292,7 +295,7 @@ public class OpenCSD2FundsAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("fund-submitUmbrella-btn")));
         wait.until(elementToBeClickable(By.id("fund-submitUmbrella-btn")));
         driver.findElement(By.id("fund-submitUmbrella-btn")).click();
-        String fundName = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/form/div[1]/div[1]/div/a/h2")).getText();
+        String fundName = driver.findElement(By.cssSelector(".fundForm > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).getText();
         assertTrue(fundName.equals("No Umbrella Fund"));
     }
 
@@ -380,18 +383,21 @@ public class OpenCSD2FundsAcceptanceTest {
 
     @Test
     public void shouldUpdateFund() throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         createFund();
         String umbFundNamePrev = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
-        driver.findElement(By.xpath("//*[@id=\"product-dashboard-fundID-0-fundName\"]/span")).click();
+        scrollElementIntoViewById("product-dashboard-fundID-0-fundName");
+        wait.until(elementToBeClickable(By.id("product-dashboard-fundID-0-fundName")));
+        driver.findElement(By.id("product-dashboard-fundID-0-fundName")).click();
         scrollElementIntoViewById("fund-cancelfund-btn");
         String title = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1/span")).getText();
         assertTrue(title.contains("Fund"));
         driver.findElement(By.id("fundName")).sendKeys("Updated");
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         scrollElementIntoViewById("fund-submitfund-btn");
 
         try {
