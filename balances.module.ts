@@ -6,9 +6,10 @@ import {SetlTransactionsComponent} from './transactions/transactions.component';
 import { ReportingService } from './reporting.service';
 
 /* Clarity module. */
-import {ClarityModule} from '@clr/angular';
-import {SetlPipesModule, SetlComponentsModule} from '@setl/utils';
-import {MultilingualModule} from '@setl/multilingual';
+import { ClarityModule } from '@clr/angular';
+import { SetlPipesModule, SetlComponentsModule } from '@setl/utils';
+import { MultilingualModule } from '@setl/multilingual';
+import { FileViewerModule } from '../core-fileviewer';
 
 @NgModule({
     imports: [
@@ -16,21 +17,22 @@ import {MultilingualModule} from '@setl/multilingual';
         ClarityModule,
         SetlPipesModule,
         SetlComponentsModule,
-        MultilingualModule
+        MultilingualModule,
+        FileViewerModule,
     ],
     declarations: [
         SetlBalancesComponent,
         SetlIssueComponent,
-        SetlTransactionsComponent
+        SetlTransactionsComponent,
     ],
     exports: [
         SetlBalancesComponent,
         SetlIssueComponent,
-        SetlTransactionsComponent
+        SetlTransactionsComponent,
     ],
     providers: [
-        ReportingService
-    ]
+        ReportingService,
+    ],
 })
 export class SetlBalancesModule {
 }
