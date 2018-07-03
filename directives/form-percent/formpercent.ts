@@ -77,7 +77,7 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     constructProgressBar() {
-        this.colorBar = (this.config.color === undefined) ? 'cssProgress-success' : (this.colors[this.config.color] !== undefined) ? this.colors[this.config.color] : 'cssProgress-success';
+        this.colorBar = (this.config.color === undefined) ? 'cssProgress-warning' : (this.colors[this.config.color] !== undefined) ? this.colors[this.config.color] : 'cssProgress-warning';
         // this.colorBarIcon = this.colorBar.replace('cssProgress', 'cssProgressIcon');
 
         this.divPG = document.createElement('div');
@@ -139,6 +139,14 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divIcon.innerHTML = '<i class="fa fa-exclamation-circle cssProgressIcon-danger"></i>';
         } else {
             this.divIcon.innerHTML = '<i class="fa fa-hourglass-half cssProgressIcon-warning"></i>';
+        }
+
+        if (this.config.color === undefined) {
+            if (percent === 100) {
+                this.divProgressBarColor.classList.replace(this.colorBar, 'cssProgress-success');
+            } else {
+                this.divProgressBarColor.classList.replace('cssProgress-success', this.colorBar);
+            }
         }
     }
 
