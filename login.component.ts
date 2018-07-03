@@ -1,12 +1,12 @@
 // Vendors
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild, Renderer} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {LoginGuardService} from "./login-guard.service";
+import { AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { LoginGuardService } from "./login-guard.service";
 import * as _ from 'lodash';
 // Internals
-import {APP_CONFIG, AppConfig, SagaHelper, LogService} from '@setl/utils';
+import { APP_CONFIG, AppConfig, SagaHelper, LogService } from '@setl/utils';
 import {
     AccountsService,
     ChainService,
@@ -25,12 +25,12 @@ import {
     SET_PRODUCTION,
     SET_SITE_MENU
 } from '@setl/core-store';
-import {MemberSocketService} from '@setl/websocket-service';
-import {ToasterService} from 'angular2-toaster';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Subscription} from 'rxjs/Subscription';
-import {MultilingualService} from '@setl/multilingual';
-import {Observable} from "rxjs/Observable";
+import { MemberSocketService } from '@setl/websocket-service';
+import { ToasterService } from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
+import { Observable } from "rxjs/Observable";
 
 /* Dectorator. */
 @Component({
@@ -179,8 +179,12 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         }));
 
         // Reduce observable subscription
-        Observable.combineLatest(this.authenticationOb, this.siteMenuOb).subscribe(([authentication, siteMenu]) => {
-            if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
+        // Observable.combineLatest(this.authenticationOb, this.siteMenuOb).subscribe(([authentication, siteMenu]) => {
+        //     if (Object.keys(siteMenu).length > 0) this.updateState(authentication);
+        // });
+
+        Observable.combineLatest(this.authenticationOb).subscribe(([authentication]) => {
+            this.updateState(authentication);
         });
 
         window.onbeforeunload = null;
@@ -263,7 +267,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             //     this.router.navigateByUrl(redirect);
             // }
 
-            const redirect:any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+            const redirect: any = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
 
             if (this.queryParams.invitationToken) {
                 let extras = {
@@ -325,7 +329,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { 'mismatch': true };
     }
 
     toggleShowPasswords(num) {
@@ -451,26 +455,26 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
 
         switch (responseStatus) {
-            case 'fail':
-                this.showLoginErrorMessage('warning',
-                    '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
-                );
-                break;
-            case 'locked':
-                this.showLoginErrorMessage('info',
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                    'Please contact Setl support.</span>'
-                );
-                break;
-            default:
-                this.showLoginErrorMessage('error',
-                    '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
-                );
-                break;
+        case 'fail':
+            this.showLoginErrorMessage('warning',
+                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
+            );
+            break;
+        case 'locked':
+            this.showLoginErrorMessage('info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                'Please contact Setl support.</span>'
+            );
+            break;
+        default:
+            this.showLoginErrorMessage('error',
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+            );
+            break;
         }
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, {buttonMessage: 'Please try again to log in'});
+        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
     }
 }

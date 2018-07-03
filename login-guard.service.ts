@@ -1,4 +1,4 @@
-import {Inject, Injectable, OnDestroy, OnInit} from '@angular/core';
+import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
 import {
     Router,
     CanActivate,
@@ -6,14 +6,14 @@ import {
     RouterStateSnapshot, CanDeactivate,
 
 } from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {NgRedux, select} from '@angular-redux/store';
-import {ToasterService} from 'angular2-toaster';
-import {MyUserService} from '@setl/core-req-services';
-import {Subscription} from 'rxjs/Subscription';
-import {APP_CONFIG, AppConfig, immutableHelper, MenuItem} from '@setl/utils';
+import { Observable } from 'rxjs/Observable';
+import { NgRedux, select } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
+import { MyUserService } from '@setl/core-req-services';
+import { Subscription } from 'rxjs/Subscription';
+import { APP_CONFIG, AppConfig, immutableHelper, MenuItem } from '@setl/utils';
 import * as _ from 'lodash';
-import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
@@ -47,9 +47,21 @@ export class LoginGuardService implements CanActivate {
             this.userTypeStr = userTypeStr;
         }));
 
-        this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
-            this.menuSpec = menuSpec;
-        }));
+        // this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+        //     console.log('menuspec: ', menuSpec);
+        //     console.log('this.menuSpec', this.menuSpec);
+        //
+        //     if (Object.keys(menuSpec).length == 0) {
+        //         this.menuSpec = this.appConfig.menuSpec;
+        //         this.menuSpec['hidden'] = this.appConfig.nonMenuLink;
+        //
+        //     } else {
+        //         this.menuSpec = menuSpec;
+        //     }
+        //
+        //     console.log('this.menuspec', this.menuSpec);
+        //
+        // }));
     }
 
     canActivate(next: ActivatedRouteSnapshot,
@@ -70,7 +82,6 @@ export class LoginGuardService implements CanActivate {
 
                 return false;
             }
-
             // check if the url is allow for the user
             const applyRestrictUrl = this.appConfig.applyRestrictUrl || false;
             if (applyRestrictUrl) {
@@ -86,6 +97,9 @@ export class LoginGuardService implements CanActivate {
     }
 
     isMenuDisabled(url: string): boolean {
+
+        this.menuSpec = this.appConfig.menuSpec;
+
         const disabledMenus: string[] = _.get(this.menuSpec, ['disabled'], []);
         return disabledMenus.indexOf(url) !== -1;
     }
@@ -93,12 +107,14 @@ export class LoginGuardService implements CanActivate {
     getUserAllowUrl(): { static_link: string, dynamic_link: string }[] {
         let allowUrls: { static_link: string, dynamic_link: string }[] = [];
 
-        const menuSpecs = this.menuSpec;
+        // const menuSpecs = this.menuSpec;
+
+        let menuSpecs = this.appConfig.menuSpec;
 
         const topProfileMenu = _.get(menuSpecs, ['top', 'profile', this.userTypeStr], []);
         const sideMenu = _.get(menuSpecs, ['side', this.userTypeStr], []);
         const disabledMenu = _.get(menuSpecs, 'disabled', []);
-        const nonMenuLink = _.get(menuSpecs, ['hidden', this.userTypeStr], []);
+        const nonMenuLink = _.get(this.appConfig.nonMenuLink, ['hidden', this.userTypeStr], []);
 
         // top profile menu urls
         topProfileMenu.forEach((item) => {
