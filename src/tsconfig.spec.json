@@ -11,8 +11,9 @@
         ]
     },
     "files": [
-        "test.ts"
-    ],
+        "test.ts",
+      "polyfills.ts"
+  ],
     "exclude": [
         "../setl_modules/module-template",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/test-data/**/*",
