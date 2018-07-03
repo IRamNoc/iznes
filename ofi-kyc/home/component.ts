@@ -13,7 +13,7 @@ import {MultilingualService} from '@setl/multilingual';
 import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
 import {setInformations, KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import {Observable} from 'rxjs/Observable';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyUserService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils/index';
@@ -69,6 +69,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 private myUserService: MyUserService,
                 public _translate: MultilingualService,
+                private route: ActivatedRoute,
                 @Inject('endpoints') endpoints,
                 @Inject(APP_CONFIG) appConfig: AppConfig,) {
         this.appConfig = appConfig;
@@ -139,7 +140,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
-            defaultHomePage: this.endpointsConfig.alreadyDoneConfirmation,
+            defaultHomePage: '',
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -155,7 +156,19 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
         this._ngRedux.dispatch(clearAppliedHighlight());
         //this.showModal = false;
-        this.router.navigate(['new-investor', 'already-done', 'confirmation']);
+
+        this.route.queryParams.subscribe(queryParams => {
+            if (queryParams.invitationToken) {
+                this.router.navigate(['my-requests', 'new'], {
+                    queryParams: {
+                        invitationToken: queryParams.invitationToken,
+                        amcID: queryParams.amcID
+                    }
+                });
+            } else{
+                this.router.navigate(['my-requests', 'list']);
+            }
+        });
     }
 
     /* On Destroy. */

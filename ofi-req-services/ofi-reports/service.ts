@@ -1,6 +1,6 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -8,17 +8,20 @@ import {SagaHelper} from '@setl/utils';
 /* Import actions. */
 import {
     OFI_SET_AM_HOLDERS_LIST,
+    OFI_SET_INV_HOLDINGS_LIST,
     OFI_SET_BASE_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
     ofiClearRequestedAmHolders,
     ofiClearRequestedCentralizationReports,
     ofiSetRequestedAmHolders,
+    ofiSetRequestedInvHoldings,
+    ofiClearRequestedInvHoldings,
     ofiSetRequestedCentralizationReports,
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
     OFI_GET_SHARE_HOLDER_DETAIL,
-} from '../../ofi-store/';
+} from '../../ofi-store/ofi-reports';
 
 /* Import interfaces for message bodies. */
 import {
@@ -28,6 +31,8 @@ import {
     OfiCentralizationReportsRequestBody,
     OfiHolderDetailRequestBody,
     OfiHolderDetailRequestData,
+    OfiInvHoldingsDetailRequestData,
+    OfiInvHoldingsDetailRequestBody,
 } from './model';
 
 interface CentralizationReportsData {
@@ -41,13 +46,17 @@ interface CentralizationHistoryData {
     dateRange: any;
 }
 
+interface InvHoldingsData {
+    walletID: any;
+    amCompanyID: any;
+}
+
 @Injectable()
 export class OfiReportsService {
 
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>) {
-        /* Stub. */
     }
 
     static setRequestedCentralizationReportsList(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -85,6 +94,15 @@ export class OfiReportsService {
         }
     }
 
+    static setRequestedInvHoldingsList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        // false = doRequest | true = already requested
+        if (!boolValue) {
+            ngRedux.dispatch(ofiClearRequestedInvHoldings());
+        } else {
+            ngRedux.dispatch(ofiSetRequestedInvHoldings());
+        }
+    }
+
     static setRequestedHolderDetail(boolValue: boolean, ngRedux: NgRedux<any>) {
         if (!boolValue) {
             ngRedux.dispatch(ofiSetHolderDetailRequested());
@@ -102,6 +120,21 @@ export class OfiReportsService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [OFI_SET_AM_HOLDERS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    static defaultRequestInvHoldingsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, invHoldingsDetailRequestData: OfiInvHoldingsDetailRequestData) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(ofiSetRequestedInvHoldings());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestInvHoldings(invHoldingsDetailRequestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_INV_HOLDINGS_LIST],
             [],
             asyncTaskPipe,
             {},
@@ -173,6 +206,18 @@ export class OfiReportsService {
         const messageBody: OfiAmHoldersRequestBody = {
             RequestName: 'izngetamholders',
             token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestInvHoldings(data: InvHoldingsData): any {
+
+        const messageBody: OfiInvHoldingsDetailRequestBody = {
+            RequestName: 'izngetinvestorholding',
+            token: this.memberSocketService.token,
+            walletID: data.walletID,
+            amCompanyID: data.amCompanyID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

@@ -100,7 +100,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
 
-    static getListItem(value: string, list: any[]): any[] {
+    static getListItem(value: string | number, list: any[]): any[] {
         if (value === null || !list.length) {
             return [];
         }
@@ -476,10 +476,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, { emitEvent: false });
         this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, { emitEvent: false });
 
-        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(_.get(this.umbrellaFund, [0].delegatedManagementCompanyID, '').toString(), this.managementCompanyList);
+        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].delegatedManagementCompanyID, this.managementCompanyList);
         if (delegatedManagementCompany.length > 0) {
             this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, { emitEvent: false });
         }
+
         const auditor = this.auditorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].auditorID.toString());
         if (auditor.length > 0) {
             this.umbrellaFundForm.get('auditorID').patchValue(auditor, { emitEvent: false });
@@ -591,7 +592,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
                     const errMsg = _.get(data, '[1].Data[0].Message', '');
-                    this._toasterService.pop('error', 'Failed to create the umbrella fund. ' + errMsg);
+                    let userErrMsg =  'Failed to create the umbrella fund.';
+                    if(errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
+                        userErrMsg = 'Umbrella fund is already exist.';
+                    }
+                    this._toasterService.pop('error',  userErrMsg);
                     this._changeDetectorRef.markForCheck();
                 })
             );

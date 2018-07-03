@@ -129,7 +129,7 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
 
         let message = '';
         if (!this.changes['add'] && !this.changes['remove']) {
-            message += 'No changes have been made to the Investors\' Fund Access permissions.';
+            message += 'No changes have been made to the Investors\' Fund Access permissions.<br><br>Changes may have been made to the fee information and overrides.';
         }
         if (this.changes['add']) {
             message += `<br>You are giving ${this.investorData['companyName']} permission to invest in the following funds' shares:<br><br>
@@ -188,12 +188,19 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
         Object.keys(this.access).forEach((key) => {
             if (this.access[key]['newOverride'] && this.access[key]['override']) {
                 promises.push(new Promise((resolve, reject) => {
+
+                    if (_.isEmpty(this.uploadFiles[key])) {
+                        resolve();
+                        return;
+                    }
+
                     const asyncTaskPipe = this.fileService.addFile({
                         files: this.uploadFiles[key],
                     });
                     this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
                         asyncTaskPipe,
                         (function (data) {
+
                             uploadData[key] = data[1].Data[0][0];
                             resolve();
                         })
@@ -310,8 +317,8 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             this.access[row['id']] = {
                 access: !!this.investorWalletData[row['id']],
                 changed: false,
-                entry: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['entryFee'] : 0) / 100000,
-                exit: (!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['exitFee'] : 0) / 100000,
+                entry: this.toFrontEndPecent((!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['entryFee'] : 0)),
+                exit: this.toFrontEndPecent((!!this.investorWalletData[row['id']] ? this.investorWalletData[row['id']]['exitFee'] : 0)),
                 max: row['max'],
                 minInvestment: row['minInvestment'],
                 override: (!!this.investorWalletData[row['id']] ? (this.investorWalletData[row['id']]['minInvestOverride'] == 1 ? 1 : 0) : false),
@@ -322,6 +329,16 @@ export class OfiFundAccessComponent implements OnDestroy, OnInit {
             };
         });
         this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * convert blockchain scale (100000) to front-end number.
+     * as we are show percentage we need to times it by 100.
+     *
+     * @param percent: the raw percentage number in blockchain scale.
+     */
+    toFrontEndPecent(percent: number): number{
+       return percent / 100000 * 100;
     }
 
     onClickAccess(item) {

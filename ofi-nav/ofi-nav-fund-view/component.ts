@@ -1,16 +1,16 @@
-import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {Router} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
-import {OfiManageNavPopupService} from '../ofi-manage-nav-popup/service';
+import { OfiManageNavPopupService } from '../ofi-manage-nav-popup/service';
 
-import {OfiCorpActionService} from '../../ofi-req-services/ofi-corp-actions/service';
-import {OfiNavService} from '../../ofi-req-services/ofi-product/nav/service';
+import { OfiCorpActionService } from '../../ofi-req-services/ofi-corp-actions/service';
+import { OfiNavService } from '../../ofi-req-services/ofi-product/nav/service';
 import {
     clearRequestedNavFundHistory,
     clearRequestedNavFundView,
@@ -27,8 +27,8 @@ import {
     MoneyValuePipe,
     NumberConverterService
 } from '@setl/utils';
-import {MultilingualService} from '@setl/multilingual';
-import {AlertsService} from "@setl/jaspero-ng2-alerts/src/alerts.service";
+import { MultilingualService } from '@setl/multilingual';
+import { AlertsService } from "@setl/jaspero-ng2-alerts/src/alerts.service";
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
@@ -62,6 +62,8 @@ export class OfiNavFundView implements OnInit, OnDestroy {
     }
     datePeriodItems: any;
     usingDatePeriodToSearch: boolean = false;
+    navToChangeTriggeredByDatePeriod: boolean = false;
+    navFromChangeTriggeredByDatePeriod: boolean = false;
 
     appConfig: AppConfig;
     isNavUploadModalDisplayed: boolean;
@@ -321,14 +323,12 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.dateFromConfig.max = moment();
         this.dateToConfig.min = moment();
 
-        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.subscribe(() => {
-            this.usingDatePeriodToSearch = false;
-            this.navHistoryForm.controls.datePeriod.setValue([]);
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.distinctUntilChanged().subscribe(() => {
+            this.resetDatePeriodOnDateChange('from');
         }));
 
-        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.subscribe(() => {
-            this.usingDatePeriodToSearch = false;
-            this.navHistoryForm.controls.datePeriod.setValue([]);
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.distinctUntilChanged().subscribe(() => {
+            this.resetDatePeriodOnDateChange('to');
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.controls.datePeriod.valueChanges.subscribe((val: any[]) => {
@@ -340,8 +340,13 @@ export class OfiNavFundView implements OnInit, OnDestroy {
             const navDateFrom = moment(dateArr[0]).format('YYYY-MM-DD');
             const navDateTo = moment(dateArr[1]).format('YYYY-MM-DD');
 
-            this.navHistoryForm.controls.navDateFrom.patchValue(navDateFrom);
-            this.navHistoryForm.controls.navDateTo.patchValue(navDateTo);
+            // mark that date period is triggering nav date range change.
+            this.navToChangeTriggeredByDatePeriod = true;
+            this.navFromChangeTriggeredByDatePeriod = true;
+
+            this.navHistoryForm.controls.navDateFrom.setValue(navDateFrom);
+            this.navHistoryForm.controls.navDateTo.setValue(navDateTo);
+
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.valueChanges.subscribe(() => {
@@ -479,5 +484,26 @@ export class OfiNavFundView implements OnInit, OnDestroy {
 
     private clearRequestedHistory(): void {
         this.redux.dispatch(clearRequestedNavFundHistory());
+    }
+
+    /**
+     * Reset date period drop down, and do other necessary things.
+     * @param type: to or from nav date
+     */
+    private resetDatePeriodOnDateChange(type: string): void {
+        // if the change is trigger by date period, do nothing
+        if (this.navToChangeTriggeredByDatePeriod === false && this.navFromChangeTriggeredByDatePeriod === false) {
+            this.navHistoryForm.controls.datePeriod.setValue([], { emitEvent: false });
+        } else {
+            if (type === 'to') {
+                this.navToChangeTriggeredByDatePeriod = false;
+            }
+
+            if (type === 'from') {
+                this.navFromChangeTriggeredByDatePeriod = false;
+            }
+            this.usingDatePeriodToSearch = false;
+        }
+
     }
 }

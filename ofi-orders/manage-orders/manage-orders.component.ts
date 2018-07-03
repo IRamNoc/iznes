@@ -6,6 +6,7 @@ import {
     Component,
     Inject,
     OnDestroy,
+    Input,
     OnInit,
     ViewChild,
 } from '@angular/core';
@@ -62,6 +63,7 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
+    selector: 'app-manage-orders',
     styleUrls: ['./manage-orders.component.css'],
     templateUrl: './manage-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -70,6 +72,8 @@ interface SelectedItem {
 /* Class. */
 export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     searchForm: FormGroup;
+
+    @Input() isImported: boolean;
 
     /* Datagrid server driven */
     total: number;
@@ -293,6 +297,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
             /* Update wallet name. */
             this.updateWalletConnection();
+
+            if (this.isInvestorUser && this.connectedWalletId) {
+                this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe((requested) => this.requestMyFundAccess(requested)));
+                this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
+            }
         }));
 
         let orderStream$;
@@ -307,10 +316,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             orderStream$ = this.requestedOfiInvOrdersOb;
             orderListStream$ = this.OfiInvOrdersListOb;
             this.subscriptions.push(orderListStream$.subscribe((list) => this.getInvOrdersListFromRedux(list)));
-            this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe(
-                (requested) => this.requestMyFundAccess(requested)));
-            this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
         }
+
 
         this.createForm();
         this.setInitialTabs();
@@ -685,11 +692,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.fundShare.decimalization = currentFundShare.maximumNumDecimal;
-        this.fundShare.mifiidChargesOneOff = currentFundShare.mifiidChargesOneOff;
-        this.fundShare.mifiidChargesOngoing = currentFundShare.mifiidChargesOngoing;
-        this.fundShare.mifiidTransactionCosts = currentFundShare.mifiidTransactionCosts;
-        this.fundShare.mifiidServicesCosts = currentFundShare.mifiidServicesCosts;
-        this.fundShare.mifiidIncidentalCosts = currentFundShare.mifiidIncidentalCosts;
+        this.fundShare.mifiidChargesOneOff = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOneOff);
+        this.fundShare.mifiidChargesOngoing = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOngoing);
+        this.fundShare.mifiidTransactionCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidTransactionCosts);
+        this.fundShare.mifiidServicesCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidServicesCosts);
+        this.fundShare.mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(currentFundShare.mifiidIncidentalCosts);
         this.fundShare.shareClassCode = currentFundShare.shareClassCode;
         this.detectChanges();
 
@@ -1182,6 +1189,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.logService.log('on message fail: ', error);
             this.toasterService.pop('error', toasterMessages.fail[this.language]);
         });
+    }
+
+    getDisplay() {
+        return (this.isImported) ? 'none' : 'block';
     }
 
     /**

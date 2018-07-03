@@ -90,10 +90,11 @@ export class ShareCalendarMandatory extends DynamicFormsValidator {
         ],
         mltag: 'txt_fundshare_redsettleperiod',
     };
-    subscriptionRedemptionCalendar: FormItem = {
-        type: FormItemType.text,
-        label: 'Calendar of subscription/redemption',
-        required: true,
-        mltag: 'txt_fundshare_subredcalendar',
-    };
+    // removed by PZ 28/06/2018
+    // subscriptionRedemptionCalendar: FormItem = {
+    //     type: FormItemType.text,
+    //     label: 'Calendar of subscription/redemption',
+    //     required: true,
+    //     mltag: 'txt_fundshare_subredcalendar',
+    // };
 }

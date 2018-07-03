@@ -10,7 +10,7 @@
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
+            <button [style.display]="getDisplay()" clrTabLink id="-{{id}}" [routerLink]="['/manage-orders', (id === 0) ? 'list' : tabdata.orderData.orderID]">
                 <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
                 <i class="fa fa-times-circle text-warning" *ngIf="id > 0" id="orderCloseTabBtn_{{id}}" (click)="closeTab(id)" [ngStyle]="{'margin-left': '14px', 'font-size':'18px'}"></i>
             </button>
@@ -37,7 +37,7 @@
         <div class="panel-body">
 
             <form [formGroup]="tabsControl[0].searchForm" id="search-orders-form" (keydown.enter)="$event.preventDefault()">
-                <div class="form-horizontal">
+                <div *ngIf="!isImported" class="form-horizontal">
                     <div class="row bordered">
                         <div class="form-group col-sm-3">
                             <label>{{'ISIN' | translate}}
@@ -253,12 +253,12 @@
                             <span *ngIf="order.orderType == 3">{{'Subscription' | translate}}</span>
                             <span *ngIf="order.orderType == 4">{{'Redemption' | translate}}</span>
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- investor {{showInvestor(order)}} -->{{order.investorCompanyName}}
 
 
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- isin -->
                             <button
                                 class="btn btn-link btn-sm"
@@ -267,7 +267,11 @@
                                 {{order.isin}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell>
+                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                            <!-- isin -->
+                            {{order.isin}}
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="isInvestorUser">
                             <!-- shareName -->
                             <button
                                 class="btn btn-link btn-sm"
@@ -275,6 +279,10 @@
                             >
                                 {{order.fundShareName}}
                             </button>
+                        </clr-dg-cell>
+                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                            <!-- shareName -->
+                            {{order.fundShareName}}
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, i, $event)">
                             <!-- assetManagementCompany -->{{order.amCompanyName}}
@@ -354,7 +362,7 @@
                             <button type="button" class="btn btn-sm btn-info" disabled *ngSwitchDefault>{{'Cancel' | translate}}</button>
 
                         </clr-dg-cell>
-                        <clr-dg-row-detail *cinvestmentAdvisorIDlrIfExpanded>
+                        <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
                                     <div class="form-group col-sm-3">

@@ -1,24 +1,26 @@
 import {Action} from 'redux';
 import * as ManagementCompanyActions from './actions';
-import {ManagementCompanyDetail, ManagementCompanyListState} from './model';
+import {ManagementCompanyDetail, managementCompanyListState, invManagementCompanyListState} from './model';
 import * as _ from 'lodash';
 import {List, fromJS, Map} from 'immutable';
 
-
-const initialState: ManagementCompanyListState = {
+const initialState: managementCompanyListState = {
     managementCompanyList: {},
-    requested: false
+    requested: false,
+};
+const invInitialState: invManagementCompanyListState = {
+    investorManagementCompanyList: {},
+    invRequested: false,
 };
 
-export const ManagementCompanyListReducer = function (state: ManagementCompanyListState = initialState, action: Action) {
+export const managementCompanyListReducer = function (state: managementCompanyListState = initialState, action: Action) {
 
     switch (action.type) {
         case ManagementCompanyActions.SET_MANAGEMENT_COMPANY_LIST:
-
             const mcData = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
             const managementCompanyList = formatManagementCompanyDataResponse(mcData);
             const newState = Object.assign({}, state, {
-                managementCompanyList
+                managementCompanyList,
             });
             return newState;
 
@@ -33,9 +35,29 @@ export const ManagementCompanyListReducer = function (state: ManagementCompanyLi
     }
 };
 
+export const invManagementCompanyListReducer = function (state: invManagementCompanyListState = invInitialState, action: Action) {
+
+    switch (action.type) {
+        case ManagementCompanyActions.SET_INV_MANAGEMENT_COMPANY_LIST:
+            const mcData2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+            const investorManagementCompanyList = formatManagementCompanyDataResponse(mcData2);
+            const newState2 = Object.assign({}, state, {
+                investorManagementCompanyList,
+            });
+            return newState2;
+
+        case ManagementCompanyActions.SET_REQUESTED_INV_MANAGEMENT_COMPANY:
+            return handleSetINVRequested(state, action);
+
+        case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
+            return handleClearINVRequested(state, action);
+
+        default:
+            return state;
+    }
+};
 
 function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<ManagementCompanyDetail> {
-
     const rawCompanyDataList = fromJS(rawCompanyData);
 
     const companyDetailList = Map(rawCompanyDataList.reduce(
@@ -76,13 +98,13 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
  * Handle action
  * @param state
  * @param action
- * @return {ManagementCompanyListReducer}
+ * @return {managementCompanyListReducer}
  */
-function handleSetRequested(state: ManagementCompanyListState, action: Action): ManagementCompanyListState {
+function handleSetRequested(state: managementCompanyListState, action: Action): managementCompanyListState {
     const requested = true;
 
     return Object.assign({}, state, {
-        requested
+        requested,
     });
 }
 
@@ -90,12 +112,40 @@ function handleSetRequested(state: ManagementCompanyListState, action: Action): 
  * Handle action
  * @param state
  * @param action
- * @return {ManagementCompanyListReducer}
+ * @return {managementCompanyListReducer}
  */
-function handleClearRequested(state: ManagementCompanyListState, action: Action): ManagementCompanyListState {
+function handleClearRequested(state: managementCompanyListState, action: Action): managementCompanyListState {
     const requested = false;
 
     return Object.assign({}, state, {
-        requested
+        requested,
+    });
+}
+
+/**
+ * Handle action
+ * @param state
+ * @param action
+ * @return {managementCompanyListReducer}
+ */
+function handleSetINVRequested(state: invManagementCompanyListState, action: Action): invManagementCompanyListState {
+    const invRequested = true;
+
+    return Object.assign({}, state, {
+        invRequested,
+    });
+}
+
+/**
+ * Handle action
+ * @param state
+ * @param action
+ * @return {managementCompanyListReducer}
+ */
+function handleClearINVRequested(state: invManagementCompanyListState, action: Action): invManagementCompanyListState {
+    const invRequested = false;
+
+    return Object.assign({}, state, {
+        invRequested,
     });
 }

@@ -1,0 +1,34 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-list"></i> {{'My requests' | translate}}</h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink>
+                Overview
+            </button>
+
+            <clr-tab-content>
+                <div class="information mb-1">
+                    <p class="m-0">
+                        {{'In this submodule, you can select the Asset Management Companies you want to work with and follow the status of your requests' | translate}}
+                    </p>
+                    <button [routerLink]="['../new']" class="btn btn-primary m-0">
+                        Make new request
+                    </button>
+                </div>
+
+                <my-requests-list [kycList]="kycList"></my-requests-list>
+            </clr-tab-content>
+        </clr-tab>
+
+        <clr-tab *ngFor="let tab of tabs">
+
+        </clr-tab>
+
+
+    </clr-tabs>
+
+</div>

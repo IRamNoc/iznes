@@ -104,42 +104,63 @@
             </div>
         </section>
     </form>
-    <section>
-        <h2><i class="fa fa-list"></i> {{'Invites recap:' | translate}}</h2>
-        <p>{{'Please find below invitations that have been sent to investors:' | translate}}</p>
-        <clr-datagrid #dataGrid>
-            <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Account Status' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'email'">{{'Email Address' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'companyName'">{{'Company Name' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'lastName'">{{'Last Name' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'firstName'">{{'First Name' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'invitedBy'">{{'Invitation Sent By' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'kycStarted'">{{'Date KYC Started' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'initationLink'">{{'Invitation Link' | translate}}</clr-dg-column>
-            <clr-dg-column [clrDgField]="'status'">{{'KYC Status' | translate}}</clr-dg-column>
+</div>
 
-            <clr-dg-row *clrDgItems="let item of inviteItems">
-                <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
-                <clr-dg-cell>{{item.tokenUsedAt}}</clr-dg-cell>
-                <clr-dg-cell>{{item.email}}</clr-dg-cell>
-                <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
-                <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
-                <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
-                <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
-                <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
-                <clr-dg-cell class="action">
-                    <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
-                        <i class="fa fa-copy"></i> {{'Copy link' | translate}}</button>
-                </clr-dg-cell>
-                <clr-dg-cell><span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span></clr-dg-cell>
-            </clr-dg-row>
+<div class="well">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-6">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2>{{panel.title}}</h2>
+            </a>
+        </div>
+        <div class="col-xs-6 text-right">
+        </div>
+    </div>
 
-            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <p class="subhead">Please find below invitations that have been sent to investors:</p>
 
-                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-            </clr-dg-footer>
-        </clr-datagrid>
+            <clr-datagrid #dataGrid>
+                <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Account Status' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'email'">{{'Email Address' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'companyName'">{{'Company Name' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'lastName'">{{'Last Name' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'firstName'">{{'First Name' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'invitedBy'">{{'Invitation Sent By' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'kycStarted'">{{'Date KYC Started' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'initationLink'">{{'Invitation Link' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'status'">{{'KYC Status' | translate}}</clr-dg-column>
 
-    </section>
+                <clr-dg-row *clrDgItems="let item of inviteItems">
+                    <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.tokenUsedAt}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.firstName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.invitedBy}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.kycStarted}}</clr-dg-cell>
+                    <clr-dg-cell class="action">
+                        <button class="btn btn-primary btn-sm" (click)="copyToClipboard(item.invitationLink)">
+                            <i class="fa fa-copy"></i> {{'Copy link' | translate}}
+                        </button>
+                    </clr-dg-cell>
+                    <clr-dg-cell>
+                        <span class="label label-{{enums.status[item.status].type}}">{{enums.status[item.status].label}}</span>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+
+        </div>
+    </div>
 </div>
