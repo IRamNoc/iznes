@@ -38,6 +38,7 @@ import {ClarityModule} from '@clr/angular';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import {LoginGuardService} from './login-guard.service';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 import {MultilingualService} from '@setl/multilingual';
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
@@ -50,6 +51,7 @@ const environment = {
 
 const ActivatedRouteStub = {
     params: Observable.of({token: ''}),
+    queryParams: Observable.of({email: '', error: ''}),
     snapshot: {
         params: {
             email: ''
@@ -106,7 +108,8 @@ describe('SetlLoginComComponent', () => {
                     useValue: environment,
                 },
                 LoginGuardService,
-                {provide: LogService, useClass: LogServiceMock}
+                {provide: LogService, useClass: LogServiceMock},
+                MenuSpecService,
             ]
         })
             .compileComponents();
