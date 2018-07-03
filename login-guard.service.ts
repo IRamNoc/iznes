@@ -47,21 +47,9 @@ export class LoginGuardService implements CanActivate {
             this.userTypeStr = userTypeStr;
         }));
 
-        // this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
-        //     console.log('menuspec: ', menuSpec);
-        //     console.log('this.menuSpec', this.menuSpec);
-        //
-        //     if (Object.keys(menuSpec).length == 0) {
-        //         this.menuSpec = this.appConfig.menuSpec;
-        //         this.menuSpec['hidden'] = this.appConfig.nonMenuLink;
-        //
-        //     } else {
-        //         this.menuSpec = menuSpec;
-        //     }
-        //
-        //     console.log('this.menuspec', this.menuSpec);
-        //
-        // }));
+        this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+            this.menuSpec = menuSpec;
+        }));
     }
 
     canActivate(next: ActivatedRouteSnapshot,
@@ -97,8 +85,9 @@ export class LoginGuardService implements CanActivate {
     }
 
     isMenuDisabled(url: string): boolean {
-
-        this.menuSpec = this.appConfig.menuSpec;
+        if (!this.menuSpec) {
+            this.menuSpec = Object.assign({}, this.appConfig.menuSpec, { hidden: this.appConfig.nonMenuLink });
+        }
 
         const disabledMenus: string[] = _.get(this.menuSpec, ['disabled'], []);
         return disabledMenus.indexOf(url) !== -1;
@@ -107,14 +96,16 @@ export class LoginGuardService implements CanActivate {
     getUserAllowUrl(): { static_link: string, dynamic_link: string }[] {
         let allowUrls: { static_link: string, dynamic_link: string }[] = [];
 
-        // const menuSpecs = this.menuSpec;
+        if (!this.menuSpec) {
+            this.menuSpec = Object.assign({}, this.appConfig.menuSpec, { hidden: this.appConfig.nonMenuLink });
+        }
 
-        let menuSpecs = this.appConfig.menuSpec;
+        const menuSpecs = this.menuSpec;
 
         const topProfileMenu = _.get(menuSpecs, ['top', 'profile', this.userTypeStr], []);
         const sideMenu = _.get(menuSpecs, ['side', this.userTypeStr], []);
         const disabledMenu = _.get(menuSpecs, 'disabled', []);
-        const nonMenuLink = _.get(this.appConfig.nonMenuLink, ['hidden', this.userTypeStr], []);
+        const nonMenuLink = _.get(menuSpecs, ['hidden', this.userTypeStr], []);
 
         // top profile menu urls
         topProfileMenu.forEach((item) => {
