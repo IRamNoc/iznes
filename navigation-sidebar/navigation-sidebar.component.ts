@@ -4,6 +4,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
 import {getMyDetail} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual/multilingual.service';
+import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -28,6 +29,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 private _changeDetectorRef: ChangeDetectorRef,
                 public _translate: MultilingualService,
                 private logService: LogService,
+                private menuSpecService: MenuSpecService,
                 private ngRedux: NgRedux<any>) {
     }
 
@@ -61,16 +63,19 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 console.warn('Navigation Render: Missing user type!');
             }
 
-            this.logService.log('menuSpec', this.appConfig.menuSpec, userTypeStr);
-            /* Translate the menu. */
-            this.menuJson = this.translateMenu(this.appConfig.menuSpec.side[userTypeStr]);
-            if (!this.menuJson) {
-                console.warn('Navigation Render: No menu structure found!');
-            }
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
 
-            this.menuJson && this.menuJson.forEach((row) => {
-                if (row['children'] != null) this.menuParent.push(row['element_id']);
+                /* Translate the menu. */
+                this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+                if (!this.menuJson) {
+                    console.warn('Navigation Render: No menu structure found!');
+                }
+
+                this.menuJson && this.menuJson.forEach((row) => {
+                    if (row['children'] != null) this.menuParent.push(row['element_id']);
+                });
             });
+
         });
 
     }
@@ -130,7 +135,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
         return routeRegex.test(this.router.url);
     }
 
-    public activeChildRoute(children){
+    public activeChildRoute(children) {
         let routerUrl = this.router.url;
         let active = false;
 
