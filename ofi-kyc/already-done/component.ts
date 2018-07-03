@@ -4,8 +4,9 @@ import {APP_CONFIG, AppConfig, SagaHelper} from '@setl/utils/index';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import {Endpoints} from '../config';
 import {MyUserService} from '@setl/core-req-services';
 import {ToasterService} from 'angular2-toaster';
@@ -89,8 +90,8 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.markForCheck();
 
             });
-        this.myDetails$
-            .takeUntil(this.unsubscribe)
+        this.myDetails$.pipe(
+            takeUntil(this.unsubscribe))
             .subscribe((d) => {
                 const phoneNumber = (d.phoneCode && d.phoneNumber) ? `${d.phoneCode} ${d.phoneNumber}` : '';
 
@@ -102,7 +103,9 @@ export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
         /* fetch backend for existing data to pre fill the form */
         this.ofiKycService.fetchInvestor();
 
-        this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
+        this.language$.pipe(
+            takeUntil(this.unsubscribe))
+            .subscribe((language) => this.lang = language);
     }
 
     onCancel() {

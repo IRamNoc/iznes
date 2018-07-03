@@ -1,7 +1,7 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 import {DebugElement, Directive, Input, Pipe, PipeTransform} from '@angular/core';
 import {By} from '@angular/platform-browser';
-import {of} from 'rxjs/observable/of';
+import {of} from 'rxjs';
 
 
 import {NgRedux} from '@angular-redux/store';

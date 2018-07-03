@@ -1,7 +1,8 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     template : '<router-outlet></router-outlet>'
@@ -22,8 +23,10 @@ export class MyRequestsContainerComponent implements OnInit, OnDestroy{
 
     initSubscriptions(){
         this.myKycListRequested$
-            .filter(requested => !requested)
-            .takeUntil(this.unsubscribe)
+            .pipe(
+                filter(requested => !requested),
+                takeUntil(this.unsubscribe),
+            )
             .subscribe(() => {
                 this.getRequests();
             })

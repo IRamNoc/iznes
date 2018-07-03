@@ -27,8 +27,9 @@ import {
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import * as _ from 'lodash';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import {SagaHelper} from '@setl/utils';
 import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
@@ -245,8 +246,8 @@ export class OfiKycService {
         if (this.isListeningGetInvitationsByUserAmCompany) {
             return;
         }
-        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$
-            .takeUntil(this.unSubscribe)
+        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$.pipe(
+            takeUntil(this.unSubscribe))
             .subscribe((d) => {
                 if (d) {
                     return;

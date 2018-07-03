@@ -247,10 +247,12 @@ export interface OfiProductState {
     ofiFundShareList: OfiFundShareListState;
     ofiUmbrellaFund: UmbrellaFundState;
     ofiFundShare: OfiFundShareState;
+    ofiFundShareAudit: OfiFundShareAuditState;
     ofiFundShareDocs: OfiFundShareDocsState;
     ofiFundShareSelectedFund: OfiFundShareSelectedFundState;
     ofiManageNav: OfiManageNavState;
     ofiNavLatest: OfiNavLatestState;
+    ofiNavAudit: OfiNavAuditState;
     ofiProductConfiguration: OfiProductConfigState;
     ofiProductCharacteristics: productCharacteristicsState;
 }

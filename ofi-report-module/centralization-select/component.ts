@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import 'rxjs/add/operator/takeUntil';
+
 import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import {Router} from '@angular/router';

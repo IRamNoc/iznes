@@ -1,3 +1,5 @@
+
+import {debounceTime, take, switchMap, filter} from 'rxjs/operators';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
@@ -28,9 +30,9 @@ import {
     LogService,
     SagaHelper,
 } from '@setl/utils';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/take';
+
+
+
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ToasterService } from 'angular2-toaster';
@@ -322,7 +324,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        const filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
+        const filterStream$ = this.OfiAmOrdersFiltersOb.pipe(take(1))
         const combined$ = orderStream$.combineLatest(filterStream$);
 
         const combinedSubscription = combined$.subscribe(([requested, filters]) => {
@@ -339,9 +341,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let routeParams$ = this.route.params;
         let routeCombinedSubscription = orderListStream$
-            .filter(orders => !_.isEmpty(orders))
-            .take(1)
-            .switchMap(() => routeParams$)
+            .pipe(
+                filter(orders => !_.isEmpty(orders)),
+                take(1),
+                switchMap(() => routeParams$),
+            )
             .subscribe(params => {
                 this.routeUpdate(params);
             });
@@ -363,7 +367,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(routeCombinedSubscription);
 
         this.subscriptions.push(combinedSubscription);
-        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => this.requestSearch()));
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
 
         this.detectChanges();
