@@ -101,7 +101,7 @@
                                             <clr-dg-cell id="access_slider_row_{{i}}">
                                                 <div class="switch-container">
                                                     <label class="switch">
-                                                        <input type="checkbox" id="{{row['isin'] + '-access'}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
+                                                        <input type="checkbox" id="access_slider_{{i}}" [checked]="access[row['id']]['access']" (click)="onClickAccess(access[row['id']])">
                                                         <span class="slider round"></span>
                                                     </label>
                                                 </div>
@@ -173,12 +173,12 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="share_current_override">{{'Current Override' | translate}}</label>
                     <input
-                            *ngIf="access[currentOverride]['overrideDocumentTitle'] == '' || access[currentOverride]['overrideDocumentTitle'] == null"
-                            type="text"
-                            id="share_current_override"
-                            name="share_current_override"
-                            value="{{access[currentOverride]['overrideAmount'] | moneyValue: 5}}"
-                            disabled>
+                        *ngIf="access[currentOverride]['overrideDocumentTitle'] == '' || access[currentOverride]['overrideDocumentTitle'] == null"
+                        type="text"
+                        id="share_current_override"
+                        name="share_current_override"
+                        value="{{access[currentOverride]['overrideAmount'] | moneyValue: 5}}"
+                        disabled>
                     <div *ngIf="access[currentOverride]['overrideDocumentTitle'] != '' && access[currentOverride]['overrideDocumentTitle'] != null" class="filedrop-wrapper">
                         <input type="text" class="wrapper-current-override" id="share_current_override" name="share_current_override" value="{{access[currentOverride]['overrideAmount'] | moneyValue: 5}}" disabled>
                         <setl-file-viewer id="override_file_viewer" *ngIf="!access[currentOverride]['newOverride']" [fileHash]="access[currentOverride]['overrideDocument']"></setl-file-viewer>
