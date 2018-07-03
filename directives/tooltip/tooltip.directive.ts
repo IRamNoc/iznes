@@ -655,8 +655,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltip.remove();
             this.divTooltip = null;
         }
-        if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
-            this.autoshowTooltip();
+        if (this.isTour) {
+            this.divBackgroundTour.remove();
         }
     }
 
