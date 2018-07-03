@@ -232,7 +232,11 @@
 {{'&lt;/form&gt;'}}</code></pre>
                 <br>
                 <pre><code>{{'[formsteps]="[{form: myFormSteps1, forceNext: true, title1: \'This is my first step\', redirect: \'ui-layouts/tooltips\'}]"'}}</code></pre>
-                <br>
+                <p class="mb-0">
+                    Call custom events from component to directive (resize if form change):
+                    <button type="button" class="m-1 btn btn-warning" (click)="addField()">Add 1 field to form</button>
+                    <button type="button" class="m-1 btn btn-warning" (click)="removeField()">Remove 1 field to form</button>
+                </p>
                 <b>{{'Example' | translate}}:</b>
                 <div class="docBox">
                     <form [formGroup]="myFormSteps1" novalidate id="myFormSteps1" (ngSubmit)="myFormSteps1.valid && save1(myFormSteps1.value)" [formsteps]="[{form: myFormSteps1, forceNext: true, title1: 'This is my first step', redirect: 'ui-layouts/tooltips'}]">
@@ -260,6 +264,18 @@
                                         <input type="text" class="form-control" formControlName="lastname" [placeholder]="_translate.translate('your last name here')">
                                     </div>
                                     <div *ngIf="myFormSteps1.controls.step1.controls.lastname.hasError('required') && myFormSteps1.controls.step1.controls.lastname.touched" class="text-danger">{{'This field is required' | translate}}</div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="myFormSteps1.controls.step1.controls.nickname">
+                                <div class="form-group col-sm-12">
+                                    <label>
+                                        {{'NickName' | translate}}
+                                        <div class="mandatory text-danger">*</div>
+                                    </label>
+                                    <div>
+                                        <input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')">
+                                    </div>
+                                    <div *ngIf="myFormSteps1.controls.step1.controls.nickname.hasError('required') && myFormSteps1.controls.step1.controls.nickname.touched" class="text-danger">{{'This field is required' | translate}}</div>
                                 </div>
                             </div>
                         </section>
