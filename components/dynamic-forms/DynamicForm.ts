@@ -11,7 +11,7 @@ export interface FormItem {
     type: FormItemType;
     validator?: ValidatorFn;
     value?: () => any;
-
+    maxLength?: number;
     disabled?: boolean;
     hidden?: () => boolean;
     isBlockchainValue?: boolean;
