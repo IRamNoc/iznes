@@ -4,5 +4,8 @@
     "main": "index.js",
     "repository": "http://si-nexus01.dev.setl.io/SETL_Modules/core-balances.git",
     "author": "Ollie Kett <ollie.kett@setl.io>",
-    "license": "MIT"
+    "license": "MIT",
+    "dependencies": {
+        "json2csv": "^4.1.5"
+    }
 }
