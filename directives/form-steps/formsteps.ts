@@ -3,6 +3,7 @@ import {ControlContainer, FormControl, FormControlDirective, FormControlName} fr
 import * as _ from 'lodash';
 import {MultilingualService} from '@setl/multilingual';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs/Rx';
 
 @Directive({
     selector: '[formsteps]'
@@ -66,31 +67,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        if (this.config.length > 1 && Array.isArray(this.config)) {
-            this.isMultiForm = true;
-
-            let cpt = 0;
-            for (let i in this.config) {
-                if (this.config[i].form !== undefined) {
-                    if (this.config[i].submitted === undefined) {
-                        this.config[i].submitted = false; // si on repasse sur la page et qu'un form a deja été rempli - on recup via auto save l'info et on popule cette propriete
-                    }
-                    this.config[i].form.valueChanges.subscribe((form) => this.showHideButtons(form));
-                }
-                if (this.config[i].startHere !== undefined && this.config[i].startHere) {
-                    this.currentStep = cpt;
-                }
-                cpt++;
-            }
-        } else {
-            this.config = this.config[0];
-            // get forceNext if exist
-            if (this.config.forceNext !== undefined && this.config.forceNext !== false) {
-                this.forceNext = this.config.forceNext;
-            }
-            // listen to changes on form
-            this.config.form.valueChanges.subscribe((form) => this.showHideButtons(this.config.form));
-        }
+        this.initConfig();
 
         // calculate nbSteps
         this.nbSteps = (this.isMultiForm) ? this.config.length : Object.keys(this.config.form.controls).length;
@@ -270,6 +247,34 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    initConfig() {
+        if (this.config.length > 1 && Array.isArray(this.config)) {
+            this.isMultiForm = true;
+
+            let cpt = 0;
+            for (let i in this.config) {
+                if (this.config[i].form !== undefined) {
+                    if (this.config[i].submitted === undefined) {
+                        this.config[i].submitted = false; // si on repasse sur la page et qu'un form a deja été rempli - on recup via auto save l'info et on popule cette propriete
+                    }
+                    this.config[i].form.valueChanges.subscribe((form) => this.showHideButtons(form));
+                }
+                if (this.config[i].startHere !== undefined && this.config[i].startHere) {
+                    this.currentStep = cpt;
+                }
+                cpt++;
+            }
+        } else {
+            this.config = this.config[0];
+            // get forceNext if exist
+            if (this.config.forceNext !== undefined && this.config.forceNext !== false) {
+                this.forceNext = this.config.forceNext;
+            }
+            // listen to changes on form
+            this.config.form.valueChanges.subscribe((form) => this.showHideButtons(this.config.form));
+        }
+    }
+
     ngAfterViewInit() {
         const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
         setTimeout(() => {
@@ -373,7 +378,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         } else {
             // NEXT
             if (this.currentStep < (this.nbSteps - 1)) {
-                console.log('next');
+                // console.log('next');
                 if (this.config.form.controls['step' + (this.currentStep + 1)].valid || (this.config.forceNext !== undefined && this.config.forceNext === true)) {
                     return true;
                 } else {
@@ -386,7 +391,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 }
             // SUBMIT
             } else {
-                console.log('submit');
+                // console.log('submit');
                 if (this.config.form.controls['step' + (this.currentStep + 1)].valid) {
                     return true;
                 } else {
@@ -522,6 +527,13 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             marginsTop = parseInt(window.getComputedStyle(this.divFinished,null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
             this.divSlider.style.height = marginsTop + this.divFinished.offsetHeight + 'px';
         }
+    }
+
+    refreshFormSteps() {
+        const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
+        this.showHideButtons(form);
+        this.resizeHeight();
+        this.resizeWidth();
     }
 
     ngOnDestroy(): void {
