@@ -37,6 +37,11 @@
                 <div class="docBox">
                     <h1>{{'Full Form' | translate}}</h1>
                     <!--all field in 1 form-->
+                    <p class="mb-0">
+                        Call custom events from component to directive (re-calcul percentage):
+                        <button type="button" class="m-1 btn btn-warning" (click)="addField()">Add 1 field to form</button>
+                        <button type="button" class="m-1 btn btn-warning" (click)="removeField()">Remove 1 field to form</button>
+                    </p>
                     <form [formGroup]="myForm1" novalidate (ngSubmit)="myForm1.valid && save(myForm1.value)">
                         <div id="formPercent1" style="width: 99%" [formpercent]="{form: myForm1}"></div>
                         <br>
@@ -46,6 +51,7 @@
                         <div formGroupName="mygroup">
                             <div class="form-group"><input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')"></div>
                             <div class="form-group"><input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')"></div>
+                            <div class="form-group" *ngIf="myForm1.controls.mygroup.controls.nickname"><input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')"></div>
                         </div>
                     </form>
                 </div>
