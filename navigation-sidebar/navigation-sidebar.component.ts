@@ -1,10 +1,10 @@
-import {AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
-import {getMyDetail} from '@setl/core-store';
-import {MultilingualService} from '@setl/multilingual/multilingual.service';
-import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
+import { AfterViewInit, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
+import { APP_CONFIG, AppConfig, immutableHelper, LogService } from '@setl/utils';
+import { getMyDetail } from '@setl/core-store';
+import { MultilingualService } from '@setl/multilingual/multilingual.service';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -63,18 +63,22 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 console.warn('Navigation Render: Missing user type!');
             }
 
-            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+            // this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
 
-                /* Translate the menu. */
-                this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
-                if (!this.menuJson) {
-                    console.warn('Navigation Render: No menu structure found!');
-                }
+            // if (Object.keys(menuSpec).length == 0) menuSpec = this.appConfig.menuSpec;
 
-                this.menuJson && this.menuJson.forEach((row) => {
-                    if (row['children'] != null) this.menuParent.push(row['element_id']);
-                });
+            const menuSpec = this.appConfig.menuSpec;
+
+            /* Translate the menu. */
+            this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+            if (!this.menuJson) {
+                console.warn('Navigation Render: No menu structure found!');
+            }
+
+            this.menuJson && this.menuJson.forEach((row) => {
+                if (row['children'] != null) this.menuParent.push(row['element_id']);
             });
+            // });
 
         });
 
