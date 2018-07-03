@@ -1,3 +1,5 @@
+
+import {debounceTime} from 'rxjs/operators';
 import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -5,8 +7,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {fromJS} from 'immutable';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {NumberConverterService, MoneyValuePipe, NavHelperService} from '@setl/utils';
 import {Datagrid} from '@clr/angular';
 
@@ -92,7 +93,7 @@ export class OfiNavAuditComponent implements OnInit, OnDestroy {
             dateTo: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
-        this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe((values) => {
+        this.subscriptionsArray.push(this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((values) => {
             this.redux.dispatch(clearRequestedNavAudit());
         }));
     }

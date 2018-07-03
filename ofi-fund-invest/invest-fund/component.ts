@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
@@ -752,7 +753,7 @@ The IZNES Team.</p>`;
             }
         }[type];
 
-        this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
+        this.inputSubscription = triggering.valueChanges.pipe(distinctUntilChanged()).subscribe(callBack);
     }
 
     isValidOrderValue() {

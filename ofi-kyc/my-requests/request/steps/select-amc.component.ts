@@ -1,9 +1,10 @@
+
+import {combineLatest as observableCombineLatest, Subject, Observable} from 'rxjs';
+import { takeUntil, filter as rxfilter } from 'rxjs/operators';
 import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {ActivatedRoute} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
 import {isEmpty, isNil, keyBy, filter} from 'lodash';
 
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
@@ -68,16 +69,19 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     initSubscriptions() {
         this.requestedManagementCompanyList$
-            .filter(requested => !requested)
-            .takeUntil(this.unsubscribe)
+            .pipe(
+                filter(requested => !requested),
+                takeUntil(this.unsubscribe),
+            )
             .subscribe(() => {
                 this.getAssetManagementCompanies();
             })
         ;
 
-        Observable
-            .combineLatest(this.managementCompanyList$, this.myKycList$)
-            .takeUntil(this.unsubscribe)
+        observableCombineLatest(this.managementCompanyList$, this.myKycList$)
+            .pipe(
+                takeUntil(this.unsubscribe),
+            )
             .subscribe(([managementCompanies, kycList]) => {
                 this.managementCompanies = keyBy(managementCompanies, 'companyID');
                 this.kycList = kycList;

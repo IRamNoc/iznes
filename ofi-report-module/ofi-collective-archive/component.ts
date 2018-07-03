@@ -2,7 +2,7 @@ import {
     Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef, Pipe,
     PipeTransform
 } from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {immutableHelper, NumberConverterService, mDateHelper} from '@setl/utils';

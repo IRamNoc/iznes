@@ -1,12 +1,12 @@
+
+import {forkJoin as observableForkJoin,  Observable ,  Subscription } from 'rxjs';
+
+import {take, first} from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { fromJS } from 'immutable';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/forkJoin';
-import 'rxjs/add/operator/take';
-import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
@@ -193,23 +193,23 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         let fork;
         if (this.mode === FundShareMode.Update) {
-            fork = Observable.forkJoin([
-                this.route.paramMap.first(),
-                this.managementCompanyAccessListOb.first(),
-                this.fundShareOb.take(2),
-                this.fundShareDocsOb.take(2),
-                this.fundListOb.first(),
+            fork = observableForkJoin([
+                this.route.paramMap.pipe(first()),
+                this.managementCompanyAccessListOb.pipe(first()),
+                this.fundShareOb.pipe(take(2)),
+                this.fundShareDocsOb.pipe(take(2)),
+                this.fundListOb.pipe(first()),
                 this.shareListObs.first(),
-                this.umbrellaFundListOb.first(),
+                this.umbrellaFundListOb.pipe(first()),
                 this.productionOb.first(),
             ]);
         } else {
-            fork = Observable.forkJoin([
-                this.route.paramMap.first(),
-                this.managementCompanyAccessListOb.first(),
-                this.fundListOb.first(),
+            fork = observableForkJoin([
+                this.route.paramMap.pipe(first()),
+                this.managementCompanyAccessListOb.pipe(first()),
+                this.fundListOb.pipe(first()),
                 this.shareListObs.first(),
-                this.umbrellaFundListOb.first(),
+                this.umbrellaFundListOb.pipe(first()),
                 this.productionOb.first(),
             ]);
         }

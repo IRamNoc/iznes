@@ -3,7 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {LogService} from '@setl/utils';
 import {MultilingualService} from '@setl/multilingual';
 

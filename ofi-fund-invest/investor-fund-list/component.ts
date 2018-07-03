@@ -9,7 +9,7 @@ import {
     MemberService,
 } from '@setl/core-req-services';
 import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription, Observable} from 'rxjs';
 import {NumberConverterService, immutableHelper} from '@setl/utils';
 import {ActivatedRoute, Router, Params} from '@angular/router';
 import {ofiListOfFundsComponentActions, clearRequestedFundAccessMy} from '@ofi/ofi-main/ofi-store';
@@ -17,8 +17,7 @@ import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
 import {OrderType} from '../../ofi-orders/order.model';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/combineLatest';
+
 import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
 import {ReportingService} from '@setl/core-balances/reporting.service';
 import has = Reflect.has;
