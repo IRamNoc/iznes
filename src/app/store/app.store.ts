@@ -42,7 +42,7 @@ const composeMiddlewares = window['devToolsExtension'] ? compose(
  * @return {Store<S>}
  */
 export function createAppStore(): Store<any> {
-    return createStore<any>(
+    return createStore<any, any, any, any>(
         rootReducer,
         composeMiddlewares
     );
