@@ -1,6 +1,9 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
 import * as _ from 'lodash';
 import {MultilingualService} from '@setl/multilingual';
+import {NgRedux, select} from '@angular-redux/store';
+import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
+import {Router} from "@angular/router";
 
 @Directive({
     selector: '[tooltip]'
@@ -13,24 +16,28 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     divTooltipTitle: any;
     divTooltipText: any;
     divTooltipCloseBtn: any;
+    divBackgroundTour: any;
     btnContainer: any;
     btnBack: any;
     btnNext: any;
     btnDone: any;
     arrowSize = 10; // arrow size
     scrollTop = 0;
+    scrollListener = null;
     parentDiv: any;
     pCases = [0, 0, 0, 0]; // top - right - bottom - left
     tourConfig = [];
     step = 0;
     autoNextTimeout: any;
-    tourDuration = 5000;
+    tourDuration = 5000; // default
     isAutoNext = true;
     isTour = false;
 
     constructor(
         private _el: ElementRef,
         private renderer: Renderer2,
+        private _ngRedux: NgRedux<any>,
+        private _router: Router,
         private _translate: MultilingualService,
     ) {
         this.el = this._el.nativeElement;
@@ -38,9 +45,25 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        // force overflow hidden to prevent scroll outside website
+        document.body.style.overflow = 'hidden';
+
         // this.config.autoshow = (this.el.id !== 'bug') ? false : true;   // debug: keep auto only if id="bug"
         if (this.config.length > 1) { // tooltip Tour
             this.isTour = true;
+
+            // add black bglayer
+            this.divBackgroundTour = document.createElement('div');
+            this.divBackgroundTour.style.position = 'absolute';
+            this.divBackgroundTour.style.left = '0';
+            this.divBackgroundTour.style.top = '0';
+            this.divBackgroundTour.style.backgroundColor = 'rgba(0,0,0,0.6)';
+            this.divBackgroundTour.style.width = '100%';
+            this.divBackgroundTour.style.zIndex = 1002;
+            const pageSize = this.getPageSize();
+            this.divBackgroundTour.style.height = pageSize.height + 'px';
+            document.body.appendChild(this.divBackgroundTour);
+
             for (const conf of this.config) {
                 this.tourConfig.push(_.clone(conf));
             }
@@ -70,19 +93,20 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('mouseenter') onMouseEnter(): void {
         this.checkIfTooltipExists();
         if (this.parentDiv) {
-            this.parentDiv.addEventListener('scroll', (event) => {
+            this.scrollListener = this.parentDiv.addEventListener('scroll', (event) => {
                 this.getScroll(event);
             }, false);
-            if (this.scrollTop === 0) {
-                this.scrollTop = this.parentDiv.scrollTop;
-            }
+            this.scrollTop = this.parentDiv.scrollTop;
         }
-        this.showTooltip();
+        if (this.config.autoshow === undefined || this.config.autoshow === false) {
+            this.showTooltip();
+        }
     }
 
     @HostListener('mousemove', ['$event']) onMouseOver(event: MouseEvent): void {
         if (this.config.autoshow === undefined || this.config.autoshow === false) {
             if (this.el === event.target) {
+                this.checkIfTooltipExists();
                 this.moveTooltip();
             }
         }
@@ -107,11 +131,11 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.parentDiv.addEventListener('scroll', (event) => {
                     this.getScroll(event);
                 }, false);
-                if (this.scrollTop === 0) {
-                    this.scrollTop = this.parentDiv.scrollTop;
-                }
+                this.scrollTop = this.parentDiv.scrollTop;
             }
             this.showTooltip();
+            this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{id: this.config.target}]});
+            this._ngRedux.dispatch(setAppliedHighlight());
         }
     }
 
@@ -170,6 +194,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltipText.innerHTML += this.config.text;
 
             if (this.isTour) {
+                this.divTooltip.style.zIndex = 1003;
+
                 // add button back/next
                 this.btnContainer = document.createElement('div');
                 this.btnContainer.className = 'btnTourContainer';
@@ -182,6 +208,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.btnBack.innerHTML = this._translate.translate('Back');
                     this.btnBack.onclick = (event) => {
                         if (event.target.id === 'btnTourBack_' + randomID) {
+                            this._ngRedux.dispatch(clearAppliedHighlight());
                             clearTimeout(this.autoNextTimeout);
                             this.isAutoNext = false;
                             this.prevStep();
@@ -189,16 +216,32 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     };
                     this.btnContainer.appendChild(this.btnBack);
                 }
-                if ((this.step) < (this.tourConfig.length - 1)) {
+                let hasRedirect = false;
+                if (this.config.redirect !== undefined && this.config.redirect !== '') {
+                    hasRedirect = true;
+                }
+                if ((this.step) < (this.tourConfig.length - 1) || hasRedirect) {
                     this.btnNext = document.createElement('button');
                     this.btnNext.id = 'btnTourNext_' + randomID;
                     this.btnNext.className = 'btn btn-sm btn-success';
                     this.btnNext.innerHTML = this._translate.translate('Next');
                     this.btnNext.onclick = (event) => {
                         if (event.target.id === 'btnTourNext_' + randomID) {
-                            clearTimeout(this.autoNextTimeout);
-                            this.isAutoNext = false;
-                            this.nextStep();
+                            if (hasRedirect) {
+                                // do same thing Done button + redirect
+                                this._ngRedux.dispatch(clearAppliedHighlight());
+                                clearTimeout(this.autoNextTimeout);
+                                this.isAutoNext = false;
+                                this.step += 1;
+                                this.hideTooltip();
+                                this.divBackgroundTour.remove();
+                                this._router.navigate([this.config.redirect]);
+                            } else {
+                                this._ngRedux.dispatch(clearAppliedHighlight());
+                                clearTimeout(this.autoNextTimeout);
+                                this.isAutoNext = false;
+                                this.nextStep();
+                            }
                         }
                     };
                     this.btnContainer.appendChild(this.btnNext);
@@ -209,10 +252,12 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.btnDone.innerHTML = this._translate.translate('Done');
                     this.btnDone.onclick = (event) => {
                         if (event.target.id === 'btnTourDone_' + randomID) {
+                            this._ngRedux.dispatch(clearAppliedHighlight());
                             clearTimeout(this.autoNextTimeout);
                             this.isAutoNext = false;
                             this.step += 1;
                             this.hideTooltip();
+                            this.divBackgroundTour.remove();
                         }
                     };
                     this.btnContainer.appendChild(this.btnDone);
@@ -222,7 +267,20 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             // if tour launch timer
             if (this.isTour && this.isAutoNext) {
                 this.autoNextTimeout = setTimeout(() => {
-                    this.nextStep();
+                    if ((this.step) < (this.tourConfig.length - 1)) {
+                        this._ngRedux.dispatch(clearAppliedHighlight());
+                        this.nextStep();
+                    } else {
+                        this._ngRedux.dispatch(clearAppliedHighlight());
+                        clearTimeout(this.autoNextTimeout);
+                        this.isAutoNext = false;
+                        this.step += 1;
+                        this.hideTooltip();
+                        this.divBackgroundTour.remove();
+                        if (this.config.redirect !== undefined && this.config.redirect !== '') {
+                            this._router.navigate([this.config.redirect]);
+                        }
+                    }
                 }, this.config.duration);
             }
         }
@@ -284,6 +342,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     moveTooltip(): void {
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
+            this.scrollTop = this.parentDiv.scrollTop;
+
             // reset array
             this.pCases = [0, 0, 0, 0];
 
@@ -293,11 +353,14 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.el = (this.isTour) ? document.getElementById(this.config.target) : this.el;
             const elRect = this.el.getBoundingClientRect();
 
-            // position absolute fix
+            const isChildContainer = this.isChild(this.parentDiv, this.el);
             const elPosition = window.getComputedStyle(this.el,null).getPropertyValue('position');
-            if (elPosition === 'absolute') {
+            if (!isChildContainer) {
+                this.scrollTop = 0;
+            } else if (elPosition === 'absolute') {
                 this.scrollTop = 0;
             }
+
             // tooltip position
             let newTop: any = Number(this.getOffset(this.el).top - this.divTooltip.offsetHeight - this.arrowSize - this.scrollTop);
             let newLeft: any = Number((elRect.left + (this.el.offsetWidth / 2)) - (this.divTooltip.offsetWidth / 2));
@@ -309,7 +372,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.pCases[0] = 1;
             }
             // too low
-            if ((newTop + this.divTooltip.offsetHeight) > pageSize.height) {
+            if (Number(newTop + this.divTooltip.offsetHeight) > pageSize.height) {
                 this.pCases[2] = 1;
             }
             // too left
@@ -317,7 +380,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.pCases[3] = 1;
             }
             // too right
-            if ((newLeft + this.divTooltip.offsetWidth) > pageSize.width) {
+            if (Number(newLeft + this.divTooltip.offsetWidth) > pageSize.width) {
                 this.pCases[1] = 1;
             }
 
@@ -327,7 +390,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 case '0,0,0,1': // middle left
                     // tooltip position
                     newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
-                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
                     if (Number(newTop + this.divTooltip.offsetHeight) >= pageSize.height) {
                         newTop = Number(pageSize.height - this.arrowSize - this.divTooltip.offsetHeight);
                         const posYTooltip = newTop;
@@ -337,10 +400,10 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                         // change arrow direction
                         this.applyArrowClass('tooltips-left');
                         // move arrow position
-                        const roundPercent = (5 * Math.round(percent / 5));
-                        if (roundPercent !== 50) {
-                            this.divTooltip.classList.add('tooltips-left' + roundPercent);
-                        }
+                        let roundPercent = (5 * Math.round(percent / 5));
+                        roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                        roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                        this.divTooltip.classList.add('tooltips-left' + roundPercent);
                     } else {
                         // change arrow direction
                         this.applyArrowClass('tooltips-left');
@@ -349,75 +412,68 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 case '0,1,0,0': // middle right
                     // tooltip position
                     newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
-                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                    if (Number(newTop + this.divTooltip.offsetHeight) >= pageSize.height) {
-                        newTop = Number(pageSize.height - this.arrowSize - this.divTooltip.offsetHeight);
-                        const posYTooltip = newTop;
-                        const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                        const tooltipSize = this.divTooltip.offsetHeight;
-                        const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-right');
-                        // move arrow position
-                        const roundPercent = (5 * Math.round(percent / 5));
-                        if (roundPercent !== 50) {
-                            this.divTooltip.classList.add('tooltips-right' + roundPercent);
-                        }
-                    } else {
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-right');
-                    }
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    this.applyArrowClass('tooltips-right');
                     break;
                 case '1,0,0,1': // corner top-left
                     newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
-                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                    if (Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
-                        newTop = this.arrowSize;
-                        const posYTooltip = newTop;
-                        const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                        const tooltipSize = this.divTooltip.offsetHeight;
-                        const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-left');
-                        // move arrow position
-                        const roundPercent = (5 * Math.round(percent / 5));
-                        if (roundPercent !== 50) {
-                            this.divTooltip.classList.add('tooltips-left' + roundPercent);
-                        }
-                    } else {
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-left');
-                    }
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    this.applyArrowClass('tooltips-left');
+                    // if (Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
+                    //     newTop = this.arrowSize;
+                    //     const posYTooltip = newTop;
+                    //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
+                    //     const tooltipSize = this.divTooltip.offsetHeight;
+                    //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-left');
+                    //     // move arrow position
+                    //     let roundPercent = (5 * Math.round(percent / 5));
+                    //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                    //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                    //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
+                    // } else {
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-left');
+                    // }
                     break;
                 case '1,1,0,0': // corner top-right
                     newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
-                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                    if (Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
-                        newTop = this.arrowSize;
-                        const posYTooltip = newTop;
-                        const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                        const tooltipSize = this.divTooltip.offsetHeight;
-                        const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-right');
-                        // move arrow position
-                        const roundPercent = (5 * Math.round(percent / 5));
-                        if (roundPercent !== 50) {
-                            this.divTooltip.classList.add('tooltips-right' + roundPercent);
-                        }
-                    } else {
-                        // change arrow direction
-                        this.applyArrowClass('tooltips-right');
-                    }
+                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2) - this.scrollTop);
+                    this.applyArrowClass('tooltips-right');
+                    // if (Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
+                    //     newTop = this.arrowSize;
+                    //     const posYTooltip = newTop;
+                    //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
+                    //     const tooltipSize = this.divTooltip.offsetHeight;
+                    //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-right');
+                    //     // move arrow position
+                    //     let roundPercent = (5 * Math.round(percent / 5));
+                    //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                    //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                    //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
+                    //     this.divTooltip.classList.add('tooltips-right' + roundPercent);
+                    // } else {
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-right');
+                    // }
                     break;
                 case '1,0,0,0': // middle top
-                    newTop = Number(this.getOffset(this.el).top + this.el.offsetHeight + this.arrowSize);
+                    newTop = Number(this.getOffset(this.el).top + this.el.offsetHeight + this.arrowSize - this.scrollTop);
                     // change arrow direction
                     this.applyArrowClass('tooltips-top');
                     if (this.config.title === undefined || this.config.title === '') {
                         this.divTooltip.classList.add('tooltips-top-text');
                     }
                     break;
+                case '0,1,1,0': // corner bottom right
+                    newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                case '0,0,1,1': // corner bottom left
+                    newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
             }
 
             // calcul decal from previous position - first time decal = new
@@ -426,17 +482,35 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             let decalLeft = (this.divTooltip.style.top !== '') ? parseInt(newLeft) - parseInt(this.divTooltip.style.left) : newLeft;
             decalLeft = (decalLeft < 0) ? decalLeft * -1 : decalLeft;
 
-            if (this.config.autoshow !== undefined && this.config.autoshow === true && elPosition !== 'absolute' && this.config.target === undefined) {
+            // hide only scrollable tooltips
+            if (this.config.autoshow !== undefined && this.config.autoshow === true && isChildContainer && elPosition !== 'absolute' && this.config.target === undefined) {
                 const topBarSizeHeight = 75;
-                if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - this.divTooltip.offsetHeight - (this.arrowSize * 2)) <= 1) {
+                const arrowSize = (this.divTooltip.classList.contains('tooltips-left') || this.divTooltip.classList.contains('tooltips-right')) ? 0 : (this.arrowSize * 2);
+                const tooltipSize = (this.divTooltip.classList.contains('tooltips-left') || this.divTooltip.classList.contains('tooltips-right')) ? ((this.getOffset(this.el).top - (this.getOffset(this.el).top + (this.el.offsetWidth / 2) - (this.divTooltip.offsetHeight / 2)))) : this.divTooltip.offsetHeight;
+                // console.log('-------------------------------------------------------------------');
+                // console.log('this.getOffset(this.el).top', this.getOffset(this.el).top);
+                // console.log('this.scrollTop', this.scrollTop);
+                // console.log('topBarSizeHeight', topBarSizeHeight);
+                // console.log('this.divTooltip.offsetHeight', this.divTooltip.offsetHeight);
+                // console.log('arrowSize', arrowSize);
+                // console.log('newTop', newTop);
+                // console.log('this.divTooltip.offsetTop', this.divTooltip.offsetTop);
+                // console.log('this.getOffset(this.divTooltip).top', this.getOffset(this.divTooltip).top);
+                // console.log('calcul', (this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - tooltipSize - arrowSize));
+                // console.log('-------------------------------------------------------------------');
+                if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight - tooltipSize - arrowSize) <= 1) {
+                    // hide
                     decalTop = 0; // stop moving
                     this.hideTooltip();
                 } else {
+                    // show
                     if (this.divTooltip !== null && this.divTooltip !== undefined) {
                         this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(0, 0, 0)');
                         this.renderer.setStyle(this.divTooltip, 'opacity', '1');
+                        this.renderer.setStyle(this.divTooltip, 'pointer-events', 'all');
                     }
                 }
+
             }
 
             // apply modification only if decal >= 1
@@ -548,7 +622,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(20px, 0, 0)');
                     break;
                 case '0,1,0,0': // middle right
-                    this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(-20px, 0, 0)');
+                    this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(0, -20px, 0)');
                     break;
                 case '1,0,0,0': // middle top
                     this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(0, 20px, 0)');
@@ -558,9 +632,10 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     break;
             }
             this.renderer.setStyle(this.divTooltip, 'opacity', '0');
+            this.renderer.setStyle(this.divTooltip, 'pointer-events', 'none'); // allow click through transparent tooltips
             if (this.config.autoshow === undefined || this.config.autoshow === false || this.tourConfig.length > 0) {
                 setTimeout(() => {
-                    this.cleanAll();
+                    this.cleanAll(false);
                 }, 300);
             }
         }
@@ -575,7 +650,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         return text;
     }
 
-    cleanAll(): void {
+    cleanAll(forced): void {
         this.parentDiv.removeEventListener('scroll', (event) => {
             this.getScroll(event);
         }, true);
@@ -584,17 +659,23 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltip.remove();
             this.divTooltip = null;
         }
-        if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
-            this.autoshowTooltip();
+        if (forced) {
+            if (this.isTour) {
+                this.divBackgroundTour.remove();
+            }
+        } else {
+            if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
+                this.autoshowTooltip();
+            }
         }
     }
 
     setConfig(index) {
-        // console.log('setConfig');
         this.config = {
             title: this.tourConfig[index].title,
             text: this.tourConfig[index].text,
             target: this.tourConfig[index].target,
+            redirect: this.tourConfig[index].redirect,
             autoshow: true,
             scrolled: false,
             duration: (this.tourConfig[index].duration) ? this.tourConfig[index].duration : this.tourDuration,
@@ -619,7 +700,18 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
+    isChild(parent, child) {
+        let node = child.parentNode;
+        while (node != null) {
+            if (node == parent) {
+                return true;
+            }
+            node = node.parentNode;
+        }
+        return false;
+    }
+
     ngOnDestroy(): void {
-        this.cleanAll();
+        this.cleanAll(true);
     }
 }
