@@ -1,8 +1,8 @@
-import {TestBed, inject, async} from '@angular/core/testing';
-import {LoginGuardService} from './login-guard.service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
+import { TestBed, inject, async } from '@angular/core/testing';
+import { LoginGuardService } from './login-guard.service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { NgReduxTestingModule, MockNgRedux } from '@angular-redux/store/testing';
 import {
     CoreTestUtilModule,
     MyUserServiceMock,
@@ -10,10 +10,11 @@ import {
     AlertsServiceMock,
     ToasterServiceMock
 } from '@setl/core-test-util';
-import {MyUserService} from '@setl/core-req-services';
-import {MemberSocketService} from '@setl/websocket-service';
-import {Subject} from 'rxjs/Subject';
-import {APP_CONFIG} from '@setl/utils';
+import { MyUserService } from '@setl/core-req-services';
+import { MemberSocketService } from '@setl/websocket-service';
+import { Subject } from 'rxjs/Subject';
+import { APP_CONFIG } from '@setl/utils';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 const environment = {
     logoID: '',
@@ -31,15 +32,16 @@ describe('LoginGuardService', () => {
                 CoreTestUtilModule
             ],
             providers: [
-                {provide: AlertsService, useClass: AlertsServiceMock},
-                {provide: ToasterService, useClass: ToasterServiceMock},
+                { provide: AlertsService, useClass: AlertsServiceMock },
+                { provide: ToasterService, useClass: ToasterServiceMock },
                 LoginGuardService,
-                {provide: MyUserService, useClass: MyUserServiceMock},
-                {provide: MemberSocketService, useClass: MemberSocketServiceMock},
+                { provide: MyUserService, useClass: MyUserServiceMock },
+                { provide: MemberSocketService, useClass: MemberSocketServiceMock },
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
+                MenuSpecService
             ]
         });
 
