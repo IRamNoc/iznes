@@ -59,6 +59,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divBackgroundTour.style.top = '0';
             this.divBackgroundTour.style.backgroundColor = 'rgba(0,0,0,0.6)';
             this.divBackgroundTour.style.width = '100%';
+            this.divBackgroundTour.style.zIndex = 1002;
             const pageSize = this.getPageSize();
             this.divBackgroundTour.style.height = pageSize.height + 'px';
             document.body.appendChild(this.divBackgroundTour);
@@ -105,6 +106,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('mousemove', ['$event']) onMouseOver(event: MouseEvent): void {
         if (this.config.autoshow === undefined || this.config.autoshow === false) {
             if (this.el === event.target) {
+                this.checkIfTooltipExists();
                 this.moveTooltip();
             }
         }
@@ -192,6 +194,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltipText.innerHTML += this.config.text;
 
             if (this.isTour) {
+                this.divTooltip.style.zIndex = 1003;
+
                 // add button back/next
                 this.btnContainer = document.createElement('div');
                 this.btnContainer.className = 'btnTourContainer';
