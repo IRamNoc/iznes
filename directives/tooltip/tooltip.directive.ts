@@ -631,7 +631,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.renderer.setStyle(this.divTooltip, 'pointer-events', 'none'); // allow click through transparent tooltips
             if (this.config.autoshow === undefined || this.config.autoshow === false || this.tourConfig.length > 0) {
                 setTimeout(() => {
-                    this.cleanAll();
+                    this.cleanAll(false);
                 }, 300);
             }
         }
@@ -646,7 +646,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         return text;
     }
 
-    cleanAll(): void {
+    cleanAll(forced): void {
         this.parentDiv.removeEventListener('scroll', (event) => {
             this.getScroll(event);
         }, true);
@@ -655,7 +655,10 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltip.remove();
             this.divTooltip = null;
         }
-        if (this.isTour) {
+        if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
+            this.autoshowTooltip();
+        }
+        if (this.isTour && forced) {
             this.divBackgroundTour.remove();
         }
     }
@@ -702,6 +705,6 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
-        this.cleanAll();
+        this.cleanAll(true);
     }
 }
