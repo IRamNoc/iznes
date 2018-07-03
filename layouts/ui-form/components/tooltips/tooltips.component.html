@@ -8,12 +8,12 @@
                 <h1>{{'Tooltips' | translate}}</h1>
                 <hr>
                 <p>
-                    <span class="label label-success" id="tooltip-label-directives" appHighlight [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: false}">Directives</span>
+                    <span class="label label-success" id="tooltip-label-directives" appHighlight [tooltip]="{text: _translate.translate('This feature use the Angular directives'), size: 'small', autoshow: true}">Directives</span>
                 </p>
                 <p>{{'Tooltips provides a description of a UI element.' | translate}}</p>
                 <h1>{{'How to use' | translate}}</h1>
                 <hr>
-                <p>{{'Just add the directives [tooltip] and give params via an object' | translate}} {{'{'}}{{'}'}}: <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
+                <p>{{'Just add the directives [tooltip] and give params via an object' | translate}} {{'{'}}{{'}'}}: <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
                 <ol>
                     <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
@@ -23,7 +23,7 @@
                 <br>
                 <h2>{{'Sizes' | translate}}</h2>
                 <hr>
-                <p>{{'There is several possible sizes you can force for the tooltips.' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
+                <p>{{'There is several possible sizes you can force for the tooltips.' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
                 <ol>
                     <li><b>small:</b> {{'limited to 50 chars. If more, medium size is automatically applied.' | translate}}</li>
                     <li><b>medium:</b> {{'if more than 50 chars or specified (width 320px)' | translate}}</li>
@@ -32,7 +32,7 @@
                 <br>
                 <h2>{{'Sizes Rules' | translate}}</h2>
                 <hr>
-                <p>{{'If you don\'t apply a size to your tooltip, some rules are auto applied:' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></p>
+                <p>{{'If you don\'t apply a size to your tooltip, some rules are auto applied:' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></p>
                 <ol>
                     <li><b>small:</b> {{'if no title and max 50 chars.' | translate}}</li>
                     <li><b>medium:</b> {{'if title and/or more than 50 chars.' | translate}}</li>
@@ -44,7 +44,7 @@
                 <p>{{'A tooltip with autoshow will be visible directly on the page without over it.' | translate}}</p>
                 <ol>
                     <li>{{'These tooltips can be closed manually by clicking the close button.' | translate}}</li>
-                    <li>{{'Once a tooltip has been closed, it becomes a classic tooltip (mouseover/mouseout).' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: false}"></i></li>
+                    <li>{{'Once a tooltip has been closed, it becomes a classic tooltip (mouseover/mouseout).' | translate}} <i class="fa fa-question-circle text-warning" [tooltip]="{text:'Just a test', autoshow: true}"></i></li>
                     <li>{{'Clicking on the element toggle the autoshow property.' | translate}}</li>
                 </ol>
                 <br>
@@ -80,15 +80,15 @@
                         {{'Example' | translate}} 5
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip'), text: _translate.translate('This is a medium tooltip with some ') + '<i><b><u>HTML</u></b></i>.'}"></div>
+                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip'), text: _translate.translate('This is a medium tooltip with some') + ' <i><b><u>HTML</u></b></i>.'}"></div>
                         {{'Example' | translate}} 6
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip + autoshow'), text: _translate.translate('This is a medium tooltip autoshown'), autoshow: false}"></div>
+                        <div class="infoBulle ib-medium" [tooltip]="{title: _translate.translate('Medium tooltip + autoshow'), text: _translate.translate('This is a medium tooltip autoshown'), autoshow: true}"></div>
                         Example 7
                     </div>
                     <div class="d-inline-block text-center">
-                        <div class="infoBulle ib-large" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large', autoshow: false}"></div>
+                        <div class="infoBulle ib-large" [tooltip]="{title: _translate.translate('Large tooltip'), text: '<img src=\'assets/images/male.png\' width=\'80\' border=\'0\'><b>' + _translate.translate('This is a large tooltip for long texts.') + '</b> ' + _translate.translate('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque a mauris id nibh gravida auctor ac vel nunc. Aliquam id tellus sit amet lacus cursus egestas id ut felis. Suspendisse dignissim, mi ut sodales porttitor, augue elit malesuada dui, quis pulvinar mauris diam non ex.'), size: 'large', autoshow: true}"></div>
                         Example 8
                     </div>
                 </div>
