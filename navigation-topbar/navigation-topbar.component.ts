@@ -214,10 +214,11 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             }[userType];
 
             if (!this.profileMenu) {
-                this.profileMenu = this.appConfig.menuSpec.top.profile[userType];
+                this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
             }
 
             this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                let menuSpec = menuSpec;
                 this.profileMenu = menuSpec.top.profile[userTypeStr];
             });
         }));
