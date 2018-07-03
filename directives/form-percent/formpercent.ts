@@ -51,8 +51,6 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     iterateForm(controls, action) {
-        const nbControls = Object.keys(controls).length;
-
         Object.keys(controls).forEach((key) => {
             if (controls[key].controls) {
                 if (action === 'push') this.iterateForm(controls[key].controls, 'push');
@@ -61,11 +59,13 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
                 if (action === 'push') {
                     this.allFields[key] = { field: key, valid: false };
                 }
-                if (action === 'check') {
-                    if (controls[key].valid) {
-                        this.allFields[key].valid = true;
-                    } else {
-                        this.allFields[key].valid = false;
+                if (action === 'check' && this.allFields[key] !== undefined) {
+                    if (this.allFields[key].hasOwnProperty('valid')) {
+                        if (controls[key].valid) {
+                            this.allFields[key].valid = true;
+                        } else {
+                            this.allFields[key].valid = false;
+                        }
                     }
                 }
             }
@@ -140,6 +140,12 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.divIcon.innerHTML = '<i class="fa fa-hourglass-half cssProgressIcon-warning"></i>';
         }
+    }
+
+    refreshFormPercent() {
+        this.allFields = []; // reset
+        this.iterateForm(this.config.form.controls, 'push'); // re-parse
+        this.iterateForm(this.config.form.controls, 'check'); // re-check
     }
 
     ngOnDestroy(): void {
