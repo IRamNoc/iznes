@@ -63,22 +63,27 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
                 console.warn('Navigation Render: Missing user type!');
             }
 
-            // this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
-
-            // if (Object.keys(menuSpec).length == 0) menuSpec = this.appConfig.menuSpec;
-
-            const menuSpec = this.appConfig.menuSpec;
-
+            let menuSpec = this.appConfig.menuSpec;
             /* Translate the menu. */
             this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
             if (!this.menuJson) {
                 console.warn('Navigation Render: No menu structure found!');
             }
-
             this.menuJson && this.menuJson.forEach((row) => {
                 if (row['children'] != null) this.menuParent.push(row['element_id']);
             });
-            // });
+
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                /* Translate the menu. */
+                this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+                if (!this.menuJson) {
+                    console.warn('Navigation Render: No menu structure found!');
+                }
+
+                this.menuJson && this.menuJson.forEach((row) => {
+                    if (row['children'] != null) this.menuParent.push(row['element_id']);
+                });
+            });
 
         });
 
