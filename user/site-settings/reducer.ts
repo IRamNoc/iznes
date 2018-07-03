@@ -1,5 +1,5 @@
 import {Action} from 'redux';
-import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
+import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU} from './actions';
 import {SiteSettingsState} from './model';
 import * as _ from 'lodash';
 
@@ -19,7 +19,8 @@ switch (window.navigator.language) {
 const initialState: SiteSettingsState = {
     language: defaultLanguage,
     menuShown: true,
-    production: true
+    production: true,
+    siteMenu: {},
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
@@ -30,6 +31,8 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
             return setMenuShown(SET_MENU_SHOWN, action, state);
         case SET_PRODUCTION:
             return setProduction(state, action);
+        case SET_SITE_MENU:
+            return setSiteMenu(SET_SITE_MENU, action, state);
         default:
             return state;
     }
@@ -86,4 +89,17 @@ function setProduction(state: SiteSettingsState, action: any): SiteSettingsState
 
     const production = isProduction === '1';
     return Object.assign({}, state, {production});
+}
+
+
+function setSiteMenu(actionType, action, state) {
+    let newState;
+
+    const siteMenu = _.get(action, 'payload[1].Data', []);
+
+    newState = Object.assign({}, state, {
+        siteMenu
+    });
+
+    return newState;
 }

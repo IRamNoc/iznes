@@ -18,3 +18,8 @@ export const getTranPermissions = createSelector(
     getPermissions,
     (state: PermissionsState) => state.transPermissions
 );
+
+export const getMenuPermissions = createSelector(
+    getPermissions,
+    (state: PermissionsState) => state.menuPermissions
+);

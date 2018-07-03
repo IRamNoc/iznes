@@ -10,8 +10,9 @@ export {PermissionsState} from './model';
 /* Actions. */
 export {
     SET_ADMIN_PERMISSIONS,
-    SET_TX_PERMISSIONS
+    SET_TX_PERMISSIONS,
+    SET_MENU_PERMISSIONS
 } from './actions';
 
 /* Selectors. */
-export {getPermissions, getAdminPermissions, getTranPermissions} from './selectors';
+export {getPermissions, getAdminPermissions, getTranPermissions, getMenuPermissions} from './selectors';

@@ -10,16 +10,18 @@ import * as adminPermAreasActions from './actions';
 import {
     PermAreasState,
     AdminPermAreaDetail,
-    TxPermAreaDetail
+    TxPermAreaDetail,
+    MenuPermAreaDetail
 } from './model';
 
 const initialState: PermAreasState = {
     adminPermAreaList: {},
-    txPermAreaList: {}
+    txPermAreaList: {},
+    menuPermAreaList: {}
 };
 
 export const PermAreasReducer = function (state: PermAreasState = initialState,
-                                                action: Action) {
+                                          action: Action) {
 
     /* Local stuff. */
     let newState: PermAreasState;
@@ -27,6 +29,9 @@ export const PermAreasReducer = function (state: PermAreasState = initialState,
         [key: number]: AdminPermAreaDetail
     };
     let txPermAreaList: {
+        [key: number]: AdminPermAreaDetail
+    };
+    let menuPermAreaList: {
         [key: number]: AdminPermAreaDetail
     };
 
@@ -50,6 +55,18 @@ export const PermAreasReducer = function (state: PermAreasState = initialState,
             /* Let's assign it to the higher state. */
             newState = Object.assign({}, state, {
                 txPermAreaList
+            });
+
+            /* Return the newly assigned state. */
+            return newState;
+
+        case adminPermAreasActions.SET_MENU_PERM_AREAS_LIST:
+            /* Get the array from the payload. */
+            menuPermAreaList = _.get(action, 'payload[1].Data', []);
+
+            /* Let's assign it to the higher state. */
+            newState = Object.assign({}, state, {
+                menuPermAreaList
             });
 
             /* Return the newly assigned state. */
