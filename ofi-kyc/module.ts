@@ -75,7 +75,7 @@ import config, { kycEnums } from './config';
         NewKycRequestComponent,
         NewKycSelectAmcComponent,
         NewKycIntroductionComponent,
-        MyRequestsContainerComponent
+        MyRequestsContainerComponent,
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
@@ -96,7 +96,7 @@ import config, { kycEnums } from './config';
         MyRequestsComponent,
         MyRequestComponent,
         NewKycRequestComponent,
-        MyRequestsContainerComponent
+        MyRequestsContainerComponent,
         KycAuditTrailComponent,
     ],
     imports: [

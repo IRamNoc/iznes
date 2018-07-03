@@ -38,7 +38,7 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     myInformations: KycMyInformationsReducer,
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
-    myKycList: MyKycListReducer
+    myKycList: MyKycListReducer,
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,
 });
