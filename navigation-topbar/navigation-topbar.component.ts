@@ -213,14 +213,13 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 65: 'rooster_operator',
             }[userType];
 
-            // this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+            if (!this.profileMenu) {
+                this.profileMenu = this.appConfig.menuSpec.top.profile[userType];
+            }
 
-            // if (Object.keys(menuSpec).length == 0) menuSpec = this.appConfig.menuSpec;
-
-            const menuSpec = this.appConfig.menuSpec;
-
-            this.profileMenu = menuSpec.top.profile[userTypeStr];
-            // });
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                this.profileMenu = menuSpec.top.profile[userTypeStr];
+            });
         }));
 
         // When membernode reconnect. trigger wallet select.
