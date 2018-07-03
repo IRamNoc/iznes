@@ -44,18 +44,18 @@
 
                 <clr-dg-row *clrDgItems="let user of users; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
                     <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
-                        (click)="navigateToEntity(user.userId)">
+                        (click)="navigateToEntity(user.userID)">
                         {{ (user.reference) ? user.reference : 'N/A' }}
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellFirstName' + idx}}" (click)="navigateToEntity(user.userId)">{{user.firstName}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellLastName' + idx}}" (click)="navigateToEntity(user.userId)">{{user.lastName}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellEmail' + idx}}" (click)="navigateToEntity(user.userId)">{{user.emailAddress}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellPhone' + idx}}" (click)="navigateToEntity(user.userId)">{{user.phoneNumber}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellType' + idx}}" (click)="navigateToEntity(user.userId)">{{user.userType}}</clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellTeams' + idx}}" (click)="navigateToEntity(user.userId)">
+                    <clr-dg-cell id="{{'accountAdminTeamCellFirstName' + idx}}" (click)="navigateToEntity(user.userID)">{{user.firstName}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellLastName' + idx}}" (click)="navigateToEntity(user.userID)">{{user.lastName}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellEmail' + idx}}" (click)="navigateToEntity(user.userID)">{{user.emailAddress}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellPhone' + idx}}" (click)="navigateToEntity(user.userID)">{{user.phoneNumber}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellType' + idx}}" (click)="navigateToEntity(user.userID)">{{user.userType}}</clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamCellTeams' + idx}}" (click)="navigateToEntity(user.userID)">
                         <span class="label label-info">{{user.totalTeams}}</span>
                     </clr-dg-cell>
-                    <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" (click)="navigateToEntity(user.userId)">
+                    <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" (click)="navigateToEntity(user.userID)">
                         <ng-container [ngSwitch]="user.userStatus">
                             <span *ngSwitchCase="'1'" class="label label-success">{{ 'Active' | translate }}</span>
                             <span *ngSwitchCase="'0'" class="label label-danger">{{ 'Disabled' | translate }}</span>

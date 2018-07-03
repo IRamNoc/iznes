@@ -116,6 +116,14 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         message += `.<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
+
+        console.log(error);
+    }
+
+    protected onReadEntityError(error: AccountAdminErrorResponse): void {
+        this.toaster.pop('error', `Failed to read ${this.noun}`);
+
+        this.router.navigateByUrl(this.getBackUrl());
     }
 
     ngOnDestroy() {

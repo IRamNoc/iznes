@@ -29,6 +29,9 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 fileDownloader: FileDownloader) {
         super(router, redux, fileDownloader);
         this.noun = 'Team';
+        this.csvRequest = {
+            userTeamID: null,
+        };
     }
 
     ngOnInit() {

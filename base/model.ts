@@ -1,3 +1,14 @@
+export type AccountAdminResponse = AccountAdminSuccessResponse | AccountAdminErrorResponse;
+
+export type AccountAdminSuccessResponse = [
+    null,
+    {
+        Data: [any],
+        Status: string,
+    },
+    undefined
+];
+
 export type AccountAdminErrorResponse = [
     null,
     {
@@ -10,4 +21,4 @@ export type AccountAdminErrorResponse = [
     undefined
 ];
 
-export type RequestCallback = (data) => void;
+export type RequestCallback = (data: AccountAdminResponse) => void;

@@ -18,7 +18,9 @@ import { AccountAdminListBase } from '../../base/list/component';
 export class UsersListComponent extends AccountAdminListBase implements OnInit, OnDestroy {
 
     users: Model.AccountAdminUser[];
+    accountId: number;
 
+    @select(['user', 'myDetail', 'accountId']) accountIdOb;
     @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
     @select(['accountAdmin', 'users', 'users']) usersOb;
 
@@ -34,6 +36,15 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     ngOnInit() {
         super.ngOnInit();
 
+        this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
+            this.accountId = accountId;
+
+            this.csvRequest = {
+                userID: null,
+                accountID: this.accountId,
+            };
+        }));
+
         this.subscriptions.push(this.usersRequestedOb.subscribe((requested: boolean) => {
             this.requestUsers(requested);
         }));
@@ -48,7 +59,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     private requestUsers(requested: boolean): void {
         if (requested) return;
 
-        this.service.readUsers(null, null, () => {}, () => {});
+        this.service.readUsers(null, this.accountId, () => {}, () => {});
     }
 
     ngOnDestroy() {}

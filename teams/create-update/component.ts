@@ -32,7 +32,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
                                        (data: any) => this.onReadTeamSuccess(data),
-                                       (e: any) => this.onReadTeamError(e));
+                                       (e: any) => this.onReadEntityError(e));
         }
     }
 
@@ -43,10 +43,6 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         this.form.name.control.setValue(team.name);
         this.form.reference.control.setValue(team.reference);
         this.form.status.control.setValue(team.status);
-    }
-
-    private onReadTeamError(e): void {
-
     }
 
     save(): void {
