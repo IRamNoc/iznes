@@ -9,8 +9,8 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import {APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
+import { APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     addWalletNodeInitialSnapshot,
     clearRequestedMailInitial,
@@ -25,8 +25,8 @@ import {
     setMenuShown,
     setRequestedMailInitial,
 } from '@setl/core-store';
-import {fromJS} from 'immutable';
-import {MultilingualService} from '@setl/multilingual/multilingual.service';
+import { fromJS } from 'immutable';
+import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
@@ -40,12 +40,12 @@ import {
     NodeAlertsService
 } from '@setl/core-req-services';
 
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
-import {MenuSpecService} from '@setl/utils/services/menuSpec/service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -153,39 +153,39 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
             const myAuthenData = getAuthentication(newState);
             const myDetail = getMyDetail(newState);
-            const {userId} = myDetail;
-            const {apiKey} = myAuthenData;
+            const { userId } = myDetail;
+            const { apiKey } = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
             const nodePath = _.get(chainAccess, 'nodePath', '');
 
             this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
-                .then((res) => {
-                    // Set connected wallet, if we got the wallet list and
-                    // there is not wallet is chosen.
-                    if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                        this.selectedWalletId.setValue([this.walletSelectItems[0]], {
-                            onlySelf: true,
-                            emitEvent: true,
-                            emitModelToViewChange: true,
-                            emitViewToModelChange: true,
-                        });
-                        this.logService.log(this.walletSelectItems[0]);
-                        this.selected(this.walletSelectItems[0]);
-
-                        /* set the chain id as the connected one in redux store */
-                        const chainId = _.get(chainAccess, 'chainId', '');
-                        this.ngRedux.dispatch(setConnectedChain(chainId));
-
-                        this.changeDetectorRef.markForCheck();
-                    }
-
-                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
-                        const action = addWalletNodeInitialSnapshot(initialSnapshot);
-                        this.ngRedux.dispatch(action);
+            .then((res) => {
+                // Set connected wallet, if we got the wallet list and
+                // there is not wallet is chosen.
+                if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                        onlySelf: true,
+                        emitEvent: true,
+                        emitModelToViewChange: true,
+                        emitViewToModelChange: true,
                     });
+                    this.logService.log(this.walletSelectItems[0]);
+                    this.selected(this.walletSelectItems[0]);
+
+                    /* set the chain id as the connected one in redux store */
+                    const chainId = _.get(chainAccess, 'chainId', '');
+                    this.ngRedux.dispatch(setConnectedChain(chainId));
+
+                    this.changeDetectorRef.markForCheck();
+                }
+
+                this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
+                    const action = addWalletNodeInitialSnapshot(initialSnapshot);
+                    this.ngRedux.dispatch(action);
                 });
+            });
 
         }
         this.changeDetectorRef.markForCheck();
@@ -213,9 +213,14 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 65: 'rooster_operator',
             }[userType];
 
-            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
-                this.profileMenu = menuSpec.top.profile[userTypeStr];
-            });
+            // this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+
+            // if (Object.keys(menuSpec).length == 0) menuSpec = this.appConfig.menuSpec;
+
+            const menuSpec = this.appConfig.menuSpec;
+
+            this.profileMenu = menuSpec.top.profile[userTypeStr];
+            // });
         }));
 
         // When membernode reconnect. trigger wallet select.
@@ -420,7 +425,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
         console.log('Disconnected from wallet node');
     }
 
