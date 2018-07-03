@@ -41,7 +41,7 @@ describe('LoginGuardService', () => {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
-                MenuSpecService
+                MenuSpecService,
             ]
         });
 
