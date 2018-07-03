@@ -15,6 +15,7 @@ export const kAction = type => k({ type });
  */
 export interface MemberNodeMessageBody {
     RequestName: string;
+    [key: string]: any;
 }
 
 export interface MemberNodeRequest {
