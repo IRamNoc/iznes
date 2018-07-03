@@ -1,28 +1,26 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BrowserModule} from '@angular/platform-browser';
-import {FileViewerComponent} from './fileviewer.component';
-import {FileViewerPreviewComponent} from './preview-modal/component';
-import {FileViewerPreviewService} from './preview-modal/service';
-import {ClarityModule} from '@clr/angular';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FileViewerComponent } from './fileviewer.component';
+import { FileViewerPreviewComponent } from './preview-modal/component';
+import { FileViewerPreviewService } from './preview-modal/service';
+import { ClarityModule } from '@clr/angular';
 
 @NgModule({
     declarations: [
         FileViewerComponent,
-        FileViewerPreviewComponent
+        FileViewerPreviewComponent,
     ],
     exports: [
         FileViewerComponent,
-        FileViewerPreviewComponent
+        FileViewerPreviewComponent,
     ],
     imports: [
-        CommonModule,
         BrowserModule,
-        ClarityModule
+        ClarityModule,
     ],
     providers: [
-        FileViewerPreviewService
-    ]
+        FileViewerPreviewService,
+    ],
 })
 export class FileViewerModule {
 }
