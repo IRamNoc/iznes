@@ -203,15 +203,15 @@ export class UiFormStepsComponent implements OnInit {
     }
 
     save1(formValues) {
-        alert('save1: ' + JSON.stringify(formValues));
+        console.log('save1: ' + JSON.stringify(formValues));
     }
 
     save2(formValues) {
-        alert('save2: ' + JSON.stringify(formValues));
+        console.log('save2: ' + JSON.stringify(formValues));
     }
 
     save3(formValues) {
-        alert('save3: ' + JSON.stringify(formValues));
+        console.log('save3: ' + JSON.stringify(formValues));
     }
 
     toggleInfoPanes(event: Event): void {

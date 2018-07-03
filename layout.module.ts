@@ -44,7 +44,13 @@ import {SidebarModule} from 'ng-sidebar';
 import {RouterModule} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule} from '@setl/utils';
+import {
+    SelectModule,
+    SetlComponentsModule,
+    SetlDirectivesModule,
+    SetlPipesModule,
+    SetlServicesModule
+} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 /* Import the persist module. */
@@ -66,6 +72,7 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         SetlDirectivesModule,
         MultilingualModule,
         PersistModule,
+        SetlServicesModule,
     ],
     declarations: [
         /* Directives. */

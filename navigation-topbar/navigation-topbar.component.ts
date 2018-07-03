@@ -39,11 +39,13 @@ import {
     WalletNodeRequestService,
     NodeAlertsService
 } from '@setl/core-req-services';
+
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 @Component({
     selector: 'app-navigation-topbar',
@@ -106,6 +108,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 public translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
+                private menuSpecService: MenuSpecService,
                 private initialisationService: InitialisationService,
                 private logService: LogService,
                 private nodeAlertsService: NodeAlertsService,
@@ -158,31 +161,31 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             const nodePath = _.get(chainAccess, 'nodePath', '');
 
             this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
-                .then((res) => {
-                    // Set connected wallet, if we got the wallet list and
-                    // there is not wallet is chosen.
-                    if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                        this.selectedWalletId.setValue([this.walletSelectItems[0]], {
-                            onlySelf: true,
-                            emitEvent: true,
-                            emitModelToViewChange: true,
-                            emitViewToModelChange: true,
-                        });
-                        this.logService.log(this.walletSelectItems[0]);
-                        this.selected(this.walletSelectItems[0]);
-
-                        /* set the chain id as the connected one in redux store */
-                        const chainId = _.get(chainAccess, 'chainId', '');
-                        this.ngRedux.dispatch(setConnectedChain(chainId));
-
-                        this.changeDetectorRef.markForCheck();
-                    }
-
-                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
-                        const action = addWalletNodeInitialSnapshot(initialSnapshot);
-                        this.ngRedux.dispatch(action);
+            .then((res) => {
+                // Set connected wallet, if we got the wallet list and
+                // there is not wallet is chosen.
+                if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                        onlySelf: true,
+                        emitEvent: true,
+                        emitModelToViewChange: true,
+                        emitViewToModelChange: true,
                     });
+                    this.logService.log(this.walletSelectItems[0]);
+                    this.selected(this.walletSelectItems[0]);
+
+                    /* set the chain id as the connected one in redux store */
+                    const chainId = _.get(chainAccess, 'chainId', '');
+                    this.ngRedux.dispatch(setConnectedChain(chainId));
+
+                    this.changeDetectorRef.markForCheck();
+                }
+
+                this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
+                    const action = addWalletNodeInitialSnapshot(initialSnapshot);
+                    this.ngRedux.dispatch(action);
                 });
+            });
 
         }
         this.changeDetectorRef.markForCheck();
@@ -209,20 +212,28 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 60: 't2s',
                 65: 'rooster_operator',
             }[userType];
-            this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+
+            if (!this.profileMenu) {
+                this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+            }
+
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                let menuSpec = menuSpec;
+                this.profileMenu = menuSpec.top.profile[userTypeStr];
+            });
         }));
 
         // When membernode reconnect. trigger wallet select.
         this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
                 // Subscribe to my connection channel, target for my userId
-            InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
+                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
 
-            if (!this.selectedWalletId.value) {
-                return;
-            }
+                if (!this.selectedWalletId.value) {
+                    return;
+                }
 
-            this.selected(this.selectedWalletId.value[0]);
-        }),
+                this.selected(this.selectedWalletId.value[0]);
+            }),
         );
     }
 
