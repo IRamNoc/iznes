@@ -172,7 +172,8 @@ ul.breadcrumb li a:hover {
         width: 100%;
         background: #373a49;
         height: calc(100% - 75px);
-        transform: translateX(-0px);
+        //transform: translateX(-0px);
+        transform: none;
         transition: width 100ms linear, transform 100ms linear;
 
         .sidenav {
@@ -1092,9 +1093,6 @@ dp-date-picker div {
   margin-left: -5px;
   background-color: #286F8A;
 }
-.tooltips-bottom0:after {
-  left: 0;
-}
 .tooltips-bottom5:after {
   left: 5%;
 }
@@ -1149,9 +1147,6 @@ dp-date-picker div {
 .tooltips-bottom95:after {
   left: 95%;
 }
-.tooltips-bottom100:after {
-  left: 10%;
-}
 .tooltips-left {
   -webkit-transform: translate3d(20px, 0, 0);
   -moz-transform: translate3d(20px, 0, 0);
@@ -1172,9 +1167,6 @@ dp-date-picker div {
   top: 50%;
   margin-top: -5px;
   background-color: #286F8A;
-}
-.tooltips-left0:after {
-  top: 0;
 }
 .tooltips-left5:after {
   top: 5%;
@@ -1230,9 +1222,6 @@ dp-date-picker div {
 .tooltips-left95:after {
   top: 95%;
 }
-.tooltips-left100:after {
-  top: 10%;
-}
 .tooltips-right {
   -webkit-transform: translate3d(-20px, 0, 0);
   -moz-transform: translate3d(-20px, 0, 0);
@@ -1253,9 +1242,6 @@ dp-date-picker div {
   top: 50%;
   margin-top: -5px;
   background-color: #286F8A;
-}
-.tooltips-right0:after {
-  top: 0;
 }
 .tooltips-right5:after {
   top: 5%;
@@ -1311,9 +1297,6 @@ dp-date-picker div {
 .tooltips-right95:after {
   top: 95%;
 }
-.tooltips-right100:after {
-  top: 10%;
-}
 .tooltips-top {
   -webkit-transform: translate3d(0, 20px, 0);
   -moz-transform: translate3d(0, 20px, 0);
@@ -1334,9 +1317,6 @@ dp-date-picker div {
   left: 50%;
   margin-left: -5px;
   background: white;
-}
-.tooltips-top0:after {
-  left: 0;
 }
 .tooltips-top5:after {
   left: 5%;
@@ -1391,9 +1371,6 @@ dp-date-picker div {
 }
 .tooltips-top95:after {
   left: 95%;
-}
-.tooltips-top100:after {
-  left: 10%;
 }
 
 .tooltips-top-text:after {
