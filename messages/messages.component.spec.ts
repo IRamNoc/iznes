@@ -8,6 +8,7 @@ import { SetlMessageFormActionComponent } from './message-components/message-for
 import { SetlMessageConnectionComponent } from './message-components/message-connection/message-connection.component';
 import { SetlMessagePOAComponent } from './message-components/message-poa/component';
 import { SetlMessageAlertComponent } from './message-components/message-alert/component';
+import {SetlMessageWorkflowComponent} from './message-components/message-workflow/message-workflow.component';
 import { SetlMessageKycComponent } from './message-components/message-kyc/message-kyc.component';
 import { SetlMessageAmCancelOrderComponent } from './message-components/message-cancel-order/message-cancel-order.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -113,11 +114,11 @@ describe('SetlMessagesComponent', () => {
                 SetlMessagesComponent,
                 SetlMessagePOAComponent,
                 SetlMessageAlertComponent,
+                SetlMessageWorkflowComponent,
                 SetlMessageBodyComponent,
                 SetlMessageAttachmentComponent,
                 SetlMessageFormActionComponent,
                 SetlMessageConnectionComponent,
-               	SetlMessagePOAComponent,
                 SetlMessageKycComponent,
                 SetlMessageAmCancelOrderComponent,
             ],

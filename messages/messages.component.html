@@ -145,6 +145,9 @@
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
                 <setl-message-alert [data]="currentMessage.action.data" [userId]="userId"></setl-message-alert>
             </p>
+
+            <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'" [data]="currentMessage.action.data" [userId]="userId"></setl-message-workflow>
+
         </div>
 
         <div class="message_view_menu">
