@@ -18,7 +18,11 @@ import {
     SendInvestInvitationRequestBody,
     SendInvitationRequestData,
     VerifyInvitationTokenRequestBody,
+    UseTokenRequestBody,
     fetchInvitationsByUserAmCompanyRequestBody,
+    GetMyKycListRequestBody,
+    createKYCDraftMessageBody,
+    createKYCDraftRequestData,
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -29,18 +33,32 @@ import 'rxjs/add/operator/takeUntil';
 import { SagaHelper } from '@setl/utils';
 import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {
     SET_INVESTOR_INVITATIONS_LIST,
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import {
+    setStatusAuditTrail,
+    SET_STATUS_AUDIT_TRAIL_REQUESTED,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
+import {
+    setInformationAuditTrail,
+    SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/information-audit-trail';
 
 @Injectable()
 export class OfiKycService {
 
     isListeningGetInvitationsByUserAmCompany;
+    informationAuditTrailList;
+    statusAuditTrailList;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
+    @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'requested']) statusAuditTrailRequested$;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
     @select(['user', 'authentication', 'isLogin']) isLogin$;
 
     constructor(
@@ -54,6 +72,28 @@ export class OfiKycService {
             this.unSubscribe.next();
             this.unSubscribe.complete();
         });
+
+        this.informationAuditTrailList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((list) => {
+                this.informationAuditTrailList = list;
+            });
+
+        this.statusAuditTrailList$
+            .takeUntil(this.unSubscribe)
+            .subscribe((list) => {
+                this.statusAuditTrailList = list;
+            });
+
+        this.statusAuditTrailRequested$
+            .takeUntil(this.unSubscribe)
+            .subscribe((b) => {
+                if (!b) {
+                    this.statusAuditTrailList.map((kycID) => {
+                        this.fetchStatusAuditByKycID(kycID);
+                    });
+                }
+            });
     }
 
     /**
@@ -102,6 +142,18 @@ export class OfiKycService {
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    useInvitationToken(invitationToken: string) {
+
+        const messageBody: UseTokenRequestBody = {
+            RequestName: 'izneskycusetoken',
+            token: this.memberSocketService.token,
+            invitationToken: invitationToken,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
     }
 
     isInvitationTokenUsed(token: string): any {
@@ -207,6 +259,21 @@ export class OfiKycService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getMyKycList() {
+        const messageBody: GetMyKycListRequestBody = {
+            RequestName: 'iznesgetmykyclist',
+            token: this.memberSocketService.token,
+            walletid: 0
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        return this.buildRequest({
+            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
+        });
     }
 
     getInvitationsByUserAmCompany() {
@@ -319,6 +386,79 @@ export class OfiKycService {
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
+
+    createKYCDraftOrWaitingApproval(requestData: createKYCDraftRequestData) {
+
+        const messageBody: createKYCDraftMessageBody = {
+            RequestName: 'izncreatedraftorwaitingapprovalkycrequest',
+            token: this.memberSocketService.token,
+            inviteToken: _.get(requestData, 'inviteToken', ''),
+            managementCompanyID: _.get(requestData, 'managementCompanyID', ''),
+            investorWalletID: _.get(requestData, 'investorWalletID', ''),
+            kycStatus: _.get(requestData, 'kycStatus', ''),
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+
+    }
+
+    getStatusAuditByKycID(kycID: number) {
+        if (this.statusAuditTrailList.indexOf(kycID) !== -1) {
+            return;
+        }
+        this.fetchStatusAuditByKycID(kycID);
+    }
+
+    fetchStatusAuditByKycID(kycID: number) {
+        const messageBody = {
+            RequestName: 'getkycstatusauditbykycid',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => {
+                this.ngRedux.dispatch(setStatusAuditTrail(kycID, res));
+                this.ngRedux.dispatch({
+                    type: SET_STATUS_AUDIT_TRAIL_REQUESTED,
+                });
+            },
+        ));
+    }
+
+    getInformationAuditByKycID(kycID: number) {
+        if (this.informationAuditTrailList.indexOf(kycID) !== -1) {
+            return;
+        }
+        this.fetchInformationAuditByKycID(kycID);
+    }
+
+    fetchInformationAuditByKycID(kycID: number) {
+        const messageBody = {
+            RequestName: 'getkycinformationauditbykycid',
+            token: this.memberSocketService.token,
+            kycID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [],
+            [],
+            asyncTaskPipe,
+            {},
+            (res) => {
+                this.ngRedux.dispatch(setInformationAuditTrail(kycID, res));
+                this.ngRedux.dispatch({
+                    type: SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
+                });
+            },
+        ));
+    }
 }
-
-

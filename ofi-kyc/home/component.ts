@@ -164,7 +164,19 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         this._ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: [{}] });
         this._ngRedux.dispatch(clearAppliedHighlight());
         //this.showModal = false;
-        this.router.navigate(['home']);
+
+        this.route.queryParams.subscribe(queryParams => {
+            if (queryParams.invitationToken) {
+                this.router.navigate(['my-requests', 'new'], {
+                    queryParams: {
+                        invitationToken: queryParams.invitationToken,
+                        amcID: queryParams.amcID
+                    }
+                });
+            } else{
+                this.router.navigate(['my-requests', 'list']);
+            }
+        });
     }
 
     ngOnDestroy(): void {
