@@ -55,7 +55,7 @@
     "@setl/multilingual": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/multilingual.git#upgrade/6",
     "@setl/permission-grid": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/permission-grid.git",
     "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#upgrade/6",
-    "@setl/websocket-service": "git+file:///Users/stuartfyfe/upgrade6/iznes/setl_modules/websocket-service#refactor/bump-libsodium",
+    "@setl/websocket-service": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#refactor/bump-libsodium",
     "@swimlane/ngx-charts": "^8.1.0",
     "@swimlane/ngx-graph": "^5.1.0",
     "@webcomponents/custom-elements": "^1.0.8",
