@@ -1,14 +1,16 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {By} from '@angular/platform-browser';
-import {DebugElement, DebugNode, Pipe, PipeTransform} from '@angular/core';
-import {OfiMyInformationsComponent, ViewMode} from './component';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SelectModule} from '@setl/utils/index';
-import {SetlPipesModule} from '@setl/utils';
-import {NgRedux} from '@angular-redux/store';
-import {KycMyInformations} from '../../ofi-store/ofi-kyc/my-informations';
-import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
-import {MultilingualService} from '@setl/multilingual';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { DebugElement, DebugNode, Pipe, PipeTransform } from '@angular/core';
+import { OfiMyInformationsComponent, ViewMode } from './component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectModule } from '@setl/utils/index';
+import { SetlPipesModule } from '@setl/utils';
+import { NgRedux } from '@angular-redux/store';
+import { KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { MultilingualService } from '@setl/multilingual';
+import config from '../config';
+
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
@@ -20,7 +22,7 @@ class OfiManagementCompanyServiceMock {
 }
 
 // Stub for translate
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
     transform(value: any): any {
         return value;
@@ -36,7 +38,7 @@ describe('OfiMyInformationsComponent', () => {
 
     const resetTestingModule = TestBed.resetTestingModule;
 
-    beforeAll((done) => (async () => {
+    beforeAll(done => (async () => {
         TestBed.resetTestingModule();
         spyOn(OfiManagementCompanyService, 'defaultRequestManagementCompanyList');
         TestBed.configureTestingModule({
@@ -53,7 +55,8 @@ describe('OfiMyInformationsComponent', () => {
                 { provide: NgRedux, useValue: ngReduxSpy },
                 { provide: OfiManagementCompanyService, useClass: OfiManagementCompanyServiceMock },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
-            ]
+                { provide: 'my-information-config', useValue: config },
+            ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
@@ -91,7 +94,7 @@ describe('OfiMyInformationsComponent', () => {
         };
 
         comp.userInfo = fakeUser;
-        comp.type = '46';
+        comp.type = 46;
 
         tick();
         fixture.detectChanges();

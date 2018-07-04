@@ -1,36 +1,38 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject} from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject } from '@angular/core';
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
+import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/operator/takeUntil';
 
-import {fromJS} from 'immutable';
-import {ToasterService} from 'angular2-toaster';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
+import { fromJS } from 'immutable';
+import { ToasterService } from 'angular2-toaster';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
 
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
 /* Ofi orders request service. */
-import {clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight} from '@setl/core-store/index';
-import {setInformations, KycMyInformations} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import {Observable} from 'rxjs/Observable';
-import {Router, ActivatedRoute} from '@angular/router';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {MyUserService} from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils/index';
-import {Endpoints} from '../config';
-import {ConfirmationService} from '@setl/utils';
+import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
+import { setInformations, KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { MyUserService } from '@setl/core-req-services';
+import { SagaHelper } from '@setl/utils/index';
+import { Endpoints } from '../config';
+import { ConfirmationService } from '@setl/utils';
 
 @Component({
     styleUrls: ['./component.css'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
 
     appConfig: AppConfig;
     endpointsConfig: Endpoints;
     hasFilledAdditionnalInfos = false;
-    userType: string;
+    userType: number;
 
     /* Public properties. */
     public showModal = false;
@@ -51,41 +53,47 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         phoneCode: '',
         phoneNumber: '',
         amManagementCompanyID: 0,
-        invitationToken: ''
+        invitationToken: '',
     };
 
-    /* Private properties. */
-    private subscriptions: Array<any> = [];
+    unSubscribe: Subject<any> = new Subject();
 
     /* Observables. */
     @select(['ofi', 'ofiKyc', 'myInformations']) kycMyInformations: Observable<KycMyInformations>;
+    @select(['user', 'myDetail', 'userType']) userType$: Observable<number>;
 
     /* Constructor. */
-    constructor(private _changeDetectorRef: ChangeDetectorRef,
-                private _ngRedux: NgRedux<any>,
-                private toasterService: ToasterService,
-                private router: Router,
-                private ofiKycService: OfiKycService,
-                private confirmationService: ConfirmationService,
-                private myUserService: MyUserService,
-                public _translate: MultilingualService,
-                private route: ActivatedRoute,
-                @Inject('endpoints') endpoints,
-                @Inject(APP_CONFIG) appConfig: AppConfig,) {
+    constructor(
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _ngRedux: NgRedux<any>,
+        private toasterService: ToasterService,
+        private router: Router,
+        private ofiKycService: OfiKycService,
+        private confirmationService: ConfirmationService,
+        private myUserService: MyUserService,
+        public _translate: MultilingualService,
+        @Inject('endpoints') endpoints,
+        @Inject(APP_CONFIG) appConfig: AppConfig,
+    ) {
         this.appConfig = appConfig;
         this.endpointsConfig = endpoints;
-        this.userType = '46';
     }
 
     ngAfterViewInit() {
         /* Do observable subscriptions here. */
 
         /* Subscribe for this user's connected info. */
-        this.subscriptions['kyc-my-informations'] = this.kycMyInformations.subscribe((d) => {
-            /* Assign list to a property. */
-            this.userInfo = d;
-            this._changeDetectorRef.markForCheck();
-        });
+        this.kycMyInformations
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                /* Assign list to a property. */
+                this.userInfo = d;
+                this._changeDetectorRef.markForCheck();
+            });
+
+        this.userType$
+            .takeUntil(this.unSubscribe)
+            .subscribe(v => this.userType = v);
 
         /* fetch backend for existing data to pre fill the form */
         this.ofiKycService.fetchInvestor();
@@ -101,12 +109,12 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             lastName: userInformations.lastName,
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
-            companyName: userInformations.companyName
+            companyName: userInformations.companyName,
         };
 
         const listImu = fromJS([
-            {id: 'dropdown-user'},
-            {id: 'menu-account-module'},
+            { id: 'dropdown-user' },
+            { id: 'menu-account-module' },
         ]);
 
         const listToRedux = listImu.reduce((result, item) => {
@@ -118,14 +126,14 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             return result;
         }, []);
 
-        this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: listToRedux});
+        this._ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: listToRedux });
         this._ngRedux.dispatch(setAppliedHighlight());
         // this.showModal = true;
 
         this.confirmationService.create(
             'My Information',
             'My information can be changed later in "Profile" at the top of the page.',
-            {confirmText: 'Ok, I understand', declineText: ''}
+            { confirmText: 'Ok, I understand', declineText: '' }
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.closeModal();
@@ -140,7 +148,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
-            defaultHomePage: '',
+            defaultHomePage: this.endpointsConfig.home,
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -151,9 +159,9 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             () => {
                 this.toasterService.pop('error', 'Failed to save your informations.');
                 return;
-            })
+            }),
         );
-        this._ngRedux.dispatch({type: SET_HIGHLIGHT_LIST, data: [{}]});
+        this._ngRedux.dispatch({ type: SET_HIGHLIGHT_LIST, data: [{}] });
         this._ngRedux.dispatch(clearAppliedHighlight());
         //this.showModal = false;
 
@@ -171,12 +179,8 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         });
     }
 
-    /* On Destroy. */
     ngOnDestroy(): void {
-
-        /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
-            key.unsubscribe();
-        }
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 }
