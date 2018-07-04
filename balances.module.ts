@@ -9,7 +9,7 @@ import { ReportingService } from './reporting.service';
 import { ClarityModule } from '@clr/angular';
 import { SetlPipesModule, SetlComponentsModule } from '@setl/utils';
 import { MultilingualModule } from '@setl/multilingual';
-import { FileViewerModule } from '../core-fileviewer';
+import { FileViewerModule } from '@setl/core-fileviewer';
 
 @NgModule({
     imports: [
