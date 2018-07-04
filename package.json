@@ -5,7 +5,7 @@
     "main": "index.js",
     "dependencies": {
         "@setl/socketcluster-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git#refactor/bump-libsodium",
-        "@setl/vanilla-websocket-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#refactor/bumb-libsodium",
+        "@setl/vanilla-websocket-wrapper": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git#refactor/bump-libsodium",
         "lodash": "^4.17.4"
     },
     "devDependencies": {},
