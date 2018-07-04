@@ -157,4 +157,11 @@ public class OpenCSDSprint8AcceptanceTest {
         assertTrue(actions.equals("Actions"));
     }
 
+    @Test
+    public void shouldDisplayRecapTable() throws InterruptedException{
+        loginAndVerifySuccess("am", "alex01");
+        navigateToInviteInvestorPage();
+        inviteAnInvestor("recapTableTest1@setl.io", "Jordan", "Miller", "Success!");
+    }
+
 }
