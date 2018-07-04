@@ -15,7 +15,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
 import { setInformations, KycMyInformations } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MyUserService } from '@setl/core-req-services';
 import { SagaHelper } from '@setl/utils/index';
@@ -68,6 +68,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
         private _ngRedux: NgRedux<any>,
         private toasterService: ToasterService,
         private router: Router,
+        private route: ActivatedRoute,
         private ofiKycService: OfiKycService,
         private confirmationService: ConfirmationService,
         private myUserService: MyUserService,
