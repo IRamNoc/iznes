@@ -75,7 +75,7 @@ export class DayCalendarService {
           nextMonth: current.isSame(nextMonth, 'month'),
           currentDay: current.isSame(today, 'day')
         });
-        current.add(24, 'hour');
+        current.add(1, 'day');
 
         return array;
       }, []);
