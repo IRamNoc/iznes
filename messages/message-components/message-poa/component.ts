@@ -18,6 +18,9 @@ export class SetlMessagePOAComponent implements OnInit {
 
     @Input() data;
     messageBody: string = '';
+    canAct = true;
+    inProgress = false;
+    knownPOAs = null;
 
     constructor (private walletNodeSocketService: WalletNodeSocketService,
                  private _ngRedux: NgRedux<any>,
@@ -26,7 +29,27 @@ export class SetlMessagePOAComponent implements OnInit {
     }
 
     ngOnInit() {
+        const now = new Date();
+        const expiry = new Date();
+        const ets = this.data && this.data.enddate + '000' || '0';
+        expiry.setTime(parseInt(ets, 10));
 
+        if (expiry < now) {
+            this.canAct = false;
+            return;
+        }
+        try {
+            this.knownPOAs = JSON.parse(window.localStorage.getItem('activatedPOAs')); // TODO: ask the wallet node about the POA
+        } catch (e) {
+
+        }
+        if (!this.knownPOAs) {
+            this.knownPOAs = [];
+            window.localStorage.setItem('activatedPOAs', '[]');
+        }
+        if (this.knownPOAs.indexOf(this.data['poareference']) !== -1) {
+            this.canAct = false;
+        }
     }
 
     public txNames = {
@@ -72,12 +95,18 @@ export class SetlMessagePOAComponent implements OnInit {
 
     acceptPoa () {
 
+        this.inProgress = true;
+console.log(JSON.stringify(this.data));
         const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.data);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             (d) => {
-                console.log(d);
+                console.log("NON ERROR RESPONSE", d);
                 this.showSuccessResponse('POA has been signed on the blockchain');
+                this.canAct = false;
+                this.inProgress = false;
+                this.knownPOAs.push(this.data['poareference']);
+                window.localStorage.setItem('activatedPOAs', JSON.stringify(this.knownPOAs));
             },
             (e) => {
                 console.error(e);
@@ -87,6 +116,7 @@ export class SetlMessagePOAComponent implements OnInit {
                     base += ':  ';
                 }
                 this.showErrorResponse(base + extra);
+                this.inProgress = false;
             }
         ));
     }
