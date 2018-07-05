@@ -14,8 +14,7 @@ import static com.setl.UI.common.SETLUIHelpers.WalletsDetailsHelper.selectLEIFro
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 public class MemberDetailsHelper extends LoginAndNavigationHelper {
@@ -291,10 +290,21 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
     }
 
-    public static String generateMemberName()
-    {
+    public static String generateMemberName() {
         String str = RandomStringUtils.randomAlphabetic(12);
         String memberName = "Test_Member_" + str;
         return memberName;
+    }
+
+    public static void validateCSSOnNavigationBarByID(String elementId){
+        driver.findElement(By.id(elementId));
+        String cssNav = driver.findElement(By.id(elementId)).getAttribute("class");
+        assertTrue(cssNav.contains("nav-link active"));
+    }
+    public static void validateColourOfElementByCSS(String cssSelector, String rgba){
+        driver.findElement(By.cssSelector(cssSelector));
+        String Color = driver.findElement(By.cssSelector(cssSelector)).getCssValue("background-color");
+        System.out.println(Color);
+        assertTrue(Color.equals(rgba));
     }
 }
