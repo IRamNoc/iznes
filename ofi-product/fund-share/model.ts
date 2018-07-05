@@ -71,7 +71,8 @@ export class FundShare {
         optional: new ShareDocumentsOptional(),
     };
 
-    constructor() {}
+    constructor() {
+    }
 
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
@@ -80,9 +81,10 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {
+    getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
+            draft: draft,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
             fundShareID: this.fundShareId,
             fundID: this.fundID,
@@ -129,9 +131,9 @@ export class FundShare {
             mifiidServicesCosts: this.fees.mandatory.mifiidServicesCosts.value(),
             mifiidIncidentalCosts: this.fees.mandatory.mifiidIncidentalCosts.value(),
             subscriptionTradeCyclePeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklySubscriptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -142,9 +144,9 @@ export class FundShare {
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             redemptionTradeCyclePeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleRedemptionsWithinPeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklyRedemptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -430,9 +432,9 @@ export class FundShare {
     private setFeederPreset(value: any): void {
         const preset = (!value || value === 0) ?
             [this.keyFacts.mandatory.feeder.listItems[0]] :
-        [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
-            return item.id == value;
-        })];
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
 
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
     }
@@ -444,11 +446,13 @@ export class FundShare {
     }
 
     private isStatusMaster(): boolean {
+        if (!this.keyFacts.mandatory.status.value()) return null;
+
         return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
-        if (parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (!!this.keyFacts.mandatory.status.value() && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;

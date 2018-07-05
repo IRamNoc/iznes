@@ -34,7 +34,7 @@ import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-produ
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
 import * as Enum from '../FundShareEnum';
-import {FundShareTradeCycleModel} from './trade-cycle/model';
+import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
@@ -60,6 +60,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private subscriptionsArray: Subscription[] = [];
     private panels: { [key: string]: any } = new PanelData();
     private iznShareList;
+
+    currDraft: number = 0;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
 
@@ -218,42 +220,42 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         fork.subscribe(data => {
                 // nothing to do here
-        },
-                       (err) => {
-                           this.toaster.pop('error', 'An error occured.');
-                           this.router.navigateByUrl(`product-module/product`);
-                       },         () => {
-                           if (this.mode === FundShareMode.Update) {
-                               if (this.fundShareData) this.model.setFundShare(this.fundShareData);
+            },
+            (err) => {
+                this.toaster.pop('error', 'An error occured.');
+                this.router.navigateByUrl(`product-module/product`);
+            }, () => {
+                if (this.mode === FundShareMode.Update) {
+                    if (this.fundShareData) this.model.setFundShare(this.fundShareData);
 
-                               if (this.fundShareId === this.fundShareData.fundShareID &&
+                    if (this.fundShareId === this.fundShareData.fundShareID &&
                         !!this.fundShareDocsData) {
-                                   this.model.setFundShareDocs(this.fundShareDocsData);
-                               }
-                           }
+                        this.model.setFundShareDocs(this.fundShareDocsData);
+                    }
+                }
 
-                           if (this.managementCompanyList) {
-                               this.model.fund.managementCompany.listItems = this.managementCompanyList;
-                               this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
-                           }
+                if (this.managementCompanyList) {
+                    this.model.fund.managementCompany.listItems = this.managementCompanyList;
+                    this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
+                }
 
-                           this.model.setFund(this.fund);
+                this.model.setFund(this.fund);
 
-                           if (this.hasUmbrellaFund()) {
-                               this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
-                                   return index === this.model.umbrellaFundID.toString();
-                               }));
-                           }
+                if (this.hasUmbrellaFund()) {
+                    this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
+                        return index === this.model.umbrellaFundID.toString();
+                    }));
+                }
 
-                           if (!this.model.isProduction) {
-                               this.model.documents.mandatory.kiid.required = false;
-                               this.model.documents.mandatory.prospectus.required = false;
-                           }
-                           this.isReady = true;
+                if (!this.model.isProduction) {
+                    this.model.documents.mandatory.kiid.required = false;
+                    this.model.documents.mandatory.prospectus.required = false;
+                }
+                this.isReady = true;
 
-                           this.changeDetectorRef.markForCheck();
-                           this.changeDetectorRef.detectChanges();
-                       });
+                this.changeDetectorRef.markForCheck();
+                this.changeDetectorRef.detectChanges();
+            });
 
     }
 
@@ -397,6 +399,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
             return;
         }
 
+        this.currDraft = fundShare.draft;
+
         this.fundShareData = fundShare;
 
         this.changeDetectorRef.detectChanges();
@@ -456,7 +460,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             });
 
             return result;
-        },                           []);
+        }, []);
 
         this.managementCompanyList = items;
     }
@@ -466,9 +470,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     saveFundShare(): void {
-        const request = this.model.getRequest();
+        const request = this.model.getRequest(0);
 
-        if (this.mode === FundShareMode.Create) {
+        if (this.mode === FundShareMode.Create || this.currDraft == 1) {
             this.alerts.create('info', `
                 <table class="table grid">
                     <tbody>
@@ -477,47 +481,69 @@ export class FundShareComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `,                 {
+            `, {
                 showCloseButton: false,
                 overlayClickToClose: false,
             });
 
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-                                                       this.redux,
-                                                       request,
-                                                       (data) => this.onCreateSuccess(data[1].Data),
-                                                       (e) => this.onCreateError(e[1].Data[0]));
+                this.redux,
+                request,
+                (data) => this.onCreateSuccess(data[1].Data, 0),
+                (e) => this.onCreateError(e[1].Data[0], 0));
         } else {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-                                                       this.redux,
-                                                       request,
-                                                       (data) => this.onUpdateSuccess(data[1].Data),
-                                                       (e) => this.onUpdateError(e[1].Data[0]));
+                this.redux,
+                request,
+                (data) => this.onUpdateSuccess(data[1].Data, 0),
+                (e) => this.onUpdateError(e[1].Data[0], 0));
         }
     }
 
-    private onCreateSuccess(data): void {
+    /**
+     * save the draft fund share (this is used for create and update)
+     * @return void
+     */
+    saveDraft(): void {
+        const request = this.model.getRequest(1);
+
+        if (this.mode === FundShareMode.Create) {
+            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
+                this.redux,
+                request,
+                (data) => this.onCreateSuccess(data[1].Data, 1),
+                (e) => this.onCreateError(e[1].Data[0], 1));
+        } else {
+            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
+                this.redux,
+                request,
+                (data) => this.onUpdateSuccess(data[1].Data, 1),
+                (e) => this.onUpdateError(e[1].Data[0], 1));
+        }
+    }
+
+    private onCreateSuccess(data, draft): void {
         if (data.Status === 'Fail') {
-            this.onCreateError(data);
+            this.onCreateError(data, draft);
             return;
         }
 
         OfiFundShareService.defaultCreateFundShareDocuments(this.ofiFundShareService,
-                                                            this.redux,
-                                                            this.model.getDocumentsRequest(data.fundShareID),
-                                                            (docsData) => {
-                                                                this.toaster.pop('success', data.fundShareName + ' has been successfully created');
-                                                                this.router.navigateByUrl(`product-module/product`);
-                                                            },
-                                                            (e) => this.onCreateError(e[1].Data[0]));
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (docsData) => {
+                this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') + ' has been successfully created');
+                this.router.navigateByUrl(`product-module/product`);
+            },
+            (e) => this.onCreateError(e[1].Data[0], draft));
     }
 
-    private onCreateError(e): void {
+    private onCreateError(e, draft): void {
         this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">There was an issue creating the Fund Share.<br />
+                        <td class="text-center text-danger">There was an issue creating the` + (draft == 1 ? ' draft' : '') + `Fund Share.<br />
                         ${e.Message}</td>
                     </tr>
                 </tbody>
@@ -525,20 +551,22 @@ export class FundShareComponent implements OnInit, OnDestroy {
         `);
     }
 
-    private onUpdateSuccess(data): void {
+    private onUpdateSuccess(data, draft): void {
         OfiFundShareService.defaultUpdateFundShareDocuments(this.ofiFundShareService,
-                                                            this.redux,
-                                                            this.model.getDocumentsRequest(data.fundShareID),
-                                                            (docsData) => {
-                                                                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (docsData) => {
+                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+                    (draft == 1 ? ' draft' : '') +
                     ' has been successfully updated');
-                                                                this.router.navigateByUrl(`product-module/product`);
-                                                            },
-                                                            (e) => this.onUpdateError(e[1].Data[0]));
+                this.router.navigateByUrl(`product-module/product`);
+            },
+            (e) => this.onUpdateError(e[1].Data[0], draft));
     }
 
-    private onUpdateError(e): void {
+    private onUpdateError(e, draft): void {
         this.toaster.pop('error', this.model.keyFacts.mandatory.fundShareName.value() +
+            (draft == 1 ? ' draft' : '') +
             ' could not be updated');
     }
 

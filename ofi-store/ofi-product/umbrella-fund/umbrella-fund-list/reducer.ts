@@ -40,12 +40,13 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
         (result, item) => {
             result[item.get('umbrellaFundID')] = {
                 umbrellaFundID: item.get('umbrellaFundID').toString(),
+                draft: item.get('draft'),
                 umbrellaFundName: item.get('umbrellaFundName'),
                 registerOffice: item.get('registerOffice'),
                 registerOfficeAddress: item.get('registerOfficeAddress'),
                 legalEntityIdentifier: item.get('legalEntityIdentifier'),
                 domicile: item.get('domicile'),
-                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate').split(' ')[0],
+                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate'),
                 managementCompanyID: item.get('managementCompanyID'),
                 fundAdministratorID: item.get('fundAdministratorID'),
                 custodianBankID: item.get('custodianBankID'),
@@ -63,6 +64,11 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
                 internalReference: item.get('internalReference'),
                 additionnalNotes: item.get('additionnalNotes'),
             };
+
+            if (!!result[item.get('umbrellaFundID')].umbrellaFundCreationDate) {
+                result[item.get('umbrellaFundID')].umbrellaFundCreationDate = result[item.get('umbrellaFundID')].umbrellaFundCreationDate.split(' ')[0];
+            }
+
             return result;
         },
         {}));

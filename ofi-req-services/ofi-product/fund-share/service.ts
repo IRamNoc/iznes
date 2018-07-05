@@ -11,6 +11,7 @@ import {
     FundShareRequestBody,
     CreateFundShareRequestData,
     IznesShareListRequestMessageBody,
+    IznDeleteShareDraftRequestBody
 } from './model';
 import {
     SET_FUND_SHARE,
@@ -25,8 +26,9 @@ import {
     clearRequestedFundShareDocs,
     SET_FUND_SHARE_AUDIT,
     setRequestedFundShareAudit,
-    clearRequestedFundShareAudit,
+    clearRequestedFundShareAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product';
+import { OfiFundService } from "../fund/fund.service";
 
 export interface RequestInvestorFundAccessData {
     investorWalletId: number;
@@ -214,10 +216,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultCreateFundShareDocuments(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                           ngRedux: NgRedux<any>,
+                                           requestData,
+                                           successCallback: (data) => void,
+                                           errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.createFundShareDocuments(requestData);
 
@@ -276,10 +278,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultUpdateFundShareDocuments(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                           ngRedux: NgRedux<any>,
+                                           requestData,
+                                           successCallback: (data) => void,
+                                           errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.updateFundShareDocuments(requestData);
 
@@ -309,10 +311,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultFundShareAudit(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                 ngRedux: NgRedux<any>,
+                                 requestData,
+                                 successCallback: (data) => void,
+                                 errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.getFundShareAudit(requestData);
 
@@ -354,6 +356,22 @@ export class OfiFundShareService {
         request.mifiidTransactionCosts = this.numberService.toBlockchain(request.mifiidTransactionCosts);
 
         return request;
+    }
+
+    iznDeleteShareDraft(ofiFundShareService: OfiFundShareService, ngRedux: NgRedux<any>, id: string) {
+        // Request the list.
+        const asyncTaskPipe = ofiFundShareService.deleteShareDraft(id);
+        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
+    }
+
+    deleteShareDraft(id: string): any {
+        const messageBody: IznDeleteShareDraftRequestBody = {
+            RequestName: 'izndeleteShareDraft',
+            token: this.memberSocketService.token,
+            id: id,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }

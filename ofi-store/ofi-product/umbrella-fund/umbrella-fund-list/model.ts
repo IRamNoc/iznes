@@ -1,5 +1,6 @@
 export interface UmbrellaFundDetail {
     umbrellaFundID?: number;
+    draft: number;
     umbrellaFundName: string;
     registerOffice: string;
     registerOfficeAddress: string;

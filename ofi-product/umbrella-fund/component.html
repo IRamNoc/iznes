@@ -89,9 +89,6 @@
                                 <ng-select id="uf_domicile" [items]="countries" [allowClear]="true" [placeholder]="_translate.translate('Select a country')" formControlName="domicile">
 
 
-
-
-
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['domicile'].hasError('required') && umbrellaFundForm.controls['domicile'].touched" class="text-danger">{{'This field is required' | translate}}
@@ -124,8 +121,6 @@
                                 <ng-select id="uf_managementCompany" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="managementCompanyID">
 
 
-
-
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['managementCompanyID'].hasError('required') && umbrellaFundForm.controls['managementCompanyID'].touched" class="text-danger">{{'This field is required' | translate}}
@@ -136,9 +131,6 @@
                             <div class="form-group required-field col-sm-6">
                                 <label for="uf_fundAdministrator" class="control-label">{{'Fund Administrator' | translate}}</label>
                                 <ng-select id="uf_fundAdministrator" [items]="fundAdminOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="fundAdministratorID">
-
-
-
 
 
                                 </ng-select>
@@ -153,8 +145,6 @@
                                 <ng-select id="uf_custodian" [items]="custodianBankOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="custodianBankID">
 
 
-
-
                                 </ng-select>
 
                                 <div *ngIf="umbrellaFundForm.controls['custodianBankID'].hasError('required') && umbrellaFundForm.controls['custodianBankID'].touched" class="text-danger">{{'This field is required' | translate}}
@@ -167,18 +157,12 @@
                                 <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="investmentAdvisorID">
 
 
-
-
-
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_payingAgent" class="control-label">{{'Paying Agent' | translate}}</label>
                                 <ng-select id="uf_payingAgent" [items]="payingagentOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="payingAgentID">
-
-
-
 
 
                                 </ng-select>
@@ -189,20 +173,12 @@
                                 <ng-select id="uf_transferAgent" [items]="transferAgentOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['transferAgentID']">
 
 
-
-
-
-
                                 </ng-select>
                             </div>
 
                             <div *ngIf="isCentralizingAgentActive()" class="form-group col-sm-6">
                                 <label for="uf_centralizingAgent" class="control-label">{{'Centralising Agent' | translate}}</label>
                                 <ng-select id="uf_centralizingAgent" [items]="centralizingAgentOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="umbrellaFundForm.controls['centralisingAgentID']">
-
-
-
-
 
 
                                 </ng-select>
@@ -242,17 +218,12 @@
                                 <ng-select id="uf_delegatedManagementCompany" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="delegatedManagementCompanyID">
 
 
-
-
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_auditor" class="control-label">{{'Auditor' | translate}}</label>
                                 <ng-select id="uf_auditor" [items]="auditorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="auditorID">
-
-
-
 
 
                                 </ng-select>
@@ -263,9 +234,6 @@
                                 <ng-select id="uf_taxAuditor" [items]="taxAuditorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="taxAuditorID">
 
 
-
-
-
                                 </ng-select>
                             </div>
 
@@ -274,19 +242,12 @@
                                 <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
 
 
-
-
-
-
                                 </ng-select>
                             </div>
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_legalAdvisor" class="control-label">{{'Legal Advisor' | translate}}</label>
                                 <ng-select id="uf_legalAdvisor" [items]="legalAdvisorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="legalAdvisorID">
-
-
-
 
 
                                 </ng-select>
@@ -311,27 +272,20 @@
 
                     <div class="form-group col-sm-6">
                         <button id="ufBtnResetForm" type="button" class="btn btn-info" (click)="cancel()">
+                            {{(!editForm ? 'Cancel' : 'Close') | translate}}
+                        </button>
 
-
-
-                            <div *ngIf="!editForm; else editCloseButton">{{'Cancel' | translate}}</div>
-                            <ng-template #editCloseButton>{{'Close' | translate}}</ng-template>
+                        <button *ngIf="currDraft == 1 || !editForm"
+                                id="mcBtnSubmitFormDraft"
+                                type="button"
+                                class="btn btn-primary"
+                                (click)="saveDraft(umbrellaFundForm.value)"
+                                [disabled]="umbrellaFundForm.value.managementCompanyID.length == 0">
+                            <i class="fa fa-save"></i> {{(!editForm ? 'Save Draft' : 'Update Draft') | translate}}
                         </button>
 
                         <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
-
-
-
-
-                            <div *ngIf="!editForm; else editUfFBtSubmit">
-                                <i class="fa fa-save"></i>{{'Save' | translate}}
-
-                            </div>
-
-                            <ng-template #editUfFBtSubmit>
-                                <i class="fa fa-save"></i>{{'Update' | translate}}
-
-                            </ng-template>
+                            <i class="fa fa-save"></i> {{(!editForm || currDraft == 1 ? 'Save' : 'Update') | translate}}
                         </button>
                     </div>
                 </section>

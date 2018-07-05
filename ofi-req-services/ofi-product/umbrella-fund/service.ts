@@ -1,12 +1,22 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
-import {UmbrellaFundRequestMessageBody, SaveUmbrellaFundRequestBody, UpdateUmbrellaFundRequestBody} from './service.model';
-import {setRequestedUmbrellaFund, clearRequestedUmbrellaFund, SET_UMBRELLA_FUND_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import {
+    UmbrellaFundRequestMessageBody,
+    SaveUmbrellaFundRequestBody,
+    UpdateUmbrellaFundRequestBody,
+    IznDeleteUmbrellaDraftRequestBody
+} from './service.model';
+import {
+    setRequestedUmbrellaFund,
+    clearRequestedUmbrellaFund,
+    SET_UMBRELLA_FUND_LIST
+} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
+import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import { IznDeleteShareDraftRequestBody } from "../fund-share/model";
 
 @Injectable()
 export class OfiUmbrellaFundService {
@@ -62,6 +72,7 @@ export class OfiUmbrellaFundService {
             RequestName: 'izncreateumbrellafund',
             token: this.memberSocketService.token,
             walletID: this.walletID,
+            draft: ufData.draft,
             umbrellaFundName: ufData.umbrellaFundName,
             registerOffice: ufData.registerOffice,
             registerOfficeAddress: ufData.registerOfficeAddress,
@@ -96,6 +107,7 @@ export class OfiUmbrellaFundService {
             token: this.memberSocketService.token,
             walletID: this.walletID,
             umbrellaFundID: ufData.umbrellaFundID,
+            draft: ufData.draft,
             umbrellaFundName: ufData.umbrellaFundName,
             registerOffice: ufData.registerOffice,
             registerOfficeAddress: ufData.registerOfficeAddress,
@@ -118,6 +130,22 @@ export class OfiUmbrellaFundService {
             directors: ufData.directors,
             internalReference: ufData.internalReference,
             additionnalNotes: ufData.additionnalNotes,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    iznDeleteUmbrellaDraft(ofiUmbrellaFundService: OfiUmbrellaFundService, ngRedux: NgRedux<any>, id: string) {
+        // Request the list.
+        const asyncTaskPipe = ofiUmbrellaFundService.deleteUmbrellaDraft(id);
+        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
+    }
+
+    deleteUmbrellaDraft(id: string): any {
+        const messageBody: IznDeleteUmbrellaDraftRequestBody = {
+            RequestName: 'izndeleteumbrelladraft',
+            token: this.memberSocketService.token,
+            id: id,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

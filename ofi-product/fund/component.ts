@@ -146,6 +146,8 @@ export class FundComponent implements OnInit, OnDestroy {
         fromShare?: boolean,
     } = {};
 
+    currDraft: number = 0;
+
     constructor(
         private router: Router,
         private location: Location,
@@ -174,6 +176,9 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.domicileItems = this.fundItems.domicileItems;
         this.umbrellaItems = this.fundItems.umbrellaItems;
+
+        console.log('umbrellaItems', this.umbrellaItems);
+
         this.typeOfEuDirectiveItems = this.fundItems.typeOfEuDirectiveItems;
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
@@ -206,42 +211,42 @@ export class FundComponent implements OnInit, OnDestroy {
         });
 
         this.umbrellaForm = fb.group({
-            umbrellaFundName: {value: '', disabled: true},
-            umbrellaLei: {value: '', disabled: true},
-            umbrellaFundDomicile: {value: '', disabled: true},
+            umbrellaFundName: { value: '', disabled: true },
+            umbrellaLei: { value: '', disabled: true },
+            umbrellaFundDomicile: { value: '', disabled: true },
         });
 
         this.umbrellaEditForm = fb.group({
-            umbrellaEditLei: {value: '', disabled: true},
-            umbrellaEditFundDomicile: {value: '', disabled: true},
-            auditorID: {value: '', disabled: true},
-            centralisingAgentID: {value: '', disabled: true},
-            custodianBankID: {value: '', disabled: true},
-            delegatedManagementCompanyID: {value: '', disabled: true},
-            directors: {value: '', disabled: true},
-            domicile: {value: '', disabled: true},
-            fundAdministratorID: {value: '', disabled: true},
-            giin: {value: '', disabled: true},
-            investmentAdvisorID: {value: '', disabled: true},
-            legalAdvisorID: {value: '', disabled: true},
-            legalEntityIdentifier: {value: '', disabled: true},
-            managementCompanyID: {value: '', disabled: true},
-            payingAgentID: {value: '', disabled: true},
-            principlePromoterID: {value: '', disabled: true},
-            registerOffice: {value: '', disabled: true},
-            registerOfficeAddress: {value: '', disabled: true},
-            taxAuditorID: {value: '', disabled: true},
-            transferAgentID: {value: '', disabled: true},
-            umbrellaFundCreationDate: {value: '', disabled: true},
-            umbrellaFundID: {value: '', disabled: true},
-            umbrellaFundName: {value: '', disabled: true},
-            internalReference: {value: '', disabled: true},
-            additionnalNotes: {value: '', disabled: true},
+            umbrellaEditLei: { value: '', disabled: true },
+            umbrellaEditFundDomicile: { value: '', disabled: true },
+            auditorID: { value: '', disabled: true },
+            centralisingAgentID: { value: '', disabled: true },
+            custodianBankID: { value: '', disabled: true },
+            delegatedManagementCompanyID: { value: '', disabled: true },
+            directors: { value: '', disabled: true },
+            domicile: { value: '', disabled: true },
+            fundAdministratorID: { value: '', disabled: true },
+            giin: { value: '', disabled: true },
+            investmentAdvisorID: { value: '', disabled: true },
+            legalAdvisorID: { value: '', disabled: true },
+            legalEntityIdentifier: { value: '', disabled: true },
+            managementCompanyID: { value: '', disabled: true },
+            payingAgentID: { value: '', disabled: true },
+            principlePromoterID: { value: '', disabled: true },
+            registerOffice: { value: '', disabled: true },
+            registerOfficeAddress: { value: '', disabled: true },
+            taxAuditorID: { value: '', disabled: true },
+            transferAgentID: { value: '', disabled: true },
+            umbrellaFundCreationDate: { value: '', disabled: true },
+            umbrellaFundID: { value: '', disabled: true },
+            umbrellaFundName: { value: '', disabled: true },
+            internalReference: { value: '', disabled: true },
+            additionnalNotes: { value: '', disabled: true },
 
         });
 
         this.fundForm = fb.group({
-            isFundStructure: {value: '', disabled: true},
+            isFundStructure: { value: '', disabled: true },
             fundName: ['', Validators.compose([Validators.required, this.validators.alphanumeric])],
             legalEntityIdentifier: [null, this.validators.lei],
             registerOffice: [null, Validators.compose([this.validators.alphanumeric])],
@@ -491,7 +496,8 @@ export class FundComponent implements OnInit, OnDestroy {
             if (!values.length) {
                 return [];
             }
-            const newItems = values.map((item) => {
+
+            const newItems = values.filter(value => value.draft == 0).map((item) => {
                 return {
                     id: item.umbrellaFundID,
                     text: item.umbrellaFundName,
@@ -524,19 +530,19 @@ export class FundComponent implements OnInit, OnDestroy {
         });
 
         this.managementCompanyAccessList$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                const values = _.values(d);
-                if (!values.length) {
-                    return [];
-                }
-                this.managementCompanyItems = values.map((item) => {
-                    return {
-                        id: item.companyID,
-                        text: item.companyName,
-                    };
-                });
+        .takeUntil(this.unSubscribe)
+        .subscribe((d) => {
+            const values = _.values(d);
+            if (!values.length) {
+                return [];
+            }
+            this.managementCompanyItems = values.map((item) => {
+                return {
+                    id: item.companyID,
+                    text: item.companyName,
+                };
             });
+        });
 
         this.currencyList$
         .takeUntil(this.unSubscribe)
@@ -557,14 +563,14 @@ export class FundComponent implements OnInit, OnDestroy {
         OfiProductConfigService.defaultRequestProductConfig(this.ofiProductConfigService, this.ngRedux);
     }
 
-    static getListItemText(value: string|number, list: { id: string|number, text: string }[]): string {
+    static getListItemText(value: string | number, list: { id: string | number, text: string }[]): string {
         const listItem = FundComponent.getListItem(value, list);
         return listItem.length ? listItem[0].text : '';
     }
 
     static getListItem(
-        value: string|number,
-        list: { id: string|number, text: string }[],
+        value: string | number,
+        list: { id: string | number, text: string }[],
     ): { id: any, text: string }[] {
         if (value === null) {
             return [];
@@ -579,7 +585,7 @@ export class FundComponent implements OnInit, OnDestroy {
         return [item];
     }
 
-    getListItems(val: any[], list: {id: string, text: string}[]): {id: string, text: string}[] {
+    getListItems(val: any[], list: { id: string, text: string }[]): { id: string, text: string }[] {
         try {
             if (!val.length) {
                 return [];
@@ -597,7 +603,7 @@ export class FundComponent implements OnInit, OnDestroy {
         }).filter(d => d !== null);
     }
 
-    getIdsFromList(val: {id: string, text: string}[]): string[] {
+    getIdsFromList(val: { id: string, text: string }[]): string[] {
         if (!val.length) {
             return [];
         }
@@ -671,8 +677,10 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
                 this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
 
+                this.currDraft = fund.draft;
+
                 this.fundForm.setValue({
-                    ...fund,
+                    ..._.omit(fund, ['draft']),
                     domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
                     typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
                     UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
@@ -725,7 +733,7 @@ export class FundComponent implements OnInit, OnDestroy {
             text: umbrella.umbrellaFundName,
         }]);
         const newUrl = this.router.createUrlTree([], {
-            queryParams: {umbrella: null},
+            queryParams: { umbrella: null },
             queryParamsHandling: 'merge',
         });
         this.location.replaceState(this.router.serializeUrl(newUrl));
@@ -740,6 +748,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
     submitFundForm() {
         const payload: Fund = {
+            draft: 0,
             ...this.fundForm.getRawValue(),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
@@ -812,12 +821,80 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveDraft() {
+        const payload: Fund = {
+            draft: 1,
+            ...this.fundForm.getRawValue(),
+            domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
+            typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
+            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
+            legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
+            nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
+            homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
+            fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
+            portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
+            investmentAdvisor: this.getIdsFromList(this.fundForm.controls['investmentAdvisor'].value),
+            auditor: _.get(this.fundForm.controls['auditor'].value, ['0', 'id'], null),
+            taxAuditor: _.get(this.fundForm.controls['taxAuditor'].value, ['0', 'id'], null),
+            legalAdvisor: _.get(this.fundForm.controls['legalAdvisor'].value, ['0', 'id'], null),
+            fiscalYearEnd: (this.fundForm.controls['fiscalYearEnd'].value != null ? this.fundForm.controls['fiscalYearEnd'].value + '-01' : null),
+            fundAdministrator: _.get(this.fundForm.controls['fundAdministrator'].value, ['0', 'id'], null),
+            custodianBank: _.get(this.fundForm.controls['custodianBank'].value, ['0', 'id'], null),
+            investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
+            principalPromoter: this.getIdsFromList(this.fundForm.controls['principalPromoter'].value),
+            payingAgent: this.getIdsFromList(this.fundForm.controls['payingAgent'].value),
+            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
+            umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
+            transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
+            centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
+            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            holidayMgmtConfig: this.getHolidayMgmtConfig(),
+            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+        };
+
+        if (this.param === 'new') {
+
+            this.fundService.iznCreateFund(payload)
+            .then(() => {
+                this.toasterService.pop(
+                    'success',
+                    `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
+                );
+                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.location.back();
+                return;
+            })
+            .catch((err) => {
+                const errMsg = _.get(err, '[1].Data[0].Message', '');
+                this.toasterService.pop('error', 'Failed to create the draft fund. ' + errMsg);
+                return;
+            });
+        } else {
+            this.fundService.iznUpdateFund(this.param, payload)
+            .then(() => {
+                this.toasterService.pop(
+                    'success',
+                    `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
+                );
+                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.location.back();
+                return;
+            })
+            .catch((err) => {
+                const errMsg = _.get(err, '[1].Data[0].Message', '');
+                this.toasterService.pop('error', 'Failed to update the draft fund. ' + errMsg);
+                return;
+            });
+        }
+    }
+
     redirectToShare(fundID?) {
         let query = {};
         if (fundID) {
-            query = {fund: fundID};
+            query = { fund: fundID };
         }
-        this.router.navigate(['/product-module/product/fund-share/new'], {queryParams: query});
+        this.router.navigate(['/product-module/product/fund-share/new'], { queryParams: query });
     }
 
     displaySharePopup(fundName, fundID) {
@@ -826,7 +903,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.confirmationService.create(
             '<span>Do you want to create a share?</span>',
             message,
-            {confirmText: 'Yes', declineText: 'No'},
+            { confirmText: 'Yes', declineText: 'No' },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.redirectToShare(fundID);
