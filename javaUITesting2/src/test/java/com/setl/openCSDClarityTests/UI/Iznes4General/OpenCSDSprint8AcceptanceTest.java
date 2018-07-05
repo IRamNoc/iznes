@@ -150,6 +150,4 @@ public class OpenCSDSprint8AcceptanceTest {
         navigateToInviteInvestorPage();
         inviteAnInvestor("recapTableTest1@setl.io", "Jordan", "Miller", "Success!");
     }
-
-    }
 }
