@@ -332,8 +332,8 @@ public class OpenCSDGeneralAcceptanceTest {
 
         driver.findElement(By.id("kyc_firstName_0")).sendKeys(firstname);
         driver.findElement(By.id("kyc_lastName_0")).sendKeys(lastname);
-        driver.findElement(By.id("kyc_lastName_0")).sendKeys(Keys.ENTER);
 
+        driver.findElement(By.id("btnKycSubmit")).click();
 
         wait.until(visibilityOf(driver.findElement(By.className("jaspero__dialog-title"))));
 

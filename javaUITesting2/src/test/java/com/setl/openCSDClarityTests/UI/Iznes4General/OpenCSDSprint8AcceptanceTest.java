@@ -1,6 +1,5 @@
 package com.setl.openCSDClarityTests.UI.Iznes4General;
 
-import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -143,7 +142,14 @@ public class OpenCSDSprint8AcceptanceTest {
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(2)", "rgba(73, 164, 95, 1)");
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(3)", "rgba(232, 160, 46, 1)");
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(4)", "rgba(45, 113, 180, 1)");
+    }
+
+    @Test
+    public void shouldDisplayRecapTable() throws InterruptedException{
+        loginAndVerifySuccess("am", "alex01");
+        navigateToInviteInvestorPage();
+        inviteAnInvestor("recapTableTest1@setl.io", "Jordan", "Miller", "Success!");
+    }
 
     }
 }
-

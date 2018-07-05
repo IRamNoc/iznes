@@ -20,6 +20,7 @@ import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.generateRandomISIN;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.getShareTableRow;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
@@ -48,7 +49,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     static String testusername = "TestUserNullInfo";
     static String testpassword = "Testpass123";
 
-    JavascriptExecutor jse = (JavascriptExecutor)driver;
+    JavascriptExecutor jse = (JavascriptExecutor) driver;
 
 
     @Rule
@@ -73,6 +74,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldTestEntireFundFlow() throws InterruptedException, SQLException, IOException {
 
         /////////////////////////////////////////////////////////////////////////
@@ -94,7 +96,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-product-home");
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], umbLei);
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -109,12 +111,12 @@ public class OpenCSDEntireFlowAcceptanceTest {
         assertPopupNextFundNo("Share");
 
         searchFundsTable(uFundDetails[0]);
-        getFundTableRow(0, uFundDetails[0], fundLei, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
+        getFundTableRow(0, uFundDetails[0], fundLei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails[0]);
 
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         searchSharesTable(uShareDetails[0]);
-        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open" );
+        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open");
 
         /////////////////////////////////////////////////////////////////////////
         ////////////////                NAV             /////////////////////////
@@ -147,7 +149,7 @@ public class OpenCSDEntireFlowAcceptanceTest {
             System.out.println(TableNav);
             System.out.println(setNav + ".00");
             assertTrue(TableNav.equals(setNav + ".00"));
-        }catch (Error e){
+        } catch (Error e) {
             fail(e.getMessage());
         }
         logout();
@@ -156,12 +158,14 @@ public class OpenCSDEntireFlowAcceptanceTest {
         ////////////////                KYC             /////////////////////////
         /////////////////////////////////////////////////////////////////////////
 
-        loginAndVerifySuccessKYC("testops004@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops004@setl.io", "FundFlow", "Testing");
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
+        fillKYCTopFields("testops001@setl.io", "FundFlow", "Testing");
         fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");
         logout();
+
         loginAndVerifySuccess("am", "alex01");
         navigateToKYCPage();
 
@@ -170,13 +174,11 @@ public class OpenCSDEntireFlowAcceptanceTest {
 
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid")));
-        String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
-        System.out.println(reviewedByColumn);
-
         driver.findElement(By.id("AllClients-Status-KYC-0")).click();
+
         driver.findElement(By.id("checkbox")).click();
 
-        try{
+        try {
             wait.until(elementToBeClickable(By.id("submitButton")));
             driver.findElement(By.id("submitButton")).click();
         }catch (Exception e){
@@ -184,6 +186,47 @@ public class OpenCSDEntireFlowAcceptanceTest {
         }
 
         wait.until(visibilityOfElementLocated(By.id("companyName")));
+
+        try {
+            Thread.sleep(750);
+            js.executeScript("document.getElementById('" + uIsin[0] + "-access').click();");
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        try {
+            scrollElementIntoViewById("client_folder_validate");
+            wait.until(visibilityOfElementLocated(By.id("client_folder_validate")));
+            wait.until(elementToBeClickable(driver.findElement(By.id("client_folder_validate"))));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        driver.findElement(By.id("client_folder_validate")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
+        String popupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();
+        assertTrue(popupTitle.equals("Confirm Fund Share Access:"));
+
+        String popupFundName = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]/table/tbody/tr[2]/td[1]")).getText();
+        assertTrue(popupFundName.equals(uFundDetails[0]));
+
+        String popupShareName = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]/table/tbody/tr[2]/td[2]")).getText();
+        assertTrue(popupShareName.equals(uShareDetails[0]));
+
+        String popupISIN = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[3]/table/tbody/tr[2]/td[3]")).getText();
+        assertTrue(popupISIN.equals(uIsin[0]));
+
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+
+        String permissionToaster = driver.findElement(By.className("toast-title")).getText();
+        System.out.println(permissionToaster);
+        System.out.println("Share Permissions Saved");
+        assertTrue(permissionToaster.equals("Share Permissions Saved"));
+
+
     }
 
     @Test
@@ -211,27 +254,23 @@ public class OpenCSDEntireFlowAcceptanceTest {
 
         driver.findElement(By.id("checkbox")).click();
 
-        try{
+        try {
             wait.until(elementToBeClickable(By.id("submitButton")));
             driver.findElement(By.id("submitButton")).click();
-        }catch (Exception e){
+        } catch (Exception e) {
             fail(e.getMessage());
         }
 
         wait.until(visibilityOfElementLocated(By.id("companyName")));
-
-        System.out.println("1661232" + "-access");
-        Thread.sleep(2500);
-
-        driver.findElement(By.xpath("//*[@id=\'" + "1661232" + "-access\']")).click();
         wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
+
         driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
 
-        try{
+        try {
             wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
             String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
             assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
-        }catch (Exception e){
+        } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
 
@@ -244,7 +283,4 @@ public class OpenCSDEntireFlowAcceptanceTest {
             fail(e.getMessage());
         }
     }
-
-
-
 }
