@@ -6,6 +6,7 @@ import { investorInvitationState, investorInvitationReducer } from './invitation
 import { kycStatusAuditTrailState, kycStatusAuditTrailReducer } from './status-audit-trail';
 import { MyKycListState, MyKycListReducer } from './kyc-list';
 import { kycInformationAuditTrailState, kycInformationAuditTrailReducer } from './information-audit-trail';
+import { OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState } from './inv-my-documents';
 
 export {
     KycMyInformations,
@@ -53,6 +54,12 @@ export * from './invitationsByUserAmCompany';
 
 export * from './kyc-list';
 
+export {
+    OFI_SET_MY_DOCUMENTS_LIST,
+    OFI_SET_REQUESTED_MY_DOCUMENTS,
+    OFI_CLEAR_REQUESTED_MY_DOCUMENTS,
+} from './inv-my-documents';
+
 export interface KycState {
     myInformations: KycMyInformationsState;
     amKycList: AmKycListState;
@@ -61,6 +68,7 @@ export interface KycState {
     myKycList: MyKycListState;
     statusAuditTrail: kycStatusAuditTrailState;
     informationAuditTrail: kycInformationAuditTrailState;
+    invMyDocuments: OfiInvMyDocumentsState;
 }
 
 export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
@@ -71,4 +79,5 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     myKycList: MyKycListReducer,
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,
+    invMyDocuments: OfiInvMyDocumentsListReducer,
 });

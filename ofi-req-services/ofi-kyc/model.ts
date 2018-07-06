@@ -81,6 +81,20 @@ export interface RejectedKycRequestData {
     lang: string;
 }
 
+export interface SaveKycDocumentRequestData {
+    walletID: number;
+    name: string;
+    hash: string;
+    type: string;
+    common: boolean;
+    'default': number;
+}
+
+export interface GetKycDocumentRequestData {
+    walletID: number;
+    kycID: number;
+}
+
 export interface RejectedKycMessageBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
@@ -175,4 +189,26 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
     managementCompanyID: number;
     investorWalletID: number;
     kycStatus: number;
+}
+
+export interface SaveFundAccessRequestData {
+    access: object;
+    kycID: number;
+    investorWalletID: number;
+}
+
+export interface SaveKycDocumentRequestBody extends MemberNodeMessageBody {
+    token: string;
+    walletID: number;
+    name: string;
+    hash: string;
+    type: string;
+    common: boolean;
+    'default': number;
+}
+
+export interface GetKycDocumentRequestBody extends MemberNodeMessageBody {
+    token: string;
+    walletID: number;
+    kycID: number;
 }
