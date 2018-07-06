@@ -411,6 +411,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+
+        this.searchForm.reset();
+
         /* Detach the change detector on destroy. */
         // this.changeDetectorRef.detach();
         //
