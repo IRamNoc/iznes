@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common, LogService} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common, LogService } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     RequestAdminUsersMessageBody,
 
@@ -51,16 +51,18 @@ import {
 
     /* Account wallet permission */
     RequestUserAccountWalletPermission,
-    UpdateUserAccountWalletPermissions, RequestMenuPermissionBody
+    UpdateUserAccountWalletPermissions,
+    RequestMenuPermissionBody,
+    RequestUserTypes,
 } from './useradmin.service.model';
 import {
     SET_WALLET_NODE_LIST,
     setRequestedWalletNodeList,
     clearRequestedWalletNodeList,
     setRequestedChainList,
-    SET_CHAIN_LIST
+    SET_CHAIN_LIST,
 } from '@setl/core-store';
-import {NgRedux} from '@angular-redux/store';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 interface WalletNodeData {
@@ -117,7 +119,7 @@ export class AdminUsersService {
             [SET_CHAIN_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -141,8 +143,8 @@ export class AdminUsersService {
                     },
                     (error) => {
                         reject(error);
-                    }
-                )
+                    },
+                ),
             );
         });
     }
@@ -155,7 +157,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
@@ -171,7 +173,7 @@ export class AdminUsersService {
             email: userData.email,
             account: userData.accountType,
             userType: userData.userType,
-            password: userData.password
+            password: userData.password,
         };
 
         /* Return the new member node saga request. */
@@ -187,7 +189,7 @@ export class AdminUsersService {
             email: newData.email,
             account: newData.account,
             userType: newData.userType,
-            status: newData.status
+            status: newData.status,
         };
 
         /* Return the new member node saga request. */
@@ -213,7 +215,7 @@ export class AdminUsersService {
         const messageBody: RequestUserWalletPermissions = {
             RequestName: 'guwp',
             token: this.memberSocketService.token,
-            userId: data.userId
+            userId: data.userId,
         };
 
         /* Return the new member node saga request. */
@@ -226,7 +228,7 @@ export class AdminUsersService {
             RequestName: 'nuwa',
             token: this.memberSocketService.token,
             userId: data.userId,
-            walletAccess: data.walletAccess
+            walletAccess: data.walletAccess,
         };
 
         this.logService.log('SENDING nuwa: ', messageBody);
@@ -259,7 +261,7 @@ export class AdminUsersService {
             token: this.memberSocketService.token,
             userId: data.userId,
             toAdd: data.toAdd,
-            toDelete: data.toDelete
+            toDelete: data.toDelete,
         };
 
         this.logService.log('SENDING uduca: ', messageBody);
@@ -273,7 +275,7 @@ export class AdminUsersService {
         const messageBody: RequestUserChainAccessBody = {
             RequestName: 'guca',
             token: this.memberSocketService.token,
-            userId: data.userId
+            userId: data.userId,
         };
 
         this.logService.log('SENDING guca: ', messageBody);
@@ -290,7 +292,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gpal',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
@@ -301,7 +303,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gtpal',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
@@ -312,7 +314,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: GetPermissionAreaListBody = {
             RequestName: 'gmpal',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
@@ -330,7 +332,7 @@ export class AdminUsersService {
             token: this.memberSocketService.token,
             groupName: data.name,
             groupDescription: data.description,
-            groupType: data.type
+            groupType: data.type,
         };
 
         /* Return the new member node saga request. */
@@ -345,7 +347,7 @@ export class AdminUsersService {
             groupId: data.groupId,
             groupName: data.name,
             groupDescription: data.description,
-            groupType: data.type
+            groupType: data.type,
         };
 
         this.logService.log('SENDING UDG: ', messageBody);
@@ -359,7 +361,7 @@ export class AdminUsersService {
         const messageBody: DeleteGroupBody = {
             RequestName: 'dpg',
             token: this.memberSocketService.token,
-            groupId: data.groupId
+            groupId: data.groupId,
         };
 
         this.logService.log('SENDING UDG: ', messageBody);
@@ -378,7 +380,7 @@ export class AdminUsersService {
             toAdd: data.toAdd,
             toUpdate: data.toUpdate,
             toDelete: data.toDelete,
-            isAdmin: data.isAdmin
+            isAdmin: data.isAdmin,
         };
 
         this.logService.log('SENDING UDAP: ', messageBody);
@@ -399,7 +401,7 @@ export class AdminUsersService {
             toAdd: data.toAdd,
             toUpdate: data.toUpdate,
             toDelete: data.toDelete,
-            isAdmin: data.isAdmin
+            isAdmin: data.isAdmin,
         };
 
         this.logService.log('SENDING UDTP: ', messageBody);
@@ -419,7 +421,7 @@ export class AdminUsersService {
             toAdd: data.toAdd,
             toUpdate: data.toUpdate,
             toDelete: data.toDelete,
-            isAdmin: data.isAdmin
+            isAdmin: data.isAdmin,
         };
 
         this.logService.log('SENDING UDMP: ', messageBody);
@@ -440,7 +442,7 @@ export class AdminUsersService {
             entityId: entity.entityId,
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
-            includeGroup: entity.includeGroup
+            includeGroup: entity.includeGroup,
         };
 
         this.logService.log('SENDING GP: ', messageBody);
@@ -458,7 +460,7 @@ export class AdminUsersService {
             chainId: entity.chainId,
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
-            includeGroup: entity.includeGroup
+            includeGroup: entity.includeGroup,
         };
 
         this.logService.log('SENDING GTP: ', messageBody);
@@ -475,7 +477,7 @@ export class AdminUsersService {
             entityId: entity.entityId,
             isGroup: entity.isGroup,
             permissionId: entity.permissionId,
-            includeGroup: entity.includeGroup
+            includeGroup: entity.includeGroup,
         };
 
         this.logService.log('SENDING GMP: ', messageBody);
@@ -519,7 +521,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: RequestWalletNodeListBody = {
             RequestName: 'gwnl',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         // this.logService.log('REQUESTING WALLET NODE LIST');
@@ -574,7 +576,7 @@ export class AdminUsersService {
         /* Setup the message body. */
         const messageBody: RequestChainListBody = {
             RequestName: 'gmcl',
-            token: this.memberSocketService.token
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */
@@ -586,7 +588,7 @@ export class AdminUsersService {
         const messageBody: RequestMemberChainAccessBody = {
             RequestName: 'gmca',
             token: this.memberSocketService.token,
-            chainId: _.get(requestData, 'chainId', 0)
+            chainId: _.get(requestData, 'chainId', 0),
         };
 
         /* Return the new member node saga request. */
@@ -616,7 +618,7 @@ export class AdminUsersService {
             userId: entity.userId,
             toAdd: entity.toAdd,
             toDelete: entity.toDelete,
-            chainId: entity.chainId
+            chainId: entity.chainId,
         };
 
         this.logService.log('SENDING UDUG: ', messageBody);
@@ -633,7 +635,7 @@ export class AdminUsersService {
             chainId: _.get(requestData, 'chainId', 0),
             toUpdate: _.get(requestData, 'toUpdate', {}),
             toAdd: _.get(requestData, 'toAdd', {}),
-            toDelete: _.get(requestData, 'toDelete', [])
+            toDelete: _.get(requestData, 'toDelete', []),
         };
 
         /* Return the new member node saga requests. */
@@ -839,7 +841,7 @@ export class AdminUsersService {
         const messageBody: DeleteWalletBody = {
             RequestName: 'dw',
             token: this.memberSocketService.token,
-            walletId: data.walletId
+            walletId: data.walletId,
         };
 
         this.logService.log('SENDING DW: ', messageBody);
@@ -853,7 +855,7 @@ export class AdminUsersService {
         const messageBody: RequestUserAccountWalletPermission = {
             RequestName: 'getuseraccountwalletpermission',
             token: this.memberSocketService.token,
-            userId: data.userId
+            userId: data.userId,
         };
 
         /* Return the new member node saga request. */
@@ -868,7 +870,18 @@ export class AdminUsersService {
             userId: data.userId,
             toAdd: data.toAdd,
             toUpdate: data.toUpdate,
-            toDelete: data.toDelete
+            toDelete: data.toDelete,
+        };
+
+        /* Return the new member node saga request. */
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    public requestUserTypes(): any {
+        /* Setup the message body. */
+        const messageBody: RequestUserTypes = {
+            RequestName: 'getusertypes',
+            token: this.memberSocketService.token,
         };
 
         /* Return the new member node saga request. */

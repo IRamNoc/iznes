@@ -1,4 +1,4 @@
-import {MemberNodeRequest, MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeRequest, MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface RequestOwnWalletsMessage extends MemberNodeRequest {
     MessageBody: RequestAdminUsersMessageBody;
@@ -57,15 +57,15 @@ export interface RequestUserWalletPermissions extends MemberNodeMessageBody {
 export interface NewUserWalletPermissions extends MemberNodeMessageBody {
     token: string;
     userId: string;
-    walletAccess: { [walletId: number]: number }
+    walletAccess: { [walletId: number]: number };
 }
 
 export interface UpdateUserWalletPermissions extends MemberNodeMessageBody {
     token: string;
     userId: string;
-    toAdd: { [walletId: number]: number },
-    toUpdate: { [walletId: number]: number },
-    toDelete: { [walletId: number]: number }
+    toAdd: { [walletId: number]: number };
+    toUpdate: { [walletId: number]: number };
+    toDelete: { [walletId: number]: number };
 }
 
 export interface RequestUserChainAccessBody extends MemberNodeMessageBody {
@@ -76,8 +76,8 @@ export interface RequestUserChainAccessBody extends MemberNodeMessageBody {
 export interface UpdateUserChainAccessBody extends MemberNodeMessageBody {
     token: string;
     userId: string;
-    toAdd: { [walletId: number]: number },
-    toDelete: { [walletId: number]: number }
+    toAdd: { [walletId: number]: number };
+    toDelete: { [walletId: number]: number };
 }
 
 /*
@@ -347,3 +347,6 @@ export interface UpdateUserAccountWalletPermissions extends MemberNodeMessageBod
     toDelete: { [walletId: number]: number };
 }
 
+export interface RequestUserTypes extends MemberNodeMessageBody {
+    token: string;
+}
