@@ -32,7 +32,7 @@ export {
     getSiteSettings,
     SET_PRODUCTION,
     SET_LANGUAGE,
-    SET_SITE_MENU
+    SET_SITE_MENU,
 
 } from './user';
 
@@ -207,6 +207,13 @@ export {
     /* Users chain access */
     SET_USERS_CHAIN_ACCESS,
     getUsersChainAccess,
+
+    /* Users types */
+    SET_USER_TYPES,
+    SET_REQUESTED_USER_TYPES,
+    setRequestedUserTypes,
+    clearRequestedUserTypes,
+    CLEAR_REQUESTED_USER_TYPES,
 } from './useradmin';
 
 export {

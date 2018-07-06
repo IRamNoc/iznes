@@ -7,8 +7,22 @@ import {
 export {
     SET_ADMIN_USERLIST,
     getUsersList,
-    userAdminActions
+    userAdminActions,
 } from './users';
+
+/* UserTypes */
+import {
+    UserTypesState,
+    userTypesReducer,
+} from './users-types';
+
+export {
+    SET_USER_TYPES,
+    SET_REQUESTED_USER_TYPES,
+    setRequestedUserTypes,
+    clearRequestedUserTypes,
+    CLEAR_REQUESTED_USER_TYPES,
+} from './users-types';
 
 /* Permission groups. */
 import {
@@ -23,7 +37,7 @@ export {
     getAdminPermissionGroup,
     getTranPermissionGroup,
     getMenuPermissionGroup,
-    permissionGroupActions
+    permissionGroupActions,
 } from './permission-group';
 
 /* Permission areas. */
@@ -38,7 +52,7 @@ export {
     SET_MENU_PERM_AREAS_LIST,
     getAdminPermAreaList,
     getTxPermAreaList,
-    getMenuPermAreaList
+    getMenuPermAreaList,
 } from './permission-areas';
 
 /* Group permissions. */
@@ -63,7 +77,7 @@ import {
     SET_WALLET_NODE_LIST,
     setRequestedWalletNodeList,
     clearRequestedWalletNodeList,
-    getWalletNodeList
+    getWalletNodeList,
 } from './wallet-nodes';
 
 import {
@@ -71,14 +85,14 @@ import {
     ChainReducer,
     SET_CHAIN_LIST,
     setRequestedChainList,
-    clearRequestedChainList
+    clearRequestedChainList,
 } from './chains';
 
 import {
     ChainMembershipState,
     ChainMembershipReducer,
     SET_CHAIN_MEMBERSHIP_LIST,
-    getCurrentChainMembershipList
+    getCurrentChainMembershipList,
 } from './chainMembership';
 
 /* Users permissions. */
@@ -123,18 +137,18 @@ export {
     SET_WALLET_NODE_LIST,
     setRequestedWalletNodeList,
     clearRequestedWalletNodeList,
-    getWalletNodeList
+    getWalletNodeList,
 };
 
 export {
     SET_CHAIN_LIST,
     setRequestedChainList,
-    clearRequestedChainList
+    clearRequestedChainList,
 };
 
 export {
     SET_CHAIN_MEMBERSHIP_LIST,
-    getCurrentChainMembershipList
+    getCurrentChainMembershipList,
 };
 
 /* Define this branch of the app redux store. */
@@ -149,10 +163,11 @@ export interface AdminUsersState {
     usersPermissions: UsersPermissionsState;
     usersWalletPermissions: UsersWalletPermissionsState;
     usersChainAccess: UsersChainAccessState;
+    userTypes: UserTypesState;
 }
 
 /* Import Redux reducers to combine. */
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
 /* Export the comibined reducers of this branch. */
 export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminUsersState>({
@@ -166,4 +181,5 @@ export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminU
     usersPermissions: UsersPermissionsReducer,
     usersWalletPermissions: UsersWalletPermissionsReducer,
     usersChainAccess: UsersChainAccessReducer,
+    userTypes: userTypesReducer,
 });
