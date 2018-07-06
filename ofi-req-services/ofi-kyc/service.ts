@@ -22,6 +22,10 @@ import {
     fetchInvitationsByUserAmCompanyRequestBody,
     getKycRequestDetailsRequestData,
     getKycRequestDetailsRequestBody,
+    SaveKycDocumentRequestData,
+    SaveKycDocumentRequestBody,
+    GetKycDocumentRequestData,
+    GetKycDocumentRequestBody,
     GetMyKycListRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
@@ -74,6 +78,10 @@ import {
     setInformationAuditTrail,
     SET_INFORMATION_AUDIT_TRAIL_REQUESTED,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/information-audit-trail';
+import {
+    OFI_SET_MY_DOCUMENTS_LIST,
+    OFI_SET_REQUESTED_MY_DOCUMENTS,
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
 
 @Injectable()
 export class OfiKycService {
@@ -295,6 +303,21 @@ export class OfiKycService {
     }
 
     /* END My Request Details */
+
+    static defaultRequestGetInvKycDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, getKycDocumentRequestData: GetKycDocumentRequestData) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch({type: OFI_SET_REQUESTED_MY_DOCUMENTS,});
+
+        // Request the list.
+        const asyncTaskPipe = ofiKycService.getKycDocuments(getKycDocumentRequestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_MY_DOCUMENTS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
 
     sendInvestInvitations(requstData: SendInvitationRequestData): any {
 
@@ -727,4 +750,31 @@ export class OfiKycService {
             },
         ));
     }
+
+    saveKycDocument(requestData: SaveKycDocumentRequestData): any {
+        const messageBody: SaveKycDocumentRequestBody = {
+            RequestName: 'updatekycdocument',
+            token: this.memberSocketService.token,
+            walletID: _.get(requestData, 'walletID', 0),
+            name: _.get(requestData, 'name', ''),
+            hash: _.get(requestData, 'hash', ''),
+            type: _.get(requestData, 'type', ''),
+            common: _.get(requestData, 'common', ''),
+            'default': _.get(requestData, 'default', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getKycDocuments(requestData: GetKycDocumentRequestData): any {
+        const messageBody: GetKycDocumentRequestBody = {
+            RequestName: 'getkycdocument',
+            token: this.memberSocketService.token,
+            walletID: _.get(requestData, 'walletID', 0),
+            kycID: _.get(requestData, 'kycID', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
 }

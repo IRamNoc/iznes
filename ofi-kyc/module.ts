@@ -50,6 +50,7 @@ import { RequestsService } from './my-requests/requests.service';
 
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
+import {OfiInvMyDocumentsComponent} from "./inv-my-documents/component";
 
 /* Constants */
 import config, { kycEnums } from './config';
@@ -67,6 +68,7 @@ import config, { kycEnums } from './config';
         OfiKycAlreadyDoneComponent,
         OfiKycRequestDetailsComponent,
         TextInputListComponent,
+        OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
         MyRequestsComponent,
@@ -79,7 +81,6 @@ import config, { kycEnums } from './config';
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
-
     ],
     exports: [
         OfiInviteInvestorsComponent,
@@ -92,6 +93,7 @@ import config, { kycEnums } from './config';
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
         OfiKycRequestDetailsComponent,
+        OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
         MyRequestsComponent,
