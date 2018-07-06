@@ -188,8 +188,8 @@ ul.breadcrumb li a:hover {
     }
 
     .main-container-sidebar-content {
-        .sidenav{
-            transition : none;
+        .sidenav {
+            transition: none;
         }
         &.menuHideNav {
             $hidden-width: 80px;
@@ -207,7 +207,7 @@ ul.breadcrumb li a:hover {
 
                 label,
                 .nav-link,
-                .fakeLink{
+                .fakeLink {
                     text-align: center;
                 }
                 label {
@@ -218,7 +218,7 @@ ul.breadcrumb li a:hover {
                 i {
                     text-align: center;
                     padding-right: 0;
-                    width : auto !important;
+                    width: auto !important;
                 }
                 .sidenav-label {
                     display: none;
@@ -239,8 +239,8 @@ ul.breadcrumb li a:hover {
                         background-color: rgb(51, 53, 67);
                         color: white;
                         height: auto !important;
-                        opacity : 1;
-                        transition : none;
+                        opacity: 1;
+                        transition: none;
 
                         i {
                             display: none;
@@ -249,8 +249,8 @@ ul.breadcrumb li a:hover {
                             white-space: nowrap;
                         }
 
-                        .nav-link{
-                            padding : 20px 30px;
+                        .nav-link {
+                            padding: 20px 30px;
                         }
                     }
 
@@ -260,24 +260,24 @@ ul.breadcrumb li a:hover {
                 width: calc(100% - #{$hidden-width});
             }
 
-            .branding{
+            .branding {
                 width: 80px;
                 min-width: 0;
                 justify-content: center;
                 padding: 0 !important;
 
-                .nav-link{
+                .nav-link {
                     display: none;
                 }
-                button{
+                button {
                     margin-right: 0;
                 }
             }
         }
-        &:not(.menuHideNav){
-            .sidenav{
-                label.active{
-                    border-left : none !important;
+        &:not(.menuHideNav) {
+            .sidenav {
+                label.active {
+                    border-left: none !important;
                 }
             }
         }
@@ -923,845 +923,1023 @@ dp-date-picker div {
 }
 
 .blink_me {
-  animation: blinker 1s linear infinite;
+    animation: blinker 1s linear infinite;
 }
 
 @keyframes blinker {
-  50% {
-    opacity: 0.2;
-  }
+    50% {
+        opacity: 0.2;
+    }
 }
 
 .blink_bg {
-  animation: blinkerBg 1s linear infinite;
+    animation: blinkerBg 1s linear infinite;
 }
 
 @keyframes blinkerBg {
-  50% {
-    background-color: rgba(255, 255, 85, 0.4);
-  }
+    50% {
+        background-color: rgba(255, 255, 85, 0.4);
+    }
 }
 
 .highlighMissingTranslations {
-  background-color: rgba(255, 255, 85, 1) !important;
-  //padding: 4px !important;
-  //margin: 4px 0 !important;
-  color: red !important;
+    background-color: rgba(255, 255, 85, 1) !important;
+    //padding: 4px !important;
+    //margin: 4px 0 !important;
+    color: red !important;
 }
 
 /* documentation */
 
 .jumbotron .label {
-  border-radius: 3px !important;
-  padding: 0 1rem 1px !important;
-  font-size: 13px !important;
+    border-radius: 3px !important;
+    padding: 0 1rem 1px !important;
+    font-size: 13px !important;
 }
+
 .jumbotron {
-  padding: 60px 30px;
-  margin: 10px 0;
-  background-color: #eee;
-  border-radius: 6px;
-  max-width: 100%;
+    padding: 60px 30px;
+    margin: 10px 0;
+    background-color: #eee;
+    border-radius: 6px;
+    max-width: 100%;
 }
+
 .jumbotron a {
-  font-weight: 900;
+    font-weight: 900;
 }
+
 .jumbotron p {
-  margin-bottom: 25px;
-  font-size: 14px;
+    margin-bottom: 25px;
+    font-size: 14px;
 }
+
 .jumbotron hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
-  margin: .6em 0 2em 0;
-  padding: 0;
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: .6em 0 2em 0;
+    padding: 0;
 }
+
 .jumbotron ol, .jumbotron ul {
-  margin: 0 !important;
-  padding: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
+
 .jumbotron pre {
-  background-color: white;
-  margin: .5em 0;
-  overflow: auto;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 2em;
-  color: #666;
-  border-width: 1px 1px 1px 20px;
-  border-left-color: rgb(73, 164, 95);
-  max-height: fit-content !important;
+    background-color: white;
+    margin: .5em 0;
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 2em;
+    color: #666;
+    border-width: 1px 1px 1px 20px;
+    border-left-color: rgb(73, 164, 95);
+    max-height: fit-content !important;
 }
+
 .jumbotron pre img {
-  border: none;
-  margin: 0;
-  padding: 0;
-  float: left;
+    border: none;
+    margin: 0;
+    padding: 0;
+    float: left;
 }
-.docBox{
-  background-color: rgba(0, 0, 0, .05);
-  margin: .5em 0;
-  overflow: auto;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 1em 2em;
-  color: #666;
-  border-width: 1px 1px 1px 20px;
-  border-left-color: rgb(73, 164, 95);
-  max-height: fit-content !important;
+
+.docBox {
+    background-color: rgba(0, 0, 0, .05);
+    margin: .5em 0;
+    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 1em 2em;
+    color: #666;
+    border-width: 1px 1px 1px 20px;
+    border-left-color: rgb(73, 164, 95);
+    max-height: fit-content !important;
 }
+
 @media screen and (min-width: 768px) {
-  .jumbotron {
-    padding-top: 48px;
-    padding-bottom: 48px;
-  }
-  .jumbotron > h1, .jumbotron .h1 {
-    font-size: 34px;
-  }
-  .jumbotron > h2, .jumbotron .h2 {
-    font-size: 28px;
-  }
+    .jumbotron {
+        padding-top: 48px;
+        padding-bottom: 48px;
+    }
+    .jumbotron > h1, .jumbotron .h1 {
+        font-size: 34px;
+    }
+    .jumbotron > h2, .jumbotron .h2 {
+        font-size: 28px;
+    }
 }
 
 /* TOOLTIPS */
 
 .tooltips {
-  box-sizing: border-box;
-  position: absolute;
-  z-index: 1000; // ads rules - top layers
-  left: -1000px;
-  top: -1000px;
-  background-color: #286F8A;
-  font-size: 16px;
-  line-height: 24px;
-  background-color: #286F8A;
-  cursor: text;
-  color: white;
-  opacity: 0;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  transform: translate3d(0, 0, 0);
-  -webkit-transition: opacity .3s, transform .3s;
-  -moz-transition: opacity .3s, transform .3s;
-  -ms-transition: opacity .3s, transform .3s;
-  -o-transition: opacity .3s, transform .3s;
-  transition: opacity .3s, transform .3s;
-  -webkit-transition-timing-function: ease-out;
-  -moz-transition-timing-function: ease-out;
-  -ms-transition-timing-function: ease-out;
-  -o-transition-timing-function: ease-out;
-  transition-timing-function: ease-out;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 1000; // ads rules - top layers
+    left: -1000px;
+    top: -1000px;
+    background-color: #286F8A;
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #286F8A;
+    cursor: text;
+    color: white;
+    opacity: 0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    transform: translate3d(0, 0, 0);
+    -webkit-transition: opacity .3s, transform .3s;
+    -moz-transition: opacity .3s, transform .3s;
+    -ms-transition: opacity .3s, transform .3s;
+    -o-transition: opacity .3s, transform .3s;
+    transition: opacity .3s, transform .3s;
+    -webkit-transition-timing-function: ease-out;
+    -moz-transition-timing-function: ease-out;
+    -ms-transition-timing-function: ease-out;
+    -o-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
 }
+
 .t-small {
-  font-size: 12px;
-  line-height: 18px;
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    font-size: 12px;
+    line-height: 18px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
 }
+
 .t-medium {
-  width: 320px;
-  font-size: 14px;
-  line-height: 20px;
+    width: 320px;
+    font-size: 14px;
+    line-height: 20px;
 }
+
 .t-large {
-  width: 540px;
-  font-size: 16px;
-  line-height: 24px;
+    width: 540px;
+    font-size: 16px;
+    line-height: 24px;
 }
+
 .tooltips-bottom {
-  -webkit-transform: translate3d(0, -20px, 0);
-  -moz-transform: translate3d(0, -20px, 0);
-  -ms-transform: translate3d(0, -20px, 0);
-  -o-transform: translate3d(0, -20px, 0);
-  transform: translate3d(0, -20px, 0);
+    -webkit-transform: translate3d(0, -20px, 0);
+    -moz-transform: translate3d(0, -20px, 0);
+    -ms-transform: translate3d(0, -20px, 0);
+    -o-transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -20px, 0);
 }
+
 .tooltips-bottom:after {
-  position: absolute;
-  content: '';
-  width: 10px;
-  height: 10px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  bottom: -5px;
-  left: 50%;
-  margin-left: -5px;
-  background-color: #286F8A;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    bottom: -5px;
+    left: 50%;
+    margin-left: -5px;
+    background-color: #286F8A;
 }
+
 .tooltips-bottom0:after {
-  left: 0;
+    left: 0;
 }
+
 .tooltips-bottom5:after {
-  left: 5%;
+    left: 5%;
 }
+
 .tooltips-bottom10:after {
-  left: 10%;
+    left: 10%;
 }
+
 .tooltips-bottom15:after {
-  left: 15%;
+    left: 15%;
 }
+
 .tooltips-bottom20:after {
-  left: 20%;
+    left: 20%;
 }
+
 .tooltips-bottom25:after {
-  left: 25%;
+    left: 25%;
 }
+
 .tooltips-bottom30:after {
-  left: 30%;
+    left: 30%;
 }
+
 .tooltips-bottom35:after {
-  left: 35%;
+    left: 35%;
 }
+
 .tooltips-bottom40:after {
-  left: 40%;
+    left: 40%;
 }
+
 .tooltips-bottom45:after {
-  left: 45%;
+    left: 45%;
 }
+
 .tooltips-bottom55:after {
-  left: 55%;
+    left: 55%;
 }
+
 .tooltips-bottom60:after {
-  left: 60%;
+    left: 60%;
 }
+
 .tooltips-bottom65:after {
-  left: 65%;
+    left: 65%;
 }
+
 .tooltips-bottom70:after {
-  left: 70%;
+    left: 70%;
 }
+
 .tooltips-bottom75:after {
-  left: 75%;
+    left: 75%;
 }
+
 .tooltips-bottom80:after {
-  left: 80%;
+    left: 80%;
 }
+
 .tooltips-bottom85:after {
-  left: 85%;
+    left: 85%;
 }
+
 .tooltips-bottom90:after {
-  left: 90%;
+    left: 90%;
 }
+
 .tooltips-bottom95:after {
-  left: 95%;
+    left: 95%;
 }
+
 .tooltips-bottom100:after {
-  left: 10%;
+    left: 10%;
 }
+
 .tooltips-left {
-  -webkit-transform: translate3d(20px, 0, 0);
-  -moz-transform: translate3d(20px, 0, 0);
-  -ms-transform: translate3d(20px, 0, 0);
-  -o-transform: translate3d(20px, 0, 0);
-  transform: translate3d(20px, 0, 0);
+    -webkit-transform: translate3d(20px, 0, 0);
+    -moz-transform: translate3d(20px, 0, 0);
+    -ms-transform: translate3d(20px, 0, 0);
+    -o-transform: translate3d(20px, 0, 0);
+    transform: translate3d(20px, 0, 0);
 }
+
 .tooltips-left:after {
-  position: absolute;
-  content: '';
-  width: 10px;
-  height: 10px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  left: -5px;
-  top: 50%;
-  margin-top: -5px;
-  background-color: #286F8A;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    left: -5px;
+    top: 50%;
+    margin-top: -5px;
+    background-color: #286F8A;
 }
+
 .tooltips-left0:after {
-  top: 0;
+    top: 0;
 }
+
 .tooltips-left5:after {
-  top: 5%;
+    top: 5%;
 }
+
 .tooltips-left10:after {
-  top: 10%;
+    top: 10%;
 }
+
 .tooltips-left15:after {
-  top: 15%;
+    top: 15%;
 }
+
 .tooltips-left20:after {
-  top: 20%;
+    top: 20%;
 }
+
 .tooltips-left25:after {
-  top: 25%;
+    top: 25%;
 }
+
 .tooltips-left30:after {
-  top: 30%;
+    top: 30%;
 }
+
 .tooltips-left35:after {
-  top: 35%;
+    top: 35%;
 }
+
 .tooltips-left40:after {
-  top: 40%;
+    top: 40%;
 }
+
 .tooltips-left45:after {
-  top: 45%;
+    top: 45%;
 }
+
 .tooltips-left55:after {
-  top: 55%;
+    top: 55%;
 }
+
 .tooltips-left60:after {
-  top: 60%;
+    top: 60%;
 }
+
 .tooltips-left65:after {
-  top: 65%;
+    top: 65%;
 }
+
 .tooltips-left70:after {
-  top: 70%;
+    top: 70%;
 }
+
 .tooltips-left75:after {
-  top: 75%;
+    top: 75%;
 }
+
 .tooltips-left80:after {
-  top: 80%;
+    top: 80%;
 }
+
 .tooltips-left85:after {
-  top: 85%;
+    top: 85%;
 }
+
 .tooltips-left90:after {
-  top: 90%;
+    top: 90%;
 }
+
 .tooltips-left95:after {
-  top: 95%;
+    top: 95%;
 }
+
 .tooltips-left100:after {
-  top: 10%;
+    top: 10%;
 }
+
 .tooltips-right {
-  -webkit-transform: translate3d(-20px, 0, 0);
-  -moz-transform: translate3d(-20px, 0, 0);
-  -ms-transform: translate3d(-20px, 0, 0);
-  -o-transform: translate3d(-20px, 0, 0);
-  transform: translate3d(-20px, 0, 0);
+    -webkit-transform: translate3d(-20px, 0, 0);
+    -moz-transform: translate3d(-20px, 0, 0);
+    -ms-transform: translate3d(-20px, 0, 0);
+    -o-transform: translate3d(-20px, 0, 0);
+    transform: translate3d(-20px, 0, 0);
 }
+
 .tooltips-right:after {
-  position: absolute;
-  content: '';
-  width: 10px;
-  height: 10px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  right: -5px;
-  top: 50%;
-  margin-top: -5px;
-  background-color: #286F8A;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    right: -5px;
+    top: 50%;
+    margin-top: -5px;
+    background-color: #286F8A;
 }
+
 .tooltips-right0:after {
-  top: 0;
+    top: 0;
 }
+
 .tooltips-right5:after {
-  top: 5%;
+    top: 5%;
 }
+
 .tooltips-right10:after {
-  top: 10%;
+    top: 10%;
 }
+
 .tooltips-right15:after {
-  top: 15%;
+    top: 15%;
 }
+
 .tooltips-right20:after {
-  top: 20%;
+    top: 20%;
 }
+
 .tooltips-right25:after {
-  top: 25%;
+    top: 25%;
 }
+
 .tooltips-right30:after {
-  top: 30%;
+    top: 30%;
 }
+
 .tooltips-right35:after {
-  top: 35%;
+    top: 35%;
 }
+
 .tooltips-right40:after {
-  top: 40%;
+    top: 40%;
 }
+
 .tooltips-right45:after {
-  top: 45%;
+    top: 45%;
 }
+
 .tooltips-right55:after {
-  top: 55%;
+    top: 55%;
 }
+
 .tooltips-right60:after {
-  top: 60%;
+    top: 60%;
 }
+
 .tooltips-right65:after {
-  top: 65%;
+    top: 65%;
 }
+
 .tooltips-right70:after {
-  top: 70%;
+    top: 70%;
 }
+
 .tooltips-right75:after {
-  top: 75%;
+    top: 75%;
 }
+
 .tooltips-right80:after {
-  top: 80%;
+    top: 80%;
 }
+
 .tooltips-right85:after {
-  top: 85%;
+    top: 85%;
 }
+
 .tooltips-right90:after {
-  top: 90%;
+    top: 90%;
 }
+
 .tooltips-right95:after {
-  top: 95%;
+    top: 95%;
 }
+
 .tooltips-right100:after {
-  top: 10%;
+    top: 10%;
 }
+
 .tooltips-top {
-  -webkit-transform: translate3d(0, 20px, 0);
-  -moz-transform: translate3d(0, 20px, 0);
-  -ms-transform: translate3d(0, 20px, 0);
-  -o-transform: translate3d(0, 20px, 0);
-  transform: translate3d(0, 20px, 0);
+    -webkit-transform: translate3d(0, 20px, 0);
+    -moz-transform: translate3d(0, 20px, 0);
+    -ms-transform: translate3d(0, 20px, 0);
+    -o-transform: translate3d(0, 20px, 0);
+    transform: translate3d(0, 20px, 0);
 }
+
 .tooltips-top:after {
-  position: absolute;
-  content: '';
-  width: 10px;
-  height: 10px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  top: -5px;
-  left: 50%;
-  margin-left: -5px;
-  background: white;
+    position: absolute;
+    content: '';
+    width: 10px;
+    height: 10px;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    top: -5px;
+    left: 50%;
+    margin-left: -5px;
+    background: white;
 }
+
 .tooltips-top0:after {
-  left: 0;
+    left: 0;
 }
+
 .tooltips-top5:after {
-  left: 5%;
+    left: 5%;
 }
+
 .tooltips-top10:after {
-  left: 10%;
+    left: 10%;
 }
+
 .tooltips-top15:after {
-  left: 15%;
+    left: 15%;
 }
+
 .tooltips-top20:after {
-  left: 20%;
+    left: 20%;
 }
+
 .tooltips-top25:after {
-  left: 25%;
+    left: 25%;
 }
+
 .tooltips-top30:after {
-  left: 30%;
+    left: 30%;
 }
+
 .tooltips-top35:after {
-  left: 35%;
+    left: 35%;
 }
+
 .tooltips-top40:after {
-  left: 40%;
+    left: 40%;
 }
+
 .tooltips-top45:after {
-  left: 45%;
+    left: 45%;
 }
+
 .tooltips-top55:after {
-  left: 55%;
+    left: 55%;
 }
+
 .tooltips-top60:after {
-  left: 60%;
+    left: 60%;
 }
+
 .tooltips-top65:after {
-  left: 65%;
+    left: 65%;
 }
+
 .tooltips-top70:after {
-  left: 70%;
+    left: 70%;
 }
+
 .tooltips-top75:after {
-  left: 75%;
+    left: 75%;
 }
+
 .tooltips-top80:after {
-  left: 80%;
+    left: 80%;
 }
+
 .tooltips-top85:after {
-  left: 85%;
+    left: 85%;
 }
+
 .tooltips-top90:after {
-  left: 90%;
+    left: 90%;
 }
+
 .tooltips-top95:after {
-  left: 95%;
+    left: 95%;
 }
+
 .tooltips-top100:after {
-  left: 10%;
+    left: 10%;
 }
 
 .tooltips-top-text:after {
-  background-color: #286F8A;
+    background-color: #286F8A;
 }
-.tooltips .title{
-  box-sizing: border-box;
-  display: block;
-  background: #fff;
-  font-weight: 900;
-  font-size: 120%;
-  color: #286F8A;
-  padding: 11px 40px 11px 17px;
-  line-height: 16px;
-  position: relative;
-  z-index: 10;
-  word-break: break-word;
+
+.tooltips .title {
+    box-sizing: border-box;
+    display: block;
+    background: #fff;
+    font-weight: 900;
+    font-size: 120%;
+    color: #286F8A;
+    padding: 11px 40px 11px 17px;
+    line-height: 16px;
+    position: relative;
+    z-index: 10;
+    word-break: break-word;
 }
-.tooltips .hideTitle{
-  display: none;
+
+.tooltips .hideTitle {
+    display: none;
 }
-.tooltips .text{
-  box-sizing: border-box;
-  display: block;
-  padding: 13px 17px;
-  font-size: 100%;
-  color: white;
-  position: relative;
-  z-index: 10;
-  word-break: break-word;
+
+.tooltips .text {
+    box-sizing: border-box;
+    display: block;
+    padding: 13px 17px;
+    font-size: 100%;
+    color: white;
+    position: relative;
+    z-index: 10;
+    word-break: break-word;
 }
+
 .tooltips .text > img {
-  float: left;
-  margin-right: 6px;
+    float: left;
+    margin-right: 6px;
 }
-.tooltips .hideTitle{
-  padding: 8px 12px;
+
+.tooltips .hideTitle {
+    padding: 8px 12px;
 }
+
 .tooltipCloseBtnTitle, .tooltipCloseBtnText {
-  cursor: pointer;
-  position: absolute;
-  font-size: 130%;
+    cursor: pointer;
+    position: absolute;
+    font-size: 130%;
 }
+
 .tooltipCloseBtnTitle {
-  top: 6px;
-  right: 10px;
+    top: 6px;
+    right: 10px;
 }
+
 .tooltipCloseBtnText {
-  cursor: pointer;
-  color: white;
-  background-color: #286F8A;
-  border-radius: 20px;
-  font-size: 120%;
-  line-height: 19px;
-  height: 24px;
-  width: 24px;
-  text-align: center;
-  top: -9px;
-  right: -9px;
-  padding: 2px 0 0 1px;
+    cursor: pointer;
+    color: white;
+    background-color: #286F8A;
+    border-radius: 20px;
+    font-size: 120%;
+    line-height: 19px;
+    height: 24px;
+    width: 24px;
+    text-align: center;
+    top: -9px;
+    right: -9px;
+    padding: 2px 0 0 1px;
 }
+
 .btnTourContainer {
-  width: 100%;
-  text-align: right;
+    width: 100%;
+    text-align: right;
 }
+
 .btnTourContainer hr {
-  height: 1px;
-  border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  margin: 10px 0 15px 0;
+    height: 1px;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    margin: 10px 0 15px 0;
 }
+
 .btnTourContainer .btn {
-  margin-right: 6px!important;
+    margin-right: 6px !important;
 }
+
 .btnTourContainer .btn:last-child {
-  margin-right: 0!important;
+    margin-right: 0 !important;
 }
 
 /* UI - FORM STEPS */
-.fs-container{
-  max-width: 100%;
-  margin: 50px auto;
-  overflow: auto;
+.fs-container {
+    max-width: 100%;
+    margin: 50px auto;
+    overflow: auto;
 }
-.fs-progressbar{
-  counter-reset: step;
+
+.fs-progressbar {
+    counter-reset: step;
 }
-.fs-progressbar div{
-  float: left;
-  position: relative;
-  text-align: center;
-  font-size: 1.1em;
-  font-weight: 500;
+
+.fs-progressbar div {
+    float: left;
+    position: relative;
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 500;
 }
-.fs-progressbar div:before{
-  content:counter(step);
-  position: relative;
-  z-index: 1;
-  counter-increment: step;
-  width: 50px;
-  height: 50px;
-  border: 4px solid #bebebe;
-  display: block;
-  margin: 0 auto 10px auto;
-  border-radius: 50%;
-  line-height: 43px;
-  background: white;
-  color: #bebebe;
-  text-align: center;
-  font-weight: 900;
-  box-sizing: border-box;
-  font-size: 1.4em;
-  cursor: pointer;
+
+.fs-progressbar div:before {
+    content: counter(step);
+    position: relative;
+    z-index: 1;
+    counter-increment: step;
+    width: 50px;
+    height: 50px;
+    border: 4px solid #bebebe;
+    display: block;
+    margin: 0 auto 10px auto;
+    border-radius: 50%;
+    line-height: 43px;
+    background: white;
+    color: #bebebe;
+    text-align: center;
+    font-weight: 900;
+    box-sizing: border-box;
+    font-size: 1.4em;
+    cursor: pointer;
 }
-.fs-progressbar div:after{
-  content: '';
-  position: absolute;
-  top: 22px;
-  left: -50%;
-  z-index: 0;
-  width:100%;
-  height: 6px;
-  background: #979797;
+
+.fs-progressbar div:after {
+    content: '';
+    position: absolute;
+    top: 22px;
+    left: -50%;
+    z-index: 0;
+    width: 100%;
+    height: 6px;
+    background: #979797;
 }
-.fs-progressbar div:first-child:after{
-  content: none;
+
+.fs-progressbar div:first-child:after {
+    content: none;
 }
+
 .fs-progressbar div.fs-active {
-  color: #3aac5d;
+    color: #3aac5d;
 }
-.fs-progressbar div.fs-active + div:after{
-  background: #3aac5d;
+
+.fs-progressbar div.fs-active + div:after {
+    background: #3aac5d;
 }
-.fs-progressbar div.fs-active:before{
-  border-color: #3aac5d;
-  background: #3aac5d;
-  color: white;
-  //content: "\2713";
-  content: "\2714";
+
+.fs-progressbar div.fs-active:before {
+    border-color: #3aac5d;
+    background: #3aac5d;
+    color: white;
+    //content: "\2713";
+    content: "\2714";
 }
+
 .fs-slider {
-  width: 100%;
-  overflow: hidden;
-  transition: height ease-out .3s;
+    width: 100%;
+    overflow: hidden;
+    transition: height ease-out .3s;
 }
+
 .fs-slider-container {
-  transition: margin-left ease-in-out .5s;
+    transition: margin-left ease-in-out .5s;
 }
+
 .fs-slider-container section {
-  float: left;
+    float: left;
 }
+
 .fs-slider-finished {
-  text-align: center;
-  color: green;
-  font-size: 2em;
-  font-weight: 600;
-  padding: 40px;
-  float: left;
+    text-align: center;
+    color: green;
+    font-size: 2em;
+    font-weight: 600;
+    padding: 40px;
+    float: left;
 }
+
 .fs-buttons {
-  width: 100%;
-  text-align: center;
-  margin: 20px auto;
+    width: 100%;
+    text-align: center;
+    margin: 20px auto;
 }
+
 .btPrev, .btNext, .btSubmit {
-  margin: 0 auto;
+    margin: 0 auto;
 }
+
 .btPrev {
-  margin-right: 20px;
+    margin-right: 20px;
 }
+
 .txtRed {
-  color: red;
+    color: red;
 }
 
 /* progress bar */
 
 .examples {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
 }
 
 .divPG {
-  display: inline-block;
+    display: inline-block;
 }
 
 .divPGIcon {
-  display: inline-block;
-  right: 0;
-  position: relative;
-  top: -4px;
-  left: 10px;
+    display: inline-block;
+    right: 0;
+    position: relative;
+    top: -4px;
+    left: 10px;
 }
 
 .divPGIcon i {
-  font-size: 1.2em!important;
-  float: none!important;
-  margin-top: 0!important;
+    font-size: 1.2em !important;
+    float: none !important;
+    margin-top: 0 !important;
 }
 
 .cssProgress {
-  width: 100%;
+    width: 100%;
 }
 
-.cssProgress .progressSquare, .cssProgress .progressRounded, .cssProgress .progressBordered  {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-  font-family: "Roboto", sans-serif
+.cssProgress .progressSquare, .cssProgress .progressRounded, .cssProgress .progressBordered {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    font-family: "Roboto", sans-serif
 }
 
 .cssProgress .cssProgress-bar {
-  display: block;
-  float: left;
-  width: 0%;
-  height: 100%;
-  background: #3798d9;
-  box-shadow: inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -1px 2px rgba(0,0,0,0.2);
-  -webkit-transition: width 0.8s ease-in-out;
-  transition: width 0.8s ease-in-out;
+    display: block;
+    float: left;
+    width: 0%;
+    height: 100%;
+    background: #3798d9;
+    box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+    -webkit-transition: width 0.8s ease-in-out;
+    transition: width 0.8s ease-in-out;
 }
 
 .cssProgress .cssProgress-label {
-  position: absolute;
-  overflow: hidden;
-  left: 0px;
-  right: 0px;
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 0.8em;
-  text-align: center;
-  text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.2);
-  font-weight: 400;
+    position: absolute;
+    overflow: hidden;
+    left: 0px;
+    right: 0px;
+    color: rgba(0, 0, 0, 0.8);
+    font-size: 0.8em;
+    text-align: center;
+    text-shadow: 0px 0px 1px rgba(255, 255, 255, 0.2);
+    font-weight: 400;
 }
 
-.cssProgress .cssProgress-info { background-color: #9575cd !important }
-.cssProgressIcon-info { color: #9575cd !important }
+.cssProgress .cssProgress-info {
+    background-color: #9575cd !important
+}
 
-.cssProgress .cssProgress-danger { background-color: #ef5350 !important }
-.cssProgressIcon-danger { color: #ef5350 !important }
+.cssProgressIcon-info {
+    color: #9575cd !important
+}
 
-.cssProgress .cssProgress-success { background-color: #66bb6a !important }
-.cssProgressIcon-success { color: #66bb6a !important }
+.cssProgress .cssProgress-danger {
+    background-color: #ef5350 !important
+}
 
-.cssProgress .cssProgress-warning { background-color: #ffb74d !important }
-.cssProgressIcon-warning { color: #ffb74d !important }
+.cssProgressIcon-danger {
+    color: #ef5350 !important
+}
 
-.cssProgress .cssProgress-right { float: right !important }
+.cssProgress .cssProgress-success {
+    background-color: #66bb6a !important
+}
+
+.cssProgressIcon-success {
+    color: #66bb6a !important
+}
+
+.cssProgress .cssProgress-warning {
+    background-color: #ffb74d !important
+}
+
+.cssProgressIcon-warning {
+    color: #ffb74d !important
+}
+
+.cssProgress .cssProgress-right {
+    float: right !important
+}
 
 .cssProgress .cssProgress-label-left {
-  margin-left: 10px;
-  text-align: left !important
+    margin-left: 10px;
+    text-align: left !important
 }
 
 .cssProgress .cssProgress-label-right {
-  margin-right: 10px;
-  text-align: right !important
+    margin-right: 10px;
+    text-align: right !important
 }
 
 .cssProgress .cssProgress-label2 {
-  display: block;
-  margin: 2px 0;
-  padding: 0 8px;
-  font-size: 0.8em
+    display: block;
+    margin: 2px 0;
+    padding: 0 8px;
+    font-size: 0.8em
 }
 
-.cssProgress .cssProgress-label2.cssProgress-label2-right { text-align: right }
+.cssProgress .cssProgress-label2.cssProgress-label2-right {
+    text-align: right
+}
 
-.cssProgress .cssProgress-label2.cssProgress-label2-center { text-align: center }
+.cssProgress .cssProgress-label2.cssProgress-label2-center {
+    text-align: center
+}
 
 .cssProgress .cssProgress-stripes, .cssProgress .cssProgress-active, .cssProgress .cssProgress-active-right {
-  background-image: -webkit-linear-gradient(135deg, rgba(255,255,255,0.125) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.125) 50%, rgba(255,255,255,0.125) 75%, transparent 75%, transparent);
-  background-image: linear-gradient(-45deg, rgba(255,255,255,0.125) 25%, transparent 25%, transparent 50%, rgba(255,255,255,0.125) 50%, rgba(255,255,255,0.125) 75%, transparent 75%, transparent);
-  background-size: 35px 35px
+    background-image: -webkit-linear-gradient(135deg, rgba(255, 255, 255, 0.125) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.125) 50%, rgba(255, 255, 255, 0.125) 75%, transparent 75%, transparent);
+    background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.125) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.125) 50%, rgba(255, 255, 255, 0.125) 75%, transparent 75%, transparent);
+    background-size: 35px 35px
 }
 
 .cssProgress .cssProgress-active {
-  -webkit-animation: cssProgressActive 2s linear infinite;
-  animation: cssProgressActive 2s linear infinite
+    -webkit-animation: cssProgressActive 2s linear infinite;
+    animation: cssProgressActive 2s linear infinite
 }
 
 .cssProgress .cssProgress-active-right {
-  -webkit-animation: cssProgressActiveRight 2s linear infinite;
-  animation: cssProgressActiveRight 2s linear infinite
+    -webkit-animation: cssProgressActiveRight 2s linear infinite;
+    animation: cssProgressActiveRight 2s linear infinite
 }
-@-webkit-keyframes
-cssProgressActive { 0% {
-  background-position:0 0
+
+@-webkit-keyframes cssProgressActive {
+    0% {
+        background-position: 0 0
+    }
+    100% {
+        background-position: 35px 35px
+    }
 }
-  100% {
-    background-position:35px 35px
-  }
+
+@keyframes cssProgressActive {
+    0% {
+        background-position: 0 0
+    }
+    100% {
+        background-position: 35px 35px
+    }
 }
-@keyframes
-cssProgressActive { 0% {
-  background-position:0 0
+
+@-webkit-keyframes cssProgressActiveRight {
+    0% {
+        background-position: 0 0
+    }
+    100% {
+        background-position: -35px -35px
+    }
 }
-  100% {
-    background-position:35px 35px
-  }
-}
-@-webkit-keyframes
-cssProgressActiveRight { 0% {
-  background-position:0 0
-}
-  100% {
-    background-position:-35px -35px
-  }
-}
-@keyframes
-cssProgressActiveRight { 0% {
-  background-position:0 0
-}
-  100% {
-    background-position:-35px -35px
-  }
+
+@keyframes cssProgressActiveRight {
+    0% {
+        background-position: 0 0
+    }
+    100% {
+        background-position: -35px -35px
+    }
 }
 
 .progressSquare {
-  background-color: #EEE;
-  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.4)
+    background-color: #EEE;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4)
 }
 
-.progressSquare .cssProgress-bar { height: 18px }
+.progressSquare .cssProgress-bar {
+    height: 18px
+}
 
-.progressSquare .cssProgress-label { line-height: 18px }
+.progressSquare .cssProgress-label {
+    line-height: 18px
+}
 
 .progressRounded {
-  background-color: #EEE;
-  border-radius: 18px;
-  box-shadow: inset 0px 1px 3px rgba(0,0,0,0.4)
+    background-color: #EEE;
+    border-radius: 18px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.4)
 }
 
 .progressRounded .cssProgress-bar {
-  height: 18px;
-  border-radius: 18px
+    height: 18px;
+    border-radius: 18px
 }
 
-.progressRounded .cssProgress-label { line-height: 18px }
+.progressRounded .cssProgress-label {
+    line-height: 18px
+}
 
 .progressBordered {
-  width: auto !important;
-  padding: 4px;
-  background-color: rgba(0,0,0,0.1);
-  box-shadow: inset 0px 1px 2px rgba(0,0,0,0.4);
-  border-radius: 18px;
+    width: auto !important;
+    padding: 4px;
+    background-color: rgba(0, 0, 0, 0.1);
+    box-shadow: inset 0px 1px 2px rgba(0, 0, 0, 0.4);
+    border-radius: 18px;
 }
 
 .progressBordered .cssProgress-bar {
-  height: 14px;
-  border-radius: 18px;
+    height: 14px;
+    border-radius: 18px;
 }
 
-.progressBordered .cssProgress-label { line-height: 14px }
+.progressBordered .cssProgress-label {
+    line-height: 14px
+}
 
 .row.actions {
-  border-bottom: 1px dotted #DDD;
-  margin: 20px 0 20px;
-  padding: 0 0 20px;
-  width: 100%;
+    border-bottom: 1px dotted #DDD;
+    margin: 20px 0 20px;
+    padding: 0 0 20px;
+    width: 100%;
 
-  &.bottom {
-    border-bottom: none;
-    border-top: 1px dotted #DDD;
-    padding: 20px 0 0;
-  }
-  
-  > div {
-    padding: 0;
-  }
+    &.bottom {
+        border-bottom: none;
+        border-top: 1px dotted #DDD;
+        padding: 20px 0 0;
+    }
 
-  .btn { margin-top: 0 }
+    > div {
+        padding: 0;
+    }
+
+    .btn {
+        margin-top: 0
+    }
+}
+
+.fa {
+    margin-right: 0.2rem;
+}
+
+.message_list_menu_buttons {
+    button {
+        margin-right: 5px;
+    }
 }
 
