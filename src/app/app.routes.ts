@@ -50,6 +50,7 @@ import {
     OfiSignUpComponent,
     OfiTaxReportComponent,
     ProductConfigurationComponent,
+    OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
     OfiConsumeTokenComponent,
     MyRequestsComponent,
@@ -192,6 +193,16 @@ export const ROUTES: Routes = [
                         component: SetlMyAccountComponent,
                         canActivate: [LoginGuardService],
                         data: { state: 'my-account' },
+                    },
+                ],
+            },
+            {
+                path: 'my-asset-managers',
+                children: [
+                    {
+                        path: 'my-documents',
+                        component: OfiInvMyDocumentsComponent,
+                        canActivate: [LoginGuardService],
                     },
                 ],
             },
