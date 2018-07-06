@@ -89,9 +89,8 @@ public class OpenCSDSprint7AcceptanceTest {
         navigateToInviteInvestorPage();
         inviteAnInvestor(investorEmail, "Michael", "Bindley", "Success!");
 
-        String email = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-invite-investors/div[2]/section/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row[1]/div/clr-dg-cell[3]")).getText();
+        String email = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table")).getText();
         assertTrue(email.equals(investorEmail));
-
     }
 
     @Test
@@ -271,13 +270,13 @@ public class OpenCSDSprint7AcceptanceTest {
         assertTrue(CentralHeader.equals("Centralisation History"));
         wait.until(elementToBeClickable(By.cssSelector("i.special:nth-child(3)")));
         driver.findElement(By.cssSelector("i.special:nth-child(3)")).click();
-        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/div/input")).sendKeys(uShareDetails[0]);
+        wait.until(elementToBeClickable(By.cssSelector("input.form-control")));
+        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uShareDetails[0]);
 
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-15\"]/ng-select/div/div[3]/ul/li[2]")));
 
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/clr-tabs/clr-tab/clr-tab-content/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+        wait.until(visibilityOfElementLocated(By.cssSelector(".ui-select-choices-row")));
+        driver.findElement(By.cssSelector(".ui-select-choices-row > a:nth-child(1) > div:nth-child(1)")).click();
 
 
         String ShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-am-centralization-history/div[2]/clr-tabs/clr-tab/clr-tab-content/form/div/div/div/div/ng-select/div/div[2]/span/span")).getText();
@@ -310,14 +309,9 @@ public class OpenCSDSprint7AcceptanceTest {
         assertPopupNextFundNo("Share");
         searchFundsTable(uFundDetails[0]);
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
+        searchSharesTable(uShareDetails[0]);
 
-        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).click();
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uShareDetails[0]);
         wait.until(invisibilityOfElementLocated(By.id("product-dashboard-fundShareID-1-shareName")));
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/div/button")).click();
         wait.until(elementToBeClickable(By.id("product-dashboard-fundShareID-0-shareName")));
         driver.findElement(By.id("product-dashboard-fundShareID-0-shareName")).click();
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-fund-share/clr-tabs/clr-tab/clr-tab-content/div[1]/div/button")).click();

@@ -40,6 +40,7 @@ import {
     OfiInviteInvestorsComponent,
     OfiKycAlreadyDoneComponent,
     OfiKycHomeComponent,
+    KycAuditTrailComponent,
     OfiManageCsvComponent,
     OfiNavFundsList,
     OfiNavFundView,
@@ -50,6 +51,11 @@ import {
     OfiTaxReportComponent,
     ProductConfigurationComponent,
     OfiInvMyDocumentsComponent,
+    OfiRedirectTokenComponent,
+    OfiConsumeTokenComponent,
+    MyRequestsComponent,
+    NewKycRequestComponent,
+    MyRequestsContainerComponent,
     MyHoldingsComponent,
 } from '@ofi/ofi-main';
 /* UserAdmin Module. */
@@ -131,11 +137,19 @@ export const ROUTES: Routes = [
         loadChildren: '@setl/core-login/login.module#SetlLoginModule',
     },
     {
+        path: 'redirect/:lang/:invitationToken',
+        component: OfiRedirectTokenComponent,
+    },
+    {
+        path: 'consume',
+        component: OfiConsumeTokenComponent,
+    },
+    {
         path: 'signup',
         component: BlankLayoutComponent,
         children: [
             {
-                path: ':lang/:invitationToken',
+                path: '',
                 component: OfiSignUpComponent,
             },
         ],
@@ -205,6 +219,11 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc-am-documents',
                 component: OfiAmDocumentsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'kyc-audit-trail/:kycID',
+                component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
             },
             {
@@ -638,6 +657,21 @@ export const ROUTES: Routes = [
                     {
                         path: 'client/:kycId',
                         component: OfiWaitingApprovalComponent,
+                    },
+                ],
+            },
+            {
+                path: 'my-requests',
+                canActivate: [LoginGuardService],
+                component: MyRequestsContainerComponent,
+                children: [
+                    {
+                        path: 'list',
+                        component: MyRequestsComponent,
+                    },
+                    {
+                        path: 'new',
+                        component: NewKycRequestComponent,
                     },
                 ],
             },

@@ -146,14 +146,14 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-my-products");
         navigateToPageByID("menu-nav");
-        verifyCorrectPageById("Net asset value");
+        verifyCorrectPageById("Net Asset Value");
     }
 
     @Test
     public void shouldNavigateToNAVHomepage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[2]/div/a")).click();
-        assertTrue(driver.findElement(By.id("NAV-Title")).getText().equals("Net asset value"));
+        assertTrue(driver.findElement(By.id("NAV-Title")).getText().equals("Net Asset Value"));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class OpenCSDNavigationAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("top-menu-my-info")));
         wait.until(elementToBeClickable(By.id("top-menu-my-info")));
         driver.findElement(By.id("top-menu-my-info")).click();
-        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]")).getText().equals("MY INFORMATION"));
+        assertTrue(driver.findElement(By.xpath("//*[@id=\"ofi-welcome-additionnal\"]")).getText().equals("My Information"));
     }
 
     @Test
