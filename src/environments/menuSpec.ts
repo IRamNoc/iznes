@@ -352,7 +352,7 @@ const kycDocuments = {
     ],
 };
 
-const MyAssetManagers = {
+const myAssetManagers = {
     label: 'My Asset Managers',
     label_txt: 'txt_my_asset_managers',
     icon_class: 'fa fa-users',
@@ -364,6 +364,14 @@ const MyAssetManagers = {
             icon_class: 'fa fa-copy',
             element_id: 'top-menu-my-documents',
             router_link: '/my-asset-managers/my-documents',
+        },
+        {
+            label : 'My Requests',
+            label_txt : 'txt_my_requests',
+            icon_class : 'fa fa-file-text',
+            element_id : 'top-menu-my-requests',
+            router_link : '/my-requests/list',
+            dynamic_link: '/my-requests/list[^\/]*',
         },
     ],
 };
@@ -398,26 +406,6 @@ const accountAdmin = {
             router_link: '/account-admin/teams',
             dynamic_link: '/account-admin/teams/[^\/]*',
         },
-    ],
-};
-
-const myKYCRequests = {
-    label : 'My Requests',
-    label_txt : 'txt_my_requests',
-    icon_class : 'fa fa-file-text',
-    element_id : 'top-menu-my-requests',
-    router_link : '/my-requests/list',
-    dynamic_link: '/my-requests/list[^\/]*',
-};
-
-const myAssetManagers = {
-    label: 'My Asset Managers',
-    label_txt: 'txt_my_asset_managers',
-    icon_class: 'fa fa-users',
-    element_id: 'top-menu-my-asset-managers',
-    always_displayed: true,
-    children: [
-        myKYCRequests,
     ],
 };
 
@@ -460,11 +448,10 @@ export const menuSpec: MenuSpec = {
         investor: [
             home,
             orderBook,
-            MyAssetManagers,
+            myAssetManagers,
             myHoldings,
             // dashboard,
             subPortfolio,
-            myAssetManagers,
             // messages,
             // {
             //     label: 'Reports',
