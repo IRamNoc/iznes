@@ -196,6 +196,9 @@ export {
     setrequested,
     setamkyclist,
     clearrequested,
+    OFI_SET_MY_DOCUMENTS_LIST,
+    OFI_SET_REQUESTED_MY_DOCUMENTS,
+    OFI_CLEAR_REQUESTED_MY_DOCUMENTS,
 } from './ofi-kyc';
 
 /* Currencies */

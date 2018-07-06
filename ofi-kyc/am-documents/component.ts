@@ -237,7 +237,6 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
     }
 
     buildLink(column, row, event) {
-        console.log(column, row, event);
         if (
             !event.target.classList.contains('datagrid-expandable-caret') &&
             !event.target.classList.contains('datagrid-expandable-caret-button') &&

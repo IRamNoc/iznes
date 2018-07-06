@@ -559,7 +559,6 @@ export class FundComponent implements OnInit, OnDestroy {
 
     static getListItemText(value: string|number, list: { id: string|number, text: string }[]): string {
         const listItem = FundComponent.getListItem(value, list);
-        if (!listItem.length) console.log('getListItemText ', value, list);
         return listItem.length ? listItem[0].text : '';
     }
 
