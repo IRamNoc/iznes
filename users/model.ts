@@ -14,6 +14,12 @@ export class AccountAdminUser {
 }
 
 export class AccountAdminUserForm {
+    constructor(userTypePreset: string,
+                userTypesList: any[]) {
+        this.userType.preset = userTypePreset;
+        this.userType.listItems = userTypesList;
+    }
+
     emailAddress: FormItem = {
         label: 'Email address (username)',
         type: FormItemType.text,
@@ -42,7 +48,7 @@ export class AccountAdminUserForm {
 
     userType: FormItem = {
         label: 'Type',
-        type: FormItemType.text,
+        type: FormItemType.list,
         required: true,
         style: [FormItemStyle.BreakOnAfter],
     };

@@ -4,7 +4,10 @@ import { NgRedux } from '@angular-redux/store';
 import {
     SET_ACCOUNT_ADMIN_USERS,
     setRequestedAccountAdminUsers,
+    SET_USER_TYPES,
+    setRequestedUserTypes,
 } from '@setl/core-store';
+import { AdminUsersService } from '@setl/core-req-services';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -20,7 +23,8 @@ import {
 @Injectable()
 export class UsersService extends AccountAdminBaseService {
     constructor(redux: NgRedux<any>,
-                private memberSocketService: MemberSocketService) {
+                private memberSocketService: MemberSocketService,
+                private usersService: AdminUsersService) {
         super(redux);
     }
 
@@ -192,6 +196,16 @@ export class UsersService extends AccountAdminBaseService {
     private generatePassword(): string {
         // TODO: to be changed to a randon string generator
         return 'changeme';
+    }
+
+    getUserTypes(): void {
+        const asyncTaskPipe = this.usersService.requestUserTypes();
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 setRequestedUserTypes,
+                                 SET_USER_TYPES,
+                                 () => {},
+                                 () => {});
     }
 
 }

@@ -53,7 +53,11 @@
                     <clr-dg-cell id="{{'accountAdminTeamCellPhone' + idx}}" (click)="navigateToEntity(user.userID)">{{user.phoneNumber}}</clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellType' + idx}}" (click)="navigateToEntity(user.userID)">{{user.userType}}</clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellTeams' + idx}}" (click)="navigateToEntity(user.userID)">
-                        <span class="label label-info">{{user.totalTeams}}</span>
+                        <span class="label"
+                            [class.label-danger]="user.totalTeams == 0"
+                            [class.label-info]="user.totalTeams > 0">
+                            {{user.totalTeams}}
+                        </span>
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" (click)="navigateToEntity(user.userID)">
                         <ng-container [ngSwitch]="user.userStatus">
