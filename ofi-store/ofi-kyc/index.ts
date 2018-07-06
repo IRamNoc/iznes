@@ -1,8 +1,11 @@
-import {combineReducers, Reducer} from 'redux';
-import {KycMyInformationsReducer, KycMyInformationsState} from './my-informations';
-import {AmKycListReducer, AmKycListState} from './ofi-am-kyc-list';
-import {investorInvitationState, investorInvitationReducer} from './invitationsByUserAmCompany';
 import {AmKycMyRequestDetailsReducer, KycMyRequestDetailsState} from './ofi-my-request-details';
+import { combineReducers, Reducer } from 'redux';
+import { KycMyInformationsReducer, KycMyInformationsState } from './my-informations';
+import { AmKycListReducer, AmKycListState } from './ofi-am-kyc-list';
+import { investorInvitationState, investorInvitationReducer } from './invitationsByUserAmCompany';
+import { kycStatusAuditTrailState, kycStatusAuditTrailReducer } from './status-audit-trail';
+import { MyKycListState, MyKycListReducer } from './kyc-list';
+import { kycInformationAuditTrailState, kycInformationAuditTrailReducer } from './information-audit-trail';
 
 export {
     KycMyInformations,
@@ -16,7 +19,7 @@ export {
     CLEAR_REQUESTED,
     setamkyclist,
     setrequested,
-    clearrequested
+    clearrequested,
 } from './ofi-am-kyc-list';
 
 export {
@@ -48,11 +51,16 @@ export {
 
 export * from './invitationsByUserAmCompany';
 
+export * from './kyc-list';
+
 export interface KycState {
     myInformations: KycMyInformationsState;
     amKycList: AmKycListState;
     investorInvitations: investorInvitationState;
     kycMyRequestDetails: KycMyRequestDetailsState;
+    myKycList: MyKycListState;
+    statusAuditTrail: kycStatusAuditTrailState;
+    informationAuditTrail: kycInformationAuditTrailState;
 }
 
 export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
@@ -60,4 +68,7 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
     kycMyRequestDetails: AmKycMyRequestDetailsReducer,
+    myKycList: MyKycListReducer,
+    statusAuditTrail: kycStatusAuditTrailReducer,
+    informationAuditTrail: kycInformationAuditTrailReducer,
 });

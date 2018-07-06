@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
@@ -49,8 +49,17 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         type: FormItemType.date,
         label: 'Subscription Period Start Date',
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_substartdate',
+    };
+    iban: FormItem = {
+        type: FormItemType.text,
+        label: 'IBAN',
+        required: true,
+        mltag: 'txt_fundshare_iban',
+        validator: Validators.compose([
+            Validators.minLength(14),
+            Validators.maxLength(34),
+        ]),
     };
     shareLaunchDate: FormItem = {
         type: FormItemType.date,
@@ -72,7 +81,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
     // conditional - status
     feeder: FormItem = {
         type: FormItemType.list,
-        label: 'Feeder',
+        label: 'Master', // previously was displayed was Feeder
         required: true,
         hidden: () => {
             const val = (this.status.value() as any);
@@ -520,7 +529,7 @@ export class ShareKeyFactsOptional {
 function validateISIN(c: FormControl) {
     const ISIN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[0-9]{10}\b/);
 
-    return ISIN_REGEXP.test(c.value) ? null : {
+    return ISIN_REGEXP.test(c.value) && c.value.length === 12 ? null : {
         'ISIN must meet ISO 6166 format (12 characters).': c.value,
     };
 }

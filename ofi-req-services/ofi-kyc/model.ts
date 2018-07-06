@@ -22,6 +22,11 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     investors: Array<Invitation>;
 }
 
+export interface UseTokenRequestBody extends MemberNodeMessageBody{
+    token: string,
+    invitationToken: string
+}
+
 export interface VerifyInvitationTokenRequestBody extends MemberNodeMessageBody {
     token: string;
     source: string;
@@ -118,6 +123,11 @@ export interface GetAmKycListRequestBody extends MemberNodeMessageBody {
     token: string;
 }
 
+export interface GetMyKycListRequestBody extends MemberNodeMessageBody {
+    token: string;
+    walletid: number;
+}
+
 export interface GetInvestorRequestBody extends MemberNodeMessageBody {
     token: string;
 }
@@ -150,4 +160,19 @@ export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
 export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
+}
+
+export interface createKYCDraftRequestData{
+    inviteToken: string;
+    managementCompanyID: number;
+    investorWalletID: number;
+    kycStatus: number;
+}
+
+export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
+    token: string;
+    inviteToken: string;
+    managementCompanyID: number;
+    investorWalletID: number;
+    kycStatus: number;
 }

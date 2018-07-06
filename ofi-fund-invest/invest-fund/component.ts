@@ -197,7 +197,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return (this.type === 'subscribe' ? this.shareData['entryFee'] : this.shareData['exitFee']);
+        return (this.type === 'subscribe' ? this._numberConverterService.toFrontEnd(this.shareData['entryFee']) :
+            this._numberConverterService.toFrontEnd(this.shareData['exitFee']));
     }
 
     get cutoffTime(): string {
@@ -351,21 +352,42 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return quantity > this.amountLimit;
     }
 
+    get feeFrontend(): {
+        mifiidChargesOneOff: number;
+        mifiidChargesOngoing: number;
+        mifiidTransactionCosts: number;
+        mifiidServicesCosts: number;
+        mifiidIncidentalCosts: number;
+    } {
+        const mifiidChargesOneOff = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOneOff);
+        const mifiidChargesOngoing = this._numberConverterService.toFrontEnd(this.shareData.mifiidChargesOngoing);
+        const mifiidTransactionCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidTransactionCosts);
+        const mifiidServicesCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidServicesCosts);
+        const mifiidIncidentalCosts = this._numberConverterService.toFrontEnd(this.shareData.mifiidIncidentalCosts);
+
+        return {
+            mifiidChargesOneOff,
+            mifiidChargesOngoing,
+            mifiidTransactionCosts,
+            mifiidServicesCosts,
+            mifiidIncidentalCosts,
+        };
+    }
+
     constructor(private _changeDetectorRef: ChangeDetectorRef,
-        public _moneyValuePipe: MoneyValuePipe,
-        private _myWalletService: MyWalletsService,
-        private _walletNodeRequestService: WalletNodeRequestService,
-        private _numberConverterService: NumberConverterService,
-        private _ofiOrdersService: OfiOrdersService,
-        private _alertsService: AlertsService,
-        private _confirmationService: ConfirmationService,
-        private _toaster: ToasterService,
-        private _router: Router,
-        private logService: LogService,
-        public _translate: MultilingualService,
-        private _ngRedux: NgRedux<any>,
-        private _messagesService: MessagesService
-    ) {
+                public _moneyValuePipe: MoneyValuePipe,
+                private _myWalletService: MyWalletsService,
+                private _walletNodeRequestService: WalletNodeRequestService,
+                private _numberConverterService: NumberConverterService,
+                private _ofiOrdersService: OfiOrdersService,
+                private _alertsService: AlertsService,
+                private _confirmationService: ConfirmationService,
+                private _toaster: ToasterService,
+                private _router: Router,
+                private logService: LogService,
+                public _translate: MultilingualService,
+                private _ngRedux: NgRedux<any>,
+                private _messagesService: MessagesService) {
     }
 
     ngOnDestroy() {
@@ -770,7 +792,7 @@ The IZNES Team.</p>`;
         if (type === 'cutoff') {
 
             const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
-                .format('YYYY-MM-DD HH:mm');
+            .format('YYYY-MM-DD HH:mm');
 
             const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
@@ -1016,7 +1038,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent / 100)).done(), 14));
+    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
 }
 
 /**

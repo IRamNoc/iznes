@@ -92,6 +92,7 @@ export class FundShare {
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
+            iban: this.keyFacts.mandatory.iban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
@@ -118,7 +119,7 @@ export class FundShare {
             redemptionCutOffTime: this.calendar.mandatory.redemptionCutOffTime.value(),
             redemptionCutOffTimeZone: this.getSelectValue(this.calendar.mandatory.redemptionCutOffTimeZone),
             redemptionSettlementPeriod: this.getSelectValue(this.calendar.mandatory.redemptionSettlementPeriod),
-            subscriptionRedemptionCalendar: this.calendar.mandatory.subscriptionRedemptionCalendar.value(),
+            subscriptionRedemptionCalendar: '0',
             maxManagementFee: this.fees.mandatory.maxManagementFee.value(),
             maxSubscriptionFee: this.fees.mandatory.maxSubscriptionFee.value(),
             maxRedemptionFee: this.fees.mandatory.maxRedemptionFee.value(),
@@ -175,6 +176,7 @@ export class FundShare {
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
         this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.keyFacts.mandatory.iban.preset = fundShare.iban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
@@ -215,7 +217,8 @@ export class FundShare {
             this.calendar.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
         );
-        this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
+        // removed by PZ 28/06/2018
+        // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
         this.fees.mandatory.maxManagementFee.preset = fundShare.maxManagementFee;
         this.fees.mandatory.maxSubscriptionFee.preset = fundShare.maxSubscriptionFee;
         this.fees.mandatory.maxRedemptionFee.preset = fundShare.maxRedemptionFee;

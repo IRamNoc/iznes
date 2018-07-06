@@ -25,9 +25,12 @@
 
                 <div class="hr-line-dashed"></div>
 
-                <clr-datagrid clrDgSortIcon>
+                <clr-datagrid>
                     <clr-dg-column [clrDgField]="'amManagementCompanyID'" clrDgSortIcon>
                         <span>{{'Asset Management Company' | translate}}</span> <span class="column-label"></span>
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
+                        {{'Portfolio' | translate}} <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundShareName'" clrDgSortIcon>
                         {{'Share Name' | translate}} <span class="column-label"></span>
@@ -51,8 +54,9 @@
                         {{'Ratio' | translate}} <span class="column-label"></span>
                     </clr-dg-column>
 
-                    <clr-dg-row *ngFor="let data of holdingsList">
+                    <clr-dg-row *clrDgItems="let data of holdingsList">
                         <clr-dg-cell>{{data.companyName}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
                         <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
