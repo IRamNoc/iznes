@@ -125,6 +125,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -133,6 +134,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldEnterKYCInformationOnFirstLoginAsProfessionalInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccess(adminuser, adminuserPassword);
         navigateToAddUser();
@@ -157,6 +159,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteAnInvestorAndReceiveEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -173,7 +176,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteAnInvestorAndInvestorCanLogin() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
@@ -181,6 +184,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteAnInvestorWithoutFirstname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
@@ -188,6 +192,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteAnInvestorWithoutLastname() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
@@ -195,6 +200,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldNotInviteAnInvestorWithoutEmail() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
@@ -202,11 +208,13 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldShowKYCLandingPageOnFirstLoginAsInvestor() throws IOException, InterruptedException{
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
      }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -215,6 +223,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -223,12 +232,12 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
         fillKYCLowerFields("SETL Developments Ltd", "07956701992");
         saveKYCAndVerifySuccessPageOne();
-        ///////////thisone
     }
 
     @Test
@@ -237,7 +246,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldDisplayPopupConfirmationScreenIfCaseNO() throws IOException, InterruptedException {
         loginKYCConfirmationScreen("testops005@setl.io", "asdasd");
         fillKYCTopFields("testops001@setl.io", "Test", "Investor");
@@ -248,6 +257,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldNotBeAskedToEnterKycAfterFillingItOutOnce() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops006@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops006@setl.io", "Test", "Investor");
@@ -257,18 +267,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
         selectOptionNoValidatePopup();
         logout();
         loginCompleteKYC("testops006@setl.io", "asdasd");
-        ///////////thisone
     }
 
     @Test
-    @Ignore("Test needs to be redone")
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldReceiveActionMessageFromInvestorIfCaseNO() throws IOException, InterruptedException {
-//        loginAndVerifySuccessKYC("testops002@setl.io", "alex01");
-//        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-//        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-//        saveKYCAndVerifySuccessPageOne();
-//        selectOptionAndSubmitKYC("no");
-//        logout();
         loginAndVerifySuccess("am", "alex01");
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -280,10 +283,10 @@ public class OpenCSDKYCModuleAcceptanceTest {
         }catch (Exception e){
             fail(e.getMessage());
         }
-        //assert kyc is awaiting approval
     }
 
     @Test
+    @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldTakeInvestorToAwaitingPageIfCaseYES() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops003@setl.io", "asdasd", "additionnal");
         fillKYCTopFields("testops003@setl.io", "Test", "Investor");
@@ -291,7 +294,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         saveKYCAndVerifySuccessPageOne();
         selectOptionAndSubmitKYC("yes");
         logout();
-        ///////////thisone
     }
 
     @Test
