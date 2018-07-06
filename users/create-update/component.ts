@@ -11,7 +11,7 @@ import { clearRequestedUserTypes } from '@setl/core-store';
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse } from '../../base/model';
+import { AccountAdminErrorResponse, AccountAdminNouns } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-users-crud',
@@ -32,7 +32,7 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
                 alerts: AlertsService,
                 toaster: ToasterService) {
         super(route, router, alerts, toaster);
-        this.noun = 'User';
+        this.noun = AccountAdminNouns.User;
     }
 
     ngOnInit() {

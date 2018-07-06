@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 
-import { AccountAdminErrorResponse } from '../model';
+import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 
 @Component({
     selector: 'app-account-admin-crud-base',
@@ -71,6 +71,14 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         this.permissionsForm = new FormGroup({
             permissions: new FormControl(),
         });
+    }
+
+    isTeamsPage(): boolean {
+        return this.noun === AccountAdminNouns.Team;
+    }
+
+    isUsersPage(): boolean {
+        return this.noun === AccountAdminNouns.User;
     }
 
     isCreateMode(): boolean {

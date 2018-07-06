@@ -25,6 +25,8 @@ import {
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
     UserTeamsService,
+    UserTeamsUsersMgmtComponent,
+    UserManagementService,
 } from './teams';
 
 import {
@@ -60,8 +62,13 @@ import {
         UsersAuditComponent,
         UsersCreateUpdateComponent,
         UsersListComponent,
+        UserTeamsUsersMgmtComponent,
     ],
-    providers: [UserTeamsService, UsersService],
+    providers: [
+        UserTeamsService,
+        UsersService,
+        UserManagementService,
+    ],
     exports: [],
 })
 export class CoreAccountAdminModule {
