@@ -1,17 +1,17 @@
+import { combineLatest as observableCombineLatest, Subscription, Observable, } from 'rxjs';
+import { distinctUntilChanged, filter } from 'rxjs/operators';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { APP_CONFIG, AppConfig, immutableHelper, LogService } from '@setl/utils';
+import { setRequestedMailList } from '@setl/core-store';
+import { MyMessagesService } from '@setl/core-req-services';
+import { MessagesService } from "../messages.service";
+import { MailHelper } from './mailHelper';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToasterService } from 'angular2-toaster';
 
-import {combineLatest as observableCombineLatest, Subscription, Observable} from 'rxjs';
-import {ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {APP_CONFIG, AppConfig, immutableHelper, LogService} from '@setl/utils';
-import {setRequestedMailList} from '@setl/core-store';
-import {MyMessagesService} from '@setl/core-req-services';
-import {MessagesService} from "../messages.service";
-import {MailHelper} from './mailHelper';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ToasterService} from 'angular2-toaster';
-
-import {FileDownloader} from "@setl/utils";
+import { FileDownloader } from "@setl/utils";
 
 @Component({
     selector: 'setl-messages',
@@ -70,15 +70,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
         ['blockquote'],
 
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'direction': 'rtl'}],                         // text direction
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'direction': 'rtl' }],                         // text direction
 
-        [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+        [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
 
-        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
-        [{'font': []}],
-        [{'align': []}],
+        [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        [{ 'font': [] }],
+        [{ 'align': [] }],
 
         ['clean']                                         // remove formatting button
     ];
@@ -120,20 +120,20 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         this.subscriptionsArray.push(
             observableCombineLatest(
-                this.getConnectedWallet.distinctUntilChanged().filter(walletId => walletId > 0),
+                this.getConnectedWallet.pipe(distinctUntilChanged(), filter(walletId => walletId > 0)),
                 this.getWalletDirectoryList
             )
-                .subscribe((subs) => {
-                    const walletId = subs[0];
-                    const walletDirectoryList = subs[1];
+            .subscribe((subs) => {
+                const walletId = subs[0];
+                const walletDirectoryList = subs[1];
 
-                    this.connectedWalletId = walletId;
-                    this.mailHelper.retrieveMessages(walletId, this.currentBox.type || 'inbox', 0, 15, this.search);
+                this.connectedWalletId = walletId;
+                this.mailHelper.retrieveMessages(walletId, this.currentBox.type || 'inbox', 0, 15, this.search);
 
-                    this.walletDirectoryList = walletDirectoryList;
-                    this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
-                    this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.connectedWalletId);
-                })
+                this.walletDirectoryList = walletDirectoryList;
+                this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
+                this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.connectedWalletId);
+            })
         );
 
         this.subscriptionsArray.push(
@@ -156,8 +156,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             this.getMailCounts,
             this.getMessageList
         ]).subscribe((subs) => {
-                this.mailCounts = subs[0];
-                this.messagesList(subs[1]);
+            this.mailCounts = subs[0];
+            this.messagesList(subs[1]);
         });
 
         this.messageComposeForm = new FormGroup({
@@ -179,7 +179,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
                             this.messageComposeForm.setValue({
                                 subject: 'Re: ' + reply.subject,
-                                recipients: [{id: {walletId: reply.senderId}, text: reply.senderWalletName}],
+                                recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' + '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' + reply.senderWalletName + '</b> ' + reply.date + ':</p>' + reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;')
                             });
                         }
@@ -278,7 +278,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     uncheckAll() {
         this.messages = this.messages.map((message) => {
-            return {...message, isChecked: false};
+            return { ...message, isChecked: false };
         });
     }
 
@@ -407,7 +407,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param {boolean} composeSelected
      */
     showCategory(index, composeSelected = false, page = 0, reset = true) {
-        if(reset){
+        if (reset) {
             this.messageView = false;
         }
         this.resetMessages(reset);
@@ -429,7 +429,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
             this.requestMailboxByCategory(type, page);
 
-            if(reset){
+            if (reset) {
                 this.currentMessage = {
                     id: 0,
                     mailid: 0
@@ -475,7 +475,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.currentCategory = 0;
         this.currentPage = 0;
         // Default current message
-        if(reset){
+        if (reset) {
             this.currentMessage = {
                 id: 0
             };
@@ -533,7 +533,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.editor = quill;
     }
 
-    public onContentChanged({quill, html, text}) {
+    public onContentChanged({ quill, html, text }) {
     }
 
     private get disabledV(): string {
@@ -557,9 +557,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public itemsToString(value: Array<any> = []): string {
         return value
-            .map((item: any) => {
-                return item.text;
-            }).join(',');
+        .map((item: any) => {
+            return item.text;
+        }).join(',');
     }
 
     replyMessage() {
