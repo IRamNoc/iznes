@@ -10,29 +10,46 @@
             </button>
 
             <clr-tab-content *clrIfActive="tabdata.active">
-                <form [formGroup]="searchFundsForm" id="search-funds-orders-form" *ngIf="tabdata.type === 'funds'">
+                <form [formGroup]="searchForm" id="search-funds-orders-form" *ngIf="tabdata.type === 'funds'">
                     <div class="form-horizontal">
                         <div class="row ">
                             <div class="form-group col-sm-8">
                                 <p>{{'Please select the fund on which you want to see the recordkeeping or export recordkeeping for all funds by clicking on the top right button.' | translate}}</p>
-                                <label style="margin: 10px 0;">
+                                <div style="margin: 10px 0;">
                                     <b><span>{{'Fund Name:' | translate}}</span></b>
-                                </label>
+                                </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-search-field" [items]="fundList" [allowClear]="true" [placeholder]="_translate.translate('Type a Fund Name or a share\'s ISIN')" [formControl]="searchFundsForm.controls['search']">
+                                    <ng-select id="holders-funds-search-field" [items]="fundList" [allowClear]="true" [placeholder]="_translate.translate('Type a Fund Name or a share\'s ISIN')" [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
                             <div class="col-sm-4 text-right">
-                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="handleHoldersExportButtonClick()">{{'Export Recordkeeping for all funds' | translate}}</button>
+                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportButton('all')">{{'Export Recordkeeping for all funds' | translate}}</button>
                             </div>
                         </div>
                     </div>
                 </form>
 
-                <form [formGroup]="searchFundsForm" id="search-shares-orders-form" *ngIf="tabdata.type === 'shares'">
-                    SHARES
+                <form [formGroup]="searchForm" id="search-shares-orders-form" *ngIf="tabdata.type === 'shares'">
+                    <div class="form-horizontal">
+                        <div class="row ">
+                            <div class="form-group col-sm-8">
+                                <p>{{'Please select the share on which you want to see the recordkeeping.' | translate}}</p>
+                                <div style="margin: 10px 0;">
+                                    <b><span>{{'Share Name or ISIN:' | translate}}</span></b>
+                                </div>
+
+                                <div class="input-button-group">
+                                    <ng-select id="holders-shares-search-field" [items]="fundList" [allowClear]="true" [placeholder]="_translate.translate('Type a Fund Name or a share\'s ISIN')" [formControl]="searchForm.controls['search']">
+                                    </ng-select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 text-right">
+                                <button id="holders-shares-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportButton('all')">{{'Export Recordkeeping for all funds' | translate}}</button>
+                            </div>
+                        </div>
+                    </div>
                 </form>
 
                 <div class="hr-line-dashed"></div>
@@ -61,18 +78,27 @@
         </clr-tab>
     </clr-tabs>
 
-    <ng-template #staticFunds let-data="data">
+    <ng-template #staticFunds let-data="data" let-tabid="tabid">
         <div class="panel-body">
-            <form [formGroup]="filtersFundsForm" id="filters-funds-orders-form">
+            <form [formGroup]="filtersForm" id="filters-funds-orders-form">
                 <div class="form-horizontal">
                     <div class="row ">
-                        <div class="form-group col-sm-12">
+                        <div class="form-group col-sm-4">
                             <label>
                                 <b>{{'Top holders of this fund:' | translate}}</b>
                             </label>
                             <div class="input-button-group">
-                                <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this fund')" [formControl]="filtersFundsForm.controls['topholders']">
+                                <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this fund')" [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>
+                                <b>{{'Last Settlement Date:' | translate}}</b>
+                            </label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input id="filter-funds-settlement-date" formControlName="settlementDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
                             </div>
                         </div>
                     </div>
@@ -104,7 +130,109 @@
                             </div>
                         </div>
                         <div class="col-sm-4 text-right">
-                            <button id="holders-funds-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important" (click)="handleHoldersExportButtonClick()">{{'Export Recordkeeping' | translate}}</button>
+                            <button id="holders-funds-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportButton('')">{{'Export Recordkeeping' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <br>
+
+            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+                <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let data of data">
+                    <clr-dg-cell>{{data.ranking}}</clr-dg-cell>
+                    <clr-dg-cell>{{data.investor}}</clr-dg-cell>
+                    <clr-dg-cell>{{data.portfolio}}</clr-dg-cell>
+                    <clr-dg-cell>{{data.asset | moneyValue:5}}</clr-dg-cell>
+                    <clr-dg-cell>{{data.ratio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
+                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}-->
+                    </clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+    <ng-template #staticShares let-data="data" let-tabid="tabid">
+        <div class="panel-body">
+            <form [formGroup]="filtersForm" id="filters-shares-orders-form">
+                <div class="form-horizontal">
+                    <div class="row ">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        <b>{{'Top holders of this share:' | translate}}</b>
+                                    </label>
+                                    <div class="input-button-group">
+                                        <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
+                                        </ng-select>
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label>
+                                        <b>{{'Last Settlement Date:' | translate}}</b>
+                                    </label>
+                                    <div class="input-group date-pick-wrapper">
+                                        <span class="fa fa-calendar" aria-hidden="true"></span>
+                                        <input id="filter-shares-settlement-date" formControlName="settlementDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 text-right">
+                            <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportButton('')">{{'Export Recordkeeping' | translate}}</button>
+                        </div>
+                    </div>
+                    <div class="row mt-1">
+                        <div class="form-group col-sm-2">
+                            <label>
+                                <b>{{'Number of holders' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{fundsNbHolders}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label>
+                                <b>{{'Share AUM' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{fundsAUM | moneyValue:5}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>
+                                <b>{{'Number of units' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{sharesNbUnits}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label>
+                                <b>{{'Latest NAV' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{sharesLatestNAV}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>
+                                <b>{{'CCY' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{fundsCCY}}</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -137,3 +265,24 @@
     </ng-template>
 
 </section>
+
+<!-- NAV upload modal -->
+<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="true">
+    <!--*ngIf="isFundLevel"-->
+    <h3 class="modal-title">
+        {{'Export Recorkeeping with share details?' | translate}}
+    </h3>
+
+    <div class="modal-body text-center">
+        <p>
+            {{'Do you want to export the record keeping at funds level only,' | translate}}
+            <br>
+            {{'or do you want shares details too?' | translate}}
+        </p>
+    </div>
+
+    <div class="modal-footer">
+        <button id='exportFundOnly' type="button" class="btn btn-outline" (click)="exportFile('fund', 'only')">{{'Export at funds level only' | translate}}</button>
+        <button id='exportFundShares' type="button" class="btn btn-outline" (click)="exportFile('fund', 'shares')">{{'Export with shares details' | translate}}</button>
+    </div>
+</clr-modal>

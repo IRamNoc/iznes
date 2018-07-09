@@ -33,8 +33,14 @@ interface SelectedItem {
 
 export class ShareHoldersComponent implements OnInit, OnDestroy {
 
-    searchFundsForm: FormGroup;
-    filtersFundsForm: FormGroup;
+    searchForm: FormGroup;
+    filtersForm: FormGroup;
+    searchSharesForm: FormGroup;
+    filtersSharesForm: FormGroup;
+
+    showModal = false;
+    exportType = '';
+    isFundLevel = true;
 
     /* Datagrid server driven */
     total: number;
@@ -73,6 +79,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     fundsAUM = 0;
     fundsCCY = 'EUR';
 
+    sharesNbUnits = 0;
+    sharesLatestNAV = 0;
+
     fundList = [];
     fundsData = [];
     sharesData = [];
@@ -103,12 +112,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
 
-        this.searchFundsForm = this._fb.group({
+        this.searchForm = this._fb.group({
             search: [
                 '',
             ],
         });
-        this.filtersFundsForm = this._fb.group({
+        this.filtersForm = this._fb.group({
             topholders: [
                 '',
             ],
@@ -121,7 +130,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
+        this.isFundLevel = (this.router.url.indexOf('/funds/') !== -1) ? true : false;
     }
 
     getLanguage(requested): void {
@@ -179,6 +188,17 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
 
         // this.tabsControl = openedTabs;
+    }
+
+    exportButton(type) {
+        this.exportType = (type === '') ? '' : 'all';
+        this.showModal = true;
+    }
+
+    exportFile(type) {
+        console.log('Export on fundLevel: ' + this.isFundLevel);
+        console.log('Export type: ' + type);
+        this.showModal = false;
     }
 
     ngOnDestroy(): void {
