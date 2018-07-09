@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Observable} from "rxjs/Observable";
+import {Observable} from "rxjs";
 import {select} from "@angular-redux/store";
+import {filter} from "rxjs/operators"
 
 @Injectable()
 export class MenuSpecService {
@@ -12,6 +13,6 @@ export class MenuSpecService {
     }
 
     getMenuSpec() {
-        return this.getSiteMenu.filter(m => !!Object.keys(m).length);
+        return this.getSiteMenu.pipe(filter(m => !!Object.keys(m).length));
     }
 }
