@@ -1,26 +1,26 @@
 // Vendor
-import {Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
+import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
 import * as _ from 'lodash';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 
 // Internal
 import {
     MemberService,
 } from '@setl/core-req-services';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {Subscription, Observable} from 'rxjs';
-import {NumberConverterService, immutableHelper} from '@setl/utils';
-import {ActivatedRoute, Router, Params} from '@angular/router';
-import {ofiListOfFundsComponentActions, clearRequestedFundAccessMy} from '@ofi/ofi-main/ofi-store';
+import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { Subscription, Observable } from 'rxjs';
+import { NumberConverterService, immutableHelper } from '@setl/utils';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ofiListOfFundsComponentActions, clearRequestedFundAccessMy } from '@ofi/ofi-main/ofi-store';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderType} from '../../ofi-orders/order.model';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
+import { OrderType } from '../../ofi-orders/order.model';
 
-import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
-import {ReportingService} from '@setl/core-balances/reporting.service';
-import has = Reflect.has;
+import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
+import { ReportingService } from '@setl/core-balances/reporting.service';
 
 
 @Component({
@@ -86,7 +86,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
 
-        const combinedFundShare$ = this.fundShareAccessListOb.combineLatest(this.balancesOb);
+        const combinedFundShare$ = observableCombineLatest(this.fundShareAccessListOb, this.balancesOb);
         this.subscriptionsArray.push(combinedFundShare$.subscribe(
             ([fundShareAccessList, balances]) => this.updateFundList(fundShareAccessList, balances)));
 
@@ -170,7 +170,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const shareName = item.get('fundShareName', '');
 
             let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
-            if(!isNaN(position)){
+            if (!isNaN(position)) {
                 position = this._numberConverterService.toFrontEnd(position);
             }
 
@@ -187,7 +187,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
                 nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
                 hasNoNav: Boolean(nav <= 0),
-                position : position
+                position: position
             });
 
             return result;

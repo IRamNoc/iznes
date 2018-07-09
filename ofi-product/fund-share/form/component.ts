@@ -1,7 +1,6 @@
+import { forkJoin as observableForkJoin, Observable, Subscription } from 'rxjs';
 
-import {forkJoin as observableForkJoin,  Observable ,  Subscription } from 'rxjs';
-
-import {take, first} from 'rxjs/operators';
+import { take, first } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
@@ -34,7 +33,7 @@ import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-produ
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
 import * as Enum from '../FundShareEnum';
-import {FundShareTradeCycleModel} from './trade-cycle/model';
+import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 @Component({
@@ -199,18 +198,18 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.fundShareOb.pipe(take(2)),
                 this.fundShareDocsOb.pipe(take(2)),
                 this.fundListOb.pipe(first()),
-                this.shareListObs.first(),
+                this.shareListObs.pipe(first()),
                 this.umbrellaFundListOb.pipe(first()),
-                this.productionOb.first(),
+                this.productionOb.pipe(first()),
             ]);
         } else {
             fork = observableForkJoin([
                 this.route.paramMap.pipe(first()),
                 this.managementCompanyAccessListOb.pipe(first()),
                 this.fundListOb.pipe(first()),
-                this.shareListObs.first(),
+                this.shareListObs.pipe(first()),
                 this.umbrellaFundListOb.pipe(first()),
-                this.productionOb.first(),
+                this.productionOb.pipe(first()),
             ]);
         }
 
@@ -218,42 +217,42 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         fork.subscribe(data => {
                 // nothing to do here
-        },
-                       (err) => {
-                           this.toaster.pop('error', 'An error occured.');
-                           this.router.navigateByUrl(`product-module/product`);
-                       },         () => {
-                           if (this.mode === FundShareMode.Update) {
-                               if (this.fundShareData) this.model.setFundShare(this.fundShareData);
+            },
+            (err) => {
+                this.toaster.pop('error', 'An error occured.');
+                this.router.navigateByUrl(`product-module/product`);
+            }, () => {
+                if (this.mode === FundShareMode.Update) {
+                    if (this.fundShareData) this.model.setFundShare(this.fundShareData);
 
-                               if (this.fundShareId === this.fundShareData.fundShareID &&
+                    if (this.fundShareId === this.fundShareData.fundShareID &&
                         !!this.fundShareDocsData) {
-                                   this.model.setFundShareDocs(this.fundShareDocsData);
-                               }
-                           }
+                        this.model.setFundShareDocs(this.fundShareDocsData);
+                    }
+                }
 
-                           if (this.managementCompanyList) {
-                               this.model.fund.managementCompany.listItems = this.managementCompanyList;
-                               this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
-                           }
+                if (this.managementCompanyList) {
+                    this.model.fund.managementCompany.listItems = this.managementCompanyList;
+                    this.model.umbrella.managementCompanyID.listItems = this.managementCompanyList;
+                }
 
-                           this.model.setFund(this.fund);
+                this.model.setFund(this.fund);
 
-                           if (this.hasUmbrellaFund()) {
-                               this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
-                                   return index === this.model.umbrellaFundID.toString();
-                               }));
-                           }
+                if (this.hasUmbrellaFund()) {
+                    this.model.setUmbrellaFund(_.find(this.umbrellaFundList, (umbFund, index: string) => {
+                        return index === this.model.umbrellaFundID.toString();
+                    }));
+                }
 
-                           if (!this.model.isProduction) {
-                               this.model.documents.mandatory.kiid.required = false;
-                               this.model.documents.mandatory.prospectus.required = false;
-                           }
-                           this.isReady = true;
+                if (!this.model.isProduction) {
+                    this.model.documents.mandatory.kiid.required = false;
+                    this.model.documents.mandatory.prospectus.required = false;
+                }
+                this.isReady = true;
 
-                           this.changeDetectorRef.markForCheck();
-                           this.changeDetectorRef.detectChanges();
-                       });
+                this.changeDetectorRef.markForCheck();
+                this.changeDetectorRef.detectChanges();
+            });
 
     }
 
@@ -456,7 +455,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             });
 
             return result;
-        },                           []);
+        }, []);
 
         this.managementCompanyList = items;
     }
@@ -477,22 +476,22 @@ export class FundShareComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-            `,                 {
+            `, {
                 showCloseButton: false,
                 overlayClickToClose: false,
             });
 
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-                                                       this.redux,
-                                                       request,
-                                                       (data) => this.onCreateSuccess(data[1].Data),
-                                                       (e) => this.onCreateError(e[1].Data[0]));
+                this.redux,
+                request,
+                (data) => this.onCreateSuccess(data[1].Data),
+                (e) => this.onCreateError(e[1].Data[0]));
         } else {
             OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-                                                       this.redux,
-                                                       request,
-                                                       (data) => this.onUpdateSuccess(data[1].Data),
-                                                       (e) => this.onUpdateError(e[1].Data[0]));
+                this.redux,
+                request,
+                (data) => this.onUpdateSuccess(data[1].Data),
+                (e) => this.onUpdateError(e[1].Data[0]));
         }
     }
 
@@ -503,13 +502,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
         }
 
         OfiFundShareService.defaultCreateFundShareDocuments(this.ofiFundShareService,
-                                                            this.redux,
-                                                            this.model.getDocumentsRequest(data.fundShareID),
-                                                            (docsData) => {
-                                                                this.toaster.pop('success', data.fundShareName + ' has been successfully created');
-                                                                this.router.navigateByUrl(`product-module/product`);
-                                                            },
-                                                            (e) => this.onCreateError(e[1].Data[0]));
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (docsData) => {
+                this.toaster.pop('success', data.fundShareName + ' has been successfully created');
+                this.router.navigateByUrl(`product-module/product`);
+            },
+            (e) => this.onCreateError(e[1].Data[0]));
     }
 
     private onCreateError(e): void {
@@ -527,14 +526,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     private onUpdateSuccess(data): void {
         OfiFundShareService.defaultUpdateFundShareDocuments(this.ofiFundShareService,
-                                                            this.redux,
-                                                            this.model.getDocumentsRequest(data.fundShareID),
-                                                            (docsData) => {
-                                                                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+            this.redux,
+            this.model.getDocumentsRequest(data.fundShareID),
+            (docsData) => {
+                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
                     ' has been successfully updated');
-                                                                this.router.navigateByUrl(`product-module/product`);
-                                                            },
-                                                            (e) => this.onUpdateError(e[1].Data[0]));
+                this.router.navigateByUrl(`product-module/product`);
+            },
+            (e) => this.onUpdateError(e[1].Data[0]));
     }
 
     private onUpdateError(e): void {

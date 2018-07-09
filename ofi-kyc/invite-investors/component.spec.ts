@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ClarityModule } from '@clr/angular';
 import { Location } from '@angular/common';
 import { SelectModule } from '@setl/utils/index';
+
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 
