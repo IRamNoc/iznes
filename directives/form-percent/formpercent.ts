@@ -51,8 +51,6 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     iterateForm(controls, action) {
-        const nbControls = Object.keys(controls).length;
-
         Object.keys(controls).forEach((key) => {
             if (controls[key].controls) {
                 if (action === 'push') this.iterateForm(controls[key].controls, 'push');
@@ -61,11 +59,13 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
                 if (action === 'push') {
                     this.allFields[key] = { field: key, valid: false };
                 }
-                if (action === 'check') {
-                    if (controls[key].valid) {
-                        this.allFields[key].valid = true;
-                    } else {
-                        this.allFields[key].valid = false;
+                if (action === 'check' && this.allFields[key] !== undefined) {
+                    if (this.allFields[key].hasOwnProperty('valid')) {
+                        if (controls[key].valid) {
+                            this.allFields[key].valid = true;
+                        } else {
+                            this.allFields[key].valid = false;
+                        }
                     }
                 }
             }
@@ -77,7 +77,7 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     constructProgressBar() {
-        this.colorBar = (this.config.color === undefined) ? 'cssProgress-success' : (this.colors[this.config.color] !== undefined) ? this.colors[this.config.color] : 'cssProgress-success';
+        this.colorBar = (this.config.color === undefined) ? 'cssProgress-warning' : (this.colors[this.config.color] !== undefined) ? this.colors[this.config.color] : 'cssProgress-warning';
         // this.colorBarIcon = this.colorBar.replace('cssProgress', 'cssProgressIcon');
 
         this.divPG = document.createElement('div');
@@ -140,6 +140,20 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.divIcon.innerHTML = '<i class="fa fa-hourglass-half cssProgressIcon-warning"></i>';
         }
+
+        if (this.config.color === undefined) {
+            if (percent === 100) {
+                this.divProgressBarColor.classList.replace(this.colorBar, 'cssProgress-success');
+            } else {
+                this.divProgressBarColor.classList.replace('cssProgress-success', this.colorBar);
+            }
+        }
+    }
+
+    refreshFormPercent() {
+        this.allFields = []; // reset
+        this.iterateForm(this.config.form.controls, 'push'); // re-parse
+        this.iterateForm(this.config.form.controls, 'check'); // re-check
     }
 
     ngOnDestroy(): void {
