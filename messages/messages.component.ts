@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { combineLatest as observableCombineLatest, Subscription, Observable, } from 'rxjs';
 import { distinctUntilChanged, filter } from 'rxjs/operators';
 import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
@@ -121,11 +120,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         this.subscriptionsArray.push(
             observableCombineLatest(
-<<<<<<< HEAD
                 this.getConnectedWallet.pipe(distinctUntilChanged(), filter(walletId => walletId > 0)),
-=======
-                this.getConnectedWallet.distinctUntilChanged().filter(walletId => walletId > 0),
->>>>>>> Upgraded rxjs to v6
                 this.getWalletDirectoryList
             )
             .subscribe((subs) => {
