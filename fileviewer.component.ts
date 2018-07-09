@@ -1,32 +1,33 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, Inject, OnChanges,
-    SecurityContext
+    SecurityContext,
 } from '@angular/core';
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
-import {NgRedux, select} from '@angular-redux/store';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { NgRedux, select } from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
-import {AlertsService, AlertType} from '@setl/jaspero-ng2-alerts';
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeRequest} from '@setl/utils/common';
+import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
+import { MemberSocketService } from '@setl/websocket-service';
+import { createMemberNodeRequest } from '@setl/utils/common';
 
-import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
-import {APP_CONFIG} from '@setl/utils/appConfig/appConfig';
-import {AppConfig} from '@setl/utils/appConfig/appConfig.model';
-import {FileDownloader} from '@setl/utils/services/file-downloader/service';
+import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
+import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
+import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
+import { FileDownloader } from '@setl/utils/services/file-downloader/service';
 
-import {ValidateFileMessageBody} from "./fileviewer.model";
-import {FileViewerPreviewService} from './preview-modal/service';
+import { ValidateFileMessageBody } from './fileviewer.model';
+import { FileViewerPreviewService } from './preview-modal/service';
 
 enum ViewType {
     Button = 0,
-    Link = 1
+    Link = 1,
+    Download = 2,
 }
 
 @Component({
     selector: 'setl-file-viewer',
     templateUrl: 'fileviewer.component.html',
     styleUrls: ['fileviewer.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class FileViewerComponent implements OnInit, OnChanges {
@@ -67,14 +68,14 @@ export class FileViewerComponent implements OnInit, OnChanges {
             this.getUser.subscribe(
                 (data) => {
                     this.userId = data;
-                }
+                },
             );
         }
         if (this.getConnectedWallet) {
             this.getConnectedWallet.subscribe(
                 (data) => {
                     this.walletId = data;
-                }
+                },
             );
         }
     }
@@ -94,7 +95,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     (fileHash) => {
                         this.fileHash = fileHash;
                         resolve();
-                    }
+                    },
                 );
             } else {
                 resolve();
@@ -114,7 +115,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
             RequestName: 'validateFile',
             token: this.memberSocketService.token,
             walletId: this.walletId,
-            fileHash: this.fileHash
+            fileHash: this.fileHash,
         };
 
         createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
@@ -129,14 +130,35 @@ export class FileViewerComponent implements OnInit, OnChanges {
                 this.fileDownloader.getDownLoaderUrl({
                     method: 'retrieve',
                     walletId: this.walletId,
-                    downloadId: downloadId
-
+                    downloadId,
                 }).subscribe((downloadData) => {
                     const downloadUrl = downloadData.url;
                     this.previewModalService.open({
                         name: fileName,
-                        url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl)
+                        url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl),
                     });
+                });
+            }
+        });
+    }
+
+    public downloadFile() {
+        const messageBody: ValidateFileMessageBody = {
+            RequestName: 'validateFile',
+            token: this.memberSocketService.token,
+            walletId: this.walletId,
+            fileHash: this.fileHash,
+        };
+
+        createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
+            const data = result[1].Data;
+            if (data.error) {
+                this.showAlert('Unable to download file', 'error');
+            } else {
+                this.fileDownloader.downLoaderFile({
+                    method: 'retrieve',
+                    walletId: this.walletId,
+                    downloadId: data.downloadId,
                 });
             }
         });
