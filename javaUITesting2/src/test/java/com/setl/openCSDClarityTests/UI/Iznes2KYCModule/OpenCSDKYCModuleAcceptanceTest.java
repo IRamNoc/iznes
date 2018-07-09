@@ -13,7 +13,9 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -214,12 +216,74 @@ public class OpenCSDKYCModuleAcceptanceTest {
      }
 
     @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("", "07956701992");
-        verifySaveButtonIsDisabled();
+    @Ignore("waiting for id to be added")
+    public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
+        String userNo = "006";
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+
+        String test = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
+        assertTrue(test.equals("testops" + userNo + "@setl.io"));
+
+        String test2 = driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value");
+        assertTrue(test2.equals("Management Company"));
+
+        String test3 = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
+        assertTrue(test3.equals("Jordan" + userNo));
+
+        String test4 = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
+        assertTrue(test4.equals("Miller" + userNo));
+
+        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("Jordan Corp");
+        openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
+
+        String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
+        System.out.println(disabled);
+        assertTrue(disabled.equals("true"));
+
+        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
+
+        driver.findElement(By.id("btnKycSubmit")).click();
+
+        try {
+            String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
+            assertTrue(header2.equals("My Information"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")));
+
+        String myRequests = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")).getText();
+        assertTrue(myRequests.equals("My requests"));
+
+        try {
+            driver.findElement(By.id("kyc-newRequestBtn")).click();
+        }catch (Exception e){
+            fail(e.getMessage());}
+
+        String newRequests = driver.findElement(By.id("new-request-title")).getText();
+        assertTrue(newRequests.equals("Make a new request"));
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")));
+        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")).sendKeys("Management Company");
+        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/ul/li[1]/div/a")).click();
+
+        try {
+            String testf = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[2]/div/div[1]/div/div[1]")).getAttribute("class");
+            assertTrue(testf.equals("fs-active"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+
+
     }
 
     @Test
