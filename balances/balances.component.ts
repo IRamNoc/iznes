@@ -66,10 +66,13 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                     return updated;
                 })
             );
+<<<<<<< HEAD
 
         this.balances$.subscribe((balances) => {
             this.balances = balances;
         });
+=======
+>>>>>>> affb97cd993420165299c28f4324ee5180c284e0
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
