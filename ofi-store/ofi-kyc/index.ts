@@ -82,7 +82,7 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
     myKycList: MyKycListReducer,
-    myKycRequested : MyKycRequestedReducer
+    myKycRequested : MyKycRequestedReducer,
     kycMyRequestDetails: AmKycMyRequestDetailsReducer,
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,

@@ -63,7 +63,7 @@ import config, { kycEnums } from './config';
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent
+        OfiConsumeTokenComponent,
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
@@ -81,7 +81,7 @@ import config, { kycEnums } from './config';
         OfiKycRequestDetailsComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
-        OfiConsumeTokenComponent
+        OfiConsumeTokenComponent,
         KycAuditTrailComponent,
     ],
     imports: [

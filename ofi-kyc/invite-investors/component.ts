@@ -42,7 +42,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     enums = {
         status: {},
     };
-    }
+
 
     panel: any;
 

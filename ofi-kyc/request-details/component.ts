@@ -38,7 +38,7 @@ import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-request-details',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
