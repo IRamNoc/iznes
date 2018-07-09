@@ -14,9 +14,12 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     noun: string;
 
     private token: string;
+    private userId: number;
+    protected csvRequest;
     protected subscriptions: Subscription[] = [];
 
     @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
 
     /**
      *
@@ -36,6 +39,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
         this.subscriptions.push(this.tokenOb.subscribe((token: string) => {
             this.token = token;
         }));
+
+        this.subscriptions.push(this.userIdOb.subscribe((userId: number) => {
+            this.userId = userId;
+        }));
     }
 
     navigateToEntity(entityId: number) {
@@ -44,8 +51,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
 
     exportEntitiesAsCSV(): void {
         this.fileDownloader.downLoaderFile({
-            method: 'exportUserTeams',
+            ...this.csvRequest,
+            method: `export${this.noun}sCSV`,
             token: this.token,
+            userId: this.userId,
         });
     }
 

@@ -4,23 +4,29 @@ import { NgRedux } from '@angular-redux/store';
 import {
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
 } from '@setl/core-store';
-import { SagaHelper } from '@setl/utils';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { MemberSocketService } from '@setl/websocket-service';
 
+import { RequestCallback } from '../base/model';
+import { AccountAdminBaseService } from '../base/service';
+
 import {
-    RequestCallback,
     ReadUserTeamsRequest,
     CreateUserTeamRequest,
     UpdateUserTeamRequest,
     DeleteUserTeamRequest,
+    ReadUserTeamsAuditRequest,
 } from './model';
 
 @Injectable()
-export class UserTeamsService {
-    constructor(private redux: NgRedux<any>,
-                private memberSocketService: MemberSocketService) {}
+export class UserTeamsService extends AccountAdminBaseService {
+    constructor(redux: NgRedux<any>,
+                private memberSocketService: MemberSocketService) {
+        super(redux);
+    }
 
     /**
      * Read User Teams
@@ -42,8 +48,8 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
-                                 SET_ACCOUNT_ADMIN_TEAMS,
+                                 (userTeamId) ? undefined : setRequestedAccountAdminTeams,
+                                 (userTeamId) ? undefined : SET_ACCOUNT_ADMIN_TEAMS,
                                  onSuccess,
                                  onError);
     }
@@ -80,7 +86,7 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
@@ -118,7 +124,7 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
@@ -144,36 +150,40 @@ export class UserTeamsService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
-                                 setRequestedAccountAdminTeams,
+                                 undefined,
                                  undefined,
                                  onSuccess,
                                  onError);
     }
 
     /**
-     * Make API Call
+     * Read User Teams
      *
-     * @param asyncTaskPipe
-     * @param setRequestedMethod
-     * @param successType
-     * @param successCallback
-     * @param errorCallback
+     * @param userTeamId pass null to retrieve all teams
+     * @param onSuccess
+     * @param onError
      */
-    private callAccountAdminAPI(asyncTaskPipe: { [key: string]: any },
-                                setRequestedMethod: () => any,
-                                successType: any,
-                                successCallback: (data) => void,
-                                errorCallback: (e) => void): void {
-        this.redux.dispatch(setRequestedMethod());
+    readUserTeamsAudit(search: string,
+                       dateFrom: string,
+                       dateTo: string,
+                       onSuccess: RequestCallback,
+                       onError: RequestCallback): void {
 
-        this.redux.dispatch(SagaHelper.runAsync(
-            [successType],
-            [],
-            asyncTaskPipe,
-            {},
-            successCallback,
-            errorCallback,
-        ));
+        const request: ReadUserTeamsAuditRequest = {
+            RequestName: 'readUserTeamsAudit',
+            token: this.memberSocketService.token,
+            search,
+            dateFrom,
+            dateTo,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 setRequestedAccountAdminTeamsAudit,
+                                 SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+                                 onSuccess,
+                                 onError);
     }
 
 }

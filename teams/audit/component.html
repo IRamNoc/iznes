@@ -6,22 +6,84 @@
     <clr-tab>
         <button clrTabLink id="tabAccountAdminTeamsAuditButton">{{'Audit' | translate}}</button>
         <clr-tab-content class="outer">
-            <div class="row buttons">
-                <div class="col">
-                    <label class="control-label">&nbsp;</label>
-                    
+            <form [formGroup]="searchForm" novalidate>
+                <div class="form-horizontal">
+                    <div class="row">
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">{{'Team' | translate}}</label>
+                            <input id="auditSearch" name="auditSearch" class="form-control"
+                                type="text"
+                                [placeholder]="translate.translate('Search by team name or reference')"
+                                formControlName="entitySearch"/>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">{{'Date from' | translate}}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateFrom" name="auditDateFrom"
+                                    [placeholder]="translate.translate('Choose a date')"
+                                    formControlName="dateFrom"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material">
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-4">
+                            <label class="control-label">{{'Date to' | translate}}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar"></span>
+                                <input id="auditDateTo" name="auditDateTo"
+                                    [placeholder]="translate.translate('Choose a date')"
+                                    formControlName="dateTo"
+                                    [dpDayPicker]="dateConfig"
+                                    mode="day"
+                                    theme="dp-material">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column class="col-ref">
-                    <span id="accountAdminCol">{{'Ref' | translate}}</span>
+                    <span id="accountAdminTeamsAuditRefCol">{{'Ref' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminTeamsAuditTeamCol">{{'Team' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminTeamsAuditPrevValueCol">{{'Previous value' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminTeamsAuditNewValueCol">{{'New value' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminTeamsAuditModByCol">{{'Modified by' | translate}}</span>
+                </clr-dg-column>
+                <clr-dg-column class="col-ref">
+                    <span id="accountAdminTeamsAuditDateCol">{{'Date' | translate}}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let row of audit; let idx = index;" id="{{'accountAdminTeamAuditRow' + idx}}" clrDgRowClickable>
-                    <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
-                        (click)="navigateToTeam(team.userTeamID)">
-                        {{team.reference}}
+                    <clr-dg-cell id="{{'accountAdminTeamAuditRefCell' + idx}}" class="col-ref">
+                        {{row.reference}}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamAuditTeamCell' + idx}}" class="col-ref">
+                        {{row.name}}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamAuditPrevValueCell' + idx}}" class="col-ref">
+                        {{ (row.oldValue) ? row.oldValue : 'N/A' }}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamAuditOldValueCell' + idx}}" class="col-ref">
+                        {{ (row.newValue) ? row.newValue : 'N/A' }}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamAuditModByCell' + idx}}" class="col-ref">
+                        {{row.userName}}
+                    </clr-dg-cell>
+                    <clr-dg-cell id="{{'accountAdminTeamAuditDateCell' + idx}}" class="col-ref">
+                        {{row.dateModified}}
                     </clr-dg-cell>
                 </clr-dg-row>
 
@@ -32,7 +94,7 @@
 
             <div class="row buttons bottom">
                 <div class="col">
-                    <button class="btn" (click)="exportEntitiesAsCSV()">{{ 'Export Teams as CSV' | translate }}</button>
+                    <button class="btn" (click)="exportEntitiesAsCSV()">{{ 'Export Teams Audit as CSV' | translate }}</button>
                 </div>                
             </div>
 

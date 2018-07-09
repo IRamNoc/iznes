@@ -1,7 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { NgRedux } from '@angular-redux/store';
+import { Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
 
+import {
+    clearRequestedAccountAdminTeamsAudit,
+} from '@setl/core-store';
+import * as Model from '../model';
+import { UserTeamsService } from '../service';
 import { AccountAdminAuditBase } from '../../base/audit/component';
+
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     selector: 'app-core-admin-teams-audit',
@@ -10,11 +18,48 @@ import { AccountAdminAuditBase } from '../../base/audit/component';
 })
 export class UserTeamsAuditComponent extends AccountAdminAuditBase implements OnInit, OnDestroy {
 
-    constructor(redux: NgRedux<any>) {
-        super(redux);
+    audit: Model.AccountAdminTeamAuditEntry[];
+
+    @select(['accountAdmin', 'teamsAudit', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teamsAudit', 'teams']) teamsOb;
+
+    constructor(private service: UserTeamsService,
+                redux: NgRedux<any>,
+                router: Router,
+                translate: MultilingualService) {
+        super(redux, router, translate);
+        this.noun = 'Team';
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        super.ngOnInit();
 
-    ngOnDestroy() {}
+        this.subscriptions.push(this.teamsRequestedOb.subscribe((requested: boolean) => {
+            this.requestTeamsAudit(requested);
+        }));
+
+        this.subscriptions.push(this.teamsOb.subscribe((audit: Model.AccountAdminTeamAuditEntry[]) => {
+            this.audit = audit;
+        }));
+    }
+
+    private requestTeamsAudit(requested: boolean): void {
+        if (requested) return;
+
+        const request = this.getSearchRequest('userTeamID');
+
+        this.service.readUserTeamsAudit(request.search,
+                                        request.dateFrom,
+                                        request.dateTo,
+                                        () => {},
+                                        () => {});
+    }
+
+    protected updateData(): void {
+        this.redux.dispatch(clearRequestedAccountAdminTeamsAudit());
+    }
+
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
 }

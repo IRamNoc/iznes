@@ -1,16 +1,32 @@
 import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export class AccountAdminUser {
-    userId?: number;
+    userID?: number;
+    reference: string;
     firstName: string;
     lastName: string;
-    email: string;
-    phone: string;
-    type: any;
-    reference: string;
+    emailAddress: string;
+    phoneNumber: string;
+    userTypeID: number;
+    userType: string;
+    userStatus: number;
 }
 
 export class AccountAdminUserForm {
+    constructor(userTypePreset: string,
+                userTypesList: any[]) {
+        this.userType.preset = userTypePreset;
+        this.userType.listItems = userTypesList;
+    }
+
+    emailAddress: FormItem = {
+        label: 'Email address (username)',
+        type: FormItemType.text,
+        required: true,
+        style: [FormItemStyle.BreakOnAfter],
+    };
+
     firstName: FormItem = {
         label: 'First name',
         type: FormItemType.text,
@@ -23,21 +39,16 @@ export class AccountAdminUserForm {
         required: true,
     };
 
-    email: FormItem = {
-        label: 'Email address',
-        type: FormItemType.text,
-        required: true,
-    };
-
-    phone: FormItem = {
+    phoneNumber: FormItem = {
         label: 'Phone number',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.BreakOnAfter],
     };
 
-    type: FormItem = {
+    userType: FormItem = {
         label: 'Type',
-        type: FormItemType.text,
+        type: FormItemType.list,
         required: true,
         style: [FormItemStyle.BreakOnAfter],
     };
@@ -47,4 +58,32 @@ export class AccountAdminUserForm {
         type: FormItemType.text,
         required: true,
     };
+}
+
+export interface ReadUsersRequest extends MemberNodeMessageBody {
+    token: string;
+    userID?: number;
+    accountID?: number;
+}
+
+export interface CreateUserRequest extends MemberNodeMessageBody {
+    token: string;
+    account: number;
+    username: string;
+    email: string;
+    userType: number;
+    password: string;
+}
+
+export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {
+    token: string;
+    accountID: number;
+    userID: number;
+    displayName: string;
+    firstName: string;
+    lastName: string;
+    emailAddress: string;
+    phoneNumber: string;
+    userType: number;
+    reference: string;
 }

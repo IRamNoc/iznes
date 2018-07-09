@@ -8,9 +8,11 @@ import {
     SetlDirectivesModule,
     SetlPipesModule,
     DynamicFormsModule,
+    DpDatePickerModule,
 } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { PermissionGridModule } from '@setl/permission-grid';
 
 import {
     AccountAdminCreateUpdateBase,
@@ -29,6 +31,7 @@ import {
     UsersAuditComponent,
     UsersCreateUpdateComponent,
     UsersListComponent,
+    UsersService,
 } from './users';
 
 @NgModule({
@@ -36,6 +39,7 @@ import {
         RouterModule,
         CommonModule,
         FormsModule,
+        DpDatePickerModule,
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
@@ -44,6 +48,7 @@ import {
         DynamicFormsModule,
         SetlDirectivesModule,
         MultilingualModule,
+        PermissionGridModule,
     ],
     declarations: [
         AccountAdminCreateUpdateBase,
@@ -56,7 +61,7 @@ import {
         UsersCreateUpdateComponent,
         UsersListComponent,
     ],
-    providers: [UserTeamsService],
+    providers: [UserTeamsService, UsersService],
     exports: [],
 })
 export class CoreAccountAdminModule {

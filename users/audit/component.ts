@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgRedux } from '@angular-redux/store';
 
+import { MultilingualService } from '@setl/multilingual';
 import { AccountAdminAuditBase } from '../../base/audit/component';
 
 @Component({
@@ -10,8 +12,10 @@ import { AccountAdminAuditBase } from '../../base/audit/component';
 })
 export class UsersAuditComponent extends AccountAdminAuditBase implements OnInit, OnDestroy {
 
-    constructor(redux: NgRedux<any>) {
-        super(redux);
+    constructor(redux: NgRedux<any>,
+                router: Router,
+                translate: MultilingualService) {
+        super(redux, router, translate);
     }
 
     ngOnInit() {}

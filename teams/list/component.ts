@@ -6,7 +6,6 @@ import { FileDownloader } from '@setl/utils';
 
 import {
     clearRequestedAccountAdminTeams,
-    setRequestedAccountAdminTeams,
 } from '@setl/core-store';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
@@ -21,8 +20,8 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    @select(['accountAdmin', 'accountAdminTeams', 'requested']) teamsRequestedOb;
-    @select(['accountAdmin', 'accountAdminTeams', 'teams']) teamsOb;
+    @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
     constructor(private service: UserTeamsService,
                 router: Router,
@@ -30,6 +29,9 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
                 fileDownloader: FileDownloader) {
         super(router, redux, fileDownloader);
         this.noun = 'Team';
+        this.csvRequest = {
+            userTeamID: null,
+        };
     }
 
     ngOnInit() {
@@ -50,8 +52,6 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         if (requested) return;
 
         this.service.readUserTeams(null, () => {}, () => {});
-
-        this.redux.dispatch(setRequestedAccountAdminTeams());
     }
 
     ngOnDestroy() {}

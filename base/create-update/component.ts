@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { NgRedux, select } from '@angular-redux/store';
+import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
+
+import { AccountAdminErrorResponse } from '../model';
 
 @Component({
     selector: 'app-account-admin-crud-base',
@@ -17,9 +19,13 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     form;
     mode: 0 | 1; // 0 - create, 1 - update
     noun: string;
+    permissionAreas: any[] = [];
+    permissionLevels: any[] = [];
+    permissionsEmitter: EventEmitter<any> = new EventEmitter();
+    permissionsForm: FormGroup;
 
     protected accountId: number;
-    private subscriptions: Subscription[] = [];
+    protected subscriptions: Subscription[] = [];
 
     @select(['user', 'myDetail', 'accountId']) accountIdOb;
 
@@ -32,14 +38,14 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
      * @param route ActivatedRoute
      */
     constructor(private route: ActivatedRoute,
-                private redux: NgRedux<any>,
+                private router: Router,
                 private alerts: AlertsService,
-                private toaster: ToasterService,
-                private confirmationService: ConfirmationService) {}
+                private toaster: ToasterService) {}
 
     ngOnInit() {
         this.processParams();
         this.initSubscriptions();
+        this.initPermissions();
     }
 
     private processParams(): void {
@@ -59,6 +65,12 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
             this.accountId = accountId;
         }));
+    }
+
+    private initPermissions(): void {
+        this.permissionsForm = new FormGroup({
+            permissions: new FormControl(),
+        });
     }
 
     isCreateMode(): boolean {
@@ -87,9 +99,11 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         }
 
         this.toaster.pop('success', message);
+
+        this.router.navigateByUrl(this.getBackUrl());
     }
 
-    protected onSaveError(entityName: string, error: string): void {
+    protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {
         let message = `${entityName} failed to be `;
 
         if (this.isCreateMode()) {
@@ -98,9 +112,17 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
             message += 'updated';
         }
 
-        message += `.<br /><i>${error}</i>`;
+        message += `.<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
+
+        console.log(error);
+    }
+
+    protected onReadEntityError(error: AccountAdminErrorResponse): void {
+        this.toaster.pop('error', `Failed to read ${this.noun}`);
+
+        this.router.navigateByUrl(this.getBackUrl());
     }
 
     ngOnDestroy() {
