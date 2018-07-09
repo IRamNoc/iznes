@@ -79,7 +79,7 @@ import {AppState} from './store/app.reducer';
 /**
  * Environment
  */
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
 
 /**
  * Membersocket service factory
