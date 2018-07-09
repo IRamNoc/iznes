@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
 import {ToasterService} from 'angular2-toaster';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
 
 @Component({

@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDet
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
 
 import {FormPercentDirective} from "@setl/utils/directives/form-percent/formpercent";
