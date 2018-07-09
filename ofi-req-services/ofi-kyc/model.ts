@@ -150,12 +150,6 @@ interface Shares {
     id: string;
 }
 
-export interface SaveFundAccessRequestData {
-    access: object;
-    kycID: number;
-    investorWalletID: number;
-}
-
 export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
     access: object;
