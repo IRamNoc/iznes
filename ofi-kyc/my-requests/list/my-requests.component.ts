@@ -1,7 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
-
-import {Subscription} from 'rxjs/Subscription';
-import {Subject} from 'rxjs/Subject';
+import {Subscription, Subject} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {select} from '@angular-redux/store';
 
 @Component({
@@ -25,8 +24,8 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
     }
 
     initSubscriptions() {
-        this.myKycList$
-            .takeUntil(this.unsubscribe)
+        this.myKycList$.pipe(
+            takeUntil(this.unsubscribe))
             .subscribe(kycList => {
                 this.kycList = kycList;
             })

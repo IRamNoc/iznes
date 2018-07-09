@@ -13,7 +13,7 @@ import { APP_CONFIG, AppConfig } from '@setl/utils';
 /* Ofi orders request service. */
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/index';
 import { setInformations, KycMyInformations } from '../../ofi-store/ofi-kyc/my-informations';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 

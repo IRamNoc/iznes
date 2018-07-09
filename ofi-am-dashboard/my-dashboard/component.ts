@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
 import {SagaHelper} from '@setl/utils';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {select, NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
 
