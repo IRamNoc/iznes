@@ -135,21 +135,12 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        /* Subscribe for this user's wallets. */
-        this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
-            /* Assign list to a property. */
-            this.myWallets = walletsList;
-
-            /* Update wallet name. */
-            this.updateWalletConnection();
-        });
-
         /* Subscribe for this user's connected info. */
         this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
             /* Assign list to a property. */
             this.connectedWalletId = connectedWalletId;
 
-            this.callHolders();
+            this.callServices();
 
             /* Update wallet name. */
             this.updateWalletConnection();
@@ -161,7 +152,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
             this.userType = details.userType;
 
-            this.callHolders();
+            this.callServices();
 
             this._changeDetectorRef.detectChanges();
         });
@@ -169,14 +160,6 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         this.subscriptions.push(this.addressListOb.subscribe(addressList => this.updateAddressList(addressList)));
         this.subscriptions.push(this.requestedAddressListOb.subscribe(requested => this.requestAddressList(requested)));
         this.subscriptions.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
-
-        // prodcuts
-        this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
-        this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
-        this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
-        this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
-        this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
-        this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
 
         /* Do observable subscriptions here. */
         this.subscriptions['message'] = this.nbMessagesObj.subscribe((nb) => {
@@ -239,9 +222,26 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    callHolders() {
+    callServices() {
         if (this.userType !== 0 && this.connectedWalletId !== 0) {
             if (this.userType === 36) {
+                /* Subscribe for this user's wallets. */
+                this.subscriptions['my-wallets'] = this.myWalletsOb.subscribe((walletsList) => {
+                    /* Assign list to a property. */
+                    this.myWallets = walletsList;
+
+                    /* Update wallet name. */
+                    this.updateWalletConnection();
+                });
+                // umbrella fundList
+                this.subscriptions.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
+                this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
+                // fundList
+                this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
+                this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
+                // shares
+                this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+                this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
                 // recordkeeping
                 this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
                 this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));

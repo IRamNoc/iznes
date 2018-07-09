@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1>
+    <h1 id="NAV-Audit-ShareName-Title">
         <i class="fa fa-bars"></i>{{'NAV Audit Trail - @navFund[\'fundShareName\']@' | translate: {'navFund[\'fundShareName\']': navFund['fundShareName']} }}
 
     </h1>
@@ -34,30 +34,30 @@
             </form>
 
             <clr-datagrid #dataGrid (clrDgRefresh)="dataGridRefresh($event)" *ngIf="navAuditData">
-                <clr-dg-column class="col-action">{{'Action' | translate}}
+                <clr-dg-column class="col-action" id="Audit-Action">{{'Action' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-navprevious">{{'NAV (previous)' | translate}}
+                <clr-dg-column class="col-navprevious" id="Audit-NAV-Prev">{{'NAV (previous)' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-navnew">{{'NAV (new)' | translate}}
+                <clr-dg-column class="col-navnew" id="Audit-NAV-New">{{'NAV (new)' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-navvaldate">{{'NAV Valuation Date' | translate}}
+                <clr-dg-column class="col-navvaldate" id="Audit-NAV-Val-Date">{{'NAV Valuation Date' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-modifiedby">{{'Modified by' | translate}}
+                <clr-dg-column class="col-modifiedby" id="Audit-Mod-By">{{'Modified by' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-date">{{'Date' | translate}}
+                <clr-dg-column class="col-date" id="Audit-Date">{{'Date' | translate}}
 
                 </clr-dg-column>
 
                 <clr-dg-row *ngFor="let item of navAuditData; let idx = index;" id="{{'product-nav-audit-row' + i}}">
                     <clr-dg-cell class="col-logtype" id="{{'nav-audit-row'+idx+'-col-logtype'}}">
-                        <span class="label label-success" *ngIf="isLogTypeInsert(item)">{{'Insert' | translate}}</span>
-                        <span class="label label-warning" *ngIf="isLogTypeUpdate(item)">{{'Update' | translate}}</span>
-                        <span class="label label-danger" *ngIf="isLogTypeRemove(item)">{{'Remove' | translate}}</span>
+                        <span class="label label-success" *ngIf="isLogTypeInsert(item)" id="{{'Audit-Insert-' + idx}}">{{'Insert' | translate}}</span>
+                        <span class="label label-warning" *ngIf="isLogTypeUpdate(item)" id="{{'Audit-Update-' + idx}}">{{'Update' | translate}}</span>
+                        <span class="label label-danger" *ngIf="isLogTypeRemove(item)" id="{{'Audit-Remove-' + idx}}">{{'Remove' | translate}}</span>
                     </clr-dg-cell>
                     <clr-dg-cell class="col-navprevious" id="{{'nav-audit-row'+idx+'-col-prev-price'}}">{{navToFrontEndString(item.previousPrice)}}</clr-dg-cell>
                     <clr-dg-cell class="col-navnew{{getPriceClass(item)}}" id="{{'nav-audit-row'+idx+'-col-new-price'}}">{{navToFrontEndString(item.price)}}
@@ -78,7 +78,7 @@
 
             <div class="row actions">
                 <div class="col-sm-12">
-                    <button class="btn btn-default" (click)="returnToNav()">{{'Cancel' | translate}}</button>
+                    <button class="btn btn-default" (click)="returnToNav()" id="Audit-Cancel">{{'Cancel' | translate}}</button>
                 </div>
             </div>
         </clr-tab-content>

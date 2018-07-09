@@ -99,9 +99,9 @@
                         <clr-dg-cell *ngIf="fund['hasNoNav']">{{'No NAV Exist' | translate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
                             <div class="btn-group btn-sm">
-                                <button class="btn btn-success btn-sm" (click)="handleSubscribe(i)">
+                                <button class="btn btn-success btn-sm" (click)="handleSubscribe(fund.id)">
                                     <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}</button>
-                                <button class="btn btn-danger btn-sm" (click)="handleRedeem(i)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
+                                <button class="btn btn-danger btn-sm" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
                                     <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}</button>
                                 <!--<button class="btn text-yellow" (click)="handleBuySell(i)">-->
                                 <!--<i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>-->

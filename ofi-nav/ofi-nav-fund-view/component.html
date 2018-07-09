@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs" *ngIf="navFund">
-    <h1>
+    <h1 id="NAV-ShareName-Title">
         <i class="fa fa-ellipsis-h"></i>{{'Net asset value: @navFund.fundShareName@' | translate: {'navFund.fundShareName': navFund.fundShareName} }}
 
     </h1>{{'View and manage NAV\'s for a share.' | translate}}
@@ -112,48 +112,39 @@
 
                         <div class="form-group col-sm-4 add-new-nav">
                             <label class="control-label">{{'&nbsp;' | translate}}</label>
-                            <button class="btn btn-primary" (click)="addNav()">{{'Add New NAV' | translate}}</button>
-                            <button class="btn" (click)="goToAuditTrail()">{{'NAV Audit Trail' | translate}}</button>
+                            <button class="btn btn-primary" (click)="addNav()" id="Add-New-NAV">{{'Add New NAV' | translate}}</button>
+                            <button class="btn" (click)="goToAuditTrail()" id="NAV-Audit-Trail">{{'NAV Audit Trail' | translate}}</button>
                         </div>
                     </div>
                 </div>
             </form>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column class="col-date col-min-width">{{'NAV Date' | translate}}
+                <clr-dg-column class="col-date col-min-width" id="NAV-Date">{{'NAV Date' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-date col-min-width">{{'Publication Date' | translate}}
+                <clr-dg-column class="col-date col-min-width" id="Publication-Date">{{'Publication Date' | translate}}
 
                 </clr-dg-column>
-                <!--<clr-dg-column>-->
-                <!--<span>Use</span>-->
-                <!--</clr-dg-column>-->
-                <clr-dg-column class="col-currency col-min-width">{{'NAV CCY' | translate}}
+                <clr-dg-column class="col-currency col-min-width" id="NAV-CCY">{{'NAV CCY' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-min-width">{{'NAV' | translate}}
+                <clr-dg-column class="col-min-width" id="NAV">{{'NAV' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-min-width">{{'Number of Shares' | translate}}
+                <clr-dg-column class="col-min-width" id="Number-Of-Shares">{{'Number of Shares' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-min-width">{{'Share AUM' | translate}}
+                <clr-dg-column class="col-min-width" id="Share-AUM">{{'Share AUM' | translate}}
 
                 </clr-dg-column>
-                <!--<clr-dg-column>-->
-                <!--<span>Parity</span>-->
-                <!--</clr-dg-column>-->
-                <!--<clr-dg-column>-->
-                <!--<span>Fund AUM</span>-->
-                <!--</clr-dg-column>-->
-                <clr-dg-column class="col-min-width">{{'Coupons' | translate}}
+                <clr-dg-column class="col-min-width" id="Coupons">{{'Coupons' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="col-status col-min-width">{{'Status' | translate}}
+                <clr-dg-column class="col-status col-min-width" id="Status">{{'Status' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column class="actions col-min-width">{{'Actions' | translate}}
+                <clr-dg-column class="actions col-min-width" id="Actions">{{'Actions' | translate}}
 
                 </clr-dg-column>
 
@@ -174,23 +165,23 @@
                     <clr-dg-cell class="col-status">
                         <span [ngSwitch]="item.status">
                             <span *ngSwitchCase="-1">
-                                <span class="label label-success">{{'Validated' | translate}}</span>
+                                <span class="label label-success" id="{{'NAV-Validated-' + i}}">{{'Validated' | translate}}</span>
                             </span>
                             <span *ngSwitchCase="1">
-                                <span class="label label-warning">{{'Estimated' | translate}}</span>
+                                <span class="label label-warning" id="{{'NAV-Estimated-' + i}}">{{'Estimated' | translate}}</span>
                             </span>
 
                             <span *ngSwitchCase="2">
-                                <span class="label label-warning">{{'Technical' | translate}}</span>
+                                <span class="label label-warning" id="{{'NAV-Technical-' + i}}">{{'Technical' | translate}}</span>
                             </span>
                         </span>
                     </clr-dg-cell>
                     <clr-dg-cell class="actions">
                         <div class="btn-group btn-sm">
-                            <button id="{{'nav-history-row'+i+'-btn-edit'}}" (click)="editNav(item)" class="btn btn-success btn-sm">
+                            <button id="{{'Edit-NAV-' + i}}" (click)="editNav(item)" class="btn btn-success btn-sm">
                                 <i class="fa fa-edit"></i> {{'Edit NAV' | translate}}
                             </button>
-                            <button id="{{'nav-history-row'+i+'-cancel-edit'}}" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
+                            <button id="{{'Delete-NAV-' + i}}" [attr.disabled]="item.status == -1 ? '' : null " (click)="cancelNav(item)" class="btn btn-danger btn-sm">
                                 <i class="fa fa-remove"></i> {{'Delete NAV' | translate}}
                             </button>
                         </div>
@@ -206,7 +197,7 @@
             <form>
                 <div class="row">
                     <div class="form-block form-group col-sm-6">
-                        <a href="/#/product-module/net-asset-value" class="btn btn-secondary">{{'Close' | translate}}</a>
+                        <a href="/#/product-module/net-asset-value" class="btn btn-secondary" id="NAV-Close">{{'Close' | translate}}</a>
                     </div>
                 </div>
             </form>

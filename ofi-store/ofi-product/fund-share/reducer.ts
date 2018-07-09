@@ -67,6 +67,7 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 subscriptionStartDate: item.get('subscriptionStartDate', ''),
                 launchDate: item.get('launchDate', ''),
                 shareClassCurrency: item.get('shareClassCurrency', ''),
+                iban: item.get('iban', ''),
                 valuationFrequency: item.get('valuationFrequency', ''),
                 historicOrForwardPricing: item.get('historicOrForwardPricing', ''),
                 hasCoupon: item.get('hasCoupon', ''),
