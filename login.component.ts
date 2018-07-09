@@ -28,7 +28,7 @@ import {
 import { MemberSocketService } from '@setl/websocket-service';
 import { ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
 import { Observable } from "rxjs/Observable";
 
