@@ -11,6 +11,7 @@ import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
 import {OfiKycService} from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
 import {RequestsService} from '../../requests.service';
+import {NewRequestService} from '../new-request.service';
 
 @Component({
     selector: 'kyc-step-select-amc',
@@ -47,6 +48,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     constructor(
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private requestsService: RequestsService,
+        private newRequestService : NewRequestService,
         private ofiKycService: OfiKycService,
         private ngRedux: NgRedux<any>,
         private route: ActivatedRoute
@@ -113,6 +115,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     async handleFormSubmit($event) {
         $event.preventDefault();
+
         if(!this.form.valid){
             return;
         }
@@ -124,8 +127,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         }
 
         let ids = await this.requestsService.createMultipleDrafts(values);
-        let requestedKycs = MyKycSetRequestedKycs(ids);
-        this.ngRedux.dispatch(requestedKycs);
+
+        this.newRequestService.storeCurrentKycs(ids);
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }

@@ -53,20 +53,24 @@ export class NewKycIdentificationComponent implements OnInit, AfterViewInit {
 
     persistForm(){
         this.persistService.watchForm(
-            'newkyc/identification',
+            'newkycrequest/identification',
             this.form
         );
     }
 
     clearPersistForm(){
         this.persistService.refreshState(
-            'newkyc/identification',
+            'newkycrequest/identification',
             this.newRequestService.createIdentificationFormGroup()
         )
     }
 
     handleSubmit(e){
         e.preventDefault();
+
+        if(!this.form.valid){
+            return;
+        }
 
         this.requests$.take(1).subscribe(requests => {
             this.identificationService.sendRequest(this.form, requests).then(() => {
@@ -76,18 +80,18 @@ export class NewKycIdentificationComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(){
-        this.form.get('generalInformation').patchValue({
-            registeredCompanyName : 'name',
-            legalForm : [{id : 'CreditUnion', text : 'Credit Union'}],
-            leiCode : '12345678901234567890',
-            registeredCompanyAddressLine1 : 'add1',
-            registeredCompanyZipCode : '1245',
-            registeredCompanyCity : 'city',
-            registeredCompanyCountry : [{id : 'FR', text : 'France'}],
-            countryTaxResidence : [{id : 'FR', text : 'France'}],
-            sectorActivity : [{id : 'Cosmetics', text : 'Cosmetics'}],
-            legalStatus : [{id : 'insurer', text : 'Insurer'}]
-        });
+        // this.form.get('generalInformation').patchValue({
+        //     registeredCompanyName : 'name',
+        //     legalForm : [{id : 'CreditUnion', text : 'Credit Union'}],
+        //     leiCode : '12345678901234567890',
+        //     registeredCompanyAddressLine1 : 'add1',
+        //     registeredCompanyZipCode : '1245',
+        //     registeredCompanyCity : 'city',
+        //     registeredCompanyCountry : [{id : 'FR', text : 'France'}],
+        //     countryTaxResidence : [{id : 'FR', text : 'France'}],
+        //     sectorActivity : [{id : 'Cosmetics', text : 'Cosmetics'}],
+        //     legalStatus : [{id : 'insurer', text : 'Insurer'}]
+        // });
         this.form.get('companyInformation').patchValue({
             activities : [{id : 'ownAccount', text : 'Own account'}],
             ownAccountinvestor : [{id : 'Cleaning', text : 'Cleaning'}],

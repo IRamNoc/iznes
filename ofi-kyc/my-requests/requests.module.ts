@@ -6,6 +6,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule, DpDatePickerModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
 import {FileDropModule} from '@setl/core-filedrop';
+import {FileViewerModule} from '@setl/core-fileviewer';
 import {PersistModule} from '@setl/core-persist';
 //
 
@@ -39,6 +40,8 @@ import {RequestsService} from './requests.service';
 import {NewRequestService} from './request/new-request.service';
 import {IdentificationService} from './request/steps/identification.service';
 import {RiskProfileService} from './request/steps/risk-profile.service';
+import {DocumentsService} from './request/steps/documents.service';
+import {ValidationService} from './request/steps/validation.service';
 
 import {RequestsRoutingModule} from './requests-routing.module';
 
@@ -53,6 +56,7 @@ import {RequestsRoutingModule} from './requests-routing.module';
         ReactiveFormsModule,
         CommonModule,
         FileDropModule,
+        FileViewerModule,
         DpDatePickerModule,
         RequestsRoutingModule,
         PersistModule
@@ -88,7 +92,9 @@ import {RequestsRoutingModule} from './requests-routing.module';
         RequestsService,
         NewRequestService,
         IdentificationService,
-        RiskProfileService
+        RiskProfileService,
+        DocumentsService,
+        ValidationService
     ]
 })
 

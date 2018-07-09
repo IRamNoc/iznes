@@ -1,6 +1,7 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {NewRequestService, configDate} from "../../new-request.service";
+import {RiskProfileService} from '../risk-profile.service';
 import {get as getValue, find} from 'lodash';
 import {Subject} from 'rxjs/Subject';
 
@@ -12,6 +13,8 @@ import {Subject} from 'rxjs/Subject';
 export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy{
 
     @Input() form;
+    @Input() multiple;
+    @Input() index;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     unsubscribe : Subject<any> = new Subject();
@@ -29,14 +32,27 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy{
     };
 
     constructor(
-        private newRequestService : NewRequestService
+        private newRequestService : NewRequestService,
+        private riskProfileService : RiskProfileService
     ){
     }
 
     ngOnInit(){
         this.initFormCheck();
         this.initData();
+        this.getCurrentFormData();
         this.configDate = configDate;
+    }
+
+    getCurrentFormData(){
+        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
+            let currentAMCId = this.form.get('assetManagementCompanyID').value;
+            let dataAMCId = data.assetManagementCompanyID;
+
+            if(!this.multiple || (dataAMCId === currentAMCId) ){
+                this.form.patchValue(data);
+            }
+        });
     }
 
     initData(){

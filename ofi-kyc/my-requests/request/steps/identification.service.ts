@@ -1,31 +1,27 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 
-import {NewRequestService} from '../new-request.service';
-
+import * as moment from 'moment';
 import {mapValues, isArray, isObject, reduce, pickBy, get as getValue, merge, omit, flatten} from 'lodash';
+
+import {NewRequestService} from '../new-request.service';
+import {RequestsService} from '../../requests.service';
 
 @Injectable()
 export class IdentificationService {
 
-    requests;
-
     constructor(
         private newRequestService: NewRequestService,
-        private memberSocketService: MemberSocketService
+        private requestsService: RequestsService
     ) {
     }
 
-    getRequest() {
-        const messageBody = 1;
-    }
-
-    sendRequest(form, _requests) {
-        this.requests = _requests;
+    sendRequest(form, requests) {
 
         let promises = [];
+        let timestamp = moment().format('X');
 
-        this.requests.forEach(request => {
+        requests.forEach(request => {
             let kycID = request.kycID;
 
             let formGroupGeneral = form.get('generalInformation');
@@ -54,54 +50,68 @@ export class IdentificationService {
             formGroupClassification.get('kycID').setValue(kycID);
             let classificationPromise = this.sendRequestClassification(formGroupClassification);
             promises.push(classificationPromise);
+
+            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            promises.push(updateStepPromise);
         });
 
-        return Promise.all(promises)
+        return Promise.all(promises);
+    }
+
+    sendRequestUpdateCurrentStep(kycID, timestamp){
+        const messageBody = {
+            RequestName : 'iznesupdatecurrentstep',
+            kycID : kycID,
+            completedStep : 'identification',
+            currentGroup : timestamp
+        };
+
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestGeneral(formGroupGeneral) {
-        let extracted = this.getValues(formGroupGeneral.value);
+        let extracted = this.newRequestService.getValues(formGroupGeneral.value);
 
         const messageBody = {
             RequestName: 'updatekycgeneral',
             ...extracted
         };
 
-        return this.newRequestService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestCompany(formGroupCompany) {
         let formGroupCompanyValue = omit(formGroupCompany.value, ['beneficiaries']);
-        let extracted = this.getValues(formGroupCompanyValue);
+        let extracted = this.newRequestService.getValues(formGroupCompanyValue);
 
         const messageBody = {
             RequestName: 'updatekyccompany',
             ...extracted
         };
 
-        return this.newRequestService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestBeneficiary(formGroupBeneficiary) {
-        let extracted = this.getValues(formGroupBeneficiary.value);
+        let extracted = this.newRequestService.getValues(formGroupBeneficiary.value);
 
         const messageBody = {
             RequestName: 'insertkyccompanybeneficiaries',
             ...extracted
         };
 
-        return this.newRequestService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestBanking(formGroupBanking) {
-        let extracted = this.getValues(formGroupBanking.value);
+        let extracted = this.newRequestService.getValues(formGroupBanking.value);
 
         const messageBody = {
             RequestName: 'updatekycbanking',
             ...extracted
         };
 
-        return this.newRequestService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestClassification(formGroupClassification) {
@@ -112,31 +122,30 @@ export class IdentificationService {
             formGroupClassification.value.pro
         );
 
-        let extracted = this.getValues(formGroupClassificationValue);
+        let extracted = this.newRequestService.getValues(formGroupClassificationValue);
 
         const messageBody = {
             RequestName: 'updatekycclassification',
             ...extracted
         };
 
-        return this.newRequestService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody);
     }
 
-    getValues(group) {
-        return mapValues(group, single => {
-            if (isArray(single)) {
-                return reduce(single, (acc, curr) => {
-                    let val = curr.id ? curr.id : curr;
+    getCurrentFormGeneralData(kycID) {
+        return this.requestsService.getKycGeneral(kycID);
+    }
 
-                    return acc ? [acc, val].join(' ') : val;
-                }, '')
-            } else if (isObject(single)) {
-                let filtered = pickBy(single);
-                return Object.keys(filtered).join(' ');
-            }
+    getCurrentFormCompanyData(kycID) {
+        return this.requestsService.getKycCompany(kycID);
+    }
 
-            return single;
-        });
+    getCurrentFormBankingData(kycID) {
+        return this.requestsService.getKycBanking(kycID);
+    }
+
+    getCurrentFormClassificationData(kycID) {
+        return this.requestsService.getKycClassification(kycID);
     }
 
 }

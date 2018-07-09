@@ -1,8 +1,10 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {FormArray} from '@angular/forms';
-import {get as getValue} from 'lodash';
+import {get as getValue, isEmpty, castArray} from 'lodash';
+import {Subject} from 'rxjs/Subject';
+import {select} from '@angular-redux/store';
 
-
+import {IdentificationService} from '../identification.service';
 import {NewRequestService} from '../../new-request.service';
 import {countries} from "../../../requests.config";
 
@@ -11,17 +13,19 @@ import {countries} from "../../../requests.config";
     templateUrl : './banking-information.component.html',
     styleUrls : ['./banking-information.component.scss']
 })
-export class BankingInformationComponent implements OnInit{
+export class BankingInformationComponent implements OnInit, OnDestroy{
 
     @Input() form;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
+    unsubscribe : Subject<any> = new Subject();
     open: boolean = false;
-
     countries = countries;
     custodianHolderAccountList;
 
     constructor(
-        private newRequestService : NewRequestService
+        private newRequestService : NewRequestService,
+        private identificationService : IdentificationService
     ){}
 
     get holders() {
@@ -30,6 +34,7 @@ export class BankingInformationComponent implements OnInit{
 
     ngOnInit(){
         this.initFormCheck();
+        this.getCurrentFormData();
 
         this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
     }
@@ -65,6 +70,27 @@ export class BankingInformationComponent implements OnInit{
     removeHolder(i){
         let control = this.form.get('custodianHolderCustom') as FormArray;
         control.removeAt(i);
+    }
+
+    getCurrentFormData(){
+        this.requests$
+            .filter(requests => !isEmpty(requests))
+            .map(requests => castArray(requests[0]))
+            .subscribe(requests => {
+                requests.forEach(request => {
+                    this.identificationService.getCurrentFormBankingData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+                        }
+                    });
+                });
+            })
+        ;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 
 }

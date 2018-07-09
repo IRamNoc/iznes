@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {MultilingualService} from '@setl/multilingual';
 import {NgRedux} from '@angular-redux/store';
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {map, get as getValue, filter} from 'lodash';
-import * as SagaHelper from '@setl/utils/sagaHelper';
-import {FileService} from '@setl/core-req-services/file/file.service';
+import {map, get as getValue, filter, mapValues, isArray, reduce, pickBy, isObject, forEach, find, merge} from 'lodash';
+
+import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import {RequestsService} from '../requests.service';
 
 import {
     legalFormList,
@@ -62,9 +61,8 @@ export class NewRequestService {
     constructor(
         private multilingualService: MultilingualService,
         private formBuilder: FormBuilder,
-        private ngRedux: NgRedux<any>,
-        private memberSocketService: MemberSocketService,
-        private fileService: FileService
+        private requestsService: RequestsService,
+        private ngRedux : NgRedux<any>
     ) {
         this.legalFormList = this.extractConfigData(legalFormList);
         this.sectorActivityList = this.extractConfigData(sectorActivityList);
@@ -120,16 +118,17 @@ export class NewRequestService {
         });
     }
 
-    createValidationFormGroup(){
+    createValidationFormGroup() {
         const fb = this.formBuilder;
 
         return fb.group({
-            undersigned : ['', Validators.required],
-            actingOnBehalfOf : ['', Validators.required],
-            doneAt : ['', Validators.required],
-            date : ['', Validators.required],
-            positionRepresentative : ['', Validators.required],
-            electronicSignature : ['', Validators.required]
+            kycID: '',
+            undersigned: ['', Validators.required],
+            actingOnBehalfOf: ['', Validators.required],
+            doneAt: ['', Validators.required],
+            doneDate: ['', Validators.required],
+            positionRepresentative: ['', Validators.required],
+            electronicSignatureDocumentID: ['', Validators.required]
         });
     }
 
@@ -289,6 +288,7 @@ export class NewRequestService {
         const fb = this.formBuilder;
 
         const investmentNature = fb.group({
+            kycID : '',
             financialAssetManagementMethod: fb.group({
                 internalManagement: '',
                 withAdviceOfAuthorisedThirdPartyInstiution: '',
@@ -303,10 +303,12 @@ export class NewRequestService {
             ]
         });
         const investmentObjective = fb.group({
+            kycID : '',
             objectivesSameInvestmentCrossAm: '',
             objectives: fb.array([])
         });
         const investmentConstraint = fb.group({
+            kycID : '',
             constraintsSameInvestmentCrossAm: '',
             constraints: fb.array([])
         });
@@ -347,10 +349,12 @@ export class NewRequestService {
 
     createDocumentFormGroup(name) {
         return this.formBuilder.group({
-            name: name,
-            hash: '',
+            name: '',
+            hash: ['', Validators.required],
             type: name,
-            file: []
+            file: [],
+            common: 0,
+            isDefault: 0
         });
     }
 
@@ -463,17 +467,6 @@ export class NewRequestService {
         return false;
     }
 
-    sendRequest(params) {
-        const messageBody = {
-            token: this.memberSocketService.token,
-            ...params
-        };
-
-        return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody)
-        });
-    }
-
     transformToForm(list) {
         let result = {};
 
@@ -484,42 +477,33 @@ export class NewRequestService {
         return result;
     }
 
-    buildRequest(options) {
-        return new Promise((resolve, reject) => {
-            /* Dispatch the request. */
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    options.successActions || [],
-                    options.failActions || [],
-                    options.taskPipe,
-                    {},
-                    (response) => {
-                        resolve(response);
-                    },
-                    (error) => {
-                        reject(error);
-                    }
-                )
-            );
-        });
+    storeCurrentKycs(ids){
+        let requestedKycs = MyKycSetRequestedKycs(ids);
+        this.ngRedux.dispatch(requestedKycs);
     }
 
-    uploadFile(event) {
-        const asyncTaskPipe = this.fileService.addFile({
-            files: filter(event.files, file => {
-                return file.status !== 'uploaded-file'
-            })
-        });
+    /**
+     * Normalizes form value for storage in database
+     * For Arrays : ['dataone', 'datatwo'] => 'data one data two'
+     * For Objects (list of checkboxes) : { dataOne : true, dataTwo : true, dataThree : false, dataFour : null } => 'dataOne dataTwo'
+     *
+     * @param group : Array|Object|String
+     * @returns String
+     */
+    getValues(group) {
+        return mapValues(group, single => {
+            if (isArray(single)) {
+                return reduce(single, (acc, curr) => {
+                    let val = curr.id ? curr.id : curr;
 
-        return new Promise((resolve, reject) => {
-            let saga = SagaHelper.runAsyncCallback(asyncTaskPipe, response => {
-                let fileID = getValue(response, [1, 'Data', 0, 'fileID']);
-                resolve(fileID);
-            }, () => {
-                reject();
-            });
+                    return acc ? [acc, val].join(' ') : val;
+                }, '')
+            } else if (isObject(single)) {
+                let filtered = pickBy(single);
+                return Object.keys(filtered).join(' ');
+            }
 
-            this.ngRedux.dispatch(saga);
+            return single;
         });
     }
 }

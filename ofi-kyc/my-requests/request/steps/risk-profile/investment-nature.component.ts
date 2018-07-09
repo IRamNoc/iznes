@@ -1,5 +1,9 @@
 import {Component, OnInit, Input} from '@angular/core';
+import {isEmpty, castArray} from 'lodash';
+import {select} from '@angular-redux/store';
+import {Subject} from 'rxjs/Subject';
 
+import {RiskProfileService} from '../risk-profile.service';
 import {NewRequestService} from '../../new-request.service';
 
 @Component({
@@ -10,17 +14,23 @@ import {NewRequestService} from '../../new-request.service';
 export class InvestmentNatureComponent implements OnInit {
 
     @Input() form;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+
+    unsubscribe : Subject<any> = new Subject();
     open: boolean = false;
     investmentVehicleList;
     frequencyList;
 
     constructor(
-        private newRequestService: NewRequestService
+        private newRequestService: NewRequestService,
+        private riskProfileService: RiskProfileService
     ) {
     }
 
     ngOnInit() {
         this.initFormCheck();
+        this.getCurrentFormData();
+
         this.investmentVehicleList = this.newRequestService.investmentVehiclesList;
         this.frequencyList = this.newRequestService.frequencyList;
     }
@@ -45,9 +55,30 @@ export class InvestmentNatureComponent implements OnInit {
         }
     }
 
+    getCurrentFormData(){
+        this.requests$
+            .filter(requests => !isEmpty(requests))
+            .map(requests => castArray(requests[0]))
+            .subscribe(requests => {
+                requests.forEach(request => {
+                    this.riskProfileService.getCurrentFormNatureData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+                        }
+                    });
+                });
+            })
+        ;
+    }
+
     isDisabled(path) {
         let control = this.form.get(path);
 
         return control.disabled;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

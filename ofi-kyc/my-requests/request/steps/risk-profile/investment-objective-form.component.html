@@ -1,4 +1,4 @@
-<div *ngIf="amc.companyID">
+<div *ngIf="multiple">
     <div class="row panel-header">
         <div class="col-sm-12">
             <a href="#" (click)="open = !open; $event.preventDefault();">
@@ -10,8 +10,7 @@
 </div>
 
 
-<div class="panel-body" [ngClass]="{hidden : !open, 'multiple pl-1' : amc.companyID}" [formGroup]="form">
-
+<div class="panel-body objective pl-1" [class.hidden]="!open" [formGroup]="form">
 
     <div class="row">
         <div class="col-sm-6 p-0" formGroupName="performanceProfile">
@@ -21,8 +20,8 @@
 
             <div>
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let performanceProfile of performanceProfileList">
-                    <input type="checkbox" id="{{performanceProfile.id}}" formControlName="{{performanceProfile.id}}">
-                    <label for="{{performanceProfile.id}}">
+                    <input type="checkbox" id="{{performanceProfile.id}}-{{index}}" formControlName="{{performanceProfile.id}}">
+                    <label for="{{performanceProfile.id}}-{{index}}">
                         {{performanceProfile.text | translate}}
                     </label>
                 </span>
@@ -36,8 +35,8 @@
 
             <div>
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let clientNeed of clientNeeds">
-                    <input type="checkbox" id="{{clientNeed.id}}" formControlName="{{clientNeed.id}}">
-                    <label for="{{clientNeed.id}}">
+                    <input type="checkbox" id="{{clientNeed.id}}-{{index}}" formControlName="{{clientNeed.id}}">
+                    <label for="{{clientNeed.id}}-{{index}}">
                         {{clientNeed.text | translate}}
                     </label>
                 </span>
@@ -61,8 +60,8 @@
 
         <div class="form-group col-sm-4" *ngFor="let horizon of investmentHorizonList">
             <div class="checkbox-inline">
-                <input type="checkbox" id="{{horizon.id}}" [formControl]="form.get(['investmentHorizonWanted', horizon.id])">
-                <label for="{{horizon.id}}">
+                <input type="checkbox" id="{{horizon.id}}-{{index}}" [formControl]="form.get(['investmentHorizonWanted', horizon.id])">
+                <label for="{{horizon.id}}-{{index}}">
                     {{horizon.text | translate}}
                 </label>
             </div>
@@ -70,7 +69,7 @@
             <div *ngIf="horizon.id === 'specific' && !isDisabled('investmentHorizonWantedSpecificPeriod')">
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                    <input [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
                 </div>
                 <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{'Field is required' | translate}}</span>
             </div>
@@ -79,10 +78,10 @@
 
     <div class="row">
         <div class="form-group col-sm-6">
-            <label for="riskProfile">
+            <label for="riskProfile-{{index}}">
                 {{'Risk profile: ability to incur losses' | translate}}
             </label>
-            <ng-select id="riskProfile" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
+            <ng-select id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
             <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
 
             <div class="form-group mt-1" *ngIf="!isDisabled('riskProfileCapital')">

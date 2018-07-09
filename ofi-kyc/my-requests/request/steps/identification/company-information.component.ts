@@ -1,7 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {FormGroup, FormArray} from '@angular/forms';
-import {get as getValue, filter} from 'lodash';
+import {get as getValue, filter, isEmpty, castArray} from 'lodash';
+import {select} from '@angular-redux/store';
+import {Subject} from 'rxjs/Subject';
 
+import {RequestsService} from '../../../requests.service';
+import {IdentificationService} from '../identification.service';
 import {NewRequestService, configDate} from '../../new-request.service';
 import {countries} from "../../../requests.config";
 
@@ -10,9 +14,12 @@ import {countries} from "../../../requests.config";
     templateUrl: './company-information.component.html',
     styleUrls : ['./company-information.component.scss']
 })
-export class CompanyInformationComponent implements OnInit {
-    @Input() form: FormGroup;
+export class CompanyInformationComponent implements OnInit, OnDestroy {
 
+    @Input() form: FormGroup;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+
+    unsubscribe : Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
     companyActivitiesList;
@@ -25,7 +32,9 @@ export class CompanyInformationComponent implements OnInit {
     configDate;
 
     constructor(
-        private newRequestService: NewRequestService
+        private requestsService : RequestsService,
+        private newRequestService: NewRequestService,
+        private identificationService: IdentificationService
     ) {
     }
 
@@ -39,6 +48,7 @@ export class CompanyInformationComponent implements OnInit {
         this.custodianHolderAccountList = this.newRequestService.custodianHolderAccountList;
 
         this.initFormCheck();
+        this.getCurrentFormData();
 
         this.configDate = configDate;
     }
@@ -165,13 +175,12 @@ export class CompanyInformationComponent implements OnInit {
     }
 
 
-    uploadFile(event, beneficiary) {
+    uploadFile($event, beneficiary) {
         let formControl = this.form.get(['beneficiaries', beneficiary, 'document']);
 
-        // @todo Change the random hash when file drop implemented
-        formControl.patchValue('13514e618f32132b030c3103b3030a302');
-
-        this.newRequestService.uploadFile(event);
+        this.requestsService.uploadFile($event).then((file : any) => {
+            formControl.patchValue(file.fileID);
+        });
     }
 
     addBeneficiary() {
@@ -187,5 +196,26 @@ export class CompanyInformationComponent implements OnInit {
         let control = this.form.get(path);
 
         return control.disabled;
+    }
+
+    getCurrentFormData(){
+        this.requests$
+            .filter(requests => !isEmpty(requests))
+            .map(requests => castArray(requests[0]))
+            .subscribe(requests => {
+                requests.forEach(request => {
+                    this.identificationService.getCurrentFormCompanyData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+                        }
+                    });
+                });
+            })
+        ;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

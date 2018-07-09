@@ -1,5 +1,7 @@
 import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const checkboxControls = ['capitalNature', 'financialInstruments', 'financialInstruments', 'marketArea', 'financialAssetManagementMethod', 'investmentvehiclesAlreadyUsed', 'frequencyFinancialTransactions', 'clientNeeds', 'investmentHorizonWanted', 'performanceProfile'];
+
 export const countries = fundItems.domicileItems;
 
 export const legalFormList = [

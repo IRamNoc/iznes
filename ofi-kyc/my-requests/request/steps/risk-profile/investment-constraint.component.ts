@@ -1,8 +1,10 @@
 import {Component, OnInit, OnDestroy, Input} from '@angular/core';
-import {NewRequestService} from '../../new-request.service';
 import {Subject} from 'rxjs/Subject';
 import {select} from '@angular-redux/store';
-import {isEmpty, values} from 'lodash';
+import {isEmpty, values, map} from 'lodash';
+
+import {NewRequestService} from '../../new-request.service';
+import {RiskProfileService} from '../risk-profile.service';
 
 @Component({
     selector : 'investment-constraint',
@@ -21,16 +23,24 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy{
         return this.form.get('constraints').controls;
     }
     constructor(
-        private newRequestService : NewRequestService
+        private newRequestService : NewRequestService,
+        private riskProfileService : RiskProfileService
     ){}
 
 
     ngOnInit(){
         this.initFormCheck();
         this.initData();
+        this.getCurrentFormData();
 
         let constraintsSameInvestmentCrossAmControl = this.form.get('constraintsSameInvestmentCrossAm');
         constraintsSameInvestmentCrossAmControl.setValue(constraintsSameInvestmentCrossAmControl.value);
+    }
+
+    getCurrentFormData(){
+        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
+            this.form.get('constraintsSameInvestmentCrossAm').patchValue(data.constraintsSameInvestmentCrossAm, {emitEvent : false})
+        });
     }
 
     initData(){
@@ -53,7 +63,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy{
         if(value){
             this.generateConstraints();
         } else{
-            this.generateConstraints(this.amcs);
+            this.generateConstraints(map(this.amcs, 'amcID'));
         }
     }
 

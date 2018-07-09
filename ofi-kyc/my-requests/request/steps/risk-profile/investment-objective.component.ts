@@ -1,8 +1,9 @@
 import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {NewRequestService} from '../../new-request.service';
+import {RiskProfileService} from '../risk-profile.service';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs/Subject';
-import {isEmpty, values} from 'lodash';
+import {isEmpty, values, map} from 'lodash';
 
 @Component({
     selector: 'investment-objective',
@@ -18,7 +19,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     amcs;
 
     constructor(
-        private newRequestService: NewRequestService
+        private newRequestService: NewRequestService,
+        private riskProfileService : RiskProfileService
     ) {
     }
 
@@ -29,9 +31,16 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.initFormCheck();
         this.initData();
+        this.getCurrentFormData();
 
         let objectivesSameInvestmentCrossAmControl = this.form.get('objectivesSameInvestmentCrossAm');
         objectivesSameInvestmentCrossAmControl.setValue(objectivesSameInvestmentCrossAmControl.value);
+    }
+
+    getCurrentFormData(){
+        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
+            this.form.get('objectivesSameInvestmentCrossAm').patchValue(data.objectivesSameInvestmentCrossAm, {emitEvent : false})
+        });
     }
 
     initData() {
@@ -54,7 +63,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         if (value) {
             this.generateObjectives();
         } else {
-            this.generateObjectives(this.amcs);
+            this.generateObjectives(map(this.amcs, 'amcID'));
         }
     }
 

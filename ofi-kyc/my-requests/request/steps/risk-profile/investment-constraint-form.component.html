@@ -1,4 +1,4 @@
-<div *ngIf="amc.companyID">
+<div *ngIf="multiple">
     <div class="row panel-header">
         <div class="col-sm-12">
             <a href="#" (click)="open = !open; $event.preventDefault();">
@@ -9,32 +9,32 @@
     </div>
 </div>
 
-<div class="panel-body" [ngClass]="{hidden : !open, 'multiple pl-1' : amc.companyID}" [formGroup]="form">
+<div class="panel-body constraint pl-1" [class.hidden]="!open" [formGroup]="form">
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <label for="statutoryConstraints">
+            <label for="statutoryConstraints-{{index}}">
                 {{'Statutory constraints/special rules concerning eligible assets (specify)' | translate}}:
             </label>
-            <textarea id="statutoryConstraints" formControlName="statutoryConstraints"></textarea>
+            <textarea id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
         </div>
     </div>
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <label for="taxConstraints">
+            <label for="taxConstraints-{{index}}">
                 {{'Tax constraints (specify tax obligations in terms of investment)' | translate}}:
             </label>
-            <textarea id="taxConstraints" formControlName="taxConstraints"></textarea>
+            <textarea id="taxConstraints-{{index}}" formControlName="taxConstraints"></textarea>
         </div>
     </div>
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <label for="otherConstraints">
+            <label for="otherConstraints-{{index}}">
                 {{'Others (including SRI, ESG, ...) (specify)' | translate}}:
             </label>
-            <textarea id="otherConstraints" formControlName="otherConstraints"></textarea>
+            <textarea id="otherConstraints-{{index}}" formControlName="otherConstraints"></textarea>
         </div>
     </div>
 
@@ -44,12 +44,12 @@
                 {{ 'For your information, are investment decisions validated by an ad hoc committee? (optional)'| translate}}:
             </label>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-yes" value="yes" formControlName="investmentDecisionsAdHocCommittee">
-                <label for="opt-yes">{{'Yes' | translate}}</label>
+                <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="investmentDecisionsAdHocCommittee">
+                <label for="opt-yes-{{index}}">{{'Yes' | translate}}</label>
             </div>
             <div class="radio-inline opt-btn-element">
-                <input type="radio" id="opt-no" value="no" formControlName="investmentDecisionsAdHocCommittee">
-                <label for="opt-no">{{'No' | translate}}</label>
+                <input type="radio" id="opt-no-{{index}}" value="no" formControlName="investmentDecisionsAdHocCommittee">
+                <label for="opt-no-{{index}}">{{'No' | translate}}</label>
             </div>
 
             <textarea placeholder="{{'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate}}" *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')" id="investmentDecisionsAdHocCommitteeSpecification" formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
@@ -58,7 +58,7 @@
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <textarea id="otherPersonsAuthorised" formControlName="otherPersonsAuthorised"></textarea>
+            <textarea id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
         </div>
     </div>
 

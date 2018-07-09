@@ -1,6 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {get as getValue} from 'lodash';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {get as getValue, isEmpty, castArray} from 'lodash';
+import {select} from '@angular-redux/store';
+import {Subject} from 'rxjs/Subject';
 
+import {IdentificationService} from '../identification.service';
 import {NewRequestService} from '../../new-request.service';
 import {countries} from "../../../requests.config";
 
@@ -9,10 +12,13 @@ import {countries} from "../../../requests.config";
     selector : 'classification-information',
     templateUrl : './classification-information.component.html'
 })
-export class ClassificationInformationComponent implements OnInit{
+export class ClassificationInformationComponent implements OnInit, OnDestroy{
     @Input() form;
     @Input() investorType;
 
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+
+    unsubscribe : Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
     financialInstrumentsList;
@@ -21,7 +27,8 @@ export class ClassificationInformationComponent implements OnInit{
     volumeOfTransactionsList;
 
     constructor(
-        private newRequestService : NewRequestService
+        private newRequestService : NewRequestService,
+        private identificationService : IdentificationService
     ){}
 
     ngOnChanges(changes){
@@ -47,6 +54,7 @@ export class ClassificationInformationComponent implements OnInit{
         this.volumeOfTransactionsList = this.newRequestService.volumeOfTransactionsList;
 
         this.initCheckForm();
+        this.getCurrentFormData();
     }
 
     toggleForm(investorType){
@@ -114,5 +122,26 @@ export class ClassificationInformationComponent implements OnInit{
 
     hasError(control, error = []){
         return this.newRequestService.hasError(this.form, control, error);
+    }
+
+    getCurrentFormData(){
+        this.requests$
+            .filter(requests => !isEmpty(requests))
+            .map(requests => castArray(requests[0]))
+            .subscribe(requests => {
+                requests.forEach(request => {
+                    this.identificationService.getCurrentFormClassificationData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+                        }
+                    });
+                });
+            })
+        ;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

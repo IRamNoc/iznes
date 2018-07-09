@@ -1,16 +1,20 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {NewRequestService} from "../../new-request.service";
+import {RiskProfileService} from '../risk-profile.service';
 import {Subject} from 'rxjs/Subject';
 import {find} from 'lodash';
 
 @Component({
     selector : 'investment-constraint-form',
-    templateUrl : './investment-constraint-form.component.html'
+    templateUrl : './investment-constraint-form.component.html',
+    styleUrls : ['./investment-constraint-form.component.scss']
 })
 export class InvestmentConstraintFormComponent implements OnInit, OnDestroy{
 
     @Input() form;
+    @Input() multiple;
+    @Input() index;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
     unsubscribe: Subject<any> = new Subject();
@@ -21,13 +25,26 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy{
     };
 
     constructor(
-        private newRequestService : NewRequestService
+        private newRequestService : NewRequestService,
+        private riskProfileService : RiskProfileService
     ){
     }
 
     ngOnInit(){
         this.initData();
         this.initFormCheck();
+        this.getCurrentFormData();
+    }
+
+    getCurrentFormData(){
+        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
+            let currentAMCId = this.form.get('assetManagementCompanyID').value;
+            let dataAMCId = data.assetManagementCompanyID;
+
+            if(!this.multiple || (dataAMCId === currentAMCId) ){
+                this.form.patchValue(data);
+            }
+        });
     }
 
     initData(){

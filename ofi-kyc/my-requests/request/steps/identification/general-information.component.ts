@@ -1,18 +1,23 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {get as getValue} from 'lodash';
+import {get as getValue, isEmpty, castArray} from 'lodash';
+import {select} from '@angular-redux/store';
+import {Subject} from 'rxjs/Subject';
 
 import {countries} from '../../../requests.config';
 import {NewRequestService} from '../../new-request.service';
+import {IdentificationService} from '../identification.service';
 
 @Component({
     selector: 'general-information',
     templateUrl: './general-information.component.html'
 })
-export class GeneralInformationComponent implements OnInit {
+export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     @Input() form: FormGroup;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
+    unsubscribe : Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
     legalFormList;
@@ -20,9 +25,11 @@ export class GeneralInformationComponent implements OnInit {
     legalStatusList;
     legalStatusInsurerTypeList;
     publicEstablishmentList;
+    associations;
 
     constructor(
-        private newRequestService: NewRequestService
+        private newRequestService: NewRequestService,
+        private identificationService: IdentificationService
     ) {
     }
 
@@ -34,6 +41,7 @@ export class GeneralInformationComponent implements OnInit {
         this.publicEstablishmentList = this.newRequestService.publicEstablishmentList;
 
         this.initFormCheck();
+        this.getCurrentFormData();
     }
 
     initFormCheck() {
@@ -56,12 +64,12 @@ export class GeneralInformationComponent implements OnInit {
         });
     }
 
-    formCheckLegalStatusPublicEstablishmentType(value){
+    formCheckLegalStatusPublicEstablishmentType(value) {
         let legalStatusPublicEstablishmentOtherControl = this.form.get('legalStatusPublicEstablishmentTypeOther');
 
-        if(value === 'other'){
+        if (value === 'other') {
             legalStatusPublicEstablishmentOtherControl.enable();
-        } else{
+        } else {
             legalStatusPublicEstablishmentOtherControl.disable();
         }
     }
@@ -100,8 +108,8 @@ export class GeneralInformationComponent implements OnInit {
                 break;
         }
     }
-    
-    hasError(control, error = []){
+
+    hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
@@ -109,5 +117,26 @@ export class GeneralInformationComponent implements OnInit {
         let control = this.form.get(path);
 
         return control.disabled;
+    }
+
+    getCurrentFormData() {
+        this.requests$
+            .filter(requests => !isEmpty(requests))
+            .map(requests => castArray(requests[0]))
+            .subscribe(requests => {
+                requests.forEach(request => {
+                    this.identificationService.getCurrentFormGeneralData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+                        }
+                    });
+                });
+            })
+        ;
+    }
+
+    ngOnDestroy(){
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }
