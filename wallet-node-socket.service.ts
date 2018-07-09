@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SetlCallbackRegister, SetlWebSocket } from '@setl/vanilla-websocket-wrapper';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class WalletNodeSocketService {
