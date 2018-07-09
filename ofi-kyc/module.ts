@@ -20,6 +20,7 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
+import { OfiKycRequestDetailsComponent } from './request-details/component';
 import { OfiInviteInvestorsComponent } from './invite-investors/component';
 import { OfiSignUpComponent } from './signup/component';
 import { OfiDocumentsComponent } from './documents/component';
@@ -65,6 +66,7 @@ import config, { kycEnums } from './config';
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
+        OfiKycRequestDetailsComponent,
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
@@ -90,6 +92,7 @@ import config, { kycEnums } from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
+        OfiKycRequestDetailsComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,

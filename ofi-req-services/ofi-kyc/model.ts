@@ -203,3 +203,12 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
     investorWalletID: number;
     kycStatus: number;
 }
+
+export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
+    kycID: number;
+}
+
+export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+}
