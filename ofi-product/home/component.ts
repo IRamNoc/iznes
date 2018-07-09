@@ -445,9 +445,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     handleShareToggleClick() {
         this.showOnlyActive = !this.showOnlyActive;
 
-        console.log(this.showOnlyActive);
-        console.log(this.shareList);
-        console.log(this.filteredShareList);
+        // console.log(this.showOnlyActive);
+        // console.log(this.shareList);
+        // console.log(this.filteredShareList);
 
 
         this.filteredShareList = this.shareList.filter((share) => {
