@@ -136,7 +136,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Test
     public void shouldShowDashBoardTilesColorTG1375() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
-        String myProducts = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a/div/div[1]/span")).getText();
+        String myProducts = driver.findElement(By.cssSelector("app-counter-tile.blocs:nth-child(1) > div:nth-child(1) > a:nth-child(1) > div:nth-child(1) > div:nth-child(1) > span:nth-child(2)")).getText();
         assertTrue(myProducts.contains("My Products"));
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(1)", "rgba(206, 85, 61, 1)");
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(2)", "rgba(73, 164, 95, 1)");
