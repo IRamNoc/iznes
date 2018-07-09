@@ -7,7 +7,7 @@
 import * as _ from 'lodash';
 import * as sha256 from 'sha256';
 import * as SocketCluster from 'socketcluster-client';
-import * as sodium from 'libsodium-wrappers';
+import * as _sodium from 'libsodium-wrappers';
 
 const initialRequestTemplate = {
     EndPoint: 'member',
@@ -92,153 +92,157 @@ export class SocketClusterWrapper {
 
             this.initialising = true;
 
-            try {
-
+            _sodium.ready.then(() => {
+                const sodium = _sodium;
                 try {
-                    this.connectTries += 1;
 
-                    this.webSocketConn = SocketCluster.connect(this.socketClusterOption);
-                } catch (error) {
-                    this.initialising = false;
-                    this.webSocketConn = false;
-                    return false;
-                }
+                    try {
+                        this.connectTries += 1;
 
-                this.webSocketConn.on('connect', () => {
-                    this.hasConnected = true;
+                        this.webSocketConn = SocketCluster.connect(this.socketClusterOption);
+                    } catch (error) {
+                        this.initialising = false;
+                        this.webSocketConn = false;
+                        return false;
+                    }
 
-                    // On connection:
-                    this.connectCallback();
-                    console.log('connected');
+                    this.webSocketConn.on('connect', () => {
 
-                    // Generate my public-private key pair.
-                    this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
-                    this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
+                        this.hasConnected = true;
 
-                    // Send my public key to server.
-                    const requestBody = {
-                        pub: this.encryption.myPublicKey,
-                    };
+                        // On connection:
+                        this.connectCallback();
+                        console.log('connected');
 
-                    // Initial handshake request.
-                    const initialRequest = Object.assign({}, initialRequestTemplate, {MessageBody: requestBody});
-                    const initialRequestText = JSON.stringify(initialRequest);
+                        // Generate my public-private key pair.
+                        this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
+                        this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
 
-                    this.webSocketConn.emit('onMessage', initialRequestText, (errorCode, data) => {
-                        // We should receive server's public key now.
-                        if (data !== false) {
-                            this.encryption.serverPublicKey = data.Data;
-                            const shared = sodium.crypto_scalarmult(this.encryption.mySecret,
-                                sodium.from_hex(this.encryption.serverPublicKey));
-                            this.encryption.shareKey = sha256(sodium.to_hex(shared));
+                        // Send my public key to server.
+                        const requestBody = {
+                            pub: this.encryption.myPublicKey,
+                        };
 
-                            this.initialising = false;
+                        // Initial handshake request.
+                        const initialRequest = Object.assign({}, initialRequestTemplate, {MessageBody: requestBody});
+                        const initialRequestText = JSON.stringify(initialRequest);
 
-                            while (this.messageQueue.length > 0) {
-                                this.sendRequest(this.messageQueue.shift());
+                        this.webSocketConn.emit('onMessage', initialRequestText, (errorCode, data) => {
+                            // We should receive server's public key now.
+                            if (data !== false) {
+                                this.encryption.serverPublicKey = data.Data;
+                                const shared = sodium.crypto_scalarmult(this.encryption.mySecret,
+                                    sodium.from_hex(this.encryption.serverPublicKey));
+                                this.encryption.shareKey = sha256(sodium.to_hex(shared));
+
+                                this.initialising = false;
+
+                                while (this.messageQueue.length > 0) {
+                                    this.sendRequest(this.messageQueue.shift());
+                                }
                             }
-                        }
+                        });
+
+                        // Subscribe to Channel is now used in Channel Service
                     });
 
-                    // Subscribe to Channel is now used in Channel Service
-                });
+                    this.webSocketConn.on('error', (error) => {
+                        /**
+                         * Reconnect when error. Hopefully, the make the connection more stable.
+                         */
 
-                this.webSocketConn.on('error', (error) => {
-                    /**
-                     * Reconnect when error. Hopefully, the make the connection more stable.
-                     */
-
-                    console.error('socket error: ', error);
-                    this.errorCallback();
-                    try {
-                        if (this.reconnecteInterval) {
-                            clearInterval(this.reconnecteInterval);
+                        console.error('socket error: ', error);
+                        this.errorCallback();
+                        try {
+                            if (this.reconnecteInterval) {
+                                clearInterval(this.reconnecteInterval);
+                            }
+                        } catch (e) {
                         }
-                    } catch (e) {
-                    }
 
-                    this.closeWebSocket();
+                        this.closeWebSocket();
 
-                    const reconnecteInterval = setInterval(() => {
-                        if (!this.hasConnected) {
-                            this.openWebSocket();
-                            console.log('error: reconnect');
-                        } else {
-                            clearInterval(reconnecteInterval);
+                        const reconnecteInterval = setInterval(() => {
+                            if (!this.hasConnected) {
+                                this.openWebSocket();
+                                console.log('error: reconnect');
+                            } else {
+                                clearInterval(reconnecteInterval);
+                            }
+                        }, 2000);
+                    });
+
+                    this.webSocketConn.on('disconnect', (error) => {
+                        /**
+                         * Reconnect when error. Hopefully, the make the connection more stable.
+                         */
+                        console.error('socket disconnect: ', error);
+                        this.disconnectCallback();
+
+                        try {
+                            if (this.reconnecteInterval) {
+                                clearInterval(this.reconnecteInterval);
+                            }
+                        } catch (e) {
                         }
-                    }, 2000);
-                });
 
-                this.webSocketConn.on('disconnect', (error) => {
-                    /**
-                     * Reconnect when error. Hopefully, the make the connection more stable.
-                     */
-                    console.error('socket disconnect: ', error);
-                    this.disconnectCallback();
+                        this.closeWebSocket();
 
-                    try {
-                        if (this.reconnecteInterval) {
-                            clearInterval(this.reconnecteInterval);
-                        }
-                    } catch (e) {
-                    }
+                        const reconnecteInterval = setInterval(() => {
+                            if (!this.hasConnected) {
+                                this.openWebSocket();
+                                console.log('disconnect: reconnect');
+                            } else {
+                                clearInterval(reconnecteInterval);
+                            }
+                        }, 2000);
+                    });
 
-                    this.closeWebSocket();
+                    this.defaultOnOpen();
 
-                    const reconnecteInterval = setInterval(() => {
-                        if (!this.hasConnected) {
-                            this.openWebSocket();
-                            console.log('disconnect: reconnect');
-                        } else {
-                            clearInterval(reconnecteInterval);
-                        }
-                    }, 2000);
-                });
-
-                this.defaultOnOpen();
-
-            } catch (error) {
-                this.showTryCatchError(error);
-            }
+                } catch (error) {
+                    this.showTryCatchError(error);
+                }
+            });
         }
     }
 
     sendRequest([request, callback]) {
+        _sodium.ready.then(() => {
+            /**
+             * Cache the requests from the browser when:
+             * 1. Initialising
+             * 2. Required authentication and has not authenticated and the request message type is not
+             *      this.authMessageTypes: ['authentication']
+             */
+            if (this.initialising || this.encryption.shareKey === false) {
+                this.messageQueue.push([request, callback]);
+            } else {
 
-        /**
-         * Cache the requests from the browser when:
-         * 1. Initialising
-         * 2. Required authentication and has not authenticated and the request message type is not
-         *      this.authMessageTypes: ['authentication']
-         */
-        if (this.initialising || this.encryption.shareKey === false) {
-            this.messageQueue.push([request, callback]);
-        } else {
+                // Log the request we sending out.
+                try {
+                    console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
+                } catch (error) {
+                    this.showTryCatchError(error);
+                }
 
-            // Log the request we sending out.
-            try {
-                console.log('sendRequest(): ' + _.get(request, 'MessageBody.RequestName'));
-            } catch (error) {
-                this.showTryCatchError(error);
+                // Send request
+
+                let requestText = JSON.stringify(request);
+
+                if (this.encryption.shareKey !== false) {
+                    requestText = GibberishAES.enc(requestText, this.encryption.shareKey);
+                }
+
+                this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
+                    const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
+
+                    const message = JSON.parse(decoded);
+
+                    callback(error, message);
+                });
             }
-
-            // Send request
-
-            let requestText = JSON.stringify(request);
-
-            if (this.encryption.shareKey !== false) {
-                requestText = GibberishAES.enc(requestText, this.encryption.shareKey);
-            }
-
-            this.webSocketConn.emit('onMessage', requestText, (error, responseData) => {
-                const decoded = GibberishAES.dec(responseData, this.encryption.shareKey);
-
-                const message = JSON.parse(decoded);
-
-                callback(error, message);
-            });
-
-        }
+        });
     }
 
     subscribeToChannel(channelName, callback) {
