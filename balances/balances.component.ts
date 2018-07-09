@@ -3,15 +3,14 @@ import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
 import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable, Subscription } from 'rxjs';
 import { TabControl, Tab } from '../tabs';
 import { NgRedux, select } from '@angular-redux/store';
-import * as _ from 'lodash';
-import { isEqual } from 'lodash';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { FileService } from '@setl/core-req-services';
+import { isEqual } from 'lodash';
+import { first, distinctUntilChanged, share, map } from 'rxjs/operators';
 
 @Component({
     selector: 'setl-balances',
@@ -48,8 +47,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                        private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
                        private fileService: FileService,
-    ) {
-    }
+    ) { }
 
     /**
      * Ng On Init
@@ -60,21 +58,19 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         let previous = [];
         this.balances$ = this.reportingService
             .getBalances()
-            .distinctUntilChanged((oldAssets, newAssets) => isEqual(oldAssets, newAssets))
-            .map((assets) => {
-                const result = this.markUpdated([previous, assets]);
-                previous = assets;
-                return result;
-            })
-            .share()
-        ;
+            .pipe(
+                map((assets) => {
+                    const updated = this.markUpdated([previous, assets]);
+                    previous = assets;
+                    return updated;
+                })
+            );
 
         this.balances$.subscribe((balances) => {
             this.balances = balances;
         });
 
-        this.subscriptions.push(
-            this.getConnectedWallet.subscribe((connectedWalletId) => {
+        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
                 this.closeTabs();
                 previous = [];
@@ -147,7 +143,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     private findAsset(hash: string) {
         return new Promise((resolve) => {
-            return this.reportingService.getBalances().first().subscribe((assets) => {
+            return this.reportingService.getBalances().pipe(first()).subscribe((assets) => {
                 resolve(assets.find(asset => asset.hash === hash));
             });
         });
@@ -261,12 +257,11 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
 
             if (!oldAsset) {
                 updatedAsset.isNew = true;
-            }
-            if (oldAsset) {
+            } else {
                 if (oldAsset.total !== asset.total) {
                     updatedAsset.totalChange = true;
                 }
-                if (oldAsset.encumbered !== asset.encumbered) {
+                if (oldAsset.totalencumbered !== asset.totalencumbered) {
                     updatedAsset.encumberChange = true;
                 }
                 if (oldAsset.free !== asset.free) {

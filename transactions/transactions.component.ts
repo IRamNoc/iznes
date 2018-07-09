@@ -1,5 +1,7 @@
+
+import {first} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable,  Subscription } from 'rxjs';
 
 import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +10,6 @@ import { Location } from '@angular/common';
 import { Transaction } from '@setl/core-store/wallet/transactions/model';
 
 import { TabControl, Tab } from '../tabs';
-import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'setl-transactions',
@@ -63,7 +64,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.reportingService.getTransaction(hash).first().subscribe((tx) => {
+        this.reportingService.getTransaction(hash).pipe(first()).subscribe((tx) => {
             this.tabControl.new({
                 title: tx.shortHash,
                 icon: 'th-list',

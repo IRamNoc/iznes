@@ -1,11 +1,12 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {HoldingByAsset, MyWalletHoldingState} from '@setl/core-store/wallet/my-wallet-holding';
-import {Observable} from 'rxjs/Observable';
-import {isEmpty, isArray, some} from 'lodash';
-import {InitialisationService, WalletNodeRequestService, MyWalletsService} from '@setl/core-req-services';
-import {SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService} from '@setl/utils';
+
+import { combineLatest as observableCombineLatest, BehaviorSubject, Observable } from 'rxjs';
+import { first, filter, tap, distinctUntilChanged } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
+import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
+import { isEmpty, isArray, some } from 'lodash';
+import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
+import { SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService } from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
@@ -13,15 +14,11 @@ import {
     SET_WALLET_ISSUER_LIST,
     SET_ISSUE_HOLDING,
     SET_ALL_TRANSACTIONS,
-    SET_ASSET_TRANSACTIONS
+    SET_ASSET_TRANSACTIONS,
 } from '@setl/core-store';
-import {WalletIssuerDetail} from '@setl/core-store/assets/my-issuers';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/first';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/distinctUntilChanged';
-import {Transaction} from '@setl/core-store/wallet/transactions/model';
-import {TransactionsByAsset} from '@setl/core-store/wallet/transactions';
+import { WalletIssuerDetail } from '@setl/core-store/assets/my-issuers';
+import { Transaction } from '@setl/core-store/wallet/transactions/model';
+import { TransactionsByAsset } from '@setl/core-store/wallet/transactions';
 
 export interface Asset {
     asset: string;
@@ -31,17 +28,19 @@ export interface Asset {
     hash: string;
 }
 
+const refetchFilter = x => x === false;
+
 @Injectable()
 export class ReportingService {
 
-    onLoad$: Array<Observable<any>>;
+    onLoad$: Observable<any>[];
 
     connectedWalletId: number;
     connectedChainId: number;
     myChainAccess: any;
     allTransactions$: Observable<Transaction[]>;
     transactionsByAsset$: Observable<TransactionsByAsset>;
-    walletInfo = {walletName: ''};
+    walletInfo = { walletName: '' };
     addressList = [];
 
     walletIssuerDetailSubject: BehaviorSubject<WalletIssuerDetail>;
@@ -56,7 +55,7 @@ export class ReportingService {
     private addressesRequested$;
     private connectedWalletId$;
     private connectedChain$;
-    private myChainAccess$;
+    private myChainAccess$: Observable<any>;
     private walletHoldingByAsset$: Observable<MyWalletHoldingState>;
     private walletIssuerDetail$;
     private walletList$;
@@ -66,7 +65,7 @@ export class ReportingService {
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private logService: LogService,
-                private myWalletService: MyWalletsService
+                private myWalletService: MyWalletsService,
     ) {
         this.connectedWalletId$ = this.ngRedux.select(['user', 'connected', 'connectedWallet']);
         this.connectedChain$ = this.ngRedux.select(['user', 'connected', 'connectedChain']);
@@ -94,29 +93,30 @@ export class ReportingService {
         this.initialised$ = initialisedSubject.asObservable();
 
         this.onLoad$ = [
-            this.myChainAccess$.filter(chainAccess => !isEmpty(chainAccess)),
+            this.myChainAccess$.pipe(
+                filter(chainAccess => !isEmpty(chainAccess)),
+            ),
             this.walletList$,
-            this.addressList$
+            this.addressList$,
         ];
 
-        const idStream$ = Observable
-            .combineLatest(
+        const idStream$ = observableCombineLatest(
                 [
-                    this.connectedWalletId$.filter(id => id > 0).distinctUntilChanged(),
-                    this.connectedChain$.filter(id => id > 0).distinctUntilChanged()
-                ]
-            )
-            .do(([connectedWalletId, connectedChainId]) => {
+                    this.connectedWalletId$.pipe(
+                        filter(id => id > 0), distinctUntilChanged()),
+                    this.connectedChain$.pipe(filter(id => id > 0), distinctUntilChanged()),
+                ],
+            ).pipe(
+            tap(([connectedWalletId, connectedChainId]) => {
                 this.connectedWalletId = connectedWalletId;
                 this.connectedChainId = connectedChainId;
                 this.requestWalletData();
-            })
+            }))
 
-        const dataStream$ = Observable
-            .combineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
+        const dataStream$ = observableCombineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
                 return [...ids, ...rest];
-            })
-            .filter(([a,b,c,d, addressList]) => !isEmpty(addressList))
+            }).pipe(
+            filter(([a, b, c, d, addressList]) => !isEmpty(addressList)))
         ;
         dataStream$.subscribe(([connectedWalletId, connectedChainId, chainAccess, walletList, addressList]) => {
             this.myChainAccess = chainAccess[this.connectedChainId];
@@ -126,15 +126,18 @@ export class ReportingService {
             initialisedSubject.next(true);
         });
 
-        const requestedStream$ = Observable
-            .combineLatest(idStream$, this.labelRequested$, this.addressesRequested$)
-            .filter(([ids, labelRequested, addressesRequested]) => labelRequested && addressesRequested)
-            .subscribe(() => {
-                initialisedSubject.next(true);
-            })
-        ;
+        const requestedStream$ = observableCombineLatest(
+            idStream$,
+            this.labelRequested$,
+            this.addressesRequested$,
+        ).pipe(
+            filter(([ids, labelRequested, addressesRequested]) => labelRequested && addressesRequested))
+            .subscribe(() => initialisedSubject.next(true));
 
-        this.initialised$.filter(init => !!init).first().subscribe(() => {
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => {
             this.getTransactionsFromWalletNode();
             this.initRefetchData();
             this.initSubscriptions();
@@ -142,18 +145,18 @@ export class ReportingService {
     }
 
     private initRefetchData() {
-        this.walletHoldingRequested$.filter(req => req === false).subscribe(() => this.requestWalletHolding());
-        this.walletIssuerRequested$.filter(req => req === false).subscribe(() => this.requestWalletIssuer());
-        this.labelRequested$.filter(req => req === false).subscribe(() => this.requestWalletData());
+        this.walletHoldingRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletHolding());
+        this.walletIssuerRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletIssuer());
+        this.labelRequested$.pipe(filter(refetchFilter)).subscribe(() => this.requestWalletData());
     }
 
-    public initSubscriptions(){
-        const filteredWalletHolding$ = this.walletHoldingByAsset$
-            .filter((wallets: MyWalletHoldingState) => {
+    public initSubscriptions() {
+        const filteredWalletHolding$ = this.walletHoldingByAsset$.pipe(
+            filter((wallets: MyWalletHoldingState) => {
                 return !!wallets && !isEmpty(wallets.holdingByAsset);
-            })
+            }))
         ;
-        const combined$ = Observable.combineLatest(filteredWalletHolding$, this.addressList$);
+        const combined$ = observableCombineLatest(filteredWalletHolding$, this.addressList$);
         combined$.subscribe(([wallets, addresses]) => {
             this.getBreakdownData(wallets, addresses);
         });
@@ -163,8 +166,10 @@ export class ReportingService {
             this.refreshDataSources();
         });
 
-        const combinedWallet$ = Observable.combineLatest(this.walletIssuerDetail$, this.holdingsByAssetSubject);
-        combinedWallet$.subscribe(([walletIssuerDetail, holdingsByAsset]) => this.handleWalletIssuerDetail(<WalletIssuerDetail>walletIssuerDetail, holdingsByAsset));
+        const combinedWallet$ = observableCombineLatest(this.walletIssuerDetail$, this.holdingsByAssetSubject);
+        combinedWallet$.subscribe(([walletIssuerDetail, holdingsByAsset]) => {
+            this.handleWalletIssuerDetail(<WalletIssuerDetail>walletIssuerDetail, holdingsByAsset)
+        });
     }
 
     private handleWalletIssuerDetail(walletIssuerDetail: WalletIssuerDetail, holdingsByAsset) {
@@ -178,7 +183,7 @@ export class ReportingService {
                     asset: issue.asset,
                     total: -issue.breakdown[0].free,
                     encumbered: issue.totalencumbered,
-                    free: issue.total - issue.totalencumbered
+                    free: issue.total - issue.totalencumbered,
                 };
             });
 
@@ -188,13 +193,16 @@ export class ReportingService {
 
     private getBreakdownData(wallets, addresses) {
         if (wallets.holdingByAsset.hasOwnProperty(this.connectedWalletId)) {
-            let next = Object
+            const next = Object
                 .getOwnPropertyNames(wallets.holdingByAsset[this.connectedWalletId])
                 .map((key) => {
                     const asset = wallets.holdingByAsset[this.connectedWalletId][key];
 
                     // Merge in address labels
-                    asset.breakdown = asset.breakdown.map(breakdown => ({...breakdown, ...addresses[breakdown.addr]}));
+                    asset.breakdown = asset.breakdown.map(breakdown => ({
+                        ...breakdown,
+                        ...addresses[breakdown.addr]
+                    }));
 
                     return asset;
                 })
@@ -210,7 +218,10 @@ export class ReportingService {
     }
 
     public getBalances(): Observable<Asset[]> {
-        this.initialised$.filter(init => !!init).first().subscribe(() => this.requestWalletHolding());
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => this.requestWalletHolding());
         return new Observable<any>((observer) => {
             const sub = this.holdingsByAssetSubject.subscribe(observer);
             return () => sub.unsubscribe();
@@ -225,14 +236,13 @@ export class ReportingService {
         return new Promise((resolve, reject) => {
             const assetPieces = asset.split('|');
             this.requestWalletIssueHolding(assetPieces[0], assetPieces[1])
-                .then((holdings: Array<any>) => {
+                .then((holdings: any[]) => {
                     const total = holdings.filter(h => h.balance > 0).reduce((a, h) => a + h.balance, 0);
-                    return resolve(holdings.map(holding => {
-
+                    return resolve(holdings.map((holding) => {
                         return {
                             ...holding,
                             walletName: this.walletInfo.walletName,
-                            percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null
+                            percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null,
                         };
                     }));
                 })
@@ -241,7 +251,7 @@ export class ReportingService {
     }
 
     public getTransactions(): Observable<Transaction[]> {
-        this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode());
+        this.initialised$.pipe(filter(init => !!init),first(),).subscribe(() => this.getTransactionsFromWalletNode());
 
         return new Observable<Transaction[]>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs));
@@ -250,7 +260,7 @@ export class ReportingService {
     }
 
     public getTransaction(hash): Observable<Transaction> {
-        this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode());
+        this.initialised$.pipe(filter(init => !!init),first(),).subscribe(() => this.getTransactionsFromWalletNode());
 
         return new Observable<Transaction>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs.find(tx => tx.hash === hash)));
@@ -259,7 +269,10 @@ export class ReportingService {
     }
 
     public getTransactionsForAsset(asset) {
-        this.initialised$.filter(init => !!init).first().subscribe(() => this.getTransactionsFromWalletNode(asset));
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => this.getTransactionsFromWalletNode(asset));
 
         return new Observable<Transaction[]>((observer) => {
             const sub = this.transactionsByAsset$.subscribe((txs) => {
@@ -287,7 +300,7 @@ export class ReportingService {
             req,
             {},
             (data) => {
-                this.getTransactionsFromReportingNode(data, {...payload, asset: asset});
+                this.getTransactionsFromReportingNode(data, { ...payload, asset });
             },
             (data) => {
                 this.logService.log('get transaction history error:', data);
@@ -302,7 +315,7 @@ export class ReportingService {
             this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
                 msgsig,
                 this.connectedChainId,
-                this.myChainAccess.nodeAddress
+                this.myChainAccess.nodeAddress,
             ).subscribe((res) => {
                 const transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
                 if (payload.asset) {
@@ -315,7 +328,7 @@ export class ReportingService {
                     const action: any = {type: SET_ALL_TRANSACTIONS, payload: {items: transactions}};
                     this.ngRedux.dispatch(action);
                 }
-            }, (e) => {
+            },(e) => {
                 this.logService.log('reporting node error', e);
             });
         } else {
@@ -329,7 +342,11 @@ export class ReportingService {
     }
 
     private requestWalletData() {
-        InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        InitialisationService.requestWalletAddresses(
+            this.ngRedux,
+            this.walletNodeRequestService,
+            this.connectedWalletId,
+        );
         MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
     }
 
@@ -339,7 +356,7 @@ export class ReportingService {
 
         // Create a saga pipe.
         const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
-            walletId: this.connectedWalletId
+            walletId: this.connectedWalletId,
         });
 
         // Send a saga action.
@@ -374,16 +391,16 @@ export class ReportingService {
                     let newHolders = [];
                     if (asset.holders) {
                         newHolders = Object.getOwnPropertyNames(asset.holders).map((addr) => {
-                            const balance = asset.holders[addr],
-                                encumbered = 0,
-                                free = balance - encumbered;
-                            return {addr, balance, encumbered, free};
+                            const balance = asset.holders[addr];
+                            const encumbered = 0;
+                            const free = balance - encumbered;
+                            return { addr, balance, encumbered, free };
                         });
                     }
 
                     resolve(newHolders);
                 },
-                (err) => reject(err)
+                err => reject(err),
             ));
         });
     }

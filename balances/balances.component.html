@@ -43,15 +43,13 @@
 <ng-template #staticBalanceList>
     <div class="panel-body">
         <clr-datagrid #myDataGrid>
-            <clr-dg-column mltag="txt_identifier" style="min-width: 150px;">Identifier</clr-dg-column>
             <clr-dg-column mltag="txt_asset" style="min-width: 170px;">Asset</clr-dg-column>
             <clr-dg-column mltag="txt_total" class="right" style="min-width: 170px;">Total</clr-dg-column>
             <clr-dg-column mltag="txt_encumbered" class="right">Encumbered</clr-dg-column>
             <clr-dg-column mltag="txt_free" class="right">Free</clr-dg-column>
             <clr-dg-column mltag="txt_actions" class="right" style="min-width: 160px;">Actions</clr-dg-column>
 
-            <clr-dg-row *clrDgItems="let asset of balances" [class.flash]="asset.isNew">
-                <clr-dg-cell>{{asset.identifier}}</clr-dg-cell>
+            <clr-dg-row *clrDgItems="let asset of balances$ | async" [class.flash]="asset.isNew">
                 <clr-dg-cell [innerHtml]="asset.asset | asset"></clr-dg-cell>
                 <clr-dg-cell class="right" [class.flash]="asset.totalChange">
                     {{asset.total | moneyValue}}

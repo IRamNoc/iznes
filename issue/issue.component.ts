@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { WalletNodeRequestService } from '@setl/core-req-services';
 import { ReportingService } from '../reporting.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  Subscription } from 'rxjs';
 import { TabControl, Tab } from '../tabs';
-import { Subscription } from 'rxjs/Subscription';
 import { select } from '@angular-redux/store';
 
 @Component({
