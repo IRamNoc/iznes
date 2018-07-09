@@ -150,12 +150,6 @@ interface Shares {
     id: string;
 }
 
-export interface SaveFundAccessRequestData {
-    access: object;
-    kycID: number;
-    investorWalletID: number;
-}
-
 export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
     access: object;
@@ -165,6 +159,30 @@ export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
 
 export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMessageBody {
     token: string;
+}
+
+export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
+    kycID: number;
+}
+
+export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
+    token: string;
+    kycID: number;
+}
+
+export interface createKYCDraftRequestData{
+    inviteToken: string;
+    managementCompanyID: number;
+    investorWalletID: number;
+    kycStatus: number;
+}
+
+export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
+    token: string;
+    inviteToken: string;
+    managementCompanyID: number;
+    investorWalletID: number;
+    kycStatus: number;
 }
 
 export interface SaveFundAccessRequestData {
@@ -186,29 +204,5 @@ export interface SaveKycDocumentRequestBody extends MemberNodeMessageBody {
 export interface GetKycDocumentRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: number;
-    kycID: number;
-}
-
-export interface createKYCDraftRequestData{
-    inviteToken: string;
-    managementCompanyID: number;
-    investorWalletID: number;
-    kycStatus: number;
-}
-
-export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
-    token: string;
-    inviteToken: string;
-    managementCompanyID: number;
-    investorWalletID: number;
-    kycStatus: number;
-}
-
-export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
-    kycID: number;
-}
-
-export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
-    token: string;
     kycID: number;
 }

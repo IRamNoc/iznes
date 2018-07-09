@@ -676,6 +676,33 @@ export class OfiKycService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    saveKycDocument(requestData: SaveKycDocumentRequestData): any {
+        const messageBody: SaveKycDocumentRequestBody = {
+            RequestName: 'updatekycdocument',
+            token: this.memberSocketService.token,
+            walletID: _.get(requestData, 'walletID', 0),
+            name: _.get(requestData, 'name', ''),
+            hash: _.get(requestData, 'hash', ''),
+            type: _.get(requestData, 'type', ''),
+            common: _.get(requestData, 'common', ''),
+            'default': _.get(requestData, 'default', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getKycDocuments(requestData: GetKycDocumentRequestData): any {
+        const messageBody: GetKycDocumentRequestBody = {
+            RequestName: 'getkycdocument',
+            token: this.memberSocketService.token,
+            walletID: _.get(requestData, 'walletID', 0),
+            kycID: _.get(requestData, 'kycID', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+
     createKYCDraftOrWaitingApproval(requestData: createKYCDraftRequestData) {
 
         const messageBody: createKYCDraftMessageBody = {
@@ -749,32 +776,6 @@ export class OfiKycService {
                 });
             },
         ));
-    }
-
-    saveKycDocument(requestData: SaveKycDocumentRequestData): any {
-        const messageBody: SaveKycDocumentRequestBody = {
-            RequestName: 'updatekycdocument',
-            token: this.memberSocketService.token,
-            walletID: _.get(requestData, 'walletID', 0),
-            name: _.get(requestData, 'name', ''),
-            hash: _.get(requestData, 'hash', ''),
-            type: _.get(requestData, 'type', ''),
-            common: _.get(requestData, 'common', ''),
-            'default': _.get(requestData, 'default', 0),
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    getKycDocuments(requestData: GetKycDocumentRequestData): any {
-        const messageBody: GetKycDocumentRequestBody = {
-            RequestName: 'getkycdocument',
-            token: this.memberSocketService.token,
-            walletID: _.get(requestData, 'walletID', 0),
-            kycID: _.get(requestData, 'kycID', 0),
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }
