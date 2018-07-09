@@ -1,0 +1,16 @@
+clr-dg-row.selected {
+    background: rgba(34,139,34,0.05) !important
+}
+
+.col-actions { 
+    width: 75px;
+
+    .switch {
+        margin-left: 0;
+
+        .slider {
+            left: 2px;
+            top: 3px;
+        }
+    }
+}

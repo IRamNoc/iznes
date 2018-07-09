@@ -7,7 +7,7 @@ import { ToasterService } from 'angular2-toaster';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse } from '../../base/model';
+import { AccountAdminErrorResponse, AccountAdminNouns } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
@@ -23,7 +23,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
                 alerts: AlertsService,
                 toaster: ToasterService) {
         super(route, router, alerts, toaster);
-        this.noun = 'Team';
+        this.noun = AccountAdminNouns.Team;
     }
 
     ngOnInit() {

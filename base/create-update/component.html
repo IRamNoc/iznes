@@ -18,13 +18,30 @@
                 <div class="col">
                     <a [routerLink]="getBackUrl()" class="btn">{{ 'Back' | translate }}</a>
                 </div>
-
+                
                 <div class="col">
                     <button class="btn btn-primary" (click)="save()">{{
                         (isCreateMode()) ?
                         'Create ' + noun :
                         'Update ' + noun
                         | translate }}</button>
+                </div>
+            </div>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{
+                        (isTeamsPage()) ?
+                        'User Memberships':
+                        'Team Memberships'
+                        | translate }}</h3>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-teams-user-mgmt *ngIf="isTeamsPage()" [entityId]="entityId"></app-core-admin-teams-user-mgmt>
+                    <app-core-admin-users-team-mgmt *ngIf="isUsersPage()" [entityId]="entityId"></app-core-admin-users-team-mgmt>
                 </div>
             </div>
         </clr-tab-content>

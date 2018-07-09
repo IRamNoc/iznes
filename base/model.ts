@@ -22,3 +22,8 @@ export type AccountAdminErrorResponse = [
 ];
 
 export type RequestCallback = (data: AccountAdminResponse) => void;
+
+export enum AccountAdminNouns {
+    Team = 'Team',
+    User = 'User',
+}
