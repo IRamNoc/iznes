@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import * as sha256 from 'sha256';
-import * as sodium from 'libsodium-wrappers';
+import * as _sodium from 'libsodium-wrappers';
 
 const GibberishAES = (<any>window).GibberishAES;
 const JXG = (<any>window).JXG;
@@ -72,8 +72,11 @@ export class SetlWebSocket {
         if (thisData !== false) {
             this.encryption.serverPublicKey = thisData;
 
-            const shared = sodium.crypto_scalarmult(this.encryption.mySecret, sodium.from_hex(this.encryption.serverPublicKey));
-            this.encryption.shareKey = sha256(sodium.to_hex(shared));
+            _sodium.ready.then(() => {
+                const sodium = _sodium;
+                const shared = sodium.crypto_scalarmult(this.encryption.mySecret, sodium.from_hex(this.encryption.serverPublicKey));
+                this.encryption.shareKey = sha256(sodium.to_hex(shared));
+            });
         }
     }
 
@@ -163,38 +166,40 @@ export class SetlWebSocket {
         } catch (e) {
         }
 
-        /**
-         * Cache the requests from the browser when:
-         * 1. Initialising
-         * 2. Required authentication and has not authenticated and the request message type is not
-         *      this.authMessageTypes: ['authentication']
-         */
-        if (
-            (this.initialising) ||
-            (this.requiredAuthentication && (!this.authenticated) &&
-                (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', '')).toLowerCase()))
-            )
-        ) {
-            this.messageQueue.push(request);
-        } else {
-            if (!this.webSocketConn) {
+        _sodium.ready.then(() => {
+            /**
+             * Cache the requests from the browser when:
+             * 1. Initialising
+             * 2. Required authentication and has not authenticated and the request message type is not
+             *      this.authMessageTypes: ['authentication']
+             */
+            if (
+                (this.initialising) ||
+                (this.requiredAuthentication && (!this.authenticated) &&
+                    (!_.includes(this.authMessageTypes, String(_.get(request, 'messageType', '')).toLowerCase()))
+                )
+            ) {
                 this.messageQueue.push(request);
-                this.openWebSocket();
             } else {
-                request['Compress'] = 'lz';
-                if (this.requiredAuthentication && this.authenticated && (this.authTokenName !== false)) {
-                    request[this.authTokenName] = this.authToken;
+                if (!this.webSocketConn) {
+                    this.messageQueue.push(request);
+                    this.openWebSocket();
+                } else {
+                    request['Compress'] = 'lz';
+                    if (this.requiredAuthentication && this.authenticated && (this.authTokenName !== false)) {
+                        request[this.authTokenName] = this.authToken;
+                    }
+
+                    let messageText = JSON.stringify(request);
+                    if (this.encryption.shareKey !== false) {
+
+                        messageText = GibberishAES.enc(messageText, this.encryption.shareKey);
+                    }
+
+                    return this.webSocketConn.send(messageText);
                 }
-
-                let messageText = JSON.stringify(request);
-                if (this.encryption.shareKey !== false) {
-
-                    messageText = GibberishAES.enc(messageText, this.encryption.shareKey);
-                }
-
-                return this.webSocketConn.send(messageText);
             }
-        }
+        });
     }
 
     openWebSocket(userCallback?: any, userCallbackData?: any) {
@@ -266,50 +271,54 @@ export class SetlWebSocket {
                         this.authToken = '';
                         // todo
                         // callHandler funciton
-                        this.initMessageID = this.callbackHandler.uniqueIDValue;
-                        this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
-                        this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
 
-                        this.callbackHandler.addHandler(
-                            this.initMessageID,
-                            (pID, pMessage, pData) => {
-                                this.initResponse(pID, pMessage, pData);
-                                this.initialising = false;
+                        _sodium.ready.then(() => {
+                            const sodium = _sodium;
+                            this.initMessageID = this.callbackHandler.uniqueIDValue;
+                            this.encryption.mySecret = sodium.randombytes_buf(sodium.crypto_box_SECRETKEYBYTES);
+                            this.encryption.myPublicKey = sodium.crypto_scalarmult_base(this.encryption.mySecret, 'hex');
 
-                                if (Object.prototype.toString.call(userCallback) === '[object Function]') {
-                                    userCallback(pID, pMessage, pData);
-                                }
+                            this.callbackHandler.addHandler(
+                                this.initMessageID,
+                                (pID, pMessage, pData) => {
+                                    this.initResponse(pID, pMessage, pData);
+                                    this.initialising = false;
 
-                                if (this.callbackHandler) {
-                                    this.callbackHandler.handleEvent('OnOpen', {});
-                                }
-
-                                if ((!this.requiredAuthentication) || (this.authenticated)) {
-                                    while (this.messageQueue.length > 0) {
-                                        this.sendRequest(this.messageQueue.shift());
+                                    if (Object.prototype.toString.call(userCallback) === '[object Function]') {
+                                        userCallback(pID, pMessage, pData);
                                     }
-                                }
-                            },
-                            {}
-                        );
 
-                        const messageBody = {
-                            pub: this.encryption.myPublicKey,
-                        };
+                                    if (this.callbackHandler) {
+                                        this.callbackHandler.handleEvent('OnOpen', {});
+                                    }
 
-                        const request = {
-                            MessageType: 'Initialise',
-                            MessageHeader: '',
-                            RequestID: this.initMessageID,
-                            MessageBody: messageBody,
-                        };
+                                    if ((!this.requiredAuthentication) || (this.authenticated)) {
+                                        while (this.messageQueue.length > 0) {
+                                            this.sendRequest(this.messageQueue.shift());
+                                        }
+                                    }
+                                },
+                                {}
+                            );
+
+                            const messageBody = {
+                                pub: this.encryption.myPublicKey,
+                            };
+
+                            const request = {
+                                MessageType: 'Initialise',
+                                MessageHeader: '',
+                                RequestID: this.initMessageID,
+                                MessageBody: messageBody,
+                            };
 
 
-                        const messageText = JSON.stringify(request);
+                            const messageText = JSON.stringify(request);
 
-                        this.webSocketConn.send(messageText);
+                            this.webSocketConn.send(messageText);
 
-                        this.defaultOnOpen();
+                            this.defaultOnOpen();
+                        });
                     };
 
                     this.webSocketConn.onclose = (e) => {
