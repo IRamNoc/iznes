@@ -9,7 +9,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { FileService } from '@setl/core-req-services';
-import { isEqual } from 'lodash';
+import { isEqual, filter, each } from 'lodash';
 import { first, distinctUntilChanged, share, map } from 'rxjs/operators';
 
 @Component({
@@ -311,7 +311,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             filePermission: 1,
         };
         const asyncTaskPipe = this.fileService.addFile({
-            files: _.filter([fileData], (file) => {
+            files: filter([fileData], (file) => {
                 return file.status !== 'uploaded-file';
             }),
         });
@@ -321,7 +321,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             (data) => {
                 if (data[1] && data[1].Data) {
                     let errorMessage;
-                    _.each(data[1].Data, (file) => {
+                    each(data[1].Data, (file) => {
                         if (file.error) {
                             errorMessage = file.error;
                         } else {
@@ -335,7 +335,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
             },
             (data) => {
                 let errorMessage;
-                _.each(data[1].Data, (file) => {
+                each(data[1].Data, (file) => {
                     if (file.error) {
                         errorMessage += file.error + '<br/>';
                     }
