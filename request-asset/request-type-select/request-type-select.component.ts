@@ -1,8 +1,7 @@
 import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs';
+import {Subscription, Observable} from 'rxjs';
 import {
     WalletNodeRequestService,
     WalletnodeTxService,

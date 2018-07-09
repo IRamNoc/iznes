@@ -16,7 +16,7 @@ import * as _ from 'lodash';
 // import {ChainModel} from './model';
 
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {Unsubscribe} from 'redux';
 import {WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
 import {MultilingualService} from '@setl/multilingual';

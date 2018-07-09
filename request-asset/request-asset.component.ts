@@ -11,8 +11,7 @@ import {TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS} from '@setl/core-store';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {Unsubscribe} from 'redux';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
-import {Observable} from 'rxjs/Observable';
+import {Subscription, Observable} from 'rxjs';
 import {PersistService} from '@setl/core-persist';
 
 @Component({
