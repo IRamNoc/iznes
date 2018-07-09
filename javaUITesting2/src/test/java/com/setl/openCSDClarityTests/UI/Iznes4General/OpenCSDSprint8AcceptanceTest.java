@@ -58,12 +58,12 @@ public class OpenCSDSprint8AcceptanceTest {
     public void setUp() throws Exception {
         testSetUp();
         screenshotRule.setDriver(driver);
-        //setDBToProdOff();
+        setDBToProdOff();
     }
 
     @After
     public void tearDown() throws Exception {
-        //setDBToProdOn();
+        setDBToProdOn();
     }
 
     @Test
