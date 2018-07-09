@@ -13,8 +13,7 @@ import { Router } from '@angular/router';
 import { AlertsService } from './alerts.service';
 import { AlertSettings } from './interfaces/alert-settings';
 import { AlertComponent } from './alert.component';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 
 @Component({
     selector: 'jaspero-alerts',
