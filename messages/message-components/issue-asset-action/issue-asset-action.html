@@ -1,0 +1,15 @@
+<div>
+    <p>{{config.messageBody}}</p>
+
+    Amount: AUD {{config.amount | moneyValue}}
+
+    <div *ngIf="!isActed && instruments.length">
+        <ng-select [items]="instruments" [active]="(instruments.length) ? [instruments[0]] : []" (selected)="instrument = [$event]"></ng-select>
+        <button class="btn btn-primary" (click)="onActionClick(config)">Issue Funds</button>
+    </div>
+    <div *ngIf="instruments.length === 0">No Assets</div>
+    <div *ngIf="isActed">
+        <i class="fa fa-check"></i>
+        <p>{{config.completeText}}</p>
+    </div>
+</div>
