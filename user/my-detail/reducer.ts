@@ -42,8 +42,7 @@ const UserTypeStr = {
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
-    let newState = {};
+export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action): MyDetailState {
     let emailAddress = '';
 
     switch (action.type) {
@@ -67,7 +66,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const accountId = _.get(loginedData, 'accontID', '');
             const memberId = _.get(loginedData, 'memberID', '');
 
-            newState = Object.assign({}, state, {
+            return Object.assign({}, state, {
                 username,
                 emailAddress,
                 userId,
@@ -76,10 +75,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 userTypeStr,
                 admin,
                 accountId,
-                memberId
+                memberId,
             });
-
-            return newState;
 
         case MyDetailActions.SET_USER_DETAILS:
 
@@ -104,7 +101,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const phoneCode = _.get(userDetailsData, 'phoneCode', '');
             const phoneNumber = _.get(userDetailsData, 'phoneNumber', '');
 
-            newState = Object.assign({}, state, {
+            return Object.assign({}, state, {
                 displayName,
                 firstName,
                 lastName,
@@ -122,10 +119,8 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 profileText,
                 companyName,
                 phoneCode,
-                phoneNumber
+                phoneNumber,
             });
-
-            return newState;
 
         case MyDetailActions.RESET_LOGIN_DETAIL:
             return initialState;

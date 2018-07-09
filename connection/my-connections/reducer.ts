@@ -103,7 +103,7 @@ function handleClearRequestedToConnections(state) {
     return Object.assign({}, state, { requestedToConnectionList });
 }
 
-export const MyConnectionReducer = (state: MyConnectionState = initialState, action: AsyncTaskResponseAction) => {
+export const MyConnectionReducer = (state: MyConnectionState = initialState, action: AsyncTaskResponseAction): MyConnectionState => {
     switch (action.type) {
         case ConnectionActions.SET_FROM_CONNECTION_LIST:
             return handleSetFromConnectionList(state, action);
