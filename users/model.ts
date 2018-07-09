@@ -3,6 +3,7 @@ import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export class AccountAdminUser {
     userID?: number;
+    userTeamID?: number;
     reference: string;
     firstName: string;
     lastName: string;
@@ -11,6 +12,7 @@ export class AccountAdminUser {
     userTypeID: number;
     userType: string;
     userStatus: number;
+    isInTeam?: boolean;
 }
 
 export class AccountAdminUserForm {

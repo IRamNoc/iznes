@@ -62,5 +62,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
         this.service.readUsers(null, this.accountId, () => {}, () => {});
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
 }

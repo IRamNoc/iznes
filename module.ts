@@ -18,6 +18,7 @@ import {
     AccountAdminCreateUpdateBase,
     AccountAdminAuditBase,
     AccountAdminListBase,
+    UserManagementServiceBase,
 } from './base';
 
 import {
@@ -25,8 +26,7 @@ import {
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
     UserTeamsService,
-    UserTeamsUsersMgmtComponent,
-    UserManagementService,
+    UserTeamsUsersMgmtTeamsComponent,
 } from './teams';
 
 import {
@@ -34,6 +34,7 @@ import {
     UsersCreateUpdateComponent,
     UsersListComponent,
     UsersService,
+    UserTeamsUsersMgmtUsersComponent,
 } from './users';
 
 @NgModule({
@@ -60,14 +61,15 @@ import {
         UserTeamsCreateUpdateComponent,
         UserTeamsListComponent,
         UsersAuditComponent,
-        UsersCreateUpdateComponent,
         UsersListComponent,
-        UserTeamsUsersMgmtComponent,
+        UserTeamsUsersMgmtTeamsComponent,
+        UserTeamsUsersMgmtUsersComponent,
+        UsersCreateUpdateComponent,
     ],
     providers: [
         UserTeamsService,
         UsersService,
-        UserManagementService,
+        UserManagementServiceBase,
     ],
     exports: [],
 })

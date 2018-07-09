@@ -8,55 +8,53 @@ import {
 } from '@setl/core-store';
 import { UserTeamsUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
-import { UsersService } from '../../../users';
-import * as UserModel from '../../../users/model';
+import { UserTeamsService } from '../../../teams';
+import * as TeamModel from '../../../teams/model';
 import { UserManagementServiceBase } from '../../../base/create-update/user-management/service';
 
 @Component({
-    selector: 'app-core-admin-teams-user-mgmt',
+    selector: 'app-core-admin-users-team-mgmt',
     templateUrl: 'component.html',
     styleUrls: ['component.scss'],
 })
-export class UserTeamsUsersMgmtTeamsComponent
-    extends UserTeamsUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
+export class UserTeamsUsersMgmtUsersComponent
+    extends UserTeamsUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
 
-    @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
-    @select(['accountAdmin', 'users', 'users']) usersOb;
+    @select(['accountAdmin', 'teams', 'requested']) teamsReqOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
     constructor(redux: NgRedux<any>,
                 service: UserManagementServiceBase,
                 toaster: ToasterService,
-                private usersService: UsersService) {
+                private teamsService: UserTeamsService) {
         super(redux, service, toaster);
     }
 
     ngOnInit() {
         super.ngOnInit();
 
-        this.subscriptions.push(this.usersRequestedOb.subscribe((requested: boolean) => {
-            this.requestUsers(requested);
+        this.subscriptions.push(this.teamsReqOb.subscribe((requested: boolean) => {
+            this.requestTeams(requested);
         }));
 
-        this.subscriptions.push(this.usersOb.subscribe((users: UserModel.AccountAdminUser[]) => {
-            this.entities = users;
+        this.subscriptions.push(this.teamsOb.subscribe((teams: TeamModel.AccountAdminTeam[]) => {
+            this.entities = teams;
 
-            if (users.length) {
+            if (teams.length) {
                 this.requestUserTeamMap();
             }
         }));
-
-        this.redux.dispatch(clearRequestedAccountAdminUsers());
     }
 
-    private requestUsers(requested: boolean): void {
+    private requestTeams(requested: boolean): void {
         if (requested) return;
 
-        this.usersService.readUsers(null, this.accountId, () => {}, () => {});
+        this.teamsService.readUserTeams(null, () => {}, () => {});
     }
 
     private requestUserTeamMap(): void {
-        this.service.readTeamUserMap(null,
-                                     this.entityId,
+        this.service.readTeamUserMap(this.entityId,
+                                     null,
                                      (data: AccountAdminResponse) => this.onRequestUserTeamMapSuccess(data),
                                      (e: AccountAdminErrorResponse) => this.onRequestError(e));
     }
@@ -73,24 +71,23 @@ export class UserTeamsUsersMgmtTeamsComponent
             (!this.entities) ||
             this.entities.length === 0) return;
 
-        _.forEach(this.entities, (user: UserModel.AccountAdminUser) => {
+        _.forEach(this.entities, (team: TeamModel.AccountAdminTeam) => {
             const result = _.find(data[1].Data, (res: any) => {
-                return res.userID === user.userID &&
-                    res.userTeamID === this.entityId;
+                return res.userTeamID === team.userTeamID &&
+                    res.userID === this.entityId;
             });
 
             if (result) {
-                user.userTeamID = result.userTeamID;
-                user.isInTeam = true;
+                team.hasUserInTeam = true;
             }
         });
     }
 
-    updateState(value: boolean, userId: number): void {
+    updateState(value: boolean, userTeamId: number): void {
         this.service.updateTeamUserMap(
             value,
-            userId,
             this.entityId,
+            userTeamId,
             () => this.onUpdateStateSuccess(value),
             (e: AccountAdminErrorResponse) => this.onRequestError(e),
         );
