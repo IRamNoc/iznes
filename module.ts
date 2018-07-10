@@ -65,6 +65,7 @@ import {
         UsersListComponent,
         UserTeamsUsersMgmtTeamsComponent,
         UserTeamsUsersMgmtUsersComponent,
+        UserTeamsUsersMgmtComponentBase,
         UsersCreateUpdateComponent,
     ],
     providers: [
