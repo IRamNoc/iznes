@@ -32,13 +32,14 @@ export class PersistService {
      *
      * @param {string} name - The name identifier of the form, must coenside with the name registered in the database.
      * @param {FormGroup} group - The FormGroup to be watched and restored.
+     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
      *
      * @return {FormGroup} - The FormGroup origininally passed in.
      */
-    public watchForm(name: string, group: FormGroup): FormGroup {
+    public watchForm(name: string, group: FormGroup, context: string = null): FormGroup {
         console.log(' |-- Persist - watchForm: ', name);
         /* Check if we have a state for this form. */
-        this._persistRequestService.loadFormState(name).then((data) => {
+        this._persistRequestService.loadFormState(name, context).then((data) => {
             /* Get recovered data. */
             const recoveredData = JSON.parse(_.get(data, '[1].Data[0].data', false));
 
@@ -60,7 +61,7 @@ export class PersistService {
         });
 
         /* Re-subscribe to changes. */
-        this._subscribeToChanges(name, group);
+        this._subscribeToChanges(name, group, context);
 
         /* Return. */
         console.log(' | returning group.');
@@ -100,17 +101,18 @@ export class PersistService {
      *
      * @param  {string} name     - the name of the form.
      * @param  {FormGroup} group - the new FormGroup object.
+     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
      *
      * @return {FormGroup} group - the FormGroup passed in.
      */
-    public refreshState(name: string, group: FormGroup): FormGroup {
+    public refreshState(name: string, group: FormGroup, context: string = null): FormGroup {
         console.log(' |--- Persist - clearState: ', name);
         /* Let's firstly set the new form value. */
         this._forms[name] = this.stripSensitiveData(group.value);
         console.log(' | Form value in service: ', this._forms[name]);
 
         /* Then let's save the empty value to the server. */
-        this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
+        this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name]), context).then((save_data) => {
             /* Stub. */
             console.log(' | Form state refesh reply: ', save_data);
         }).catch((error) => {
@@ -118,7 +120,7 @@ export class PersistService {
         });
 
         /* Re-subscribe to changes. */
-        this._subscribeToChanges(name, group);
+        this._subscribeToChanges(name, group, context);
 
         /* Return. */
         return group;
@@ -131,10 +133,11 @@ export class PersistService {
      *
      * @param  {string} name     - the form name.
      * @param  {FormGroup} group - the FormGroup.
+     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
      *
      * @return {boolean}         - true.
      */
-    private _subscribeToChanges (name: string, group: FormGroup): boolean {
+    private _subscribeToChanges (name: string, group: FormGroup, context: string = null): boolean {
         /* Unsubscribe if already subscribed. */
         if (this._subscriptions[name]) {
             console.log(' | Unsubscribing from group.');
@@ -156,7 +159,7 @@ export class PersistService {
             const secondsToWait = .5; // Seconds.
             this._wait = setTimeout(() => {
                 /* Send the request. */
-                this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name])).then((save_data) => {
+                this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name]), context).then((save_data) => {
                     /* Stub. */
                     console.log(' | Form state save reply: ', save_data);
                 }).catch((error) => {
@@ -187,7 +190,7 @@ export class PersistService {
 
     private loopAndRemovePassword (object) {
         /* Check if this is an object... */
-    	if (typeof object == 'object' && ! object.length) {
+    	if (object && typeof object == 'object' && ! object.length) {
     		/* Loop over keys... */
     		var key;
     		for (key in object) {
