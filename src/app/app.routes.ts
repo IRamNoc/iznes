@@ -51,11 +51,11 @@ import {
     ProductConfigurationComponent,
     OfiRedirectTokenComponent,
     OfiConsumeTokenComponent,
-    MyRequestsComponent,
-    NewKycRequestComponent,
-    MyRequestsContainerComponent,
     MyHoldingsComponent,
 } from '@ofi/ofi-main';
+
+import {KycRequestsModule} from '@ofi/ofi-main/ofi-kyc/my-requests/requests.module';
+
 /* UserAdmin Module. */
 import {
     AdminPermissionsComponent,
@@ -645,18 +645,7 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'my-requests',
-                canActivate: [LoginGuardService],
-                component: MyRequestsContainerComponent,
-                children: [
-                    {
-                        path: 'list',
-                        component: MyRequestsComponent,
-                    },
-                    {
-                        path: 'new',
-                        component: NewKycRequestComponent,
-                    },
-                ],
+                loadChildren : '@ofi/ofi-main/ofi-kyc/my-requests/requests.module#KycRequestsModule',
             },
             {
                 path: 'account-admin',
