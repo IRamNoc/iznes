@@ -9,6 +9,7 @@ import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/m
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
+    template: '<div></div>',
 })
 export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
