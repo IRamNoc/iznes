@@ -54,5 +54,9 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         this.service.readUserTeams(null, () => {}, () => {});
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        super.ngOnDestroy();
+
+        this.teams = undefined;
+    }
 }

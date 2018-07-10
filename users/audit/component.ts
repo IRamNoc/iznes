@@ -20,5 +20,7 @@ export class UsersAuditComponent extends AccountAdminAuditBase implements OnInit
 
     ngOnInit() {}
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
 }

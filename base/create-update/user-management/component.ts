@@ -57,6 +57,8 @@ export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy 
     }
 
     ngOnDestroy() {
+        this.entities = undefined;
+
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach((sub: Subscription) => {
                 sub.unsubscribe();

@@ -96,5 +96,7 @@ export class UserTeamsUsersMgmtTeamsComponent
         );
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
 }
