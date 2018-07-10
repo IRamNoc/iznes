@@ -1,9 +1,11 @@
-import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
+
+import {FormPercentDirective} from "@setl/utils/directives/form-percent/formpercent";
 
 @Component({
     selector: 'app-ui-layouts-formpercent',
@@ -29,11 +31,14 @@ import {MultilingualService} from '@setl/multilingual';
 })
 export class UiFormPercentComponent implements OnInit {
 
+    @ViewChildren(FormPercentDirective) formPercents: any;
+
     myForm1: FormGroup;
     myForm2: FormGroup;
 
     showInfoPanes: boolean = true;
     lang: string;
+
     @select(['user', 'siteSettings', 'language']) language$;
 
     private unsubscribe: Subject<any> = new Subject();
@@ -161,6 +166,16 @@ export class UiFormPercentComponent implements OnInit {
 
     save(formValues) {
         console.log('save', formValues);
+    }
+
+    addField() {
+        (this.myForm1.get('mygroup') as FormGroup).addControl('nickname', new FormControl('', Validators.required));
+        this.formPercents.toArray()[0].refreshFormPercent();
+    }
+
+    removeField() {
+        (this.myForm1.get('mygroup') as FormGroup).removeControl('nickname');
+        this.formPercents.toArray()[0].refreshFormPercent();
     }
 
     toggleInfoPanes(event: Event): void {

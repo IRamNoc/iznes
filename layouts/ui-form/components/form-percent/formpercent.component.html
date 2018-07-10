@@ -35,8 +35,13 @@
                 <h2>{{'Examples' | translate}}:</h2>
                 <hr>
                 <div class="docBox">
-                    <h1>{{'Full Form' | translate}}</h1>
+                    <h1>{{'Full Form - Default progressive color (0% to 99% = warning | 100% = success)' | translate}}</h1>
                     <!--all field in 1 form-->
+                    <p class="mb-0">
+                        Call custom events from component to directive (re-calcul percentage):
+                        <button type="button" class="m-1 btn btn-warning" (click)="addField()">Add 1 field to form</button>
+                        <button type="button" class="m-1 btn btn-warning" (click)="removeField()">Remove 1 field to form</button>
+                    </p>
                     <form [formGroup]="myForm1" novalidate (ngSubmit)="myForm1.valid && save(myForm1.value)">
                         <div id="formPercent1" style="width: 99%" [formpercent]="{form: myForm1}"></div>
                         <br>
@@ -46,6 +51,7 @@
                         <div formGroupName="mygroup">
                             <div class="form-group"><input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')"></div>
                             <div class="form-group"><input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')"></div>
+                            <div class="form-group" *ngIf="myForm1.controls.mygroup.controls.nickname"><input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')"></div>
                         </div>
                     </form>
                 </div>
@@ -62,7 +68,7 @@
                                 <div class="col-xs-12">
                                     <a href="#" (click)="$event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="true"></i>
-                                        <h2>{{'Square Bar - class info:' | translate}}</h2>
+                                        <h2>{{'Square Bar - forced class info:' | translate}}</h2>
                                         <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup1, type: 'square', color: 'info'}"></div>
                                     </a>
                                 </div>
@@ -81,7 +87,7 @@
                                 <div class="col-xs-12">
                                     <a href="#" (click)="$event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="true"></i>
-                                        <h2>{{'Rounded Bar - class warning:' | translate}}</h2>
+                                        <h2>{{'Rounded Bar - forced class warning:' | translate}}</h2>
                                         <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup2, type: 'round', color: 'warning'}"></div>
                                     </a>
                                 </div>
@@ -100,7 +106,7 @@
                                 <div class="col-xs-12">
                                     <a href="#" (click)="$event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="true"></i>
-                                        <h2>{{'Bordered Bar - class danger:' | translate}}</h2>
+                                        <h2>{{'Bordered Bar - forced class danger:' | translate}}</h2>
                                         <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup3, type: 'border', color: 'danger'}"></div>
                                     </a>
                                 </div>
@@ -119,7 +125,7 @@
                                 <div class="col-xs-12">
                                     <a href="#" (click)="$event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="true"></i>
-                                        <h2>{{'Static Bordered Bar with Stripes - class succcess:' | translate}}</h2>
+                                        <h2>{{'Static Bordered Bar with Stripes - forced class succcess:' | translate}}</h2>
                                         <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup4, type: 'border', color: 'succcess', animated: false, stripes: true}"></div>
                                     </a>
                                 </div>
@@ -138,7 +144,7 @@
                                 <div class="col-xs-12">
                                     <a href="#" (click)="$event.preventDefault();">
                                         <i class="fa fa-chevron-right" [class.rotate]="true"></i>
-                                        <h2>{{'Static Flat Bordered Bar - class succcess:' | translate}}</h2>
+                                        <h2>{{'Static Flat Bordered Bar - forced class succcess:' | translate}}</h2>
                                         <div class="pgContainer" [formpercent]="{form: myForm2.controls.mygroup5, type: 'border', color: 'succcess', animated: false, stripes: false}"></div>
                                     </a>
                                 </div>

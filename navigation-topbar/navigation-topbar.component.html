@@ -13,11 +13,11 @@
     </form>
     <div class="header-actions">
 
-        <div class="user" id="topBarMenu" *ngIf="appConfig.platform === 'IZNES'">
+        <div class="user iznes" id="topBarMenu" appHighlight *ngIf="appConfig.platform === 'IZNES'">
             <img src="assets/images/male.png">
             <p>{{username}}</p>
             <div class="last-login">
-                {{'Last' | translate}}:&nbsp;{{lastLogin | datex: 'MMMM Do YYYY hh:mm'}}
+                {{'Last' | translate}}: {{lastLogin}}
             </div>
         </div>
 
@@ -38,13 +38,13 @@
 
         <div class="wallet">
             <div class="decalWallet">
-                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="_translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
+                <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
                 </ng-select>
             </div>
         </div>
 
         <div class="right-buttons">
-            <div id="translation-report-button" class="dropdown" *ngIf="!appConfig.production">
+            <div id="translation-report-button" appHighlight class="dropdown" *ngIf="!appConfig.production">
                 <a (click)="getMissingTranslations()" class="nav-button dropdown-toggle messages-icon blink_me">
                     <clr-icon shape="warning-standard" class="icon text-warning"></clr-icon>
                     <!--style="stroke: orange"-->
@@ -100,19 +100,21 @@
     <div class="modal-title">
         <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
         <h4 class="modal-title-text">
-            <span class="ml_translated">{{'Session expiring soon' | translate}}</span></h4>
+            <span class="mltranslated">{{'Session expiring soon' | translate}}</span></h4>
     </div>
     <div class="modal-body">
-        <p>{{'Your session will expire in' | translate}} <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{'seconds.' | translate}}
+        <p>{{'Your session will expire in' | translate}}
+            <span class="text-warning">{{remainingSecond && remainingSecond}}</span> {{'seconds.' | translate}}
 
         </p>
-        <p>{{'Press' | translate}} <span class="text-primary font-weight-bold ml_translated">{{'continue' | translate}}</span> {{'to continue using this site.' | translate}}
+        <p>{{'Press' | translate}}
+            <span class="text-primary font-weight-bold mltranslated">{{'continue' | translate}}</span> {{'to continue using this site.' | translate}}
 
         </p>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="handleExtendSession()">
-            <span class="ml_translated">{{'Continue' | translate}}</span>
+            <span class="mltranslated">{{'Continue' | translate}}</span>
         </button>
     </div>
 </clr-modal>
@@ -153,5 +155,18 @@
 
         </button>
         <button type="button" class="btn btn-primary" (click)="showMissingTranslations = false">{{'Close' | translate}}</button>
+    </div>
+</clr-modal>
+
+<clr-modal [clrModalOpen]="walletNodeDead | async" [clrModalClosable]="false">
+    <div class="modal-title">
+        <i class="fa fa-exclamation-triangle modal-icon text-warning"></i>
+        <h4 class="modal-title-text">{{'Connection issues' | translate}} <i class="fa fa-plug"></i></h4>
+    </div>
+    <div class="modal-body tcenter">
+        <p>Your connection to the WalletNode has been lost. Please wait while we attempt to reconnect you</p>
+        <p>Alternatively, you could try refreshing your browser</p>
+    </div>
+    <div class="modal-footer">
     </div>
 </clr-modal>

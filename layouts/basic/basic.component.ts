@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ElementRef} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {FadeSlideRight} from '../../animations/fade-slide-right';
 
 import {setLanguage} from '@setl/core-store';

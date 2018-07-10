@@ -7,10 +7,10 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    Output
+    Output,
 } from '@angular/core';
-import {APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
+import { APP_CONFIG, AppConfig, MenuItem, SagaHelper, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     addWalletNodeInitialSnapshot,
     clearRequestedMailInitial,
@@ -23,11 +23,12 @@ import {
     setConnectedChain,
     setConnectedWallet,
     setMenuShown,
-    setRequestedMailInitial
+    setRequestedMailInitial,
 } from '@setl/core-store';
-import {fromJS} from 'immutable';
-import {MultilingualService} from '@setl/multilingual/multilingual.service';
+import { fromJS } from 'immutable';
+import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import * as _ from 'lodash';
+import * as moment from 'moment';
 
 import {
     ChannelService,
@@ -35,22 +36,25 @@ import {
     MyMessagesService,
     MyUserService,
     MyWalletsService,
-    WalletNodeRequestService
+    WalletNodeRequestService,
+    NodeAlertsService
 } from '@setl/core-req-services';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
-import {Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
+import { Router } from '@angular/router';
+import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
+import { Subscription ,  Observable } from 'rxjs';
 
 @Component({
     selector: 'app-navigation-topbar',
     templateUrl: './navigation-topbar.component.html',
     styleUrls: ['./navigation-topbar.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestroy {
-    walletSelectItems: Array<any>;
+    walletSelectItems: any[];
     searchForm: FormGroup;
     selectedWalletId = new FormControl();
 
@@ -61,10 +65,10 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
     appConfig: AppConfig;
     topbarLogoUrl: string;
-    profileMenu: Array<MenuItem>;
+    profileMenu: MenuItem[];
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     public hasMail = {};
     public unreadMessageCount;
@@ -74,6 +78,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     public lastLogin;
     public menuState;
 
+    public walletNodeDead: Observable<boolean>;
     public missingTranslations = [];
     public responsesService = <any>[];
     showMissingTranslations = false;
@@ -88,6 +93,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     @select(['message', 'myMessages', 'counts', 'inboxUnread']) inboxUnread;
     @select(['user', 'connected', 'memberNodeSessionManager']) memberNodeSessionManagerOb;
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private myWalletsService: MyWalletsService,
@@ -95,14 +101,16 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 private walletNodeRequestService: WalletNodeRequestService,
                 private fb: FormBuilder,
                 private router: Router,
-                private _myUserService: MyUserService,
+                private myUserService: MyUserService,
                 private walletNodeSocketService: WalletNodeSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private memberSocketService: MemberSocketService,
                 private channelService: ChannelService,
+                private menuSpecService: MenuSpecService,
                 private initialisationService: InitialisationService,
                 private logService: LogService,
+                private nodeAlertsService: NodeAlertsService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         // Search form
@@ -117,6 +125,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
+
+        this.walletNodeDead = this.nodeAlertsService.dead;
     }
 
     updateState() {
@@ -132,11 +142,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             this.username = this.currentUserDetails.username;
         }
 
-        this.lastLogin = this.currentUserDetails.lastLogin;
-
-        if (this.lastLogin === '' || this.lastLogin === null) {
-            this.lastLogin = Date.now();
-        }
+        this.lastLogin = this.currentUserDetails.lastLogin || moment().format('YYYY-MM-DD HH:mm');
 
         const chainAccess = getDefaultMyChainAccess(newState);
 
@@ -146,38 +152,39 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
             const myAuthenData = getAuthentication(newState);
             const myDetail = getMyDetail(newState);
-            const {userId} = myDetail;
-            const {apiKey} = myAuthenData;
+            const { userId } = myDetail;
+            const { apiKey } = myAuthenData;
             const protocol = this.appConfig.production ? 'wss' : 'ws';
             const hostName = _.get(chainAccess, 'nodeAddress', '');
             const port = _.get(chainAccess, 'nodePort', 0);
             const nodePath = _.get(chainAccess, 'nodePath', '');
 
             this.walletNodeSocketService.connectToNode(protocol, hostName, port, nodePath, userId, apiKey)
-                .then((res) => {
-                    // Set connected wallet, if we got the wallet list and there is not wallet is chosen.
-                    if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
-                        this.selectedWalletId.setValue([this.walletSelectItems[0]], {
-                            onlySelf: true,
-                            emitEvent: true,
-                            emitModelToViewChange: true,
-                            emitViewToModelChange: true
-                        });
-                        this.logService.log(this.walletSelectItems[0]);
-                        this.selected(this.walletSelectItems[0]);
-
-                        /* set the chain id as the connected one in redux store */
-                        const chainId = _.get(chainAccess, 'chainId', '');
-                        this.ngRedux.dispatch(setConnectedChain(chainId));
-
-                        this.changeDetectorRef.markForCheck();
-                    }
-
-                    this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
-                        let action = addWalletNodeInitialSnapshot(initialSnapshot);
-                        this.ngRedux.dispatch(action);
+            .then((res) => {
+                // Set connected wallet, if we got the wallet list and
+                // there is not wallet is chosen.
+                if (this.walletSelectItems.length > 0 && !this.selectedWalletId.value) {
+                    this.selectedWalletId.setValue([this.walletSelectItems[0]], {
+                        onlySelf: true,
+                        emitEvent: true,
+                        emitModelToViewChange: true,
+                        emitViewToModelChange: true,
                     });
+                    this.logService.log(this.walletSelectItems[0]);
+                    this.selected(this.walletSelectItems[0]);
+
+                    /* set the chain id as the connected one in redux store */
+                    const chainId = _.get(chainAccess, 'chainId', '');
+                    this.ngRedux.dispatch(setConnectedChain(chainId));
+
+                    this.changeDetectorRef.markForCheck();
+                }
+
+                this.walletNodeRequestService.requestWalletNodeInitialSnapshot().then((initialSnapshot: any) => {
+                    const action = addWalletNodeInitialSnapshot(initialSnapshot);
+                    this.ngRedux.dispatch(action);
                 });
+            });
 
         }
         this.changeDetectorRef.markForCheck();
@@ -185,61 +192,80 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     ngOnInit() {
-        this.subscriptionsArray.push(this._translate.getLanguage.subscribe((data) => {
+        this.subscriptionsArray.push(this.translate.getLanguage.subscribe((data) => {
             const currentState = this.ngRedux.getState();
             const currentUserDetails = getMyDetail(currentState);
             const userType = currentUserDetails.userType;
             const userTypeStr = {
-                '15': 'system_admin',
-                '25': 'chain_admin',
-                '27': 'bank',
-                '35': 'member_user',
-                '36': 'am',
-                '45': 'standard_user',
-                '46': 'investor',
-                '47': 'valuer',
-                '48': 'custodian',
-                '49': 'cac',
-                '50': 'registrar',
-                '60': 't2s',
-                '65': 'rooster_operator',
+                15: 'system_admin',
+                25: 'chain_admin',
+                27: 'bank',
+                35: 'member_user',
+                36: 'am',
+                45: 'standard_user',
+                46: 'investor',
+                47: 'valuer',
+                48: 'custodian',
+                49: 'cac',
+                50: 'registrar',
+                60: 't2s',
+                65: 'rooster_operator',
             }[userType];
-            this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+
+            if (!this.profileMenu) {
+                this.profileMenu = this.appConfig.menuSpec.top.profile[userTypeStr];
+            }
+
+            this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
+                this.profileMenu = menuSpec.top.profile[userTypeStr];
+            });
         }));
 
         // When membernode reconnect. trigger wallet select.
         this.subscriptionsArray.push(this.memberSocketService.getReconnectStatus().subscribe(() => {
-
                 // Subscribe to my connection channel, target for my userId
-                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService)
+                InitialisationService.subscribe(this.memberSocketService, this.channelService, this.initialisationService);
 
                 if (!this.selectedWalletId.value) {
                     return;
                 }
 
                 this.selected(this.selectedWalletId.value[0]);
-            }
-        ));
+            }),
+        );
     }
 
     ngAfterViewInit() {
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(
+            (walletId) => {
+                const selectedItem = this.walletSelectItems.find(
+                    (walletItem) => {
+                        return walletItem.id === walletId;
+                    },
+                );
+                if (typeof selectedItem !== 'undefined') {
+                    this.selectedWalletId.patchValue([selectedItem]);
+                }
+            },
+            ),
+        );
         this.subscriptionsArray.push(this.requestMailInitial.subscribe(
             (requestedState) => {
                 this.requestMailInitialCounts(requestedState);
-            }
+            },
         ));
 
         this.subscriptionsArray.push(this.inboxUnread.subscribe(
             (unreadMessages) => {
                 this.triggerUnreadMessages(unreadMessages);
-            }
+            },
         ));
 
         this.subscriptionsArray.push(this.menuShowOb.subscribe(
             (menuState) => {
                 this.menuState = menuState;
                 this.menuHasChanged();
-            }
+            },
         ));
 
         this.subscriptionsArray.push(this.memberNodeSessionManagerOb.subscribe(
@@ -255,7 +281,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 }
 
                 this.changeDetectorRef.detectChanges();
-            }
+            },
         ));
 
         this.logService.log(window.innerWidth);
@@ -267,8 +293,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         // reset
         this.missingTranslations = [];
         this.responsesService = [];
-        // get translatation
-        const tr = this._translate.getTranslations();
+        // get translation
+        const tr = this.translate.getTranslations();
         // clone
         this.missingTranslations = _.clone(tr);
         this.showMissingTranslations = true;
@@ -283,13 +309,13 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         if (this.showHighlightTranslations) {
             this.highlightMissingTranslations();
         } else {
-            this._translate.removeHighlightMissingTranslations();
+            this.translate.removeHighlightMissingTranslations();
         }
     }
 
-    highlightMissingTranslations(){
-        for (let tr of this.missingTranslations) {
-            this._translate.replaceMissingTranslations(tr.translation);
+    highlightMissingTranslations() {
+        for (const tr of this.missingTranslations) {
+            this.translate.replaceMissingTranslations(tr.translation);
         }
     }
 
@@ -299,22 +325,24 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
             if (nbMax1 > 0) {
                 for (let i = 0; i < nbMax1; i++) {
                     this.responsesService.push({
-                        response: await this._translate.addNewTranslation({
+                        response: await this.translate.addNewTranslation({
                             mltag: this.missingTranslations[i].mltag,
                             value: this.missingTranslations[i].original,
-                            location: this.missingTranslations[i].from
+                            location: this.missingTranslations[i].from,
                         }),
                         translation: this.missingTranslations[i],
                     });
                 }
                 const nbMax2 = this.responsesService.length;
                 if (nbMax2 > 0) {
-                    let idList = [];
+                    const idList = [];
                     let trFound = undefined;
                     let ix = -1;
                     for (let i = 0; i < nbMax2; i++) {
                         if (this.responsesService[i].response.ok) {
-                            trFound = this.missingTranslations.find((item) => item.original === this.responsesService[i].translation.original);
+                            trFound = this.missingTranslations.find((item) =>
+                                item.original === this.responsesService[i].translation.original,
+                            );
                             if (trFound !== undefined) {
                                 ix = this.missingTranslations.indexOf(trFound);
                                 if (ix !== -1 && ix !== undefined) {
@@ -350,7 +378,7 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
         }
 
         this.hasMail = {
-            'has-badge': messageState
+            'has-badge': messageState,
         };
 
         this.unreadMessageCount = unreadMessages;
@@ -371,19 +399,22 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
 
         // Create a saga pipe.
         const asyncTaskPipe = this.myWalletsService.setActiveWallet(
-            value.id
+            value.id,
         );
 
         // Get response from set active wallet
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe)
+            asyncTaskPipe),
         );
 
         // // Request initial data from wallet node.
-        InitialisationService.walletnodeInitialisation(this.ngRedux, this.walletNodeRequestService, value.id);
+        InitialisationService.walletnodeInitialisation(
+            this.ngRedux,
+            this.walletNodeRequestService,
+            value.id,
+        );
 
         this.ngRedux.dispatch(clearRequestedMailInitial());
-
         this.ngRedux.dispatch(clearRequestedWalletLabel());
     }
 
@@ -392,7 +423,8 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     logout() {
-        this.ngRedux.dispatch({type: 'USER_LOGOUT'});
+        this.ngRedux.dispatch({ type: 'USER_LOGOUT' });
+        console.log('Disconnected from wallet node');
     }
 
     controlMenu() {
@@ -424,31 +456,31 @@ export class NavigationTopbarComponent implements OnInit, AfterViewInit, OnDestr
                 [SET_MESSAGE_COUNTS],
                 [],
                 asyncTaskPipe,
-                {}
+                {},
             ));
 
         }
     }
 
     handleExtendSession() {
-        this._myUserService.defaultRefreshToken(this.ngRedux);
+        this.myUserService.defaultRefreshToken(this.ngRedux);
     }
 }
 
 /**
  * Convert wallet Address to an array the select2 can use to render a list a wallet address.
- * @param walletAddressList
+ * @param walletsList
  * @return {any}
  */
-function walletListToSelectItem(walletsList: object): Array<any> {
+function walletListToSelectItem(walletsList: object): any[] {
     const walletListImu = fromJS(walletsList);
     const walletsSelectItem = walletListImu.map(
         (thisWallet) => {
             return {
                 id: thisWallet.get('walletId'),
-                text: thisWallet.get('walletName')
+                text: thisWallet.get('walletName'),
             };
-        }
+        },
     );
 
     return walletsSelectItem.toArray();

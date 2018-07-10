@@ -2,7 +2,7 @@ import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDet
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
 
 @Component({
@@ -268,7 +268,7 @@ export class UiTooltipsComponent implements OnInit {
             this.showRandomTooltipsOpened = false;
         }
         if (this.showRandomTooltips || this.showRandomTooltipsOpened) {
-            this.nbMaxRandomTooltips = (opened) ? 10 : 100;
+            this.nbMaxRandomTooltips = (opened) ? Math.ceil(this.nbMaxRandomTooltips / 10) : this.nbMaxRandomTooltips;
             for (let i = 0; i < this.nbMaxRandomTooltips; i++) {
                 this.allPosXYRandomTolltips.push({
                     x: this.getRandomIntRange('left') + 'px',
@@ -284,6 +284,7 @@ export class UiTooltipsComponent implements OnInit {
             for (let i = 0; i < this.allPosXYRandomTolltips.length; i++) {
                 if (document.getElementById('randomTooltip_' + i)) document.getElementById('randomTooltip_' + i).remove();
             }
+            this.nbMaxRandomTooltips = 100;
         }
         this.changeDetectorRef.markForCheck();
     }
@@ -313,6 +314,12 @@ export class UiTooltipsComponent implements OnInit {
                     title: this._translate.translate('User Infos'),
                     text: this._translate.translate('Here you can see you last connection.'),
                     target: 'topBarMenu',
+                },
+                {
+                    title: this._translate.translate('My Reports'),
+                    text: this._translate.translate('Here you can see your reports.'),
+                    target: 'menu-am-report-section',
+                    redirect: '/home',
                 },
             );
             this.showTour = true;
