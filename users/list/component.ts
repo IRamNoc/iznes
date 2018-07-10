@@ -64,5 +64,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
 
     ngOnDestroy() {
         super.ngOnDestroy();
+
+        this.users = undefined;
     }
 }

@@ -19,6 +19,7 @@ import {
     AccountAdminAuditBase,
     AccountAdminListBase,
     UserManagementServiceBase,
+    UserTeamsUsersMgmtComponentBase,
 } from './base';
 
 import {
