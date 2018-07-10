@@ -15,7 +15,7 @@ export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy 
 
     @Input() entityId: number;
 
-    protected entities: Type[];
+    entities: Type[];
 
     protected accountId: number;
     protected state: UserMgmtModel.UserMgmtState = UserMgmtModel.UserMgmtState.Processing;
