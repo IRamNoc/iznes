@@ -26,7 +26,7 @@
                 <div class="hr-line-dashed"></div>
 
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'amManagementCompanyID'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'companyName'" clrDgSortIcon>
                         <span>{{'Asset Management Company' | translate}}</span> <span class="column-label"></span>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'portfolioLabel'" clrDgSortIcon>
@@ -59,7 +59,7 @@
                         <clr-dg-cell>{{data.portfolioLabel}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundShareName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
-                        <clr-dg-cell>{{showCurrency(data.shareClassCurrency)}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareClassCurrency}}</clr-dg-cell>
                         <clr-dg-cell>{{data.quantity | moneyValue: 5 }}</clr-dg-cell>
                         <clr-dg-cell>{{data.latestNav | moneyValue: 2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.amount | moneyValue: 5}}</clr-dg-cell>
