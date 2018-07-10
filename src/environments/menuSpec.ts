@@ -81,8 +81,8 @@ const reportsCollectsArchives = {
     label_txt: 'txt_recordkeeping',
     icon_class: 'fa fa-book',
     element_id: 'holders-list',
-    router_link: '/reports/holders-list/list',
-    dynamic_link: '\/reports/holders-list\/[^\/]*',
+    router_link: '/reports/holders-list/funds/list',
+    dynamic_link: '\/reports/holders-list/funds\/[^\/]*',
 };
 const reportsCentralization = {
     label: 'Precentralisation',
