@@ -52,19 +52,17 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
 
     iterateForm(controls, action) {
         Object.keys(controls).forEach((key) => {
-            if (controls[key].controls) {
-                if (action === 'push') this.iterateForm(controls[key].controls, 'push');
-                if (action === 'check') this.iterateForm(controls[key].controls, 'check');
-            } else {
-                if (action === 'push') {
-                    this.allFields[key] = { field: key, valid: false };
-                }
-                if (action === 'check' && this.allFields[key] !== undefined) {
-                    if (this.allFields[key].hasOwnProperty('valid')) {
-                        if (controls[key].valid) {
-                            this.allFields[key].valid = true;
-                        } else {
-                            this.allFields[key].valid = false;
+            if (!controls[key].disabled) { // not check or push disabled fields
+                if (controls[key].controls) {
+                    if (action === 'push') this.iterateForm(controls[key].controls, 'push');
+                    if (action === 'check') this.iterateForm(controls[key].controls, 'check');
+                } else {
+                    if (action === 'push') {
+                        this.allFields[key] = { field: key, valid: false };
+                    }
+                    if (action === 'check' && this.allFields[key] !== undefined) {
+                        if (this.allFields[key].hasOwnProperty('valid')) {
+                            this.allFields[key].valid = controls[key].valid;
                         }
                     }
                 }
