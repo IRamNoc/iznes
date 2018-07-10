@@ -2,10 +2,11 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ToasterService } from 'angular2-toaster';
-
+import { immutableHelper } from '@setl/utils';
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -40,6 +41,16 @@ export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy 
 
     updateState(value: boolean, userId: number): void {
         console.error('method not implemented');
+    }
+
+    protected processEntities(entities: any[]): any[] {
+        const entitiesReturn: any[] = [];
+
+        _.forEach(entities, (entity: any) => {
+            entitiesReturn.push(immutableHelper.copy(entity));
+        });
+
+        return entitiesReturn;
     }
 
     protected updateUIState(): void {

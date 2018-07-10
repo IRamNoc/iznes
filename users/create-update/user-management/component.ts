@@ -38,7 +38,7 @@ export class UserTeamsUsersMgmtUsersComponent
         }));
 
         this.subscriptions.push(this.teamsOb.subscribe((teams: TeamModel.AccountAdminTeam[]) => {
-            this.entities = teams;
+            this.entities = this.processEntities(teams);
 
             if (teams.length) {
                 this.requestUserTeamMap();
