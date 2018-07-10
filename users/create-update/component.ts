@@ -91,7 +91,7 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
             this.service.readUsers(this.entityId,
                                    this.accountId,
                                    (data: any) => this.onReadUserSuccess(data),
-                                   (e: any) => this.onReadEntityError(e));
+                                   (e: any) => this.onReadEntityError());
         } else {
             this.initForm(this.userTypes[0]);
         }

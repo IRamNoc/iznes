@@ -12,6 +12,7 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 @Component({
     selector: 'app-account-admin-crud-base',
     templateUrl: 'component.html',
+    styles: ['.row.actions .btn { margin-right: 0; }'],
 })
 export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
@@ -97,6 +98,10 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         console.error('Method not implemented');
     }
 
+    delete(): void {
+        console.error('Method not implemented');
+    }
+
     protected onSaveSuccess(entityName: string): void {
         let message = `${entityName} successfully `;
 
@@ -123,14 +128,27 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         message += `.<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
-
-        console.log(error);
     }
 
-    protected onReadEntityError(error: AccountAdminErrorResponse): void {
+    protected onReadEntityError(): void {
         this.toaster.pop('error', `Failed to read ${this.noun}`);
 
         this.router.navigateByUrl(this.getBackUrl());
+    }
+
+    protected onDeleteSuccess(entityName: string): void {
+        const message = `${entityName} successfully deleted`;
+
+        this.toaster.pop('success', message);
+
+        this.router.navigateByUrl(this.getBackUrl());
+    }
+
+    protected onDeleteError(entityName: string, error: AccountAdminErrorResponse): void {
+        const message = `${entityName} failed to delete` +
+            `.<br /><i>${error[1].Data[0].Message}</i>`;
+
+        this.alerts.create('error', message);
     }
 
     ngOnDestroy() {

@@ -16,7 +16,7 @@
 
             <div class="row actions bottom">
                 <div class="col">
-                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Back' | translate }}</a>
+                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
                 </div>
                 
                 <div class="col">
@@ -25,6 +25,10 @@
                         'Create ' + noun :
                         'Update ' + noun
                         | translate }}</button>
+                </div>
+
+                <div class="col justify-end" *ngIf="isUpdateMode()">
+                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete' | translate }}</button>
                 </div>
             </div>
             

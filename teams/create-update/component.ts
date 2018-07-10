@@ -32,7 +32,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
                                        (data: any) => this.onReadTeamSuccess(data),
-                                       (e: any) => this.onReadEntityError(e));
+                                       (e: any) => this.onReadEntityError());
         }
     }
 
@@ -51,6 +51,10 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         } else if (this.isUpdateMode()) {
             this.updateTeam();
         }
+    }
+
+    delete(): void {
+        if (this.isUpdateMode()) this.deleteTeam();
     }
 
     private createTeam(): void {
@@ -72,6 +76,14 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
+            () => this.onSaveSuccess(this.form.name.value()),
+            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
+        );
+    }
+
+    private deleteTeam(): void {
+        this.service.deleteUserTeam(
+            this.entityId,
             () => this.onSaveSuccess(this.form.name.value()),
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
