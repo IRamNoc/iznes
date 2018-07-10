@@ -41,7 +41,7 @@ public class OpenCSDSprint8AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (75000);
+    public Timeout globalTimeout = new Timeout (95000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -137,6 +137,7 @@ public class OpenCSDSprint8AcceptanceTest {
     public void shouldShowDashBoardTilesColorTG1375() throws InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         String myProducts = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[1]/div/a/div/div[1]/span")).getText();
+        System.out.println(myProducts);
         assertTrue(myProducts.contains("My Products"));
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(1)", "rgba(206, 85, 61, 1)");
         validateColourOfElementByCSS("app-counter-tile.blocs:nth-child(2)", "rgba(73, 164, 95, 1)");

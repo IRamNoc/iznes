@@ -18,6 +18,8 @@
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/node_modules/**/*",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/test-data/**/*",
         "../setl_modules/**/*.spec.ts",
+        "../ofi_modules/**/*.spec.ts",
+        "../ofi_modules/**/*.test.ts",
         "../setl_modules/@setl/utils/components/ng2-date-picker/demo/**/*",
         "../setl_modules/core-test/**/*",
         "../setl_modules/module-template/**/*",
