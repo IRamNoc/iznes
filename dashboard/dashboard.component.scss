@@ -19,6 +19,33 @@ h1 {
         "transactions transactions"
 
 }
+.x-actions {
+    grid-area: actions;
+}
+.x-connections {
+    grid-area: connections;
+}
+.x-messages {
+    grid-area: messages;
+}
+.x-asset1 {
+    grid-area: asset1;
+}
+.x-asset2 {
+    grid-area: asset2;
+}
+.x-search {
+    grid-area: search;
+}
+.x-contracts {
+    grid-area: contracts;
+}
+.x-balances {
+    grid-area: balances;
+}
+.x-transactions {
+    grid-area: transactions;
+}
 @media(min-width: 941px) {
     .grid {
         display: grid;
