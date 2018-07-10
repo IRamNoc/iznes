@@ -136,6 +136,7 @@ public class OpenCSDNAVAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
+        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
         String shareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
         assertTrue(shareName.equals(uShareDetails[0]));
         String ISIN = driver.findElement(By.id("NAV-ISIN-0")).getText();

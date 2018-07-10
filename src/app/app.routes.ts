@@ -40,6 +40,7 @@ import {
     OfiInviteInvestorsComponent,
     OfiKycAlreadyDoneComponent,
     OfiKycHomeComponent,
+    KycAuditTrailComponent,
     OfiManageCsvComponent,
     OfiNavFundsList,
     OfiNavFundView,
@@ -49,6 +50,7 @@ import {
     OfiSignUpComponent,
     OfiTaxReportComponent,
     ProductConfigurationComponent,
+    OfiInvMyDocumentsComponent,
     OfiRedirectTokenComponent,
     OfiConsumeTokenComponent,
     MyHoldingsComponent,
@@ -122,6 +124,7 @@ import { SetlBalancesComponent, SetlIssueComponent, SetlTransactionsComponent } 
 import { ConnectionComponent } from '@setl/core-connections/connections/component';
 import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
+import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
 
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -132,7 +135,20 @@ export const ROUTES: Routes = [
     {
         path: '',
         component: BlankLayoutComponent,
-        loadChildren: '@setl/core-login/login.module#SetlLoginModule',
+        children: [
+            {
+                path: 'login',
+                component: SetlLoginComponent,
+            },
+            {
+                path: 'logout',
+                component: SetlLogoutComponent,
+            },
+            {
+                path: 'reset/:token',
+                component: SetlLoginComponent,
+            },
+        ]
     },
     {
         path: 'redirect/:lang/:invitationToken',
@@ -195,6 +211,16 @@ export const ROUTES: Routes = [
                 ],
             },
             {
+                path: 'my-asset-managers',
+                children: [
+                    {
+                        path: 'my-documents',
+                        component: OfiInvMyDocumentsComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                ],
+            },
+            {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
                 canActivate: [LoginGuardService],
@@ -207,6 +233,11 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc-am-documents',
                 component: OfiAmDocumentsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'kyc-audit-trail/:kycID',
+                component: KycAuditTrailComponent,
                 canActivate: [LoginGuardService],
             },
             {

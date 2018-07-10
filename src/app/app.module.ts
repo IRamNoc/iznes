@@ -1,12 +1,12 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {ErrorHandler, NgModule} from '@angular/core';
-import {ClarityModule} from '@clr/angular';
-import {RouterModule} from '@angular/router';
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
-import {LoginGuardService} from '@setl/core-login';
-import {HttpModule} from '@angular/http';
-import {SidebarModule} from 'ng-sidebar';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { ClarityModule } from '@clr/angular';
+import { RouterModule } from '@angular/router';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { SetlLoginModule, LoginGuardService } from '@setl/core-login';
+import { HttpClientModule } from '@angular/common/http';
+import { SidebarModule } from 'ng-sidebar';
 
 import {GlobalErrorHandler} from '../error_handler';
 
@@ -79,9 +79,7 @@ import {AppState} from './store/app.reducer';
 /**
  * Environment
  */
-import {environment} from '../environments/environment';
-
-import './shared/rxjs-operators';
+import { environment } from '../environments/environment';
 
 /**
  * Membersocket service factory
@@ -106,13 +104,14 @@ export function memberSocketServiceFactory() {
         /* Vendor/Angular */
         BrowserModule,
         BrowserAnimationsModule,
-        HttpModule,
+        HttpClientModule,
         ClarityModule,
         RouterModule.forRoot(ROUTES),
         SelectModule,
         ToasterModule,
         JasperoAlertsModule,
         FileViewerModule,
+        SetlLoginModule,
         NgReduxModule,
         NgxPaginationModule,
         SidebarModule.forRoot(),
