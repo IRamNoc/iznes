@@ -4,6 +4,7 @@ import {MultilingualService} from '@setl/multilingual';
 import {NgRedux} from '@angular-redux/store';
 import {map, get as getValue, filter, mapValues, isArray, reduce, pickBy, isObject, forEach, find, merge} from 'lodash';
 
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {RequestsService} from '../requests.service';
 
@@ -62,7 +63,8 @@ export class NewRequestService {
         private multilingualService: MultilingualService,
         private formBuilder: FormBuilder,
         private requestsService: RequestsService,
-        private ngRedux : NgRedux<any>
+        private ngRedux : NgRedux<any>,
+        private ofiKycService: OfiKycService,
     ) {
         this.legalFormList = this.extractConfigData(legalFormList);
         this.sectorActivityList = this.extractConfigData(sectorActivityList);
@@ -480,6 +482,33 @@ export class NewRequestService {
     storeCurrentKycs(ids){
         let requestedKycs = MyKycSetRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
+    }
+
+    async createMultipleDrafts(choices) {
+        let ids = [];
+
+        for (let choice of choices) {
+            await this.createDraft(choice).then(response => {
+                let kycID = getValue(response, [1, 'Data', 0, 'kycID']);
+                let amcID = choice.id;
+
+                ids.push({
+                    kycID,
+                    amcID
+                });
+            });
+        }
+
+        return ids;
+    }
+
+    createDraft(choice) {
+        return this.ofiKycService.createKYCDraftOrWaitingApproval({
+            inviteToken: choice.invitationToken ? choice.invitationToken : '',
+            managementCompanyID: choice.id,
+            investorWalletID: 0,
+            kycStatus: choice.registered ? 1 : 0
+        });
     }
 
     /**

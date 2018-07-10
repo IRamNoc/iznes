@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input, AfterViewInit} from '@angular/core';
+import {Component, OnInit, OnDestroy, Input} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
@@ -11,7 +11,7 @@ import {RiskProfileService} from './risk-profile.service';
     selector: 'kyc-step-risk-profile',
     templateUrl: './risk-profile.component.html'
 })
-export class NewKycRiskProfileComponent implements OnInit, AfterViewInit {
+export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
 
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -55,45 +55,6 @@ export class NewKycRiskProfileComponent implements OnInit, AfterViewInit {
             'newkycrequest/riskProfile',
             this.newRequestService.createRiskProfileFormGroup()
         );
-    }
-
-    ngAfterViewInit() {
-        // this.form.get('investmentNature').patchValue({
-        //     financialAssetManagementMethod: {
-        //         internalManagement: true
-        //     },
-        //     frequencyFinancialTransactions: [{id: 'Daily', text: 'Daily'}],
-        //     investmentvehiclesAlreadyUsed: [{id: 'Bonds', text: 'Bonds'}],
-        //     performanceProfile: [{id: 'Income', text: 'Income'}],
-        //     clientNeeds: [{id: 'Standaloneinvestment', text: 'Standalone investment'}],
-        //
-        // });
-        // this.form.get('investmentObjective').patchValue({
-        //     objectivesSameInvestmentCrossAm: true,
-        //     objectives: [{
-        //         investmentHorizonWanted: {
-        //             Notimeconstraints : true
-        //         },
-        //         riskProfile: [{id: 'GuaranteedCapital', text: 'Guaranteed Capital'}],
-        //         riskAcceptanceLevel1: 11,
-        //         riskAcceptanceLevel2: 12,
-        //         riskAcceptanceLevel3: 13,
-        //         riskAcceptanceLevel4: 14
-        //     }]
-        // });
-        //
-        // this.form.get('investmentConstraint').patchValue({
-        //     constraintsSameInvestmentCrossAm: true,
-        //     constraints: [
-        //         {
-        //             statutoryConstraints: 'statutoryConstraints',
-        //             taxConstraints: 'taxConstraints',
-        //             otherConstraints: 'otherConstraints',
-        //             investmentDecisionsAdHocCommittee: 'no',
-        //             otherPersonsAuthorised: 'otherPersonsAuthorised'
-        //         }
-        //     ]
-        // });
     }
 
     handleSubmit(e) {

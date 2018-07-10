@@ -38,6 +38,7 @@ import {NewKycValidationComponent} from './request/steps/validation.component';
 
 import {RequestsService} from './requests.service';
 import {NewRequestService} from './request/new-request.service';
+import {SelectAmcService} from './request/steps/select-amc.service';
 import {IdentificationService} from './request/steps/identification.service';
 import {RiskProfileService} from './request/steps/risk-profile.service';
 import {DocumentsService} from './request/steps/documents.service';
@@ -91,6 +92,7 @@ import {RequestsRoutingModule} from './requests-routing.module';
     providers : [
         RequestsService,
         NewRequestService,
+        SelectAmcService,
         IdentificationService,
         RiskProfileService,
         DocumentsService,

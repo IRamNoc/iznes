@@ -6,16 +6,16 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {isEmpty, isNil, keyBy, filter} from 'lodash';
 
-import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
 import {OfiKycService} from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
 import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
+import {SelectAmcService} from './select-amc.service';
 
 @Component({
     selector: 'kyc-step-select-amc',
-    styleUrls : ['./select-amc.component.scss'],
+    styleUrls: ['./select-amc.component.scss'],
     templateUrl: './select-amc.component.html'
 })
 export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
@@ -25,12 +25,12 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     private kycList;
     private managementCompaniesExtract;
 
-    preselectedManagementCompany : any = {};
+    preselectedManagementCompany: any = {};
 
-    get filteredManagementCompanies(){
+    get filteredManagementCompanies() {
         let id = this.preselectedManagementCompany.id;
 
-        if(id){
+        if (id) {
             return filter(this.managementCompaniesExtract, company => {
                 return company.id !== id;
             });
@@ -48,11 +48,13 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     constructor(
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private requestsService: RequestsService,
-        private newRequestService : NewRequestService,
+        private newRequestService: NewRequestService,
         private ofiKycService: OfiKycService,
         private ngRedux: NgRedux<any>,
-        private route: ActivatedRoute
-    ) {}
+        private route: ActivatedRoute,
+        private selectAmcService: SelectAmcService
+    ) {
+    }
 
     get selectedManagementCompanies() {
         let selected = this.form.get('managementCompanies').value;
@@ -94,7 +96,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
             if (queryParams.invitationToken) {
                 this.preselectedManagementCompany = {
-                    id : parseInt(queryParams.amcID),
+                    id: parseInt(queryParams.amcID),
                     invitationToken: queryParams.invitationToken
                 };
                 this.disableValidators();
@@ -103,7 +105,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         });
     }
 
-    disableValidators(){
+    disableValidators() {
         let formControl = this.form.get('managementCompanies');
         formControl.clearValidators();
         formControl.updateValueAndValidity();
@@ -116,24 +118,24 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     async handleFormSubmit($event) {
         $event.preventDefault();
 
-        if(!this.form.valid){
+        if (!this.form.valid) {
             return;
         }
 
         let values = this.form.get('managementCompanies').value;
 
-        if(this.preselectedManagementCompany.id){
+        if (this.preselectedManagementCompany.id) {
             values = values.concat([this.preselectedManagementCompany]);
         }
 
-        let ids = await this.requestsService.createMultipleDrafts(values);
+        let ids = await this.selectAmcService.createMultipleDrafts(values);
 
         this.newRequestService.storeCurrentKycs(ids);
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

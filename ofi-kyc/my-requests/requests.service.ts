@@ -6,7 +6,6 @@ import {FileService} from '@setl/core-req-services/file/file.service';
 import {NgRedux} from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {checkboxControls} from './requests.config';
 
 export enum KycStatus {
@@ -21,7 +20,6 @@ export enum KycStatus {
 export class RequestsService {
 
     constructor(
-        private ofiKycService: OfiKycService,
         private ngRedux : NgRedux<any>,
         private memberSocketService : MemberSocketService,
         private fileService : FileService
@@ -52,32 +50,6 @@ export class RequestsService {
         return _.filter(companies, company => !kycList[company.companyID]);
     }
 
-    async createMultipleDrafts(choices) {
-        let ids = [];
-
-        for (let choice of choices) {
-            await this.createDraft(choice).then(response => {
-                let kycID = _.get(response, [1, 'Data', 0, 'kycID']);
-                let amcID = choice.id;
-
-                ids.push({
-                    kycID,
-                    amcID
-                });
-            });
-        }
-
-        return ids;
-    }
-
-    createDraft(choice) {
-        return this.ofiKycService.createKYCDraftOrWaitingApproval({
-            inviteToken: choice.invitationToken ? choice.invitationToken : '',
-            managementCompanyID: choice.id,
-            investorWalletID: 0,
-            kycStatus: choice.registered ? 1 : 0
-        });
-    }
 
     shapeServerData(data) {
         return _.mapValues(data, (value, key) => {

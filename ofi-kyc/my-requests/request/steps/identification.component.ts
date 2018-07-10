@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, AfterViewInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {get as getValue} from 'lodash';
 import {select} from '@angular-redux/store';
 import {PersistService} from '@setl/core-persist';
@@ -10,7 +10,7 @@ import {IdentificationService} from './identification.service';
     selector: 'kyc-step-identification',
     templateUrl: './identification.component.html'
 })
-export class NewKycIdentificationComponent implements OnInit, AfterViewInit {
+export class NewKycIdentificationComponent implements OnInit {
 
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
@@ -79,53 +79,4 @@ export class NewKycIdentificationComponent implements OnInit, AfterViewInit {
         });
     }
 
-    ngAfterViewInit(){
-        // this.form.get('generalInformation').patchValue({
-        //     registeredCompanyName : 'name',
-        //     legalForm : [{id : 'CreditUnion', text : 'Credit Union'}],
-        //     leiCode : '12345678901234567890',
-        //     registeredCompanyAddressLine1 : 'add1',
-        //     registeredCompanyZipCode : '1245',
-        //     registeredCompanyCity : 'city',
-        //     registeredCompanyCountry : [{id : 'FR', text : 'France'}],
-        //     countryTaxResidence : [{id : 'FR', text : 'France'}],
-        //     sectorActivity : [{id : 'Cosmetics', text : 'Cosmetics'}],
-        //     legalStatus : [{id : 'insurer', text : 'Insurer'}]
-        // });
-        this.form.get('companyInformation').patchValue({
-            activities : [{id : 'ownAccount', text : 'Own account'}],
-            ownAccountinvestor : [{id : 'Cleaning', text : 'Cleaning'}],
-            geographicalAreaOfActivity : [{id : 'oecd', text : 'OECD'}],
-            geographicalAreaOfActivitySpecification : 'Somewhere',
-            balanceSheetTotal : '2000',
-            netRevenuesNetIncome : '2000',
-            shareholderEquity : '2000',
-            capitalNature : {
-                treasury : true
-            },
-            geographicalOrigin1 : [{'id' : 'country', text : 'Country'}],
-            geographicalOrigin2 : [{id : 'FR', text : 'France'}],
-
-            beneficiaries : [{
-                firstName : 'name',
-                lastName : 'other name',
-                address : '1dd1',
-                nationality : [{id : 'FR', text : 'France'}],
-                dateOfBirth : '2001-01-01',
-                cityOfBirth : 'pouetville',
-                countryOfBirth : [{id : 'FR', text : 'France'}],
-                document : '15465456046540560',
-                holdingPercentage : '100',
-            }],
-            totalFinancialAssetsAlreadyInvested : [{'id' : 'Beyond', text : 'Beyond'}]
-        });
-        this.form.get('bankingInformation').patchValue({
-            custodianHolderAccount : [{id : 'Barclays', text : 'Barclays'}]
-        });
-        this.form.get('classificationInformation').patchValue({
-            pro : {
-                excludeProducts: 'nan'
-            }
-        });
-    }
 }

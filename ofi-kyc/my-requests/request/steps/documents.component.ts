@@ -85,9 +85,9 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy{
     handleSubmit(e){
         e.preventDefault();
 
-        // if(!this.form.valid){
-        //     return;
-        // }
+        if(!this.form.valid){
+            return;
+        }
 
         this.requests$.take(1).subscribe(requests => {
             this.documentsService.sendRequest(this.form, requests, this.connectedWallet);
