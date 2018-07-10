@@ -13,7 +13,7 @@ import { immutableHelper, NumberConverterService, FileDownloader } from '@setl/u
 /* services */
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { APP_CONFIG, AppConfig } from "@setl/utils/index";
 import { MultilingualService } from '@setl/multilingual';
 

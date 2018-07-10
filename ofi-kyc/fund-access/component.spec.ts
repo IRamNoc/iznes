@@ -9,7 +9,7 @@ import { ClarityModule } from '@clr/angular';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { FileService } from '@setl/core-req-services/file/file.service';
 import { MessagesService } from '@setl/core-messages';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmationService, SetlPipesModule } from '@setl/utils';
 import { FileViewerModule } from '@setl/core-fileviewer';

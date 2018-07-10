@@ -1,11 +1,12 @@
+
+import {take, filter, map} from 'rxjs/operators';
 import * as _ from 'lodash';
 import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {Location} from '@angular/common';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, NgRedux} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 
 import {
     setRequestedFund,
@@ -66,12 +67,12 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     waitForCurrentFund(fundID) {
-        this.fundListOb
-            .map(fundItems => {
+        this.fundListOb.pipe(
+            map(fundItems => {
                 return _.find(fundItems, ['fundID', fundID]);
-            })
-            .filter(fundItem => !!fundItem)
-            .take(1)
+            }),
+            filter(fundItem => !!fundItem),
+            take(1),)
             .subscribe(fundItem => {
                 let newUrl = this.router.createUrlTree([], {
                     queryParams: { fund: null },

@@ -1,3 +1,5 @@
+import { debounceTime, take, switchMap, filter } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
@@ -12,7 +14,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -28,9 +30,7 @@ import {
     LogService,
     SagaHelper,
 } from '@setl/utils';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/take';
+
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ToasterService } from 'angular2-toaster';
@@ -83,7 +83,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         isin: null,
         status: null,
         orderType: null,
-        orderID : null,
+        orderID: null,
         pageSize: this.itemPerPage,
         rowOffSet: 0,
         sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
@@ -322,8 +322,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        const filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
-        const combined$ = orderStream$.combineLatest(filterStream$);
+        const filterStream$ = this.OfiAmOrdersFiltersOb.pipe(take(1))
+        const combined$ = observableCombineLatest(orderStream$, filterStream$);
 
         const combinedSubscription = combined$.subscribe(([requested, filters]) => {
             if (_.isEmpty(filters)) {
@@ -339,17 +339,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let routeParams$ = this.route.params;
         let routeCombinedSubscription = orderListStream$
-            .filter(orders => !_.isEmpty(orders))
-            .take(1)
-            .switchMap(() => routeParams$)
+            .pipe(
+                filter(orders => !_.isEmpty(orders)),
+                take(1),
+                switchMap(() => routeParams$),
+            )
             .subscribe(params => {
                 this.routeUpdate(params);
             });
 
         this.route.queryParams.subscribe(queryParams => {
-            if(queryParams.orderID){
+            if (queryParams.orderID) {
                 this.getAmOrdersFiltersFromRedux({
-                    orderID : queryParams.orderID
+                    orderID: queryParams.orderID
                 });
 
                 let newUrl = this.router.createUrlTree([], {
@@ -363,13 +365,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(routeCombinedSubscription);
 
         this.subscriptions.push(combinedSubscription);
-        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => this.requestSearch()));
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
 
         this.detectChanges();
     }
 
-    routeUpdate(params){
+    routeUpdate(params) {
         this.orderID = params['tabid'];
         if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
             const order = this.ordersList.find(elmt => {
@@ -444,7 +446,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     clearForm() {
         this.searchForm.patchValue({
-            orderID : '',
+            orderID: '',
             sharename: '',
             isin: '',
             status: [this.orderStatuses[0]],
@@ -572,7 +574,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.isOptionalFilters = true;
                 }
 
-                if(orderID){
+                if (orderID) {
                     this.tabsControl[0].searchForm.get('orderID').patchValue(orderID);
                     this.isOptionalFilters = true;
                 }
@@ -653,7 +655,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             );
 
             return result;
-        },                              []);
+        }, []);
     }
 
     getAmOrdersNewOrder(requested): void {

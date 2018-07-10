@@ -1,8 +1,7 @@
 import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import * as moment from 'moment';

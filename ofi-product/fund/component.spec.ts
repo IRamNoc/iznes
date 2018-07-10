@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DebugElement, Directive, Input, Pipe, PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs/observable/of';
+import { of ,  Subject } from 'rxjs';
 
 import { ProductHomeComponent } from '@ofi/ofi-main';
 import { FundComponent } from './component';
@@ -26,7 +26,6 @@ import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currenc
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService, SetlComponentsModule } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
-import { Subject } from 'rxjs';
 import { MemberSocketServiceMock } from "@setl/core-test-util/mock/member-socket-service/index";
 import { NumberConverterService, LogService, APP_CONFIG } from '@setl/utils';
 
