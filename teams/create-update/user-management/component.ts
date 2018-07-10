@@ -8,7 +8,7 @@ import {
 } from '@setl/core-store';
 import { UserTeamsUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
-import { UsersService } from '../../../users';
+import { UsersService } from '../../../users/service';
 import * as UserModel from '../../../users/model';
 import { UserManagementServiceBase } from '../../../base/create-update/user-management/service';
 
