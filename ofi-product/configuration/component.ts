@@ -4,8 +4,7 @@ import {
     ChangeDetectionStrategy, ChangeDetectorRef,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable ,  Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { ProductConfigTypes } from './Configuration';

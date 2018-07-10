@@ -3,7 +3,7 @@ import {
     ChangeDetectorRef, OnDestroy
 } from '@angular/core';
 import {select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import * as _ from 'lodash';
 
 @Component({

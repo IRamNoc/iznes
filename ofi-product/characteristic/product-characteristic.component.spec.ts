@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DebugElement, Pipe, PipeTransform, Component, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs/observable/of';
+import { of } from 'rxjs';
 
 import { ProductCharacteristicComponent } from './product-characteristic.component';
 

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Share, Fund, UmbrellaFund, Awaiting } from './models';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable()
 export class MockKYCDocumentsService {
@@ -155,34 +156,34 @@ export class MockKYCDocumentsService {
     }
 
     getShare(id: number): Observable<Share> {
-        return this.getShares().switchMap((shares) => {
+        return this.getShares().pipe(switchMap((shares) => {
             return new Observable((observer) => {
                 observer.next(shares.find(item => item.id === id));
             });
-        });
+        }));
     }
 
     getFund(id: number): Observable<Fund> {
-        return this.getFunds().switchMap((funds) => {
+        return this.getFunds().pipe(switchMap((funds) => {
             return new Observable((observer) => {
                 observer.next(funds.find(item => item.id === id));
             });
-        });
+        }));
     }
 
     getAwaiting(id: number): Observable<Awaiting> {
-        return this.getAwaitings().switchMap((awaitings) => {
+        return this.getAwaitings().pipe(switchMap((awaitings) => {
             return new Observable((observer) => {
                 observer.next(awaitings.find(item => item.id === id));
             });
-        });
+        }));
     }
 
     getUmbrellaFund(id: number): Observable<UmbrellaFund> {
-        return this.getUmbrellaFunds().switchMap((umbrellaFunds) => {
+        return this.getUmbrellaFunds().pipe(switchMap((umbrellaFunds) => {
             return new Observable((observer) => {
                 observer.next(umbrellaFunds.find(item => item.id === id));
             });
-        });
+        }));
     }
 }

@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import 'rxjs/add/operator/takeUntil';
+
 import {MultilingualService} from '@setl/multilingual';
 import {fromJS} from 'immutable';
 import * as _ from 'lodash';

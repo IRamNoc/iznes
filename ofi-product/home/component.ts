@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 
 import { fromJS } from 'immutable';
 
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -445,9 +445,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     handleShareToggleClick() {
         this.showOnlyActive = !this.showOnlyActive;
 
-        console.log(this.showOnlyActive);
-        console.log(this.shareList);
-        console.log(this.filteredShareList);
+        // console.log(this.showOnlyActive);
+        // console.log(this.shareList);
+        // console.log(this.filteredShareList);
 
 
         this.filteredShareList = this.shareList.filter((share) => {

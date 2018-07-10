@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-
 import { MemberSocketService } from '@setl/websocket-service';
 import {
     ApprovedKycMessageBody,
@@ -34,8 +33,6 @@ import {
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import * as _ from 'lodash';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
 import { SagaHelper } from '@setl/utils';
 import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {
@@ -66,6 +63,9 @@ import {
 } from '../../ofi-store/ofi-kyc/ofi-my-request-details';
 import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
 import { SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import {
     SET_INVESTOR_INVITATIONS_LIST,
     SET_INVESTOR_INVITATIONS_LIST_REQUESTED,
@@ -480,8 +480,8 @@ export class OfiKycService {
         if (this.isListeningGetInvitationsByUserAmCompany) {
             return;
         }
-        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$
-            .takeUntil(this.unSubscribe)
+        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$.pipe(
+            takeUntil(this.unSubscribe))
             .subscribe((d) => {
                 if (d) {
                     return;

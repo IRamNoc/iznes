@@ -2,8 +2,8 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } fr
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+import { Observable , Subscription } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import * as model from '../OfiNav';
@@ -323,11 +323,11 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         this.dateFromConfig.max = moment();
         this.dateToConfig.min = moment();
 
-        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.distinctUntilChanged().subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateFrom.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
             this.resetDatePeriodOnDateChange('from');
         }));
 
-        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.distinctUntilChanged().subscribe(() => {
+        this.subscriptionsArray.push(this.navHistoryForm.controls.navDateTo.valueChanges.pipe(distinctUntilChanged()).subscribe(() => {
             this.resetDatePeriodOnDateChange('to');
         }));
 

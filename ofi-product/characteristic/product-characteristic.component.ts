@@ -1,10 +1,10 @@
+
+import {takeUntil} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Location } from '@angular/common';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import { combineLatest } from 'rxjs/observable/combineLatest';
+import { Subject ,  combineLatest } from 'rxjs';
 import * as _ from 'lodash';
 
 import {
@@ -72,8 +72,8 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params
-            .takeUntil(this.unSubscribe)
+        this.route.params.pipe(
+            takeUntil(this.unSubscribe))
             .subscribe((params) => {
                 if (params.isin) {
                     this.productCharacteristicsService.getProductCharacteristics(params.isin);
@@ -81,8 +81,8 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
                 }
             });
 
-        combineLatest(this.currencies$, this.productCharacteristics$)
-            .takeUntil(this.unSubscribe)
+        combineLatest(this.currencies$, this.productCharacteristics$).pipe(
+            takeUntil(this.unSubscribe))
             .subscribe(([c, p]) => {
                 const currencies = c.toJS();
                 if (!currencies.length || !p.get(this.isin)) {

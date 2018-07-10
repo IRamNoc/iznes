@@ -30,7 +30,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {setLanguage} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual';
