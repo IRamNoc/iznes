@@ -207,6 +207,20 @@ form, .form {
 
   }
 
+  .has-error{
+
+    .drop-file-zone{
+      border-color : red !important;
+    }
+
+    .field-error{
+      display: block;
+      margin-right: 0 !important;
+      width: 100%;
+    }
+
+  }
+
   ng-select, various-address-select {
     input {
       margin-top: 0 !important;
