@@ -2,12 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse, AccountAdminNouns } from '../../base/model';
+import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
@@ -21,8 +22,9 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
                 route: ActivatedRoute,
                 router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService) {
-        super(route, router, alerts, toaster);
+                toaster: ToasterService,
+                confirmations: ConfirmationService) {
+        super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.Team;
     }
 
@@ -31,6 +33,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
 
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
+                                       null,
                                        (data: any) => this.onReadTeamSuccess(data),
                                        (e: any) => this.onReadEntityError());
         }
@@ -53,7 +56,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         }
     }
 
-    delete(): void {
+    protected onDeleteConfirm(): void {
         if (this.isUpdateMode()) this.deleteTeam();
     }
 
@@ -64,7 +67,10 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            () => this.onSaveSuccess(this.form.name.value()),
+            (data: AccountAdminSuccessResponse) => this.onSaveSuccess(
+                this.form.name.value(),
+                data[1].Data[0].userTeamID,
+            ),
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
     }
@@ -76,7 +82,7 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            () => this.onSaveSuccess(this.form.name.value()),
+            () => this.onSaveSuccess(this.form.name.value(), this.entityId),
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
     }
@@ -84,8 +90,8 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
     private deleteTeam(): void {
         this.service.deleteUserTeam(
             this.entityId,
-            () => this.onSaveSuccess(this.form.name.value()),
-            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
+            () => this.onDeleteSuccess(this.form.name.value()),
+            (e: AccountAdminErrorResponse) => this.onDeleteError(this.form.name.value(), e),
         );
     }
 

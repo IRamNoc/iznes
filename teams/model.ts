@@ -8,7 +8,7 @@ export class AccountAdminTeam {
     name: string;
     reference: string;
     description: string;
-    hasUserInTeam?: boolean;
+    isActivated?: boolean;
 }
 
 export class AccountAdminTeamForm {

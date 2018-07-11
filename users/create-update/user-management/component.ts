@@ -4,7 +4,7 @@ import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
 
 import {
-    clearRequestedAccountAdminUsers,
+    clearRequestedAccountAdminTeams,
 } from '@setl/core-store';
 import { UserTeamsUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
@@ -14,8 +14,8 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 
 @Component({
     selector: 'app-core-admin-users-team-mgmt',
-    templateUrl: 'component.html',
-    styleUrls: ['component.scss'],
+    templateUrl: '../../../base/create-update/user-management/component.html',
+    styleUrls: ['../../../base/create-update/user-management/component.scss'],
 })
 export class UserTeamsUsersMgmtUsersComponent
     extends UserTeamsUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
@@ -44,12 +44,50 @@ export class UserTeamsUsersMgmtUsersComponent
                 this.requestUserTeamMap();
             }
         }));
+
+        this.redux.dispatch(clearRequestedAccountAdminTeams());
+    }
+
+    initDataGridConfig(): void {
+        this.datagridConfig = {
+            idIndex: 'userTeamID',
+            columns: [
+                {
+                    id: 'Ref',
+                    dataIndex: 'reference',
+                    styleClass: 'ref',
+                    title: 'Ref',
+                },
+                {
+                    id: 'Name',
+                    dataIndex: 'name',
+                    styleClass: 'name',
+                    title: 'Name',
+                },
+                {
+                    id: 'Description',
+                    dataIndex: 'description',
+                    styleClass: 'description',
+                    title: 'Description',
+                },
+                {
+                    id: 'Status',
+                    dataIndex: 'status',
+                    styleClass: 'status',
+                    title: 'Status',
+                },
+            ],
+        };
+    }
+
+    searchByName(): void {
+        this.redux.dispatch(clearRequestedAccountAdminTeams());
     }
 
     private requestTeams(requested: boolean): void {
         if (requested) return;
 
-        this.teamsService.readUserTeams(null, () => {}, () => {});
+        this.teamsService.readUserTeams(null, this.nameSearch, () => {}, () => {});
     }
 
     private requestUserTeamMap(): void {
@@ -78,18 +116,18 @@ export class UserTeamsUsersMgmtUsersComponent
             });
 
             if (result) {
-                team.hasUserInTeam = true;
+                team.isActivated = true;
             }
         });
     }
 
-    updateState(value: boolean, userTeamId: number): void {
+    updateState(value: boolean, entity: TeamModel.AccountAdminTeam): void {
         this.service.updateTeamUserMap(
             value,
             this.entityId,
-            userTeamId,
+            entity.userTeamID,
             () => this.onUpdateStateSuccess(value),
-            (e: AccountAdminErrorResponse) => this.onRequestError(e),
+            (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
         );
     }
 

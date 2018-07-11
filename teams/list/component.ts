@@ -51,7 +51,7 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
     private requestTeams(requested: boolean): void {
         if (requested) return;
 
-        this.service.readUserTeams(null, () => {}, () => {});
+        this.service.readUserTeams(null, null, () => {}, () => {});
     }
 
     ngOnDestroy() {

@@ -13,6 +13,18 @@ export interface ReadTeamUserMapRequest extends MemberNodeMessageBody {
     userTeamID: number;
 }
 
+export interface UserMgmtColumn {
+    id: string;
+    dataIndex: string;
+    styleClass: string;
+    title: string;
+}
+
+export interface UserMgmtDataGridConfig {
+    idIndex: string;
+    columns: UserMgmtColumn[];
+}
+
 export enum UserMgmtState {
     Default,
     Processing,

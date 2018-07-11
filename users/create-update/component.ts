@@ -5,13 +5,14 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import { clearRequestedUserTypes } from '@setl/core-store';
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse, AccountAdminNouns } from '../../base/model';
+import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-users-crud',
@@ -30,8 +31,9 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
                 route: ActivatedRoute,
                 router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService) {
-        super(route, router, alerts, toaster);
+                toaster: ToasterService,
+                confirmations: ConfirmationService) {
+        super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.User;
     }
 
@@ -90,6 +92,7 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
         if (this.isUpdateMode()) {
             this.service.readUsers(this.entityId,
                                    this.accountId,
+                                   null,
                                    (data: any) => this.onReadUserSuccess(data),
                                    (e: any) => this.onReadEntityError());
         } else {
@@ -117,6 +120,10 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
         }
     }
 
+    protected onDeleteConfirm(): void {
+
+    }
+
     private createUser(): void {
         this.service.createUser(
             this.accountId,
@@ -126,7 +133,10 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
             this.form.phoneNumber.value(),
             this.form.userType.value()[0].id,
             this.form.reference.value(),
-            () => this.onSaveSuccess(`${this.form.firstName.value()} ${this.form.lastName.value()}`),
+            (data: AccountAdminSuccessResponse) => this.onSaveSuccess(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                data[1].Data[0].userID,
+            ),
             (e: AccountAdminErrorResponse) => this.onSaveError(
                 `${this.form.firstName.value()} ${this.form.lastName.value()}`,
                 e,
@@ -144,7 +154,10 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
             this.form.phoneNumber.value(),
             this.form.userType.value()[0].id,
             this.form.reference.value(),
-            () => this.onSaveSuccess(`${this.form.firstName.value()} ${this.form.lastName.value()}`),
+            () => this.onSaveSuccess(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                this.entityId,
+            ),
             (e: AccountAdminErrorResponse) => this.onSaveError(
                 `${this.form.firstName.value()} ${this.form.lastName.value()}`,
                 e,

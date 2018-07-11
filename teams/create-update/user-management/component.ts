@@ -14,8 +14,8 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 
 @Component({
     selector: 'app-core-admin-teams-user-mgmt',
-    templateUrl: 'component.html',
-    styleUrls: ['component.scss'],
+    templateUrl: '../../../base/create-update/user-management/component.html',
+    styleUrls: ['../../../base/create-update/user-management/component.scss'],
 })
 export class UserTeamsUsersMgmtTeamsComponent
     extends UserTeamsUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
@@ -48,10 +48,58 @@ export class UserTeamsUsersMgmtTeamsComponent
         this.redux.dispatch(clearRequestedAccountAdminUsers());
     }
 
+    initDataGridConfig(): void {
+        this.datagridConfig = {
+            idIndex: 'userID',
+            columns: [
+                {
+                    id: 'Ref',
+                    dataIndex: 'reference',
+                    styleClass: 'ref',
+                    title: 'Ref',
+                },
+                {
+                    id: 'FirstName',
+                    dataIndex: 'firstName',
+                    styleClass: 'firstname',
+                    title: 'First name',
+                },
+                {
+                    id: 'LastName',
+                    dataIndex: 'lastName',
+                    styleClass: 'lastname',
+                    title: 'Last name',
+                },
+                {
+                    id: 'Email',
+                    dataIndex: 'emailAddress',
+                    styleClass: 'email',
+                    title: 'Email address',
+                },
+                {
+                    id: 'PhoneNumber',
+                    dataIndex: 'phoneNumber',
+                    styleClass: 'phone',
+                    title: 'Phone number',
+                },
+                {
+                    id: 'UserType',
+                    dataIndex: 'userType',
+                    styleClass: 'usertype',
+                    title: 'User Type',
+                },
+            ],
+        };
+    }
+
+    searchByName(): void {
+        this.redux.dispatch(clearRequestedAccountAdminUsers());
+    }
+
     private requestUsers(requested: boolean): void {
         if (requested) return;
 
-        this.usersService.readUsers(null, this.accountId, () => {}, () => {});
+        this.usersService.readUsers(null, this.accountId, this.nameSearch, () => {}, () => {});
     }
 
     private requestUserTeamMap(): void {
@@ -81,18 +129,18 @@ export class UserTeamsUsersMgmtTeamsComponent
 
             if (result) {
                 user.userTeamID = result.userTeamID;
-                user.isInTeam = true;
+                user.isActivated = true;
             }
         });
     }
 
-    updateState(value: boolean, userId: number): void {
+    updateState(value: boolean, entity: UserModel.AccountAdminUser): void {
         this.service.updateTeamUserMap(
             value,
-            userId,
+            entity.userID,
             this.entityId,
             () => this.onUpdateStateSuccess(value),
-            (e: AccountAdminErrorResponse) => this.onRequestError(e),
+            (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
         );
     }
 

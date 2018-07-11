@@ -36,6 +36,7 @@ export class UserTeamsService extends AccountAdminBaseService {
      * @param onError
      */
     readUserTeams(userTeamId: number,
+                  textSearch: string,
                   onSuccess: RequestCallback,
                   onError: RequestCallback): void {
 
@@ -43,6 +44,7 @@ export class UserTeamsService extends AccountAdminBaseService {
             RequestName: 'readUserTeams',
             token: this.memberSocketService.token,
             userTeamID: userTeamId,
+            textSearch,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);

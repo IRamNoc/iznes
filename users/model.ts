@@ -12,7 +12,7 @@ export class AccountAdminUser {
     userTypeID: number;
     userType: string;
     userStatus: number;
-    isInTeam?: boolean;
+    isActivated?: boolean;
 }
 
 export class AccountAdminUserForm {
@@ -64,8 +64,9 @@ export class AccountAdminUserForm {
 
 export interface ReadUsersRequest extends MemberNodeMessageBody {
     token: string;
-    userID?: number;
-    accountID?: number;
+    userID: number;
+    accountID: number;
+    textSearch: string;
 }
 
 export interface CreateUserRequest extends MemberNodeMessageBody {

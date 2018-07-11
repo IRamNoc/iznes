@@ -5,6 +5,7 @@ import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
@@ -41,7 +42,8 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 private router: Router,
                 private alerts: AlertsService,
-                private toaster: ToasterService) {}
+                private toaster: ToasterService,
+                private confirmations: ConfirmationService) {}
 
     ngOnInit() {
         this.processParams();
@@ -94,15 +96,15 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
+    private getUpdateUrl(id): string {
+        return `/account-admin/${this.noun.toLowerCase()}s/${id}`;
+    }
+
     save(): void {
         console.error('Method not implemented');
     }
 
-    delete(): void {
-        console.error('Method not implemented');
-    }
-
-    protected onSaveSuccess(entityName: string): void {
+    protected onSaveSuccess(entityName: string, entityId: number): void {
         let message = `${entityName} successfully `;
 
         if (this.isCreateMode()) {
@@ -113,7 +115,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
         this.toaster.pop('success', message);
 
-        this.router.navigateByUrl(this.getBackUrl());
+        if (this.isCreateMode()) this.router.navigateByUrl(this.getUpdateUrl(entityId));
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {
@@ -130,10 +132,20 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         this.alerts.create('error', message);
     }
 
-    protected onReadEntityError(): void {
-        this.toaster.pop('error', `Failed to read ${this.noun}`);
+    delete(): void {
+        this.confirmations.create(
+            `Delete ${this.noun}`,
+            `Are you sure you wish to delete this ${this.noun.toLowerCase()}?`,
+        ).subscribe((value) => {
+            if (value.resolved) {
+                this.onDeleteConfirm();
+                return;
+            }
+        });
+    }
 
-        this.router.navigateByUrl(this.getBackUrl());
+    protected onDeleteConfirm(): void {
+        console.error('Method not implemented');
     }
 
     protected onDeleteSuccess(entityName: string): void {
@@ -149,6 +161,12 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
             `.<br /><i>${error[1].Data[0].Message}</i>`;
 
         this.alerts.create('error', message);
+    }
+
+    protected onReadEntityError(): void {
+        this.toaster.pop('error', `Failed to read ${this.noun}`);
+
+        this.router.navigateByUrl(this.getBackUrl());
     }
 
     ngOnDestroy() {

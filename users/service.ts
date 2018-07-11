@@ -38,6 +38,7 @@ export class UsersService extends AccountAdminBaseService {
      */
     readUsers(userId: number,
               accountId: number,
+              textSearch: string,
               onSuccess: RequestCallback,
               onError: RequestCallback): void {
 
@@ -46,6 +47,7 @@ export class UsersService extends AccountAdminBaseService {
             token: this.memberSocketService.token,
             userID: userId,
             accountID: accountId,
+            textSearch,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
