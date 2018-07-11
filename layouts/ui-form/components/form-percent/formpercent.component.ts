@@ -64,7 +64,7 @@ export class UiFormPercentComponent implements OnInit {
                 ]),
             ],
             field2: [
-                '',
+                { value: 'disabled', disabled: true },
                 Validators.compose([
                     Validators.required,
                 ]),
