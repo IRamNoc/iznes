@@ -55,7 +55,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-xs-6">
-                <h1 mltag="txt_contract"><i class="fa fa-book"></i>Contract</h1>
+                <h1 mltag="txt_contract"><i class="fa fa-book" style="margin-right: 10px"></i>Contract</h1>
             </div>
             <div class="col-xs-6">
                 <div class="form-group tx-view-header" style="float:right">
@@ -106,7 +106,7 @@
             </div>
             <div class="list-group-item list-group-header">Parties</div>
             <div class="list-group-item">
-                <div class="card" *ngFor="let party of contract.parties">
+                <div class="card card-party" *ngFor="let party of contract.parties">
                     <div class="card-block">
                         <div class="row">
                             <div class="col-sm-6">
@@ -132,7 +132,7 @@
                                 <div class="col-xs-2">
                                     Direction
                                 </div>
-                                <div class="col-xs-1">
+                                <div class="col-xs-1 text-right">
                                     Amount
                                 </div>
                                 <div class="col-xs-3">
@@ -151,8 +151,8 @@
                                 <div class="col-xs-2">
                                     <span class="label label-success"><i class="fa fa-arrow-up" style="margin-right: 5px"></i> send</span>
                                 </div>
-                                <div class="col-xs-1">
-                                    <span style="font-family: monospace">{{item.quantity}}</span>
+                                <div class="col-xs-1 text-right">
+                                    <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
                                 </div>
                                 <div class="col-xs-3">
                                     <span class="label">{{item.namespace}} | {{item.assetId}}</span>
@@ -171,8 +171,8 @@
                                 <div class="col-xs-2">
                                     <span class="label label-danger"><i class="fa fa-arrow-down" style="margin-right: 5px"></i> receive</span>
                                 </div>
-                                <div class="col-xs-1">
-                                    <span style="font-family: monospace">{{item.quantity}}</span>
+                                <div class="col-xs-1 text-right">
+                                    <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
                                 </div>
                                 <div class="col-xs-3">
                                     <span class="label">{{item.namespace}} | {{item.assetId}}</span>
@@ -189,6 +189,8 @@
                     </ul>
                 </div>
             </div>
+
+            <!-- Authorisations -->
             <div class="list-group-item list-group-header" *ngIf="contract.authorisations.length">Authorisations</div>
             <div class="list-group-item" *ngIf="contract.authorisations.length">
                 <clr-datagrid #authorisationsDataGrid>
@@ -211,13 +213,29 @@
                     </clr-dg-row>
                 </clr-datagrid>
             </div>
+
+            <!-- Add Encumbrances -->
             <div class="list-group-item list-group-header" *ngIf="contract.addencumbrances.length">Add Encumbrances</div>
             <div class="list-group-item" *ngIf="contract.addencumbrances.length">
-                <div class="card" *ngFor="let encumbrance of contract.addencumbrances; let idx = index">
+                <div class="card card-encumbrance" *ngFor="let encumbrance of contract.addencumbrances; let idx = index">
                     <div class="card-block">
-                        <h4 class="card-title"><i class="fa fa-bank" style="margin-right: 10px"></i> Encumbrance {{idx+1}}</h4>
-                        <p class="card-text"><span class="label label-success">Reference {{encumbrance.reference}}</span></p>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h4 class="card-title"><i class="fa fa-bank" style="margin-right: 5px"></i> Encumbrance {{idx+1}}</h4>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p class="card-text"><span class="label label-success">Reference {{encumbrance.reference}}</span></p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-xs-12">
+                                <p class="card-text">
+                                    <span class="label">{{encumbrance.fullAssetId}}</span> x <span style="font-family: monospace">{{encumbrance.amount|moneyValue}}</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
+
                     <div class="list-group list-group-flush">
                         <div class="list-group-item list-group-header">
                             <div class="row">
@@ -246,6 +264,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Parameters -->
             <div class="list-group-item list-group-header" *ngIf="contract.parameters.length">Parameters</div>
             <div class="list-group-item" *ngIf="contract.parameters.length">
                 <clr-datagrid #parametersDataGrid>
