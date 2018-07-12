@@ -15,7 +15,7 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
     template: 'component.html',
     styles: ['.row.actions .btn { margin-right: 0; }'],
 })
-export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
+export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     entityId: number;
     form;

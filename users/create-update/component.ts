@@ -8,7 +8,9 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
-import { clearRequestedUserTypes } from '@setl/core-store';
+import {
+    setRequestedUserTypes,
+} from '@setl/core-store';
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
@@ -17,10 +19,13 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
 @Component({
     selector: 'app-core-admin-users-crud',
     templateUrl: 'component.html',
+    styleUrls: ['component.scss'],
 })
-export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
+export class UsersCreateUpdateComponent
+    extends AccountAdminCreateUpdateBase<Model.AccountAdminUserForm> implements OnInit, OnDestroy {
 
-    form: Model.AccountAdminUserForm;
+    forms: Model.AccountAdminUserForm[] = [];
+    usersPanelOpen: boolean = true;
     userTypes;
 
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
@@ -48,15 +53,26 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
             return userType = userTypeId;
         });
 
-        this.form = new Model.AccountAdminUserForm(userType, this.userTypes);
+        this.form = this.generateForm(userTypeId);
+        this.forms.push(_.clone(this.form));
+    }
+
+    private generateForm(userTypeId: string): Model.AccountAdminUserForm {
+        const userType = _.filter(this.userTypes, (userType: any) => {
+            return userType = userTypeId;
+        });
+
+        return new Model.AccountAdminUserForm(userType, this.userTypes);
     }
 
     private initUserTypesSubscriptions(): void {
         const userTypesSub = this.userTypesOb.subscribe((userTypes: any) => {
-            if (userTypes !== undefined) {
+            if (userTypes !== undefined && userTypes.length > 0) {
                 this.userTypes = this.processUserTypes(userTypes);
 
                 this.requestUser();
+
+                this.redux.dispatch(setRequestedUserTypes());
             }
         });
 
@@ -65,8 +81,6 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
         });
 
         this.subscriptions.push(userTypesSub, userTypesReqSub);
-
-        this.redux.dispatch(clearRequestedUserTypes());
     }
 
     private requestUserTypes(requested: boolean): void {
@@ -110,6 +124,26 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
         this.form.emailAddress.preset = user.emailAddress;
         this.form.phoneNumber.preset = user.phoneNumber;
         this.form.reference.preset = user.reference;
+    }
+
+    addAdditionalUser(): void {
+        this.forms.push(this.generateForm(this.userTypes[0]));
+    }
+
+    removeUser(index: number): void {
+        if (this.forms.length > 1) this.forms.splice(index, 1);
+    }
+
+    isValid(): boolean {
+        let valid: boolean = true;
+
+        _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
+            if (!form.isValid()) valid = false;
+
+            return;
+        });
+
+        return valid;
     }
 
     save(): void {

@@ -14,7 +14,8 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
     selector: 'app-core-admin-teams-crud',
     templateUrl: 'component.html',
 })
-export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
+export class UserTeamsCreateUpdateComponent
+    extends AccountAdminCreateUpdateBase<Model.AccountAdminTeamForm> implements OnInit, OnDestroy {
 
     form: Model.AccountAdminTeamForm = new Model.AccountAdminTeamForm();
 

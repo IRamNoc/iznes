@@ -1,0 +1,20 @@
+.well { border-bottom: none; }
+
+.repeatable-users {
+    border: 1px solid #DDD;
+    border-radius: 3px;
+    box-shadow: 2px 2px 0px 1px rgba(0,0,0,0.05);
+    margin-bottom: 15px;
+    padding: 8px 25px 5px;
+    text-align: right;
+
+    app-dynamic-form { margin-bottom: -10px; }
+
+    .remove-user {
+        color: red;
+        cursor: pointer;
+        font-size: 12px;
+
+        &:hover, &:focus { text-decoration: underline; }
+    }
+}

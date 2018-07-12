@@ -1,4 +1,4 @@
-import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
+import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export class AccountAdminUser {
@@ -15,9 +15,10 @@ export class AccountAdminUser {
     isActivated?: boolean;
 }
 
-export class AccountAdminUserForm {
+export class AccountAdminUserForm extends DynamicFormsValidator {
     constructor(userTypePreset: string,
                 userTypesList: any[]) {
+        super();
         this.userType.preset = userTypePreset;
         this.userType.listItems = userTypesList;
     }
