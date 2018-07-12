@@ -14,7 +14,6 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
 import { Subscription, Subject } from 'rxjs';
-import { Observable } from 'rxjs/observable';
 import { distinctUntilChanged, take, takeUntil, throttleTime } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
@@ -571,7 +570,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     padInt(value: number, length: number = 2): string {
         let s = value.toString();
         if (value < 0 || length < s.length) {
-            return value;
+            return value.toString();
         }
         while (s.length < length) {
             s = '0' + s;
