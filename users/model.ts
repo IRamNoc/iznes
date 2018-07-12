@@ -26,40 +26,53 @@ export class AccountAdminUserForm {
         label: 'Email address (username)',
         type: FormItemType.text,
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.WidthThird],
     };
 
     firstName: FormItem = {
         label: 'First name',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.WidthThird],
     };
 
     lastName: FormItem = {
         label: 'Last name',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.WidthThird],
     };
 
     phoneNumber: FormItem = {
         label: 'Phone number',
         type: FormItemType.text,
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.WidthThird],
     };
 
     userType: FormItem = {
         label: 'Type',
         type: FormItemType.list,
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.WidthThird],
     };
 
     reference: FormItem = {
         label: 'Reference',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.WidthThird],
     };
+}
+
+export class AccountAdminUserAuditEntry {
+    userID: number;
+    reference: string;
+    userName: string;
+    field: string;
+    oldValue: any;
+    newValue: any;
+    dateModified: string;
 }
 
 export interface ReadUsersRequest extends MemberNodeMessageBody {
@@ -89,4 +102,16 @@ export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {
     phoneNumber: string;
     userType: number;
     reference: string;
+}
+
+export interface DeleteUserRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+}
+
+export interface ReadUsersAuditRequest extends MemberNodeMessageBody {
+    token: string;
+    search: string;
+    dateFrom: string;
+    dateTo: string;
 }

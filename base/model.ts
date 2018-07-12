@@ -27,3 +27,15 @@ export enum AccountAdminNouns {
     Team = 'Team',
     User = 'User',
 }
+
+export interface DataGridConfig {
+    idIndex: string;
+    columns: DataGridColumn[];
+}
+
+export interface DataGridColumn {
+    id: string;
+    dataIndex: string;
+    styleClass: string;
+    title: string;
+}

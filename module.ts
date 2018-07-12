@@ -20,6 +20,8 @@ import {
     AccountAdminListBase,
     UserManagementServiceBase,
     UserTeamsUsersMgmtComponentBase,
+    UserTeamsPermissionsComponentBase,
+    UserTeamsPermissionsServiceBase,
 } from './base';
 
 import {
@@ -67,11 +69,13 @@ import {
         UserTeamsUsersMgmtUsersComponent,
         UserTeamsUsersMgmtComponentBase,
         UsersCreateUpdateComponent,
+        UserTeamsPermissionsComponentBase,
     ],
     providers: [
         UserTeamsService,
         UsersService,
         UserManagementServiceBase,
+        UserTeamsPermissionsServiceBase,
     ],
     exports: [],
 })

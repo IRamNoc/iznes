@@ -12,7 +12,7 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
 
 @Component({
     selector: 'app-core-admin-teams-crud',
-    templateUrl: '../../base/create-update/component.html',
+    templateUrl: 'component.html',
 })
 export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 

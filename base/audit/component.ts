@@ -7,13 +7,15 @@ import * as moment from 'moment';
 
 import { MultilingualService } from '@setl/multilingual';
 
+import { DataGridConfig } from '../../base/model';
+
 @Component({
     selector: 'app-account-admin-audit-base',
     template: '',
 })
-export class AccountAdminAuditBase implements OnInit, OnDestroy {
+export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
 
-    audit;
+    audit: Type[];
     dateConfig = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',
@@ -21,6 +23,7 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
         disableKeypress: true,
         locale: null,
     };
+    datagridConfig: DataGridConfig;
     noun: string;
     searchForm: FormGroup;
     protected subscriptions: Subscription[] = [];
@@ -36,12 +39,12 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
                 public translate: MultilingualService) {}
 
     ngOnInit() {
-        this.initSubscriptions();
         this.initForm();
+        this.initDataGridConfig();
     }
 
-    private initSubscriptions(): void {
-        //
+    protected initDataGridConfig(): void {
+        console.error('method not implemented');
     }
 
     private initForm(): void {
@@ -68,8 +71,8 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
         };
     }
 
-    navigateToEntity(entityId: number) {
-        this.router.navigateByUrl(`/account-admin/${this.noun.toLowerCase()}s/${entityId}`);
+    goBackURL() {
+        // this.router.navigateByUrl(`/account-admin/${this.noun.toLowerCase()}s`);
     }
 
     exportEntitiesAsCSV(): void {

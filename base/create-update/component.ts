@@ -12,7 +12,7 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 
 @Component({
     selector: 'app-account-admin-crud-base',
-    templateUrl: 'component.html',
+    template: 'component.html',
     styles: ['.row.actions .btn { margin-right: 0; }'],
 })
 export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {

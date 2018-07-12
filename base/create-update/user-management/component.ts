@@ -5,7 +5,7 @@ import { ToasterService } from 'angular2-toaster';
 import { immutableHelper } from '@setl/utils';
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
-import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
+import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
 import * as _ from 'lodash';
 
 @Component({
@@ -16,7 +16,7 @@ export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy 
 
     @Input() entityId: number;
 
-    datagridConfig: UserMgmtModel.UserMgmtDataGridConfig;
+    datagridConfig: DataGridConfig;
 
     private entitiesArray: Type[];
     nameSearch: string = '';

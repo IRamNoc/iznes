@@ -6,6 +6,8 @@ import {
     setRequestedAccountAdminUsers,
     SET_USER_TYPES,
     setRequestedUserTypes,
+    setRequestedAccountAdminUsersAudit,
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
 } from '@setl/core-store';
 import { AdminUsersService } from '@setl/core-req-services';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -18,6 +20,8 @@ import {
     ReadUsersRequest,
     CreateUserRequest,
     UpdateUserDetailsRequest,
+    DeleteUserRequest,
+    ReadUsersAuditRequest,
 } from './model';
 
 @Injectable()
@@ -198,6 +202,62 @@ export class UsersService extends AccountAdminBaseService {
     private generatePassword(): string {
         // TODO: to be changed to a randon string generator
         return 'changeme';
+    }
+
+    /**
+     * Delete User
+     *
+     * @param userId request a specific user
+     * @param onSuccess
+     * @param onError
+     */
+    deleteUser(userId: number,
+               onSuccess: RequestCallback,
+               onError: RequestCallback): void {
+
+        const request: DeleteUserRequest = {
+            RequestName: 'deleteuser',
+            token: this.memberSocketService.token,
+            userID: userId,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 undefined,
+                                 undefined,
+                                 onSuccess,
+                                 onError);
+    }
+
+    /**
+     * Read User Teams
+     *
+     * @param userTeamId pass null to retrieve all teams
+     * @param onSuccess
+     * @param onError
+     */
+    readUsersAudit(search: string,
+                   dateFrom: string,
+                   dateTo: string,
+                   onSuccess: RequestCallback,
+                   onError: RequestCallback): void {
+
+        const request: ReadUsersAuditRequest = {
+            RequestName: 'readUsersAudit',
+            token: this.memberSocketService.token,
+            search,
+            dateFrom,
+            dateTo,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 setRequestedAccountAdminUsersAudit,
+                                 SET_ACCOUNT_ADMIN_USERS_AUDIT,
+                                 onSuccess,
+                                 onError);
     }
 
     getUserTypes(): void {

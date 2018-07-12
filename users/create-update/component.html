@@ -23,40 +23,41 @@
                     <button class="btn btn-primary" (click)="save()">{{
                         (isCreateMode()) ?
                         'Create ' + noun :
-                        'Update ' + noun
+                        'Update ' + noun + ' Details'
                         | translate }}</button>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete' | translate }}</button>
+                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete ' + noun | translate }}</button>
                 </div>
             </div>
             
             <ng-container *ngIf="isUpdateMode()">
                 <div class="row actions bottom">
                     <div class="col-sm-12">
-                        <h3>{{
-                            (isTeamsPage()) ?
-                            'User Memberships':
-                            'Team Memberships'
-                            | translate }}</h3>
+                        <h3>{{ 'Team Memberships' | translate }}</h3>
                     </div>
                 </div>
                 
                 <div class="row">
                     <div class="col-sm-12">
-                        <app-core-admin-teams-user-mgmt *ngIf="isTeamsPage()" [entityId]="entityId"></app-core-admin-teams-user-mgmt>
                         <app-core-admin-users-team-mgmt *ngIf="isUsersPage()" [entityId]="entityId"></app-core-admin-users-team-mgmt>
                     </div>
                 </div>
                 
-                <div class="row">
+                <div class="row actions bottom">
                     <div class="col-sm-12">
                         <h3>{{
                             (isTeamsPage()) ?
                             'Team Permissions':
                             'User Permissions'
                             | translate }}</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <app-core-admin-permissions></app-core-admin-permissions>
                     </div>
                 </div>
             </ng-container>

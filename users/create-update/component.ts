@@ -16,7 +16,7 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
 
 @Component({
     selector: 'app-core-admin-users-crud',
-    templateUrl: '../../base/create-update/component.html',
+    templateUrl: 'component.html',
 })
 export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
 
@@ -121,7 +121,16 @@ export class UsersCreateUpdateComponent extends AccountAdminCreateUpdateBase imp
     }
 
     protected onDeleteConfirm(): void {
-
+        this.service.deleteUser(
+            this.entityId,
+            () => this.onDeleteSuccess(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+            ),
+            (e: AccountAdminErrorResponse) => this.onDeleteError(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                e,
+            ),
+        );
     }
 
     private createUser(): void {
