@@ -14,7 +14,7 @@ import {
     InitialisationService,
     MyUserService,
     MyWalletsService,
-    PermissionGroupService
+    PermissionGroupService,
 } from '@setl/core-req-services';
 import {
     loginRequestAC,
@@ -23,14 +23,14 @@ import {
     SET_AUTH_LOGIN_DETAIL,
     SET_LOGIN_DETAIL,
     SET_PRODUCTION,
-    SET_SITE_MENU
+    SET_SITE_MENU,
+    setLanguage,
 } from '@setl/core-store';
 import { MemberSocketService } from '@setl/websocket-service';
 import { ToasterService } from 'angular2-toaster';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
-import { Observable } from "rxjs";
 
 /* Dectorator. */
 @Component({
@@ -44,7 +44,11 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     appConfig: AppConfig;
 
     // Locale
-    language = 'fr';
+    language: string;
+    langLabels = {
+        'fr-Latn': 'Francais',
+        'en-Latn': 'English',
+    };
 
     isLogin: boolean;
 
@@ -476,5 +480,13 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     showLoginErrorMessage(type, msg) {
         this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
+    }
+
+    updateLang(lang: string) {
+        this.ngRedux.dispatch(setLanguage(lang));
+    }
+
+    getLabel(lang: string): string {
+        return this.langLabels[lang];
     }
 }

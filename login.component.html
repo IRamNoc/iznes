@@ -62,6 +62,17 @@
                     </a>
                 </span>
             </p>
+            <div class="language-container">
+                <clr-dropdown>
+                    <button type="button" class="dropdown-toggle btn btn-link btn-sm language-selector" clrDropdownTrigger>
+                        {{getLabel(language)}}
+                    </button>
+                    <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
+                        <button type="button" clrDropdownItem (click)="updateLang('en-Latn')">{{getLabel('en-Latn')}}</button>
+                        <button type="button" clrDropdownItem (click)="updateLang('fr-Latn')">{{getLabel('fr-Latn')}}</button>
+                    </clr-dropdown-menu>
+                </clr-dropdown>
+            </div>
         </div>
         <p>
             <small>

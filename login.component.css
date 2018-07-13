@@ -81,6 +81,19 @@ form .form-group input[type=text].error, form .form-group input[type=password].e
     margin-top: 20px;
 }
 
+.language-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+button.language-selector {
+    user-select: none;
+    padding-right: 12px !important;
+    min-width: 60px;
+    width: auto;
+}
+
 /**
 Small screen, portrait
  */
