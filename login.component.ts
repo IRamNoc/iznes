@@ -486,6 +486,10 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.ngRedux.dispatch(setLanguage(lang));
     }
 
+    getLangs() {
+        return Object.keys(this.langLabels);
+    }
+
     getLabel(lang: string): string {
         return this.langLabels[lang];
     }
