@@ -1,16 +1,16 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-users"></i> <span mltag="txt_managegroups">Manage Groups</span></h1>
+    <h1 id="manage-groups"><i class="fa fa-users"></i> <span mltag="txt_managegroups">Manage Groups</span></h1>
 </div>
 
 <div class="wrapper wrapper-content">
 
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl; let id = index">
-            <button *ngIf="tabdata.groupId < 0" clrTabLink id="testlink{{id}}"
+            <button *ngIf="tabdata.groupId < 0" clrTabLink id="group-tab-{id}}"
                     [routerLink]="['/user-administration/permissions', id]"><i class="fa {{tabdata.title.icon}}"></i>
                 {{tabdata.title.text}}
             </button>
-            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="testlink{{id}}"
+            <button *ngIf="tabdata.groupId >= 0" clrTabLink id="group-tab-{id}}"
                     (click)="handleEdit(tabdata.groupIndex)"><i class="fa {{tabdata.title.icon}}"></i>
                 {{tabdata.title.text}}
             </button>
