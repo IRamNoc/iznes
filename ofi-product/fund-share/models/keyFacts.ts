@@ -57,6 +57,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         mltag: 'txt_fundshare_iban',
         validator: Validators.compose([
+            Validators.required,
             Validators.minLength(14),
             Validators.maxLength(34),
         ]),
