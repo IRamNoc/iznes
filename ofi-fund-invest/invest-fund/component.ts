@@ -140,7 +140,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     netAmount: FormControl;
     address: FormControl;
     disclaimer: FormControl;
-    navStrControl: FormControl;
     feeControl: FormControl;
 
     addressSelected: any;
@@ -412,7 +411,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
-        this.navStrControl = new FormControl('');
         this.feeControl = new FormControl('');
 
         // Subscription form
@@ -427,7 +425,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             valuationDate: this.valuationDate,
             settlementDate: this.settlementDate,
             disclaimer: this.disclaimer,
-            navStrControl: this.navStrControl,
             feeControl: this.feeControl,
         });
 
