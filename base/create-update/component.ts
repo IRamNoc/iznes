@@ -40,7 +40,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
      * @param route ActivatedRoute
      */
     constructor(private route: ActivatedRoute,
-                private router: Router,
+                protected router: Router,
                 private alerts: AlertsService,
                 private toaster: ToasterService,
                 private confirmations: ConfirmationService) {}
@@ -114,8 +114,6 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         }
 
         this.toaster.pop('success', message);
-
-        if (this.isCreateMode()) this.router.navigateByUrl(this.getUpdateUrl(entityId));
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {

@@ -21,7 +21,7 @@ export class UserTeamsCreateUpdateComponent
 
     constructor(private service: UserTeamsService,
                 route: ActivatedRoute,
-                router: Router,
+                protected router: Router,
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmations: ConfirmationService) {

@@ -38,4 +38,10 @@ export interface DataGridColumn {
     dataIndex: string;
     styleClass: string;
     title: string;
+    valueDecorator?: Function;
+}
+
+export interface TooltipConfig {
+    text: string;
+    size: 'small' | 'large' | 'default';
 }

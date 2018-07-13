@@ -61,7 +61,7 @@
                     [class.selected]="entity.isActivated">
                     <clr-dg-cell *ngFor="let col of datagridConfig.columns"
                         id="{{'auditCell' + col.id + idx}}" class="col-{{col.styleClass}}">
-                            {{ entity[col.dataIndex] }}
+                            {{ col.valueDecorator ? col.valueDecorator(entity)[col.dataIndex] : entity[col.dataIndex] }}
                     </clr-dg-cell>
                 </clr-dg-row>
             

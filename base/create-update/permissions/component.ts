@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import * as PermissionsModel from './model';
 
@@ -8,6 +8,8 @@ import * as PermissionsModel from './model';
     styleUrls: ['component.scss'],
 })
 export class UserTeamsPermissionsComponentBase<Type> implements OnInit, OnDestroy {
+
+    @Input() readOnly: boolean = false;
 
     permissions: PermissionsModel.UserTeamsPermission[] = [
         {

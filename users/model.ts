@@ -47,7 +47,7 @@ export class AccountAdminUserForm extends DynamicFormsValidator {
     phoneNumber: FormItem = {
         label: 'Phone number',
         type: FormItemType.text,
-        required: true,
+        required: false,
         style: [FormItemStyle.WidthThird],
     };
 
@@ -61,7 +61,7 @@ export class AccountAdminUserForm extends DynamicFormsValidator {
     reference: FormItem = {
         label: 'Reference',
         type: FormItemType.text,
-        required: true,
+        required: false,
         style: [FormItemStyle.WidthThird],
     };
 }

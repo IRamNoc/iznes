@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ToasterService } from 'angular2-toaster';
@@ -15,6 +15,8 @@ import * as _ from 'lodash';
 export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() entityId: number;
+    @Input() doUpdate: boolean = true;
+    @Output() entitiesFn: EventEmitter<Type[]> = new EventEmitter();
 
     datagridConfig: DataGridConfig;
 
@@ -42,6 +44,7 @@ export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy 
     }
     set entities(entities: Type[]) {
         this.entitiesArray = entities;
+        this.entitiesFn.emit(entities);
     }
 
     ngOnInit() {

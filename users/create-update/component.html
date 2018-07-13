@@ -10,34 +10,39 @@
     <clr-tab>
         <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
         <clr-tab-content class="outer">
-            <div class="well">
-                <div class="row panel-header">
-                    <div class="col-sm-12">
-                        <a href="#" (click)="usersPanelOpen = !usersPanelOpen; $event.preventDefault();">
-                            <i class="fa fa-chevron-right" [class.rotate]="usersPanelOpen"></i>
-                            <h2>{{ 'User(s)' | translate }}</h2>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row panel-body" [class.hidden]="!usersPanelOpen">
-                <div class="col-sm-12">
-                    <div class="repeatable-users" *ngFor="let user of forms; let idx = index;">
-                        <app-dynamic-form [model]="user"></app-dynamic-form>
-                        <span class="remove-user" (click)="removeUser(idx)">Remove user</span>
-                    </div>
-
-                    <div class="row buttons" *ngIf="isCreateMode()">
+            <ng-container *ngIf="isCreateMode()">
+                <div class="well">
+                    <div class="row panel-header">
                         <div class="col-sm-12">
-                            <button class="btn btn-primary btn-right" (click)="addAdditionalUser()">
-                                <i class="fa fa-plus"></i>
-                                {{ 'Add another user' | translate }}
-                            </button>
+                            <a href="#" (click)="usersPanelOpen = !usersPanelOpen; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="usersPanelOpen"></i>
+                                <h2>{{ 'User(s)' | translate }}</h2>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
+
+                <div class="row panel-body" [class.hidden]="!usersPanelOpen">
+                    <div class="col-sm-12">
+                        <div class="repeatable-users" *ngFor="let user of forms; let idx = index;">
+                            <app-dynamic-form [model]="user"></app-dynamic-form>
+                            <span class="remove-user" (click)="removeUser(idx)">Remove user</span>
+                        </div>
+
+                        <div class="row buttons" *ngIf="isCreateMode()">
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary btn-right" (click)="addAdditionalUser()">
+                                    <i class="fa fa-plus"></i>
+                                    {{ 'Add another user' | translate }}
+                                </button>
+                                <i class="tooltip tooltip-right fa fa-question-circle" [tooltip]="addAdditionalUserTooltip"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
 
             <div class="row actions bottom">
                 <div class="col">
@@ -57,32 +62,41 @@
                 </div>
             </div>
             
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>
+                        {{ 'Team Memberships' | translate }}
+                        <i class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
+                    </h3>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-users-team-mgmt *ngIf="isUsersPage()"
+                        [entityId]="entityId"
+                        [doUpdate]="isUpdateMode()"
+                        (entitiesFn)="getUserTeams($event)">
+                    </app-core-admin-users-team-mgmt>
+                </div>
+            </div>
+            
             <ng-container *ngIf="isUpdateMode()">
-                <div class="row actions bottom">
-                    <div class="col-sm-12">
-                        <h3>{{ 'Team Memberships' | translate }}</h3>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-sm-12">
-                        <app-core-admin-users-team-mgmt *ngIf="isUsersPage()" [entityId]="entityId"></app-core-admin-users-team-mgmt>
-                    </div>
-                </div>
-                
                 <div class="row actions bottom">
                     <div class="col-sm-12">
                         <h3>{{
                             (isTeamsPage()) ?
                             'Team Permissions':
                             'User Permissions'
-                            | translate }}</h3>
+                            | translate }}
+                            <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
+                        </h3>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <app-core-admin-permissions></app-core-admin-permissions>
+                        <app-core-admin-permissions [readOnly]="true"></app-core-admin-permissions>
                     </div>
                 </div>
             </ng-container>

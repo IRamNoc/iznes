@@ -85,6 +85,16 @@ export class UserTeamsAuditComponent
                     dataIndex: 'oldValue',
                     styleClass: 'previous',
                     title: 'Previous value',
+                    valueDecorator: function (entity) {
+                        if (entity.field === 'status') {
+                            if (entity.oldValue === '0') entity.oldValue = 'Off';
+                            if (entity.oldValue === '1') entity.oldValue = 'On';
+                            if (entity.newValue === '0') entity.newValue = 'Off';
+                            if (entity.newValue === '1') entity.newValue = 'On';
+                        }
+
+                        return entity;
+                    },
                 },
                 {
                     id: 'New',

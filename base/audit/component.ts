@@ -72,7 +72,7 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
     }
 
     goBackURL() {
-        // this.router.navigateByUrl(`/account-admin/${this.noun.toLowerCase()}s`);
+        return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
     exportEntitiesAsCSV(): void {

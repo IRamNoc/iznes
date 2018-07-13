@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -14,7 +13,14 @@ import {
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
+import { UserManagementServiceBase } from '../../base/create-update/user-management/service';
+import * as TeamModel from '../../teams/model';
+import {
+    AccountAdminErrorResponse,
+    AccountAdminSuccessResponse,
+    AccountAdminNouns,
+    TooltipConfig,
+} from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-users-crud',
@@ -24,9 +30,14 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
 export class UsersCreateUpdateComponent
     extends AccountAdminCreateUpdateBase<Model.AccountAdminUserForm> implements OnInit, OnDestroy {
 
+    addAdditionalUserTooltip: TooltipConfig;
+    userPermissionsTooltip: TooltipConfig;
+    teamMembershipsTooltip: TooltipConfig;
     forms: Model.AccountAdminUserForm[] = [];
     usersPanelOpen: boolean = true;
     userTypes;
+
+    private userTeamsSelected: any[];
 
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
     @select(['userAdmin', 'userTypes', 'requested']) userTypesReqOb;
@@ -34,10 +45,11 @@ export class UsersCreateUpdateComponent
     constructor(private service: UsersService,
                 private redux: NgRedux<any>,
                 route: ActivatedRoute,
-                router: Router,
+                protected router: Router,
                 alerts: AlertsService,
                 toaster: ToasterService,
-                confirmations: ConfirmationService) {
+                confirmations: ConfirmationService,
+                private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.User;
     }
@@ -45,7 +57,28 @@ export class UsersCreateUpdateComponent
     ngOnInit() {
         super.ngOnInit();
 
-        this.initUserTypesSubscriptions();
+        this.initUsersSubscriptions();
+        this.initTooltips();
+    }
+
+    private initTooltips(): void {
+        this.addAdditionalUserTooltip = {
+            text: `If you add another user here, then the teams you assign below
+                will apply to all those users.`,
+            size: 'small',
+        };
+
+        this.userPermissionsTooltip = {
+            text: `User permissions allow you to set the rights that users will have over IZNES.
+                You can assign permissions in two ways; either you can give permissions to a single
+                user with the matrix below or you can create teams with specific permissions and add users to them.`,
+            size: 'small',
+        };
+
+        this.teamMembershipsTooltip = {
+            text: 'Add users to this team. Users will inherit the permissions outlined in User permissions.',
+            size: 'small',
+        };
     }
 
     private initForm(userTypeId: string): void {
@@ -65,7 +98,7 @@ export class UsersCreateUpdateComponent
         return new Model.AccountAdminUserForm(userType, this.userTypes);
     }
 
-    private initUserTypesSubscriptions(): void {
+    private initUsersSubscriptions(): void {
         const userTypesSub = this.userTypesOb.subscribe((userTypes: any) => {
             if (userTypes !== undefined && userTypes.length > 0) {
                 this.userTypes = this.processUserTypes(userTypes);
@@ -126,6 +159,10 @@ export class UsersCreateUpdateComponent
         this.form.reference.preset = user.reference;
     }
 
+    getUserTeams(teams: any[]): void {
+        this.userTeamsSelected = teams;
+    }
+
     addAdditionalUser(): void {
         this.forms.push(this.generateForm(this.userTypes[0]));
     }
@@ -148,7 +185,7 @@ export class UsersCreateUpdateComponent
 
     save(): void {
         if (this.isCreateMode()) {
-            this.createUser();
+            this.createUsers();
         } else if (this.isUpdateMode()) {
             this.updateUser();
         }
@@ -167,24 +204,50 @@ export class UsersCreateUpdateComponent
         );
     }
 
-    private createUser(): void {
-        this.service.createUser(
-            this.accountId,
-            this.form.firstName.value(),
-            this.form.lastName.value(),
-            this.form.emailAddress.value(),
-            this.form.phoneNumber.value(),
-            this.form.userType.value()[0].id,
-            this.form.reference.value(),
-            (data: AccountAdminSuccessResponse) => this.onSaveSuccess(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                data[1].Data[0].userID,
-            ),
-            (e: AccountAdminErrorResponse) => this.onSaveError(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                e,
-            ),
-        );
+    private createUsers(): void {
+        _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
+            this.service.createUser(
+                this.accountId,
+                form.firstName.value(),
+                form.lastName.value(),
+                form.emailAddress.value(),
+                form.phoneNumber.value(),
+                form.userType.value()[0].id,
+                form.reference.value(),
+                (data: AccountAdminSuccessResponse) => {
+                    this.onSaveSuccess(
+                        `${form.firstName.value()} ${form.lastName.value()}`,
+                        data[1].Data[0].userID,
+                    );
+
+                    this.addUserToTeams(
+                        data[1].Data[0].userID,
+                        `${form.firstName.value()} ${form.lastName.value()}`,
+                    );
+
+                    if (this.forms.length === index + 1) this.router.navigateByUrl(this.getBackUrl());
+                },
+                (e: AccountAdminErrorResponse) => this.onSaveError(
+                    `${form.firstName.value()} ${form.lastName.value()}`,
+                    e,
+                ),
+            );
+        });
+    }
+
+    private addUserToTeams(userId: number, username: string): void {
+        _.forEach(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
+            this.userMgmtService.updateTeamUserMap(
+                team.isActivated,
+                userId,
+                team.userTeamID,
+                () => {},
+                (e: AccountAdminErrorResponse) => this.onSaveError(
+                    username,
+                    e,
+                ),
+            );
+        });
     }
 
     private updateUser(): void {
