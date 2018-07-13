@@ -68,8 +68,7 @@
                         {{getLabel(language)}}
                     </button>
                     <clr-dropdown-menu clrPosition="bottom-left" *clrIfOpen>
-                        <button type="button" clrDropdownItem (click)="updateLang('en-Latn')">{{getLabel('en-Latn')}}</button>
-                        <button type="button" clrDropdownItem (click)="updateLang('fr-Latn')">{{getLabel('fr-Latn')}}</button>
+                        <button type="button" clrDropdownItem *ngFor="let lang of getLangs()" (click)="updateLang(lang)">{{getLabel(lang)}}</button>
                     </clr-dropdown-menu>
                 </clr-dropdown>
             </div>
