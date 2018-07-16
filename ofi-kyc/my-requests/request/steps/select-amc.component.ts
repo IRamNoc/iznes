@@ -87,17 +87,16 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
         combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
-                takeUntil(this.unsubscribe),
+                filter(([managementCompanies, kycList]) => {
+                    return managementCompanies && kycList;
+                }),
+                takeUntil(this.unsubscribe)
             )
             .subscribe(([managementCompanies, kycList]) => {
-                console.log('initSubscriptions', managementCompanies, kycList);
-                if (!managementCompanies || !kycList) {
-                    return;
-                }
                 this.managementCompanies = keyBy(managementCompanies, 'companyID');
                 this.kycList = kycList;
                 this.managementCompaniesExtract = this.requestsService
-                    .extractManagementCompanyData(managementCompanies, kycList)
+                    .extractManagementCompanyData(managementCompanies, kycList);
             })
         ;
 
