@@ -44,5 +44,23 @@ export const kycMessages = {
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
         }
+    },
+    kycUserFinished: {
+        en : {
+            greeting : 'Hello',
+            line1 : '{{investorCompanyName}} has just finished his KYC filling process.',
+            line2 : 'Your are now able to check it out and manage it in accessing the "on-boarding management" submodule or by clicking on the link below.',
+            buttonLabel : 'Manage the request',
+            thanks : 'Thank you,',
+            signature: 'The IZNES team.'
+        },
+        fr : {
+            greeting : 'Bonjour',
+            line1 : '{{investorCompanyName}} vient de finir de remplir sa procédure de KYC.',
+            line2 : 'Vous êtes désormais en mesure de la vérifier et de la gérer en accédant au sous module "gestion des clients" ou en cliquant sur le lien ci-dessous.',
+            buttonLabel : 'Gérer la demande',
+            thanks : 'Merci,',
+            signature: 'L\'équipe IZNES.',
+        }
     }
 };

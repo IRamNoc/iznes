@@ -35,6 +35,11 @@ export class SetlMessageKycComponent implements OnInit {
                     this.replaceMessageValue(kycMessages.kycInvestorNo.fr) :
                     this.replaceMessageValue(kycMessages.kycInvestorNo.en);
                 break;
+            case 'kycUserFinished':
+                this.messageBody = (this.config.lang === 'fr-Latn') ?
+                    this.replaceMessageValue(kycMessages.kycUserFinished.fr) :
+                    this.replaceMessageValue(kycMessages.kycUserFinished.en);
+                break;
         }
 
         this.logService.log('messageBody: ', this.messageBody);
