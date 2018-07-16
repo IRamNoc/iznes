@@ -5,6 +5,7 @@ import * as immutableHelper from './imu-wrapper';
 import * as mDateHelper from './m-date-wrapper';
 import * as commonHelper from './common';
 import * as ShortHash from './common/shorthash';
+import * as CustomValidators from './validators';
 
 export {
     walletHelper,
@@ -13,5 +14,6 @@ export {
     immutableHelper,
     mDateHelper,
     commonHelper,
-    ShortHash
+    ShortHash,
+    CustomValidators
 };
