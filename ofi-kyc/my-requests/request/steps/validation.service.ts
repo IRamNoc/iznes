@@ -1,37 +1,53 @@
 import {Injectable} from '@angular/core';
-import * as moment from 'moment';
+import {get as getValue, omit} from 'lodash';
 
 import {NewRequestService} from '../new-request.service';
 import {RequestsService} from '../../requests.service';
+import {DocumentsService} from './documents.service';
 
 @Injectable()
 export class ValidationService{
 
     constructor(
         private newRequestService : NewRequestService,
-        private requestsService : RequestsService
+        private requestsService : RequestsService,
+        private documentsService : DocumentsService
     ){}
 
-    sendRequest(formGroupValidation, requests){
+    sendRequest(formGroupValidation, requests, connectedWallet){
         let promises = [];
-        let timestamp = moment().format('X');
+        let context = this.newRequestService.context;
 
         requests.forEach( request => {
             let kycID = request.kycID;
 
             formGroupValidation.get('kycID').setValue(kycID);
-            let validationPromise = this.sendRequestValidation(formGroupValidation);
+
+            let validationPromise;
+            let kycDocumentID = formGroupValidation.get('electronicSignatureDocument.kycDocumentID').value;
+            if(kycDocumentID){
+                validationPromise = this.sendRequestValidation(formGroupValidation, kycDocumentID);
+            } else{
+                validationPromise = this.documentsService.sendRequestDocumentControl(formGroupValidation.get('electronicSignatureDocument').value, connectedWallet).then(data => {
+                    let kycDocumentID = getValue(data, 'kycDocumentID');
+
+                    this.sendRequestValidation(formGroupValidation, kycDocumentID);
+                });
+            }
+
             promises.push(validationPromise);
 
-            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
 
         return Promise.all(promises);
     }
 
-    private sendRequestValidation(formGroupValidation){
+    private sendRequestValidation(formGroupValidation, kycDocumentID){
         let extracted = this.newRequestService.getValues(formGroupValidation.value);
+        extracted.electronicSignatureDocumentID = kycDocumentID;
+        extracted = omit(extracted, 'electronicSignatureDocument');
 
         const messageBody = {
             RequestName : 'updatekycvalidation',
@@ -41,12 +57,12 @@ export class ValidationService{
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, timestamp){
+    sendRequestUpdateCurrentStep(kycID, context){
         const messageBody = {
             RequestName : 'iznesupdatecurrentstep',
             kycID : kycID,
             completedStep : 'validation',
-            currentGroup : timestamp
+            currentGroup : context
         };
 
         return this.requestsService.sendRequest(messageBody);

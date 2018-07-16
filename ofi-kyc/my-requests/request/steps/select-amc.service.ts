@@ -13,24 +13,24 @@ export class SelectAmcService {
     ) {
     }
 
-    async createMultipleDrafts(values) {
-        let ids = await this.newRequestService.createMultipleDrafts(values);
-        let timestamp = moment().format('X');
+    async createMultipleDrafts(values, connectedWallet) {
+        let ids = await this.newRequestService.createMultipleDrafts(values, connectedWallet);
+        let context = this.newRequestService.context;
 
         ids.forEach(id => {
             let kycID = id.kycID;
-            this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            this.sendRequestUpdateCurrentStep(kycID, context);
         });
 
         return ids;
     }
 
-    sendRequestUpdateCurrentStep(kycID, timestamp) {
+    sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
             kycID: kycID,
             completedStep: 'amcSelection',
-            currentGroup: timestamp
+            currentGroup: context
         };
 
         return this.requestsService.sendRequest(messageBody);

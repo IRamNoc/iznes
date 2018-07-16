@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import * as moment from 'moment';
 
 import {RequestsService} from '../../requests.service';
@@ -26,7 +26,7 @@ export class RiskProfileService {
         this.requests = _requests;
 
         let promises = [];
-        let timestamp = moment().format('X');
+        let context = this.newRequestService.context;
 
         this.requests.forEach(request => {
             let kycID = request.kycID;
@@ -43,7 +43,7 @@ export class RiskProfileService {
             let objectivePromises = this.sendRequestObjective(formGroupObjective, formGroupConstraint);
             promises = promises.concat(objectivePromises);
 
-            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
 
@@ -61,12 +61,12 @@ export class RiskProfileService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, timestamp){
+    sendRequestUpdateCurrentStep(kycID, context){
         const messageBody = {
             RequestName : 'iznesupdatecurrentstep',
             kycID : kycID,
             completedStep : 'riskProfile',
-            currentGroup : timestamp
+            currentGroup : context
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -108,6 +108,11 @@ export class RiskProfileService {
             this.newRequestService.getValues(formGroupconstraintsValue),
             this.newRequestService.getValues(objectiveForAM),
             this.newRequestService.getValues(constraintForAM)
+        );
+
+        formGroupValue = merge(
+            omit(formGroupValue, 'riskAcceptance'),
+            objectiveForAM.riskAcceptance
         );
 
         const messageBody = {

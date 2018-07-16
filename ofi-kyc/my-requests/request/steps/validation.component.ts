@@ -1,74 +1,135 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Router} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
+import {Subject, combineLatest} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
 import {isEmpty, find, get as getValue, castArray} from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import * as moment from 'moment';
 
+import {PersistService} from '@setl/core-persist';
 import {RequestsService} from '../../requests.service';
 import {NewRequestService, configDate} from '../new-request.service';
 import {ValidationService} from './validation.service';
+import {DocumentsService} from './documents.service';
+import {steps} from "../../requests.config";
 
 @Component({
     selector: 'kyc-step-validation',
     templateUrl: './validation.component.html',
-    styleUrls : ['./validation.component.scss']
+    styleUrls: ['./validation.component.scss']
 })
 export class NewKycValidationComponent implements OnInit, OnDestroy {
 
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
     unsubscribe: Subject<any> = new Subject();
     amcs = [];
     configDate;
+    connectedWallet;
+    open = true;
 
     constructor(
-        private requestsService : RequestsService,
-        private newRequestService : NewRequestService,
-        private validationService : ValidationService,
-        private alerts : AlertsService,
-        private router : Router
-    ){}
+        private requestsService: RequestsService,
+        private newRequestService: NewRequestService,
+        private validationService: ValidationService,
+        private alerts: AlertsService,
+        private router: Router,
+        private persistService: PersistService,
+        private documentsService: DocumentsService
+    ) {
+    }
 
     ngOnInit() {
         this.initData();
+        this.getCurrentFormData();
+        this.initSubscriptions();
+
         this.configDate = configDate;
+        this.form.get('doneDate').patchValue(moment().format(this.configDate.format));
     }
 
-    initData() {
+    initSubscriptions(){
         this.requests$
-            .combineLatest(this.managementCompanyList$)
-            .takeUntil(this.unsubscribe)
-            .subscribe(([requests, managementCompanyList]) => {
-                if(!isEmpty(requests) && !isEmpty(managementCompanyList)){
-                    this.getCompanyNames(requests, managementCompanyList);
+            .pipe(
+                takeUntil(this.unsubscribe),
+                map(kycs => kycs[0])
+            )
+            .subscribe(kyc => {
+                console.log('***check persist validation');
+                if(steps[kyc.completedStep] < steps.validation){
+                    console.log('***persisting validation');
+                    this.persistForm();
                 }
             })
         ;
     }
 
-    getCompanyNames(requests, managementCompanyList){
+    persistForm() {
+        this.persistService.watchForm(
+            'newkycrequest/validation',
+            this.form,
+            this.newRequestService.context
+        );
+    }
+
+    clearPersistForm() {
+        this.persistService.refreshState(
+            'newkycrequest/validation',
+            this.newRequestService.createValidationFormGroup(),
+            this.newRequestService.context
+        )
+    }
+
+    initData() {
+        combineLatest(
+            this.requests$,
+            this.managementCompanyList$
+        )
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(([requests, managementCompanyList]) => {
+                if (!isEmpty(requests) && !isEmpty(managementCompanyList)) {
+                    this.getCompanyNames(requests, managementCompanyList);
+                }
+            })
+        ;
+
+        this.connectedWallet$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(connectedWallet => {
+                this.connectedWallet = connectedWallet;
+            })
+        ;
+    }
+
+    getCompanyNames(requests, managementCompanyList) {
         this.amcs = [];
         requests.forEach(request => {
             let company = find(managementCompanyList, ['companyID', request.amcID]);
             let companyName = getValue(company, 'companyName');
 
-            if(companyName){
+            if (companyName) {
                 this.amcs.push({
-                    amcID : request.amcID,
-                    companyName : companyName
+                    amcID: request.amcID,
+                    companyName: companyName
                 });
             }
         });
     }
 
-    handleConfirm(){
+    handleConfirm() {
         let bodyMessage;
 
-        if(this.amcs.length == 1){
-            bodyMessage = `<p>Your request has been successfully sent to [AM Company Name]. Once they will have validated your request, you will be able to start trading on IZNES on [AM Company Name]'s products.</p>`;
+        if (this.amcs.length == 1) {
+            let companyName = getValue(this.amcs, ['0', 'companyName']);
+            bodyMessage = `<p>Your request has been successfully sent to ${companyName}. Once they will have validated your request, you will be able to start trading on IZNES on ${companyName}'s products.</p>`;
         }
         else {
             let companies = ['<ul>'];
@@ -89,7 +150,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                     </tr>
                 </tbody>
             </table>
-        `).subscribe(() => {
+        `).pipe(
+            take(1)
+        ).subscribe(() => {
             this.router.navigate(['my-requests', 'list']);
         });
     }
@@ -97,18 +160,22 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     handleSubmit(e) {
         e.preventDefault();
 
-        if(!this.form.valid){
+        if (!this.form.valid) {
             return;
         }
 
-        this.requests$.take(1).subscribe(requests => {
-            this.validationService.sendRequest(this.form, requests).then(() => {
-                this.handleConfirm();
+        this.requests$
+            .pipe(
+                take(1)
+            )
+            .subscribe(requests => {
+                this.validationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
+                    this.handleConfirm();
+                });
             });
-        });
     }
 
-    hasError(control, error = []){
+    hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
@@ -118,20 +185,35 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         return control.disabled;
     }
 
-    uploadFile($event){
-        this.requestsService.uploadFile($event).then((file : any) => {
-            this.form.get('electronicSignatureDocumentID').patchValue(file.fileID);
+    uploadFile($event) {
+        this.requestsService.uploadFile($event).then((file: any) => {
+            this.form.get('electronicSignatureDocument.hash').patchValue(file.fileHash);
+            this.form.get('electronicSignatureDocument.name').patchValue(file.fileTitle);
+            this.form.get('electronicSignatureDocument.kycDocumentID').patchValue('');
         });
     }
 
-    getCurrentFormData(){
+    getCurrentFormData() {
         this.requests$
-            .filter(requests => !isEmpty(requests))
-            .map(requests => castArray(requests[0]))
-            .takeUntil(this.unsubscribe)
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                map(requests => castArray(requests[0])),
+                takeUntil(this.unsubscribe)
+            )
             .subscribe(requests => {
                 requests.forEach(request => {
-                    this.validationService.getCurrentFormValidationData(request.kycID);
+                    this.validationService.getCurrentFormValidationData(request.kycID).then(formData => {
+                        if(formData){
+                            this.form.patchValue(formData);
+
+                            if(formData.electronicSignatureDocumentID){
+                                this.documentsService.getDocument(formData.electronicSignatureDocumentID).then(document => {
+                                    let control = this.form.get('electronicSignatureDocument');
+                                    control.patchValue(document);
+                                });
+                            }
+                        }
+                    });
                 });
             })
         ;

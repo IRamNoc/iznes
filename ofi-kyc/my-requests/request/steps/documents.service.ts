@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {RequestsService} from '../../requests.service';
 import * as moment from 'moment';
 
-import {merge, get as getValue, values} from 'lodash';
+import {RequestsService} from '../../requests.service';
+import {NewRequestService} from '../new-request.service';
+
+import {merge, get as getValue, values, isEmpty} from 'lodash';
 
 export const documentFormPaths = {
     kyclistshareholdersdoc: 'common',
@@ -24,13 +26,14 @@ export const documentFormPaths = {
 export class DocumentsService {
 
     constructor(
-        private requestsService: RequestsService
+        private requestsService: RequestsService,
+        private newRequestService:  NewRequestService
     ) {
     }
 
     sendRequest(form, requests, connectedWallet) {
         let promises = [];
-        let timestamp = moment().format('X');
+        let context = this.newRequestService.context;
 
         let extracted = this.getValues(form.value);
 
@@ -38,7 +41,7 @@ export class DocumentsService {
             let kycID = request.kycID;
 
             extracted.forEach(documentControl => {
-                let documentPromise = this.sendRequestDocumentControl(documentControl, connectedWallet, kycID).then(data => {
+                let documentPromise = this.sendRequestDocumentControl(documentControl, connectedWallet).then(data => {
                     let kycDocumentID = getValue(data, 'kycDocumentID');
 
                     if(kycDocumentID){
@@ -48,22 +51,21 @@ export class DocumentsService {
 
                 promises.push(documentPromise);
             });
-
-            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
 
         return Promise.all(promises);
     }
 
-    sendRequestDocumentControl(controlValue, connectedWallet, kycID) {
+    sendRequestDocumentControl(controlValue, connectedWallet) {
         const messageBody = {
             RequestName: 'updatekycdocument',
             walletID: connectedWallet,
             ...controlValue
         };
 
-        return this.requestsService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));
     }
 
     sendRequestDocumentPermission(kycID, kycDocumentID) {
@@ -76,12 +78,12 @@ export class DocumentsService {
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestUpdateCurrentStep(kycID, timestamp){
+    sendRequestUpdateCurrentStep(kycID, context){
         const messageBody = {
             RequestName : 'iznesupdatecurrentstep',
             kycID : kycID,
             completedStep : 'documents',
-            currentGroup : timestamp
+            currentGroup : context
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -98,7 +100,15 @@ export class DocumentsService {
     }
 
     getCurrentFormDocumentsData(kycID, connectedWallet) {
-        return this.requestsService.getKycDocuments(kycID, connectedWallet);
+        let documentsData = this.requestsService.getKycDocuments(kycID, connectedWallet);
+
+        let globalDocumentsData = this.requestsService.getKycDocuments(0, connectedWallet);
+
+        return Promise.all([globalDocumentsData, documentsData]);
+    }
+
+    getDocument(documentID){
+        return this.requestsService.getKycDocument(documentID);
     }
 
 }

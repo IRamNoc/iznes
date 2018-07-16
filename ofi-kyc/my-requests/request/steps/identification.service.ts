@@ -1,25 +1,26 @@
 import {Injectable} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 
-import * as moment from 'moment';
-import {mapValues, isArray, isObject, reduce, pickBy, get as getValue, merge, omit, flatten} from 'lodash';
+import {mapValues, isArray, isObject, reduce, pickBy, get as getValue, merge, omit, flatten, pick, isNil} from 'lodash';
 
 import {NewRequestService} from '../new-request.service';
 import {RequestsService} from '../../requests.service';
+import {DocumentsService} from './documents.service';
 
 @Injectable()
 export class IdentificationService {
 
     constructor(
         private newRequestService: NewRequestService,
-        private requestsService: RequestsService
+        private requestsService: RequestsService,
+        private documentsService: DocumentsService
     ) {
     }
 
-    sendRequest(form, requests) {
+    sendRequest(form, requests, connectedWallet) {
 
         let promises = [];
-        let timestamp = moment().format('X');
+        let context = this.newRequestService.context;
 
         requests.forEach(request => {
             let kycID = request.kycID;
@@ -33,8 +34,20 @@ export class IdentificationService {
             let formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
             formGroupBeneficiaries.controls.forEach(formGroupBeneficiary => {
                 formGroupBeneficiary.get('kycID').setValue(kycID);
-                let beneficiaryPromise = this.sendRequestBeneficiary(formGroupBeneficiary);
-                promises.push(beneficiaryPromise);
+
+                let kycDocumentID = formGroupBeneficiary.get('document.kycDocumentID').value;
+                let beneficiaryDocumentPromise;
+                if (kycDocumentID) {
+                    this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID)
+                } else {
+                    beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(formGroupBeneficiary.get('document').value, connectedWallet).then(data => {
+                        let kycDocumentID = getValue(data, 'kycDocumentID');
+
+                        this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+                    });
+                }
+                promises.push(beneficiaryDocumentPromise);
+
             });
 
             formGroupCompany.get('kycID').setValue(kycID);
@@ -43,27 +56,32 @@ export class IdentificationService {
 
             let formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
-            let bankingPromise = this.sendRequestBanking(formGroupBanking);
-            promises.push(bankingPromise);
+            let formGroupBankingCustomValue = formGroupBanking.get('custodianHolderCustom').value;
+            let formGroupBankingValue = omit(formGroupBanking.value, 'custodianHolderCustom');
+            formGroupBankingCustomValue.forEach(singleCustomValue => {
+                let bankingPromise = this.sendRequestBanking(merge(formGroupBankingValue, singleCustomValue));
+                promises.push(bankingPromise);
+            });
+
 
             let formGroupClassification = form.get('classificationInformation');
             formGroupClassification.get('kycID').setValue(kycID);
             let classificationPromise = this.sendRequestClassification(formGroupClassification);
             promises.push(classificationPromise);
 
-            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, timestamp);
+            let updateStepPromise = this.sendRequestUpdateCurrentStep(kycID, context);
             promises.push(updateStepPromise);
         });
 
         return Promise.all(promises);
     }
 
-    sendRequestUpdateCurrentStep(kycID, timestamp){
+    sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
-            RequestName : 'iznesupdatecurrentstep',
-            kycID : kycID,
-            completedStep : 'identification',
-            currentGroup : timestamp
+            RequestName: 'iznesupdatecurrentstep',
+            kycID: kycID,
+            completedStep: 'identification',
+            currentGroup: context
         };
 
         return this.requestsService.sendRequest(messageBody);
@@ -76,7 +94,6 @@ export class IdentificationService {
             RequestName: 'updatekycgeneral',
             ...extracted
         };
-
         return this.requestsService.sendRequest(messageBody);
     }
 
@@ -88,29 +105,28 @@ export class IdentificationService {
             RequestName: 'updatekyccompany',
             ...extracted
         };
-
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestBeneficiary(formGroupBeneficiary) {
+    sendRequestBeneficiary(formGroupBeneficiary, documentID) {
         let extracted = this.newRequestService.getValues(formGroupBeneficiary.value);
+        delete extracted.document;
+        extracted.documentID = documentID;
 
         const messageBody = {
-            RequestName: 'insertkyccompanybeneficiaries',
+            RequestName: 'updatekyccompanybeneficiaries',
             ...extracted
         };
-
         return this.requestsService.sendRequest(messageBody);
     }
 
-    sendRequestBanking(formGroupBanking) {
-        let extracted = this.newRequestService.getValues(formGroupBanking.value);
+    sendRequestBanking(formGroupBankingValue) {
+        let extracted = this.newRequestService.getValues(formGroupBankingValue);
 
         const messageBody = {
             RequestName: 'updatekycbanking',
             ...extracted
         };
-
         return this.requestsService.sendRequest(messageBody);
     }
 
@@ -123,6 +139,12 @@ export class IdentificationService {
         );
 
         let extracted = this.newRequestService.getValues(formGroupClassificationValue);
+        if (!isNil(extracted.activitiesBenefitFromExperience)) {
+            extracted.activitiesBenefitFromExperience = Number(extracted.activitiesBenefitFromExperience);
+        }
+        if (!isNil(extracted.changeProfessionalStatus)) {
+            extracted.changeProfessionalStatus = Number(extracted.changeProfessionalStatus);
+        }
 
         const messageBody = {
             RequestName: 'updatekycclassification',
@@ -146,6 +168,10 @@ export class IdentificationService {
 
     getCurrentFormClassificationData(kycID) {
         return this.requestsService.getKycClassification(kycID);
+    }
+
+    getCurrentFormCompanyBeneficiariesData(kycID) {
+        return this.requestsService.getKycBeneficiaries(kycID);
     }
 
 }

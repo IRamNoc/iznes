@@ -1,8 +1,10 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, ViewChild} from '@angular/core';
 import {isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
+import {filter, map, takeUntil} from 'rxjs/operators';
 
+import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {RiskProfileService} from '../risk-profile.service';
 import {NewRequestService} from '../../new-request.service';
 
@@ -13,10 +15,11 @@ import {NewRequestService} from '../../new-request.service';
 })
 export class InvestmentNatureComponent implements OnInit {
 
+    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
-    unsubscribe : Subject<any> = new Subject();
+    unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     investmentVehicleList;
     frequencyList;
@@ -53,16 +56,21 @@ export class InvestmentNatureComponent implements OnInit {
         } else {
             investmentvehiclesAlreadyUsedSpecificationControl.disable();
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
-    getCurrentFormData(){
+    getCurrentFormData() {
         this.requests$
-            .filter(requests => !isEmpty(requests))
-            .map(requests => castArray(requests[0]))
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                map(requests => castArray(requests[0])),
+                takeUntil(this.unsubscribe)
+            )
             .subscribe(requests => {
                 requests.forEach(request => {
                     this.riskProfileService.getCurrentFormNatureData(request.kycID).then(formData => {
-                        if(formData){
+                        if (formData) {
                             this.form.patchValue(formData);
                         }
                     });
@@ -77,7 +85,7 @@ export class InvestmentNatureComponent implements OnInit {
         return control.disabled;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

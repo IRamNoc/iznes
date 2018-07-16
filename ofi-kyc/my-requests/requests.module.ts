@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 
 // Common Imports
 import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule, SetlComponentsModule, SetlDirectivesModule, SetlPipesModule, DpDatePickerModule} from '@setl/utils';
 import {ClarityModule} from '@clr/angular';
@@ -12,10 +13,11 @@ import {PersistModule} from '@setl/core-persist';
 
 import {MyRequestsContainerComponent} from './my-requests-container.component';
 import {MyRequestsComponent} from './list/my-requests.component';
-import {MyRequestComponent} from './list/my-request.component';
 import {MyRequestsGridComponent} from './list/list-grid.component';
 import {NewKycRequestComponent} from './request/new-request.component';
 import {NewKycSelectAmcComponent} from './request/steps/select-amc.component';
+
+import {MyRequestsDetailsComponent} from './list/request-details/component';
 
 import {NewKycIntroductionComponent} from './request/steps/introduction.component';
 
@@ -44,32 +46,16 @@ import {RiskProfileService} from './request/steps/risk-profile.service';
 import {DocumentsService} from './request/steps/documents.service';
 import {ValidationService} from './request/steps/validation.service';
 
-import {RequestsRoutingModule} from './requests-routing.module';
-
 @NgModule({
-    imports : [
-        ClarityModule,
-        SelectModule,
-        SetlPipesModule,
-        SetlComponentsModule,
-        SetlDirectivesModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-        FileDropModule,
-        FileViewerModule,
-        DpDatePickerModule,
-        RequestsRoutingModule,
-        PersistModule
-    ],
     declarations : [
         MyRequestsContainerComponent,
         MyRequestsComponent,
-        MyRequestComponent,
         MyRequestsGridComponent,
+        MyRequestsDetailsComponent,
 
         NewKycRequestComponent,
         NewKycSelectAmcComponent,
+
         NewKycIntroductionComponent,
 
         NewKycIdentificationComponent,
@@ -88,6 +74,21 @@ import {RequestsRoutingModule} from './requests-routing.module';
         NewKycDocumentsComponent,
 
         NewKycValidationComponent
+    ],
+    imports : [
+        ClarityModule,
+        SelectModule,
+        SetlPipesModule,
+        SetlComponentsModule,
+        SetlDirectivesModule,
+        FormsModule,
+        ReactiveFormsModule,
+        CommonModule,
+        FileDropModule,
+        FileViewerModule,
+        DpDatePickerModule,
+        PersistModule,
+        RouterModule
     ],
     providers : [
         RequestsService,

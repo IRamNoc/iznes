@@ -1,17 +1,20 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {select} from '@angular-redux/store';
-import {NewRequestService} from "../../new-request.service";
-import {RiskProfileService} from '../risk-profile.service';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import {find} from 'lodash';
 
-@Component({
-    selector : 'investment-constraint-form',
-    templateUrl : './investment-constraint-form.component.html',
-    styleUrls : ['./investment-constraint-form.component.scss']
-})
-export class InvestmentConstraintFormComponent implements OnInit, OnDestroy{
+import {NewRequestService} from "../../new-request.service";
+import {RiskProfileService} from '../risk-profile.service';
 
+@Component({
+    selector: 'investment-constraint-form',
+    templateUrl: './investment-constraint-form.component.html',
+    styleUrls: ['./investment-constraint-form.component.scss']
+})
+export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
+
+    @Output() refreshForm = new EventEmitter<void>();
     @Input() form;
     @Input() multiple;
     @Input() index;
@@ -20,63 +23,75 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy{
     unsubscribe: Subject<any> = new Subject();
     open: boolean = true;
     amc = {
-        companyID : '',
-        companyName : ''
+        companyID: '',
+        companyName: ''
     };
 
     constructor(
-        private newRequestService : NewRequestService,
-        private riskProfileService : RiskProfileService
-    ){
+        private newRequestService: NewRequestService,
+        private riskProfileService: RiskProfileService
+    ) {
     }
 
-    ngOnInit(){
+    ngOnInit() {
         this.initData();
         this.initFormCheck();
         this.getCurrentFormData();
     }
 
-    getCurrentFormData(){
-        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
-            let currentAMCId = this.form.get('assetManagementCompanyID').value;
-            let dataAMCId = data.assetManagementCompanyID;
+    getCurrentFormData() {
+        this.riskProfileService.currentServerData.riskobjective
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe((data: any) => {
+                let currentAMCId = this.form.get('assetManagementCompanyID').value;
+                let dataAMCId = data.assetManagementCompanyID;
 
-            if(!this.multiple || (dataAMCId === currentAMCId) ){
-                this.form.patchValue(data);
-            }
-        });
-    }
-
-    initData(){
-        this.managementCompanyList$.takeUntil(this.unsubscribe).subscribe(amcList => {
-            let amcID = this.form.get('assetManagementCompanyID').value;
-
-            if(amcID){
-                let found = find(amcList, ['companyID', amcID]);
-
-                if(found){
-                    this.amc = found;
+                if (!this.multiple || (dataAMCId === currentAMCId)) {
+                    this.form.patchValue(data);
                 }
-            }
-        });
+            })
+        ;
     }
 
-    initFormCheck(){
+    initData() {
+        this.managementCompanyList$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(amcList => {
+                let amcID = this.form.get('assetManagementCompanyID').value;
+
+                if (amcID) {
+                    let found = find(amcList, ['companyID', amcID]);
+
+                    if (found) {
+                        this.amc = found;
+                    }
+                }
+            })
+        ;
+    }
+
+    initFormCheck() {
         this.form.get('investmentDecisionsAdHocCommittee').valueChanges.subscribe(value => {
             this.formCheckInvestmentDecisionsAdHocCommittee(value);
         });
     }
 
-    formCheckInvestmentDecisionsAdHocCommittee(value){
+    formCheckInvestmentDecisionsAdHocCommittee(value) {
         let control = this.form.get('investmentDecisionsAdHocCommitteeSpecification');
-        if(value === 'yes'){
+        if (value === 'yes') {
             control.enable();
-        } else{
+        } else {
             control.disable();
         }
+
+        this.refreshForm.emit();
     }
 
-    hasError(control, error = []){
+    hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
@@ -86,7 +101,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy{
         return control.disabled;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

@@ -15,7 +15,7 @@
 
 <div [formsteps]="stepsConfig">
     <section>
-        <kyc-step-select-amc [form]="forms.get('selection')"></kyc-step-select-amc>
+        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)"></kyc-step-select-amc>
     </section>
     <section>
         <kyc-step-introduction></kyc-step-introduction>

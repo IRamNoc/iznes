@@ -1,7 +1,8 @@
 export interface MyKycRequestedIds {
     [index : number] : {
         kycID : number,
-        amcID : number
+        amcID : number,
+        completedStep: number
     }
 }
 

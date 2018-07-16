@@ -22,7 +22,7 @@
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'waitingInformation'">
-                <button class="btn btn-orange btn-sm" [routerLink]="['/my-requests/list', {id : kyc.kycID}]">
+                <button class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
                     {{'To complete' | translate}}
                 </button>
             </div>

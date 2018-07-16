@@ -4,6 +4,7 @@ import {MultilingualService} from '@setl/multilingual';
 import {NgRedux} from '@angular-redux/store';
 import {map, get as getValue, filter, mapValues, isArray, reduce, pickBy, isObject, forEach, find, merge} from 'lodash';
 
+import {CustomValidators} from '@setl/utils/helper';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {RequestsService} from '../requests.service';
@@ -58,36 +59,45 @@ export class NewRequestService {
     investmentHorizonList;
     riskProfileList;
     riskAcceptanceList;
+    saveContext = '';
 
     constructor(
         private multilingualService: MultilingualService,
         private formBuilder: FormBuilder,
         private requestsService: RequestsService,
-        private ngRedux : NgRedux<any>,
+        private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
     ) {
-        this.legalFormList = this.extractConfigData(legalFormList);
-        this.sectorActivityList = this.extractConfigData(sectorActivityList);
-        this.legalStatusList = this.extractConfigData(legalStatusList);
-        this.legalStatusInsurerTypeList = this.extractConfigData(legalStatusInsurerTypeList);
-        this.publicEstablishmentList = this.extractConfigData(publicEstablishmentList);
-        this.geographicalAreaList = this.extractConfigData(geographicalAreaList);
-        this.companyActivitiesList = this.extractConfigData(companyActivitiesList);
-        this.ownAccountInvestorList = this.extractConfigData(ownAccountInvestorList);
-        this.investorOnBehalfList = this.extractConfigData(investorOnBehalfList);
-        this.geographicalOriginTypeList = this.extractConfigData(geographicalOriginTypeList);
-        this.financialAssetsInvestedList = this.extractConfigData(financialAssetsInvestedList);
-        this.custodianHolderAccountList = this.extractConfigData(custodianHolderAccountList);
-        this.financialInstrumentsList = this.extractConfigData(financialInstrumentsList);
-        this.natureOfTransactionsList = this.extractConfigData(natureOfTransactionsList);
-        this.volumeOfTransactionsList = this.extractConfigData(volumeOfTransactionsList);
-        this.investmentVehiclesList = this.extractConfigData(investmentVehiclesList);
-        this.frequencyList = this.extractConfigData(frequencyList);
-        this.performanceProfileList = this.extractConfigData(performanceProfileList);
-        this.clientNeedsList = this.extractConfigData(clientNeedsList);
-        this.investmentHorizonList = this.extractConfigData(investmentHorizonList);
-        this.riskProfileList = this.extractConfigData(riskProfileList);
+        this.legalFormList = legalFormList;
+        this.sectorActivityList = sectorActivityList;
+        this.legalStatusList = legalStatusList;
+        this.legalStatusInsurerTypeList = legalStatusInsurerTypeList;
+        this.publicEstablishmentList = publicEstablishmentList;
+        this.geographicalAreaList = geographicalAreaList;
+        this.companyActivitiesList = companyActivitiesList;
+        this.ownAccountInvestorList = ownAccountInvestorList;
+        this.investorOnBehalfList = investorOnBehalfList;
+        this.geographicalOriginTypeList = geographicalOriginTypeList;
+        this.financialAssetsInvestedList = financialAssetsInvestedList;
+        this.custodianHolderAccountList = custodianHolderAccountList;
+        this.financialInstrumentsList = financialInstrumentsList;
+        this.natureOfTransactionsList = natureOfTransactionsList;
+        this.volumeOfTransactionsList = volumeOfTransactionsList;
+        this.investmentVehiclesList = investmentVehiclesList;
+        this.frequencyList = frequencyList;
+        this.performanceProfileList = performanceProfileList;
+        this.clientNeedsList = clientNeedsList;
+        this.investmentHorizonList = investmentHorizonList;
+        this.riskProfileList = riskProfileList;
         this.riskAcceptanceList = riskAcceptanceList;
+    }
+
+    set context(value) {
+        this.saveContext = value;
+    }
+
+    get context() {
+        return this.saveContext;
     }
 
     extractConfigData(configValue) {
@@ -130,7 +140,7 @@ export class NewRequestService {
             doneAt: ['', Validators.required],
             doneDate: ['', Validators.required],
             positionRepresentative: ['', Validators.required],
-            electronicSignatureDocumentID: ['', Validators.required]
+            electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature')
         });
     }
 
@@ -237,6 +247,10 @@ export class NewRequestService {
                 treasury: '',
                 others: '',
                 othersText: [{value: '', disabled: true}, Validators.required]
+            }, {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
             }),
             geographicalOrigin1: ['', Validators.required],
             geographicalOrigin2: [
@@ -247,7 +261,7 @@ export class NewRequestService {
         });
         const bankingInformation = fb.group({
             kycID: '',
-            custodianHolderAccount: '',
+            custodianHolderAccount: ['', Validators.required],
             custodianHolderCustom: fb.array([this.createHolderCustom()])
         });
         const classificationInformation = fb.group({
@@ -255,7 +269,7 @@ export class NewRequestService {
             investorStatus: '',
             pro: fb.group({
                 excludeProducts: '',
-                changeProfessionalStatus: ''
+                changeProfessionalStatus: 0
             }),
             nonPro: fb.group({
                 firstName: ['', Validators.required],
@@ -290,14 +304,26 @@ export class NewRequestService {
         const fb = this.formBuilder;
 
         const investmentNature = fb.group({
-            kycID : '',
+            kycID: '',
             financialAssetManagementMethod: fb.group({
                 internalManagement: '',
-                withAdviceOfAuthorisedThirdPartyInstiution: '',
+                withAdviceOfAuthorisedThirdPartyInstitution: '',
                 mandateEntrustedToManagers: ''
+            }, {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
             }),
-            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList)),
-            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList)),
+            frequencyFinancialTransactions: fb.group(this.transformToForm(this.frequencyList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
+            }),
+            investmentvehiclesAlreadyUsed: fb.group(this.transformToForm(this.investmentVehiclesList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
+            }),
             investmentvehiclesAlreadyUsedSpecification: [
                 {
                     value: '', disabled: true
@@ -305,13 +331,13 @@ export class NewRequestService {
             ]
         });
         const investmentObjective = fb.group({
-            kycID : '',
-            objectivesSameInvestmentCrossAm: '',
+            kycID: '',
+            objectivesSameInvestmentCrossAm: false,
             objectives: fb.array([])
         });
         const investmentConstraint = fb.group({
-            kycID : '',
-            constraintsSameInvestmentCrossAm: '',
+            kycID: '',
+            constraintsSameInvestmentCrossAm: false,
             constraints: fb.array([])
         });
 
@@ -352,9 +378,9 @@ export class NewRequestService {
     createDocumentFormGroup(name) {
         return this.formBuilder.group({
             name: '',
+            kycDocumentID: '',
             hash: ['', Validators.required],
             type: name,
-            file: [],
             common: 0,
             isDefault: 0
         });
@@ -363,7 +389,11 @@ export class NewRequestService {
     createInvestmentObjective(id) {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
-            performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList)),
+            performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
+            }),
             performanceProfileSpecification: [
                 {
                     value: '',
@@ -371,16 +401,49 @@ export class NewRequestService {
                 },
                 Validators.required
             ],
-            clientNeeds: this.formBuilder.group(this.transformToForm(this.clientNeedsList)),
+            clientNeeds: this.formBuilder.group(this.transformToForm(this.clientNeedsList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
+            }),
             otherFinancialInformation: '',
-            investmentHorizonWanted: this.formBuilder.group(this.transformToForm(this.investmentHorizonList)),
+            investmentHorizonWanted: this.formBuilder.group(this.transformToForm(this.investmentHorizonList), {
+                validator: (formGroup) => {
+                    return CustomValidators.multipleCheckboxValidator(formGroup);
+                }
+            }),
             investmentHorizonWantedSpecificPeriod: [{value: '', disabled: true}, Validators.required],
             riskProfile: ['', Validators.required],
             riskProfileCapital: [{value: '', disabled: true}, Validators.required],
-            riskAcceptanceLevel1: '',
-            riskAcceptanceLevel2: '',
-            riskAcceptanceLevel3: '',
-            riskAcceptanceLevel4: ''
+            riskAcceptance: this.formBuilder.group({
+                    riskAcceptanceLevel1: '',
+                    riskAcceptanceLevel2: '',
+                    riskAcceptanceLevel3: '',
+                    riskAcceptanceLevel4: ''
+                },
+                {
+                    validator: (formGroup) => {
+                        return ((formGroup) => {
+                            let riskAcceptanceLevel1 = formGroup.get('riskAcceptanceLevel1').value;
+                            let riskAcceptanceLevel2 = formGroup.get('riskAcceptanceLevel2').value;
+                            let riskAcceptanceLevel3 = formGroup.get('riskAcceptanceLevel3').value;
+                            let riskAcceptanceLevel4 = formGroup.get('riskAcceptanceLevel4').value;
+
+                            let total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
+
+                            if(total === 100){
+                                return null;
+                            }
+
+                            return {
+                                riskAcceptance: {
+                                    valid: false
+                                }
+                            };
+                        })(formGroup);
+                    }
+                }
+            )
         });
     }
 
@@ -423,6 +486,7 @@ export class NewRequestService {
     createBeneficiary(): FormGroup {
         return this.formBuilder.group({
             kycID: '',
+            companyBeneficiariesID: '',
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
             address: ['', Validators.required],
@@ -430,7 +494,7 @@ export class NewRequestService {
             dateOfBirth: ['', Validators.required],
             cityOfBirth: ['', Validators.required],
             countryOfBirth: ['', Validators.required],
-            document: ['', Validators.required],
+            document: this.createDocumentFormGroup('kycbeneficiarydoc'),
             holdingPercentage: ['', [
                 Validators.required,
                 Validators.min(0),
@@ -442,6 +506,7 @@ export class NewRequestService {
 
     createHolderCustom() {
         return this.formBuilder.group({
+            custodianID : '',
             custodianName: ['', Validators.required],
             custodianIban: ['', Validators.required],
             custodianAddressLine1: ['', Validators.required],
@@ -479,16 +544,16 @@ export class NewRequestService {
         return result;
     }
 
-    storeCurrentKycs(ids){
+    storeCurrentKycs(ids) {
         let requestedKycs = MyKycSetRequestedKycs(ids);
         this.ngRedux.dispatch(requestedKycs);
     }
 
-    async createMultipleDrafts(choices) {
+    async createMultipleDrafts(choices, connectedWallet) {
         let ids = [];
 
         for (let choice of choices) {
-            await this.createDraft(choice).then(response => {
+            await this.createDraft(choice, connectedWallet).then(response => {
                 let kycID = getValue(response, [1, 'Data', 0, 'kycID']);
                 let amcID = choice.id;
 
@@ -502,11 +567,11 @@ export class NewRequestService {
         return ids;
     }
 
-    createDraft(choice) {
+    createDraft(choice, connectedWallet) {
         return this.ofiKycService.createKYCDraftOrWaitingApproval({
             inviteToken: choice.invitationToken ? choice.invitationToken : '',
             managementCompanyID: choice.id,
-            investorWalletID: 0,
+            investorWalletID: connectedWallet || 0,
             kycStatus: choice.registered ? 1 : 0
         });
     }

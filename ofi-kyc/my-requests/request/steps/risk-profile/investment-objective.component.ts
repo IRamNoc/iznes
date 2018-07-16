@@ -1,9 +1,13 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChild} from '@angular/core';
+import {select} from '@angular-redux/store';
+import {FormControl} from '@angular/forms';
+import {Subject} from 'rxjs';
+import {filter, take, takeUntil} from 'rxjs/operators';
+import {isEmpty, values, map} from 'lodash';
+
+import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {NewRequestService} from '../../new-request.service';
 import {RiskProfileService} from '../risk-profile.service';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs/Subject';
-import {isEmpty, values, map} from 'lodash';
 
 @Component({
     selector: 'investment-objective',
@@ -11,6 +15,7 @@ import {isEmpty, values, map} from 'lodash';
 })
 export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
+    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) currentlyRequestedKycs$;
 
@@ -20,7 +25,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
 
     constructor(
         private newRequestService: NewRequestService,
-        private riskProfileService : RiskProfileService
+        private riskProfileService: RiskProfileService
     ) {
     }
 
@@ -33,20 +38,28 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.initData();
         this.getCurrentFormData();
 
-        let objectivesSameInvestmentCrossAmControl = this.form.get('objectivesSameInvestmentCrossAm');
-        objectivesSameInvestmentCrossAmControl.setValue(objectivesSameInvestmentCrossAmControl.value);
+        (this.form.get('objectivesSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
     }
 
-    getCurrentFormData(){
-        this.riskProfileService.currentServerData.riskobjective.subscribe((data : any) => {
-            this.form.get('objectivesSameInvestmentCrossAm').patchValue(data.objectivesSameInvestmentCrossAm, {emitEvent : false})
-        });
+    getCurrentFormData() {
+        this.riskProfileService.currentServerData.riskobjective
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe((data: any) => {
+                if(data.objectivesSameInvestmentCrossAm){
+                    this.form.get('objectivesSameInvestmentCrossAm').patchValue(data.objectivesSameInvestmentCrossAm, {emitEvent: false})
+                }
+            })
+        ;
     }
 
     initData() {
         this.currentlyRequestedKycs$
-            .takeUntil(this.unsubscribe)
-            .filter(requestedKycs => !isEmpty(requestedKycs))
+            .pipe(
+                takeUntil(this.unsubscribe),
+                filter(requestedKycs => !isEmpty(requestedKycs))
+            )
             .subscribe(requestedKycs => {
                 this.amcs = values(requestedKycs);
             })
@@ -54,9 +67,14 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-        this.form.get('objectivesSameInvestmentCrossAm').valueChanges.subscribe(value => {
-            this.formCheckSameInvestmentCrossAm(value);
-        });
+        this.form.get('objectivesSameInvestmentCrossAm').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(value => {
+                this.formCheckSameInvestmentCrossAm(value);
+            })
+        ;
     }
 
     formCheckSameInvestmentCrossAm(value) {
@@ -65,6 +83,8 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         } else {
             this.generateObjectives(map(this.amcs, 'amcID'));
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
     generateObjectives(amcs = []) {
@@ -79,6 +99,10 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         objectives.forEach(objective => {
             objectivesControl.push(objective);
         });
+    }
+
+    refreshForm(){
+        this.formPercent.refreshFormPercent();
     }
 
     hasError(control, error = []) {

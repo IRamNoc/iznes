@@ -6,7 +6,7 @@ import {FileService} from '@setl/core-req-services/file/file.service';
 import {NgRedux} from '@angular-redux/store';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {checkboxControls} from './requests.config';
+import {checkboxControls, selectControls} from './requests.config';
 
 export enum KycStatus {
     Rejected = -2,
@@ -52,7 +52,18 @@ export class RequestsService {
 
 
     shapeServerData(data) {
-        return _.mapValues(data, (value, key) => {
+        return _.mapValues(data, (value: string, key) => {
+            if(!value){
+                return value;
+            }
+
+            if(selectControls.indexOf(key) !== -1){
+                let split = value.split(' ');
+
+                return split.map(value => {
+                    return {id : value};
+                });
+            }
             if(checkboxControls.indexOf(key) !== -1){
                 let split = value.split(' ');
                 let trueArray = new Array(split.length).fill(true);
@@ -73,7 +84,9 @@ export class RequestsService {
         };
 
         return this.sendRequest(messageBody).then(response => {
-            return _.get(response, [1, 'Data', 0]);
+            let data = _.get(response, [1, 'Data', 0]);
+
+            return this.shapeServerData(data);
         });
     }
 
@@ -140,6 +153,19 @@ export class RequestsService {
         });
     }
 
+    getKycBeneficiaries(kycID){
+        const messageBody = {
+            RequestName : 'getkyccompanybeneficiaries',
+            kycID : kycID
+        };
+
+        return this.sendRequest(messageBody).then(response => {
+            let data = _.get(response, [1, 'Data']);
+
+            return data;
+        });
+    }
+
     getKycDocuments(kycID, connectedWallet){
         const messageBody = {
             RequestName : 'getkycdocument',
@@ -149,6 +175,17 @@ export class RequestsService {
 
         return this.sendRequest(messageBody).then(response => {
             return _.get(response, [1, 'Data']);
+        });
+    }
+
+    getKycDocument(kycDocumentID){
+        const messageBody = {
+            RequestName : 'getkycdocument',
+            kycDocumentID : kycDocumentID
+        };
+
+        return this.sendRequest(messageBody).then(response => {
+            return _.get(response, [1, 'Data', 0]);
         });
     }
 

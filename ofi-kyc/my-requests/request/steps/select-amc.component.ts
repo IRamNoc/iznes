@@ -1,11 +1,10 @@
-
-import {combineLatest as observableCombineLatest, Subject, Observable} from 'rxjs';
-import { takeUntil, filter as rxfilter } from 'rxjs/operators';
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, Output, EventEmitter} from '@angular/core';
+import {combineLatest, Subject} from 'rxjs';
+import {takeUntil, filter as rxFilter} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {ActivatedRoute} from '@angular/router';
-import {isEmpty, isNil, keyBy, filter} from 'lodash';
+import {isEmpty, isNil, keyBy, filter, reduce} from 'lodash';
 
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
@@ -26,6 +25,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     private kycList;
     private managementCompaniesExtract;
 
+    connectedWallet;
+
     preselectedManagementCompany: any = {};
 
     get filteredManagementCompanies() {
@@ -41,8 +42,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     @Input() form: FormGroup;
+    @Output() registered = new EventEmitter<boolean>();
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'requested']) requestedManagementCompanyList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
 
@@ -75,7 +78,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     initSubscriptions() {
         this.requestedManagementCompanyList$
             .pipe(
-                filter(requested => !requested),
+                rxFilter(requested => !requested),
                 takeUntil(this.unsubscribe),
             )
             .subscribe(() => {
@@ -83,7 +86,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             })
         ;
 
-        observableCombineLatest(this.managementCompanyList$, this.myKycList$)
+        combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
                 takeUntil(this.unsubscribe),
             )
@@ -91,6 +94,15 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 this.managementCompanies = keyBy(managementCompanies, 'companyID');
                 this.kycList = kycList;
                 this.managementCompaniesExtract = this.requestsService.extractManagementCompanyData(managementCompanies, kycList)
+            })
+        ;
+
+        this.connectedWallet$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(connectedWallet => {
+                this.connectedWallet = connectedWallet;
             })
         ;
     }
@@ -119,6 +131,16 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux, true);
     }
 
+    onRegisteredChange() {
+        let accumulator = this.preselectedManagementCompany ? this.preselectedManagementCompany.registered : false;
+
+        let result = reduce(this.selectedManagementCompanies, (result, value) => {
+            return result && value.registered;
+        }, accumulator);
+
+        this.registered.emit(result);
+    }
+
     async handleFormSubmit($event) {
         $event.preventDefault();
 
@@ -132,7 +154,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             values = values.concat([this.preselectedManagementCompany]);
         }
 
-        let ids = await this.selectAmcService.createMultipleDrafts(values);
+        let ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
 
         this.newRequestService.storeCurrentKycs(ids);
 

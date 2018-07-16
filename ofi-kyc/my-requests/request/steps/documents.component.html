@@ -1,14 +1,23 @@
-<h3 class="text-center mb-1">
-    {{'DOCUMENTS' | translate}}
-</h3>
-<form [formGroup]="form" id="step-documents" (ngSubmit)="handleSubmit($event)" class="m-2">
+<div class="well p-1">
 
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row panel-header">
+        <div class="col-sm-9">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>{{'DOCUMENTS' | translate}}</h2>
+            </a>
+        </div>
+        <div class="col-sm-3 text-right">
+            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
+        </div>
+    </div>
+
+    <div class="row panel-body" [class.hidden]="!open">
+        <form [formGroup]="form" class="col-sm-12" id="step-documents" (ngSubmit)="handleSubmit($event)">
 
             <!-- Common documents -->
             <div class="row">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kyclistshareholdersdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyclistshareholdersdoc', 'hash'])">
                     <label for="kyclistshareholdersdoc" class="control-label">
                         {{'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%' | translate}}
                     </label>
@@ -22,7 +31,7 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
 
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kyclistdirectorsdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyclistdirectorsdoc', 'hash'])">
                     <label for="kyclistdirectorsdoc" class="control-label">
                         {{'Official document (or equivalent) listing the directors' | translate}}
                     </label>
@@ -36,9 +45,8 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
             </div>
-
             <div class="row">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kycbeneficialownersdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycbeneficialownersdoc', 'hash'])">
                     <label for="kycbeneficialownersdoc" class="control-label">
                         {{'List of beneficial owners' | translate}}
                     </label>
@@ -52,7 +60,7 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
 
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kyclistauthoriseddoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyclistauthoriseddoc', 'hash'])">
                     <label for="kyclistauthoriseddoc" class="control-label">
                         {{'List of persons authorised to give instructions' | translate}}
                     </label>
@@ -66,9 +74,8 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
             </div>
-
             <div class="row">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kyctaxcertificationdoc', 'hash'])">
                     <label for="kyctaxcertificationdoc" class="control-label">
                         {{'Tax self-certification form (see attachment)' | translate}}
                     </label>
@@ -83,7 +90,7 @@
                 </div>
 
 
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['common', 'kycw8benefatcadoc', 'hash'])">
                     <label for="kycw8benefatcadoc" class="control-label">
                         {{'Form W-8BEN-E (FATCA) if available' | translate}}
                     </label>
@@ -101,7 +108,7 @@
 
             <!-- Listed company -->
             <div class="row" *ngIf="!isDisabled('listedCompany')">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycproofofapprovaldoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycproofofapprovaldoc', 'hash'])">
                     <label for="kycproofofapprovaldoc" class="control-label">
                         {{'Proof of approval or copy of decree (if applicable)' | translate}}
                     </label>
@@ -115,7 +122,7 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
 
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycisincodedoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycisincodedoc', 'hash'])">
                     <label for="kycisincodedoc" class="control-label">
                         {{'ISIN code of the listed share (if applicable)' | translate}}
                     </label>
@@ -129,9 +136,8 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
             </div>
-
             <div class="row" *ngIf="!isDisabled('listedCompany')">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycwolfsbergdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['listedCompany', 'kycwolfsbergdoc', 'hash'])">
                     <label for="kycwolfsbergdoc" class="control-label">
                         {{'Wolfsberg Questionnaire or equivalent' | translate}}
                     </label>
@@ -149,7 +155,7 @@
 
             <!-- Other -->
             <div class="row" *ngIf="!isDisabled('other')">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['other', 'kycstatuscertifieddoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycstatuscertifieddoc', 'hash'])">
                     <label for="kycstatuscertifieddoc" class="control-label">
                         {{'Status "certified" (or equivalent) by the duly authorized representative of the client' | translate}}
                     </label>
@@ -162,7 +168,7 @@
                     </div>
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['other', 'kyckbisdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kyckbisdoc', 'hash'])">
                     <label for="kyckbisdoc" class="control-label">
                         {{'Kbis extract (or equivalent) less than 3 months old' | translate}}
                     </label>
@@ -177,7 +183,7 @@
                 </div>
             </div>
             <div class="row" *ngIf="!isDisabled('other')">
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['other', 'kycannualreportdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycannualreportdoc', 'hash'])">
                     <label for="kycannualreportdoc" class="control-label">
                         {{'Latest audited annual report' | translate}}
                     </label>
@@ -190,7 +196,7 @@
                     </div>
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
-                <div class="form-group col-sm-6" [class.has-error]="hasError(['other', 'kycidorpassportdoc', 'hash'])">
+                <div class="form-group required-field col-sm-6" [class.has-error]="hasError(['other', 'kycidorpassportdoc', 'hash'])">
                     <label for="kycidorpassportdoc" class="control-label">
                         {{'National identity card or valid passport or residence card of the signatory with photograph ' | translate}}
                     </label>
@@ -204,8 +210,8 @@
                     <span class="field-error">{{'File is required' | translate}}</span>
                 </div>
             </div>
-        </div>
 
+        </form>
     </div>
 
-</form>
+</div>

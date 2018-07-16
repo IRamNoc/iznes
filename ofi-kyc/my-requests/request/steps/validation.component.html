@@ -1,78 +1,98 @@
-<h3 class="text-center mb-1">
-    {{'VALIDATION OF THE REQUEST' | translate}}
-</h3>
-<form [formGroup]="form" id="step-validation" (ngSubmit)="handleSubmit($event)" class="well p-1">
+<div class="well p-1">
 
-    <div class="row">
-        <div class="col-sm-12">
-
-            <p>
-                {{'I, the undersigned,' | translate}}
-                <input class="inline-input" type="text" formControlName="undersigned"/>
-                {{'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate}}
-                <input class="inline-input" type="text" formControlName="actingOnBehalfOf"/>
-                <span *ngIf="amcs.length > 1">
-                    {{'the recipient of the services to be provided by the following asset management companies :'}}
-                </span>
-                <span *ngIf="amcs.length === 1">
-                    {{'the recipient of the services to be provided by '}}
-                    {{amcs[0].companyName}}.
-                </span>
-
-                <span class="field-error" *ngIf="hasError('undersigned') || hasError('actingOnBehalfOf')">{{'Fields are required' | translate}}</span>
-            </p>
-            <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
-                <li *ngFor="let amc of amcs">
-                    {{amc.companyName}}
-                </li>
-            </ul>
-
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label for="doneAt">
-                        {{'Done at' | translate}}:
-                    </label>
-                    <input type="text" id="doneAt" formControlName="doneAt" placeholder="{{'Please fill in a city' | translate}}">
-                    <span class="field-error" *ngIf="hasError('doneAt')">{{'Field is required' | translate}}</span>
-                </div>
-
-                <div class="form-group col-sm-6">
-                    <label for="doneDate">
-                        {{'Date' | translate}}:
-                    </label>
-
-                    <div class="input-group date-pick-wrapper">
-                        <span class="fa fa-calendar" aria-hidden="true"></span>
-                        <input [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
-                    </div>
-
-                    <span class="field-error" *ngIf="hasError('doneDate')">{{'Field is required' | translate}}</span>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group col-sm-6">
-                    <label for="positionRepresentative">
-                        {{'Position of the representative of the legal system' | translate}}:
-                    </label>
-                    <input type="text" id="positionRepresentative" formControlName="positionRepresentative" placeholder="{{'Please fill in representative\'s position' | translate}}">
-                    <span class="field-error" *ngIf="hasError('positionRepresentative')">{{'Field is required' | translate}}</span>
-                </div>
-                <div class="form-group col-sm-6">
-                    <label for="electronicSignatureDocumentID">
-                        {{'As electronic signature, please upload here representative ID\'s card' | translate}}:
-                    </label>
-                    <div class="filedrop-wrapper">
-                        <setl-file-drop class="form-control" id="electronicSignatureDocumentID"
-                                        (onDrop)="uploadFile($event)"
-                                        ngDefaultControl
-                        ></setl-file-drop>
-                    </div>
-                    <span class="field-error" *ngIf="hasError('electronicSignatureDocumentID')">{{'Field is required' | translate}}</span>
-                </div>
-            </div>
-
+    <div class="row panel-header">
+        <div class="col-sm-9">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>
+                    {{'VALIDATION OF THE REQUEST' | translate}}
+                </h2>
+            </a>
+        </div>
+        <div class="col-sm-3 text-right">
+            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
         </div>
     </div>
 
-</form>
+
+    <div class="row panel-body" [class.hidden]="!open">
+        <form [formGroup]="form" id="step-validation" (ngSubmit)="handleSubmit($event)" class="well p-1">
+
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <p>
+                        {{'I, the undersigned,' | translate}}
+                        <input class="inline-input" type="text" formControlName="undersigned"/>
+                        {{'certify on my honour the accuracy of the information and documents provided, declare that I am acting on behalf of' | translate}}
+                        <input class="inline-input" type="text" formControlName="actingOnBehalfOf"/>
+                        <span *ngIf="amcs.length > 1">
+                            {{'the recipient of the services to be provided by the following asset management companies :'}}
+                        </span>
+                        <span *ngIf="amcs.length === 1">
+                            {{'the recipient of the services to be provided by '}}
+                            {{amcs[0].companyName}}.
+                        </span>
+
+                        <span class="field-error" *ngIf="hasError('undersigned') || hasError('actingOnBehalfOf')">{{'Fields are required' | translate}}</span>
+                    </p>
+                    <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
+                        <li *ngFor="let amc of amcs">
+                            {{amc.companyName}}
+                        </li>
+                    </ul>
+
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="doneAt">
+                                {{'Done at' | translate}}:
+                            </label>
+                            <input type="text" id="doneAt" formControlName="doneAt" placeholder="{{'Please fill in a city' | translate}}">
+                            <span class="field-error" *ngIf="hasError('doneAt')">{{'Field is required' | translate}}</span>
+                        </div>
+
+                        <div class="form-group required-field col-sm-6">
+                            <label for="doneDate">
+                                {{'Date' | translate}}:
+                            </label>
+
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                            </div>
+
+                            <span class="field-error" *ngIf="hasError('doneDate')">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group required-field col-sm-6">
+                            <label for="positionRepresentative">
+                                {{'Position of the representative of the legal system' | translate}}:
+                            </label>
+                            <input type="text" id="positionRepresentative" formControlName="positionRepresentative" placeholder="{{'Please fill in representative\'s position' | translate}}">
+                            <span class="field-error" *ngIf="hasError('positionRepresentative')">{{'Field is required' | translate}}</span>
+                        </div>
+                        <div class="form-group required-field col-sm-6">
+                            <label for="electronicSignatureDocument">
+                                {{'As electronic signature, please upload here representative ID\'s card' | translate}}:
+                            </label>
+                            <div class="filedrop-wrapper">
+                                <setl-file-drop class="form-control" id="electronicSignatureDocument"
+                                                (onDrop)="uploadFile($event)"
+                                                [preset]="form.get('electronicSignatureDocument').value"
+                                                ngDefaultControl
+                                ></setl-file-drop>
+                            </div>
+                            <span class="field-error" *ngIf="hasError('electronicSignatureDocument')">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+</div>

@@ -20,7 +20,6 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
-import { OfiKycRequestDetailsComponent } from './request-details/component';
 import { OfiInviteInvestorsComponent } from './invite-investors/component';
 import { OfiSignUpComponent } from './signup/component';
 import { OfiDocumentsComponent } from './documents/component';
@@ -38,8 +37,7 @@ import { KycInformationAuditTrailComponent } from './audit-trail/information-aud
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
 
-
-import { RequestsService } from './my-requests/requests.service';
+import {KycRequestsModule} from './my-requests/requests.module'
 
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
@@ -59,7 +57,6 @@ import config, { kycEnums } from './config';
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
-        OfiKycRequestDetailsComponent,
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
@@ -78,7 +75,6 @@ import config, { kycEnums } from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
-        OfiKycRequestDetailsComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
@@ -101,6 +97,7 @@ import config, { kycEnums } from './config';
         FileDropModule,
         FileViewerModule,
         DpDatePickerModule,
+        KycRequestsModule
     ],
     providers: [
         MockKYCDocumentsService,

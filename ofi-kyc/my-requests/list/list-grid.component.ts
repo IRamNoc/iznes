@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {Router} from '@angular/router';
 import {groupBy, find} from 'lodash';
 
@@ -10,7 +10,9 @@ import {NewRequestService} from '../request/new-request.service';
     templateUrl: './list-grid.component.html'
 })
 export class MyRequestsGridComponent {
-    @Input('') kycList;
+
+    @Input() kycList;
+    @Output() selectedKyc  = new EventEmitter<number>();
 
     statusList;
 
@@ -21,6 +23,9 @@ export class MyRequestsGridComponent {
         this.statusList = statusList;
     }
 
+    viewDetails(kycID){
+        this.selectedKyc.emit(kycID);
+    }
 
     buttonToDisplay(status) {
         if ([statusList.Approved, statusList.WaitingForApproval, statusList.Rejected].indexOf(status) !== -1) {
@@ -53,7 +58,8 @@ export class MyRequestsGridComponent {
         currentGroup.forEach(kyc => {
             kycIDs.push({
                 kycID: kyc.kycID,
-                amcID: kyc.amManagementCompanyID
+                amcID: kyc.amManagementCompanyID,
+                completedStep : completedStep
             });
         });
 

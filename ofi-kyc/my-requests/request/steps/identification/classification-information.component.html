@@ -7,22 +7,22 @@
             </a>
         </div>
         <div class="col-sm-3 text-right">
-            <div class="pgContainer" [formpercent]="{form: form, stripes: false}"></div>
+            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
         </div>
     </div>
 
     <div class="row panel-body" [class.hidden]="!open">
 
         <div class="col-xs-12">
-            <p>
+            <div class="mb-1">
                 {{'After analyzing the information collected, you are a'}}
-                <span class="field-error" *ngIf="isPro">
+                <h3 class="field-error" *ngIf="isPro">
                     {{'professional investor by nature/size' | translate}}
-                </span>
-                <span class="field-error" *ngIf="!isPro">
+                </h3>
+                <h3 class="field-error" *ngIf="!isPro">
                     {{'non professional investor' | translate}}
-                </span>
-            </p>
+                </h3>
+            </div>
 
             <div *ngIf="isPro" formGroupName="pro">
                 <div class="row">
@@ -30,7 +30,7 @@
                         <label for="excludeProducts">
                             {{'If you wish to exclude a category of products and/or services from the scope or your status, please specify below:' | translate}}
                         </label>
-                        <textarea id="excludeProducts" formControlName="excludeProducts"></textarea>
+                        <textarea class="form-control" id="excludeProducts" formControlName="excludeProducts"></textarea>
                     </div>
                 </div>
                 <div class="row">
@@ -46,14 +46,14 @@
             </div>
             <div *ngIf="!isPro || form.get('pro.changeProfessionalStatus').value" formGroupName="nonPro">
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="firstName">
                             {{'First name' | translate}}
                         </label>
                         <input type="text" id="firstName" formControlName="firstName">
                         <span class="field-error" *ngIf="hasError(['nonPro', 'firstName'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="lastName">
                             {{'Last name' | translate}}
                         </label>
@@ -62,7 +62,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="jobPosition">
                             {{'Job position' | translate}}
                         </label>
@@ -71,27 +71,27 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="numberYearsExperienceRelatedFunction">
                             {{'Number of years of experience in a function related to financial markets' | translate}}
                         </label>
-                        <input type="text" id="numberYearsExperienceRelatedFunction" formControlName="numberYearsExperienceRelatedFunction">
+                        <input type="number" id="numberYearsExperienceRelatedFunction" formControlName="numberYearsExperienceRelatedFunction">
                         <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsExperienceRelatedFunction'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="numberYearsCurrentPosition">
                             {{'Number of years of experience in current position' | translate}}
                         </label>
-                        <input type="text" id="numberYearsCurrentPosition" formControlName="numberYearsCurrentPosition">
+                        <input type="number" id="numberYearsCurrentPosition" formControlName="numberYearsCurrentPosition">
                         <span class="field-error" *ngIf="hasError(['nonPro', 'numberYearsCurrentPosition'])">{{'Field is required' | translate}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="financialInstruments">
                             {{'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment: (several possible choices)' | translate}}
                         </label>
-                        <ng-select id="financialInstruments" [items]="financialInstrumentsList" [formControl]="form.get(['nonPro', 'financialInstruments'])" [multiple]="true"></ng-select>
+                        <ng-select class="multiple" placeholder="{{'Select' | translate}}" id="financialInstruments" [items]="financialInstrumentsList" [formControl]="form.get(['nonPro', 'financialInstruments'])" [multiple]="true"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'financialInstruments'])">{{'Field is required' | translate}}</span>
                     </div>
                     <div class="form-group col-sm-6 flex-items-xs-bottom" *ngIf="!isDisabled(['nonPro', 'financialInstrumentsSpecification'])">
@@ -103,32 +103,32 @@
                     </div>
                 </div>
                 <div>
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="marketArea">
                             {{'Market area(s) which have been the subject of transactions (multiple choice)' | translate}}
                         </label>
-                        <ng-select id="marketArea" [items]="geographicalAreaList" [formControl]="form.get(['nonPro', 'marketArea'])" [multiple]="true"></ng-select>
+                        <ng-select class="multiple" id="marketArea" placeholder="{{'Select' | translate}}" [items]="geographicalAreaList" [formControl]="form.get(['nonPro', 'marketArea'])" [multiple]="true"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'marketArea'])">{{'Field is required' | translate}}</span>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="natureTransactionPerYear">
                             {{'Nature of transactions per year (in €)' | translate}}
                         </label>
-                        <ng-select id="natureTransactionPerYear" [items]="natureOfTransactionsList" [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])"></ng-select>
+                        <ng-select id="natureTransactionPerYear" placeholder="{{'Select' | translate}}" [items]="natureOfTransactionsList" [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'natureTransactionPerYear'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6">
+                    <div class="form-group required-field col-sm-6">
                         <label for="volumeTransactionPerYear">
                             {{'Volume of transactions per year (in €)' | translate}}
                         </label>
-                        <ng-select id="volumeTransactionPerYear" [items]="volumeOfTransactionsList" [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])"></ng-select>
+                        <ng-select id="volumeTransactionPerYear" placeholder="{{'Select' | translate}}" [items]="volumeOfTransactionsList" [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'volumeTransactionPerYear'])">{{'Field is required' | translate}}</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="form-group col-sm-6 flex-items-xs-middle">
+                <div class="row mt-1">
+                    <div class="form-group required-field col-sm-6 flex-items-xs-middle">
                         <div class="checkbox-inline">
                             <input type="checkbox" id="activitiesBenefitFromExperience" formControlName="activitiesBenefitFromExperience">
                             <label for="activitiesBenefitFromExperience">
@@ -138,7 +138,8 @@
 
                         <span class="field-error" *ngIf="hasError(['nonPro', 'activitiesBenefitFromExperience'])">{{'Field is required' | translate}}</span>
                     </div>
-                    <div class="form-group col-sm-6" *ngIf="!isDisabled(['nonPro', 'activitiesBenefitFromExperienceSpecification'])">
+
+                    <div class="form-group field-required col-sm-6" *ngIf="!isDisabled(['nonPro', 'activitiesBenefitFromExperienceSpecification'])">
                         <input type="text" formControlName="activitiesBenefitFromExperienceSpecification" placeholder="{{'Please provide an explanation regarding the previous answer' | translate}}">
                         <span class="field-error" *ngIf="hasError('nonPro.activitiesBenefitFromExperienceSpecification')">{{'Field is required' | translate}}</span>
                     </div>

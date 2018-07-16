@@ -14,11 +14,11 @@
 
     <div class="row">
         <div class="col-sm-6 p-0" formGroupName="performanceProfile">
-            <p>
-                {{'Investment objective(s)? Performance profile' | translate}}
-            </p>
-
             <div>
+                <label class="required-field">{{'Investment objective(s)? Performance profile' | translate}}</label>
+            </div>
+
+            <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let performanceProfile of performanceProfileList">
                     <input type="checkbox" id="{{performanceProfile.id}}-{{index}}" formControlName="{{performanceProfile.id}}">
                     <label for="{{performanceProfile.id}}-{{index}}">
@@ -26,14 +26,17 @@
                     </label>
                 </span>
             </div>
+
+            <p class="txtRed" *ngIf="hasError('performanceProfile')">{{'Select at least one' | translate}}</p>
+
         </div>
 
         <div class="col-sm-6 p-0" formGroupName="clientNeeds">
-            <p>
-                {{'Client needs (purpose of the investment)' | translate}}
-            </p>
-
             <div>
+                <label class="required-field">{{'Client needs (purpose of the investment)' | translate}}</label>
+            </div>
+
+            <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let clientNeed of clientNeeds">
                     <input type="checkbox" id="{{clientNeed.id}}-{{index}}" formControlName="{{clientNeed.id}}">
                     <label for="{{clientNeed.id}}-{{index}}">
@@ -41,22 +44,26 @@
                     </label>
                 </span>
             </div>
+
+            <p class="txtRed" *ngIf="hasError('clientNeeds')">{{'Select at least one' | translate}}</p>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <div>
+                <label>{{'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation :' | translate}}</label>
+            </div>
+
+            <textarea class="form-control" formControlName="otherFinancialInformation"></textarea>
         </div>
     </div>
 
     <div class="row">
         <div class="form-group col-sm-12">
-            <p>
-                {{'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation :' | translate}}
-            </p>
-            <textarea formControlName="otherFinancialInformation"></textarea>
+            <label class="required-field">{{'Investment horizons wanted' | translate}}</label>
         </div>
-    </div>
-
-    <div class="row">
-        <p class="form-group col-sm-12">
-            {{'Investment horizons wanted' | translate}}
-        </p>
 
         <div class="form-group col-sm-4" *ngFor="let horizon of investmentHorizonList">
             <div class="checkbox-inline">
@@ -74,13 +81,15 @@
                 <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{'Field is required' | translate}}</span>
             </div>
         </div>
+
+        <p class="txtRed" *ngIf="hasError('investmentHorizonWanted')">{{'Select at least one' | translate}}</p>
+
     </div>
 
-    <div class="row">
-        <div class="form-group col-sm-6">
-            <label for="riskProfile-{{index}}">
-                {{'Risk profile: ability to incur losses' | translate}}
-            </label>
+    <div class="row mb-1">
+        <div class="form-group required-field col-sm-6">
+            <label for="riskProfile-{{index}}">{{'Risk profile: ability to incur losses' | translate}}</label>
+
             <ng-select id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
             <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
 
@@ -103,7 +112,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let riskAcceptance of riskAcceptanceList; let i = index">
+            <tr *ngFor="let riskAcceptance of riskAcceptanceList; let i = index" formGroupName="riskAcceptance">
                 <td class="left">
                     <input type="number" placeholder="%" formControlName="riskAcceptanceLevel{{i + 1}}">
                 </td>
@@ -114,6 +123,10 @@
             </tr>
             </tbody>
         </table>
+
+        <p class="txtRed" *ngIf="hasError('riskAcceptance')">
+            {{'Total of all risk acceptance fields must be equal to 100' | translate}}
+        </p>
     </div>
 
 </div>

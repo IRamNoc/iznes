@@ -1,72 +1,99 @@
 import {Component, OnInit, Input, OnDestroy} from '@angular/core';
+import {FormGroup} from '@angular/forms';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
+import {filter, map, take, takeUntil} from 'rxjs/operators';
 
 import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
 import {DocumentsService, documentFormPaths} from './documents.service';
+import {steps} from "../../requests.config";
 
 @Component({
-    selector : 'kyc-step-documents',
-    templateUrl : './documents.component.html'
+    selector: 'kyc-step-documents',
+    templateUrl: './documents.component.html'
 })
-export class NewKycDocumentsComponent implements OnInit, OnDestroy{
+export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
-
-    @Input() form;
-    @Input() set isListedCompany(isCompany){
-        if(isCompany){
-            this.form.get('other').disable();
-            this.form.get('listedCompany').enable();
+    @Input() form : FormGroup;
+    @Input() set isListedCompany(isCompany) {
+        if (isCompany) {
+            (this.form.get('other') as FormGroup).disable();
+            (this.form.get('listedCompany') as FormGroup).enable();
         }
         else {
-            this.form.get('other').enable();
-            this.form.get('listedCompany').disable();
+            (this.form.get('other') as FormGroup).enable();
+            (this.form.get('listedCompany') as FormGroup).disable();
         }
     };
 
+    open;
     unsubscribe: Subject<any> = new Subject();
     connectedWallet;
 
     constructor(
-        private requestsService : RequestsService,
-        private newRequestService : NewRequestService,
-        private persistService : PersistService,
-        private documentsService : DocumentsService
-    ){}
+        private requestsService: RequestsService,
+        private newRequestService: NewRequestService,
+        private persistService: PersistService,
+        private documentsService: DocumentsService
+    ) {
+    }
 
     ngOnInit() {
-        this.persistForm();
         this.initData();
+        this.initSubscriptions();
         this.getCurrentFormData();
     }
 
-    initData(){
-        this.connectedWallet$.subscribe(connectedWallet => {
-            this.connectedWallet = connectedWallet;
-        });
+    initSubscriptions(){
+        this.requests$
+            .pipe(
+                takeUntil(this.unsubscribe),
+                map(kycs => kycs[0])
+            )
+            .subscribe(kyc => {
+                console.log('***check persist docs');
+                if(steps[kyc.completedStep] < steps.documents){
+                    console.log('***persisting documents');
+                    this.persistForm();
+                }
+            })
+        ;
     }
 
-    persistForm(){
+    initData() {
+        this.connectedWallet$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(connectedWallet => {
+                this.connectedWallet = connectedWallet;
+            })
+        ;
+    }
+
+    persistForm() {
         this.persistService.watchForm(
             'newkycrequest/documents',
-            this.form
+            this.form,
+            this.newRequestService.context
         );
     }
 
-    clearPersistForm(){
+    clearPersistForm() {
         this.persistService.refreshState(
             'newkycrequest/documents',
-            this.newRequestService.createDocumentsFormGroup()
+            this.newRequestService.createDocumentsFormGroup(),
+            this.newRequestService.context
         );
     }
 
-    uploadFile($event, formControl){
-        this.requestsService.uploadFile($event).then((file : any) => {
+    uploadFile($event, formControl) {
+        this.requestsService.uploadFile($event).then((file: any) => {
             formControl.get('hash').patchValue(file.fileHash);
             formControl.get('name').patchValue(file.fileTitle);
         });
@@ -78,51 +105,64 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy{
         return control.disabled;
     }
 
-    hasError(control, error = []){
+    hasError(control, error = []) {
         return this.newRequestService.hasError(this.form, control, error);
     }
 
-    handleSubmit(e){
+    handleSubmit(e) {
         e.preventDefault();
 
-        if(!this.form.valid){
+        if (!this.form.valid) {
             return;
         }
 
-        this.requests$.take(1).subscribe(requests => {
-            this.documentsService.sendRequest(this.form, requests, this.connectedWallet);
+        this.requests$
+            .pipe(
+                take(1)
+            )
+            .subscribe(requests => {
+                this.documentsService.sendRequest(this.form, requests, this.connectedWallet);
 
-            this.clearPersistForm();
-        });
+                this.clearPersistForm();
+            });
 
         return;
     }
 
     getCurrentFormData() {
         this.requests$
-            .filter(requests => !isEmpty(requests))
-            .map(requests => castArray(requests[0]))
-            .takeUntil(this.unsubscribe)
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                map(requests => castArray(requests[0])),
+                takeUntil(this.unsubscribe)
+            )
             .subscribe(requests => {
                 requests.forEach(request => {
-                    this.documentsService.getCurrentFormDocumentsData(request.kycID, this.connectedWallet).then(formData => {
-                        formData.forEach(value => {
-                            let type = value.type;
+                    this.documentsService.getCurrentFormDocumentsData(request.kycID, this.connectedWallet).then((data) => {
+                        // Patch the global document data followed by the kyc form data
+                        data.forEach((formData, index) => {
+                            formData.forEach(value => {
+                                let type = value.type;
+                                let shouldContinue = (index === 1 || (index === 0 && value.common));
 
-                            if(type){
-                                let path = documentFormPaths[type];
-                                let control = this.form.get([path, type]);
+                                if (type && shouldContinue) {
+                                    let path = documentFormPaths[type];
+                                    let control = this.form.get([path, type]);
 
-                                control.patchValue(value);
-                            }
+                                    control.patchValue(value);
+                                }
+                            });
+
                         });
+
+                        this.form.updateValueAndValidity();
                     });
                 });
             })
         ;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }

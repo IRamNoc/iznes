@@ -1,9 +1,11 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {get as getValue, isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
+import {filter, map, takeUntil} from 'rxjs/operators';
 
+import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {countries} from '../../../requests.config';
 import {NewRequestService} from '../../new-request.service';
 import {IdentificationService} from '../identification.service';
@@ -14,10 +16,11 @@ import {IdentificationService} from '../identification.service';
 })
 export class GeneralInformationComponent implements OnInit, OnDestroy {
 
+    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @Input() form: FormGroup;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
-    unsubscribe : Subject<any> = new Subject();
+    unsubscribe: Subject<any> = new Subject();
     open: boolean = false;
     countries = countries;
     legalFormList;
@@ -45,23 +48,38 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
-        this.form.get('legalStatus').valueChanges.subscribe(data => {
-            let legalStatusValue = getValue(data, [0, 'id']);
+        this.form.get('legalStatus').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(data => {
+                let legalStatusValue = getValue(data, [0, 'id']);
 
-            this.formCheckLegalStatus(legalStatusValue);
-        });
+                this.formCheckLegalStatus(legalStatusValue);
+            })
+        ;
 
-        this.form.get('sectorActivity').valueChanges.subscribe(data => {
-            let sectorActivityValue = getValue(data, [0, 'id']);
+        this.form.get('sectorActivity').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(data => {
+                let sectorActivityValue = getValue(data, [0, 'id']);
 
-            this.formCheckSectorActivity(sectorActivityValue);
-        });
+                this.formCheckSectorActivity(sectorActivityValue);
+            })
+        ;
 
-        this.form.get('legalStatusPublicEstablishmentType').valueChanges.subscribe(data => {
-            let legalStatusPublicEstablishmentTypeValue = getValue(data, [0, 'id']);
+        this.form.get('legalStatusPublicEstablishmentType').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(data => {
+                let legalStatusPublicEstablishmentTypeValue = getValue(data, [0, 'id']);
 
-            this.formCheckLegalStatusPublicEstablishmentType(legalStatusPublicEstablishmentTypeValue);
-        });
+                this.formCheckLegalStatusPublicEstablishmentType(legalStatusPublicEstablishmentTypeValue);
+            })
+        ;
     }
 
     formCheckLegalStatusPublicEstablishmentType(value) {
@@ -72,6 +90,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         } else {
             legalStatusPublicEstablishmentOtherControl.disable();
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
     formCheckSectorActivity(value) {
@@ -83,6 +103,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         } else {
             sectorActivityTextControl.disable();
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
     formCheckLegalStatus(value) {
@@ -107,6 +129,8 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 form.get('legalStatusListingOther').enable();
                 break;
         }
+
+        this.formPercent.refreshFormPercent();
     }
 
     hasError(control, error = []) {
@@ -121,12 +145,15 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     getCurrentFormData() {
         this.requests$
-            .filter(requests => !isEmpty(requests))
-            .map(requests => castArray(requests[0]))
+            .pipe(
+                filter(requests => !isEmpty(requests)),
+                map(requests => castArray(requests[0])),
+                takeUntil(this.unsubscribe)
+            )
             .subscribe(requests => {
                 requests.forEach(request => {
                     this.identificationService.getCurrentFormGeneralData(request.kycID).then(formData => {
-                        if(formData){
+                        if (formData) {
                             this.form.patchValue(formData);
                         }
                     });
@@ -135,7 +162,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
         ;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
     }
