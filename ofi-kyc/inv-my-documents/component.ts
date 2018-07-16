@@ -20,11 +20,11 @@ import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service'
 })
 export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewInit {
 
-    private kycEnums;
+    public kycEnums;
 
-    private uploadMyDocumentsForm:FormGroup;
-    private connectedWalletId: number;
-    private subscriptions: Array<any> = [];
+    public uploadMyDocumentsForm:FormGroup;
+    public connectedWalletId: number;
+    public subscriptions: Array<any> = [];
 
     allUploadsFiles: any = [];
     nbUploads = 13;

@@ -1,15 +1,15 @@
 import {Component, OnInit, Input, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {combineLatest, Subject} from 'rxjs';
 import {takeUntil, filter as rxFilter} from 'rxjs/operators';
-import {FormGroup} from '@angular/forms';
-import {select, NgRedux} from '@angular-redux/store';
-import {ActivatedRoute} from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { select, NgRedux } from '@angular-redux/store';
+import { ActivatedRoute } from '@angular/router';
 import {isEmpty, isNil, keyBy, filter, reduce} from 'lodash';
 
-import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
-import {OfiKycService} from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
-import {RequestsService} from '../../requests.service';
+import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { OfiManagementCompanyService } from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { RequestsService } from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
 import {SelectAmcService} from './select-amc.service';
 
@@ -30,7 +30,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     preselectedManagementCompany: any = {};
 
     get filteredManagementCompanies() {
-        let id = this.preselectedManagementCompany.id;
+        const id = this.preselectedManagementCompany.id;
 
         if (id) {
             return filter(this.managementCompaniesExtract, company => {
@@ -61,7 +61,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     get selectedManagementCompanies() {
-        let selected = this.form.get('managementCompanies').value;
+        const selected = this.form.get('managementCompanies').value;
 
         if (isEmpty(selected)) {
             return [{}];
@@ -83,17 +83,21 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             )
             .subscribe(() => {
                 this.getAssetManagementCompanies();
-            })
-        ;
+            });
 
         combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
                 takeUntil(this.unsubscribe),
             )
             .subscribe(([managementCompanies, kycList]) => {
+                console.log('initSubscriptions', managementCompanies, kycList);
+                if (!managementCompanies || !kycList) {
+                    return;
+                }
                 this.managementCompanies = keyBy(managementCompanies, 'companyID');
                 this.kycList = kycList;
-                this.managementCompaniesExtract = this.requestsService.extractManagementCompanyData(managementCompanies, kycList)
+                this.managementCompaniesExtract = this.requestsService
+                    .extractManagementCompanyData(managementCompanies, kycList)
             })
         ;
 
@@ -103,8 +107,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             )
             .subscribe(connectedWallet => {
                 this.connectedWallet = connectedWallet;
-            })
-        ;
+            });
     }
 
     getQueryParams() {
@@ -112,8 +115,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
             if (queryParams.invitationToken) {
                 this.preselectedManagementCompany = {
-                    id: parseInt(queryParams.amcID),
-                    invitationToken: queryParams.invitationToken
+                    id: parseInt(queryParams.amcID, 10),
+                    invitationToken: queryParams.invitationToken,
                 };
                 this.disableValidators();
             }
@@ -122,13 +125,17 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     disableValidators() {
-        let formControl = this.form.get('managementCompanies');
+        const formControl = this.form.get('managementCompanies');
         formControl.clearValidators();
         formControl.updateValueAndValidity();
     }
 
     getAssetManagementCompanies() {
-        OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux, true);
+        OfiManagementCompanyService.defaultRequestINVManagementCompanyList(
+            this.ofiManagementCompanyService,
+            this.ngRedux,
+            true,
+        );
     }
 
     onRegisteredChange() {
