@@ -112,6 +112,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
         driver.findElement(By.cssSelector("form.ng-invalid > section:nth-child(1) > div:nth-child(1) > div:nth-child(5) > div:nth-child(2) > dp-date-picker:nth-child(3) > div:nth-child(2) > div:nth-child(1) > dp-day-calendar:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > button:nth-child(2)")).click();
         driver.findElement(By.id("isin")).clear();
         driver.findElement(By.id("isin")).sendKeys(isin);
+        driver.findElement(By.id("iban")).clear();
+        driver.findElement(By.id("iban")).sendKeys(isin + "33");
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
