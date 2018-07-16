@@ -56,7 +56,7 @@ import {
     MyHoldingsComponent,
 } from '@ofi/ofi-main';
 
-import {KycRequestsModule} from '@ofi/ofi-main/ofi-kyc/my-requests/requests.module';
+import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
 
 /* UserAdmin Module. */
 import {
@@ -676,7 +676,7 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'my-requests',
-                loadChildren : '@ofi/ofi-main/ofi-kyc/my-requests/requests.module#KycRequestsModule',
+                children : requestsRoute,
             },
             {
                 path: 'account-admin',
