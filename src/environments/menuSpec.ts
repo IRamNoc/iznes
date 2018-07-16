@@ -82,7 +82,6 @@ const reportsCollectsArchives = {
     icon_class: 'fa fa-book',
     element_id: 'holders-list',
     router_link: '/reports/holders-list/list',
-    dynamic_link: '\/reports/holders-list\/[^\/]*',
 };
 const reportsCentralization = {
     label: 'Precentralisation',
