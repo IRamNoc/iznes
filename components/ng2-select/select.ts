@@ -9,6 +9,7 @@ import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { MultilingualService } from '@setl/multilingual';
 import * as xss from 'xss';
+import {find, castArray} from 'lodash';
 
 const changeDetection = ChangeDetectionStrategy.OnPush;
 
@@ -73,18 +74,32 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     @Input()
-    public set active(selectedItems: Array<any>) {
+    public set active(selectedItems: any) {
         try {
             this.handleNonExistOptions(selectedItems);
             if (!selectedItems || selectedItems.length === 0) {
                 this._active = [];
             } else {
+                if(typeof selectedItems === 'string'){
+                    selectedItems = selectedItems.split(' ');
+                    selectedItems = castArray(selectedItems);
+                }
                 const areItemsStrings = typeof selectedItems[0] === 'string';
 
                 this._active = selectedItems.map((item: any) => {
-                    const data = areItemsStrings
-                        ? item
-                        : { id: item[this.idField], text: item[this.textField] };
+                    const id = areItemsStrings ? item : item.id;
+                    const foundObject = find(this.itemObjects, ['id', id]);
+                    let data;
+
+                    if (foundObject) {
+                        data = foundObject;
+                    }
+                    else {
+                        data = areItemsStrings
+                            ? item
+                            : {id: item[this.idField], text: item[this.textField]}
+                        ;
+                    }
 
                     return new SelectItem(data);
                 });
@@ -105,7 +120,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     public activeOption: SelectItem;
     public element: ElementRef;
 
-    public get active(): Array<any> {
+    public get active(): any {
         return this._active;
     }
 
