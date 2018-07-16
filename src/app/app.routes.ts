@@ -420,6 +420,11 @@ export const ROUTES: Routes = [
                         path: 'holders-list',
                         children: [
                             {
+                                path: 'list',
+                                component: ShareHoldersComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                            {
                                 path: 'funds/:tabid',
                                 component: ShareHoldersComponent,
                                 canActivate: [LoginGuardService],
