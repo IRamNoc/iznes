@@ -1,4 +1,5 @@
 import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import {FormArray} from '@angular/forms';
 import * as _ from 'lodash';
 import {MultilingualService} from '@setl/multilingual';
 
@@ -54,11 +55,11 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
         Object.keys(controls).forEach((key) => {
             if (!controls[key].disabled) { // not check or push disabled fields
                 if (controls[key].controls) {
-                    if (action === 'push') this.iterateForm(controls[key].controls, 'push');
-                    if (action === 'check') this.iterateForm(controls[key].controls, 'check');
-                } else {
+                    this.iterateForm(controls[key].controls, action);
+                }
+                else if(controls[key].validator){
                     if (action === 'push') {
-                        this.allFields[key] = { field: key, valid: false };
+                        this.allFields[key] = {field: key, valid: false};
                     }
                     if (action === 'check' && this.allFields[key] !== undefined) {
                         if (this.allFields[key].hasOwnProperty('valid')) {
@@ -127,7 +128,13 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
                 valid++;
             }
         });
-        const percent = Math.round(valid * 100 / total);
+
+        let percent;
+        if(!total){
+            percent = 100;
+        } else{
+            percent = Math.round(valid * 100 / total);
+        }
         this.divProgressBarColor.style.width = percent + '%';
         this.divProgressBarLabel.innerHTML = percent + '%';
 
@@ -150,8 +157,10 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
 
     refreshFormPercent() {
         this.allFields = []; // reset
-        this.iterateForm(this.config.form.controls, 'push'); // re-parse
-        this.iterateForm(this.config.form.controls, 'check'); // re-check
+        if(this.config){
+            this.iterateForm(this.config.form.controls, 'push'); // re-parse
+            this.iterateForm(this.config.form.controls, 'check'); // re-check
+        }
     }
 
     ngOnDestroy(): void {
