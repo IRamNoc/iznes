@@ -113,6 +113,11 @@ form, .form {
                 margin-bottom: 0px;
             }
         }
+        .large-select{
+            .ui-select-container{
+                width: 100% !important;
+            }
+        }
 
         .ui-select-toggle {
             //margin-top: 6px !important;
@@ -245,6 +250,10 @@ form, .form {
                 display: block;
             }
         }
+    }
+
+    ng-select.multiple + .field-error{
+        width : 100% !important;
     }
 
     various-address-select {
