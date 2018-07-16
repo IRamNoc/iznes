@@ -53,7 +53,7 @@ node {
                         ssh -t root@139.162.213.130 rm -f /usr/local/jar/wallnode &&
                         ssh -t root@139.162.213.130 rm -f /usr/local/jar/valnode &&
                         rsync -avhm --stats /var/lib/jenkins/Deploy/blockchain/*.jar  root@139.162.213.130:/usr/local/jar &&
-                        ssh -t root@139.162.213.130 \'cd /root ; bash &&  ./relink.sh \' &&
+                        ssh -t root@139.162.213.130 \'cd /root ; bash &&  ./relink_dev.sh \' &&
                         ssh -t root@139.162.213.130 \'cd /root ; bash && ./start_blockchain.sh \''''
 
         }
