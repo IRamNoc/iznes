@@ -4,7 +4,7 @@ import { NgRedux } from '@angular-redux/store';
 import { AccountAdminBaseService } from '../../../base/service';
 
 @Injectable()
-export class UserTeamsPermissionsServiceBase extends AccountAdminBaseService {
+export class AccountAdminPermissionsServiceBase extends AccountAdminBaseService {
     constructor(redux: NgRedux<any>) {
         super(redux);
     }

@@ -22,6 +22,7 @@ import {
     UpdateUserDetailsRequest,
     DeleteUserRequest,
     ReadUsersAuditRequest,
+    UpdateUserStatusRequest,
 } from './model';
 
 @Injectable()
@@ -163,6 +164,35 @@ export class UsersService extends AccountAdminBaseService {
             onSuccess,
             onError,
         );
+    }
+
+    /**
+     * Update User Status
+     *
+     * @param userId
+     * @param status
+     * @param onSuccess
+     * @param onError
+     */
+    updateUserStatus(userID: number,
+                     status: boolean,
+                     onSuccess: RequestCallback,
+                     onError: RequestCallback): void {
+
+        const request: UpdateUserStatusRequest = {
+            RequestName: 'updateUserStatus',
+            token: this.memberSocketService.token,
+            userID,
+            status,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 undefined,
+                                 undefined,
+                                 onSuccess,
+                                 onError);
     }
 
     private updateUserDetails(userId: number,

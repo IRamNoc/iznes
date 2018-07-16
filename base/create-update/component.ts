@@ -25,6 +25,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     permissionLevels: any[] = [];
     permissionsEmitter: EventEmitter<any> = new EventEmitter();
     permissionsForm: FormGroup;
+    status: boolean; // team / user status
 
     protected accountId: number;
     protected subscriptions: Subscription[] = [];

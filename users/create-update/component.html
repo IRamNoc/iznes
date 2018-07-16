@@ -42,6 +42,10 @@
                 </div>
             </ng-container>
 
+            <app-core-admin-users-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-users-status>
+
+            <h3>{{ 'User Details' | translate }}</h3>
+
             <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
 
             <div class="row actions bottom">

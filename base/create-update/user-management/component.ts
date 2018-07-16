@@ -12,7 +12,7 @@ import * as _ from 'lodash';
     selector: 'app-core-admin-teams-mgmt',
     template: '<div></div>',
 })
-export class UserTeamsUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
+export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() entityId: number;
     @Input() doUpdate: boolean = true;

@@ -157,6 +157,8 @@ export class UsersCreateUpdateComponent
         this.form.emailAddress.preset = user.emailAddress;
         this.form.phoneNumber.preset = user.phoneNumber;
         this.form.reference.preset = user.reference;
+
+        this.status = user.userStatus === 1 ? true : false;
     }
 
     getUserTeams(teams: any[]): void {

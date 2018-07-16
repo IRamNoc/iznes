@@ -1,6 +1,6 @@
 import { MemberNodeMessageBody } from '@setl/utils/common';
 
-export interface UserTeamsPermission {
+export interface AccountAdminPermission {
     permissionID: number;
     name: string;
     description: string;

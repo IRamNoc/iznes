@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {
     clearRequestedAccountAdminUsers,
 } from '@setl/core-store';
-import { UserTeamsUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
+import { AccountAdminUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
 import { UsersService } from '../../../users/service';
 import * as UserModel from '../../../users/model';
@@ -18,7 +18,7 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
     styleUrls: ['../../../base/create-update/user-management/component.scss'],
 })
 export class UserTeamsUsersMgmtTeamsComponent
-    extends UserTeamsUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
+    extends AccountAdminUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
 
     @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
     @select(['accountAdmin', 'users', 'users']) usersOb;

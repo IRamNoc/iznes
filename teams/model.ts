@@ -12,12 +12,12 @@ export class AccountAdminTeam {
 }
 
 export class AccountAdminTeamForm {
-    status: FormItem = {
-        label: 'Status',
-        type: FormItemType.boolean,
-        required: true,
-        style: [FormItemStyle.BreakOnAfter],
-    };
+//     status: FormItem = {
+//         label: 'Status',
+//         type: FormItemType.boolean,
+//         required: true,
+//         style: [FormItemStyle.BreakOnAfter],
+//     };
     name: FormItem = {
         label: 'Team name',
         type: FormItemType.text,
@@ -55,7 +55,6 @@ export interface ReadUserTeamsRequest extends MemberNodeMessageBody {
 export interface CreateUserTeamRequest extends MemberNodeMessageBody {
     token: string;
     accountID: number;
-    status: boolean;
     name: string;
     reference: string;
     description: string;
@@ -64,10 +63,15 @@ export interface CreateUserTeamRequest extends MemberNodeMessageBody {
 export interface UpdateUserTeamRequest extends MemberNodeMessageBody {
     token: string;
     userTeamID: number;
-    status: boolean;
     name: string;
     reference: string;
     description: string;
+}
+
+export interface UpdateUserTeamStatusRequest extends MemberNodeMessageBody {
+    token: string;
+    userTeamID: number;
+    status: boolean;
 }
 
 export interface DeleteUserTeamRequest extends MemberNodeMessageBody {

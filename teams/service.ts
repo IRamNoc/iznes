@@ -19,6 +19,7 @@ import {
     UpdateUserTeamRequest,
     DeleteUserTeamRequest,
     ReadUserTeamsAuditRequest,
+    UpdateUserTeamStatusRequest,
 } from './model';
 
 @Injectable()
@@ -68,7 +69,6 @@ export class UserTeamsService extends AccountAdminBaseService {
      * @param onError
      */
     createUserTeam(accountID: number,
-                   status: boolean,
                    name: string,
                    reference: string,
                    description: string,
@@ -98,7 +98,6 @@ export class UserTeamsService extends AccountAdminBaseService {
      * Update User Team
      *
      * @param userTeamID
-     * @param status
      * @param name
      * @param reference
      * @param description
@@ -106,7 +105,6 @@ export class UserTeamsService extends AccountAdminBaseService {
      * @param onError
      */
     updateUserTeam(userTeamID: number,
-                   status: boolean,
                    name: string,
                    reference: string,
                    description: string,
@@ -121,6 +119,35 @@ export class UserTeamsService extends AccountAdminBaseService {
             name,
             reference,
             description,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 undefined,
+                                 undefined,
+                                 onSuccess,
+                                 onError);
+    }
+
+    /**
+     * Update User Team Status
+     *
+     * @param userTeamID
+     * @param status
+     * @param onSuccess
+     * @param onError
+     */
+    updateUserTeamStatus(userTeamID: number,
+                         status: boolean,
+                         onSuccess: RequestCallback,
+                         onError: RequestCallback): void {
+
+        const request: UpdateUserTeamStatusRequest = {
+            RequestName: 'updateUserTeamStatus',
+            token: this.memberSocketService.token,
+            userTeamID,
+            status,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);

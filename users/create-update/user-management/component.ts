@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import {
     clearRequestedAccountAdminTeams,
 } from '@setl/core-store';
-import { UserTeamsUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
+import { AccountAdminUsersMgmtComponentBase } from '../../../base/create-update/user-management/component';
 import { AccountAdminErrorResponse, AccountAdminResponse } from '../../../base/model';
 import { UserTeamsService } from '../../../teams';
 import * as TeamModel from '../../../teams/model';
@@ -18,7 +18,7 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
     styleUrls: ['../../../base/create-update/user-management/component.scss'],
 })
 export class UserTeamsUsersMgmtUsersComponent
-    extends UserTeamsUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
+    extends AccountAdminUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
 
     @Input() doUpdate: boolean = true;
     @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();

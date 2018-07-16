@@ -7,11 +7,11 @@ import * as PermissionsModel from './model';
     templateUrl: 'component.html',
     styleUrls: ['component.scss'],
 })
-export class UserTeamsPermissionsComponentBase<Type> implements OnInit, OnDestroy {
+export class AccountAdminPermissionsComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() readOnly: boolean = false;
 
-    permissions: PermissionsModel.UserTeamsPermission[] = [
+    permissions: PermissionsModel.AccountAdminPermission[] = [
         {
             permissionID: 1,
             name: 'Home',

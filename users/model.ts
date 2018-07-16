@@ -92,6 +92,12 @@ export interface CreateUserRequest extends MemberNodeMessageBody {
     password: string;
 }
 
+export interface UpdateUserStatusRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+    status: boolean;
+}
+
 export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {
     token: string;
     accountID: number;

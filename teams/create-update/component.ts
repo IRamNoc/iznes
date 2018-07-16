@@ -46,7 +46,8 @@ export class UserTeamsCreateUpdateComponent
         this.form.description.control.setValue(team.description);
         this.form.name.control.setValue(team.name);
         this.form.reference.control.setValue(team.reference);
-        this.form.status.control.setValue(team.status);
+
+        this.status = team.status;
     }
 
     save(): void {
@@ -64,7 +65,6 @@ export class UserTeamsCreateUpdateComponent
     private createTeam(): void {
         this.service.createUserTeam(
             this.accountId,
-            this.form.status.value(),
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
@@ -79,7 +79,6 @@ export class UserTeamsCreateUpdateComponent
     private updateTeam(): void {
         this.service.updateUserTeam(
             this.entityId,
-            this.form.status.value(),
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
