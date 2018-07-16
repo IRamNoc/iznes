@@ -22,6 +22,7 @@ export interface IznesShareDetail {
     shareClassCode: string;
     shareClassInvestmentStatus: string;
     shareClassCurrency: string;
+    iban: string;
     valuationFrequency: string;
     historicOrForwardPricing: string;
     hasCoupon: string;

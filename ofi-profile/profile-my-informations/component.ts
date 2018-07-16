@@ -10,6 +10,7 @@ import {SET_NEW_PASSWORD} from '@setl/core-store/index';
 import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
 import { Router } from '@angular/router';
 import {MultilingualService} from '@setl/multilingual';
+import { take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -137,7 +138,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                     this.alertsService.create('success', `
                         Your password has been successfully changed!
                     `)
-                    .take(1)
+                    .asObservable()
+                    .pipe(take(1))
                     .subscribe(() => {
                         this.router.navigate(['home']);
                     });

@@ -11,8 +11,8 @@ import {ConfirmationService, NumberConverterService} from '@setl/utils';
 /* Alerts and confirms. */
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+
 import {ActivatedRoute, Router} from '@angular/router';
 /* Clarity */
 /* services */

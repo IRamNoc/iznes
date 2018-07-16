@@ -6,6 +6,10 @@ export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-li
  */
 export { OfiHomeComponent } from './ofi-home/home/component';
 /**
+ * My Asset Managers - My Documents
+ */
+export { OfiInvMyDocumentsComponent } from './ofi-kyc/inv-my-documents/component';
+/**
  * Invite Investors
  */
 export { OfiInviteInvestorsComponent } from './ofi-kyc/invite-investors/component';
@@ -15,6 +19,7 @@ export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';
 export { OfiKycHomeComponent } from './ofi-kyc/home/component';
 export { OfiFundAccessComponent } from './ofi-kyc/fund-access/component';
 export { OfiKycAlreadyDoneComponent } from './ofi-kyc/already-done/component';
+export { OfiKycRequestDetailsComponent } from './ofi-kyc/request-details/component';
 export {OfiRedirectTokenComponent} from './ofi-kyc/invitation-token/redirect-token.component';
 export {OfiConsumeTokenComponent} from './ofi-kyc/invitation-token/consume-token.component';
 export {MyRequestsComponent} from './ofi-kyc/my-requests/list/my-requests.component';

@@ -10,6 +10,7 @@ export interface OfiFundShare {
     subscriptionStartDate: string;
     launchDate: string;
     shareClassCurrency: number;
+    iban: string;
     valuationFrequency: number;
     historicOrForwardPricing: number;
     status: number;
@@ -100,4 +101,3 @@ export interface OfiFundShareDocuments {
     emt: number;
     tpts2: number;
 }
- 

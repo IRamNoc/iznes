@@ -20,6 +20,7 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
+import { OfiKycRequestDetailsComponent } from './request-details/component';
 import { OfiInviteInvestorsComponent } from './invite-investors/component';
 import { OfiSignUpComponent } from './signup/component';
 import { OfiDocumentsComponent } from './documents/component';
@@ -33,9 +34,7 @@ import { TextInputListComponent } from './text-input-list/component';
 import { OfiKycAlreadyDoneComponent } from './already-done/component';
 import { KycAuditTrailComponent } from './audit-trail/kyc-audit-trail.component';
 import { KycStatusAuditTrailComponent } from './audit-trail/status-audit-trail/kyc-status-audit-trail.component';
-import {
-    KycInformationAuditTrailComponent,
-} from './audit-trail/information-audit-trail/kyc-information-audit-trail.component';
+import { KycInformationAuditTrailComponent } from './audit-trail/information-audit-trail/kyc-information-audit-trail.component';
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
 
@@ -51,6 +50,7 @@ import { RequestsService } from './my-requests/requests.service';
 
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
+import {OfiInvMyDocumentsComponent} from "./inv-my-documents/component";
 
 /* Constants */
 import config, { kycEnums } from './config';
@@ -66,7 +66,9 @@ import config, { kycEnums } from './config';
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
+        OfiKycRequestDetailsComponent,
         TextInputListComponent,
+        OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
         MyRequestsComponent,
@@ -79,7 +81,6 @@ import config, { kycEnums } from './config';
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
-
     ],
     exports: [
         OfiInviteInvestorsComponent,
@@ -91,6 +92,8 @@ import config, { kycEnums } from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
+        OfiKycRequestDetailsComponent,
+        OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
         MyRequestsComponent,

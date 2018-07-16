@@ -16,7 +16,7 @@ import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 /* Internal */
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';

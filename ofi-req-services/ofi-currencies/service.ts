@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { SagaHelper } from '@setl/utils';
@@ -17,7 +18,9 @@ export class OfiCurrenciesService {
 
     constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
         this.loadedObs$
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe(d => this.loaded = d);
     }
 
