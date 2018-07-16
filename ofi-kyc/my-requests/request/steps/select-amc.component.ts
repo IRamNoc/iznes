@@ -87,7 +87,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
         combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
-                filter(([managementCompanies, kycList]) => {
+                rxFilter(([managementCompanies, kycList]) => {
                     return managementCompanies && kycList;
                 }),
                 takeUntil(this.unsubscribe)
