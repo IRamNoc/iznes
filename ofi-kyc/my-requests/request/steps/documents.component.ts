@@ -57,7 +57,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             )
             .subscribe(kyc => {
                 console.log('***check persist docs');
-                if(steps[kyc.completedStep] < steps.documents){
+                if(kyc && (steps[kyc.completedStep] < steps.documents)){
                     console.log('***persisting documents');
                     this.persistForm();
                 }

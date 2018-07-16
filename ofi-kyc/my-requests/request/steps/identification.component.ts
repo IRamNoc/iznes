@@ -81,7 +81,7 @@ export class NewKycIdentificationComponent implements OnInit {
             )
             .subscribe(kyc => {
                 console.log('***check persist ident');
-                if(steps[kyc.completedStep] < steps.identification){
+                if(kyc && (steps[kyc.completedStep] < steps.identification)){
                     console.log('***persisting identification');
                     this.persistForm();
                 }

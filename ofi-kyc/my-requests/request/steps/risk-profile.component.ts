@@ -40,7 +40,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
             )
             .subscribe(kyc => {
                 console.log('***check persist risk');
-                if(steps[kyc.completedStep] < steps.riskProfile){
+                if(kyc && (steps[kyc.completedStep] < steps.riskProfile)){
                     console.log('***persisting risk');
                     this.persistForm();
                 }

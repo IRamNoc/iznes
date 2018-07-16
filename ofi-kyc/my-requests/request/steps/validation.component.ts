@@ -60,7 +60,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             )
             .subscribe(kyc => {
                 console.log('***check persist validation');
-                if(steps[kyc.completedStep] < steps.validation){
+                if(kyc && (steps[kyc.completedStep] < steps.validation)){
                     console.log('***persisting validation');
                     this.persistForm();
                 }
