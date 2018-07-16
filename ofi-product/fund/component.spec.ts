@@ -131,7 +131,7 @@ const fundServiceSpy = {
 
 const ActivatedRouteStub = {
     params: of({
-        id: 'new',
+        id: null,
     }),
     setParams: (id: string) => {
         this.params = of({
@@ -220,6 +220,10 @@ describe('FundComponent', () => {
                                 component: ProductHomeComponent,
                             },
                             {
+                                path: 'product/fund/new',
+                                component: FundComponent,
+                            },
+                            {
                                 path: 'product/fund/:id',
                                 component: FundComponent,
                             },
@@ -257,7 +261,6 @@ describe('FundComponent', () => {
         fixture = TestBed.createComponent(FundComponent);
 
         comp = fixture.componentInstance;
-        comp.param = 'new';
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
@@ -374,7 +377,7 @@ describe('FundComponent', () => {
         }));
 
         it('should navigate to the umbrella creation page', fakeAsync(() => {
-            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/0');
+            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/new');
         }));
 
         it('should enable the next button', fakeAsync(() => {

@@ -6,7 +6,7 @@ import {
     OnDestroy,
     OnInit,
     AfterViewInit,
-    Inject
+    Inject,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { fromJS } from 'immutable';
@@ -15,12 +15,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
-/* Internal */
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {
+    OfiManagementCompanyService,
+} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -31,15 +33,14 @@ import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella
 
 /* Utils. */
 import { SagaHelper, NumberConverterService, LogService, ConfirmationService } from '@setl/utils';
-import { FundComponent } from '../fund/component';
-import { validators } from "../productConfig";
+import { validators } from '../productConfig';
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-product-umbrella-fund',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -70,7 +71,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
     };
 
     countries = [];
@@ -87,11 +88,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     centralizingAgentOptions = [];
     currentRoute: {
         fromFund?: boolean,
-        fromShare?: boolean
+        fromShare?: boolean,
     } = {};
 
-    /* Private properties. */
-    subscriptionsArray: Array<Subscription> = [];
+    unSubscribe: Subject<any> = new Subject();
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -143,12 +143,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
 
         // param url
-        this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
-            this.umbrellaFundID = params['id'];
-            if (typeof this.umbrellaFundID !== 'undefined' && this.umbrellaFundID !== '' && this.umbrellaFundID > 0) {
-                this.editForm = true;
-            }
-        }));
+        this._activatedRoute.params
+            .takeUntil(this.unSubscribe)
+            .subscribe((params) => {
+                if (!params['id']) {
+                    this.editForm = true;
+                }
+            });
 
         this.umbrellaFundForm = this._fb.group({
             umbrellaFundID: [
@@ -159,21 +160,21 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 Validators.compose([
                     Validators.required,
                     productConfig.alphanumeric,
-                ])
+                ]),
             ],
             registerOffice: [
                 '',
                 Validators.compose([
                     Validators.required,
                     productConfig.alphanumeric,
-                ])
+                ]),
             ],
             registerOfficeAddress: [
                 '',
                 Validators.compose([
                     Validators.required,
                     productConfig.alphanumeric,
-                ])
+                ]),
             ],
             legalEntityIdentifier: [
                 '',
@@ -181,33 +182,33 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             domicile: [
                 '',
                 Validators.compose([
-                    Validators.required
-                ])
+                    Validators.required,
+                ]),
             ],
             umbrellaFundCreationDate: [
                 '',
                 Validators.compose([
                     Validators.required,
                     productConfig.validators.date.day,
-                ])
+                ]),
             ],
             managementCompanyID: [
                 [],
                 Validators.compose([
-                    Validators.required
-                ])
+                    Validators.required,
+                ]),
             ],
             fundAdministratorID: [
                 [],
                 Validators.compose([
-                    Validators.required
-                ])
+                    Validators.required,
+                ]),
             ],
             custodianBankID: [
                 [],
                 Validators.compose([
-                    Validators.required
-                ])
+                    Validators.required,
+                ]),
             ],
             investmentAdvisorID: [
                 [],
@@ -254,31 +255,43 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             ],
         });
 
-        this.subscriptionsArray.push(
-            this.umbrellaFundForm.controls['domicile'].valueChanges
+        this.umbrellaFundForm.controls['domicile'].valueChanges
+            .takeUntil(this.unSubscribe)
             .subscribe(() => {
                 this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
                 this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
-            })
-        );
+            });
 
-        this.subscriptionsArray.push(
-            this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
+        this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
+            .takeUntil(this.unSubscribe)
             .subscribe((name) => {
                 const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
                 if (registerOffice.dirty || this.editForm) {
                     return;
                 }
                 this.umbrellaFundForm.controls['registerOffice'].setValue(name);
-            })
-        );
+            });
 
         // language
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((d) => this.getLanguage(d)));
-        this.subscriptionsArray.push(this.requestedOfiUmbrellaFundListOb.subscribe((requested) => this.getUmbrellaFundRequested(requested)));
-        this.subscriptionsArray.push(this.umbrellaFundAccessListOb.subscribe((list) => this.getUmbrellaFundList(list)));
-        this.subscriptionsArray.push(this.requestedOfiManagementCompanyListOb.subscribe((requested) => this.getManagementCompanyRequested(requested)));
-        this.subscriptionsArray.push(this.managementCompanyAccessListOb.subscribe((list) => this.getManagementCompanyList(list)));
+        this.requestLanguageObj
+            .takeUntil(this.unSubscribe)
+            .subscribe(d => this.getLanguage(d));
+
+        this.requestedOfiUmbrellaFundListOb
+            .takeUntil(this.unSubscribe)
+            .subscribe(requested => this.getUmbrellaFundRequested(requested));
+
+        this.umbrellaFundAccessListOb
+            .takeUntil(this.unSubscribe)
+            .subscribe(list => this.getUmbrellaFundList(list));
+
+        this.requestedOfiManagementCompanyListOb
+            .takeUntil(this.unSubscribe)
+            .subscribe(requested => this.getManagementCompanyRequested(requested));
+
+        this.managementCompanyAccessListOb
+            .takeUntil(this.unSubscribe)
+            .subscribe(list => this.getManagementCompanyList(list));
     }
 
     ngOnInit() {
@@ -294,6 +307,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
 
+    }
+
+    ngOnDestroy(): void {
+        /* Detach the change detector on destroy. */
+        this._changeDetectorRef.detach();
+
+        /* Unsunscribe Observables. */
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     isTransferAgentActive() {
@@ -699,16 +721,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     private numPad(num) {
         return num < 10 ? '0' + num : num;
-    }
-
-    ngOnDestroy(): void {
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
-
-        /* Unsunscribe Observables. */
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
     }
 
     /**

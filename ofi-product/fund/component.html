@@ -1,8 +1,8 @@
 <div class="header-breadcrumbs fundCreateComponent">
     <h1>
         <i class="fa fa-bars"></i>
-        <span *ngIf="param === 'new'">{{'Add a New Fund' | translate}}</span>
-        <span *ngIf="param !== 'new'">{{'Fund: @fundForm.controls[\'fundName\'].value@' | translate: {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value}
+        <span *ngIf="!param">{{'Add a New Fund' | translate}}</span>
+        <span *ngIf="param">{{'Fund: @fundForm.controls[\'fundName\'].value@' | translate: {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value}
             }}</span>
     </h1>
 </div>
@@ -35,7 +35,7 @@
                             </div>
                             <div class="form-group col-sm-6 btn-container">
                                 <p>{{'or' | translate}}</p>
-                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" [routerLink]="['/product-module/product/umbrella-fund/0']" [queryParams]="{fromFund: 'true', umbrella : null}"
+                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" [routerLink]="['/product-module/product/umbrella-fund/new']" [queryParams]="{fromFund: 'true', umbrella : null}"
                                    queryParamsHandling="merge">Add a new Umbrella Fund
 
 
@@ -1046,7 +1046,7 @@
                 <div class="form-group col-sm-6">
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel' | translate}}</button>
                     <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
-                        <i class="fa fa-save"></i> {{param === 'new' ? 'Save' : 'Update'}}
+                        <i class="fa fa-save"></i> {{!param ? 'Save' : 'Update'}}
                     </button>
                 </div>
 
