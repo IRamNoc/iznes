@@ -82,7 +82,6 @@ const reportsCollectsArchives = {
     icon_class: 'fa fa-book',
     element_id: 'holders-list',
     router_link: '/reports/holders-list/list',
-    dynamic_link: '\/reports/holders-list\/[^\/]*',
 };
 const reportsCentralization = {
     label: 'Precentralisation',
@@ -288,14 +287,6 @@ const ofiProductHome = {
     router_link: '/product-module/product',
     dynamic_link: '/product-module/product/[^\/]*',
 };
-const productsManagementCompany = {
-    label: 'Management Company',
-    label_txt: 'txt_managementcompany',
-    icon_class: 'fa fa-university',
-    element_id: 'menu-management-company',
-    router_link: '/management-company',
-    dynamic_link: '/management-company/[^\/]*',
-};
 const productsSicav = {
     label: 'SICAV',
     label_txt: 'txt_sicav',
@@ -491,8 +482,6 @@ export const menuSpec: MenuSpec = {
                     productConfiguration,
                 ],
             },
-            productsManagementCompany,
-            //accountAdmin,
         ],
         valuer: [
             home,

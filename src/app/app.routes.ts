@@ -417,9 +417,24 @@ export const ROUTES: Routes = [
                         data: { state: 'reports-transactions' },
                     },
                     {
-                        path: 'holders-list/:tabid',
-                        component: ShareHoldersComponent,
-                        canActivate: [LoginGuardService],
+                        path: 'holders-list',
+                        children: [
+                            {
+                                path: 'list',
+                                component: ShareHoldersComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                            {
+                                path: 'funds/:tabid',
+                                component: ShareHoldersComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                            {
+                                path: 'shares/:tabid',
+                                component: ShareHoldersComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                        ],
                     },
                     {
                         path: 'centralization',
