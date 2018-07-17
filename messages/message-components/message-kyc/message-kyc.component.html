@@ -61,5 +61,19 @@
             <p class="padding">{{messageBody.thanks}}</p>
             <p class="padding">{{messageBody.signature}}</p>
         </div>
+
+        <!-- User finished his KYC -->
+        <div *ngSwitchCase="'kycUserFinished'">
+            <p class="padding">{{messageBody.greeting}}</p>
+            <p class="padding">{{messageBody.line1}}</p>
+            <p class="padding">{{messageBody.line2}}</p>
+
+            <button type="button" class="btn btn-primary btn-block" (click)="handleRedirectButtonClick()">
+                {{messageBody.buttonLabel}}
+            </button>
+
+            <p class="padding">{{messageBody.thanks}}</p>
+            <p class="padding">{{messageBody.signature}}</p>
+        </div>
     </div>
 </ng-container>

@@ -122,11 +122,8 @@
             </p>
 
             <p *ngIf="currentMessage.action
-                    && currentMessage.action.type === 'kycApproved'
-                    || currentMessage.action.type === 'kycInvestorYes'
-                    || currentMessage.action.type === 'kycInvestorNo'">
-
-
+                    && ['kycApproved', 'kycInvestorYes', 'kycInvestorNo', 'kycUserFinished'].indexOf(currentMessage.action.type) !== -1"
+            >
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
 
