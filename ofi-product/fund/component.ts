@@ -682,7 +682,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.currDraft = fund.draft;
 
                 this.fundForm.setValue({
-                    ..._.omit(fund, ['draft']),
+                    ..._.omit(fund, ['draft', 'draftUser', 'draftDate']),
                     domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
                     typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
                     UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),

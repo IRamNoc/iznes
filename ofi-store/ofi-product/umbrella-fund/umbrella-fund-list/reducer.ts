@@ -41,6 +41,8 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
             result[item.get('umbrellaFundID')] = {
                 umbrellaFundID: item.get('umbrellaFundID').toString(),
                 draft: item.get('draft'),
+                draftUser: item.get('draftUser'),
+                draftDate: item.get('draftDate'),
                 umbrellaFundName: item.get('umbrellaFundName'),
                 registerOffice: item.get('registerOffice'),
                 registerOfficeAddress: item.get('registerOfficeAddress'),

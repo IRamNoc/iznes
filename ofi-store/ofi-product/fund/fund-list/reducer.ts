@@ -135,11 +135,13 @@ function clearSetIznesFundsRequested(state: FundListState): FundListState {
 
 function handleGetIznesFunds(state: FundListState, action: Action): any {
     const data = _.get(action, 'payload[1].Data', []);
-    
+
     const iznFundList = data.reduce((sum, fund) => {
         const fundData: IznesFundDetail = {
             ..._.omit(fund, ['Status']),
             draft: fund.draft,
+            draftUser: fund.draftUser,
+            draftDate: fund.draftDate,
             isFundStructure: fund.isFundStructure !== null ? fund.isFundStructure.toString() : null,
             homeCountryLegalType: fund.homeCountryLegalType !== null ? fund.homeCountryLegalType.toString() : null,
             isEuDirective: fund.isEuDirective !== null ? fund.isEuDirective.toString() : null,

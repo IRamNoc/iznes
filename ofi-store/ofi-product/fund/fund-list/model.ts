@@ -45,6 +45,8 @@ export interface FundSharesToProcess {
 export interface IznesFundDetail {
     fundName: string;
     draft: string;
+    draftUser?: string,
+    draftDate?: string,
     isFundStructure: string;
     umbrellaFundID: number;
     umbrellaFundName: string;

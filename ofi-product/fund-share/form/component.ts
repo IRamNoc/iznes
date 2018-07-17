@@ -1,4 +1,9 @@
-import { forkJoin as observableForkJoin, Observable, Subscription } from 'rxjs';
+import {
+    forkJoin as observableForkJoin,
+    Observable,
+    Subscription,
+    combineLatest as observableCombineLatest
+} from 'rxjs';
 
 import { take, first } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -32,6 +37,7 @@ import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
+import { FundShareTestData } from './TestData';
 import * as Enum from '../FundShareEnum';
 import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
@@ -60,7 +66,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private panels: { [key: string]: any } = new PanelData();
     private iznShareList;
 
-    currDraft: number = 0;
+    currDraft: number;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
 
@@ -291,8 +297,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     private configureFormForMode(): void {
         if (this.mode === FundShareMode.Update) {
-            this.model.keyFacts.mandatory.fundShareName.disabled = true;
-            this.model.keyFacts.mandatory.isin.disabled = true;
+            if (this.currDraft != 1) {
+                this.model.keyFacts.mandatory.fundShareName.disabled = true;
+                this.model.keyFacts.mandatory.isin.disabled = true;
+            }
         } else {
             this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
 
@@ -402,6 +410,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.fundShareData = fundShare;
 
+        if (this.currDraft == 1) {
+            this.model.keyFacts.mandatory.fundShareName.disabled = false;
+            this.model.keyFacts.mandatory.isin.disabled = false;
+        }
+
         this.changeDetectorRef.detectChanges();
     }
 
@@ -470,7 +483,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
      */
     saveFundShare(): void {
         const request = this.model.getRequest(0);
-
         if (this.mode === FundShareMode.Create || this.currDraft == 1) {
             this.alerts.create('info', `
                 <table class="table grid">

@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 
 import { fromJS } from 'immutable';
 
-import { Subscription } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -20,7 +19,7 @@ import {
     OfiManagementCompanyService,
 } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
-import { Observable } from "rxjs/Observable";
+import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 
 /* Models */
 
@@ -332,10 +331,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         //drafts
         this.subscriptions.push(
-            Observable.combineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(
-                ([fundList, shareList, umbrellaList]) =>
-                    this.getDrafts(fundList, shareList, umbrellaList)
-            )
+            observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
+                this.getDrafts(fundList, shareList, umbrellaList);
+            })
         );
 
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
@@ -371,11 +369,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
-                const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
-                const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
-
                 if (fund.draft == 0) {
+
+                    const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
+                    const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
+                    const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
+
                     fundList.push({
                         fundID: fund.fundID,
                         fundName: fund.fundName,
@@ -413,26 +412,28 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if ((shares !== undefined) && Object.keys(shares).length > 0) {
             Object.keys(shares).map((key) => {
-                const share = shares[key];
-                const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
-                const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
-                    return item.id === share.shareClassInvestmentStatus;
-                }).text;
+                if (shares[key].draft == 0) {
+                    const share = shares[key];
+                    const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
+                    const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
+                        return item.id === share.shareClassInvestmentStatus;
+                    }).text;
 
-                const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
+                    const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
 
-                if (share.draft == 0) {
-                    shareList.push({
-                        fundShareID: share.fundShareID,
-                        shareName: share.fundShareName,
-                        fundName: share.fundName,
-                        isin: share.isin,
-                        managementCompany: share.managementCompanyName,
-                        shareClass: share.shareClassCode,
-                        status,
-                        shareCurrency: (shareCurrency) ? shareCurrency.text : '',
-                        umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
-                    });
+                    if (share.draft == 0) {
+                        shareList.push({
+                            fundShareID: share.fundShareID,
+                            shareName: share.fundShareName,
+                            fundName: share.fundName,
+                            isin: share.isin,
+                            managementCompany: share.managementCompanyName,
+                            shareClass: share.shareClassCode,
+                            status,
+                            shareCurrency: (shareCurrency) ? shareCurrency.text : '',
+                            umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
+                        });
+                    }
                 }
             });
         }
@@ -457,9 +458,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
-
                 if (item.get('draft') == 0) {
+                    const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
+
                     umbrellaFundList.push({
                         umbrellaFundID: item.get('umbrellaFundID', 0),
                         umbrellaFundName: item.get('umbrellaFundName', ''),
@@ -508,9 +509,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
                         draftType: 'Umbrella Fund',
-                        draftName: item.get('umbrellaFundName', '[no name]'),
-                        draftCreated: '[creator goes here]',
-                        draftDate: '[date goes here]'
+                        draftName: item.get('umbrellaFundName', '[unnamed umbrella fund]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
                     });
                 }
             });
@@ -523,9 +524,9 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                     this.draftList.push({
                         draftID: item.get('fundID', 0),
                         draftType: 'Fund',
-                        draftName: item.get('fundName', '[no name]'),
-                        draftCreated: '[creator goes here]',
-                        draftDate: '[date goes here]'
+                        draftName: item.get('fundName', '[unnamed fund]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
                     });
                 }
             });
@@ -536,11 +537,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             data3.map((item) => {
                 if (item.get('draft') == 1) {
                     this.draftList.push({
-                        draftID: item.get('shareID', 0),
-                        draftType: 'Share',
-                        draftName: item.get('fundShareName', '[no name]'),
-                        draftCreated: '[creator goes here]',
-                        draftDate: '[date goes here]'
+                        draftID: item.get('fundShareID', 0),
+                        draftType: 'Fund Share',
+                        draftName: item.get('fundShareName', '[unnamed fund share]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
                     });
                 }
             });
@@ -555,7 +556,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         let temp = {
             'Umbrella Fund': 'umbrella-fund',
             'Fund': 'fund',
-            'Share': 'share',
+            'Fund Share': 'fund-share',
         };
 
         if (btnType == 'edit') {
@@ -569,7 +570,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
                 OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
             }
-            if (dataType == 'Share') {
+            if (dataType == 'Fund Share') {
                 this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
                 OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
             }

@@ -4,17 +4,19 @@ import { FundShareTradeCycleModel } from './trade-cycle/model';
 import * as E from '../FundShareEnum';
 
 export class FundShareTestData {
-    constructor() {}
+    constructor() {
+    }
 
     static generate(model: FundShare) {
         (model.keyFacts.mandatory.couponType.preset as any) = [{ id: E.CouponTypeEnum.Interest, text: 'Interest' }];
         (model.keyFacts.mandatory.freqOfDistributionDeclaration.preset as any) =
             [{ id: E.FrequencyOfDistributionDeclarationEnum.Daily, text: 'Daily' }];
         model.keyFacts.mandatory.fundShareName.preset = `Test Fund Share - ${moment().unix().toString()}`;
+        model.keyFacts.mandatory.iban.preset = `iban${moment().unix().toString()}`;
         model.keyFacts.mandatory.hasCoupon.preset = true;
         (model.keyFacts.mandatory.historicOrForwardPricing.preset as any) =
             [{ id: E.PricingTypeEnum.Historic, text: 'Historic' }];
-        model.keyFacts.mandatory.isin.preset = moment().unix().toString();
+        model.keyFacts.mandatory.isin.preset = `aa${moment().unix().toString()}`;
         model.keyFacts.mandatory.shareLaunchDate.preset = '2018-04-01';
         model.keyFacts.mandatory.shareClassCode.preset = 'Class A';
         (model.keyFacts.mandatory.shareClassCurrency.preset as any) =
@@ -22,6 +24,7 @@ export class FundShareTestData {
         (model.keyFacts.status.shareClassInvestmentStatus.preset as any) =
             [{ id: E.InvestmentStatusEnum.Open, text: 'Open' }];
         (model.keyFacts.mandatory.status.preset as any) = [{ id: E.StatusEnum.NA, text: 'N/A' }];
+        (model.keyFacts.mandatory.sharePortfolioCurrencyHedge.preset as any) = [{ id: 0, text: 'No Hedge' }];
         model.keyFacts.mandatory.subscriptionStartDate.preset = '2018-04-01';
         (model.keyFacts.mandatory.valuationFrequency.preset as any) =
             [{ id: E.ValuationFrequencyEnum.Daily, text: 'Daily' }];
@@ -46,12 +49,15 @@ export class FundShareTestData {
         (model.calendar.mandatory.navPeriodForSubscription.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
         (model.calendar.mandatory.navPeriodForRedemption.preset as any) = [{ id: E.BusinessDaysEnum.Two, text: '2' }];
         model.calendar.mandatory.redemptionCutOffTime.preset = '12:00:00';
-        (model.calendar.mandatory.redemptionCutOffTimeZone.preset as any) = [{ id: E.TimezonesEnum.UTC, text: 'UTC' }];
+        (model.calendar.mandatory.redemptionCutOffTimeZone.preset as any) = [{
+            id: 'Europe/London',
+            text: 'Europe/London'
+        }];
         (model.calendar.mandatory.redemptionSettlementPeriod.preset as any) =
             [{ id: E.BusinessDaysEnum.One, text: '1' }];
         model.calendar.mandatory.subscriptionCutOffTime.preset = '12:00:00';
         (model.calendar.mandatory.subscriptionCutOffTimeZone.preset as any) =
-            [{ id: E.TimezonesEnum.UTC, text: 'UTC' }];
+            [{ id: 'Europe/London', text: 'Europe/London' }];
         // model.calendar.mandatory.subscriptionRedemptionCalendar.preset = 1;
         (model.calendar.mandatory.subscriptionSettlementPeriod.preset as any) =
             [{ id: E.BusinessDaysEnum.One, text: '1' }];

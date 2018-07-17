@@ -112,11 +112,13 @@ function handleClearIznesShareListRequested(state: OfiFundShareListState) {
 function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
     const data = _.get(action, 'payload[1].Data', []);
     let iznShareList = OrderedMap();
-    
+
     data.map((share) => {
         const shareData: IznesShareDetail = {
             fundShareID: share.fundShareID,
             draft: share.draft,
+            draftUser: share.draftUser,
+            draftDate: share.draftDate,
             fundShareName: share.fundShareName,
             fundID: share.fundID,
             isin: share.isin,
