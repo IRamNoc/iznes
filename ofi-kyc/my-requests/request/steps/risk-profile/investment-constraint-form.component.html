@@ -1,0 +1,73 @@
+<div *ngIf="multiple">
+    <div class="row panel-header">
+        <div class="col-sm-12">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>{{amc.companyName}}</h2>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="panel-body constraint pl-1" [class.hidden]="!open" [formGroup]="form">
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="statutoryConstraints-{{index}}">
+                {{'Statutory constraints/special rules concerning eligible assets (specify)' | translate}}:
+            </label>
+            <textarea class="form-control" id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="taxConstraints-{{index}}">
+                {{'Tax constraints (specify tax obligations in terms of investment)' | translate}}:
+            </label>
+            <textarea class="form-control" id="taxConstraints-{{index}}" formControlName="taxConstraints"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <label for="otherConstraints-{{index}}">
+                {{'Others (including SRI, ESG, ...) (specify)' | translate}}:
+            </label>
+            <textarea class="form-control" id="otherConstraints-{{index}}" formControlName="otherConstraints"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-12">
+            <label>
+                {{ 'For your information, are investment decisions validated by an ad hoc committee? (optional)'| translate}}:
+            </label>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="opt-yes-{{index}}" value="yes" formControlName="investmentDecisionsAdHocCommittee">
+                <label for="opt-yes-{{index}}">{{'Yes' | translate}}</label>
+            </div>
+            <div class="radio-inline opt-btn-element">
+                <input type="radio" id="opt-no-{{index}}" value="no" formControlName="investmentDecisionsAdHocCommittee">
+                <label for="opt-no-{{index}}">{{'No' | translate}}</label>
+            </div>
+
+            <textarea class="form-control"
+                      placeholder="{{'Please provide any useful details (name of the committee, composition, frequency, function of the members, etc.)' | translate}}"
+                      *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
+                      id="investmentDecisionsAdHocCommitteeSpecification"
+                      formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group col-sm-6">
+            <p>
+                {{'Other persons authorised to take investment decisions and give instructions' | translate}}
+            </p>
+
+            <textarea class="form-control" id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
+        </div>
+    </div>
+
+</div>

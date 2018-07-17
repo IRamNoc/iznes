@@ -33,6 +33,7 @@ export interface HolderDetailStructure {
     aum: number;
     holderNumber: number;
     ratio: number;
+    lastSettlementDate: string;
     holders: List<ShareHolderItem>;
 }
 
