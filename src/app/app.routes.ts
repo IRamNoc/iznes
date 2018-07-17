@@ -437,9 +437,19 @@ export const ROUTES: Routes = [
                         ],
                     },
                     {
-                        path: 'centralization',
-                        component: CentralizationReportComponent,
-                        canActivate: [LoginGuardService],
+                        path: 'precentralisation',
+                        children: [
+                            {
+                                path: 'funds',
+                                component: CentralizationReportComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                            {
+                                path: 'shares',
+                                component: CentralizationReportComponent,
+                                canActivate: [LoginGuardService],
+                            },
+                        ],
                     },
                     {
                         path: 'select-centralization',
