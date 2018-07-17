@@ -20,7 +20,6 @@ import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
 
 /* Components. */
-import { OfiKycRequestDetailsComponent } from './request-details/component';
 import { OfiInviteInvestorsComponent } from './invite-investors/component';
 import { OfiSignUpComponent } from './signup/component';
 import { OfiDocumentsComponent } from './documents/component';
@@ -38,15 +37,7 @@ import { KycInformationAuditTrailComponent } from './audit-trail/information-aud
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
 
-import { MyRequestsContainerComponent } from './my-requests/my-requests-container.component';
-import { MyRequestsComponent } from './my-requests/list/my-requests.component';
-import { MyRequestComponent } from './my-requests/list/my-request.component';
-import { MyRequestsGridComponent } from './my-requests/list/list-grid.component';
-import { NewKycRequestComponent } from './my-requests/request/new-request.component';
-import { NewKycSelectAmcComponent } from './my-requests/request/steps/select-amc.component';
-import { NewKycIntroductionComponent } from './my-requests/request/steps/introduction.component';
-
-import { RequestsService } from './my-requests/requests.service';
+import {KycRequestsModule} from './my-requests/requests.module'
 
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer';
@@ -66,18 +57,10 @@ import config, { kycEnums } from './config';
         OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
-        OfiKycRequestDetailsComponent,
         TextInputListComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
-        MyRequestsComponent,
-        MyRequestComponent,
-        MyRequestsGridComponent,
-        NewKycRequestComponent,
-        NewKycSelectAmcComponent,
-        NewKycIntroductionComponent,
-        MyRequestsContainerComponent,
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
@@ -92,14 +75,9 @@ import config, { kycEnums } from './config';
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
-        OfiKycRequestDetailsComponent,
         OfiInvMyDocumentsComponent,
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
-        MyRequestsComponent,
-        MyRequestComponent,
-        NewKycRequestComponent,
-        MyRequestsContainerComponent,
         KycAuditTrailComponent,
     ],
     imports: [
@@ -119,9 +97,9 @@ import config, { kycEnums } from './config';
         FileDropModule,
         FileViewerModule,
         DpDatePickerModule,
+        KycRequestsModule
     ],
     providers: [
-        RequestsService,
         MockKYCDocumentsService,
         ToasterService,
         { provide: 'endpoints', useValue: config },

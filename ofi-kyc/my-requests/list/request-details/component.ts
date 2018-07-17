@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Input } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { select, NgRedux } from '@angular-redux/store';
@@ -37,19 +37,19 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
-    selector: 'app-request-details',
+    selector: 'my-requests-details',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OfiKycRequestDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDestroy {
+
+    @Input() kycID : number = 1;
 
     isDebug = true;
     showModal = false;
 
     disabledForm: FormGroup;
-
-    kycID: number = 1; // come from Inputs from Thomas component
 
     companyName: string = '';
     lastUpdate: string = 'YYYY-MM-DD 00:00:00';

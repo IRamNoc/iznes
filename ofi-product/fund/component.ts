@@ -1,9 +1,9 @@
+import { Subject } from 'rxjs/Subject';
 import { takeUntil, take, filter } from 'rxjs/operators';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subject } from 'rxjs';
 
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
@@ -197,8 +197,9 @@ export class FundComponent implements OnInit, OnDestroy {
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
 
-        this.language$.pipe(
-            takeUntil(this.unSubscribe)
+        this.language$
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
         .subscribe((d) => {
             this.language = d.substr(0, 2);
@@ -314,8 +315,10 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaEditForm.addControl('umbrellaFund', this.umbrellaControl);
         this.umbrellaForm.addControl('umbrellaFundID', this.umbrellaControl);
 
-        this.umbrellaControl.valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.umbrellaControl.valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             if (!d.length) {
                 this.selectedUmbrella = null;
@@ -419,8 +422,10 @@ export class FundComponent implements OnInit, OnDestroy {
             return;
         });
 
-        this.fundForm.controls['domicile'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['domicile'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             this.fundForm.controls['transferAgent'].setValue([]);
             this.fundForm.controls['centralizingAgent'].setValue([]);
@@ -436,8 +441,10 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.fundForm.controls['isEuDirective'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['isEuDirective'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             if (d === this.enums.isEuDirective.NO.toString()) {
                 this.fundForm.controls['typeOfEuDirective'].setValue([]);
@@ -448,8 +455,10 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.fundForm.controls['typeOfEuDirective'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['typeOfEuDirective'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
                 this.fundForm.controls['UcitsVersion'].setValue([]);
@@ -460,8 +469,10 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.fundForm.controls['legalForm'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['legalForm'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([]);
             if (!d[0]) {
@@ -474,8 +485,10 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.fundForm.controls['hasCapitalPreservation'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['hasCapitalPreservation'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             if (d === this.enums.hasCapitalPreservation.NO.toString()) {
                 this.fundForm.controls['capitalPreservationLevel'].setValue(null);
@@ -483,23 +496,26 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.fundForm.controls['hasCppi'].valueChanges.pipe(
-            takeUntil(this.unSubscribe))
+        this.fundForm.controls['hasCppi'].valueChanges
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             if (d === this.enums.hasCppi.NO.toString()) {
                 this.fundForm.controls['cppiMultiplier'].setValue(null);
             }
         });
 
-        this.umbrellaFundList$.pipe(
-            takeUntil(this.unSubscribe))
+        this.umbrellaFundList$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             const values = _.values(d);
             if (!values.length) {
                 return [];
             }
-
-            const newItems = values.filter(value => value.draft == 0).map((item) => {
+            const newItems = values.map((item) => {
                 return {
                     id: item.umbrellaFundID,
                     text: item.umbrellaFundName,
@@ -546,8 +562,11 @@ export class FundComponent implements OnInit, OnDestroy {
             });
         });
 
-        this.currencyList$.pipe(
-            takeUntil(this.unSubscribe))
+
+        this.currencyList$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((d) => {
             const data = d.toJS();
 
@@ -651,14 +670,16 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.route.params.pipe(
-            takeUntil(this.unSubscribe))
+        this.route.params
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
         .subscribe((params) => {
-            this.param = params.id;
-
-            if (params.id === 'new') {
+            if (!params.id) {
                 return;
             }
+
+            this.param = params.id;
             if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
                 if (this.fundList[params.id].umbrellaFundID) {
                     this.umbrellaControl.setValue([{
@@ -724,7 +745,7 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaFundList$
         .pipe(
             filter(umbrellas => umbrellas[umbrellaID]),
-            take(1)
+            take(1),
         )
         .subscribe((umbrellas) => {
             this.setCurrentUmbrella(umbrellas[umbrellaID]);
@@ -782,7 +803,7 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
 
-        if (this.param === 'new') {
+        if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
             .then(fund => {
@@ -857,7 +878,7 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
 
-        if (this.param === 'new') {
+        if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
             .then(() => {

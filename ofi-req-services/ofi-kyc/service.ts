@@ -470,7 +470,7 @@ export class OfiKycService {
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
 
         return this.buildRequest({
-            'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            'taskPipe': asyncTaskPipe,
             'successActions': [SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED],
         });
     }

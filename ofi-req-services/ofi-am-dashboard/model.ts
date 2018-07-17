@@ -16,3 +16,7 @@ export interface OfiRequestWalletIdsByAddresses extends OfiMemberNodeBody {
     addresses: Array<string>;
 }
 
+export interface GetFundWithHoldersRequestData {
+    fundId: number;
+    selectedFilter?: number;
+}

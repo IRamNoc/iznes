@@ -371,7 +371,6 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                         redirect: redirect
                     }
                 };
-                console.log('==== extras', extras);
                 this.router.navigate(['consume'], extras);
             } else {
                 this.router.navigateByUrl(redirect);
