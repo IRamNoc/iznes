@@ -19,6 +19,7 @@ import {MultilingualModule} from '@setl/multilingual';
 import {FundHoldingsComponent} from './fund-holdings/component';
 import {MyDashboardComponent} from './my-dashboard/component';
 import {ShareHoldersComponent} from './share-holders/component';
+import {ShareHoldersComponentUnused} from './share-holders-save/component';
 
 /* Graphs. */
 import {ChartsModule} from 'ng2-charts';
@@ -29,11 +30,13 @@ import {ChartsModule} from 'ng2-charts';
         FundHoldingsComponent,
         MyDashboardComponent,
         ShareHoldersComponent,
+        ShareHoldersComponentUnused,
     ],
     exports: [
         FundHoldingsComponent,
         MyDashboardComponent,
         ShareHoldersComponent,
+        ShareHoldersComponentUnused,
     ],
     imports: [
         CommonModule,
