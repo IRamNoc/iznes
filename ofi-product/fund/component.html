@@ -240,13 +240,13 @@
                                             </label>
                                             <div>
                                                 <ng-select
-                                                        id="uf_investmentAdvisor"
-                                                        [items]="investmentAdvisorItems"
-                                                        [allowClear]="true"
-                                                        [multiple]="true"
-                                                        [disabled]="umbrellaEditForm.controls['investmentAdvisorID'].disabled"
-                                                        [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
+                                                    id="uf_investmentAdvisor"
+                                                    [items]="investmentAdvisorItems"
+                                                    [allowClear]="true"
+                                                    [multiple]="true"
+                                                    [disabled]="umbrellaEditForm.controls['investmentAdvisorID'].disabled"
+                                                    [placeholder]="_translate.translate('Select')"
+                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -256,13 +256,13 @@
                                             </label>
                                             <div>
                                                 <ng-select
-                                                        id="uf_payingAgent"
-                                                        [items]="payingAgentItems"
-                                                        [allowClear]="true"
-                                                        [multiple]="true"
-                                                        [disabled]="umbrellaEditForm.controls['payingAgentID']"
-                                                        [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="umbrellaEditForm.controls['payingAgentID']">
+                                                    id="uf_payingAgent"
+                                                    [items]="payingAgentItems"
+                                                    [allowClear]="true"
+                                                    [multiple]="true"
+                                                    [disabled]="umbrellaEditForm.controls['payingAgentID']"
+                                                    [placeholder]="_translate.translate('Select')"
+                                                    [formControl]="umbrellaEditForm.controls['payingAgentID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -343,13 +343,13 @@
                                             </label>
                                             <div>
                                                 <ng-select
-                                                        id="uf_principalPromoter"
-                                                        [items]="principalPromoterItems"
-                                                        [allowClear]="true"
-                                                        [multiple]="true"
-                                                        [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
-                                                        [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="umbrellaEditForm.controls['principlePromoterID']">
+                                                    id="uf_principalPromoter"
+                                                    [items]="principalPromoterItems"
+                                                    [allowClear]="true"
+                                                    [multiple]="true"
+                                                    [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
+                                                    [placeholder]="_translate.translate('Select')"
+                                                    [formControl]="umbrellaEditForm.controls['principlePromoterID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -1045,11 +1045,19 @@
 
                 <div class="form-group col-sm-6">
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel' | translate}}</button>
+
+                    <button *ngIf="currDraft == 1 || !param"
+                            id="fund-savedraftfund-btn"
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="saveDraft()">
+                        <i class="fa fa-save"></i> {{(!param ? 'Save Draft' : 'Update Draft') | translate}}
+                    </button>
+
                     <button id="fund-submitfund-btn" type="submit" class="btn btn-primary" [disabled]="!fundForm.valid">
-                        <i class="fa fa-save"></i> {{!param ? 'Save' : 'Update'}}
+                        <i class="fa fa-save"></i> {{!param || currDraft == 1 ? 'Save' : 'Update'}}
                     </button>
                 </div>
-
             </form>
         </clr-tab-content>
     </clr-tab>

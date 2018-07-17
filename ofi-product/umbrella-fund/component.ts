@@ -18,6 +18,8 @@ import { Subject } from 'rxjs/Subject';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { takeUntil } from 'rxjs/operators';
 
+import { Subscription } from 'rxjs';
+
 /* Services */
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 import {
@@ -94,6 +96,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         fromShare?: boolean,
     } = {};
 
+
+    currDraft: number = 0;
+
+    /* Private properties. */
+    subscriptionsArray: Array<Subscription> = [];
+
     unSubscribe: Subject<any> = new Subject();
 
     /* Redux observables. */
@@ -147,15 +155,15 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // param url
         this._activatedRoute.params
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((params) => {
-                if (params['id']) {
-                    this.umbrellaFundID = params['id'];
-                    this.isEditMode = true;
-                }
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((params) => {
+            if (params['id']) {
+                this.umbrellaFundID = params['id'];
+                this.isEditMode = true;
+            }
+        });
 
         this.umbrellaFundForm = this._fb.group({
             umbrellaFundID: [
@@ -262,40 +270,40 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         this.umbrellaFundForm.controls['domicile'].valueChanges
-            .takeUntil(this.unSubscribe)
-            .subscribe(() => {
-                this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
-                this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe(() => {
+            this.umbrellaFundForm.controls['transferAgentID'].setValue([]);
+            this.umbrellaFundForm.controls['centralisingAgentID'].setValue([]);
+        });
 
         this.umbrellaFundForm.controls['umbrellaFundName'].valueChanges
-            .takeUntil(this.unSubscribe)
-            .subscribe((name) => {
-                const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
-                if (registerOffice.dirty || this.isEditMode) {
-                    return;
-                }
-                this.umbrellaFundForm.controls['registerOffice'].setValue(name);
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((name) => {
+            const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
+            if (registerOffice.dirty || this.isEditMode) {
+                return;
+            }
+            this.umbrellaFundForm.controls['registerOffice'].setValue(name);
+        });
 
         // language
         this.requestLanguageObj
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(d => this.getLanguage(d));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(d => this.getLanguage(d));
 
         this.requestedOfiUmbrellaFundListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(requested => this.getUmbrellaFundRequested(requested));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(requested => this.getUmbrellaFundRequested(requested));
 
         this.requestedOfiManagementCompanyListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(requested => this.getManagementCompanyRequested(requested));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(requested => this.getManagementCompanyRequested(requested));
 
         combineLatest(
             this.umbrellaFundAccessListOb,
@@ -303,57 +311,57 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this._activatedRoute.queryParams,
             this._activatedRoute.params,
         )
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(([a, b, queryParams, params]) => {
-                if (!Object.keys(a) || !Object.keys(b)) {
-                    return;
-                }
-                this.getManagementCompanyList(b);
-                this.getUmbrellaFundList(a);
-                if (queryParams.prefill) {
-                    this.umbrellaControl.setValue(
-                        UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
-                    );
-                }
-                if (
-                    this.managementCompanyList.length > 0
-                    && this.managementCompanyList
-                    && this.umbrellaFundID || queryParams.prefill
-                ) {
-                    this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
-                    this._changeDetectorRef.markForCheck();
-                }
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(([a, b, queryParams, params]) => {
+            if (!Object.keys(a) || !Object.keys(b)) {
+                return;
+            }
+            this.getManagementCompanyList(b);
+            this.getUmbrellaFundList(a);
+            if (queryParams.prefill) {
+                this.umbrellaControl.setValue(
+                    UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
+                );
+            }
+            if (
+                this.managementCompanyList.length > 0
+                && this.managementCompanyList
+                && this.umbrellaFundID || queryParams.prefill
+            ) {
+                this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
+                this._changeDetectorRef.markForCheck();
+            }
+        });
 
         this.umbrellaControl.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((item) => {
-                if (!item.length) {
-                    this.umbrellaFundForm.reset();
-                    return;
-                }
-                this.fillFormByUmbrellaID(item[0].id);
-                this._changeDetectorRef.markForCheck();
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((item) => {
+            if (!item.length) {
+                this.umbrellaFundForm.reset();
+                return;
+            }
+            this.fillFormByUmbrellaID(item[0].id);
+            this._changeDetectorRef.markForCheck();
+        });
     }
 
     ngOnInit() {
         this._activatedRoute.queryParams
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((params) => {
-                if (params.fromFund) {
-                    this.currentRoute.fromFund = true;
-                }
-                if (params.fromShare) {
-                    this.currentRoute.fromShare = true;
-                }
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((params) => {
+            if (params.fromFund) {
+                this.currentRoute.fromFund = true;
+            }
+            if (params.fromShare) {
+                this.currentRoute.fromShare = true;
+            }
+        });
     }
 
     ngAfterViewInit() {
@@ -441,6 +449,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             return {
                 // required on save
                 umbrellaFundID: u.umbrellaFundID,
+                draft: u.draft,
                 umbrellaFundName: u.umbrellaFundName,
                 legalEntityIdentifier: u.legalEntityIdentifier,
                 registerOffice: u.registerOffice,
@@ -511,15 +520,18 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fillFormByUmbrellaID(umbrellaID: string) {
         const requestedUmbrella = this.umbrellaFundList
-            .filter(item => item.umbrellaFundID === umbrellaID);
+        .filter(item => item.umbrellaFundID === umbrellaID);
 
         const u = requestedUmbrella[0];
 
         const payload = {
-            ...u,
+            ..._.omit(u, ['draft', 'draftUser', 'draftDate']),
             umbrellaFundID: this.isEditMode ? umbrellaID : '',
             umbrellaFundName: this.isEditMode ? u.umbrellaFundName : '',
         };
+
+        this.currDraft = u.draft;
+
         this.toggleLeiSwitch(!!u.legalEntityIdentifier);
         this.umbrellaFundForm.setValue(payload);
     }
@@ -534,6 +546,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     save(formValues) {
         const payload: UmbrellaFundDetail = {
+            draft: 0,
             umbrellaFundName: formValues.umbrellaFundName,
             registerOffice: formValues.registerOffice,
             registerOfficeAddress: formValues.registerOfficeAddress,
@@ -572,8 +585,23 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 (data) => {
                     // this.logService.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                    this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
-                    this._router.navigateByUrl('/product-module/product');
+                    if (this.currDraft == 1) {
+                        let umbrellaFundID = _.get(data, ['1', 'Data', '0', 'umbrellaFundID']);
+                        let umbrellaFundName = _.get(data, ['1', 'Data', '0', 'umbrellaFundName']);
+
+                        if (!_.isUndefined(umbrellaFundID)) {
+                            if (this.currentRoute.fromFund) {
+                                this.redirectToFund(umbrellaFundID);
+                            } else {
+                                this.displayFundPopup(umbrellaFundName, umbrellaFundID);
+                            }
+                        } else {
+                            this.creationSuccess(umbrellaFundName);
+                        }
+                    } else {
+                        this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
+                        this._router.navigateByUrl('/product-module/product');
+                    }
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
@@ -620,6 +648,79 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                         userErrMsg = 'Umbrella fund is already exist.';
                     }
                     this._toasterService.pop('error', userErrMsg);
+                    this._changeDetectorRef.markForCheck();
+                })
+            );
+        }
+    }
+
+    saveDraft(formValues) {
+        const payload: UmbrellaFundDetail = {
+            draft: 1,
+            umbrellaFundName: formValues.umbrellaFundName,
+            registerOffice: formValues.registerOffice,
+            registerOfficeAddress: formValues.registerOfficeAddress,
+            legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
+            domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
+            umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
+            managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
+            fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
+            custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
+            investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
+            payingAgentID: this.getIdsFromList(formValues.payingAgentID),
+            transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
+            centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
+            giin: formValues.giin || null,
+            delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : null,
+            auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : null,
+            taxAuditorID: (formValues.taxAuditorID.length > 0) ? formValues.taxAuditorID[0].id : null,
+            principlePromoterID: this.getIdsFromList(formValues.principlePromoterID),
+            legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
+            directors: formValues.directors,
+            internalReference: formValues.internalReference,
+            additionnalNotes: formValues.additionnalNotes,
+        };
+
+        if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
+            // UPDATE
+            const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
+                {
+                    ...payload,
+                    umbrellaFundID: formValues.umbrellaFundID,
+                },
+                this.ngRedux);
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    // this.logService.log('save success new fund', data); // success
+                    OfiUmbrellaFundService.setRequested(false, this.ngRedux);
+                    this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully updated!');
+                    this._location.back();
+                },
+                (data) => {
+                    this.logService.log('Error: ', data);
+                    const errMsg = _.get(data, '[1].Data[0].Message', '');
+                    this._toasterService.pop('error', 'Failed to update the draft umbrella fund. ' + errMsg);
+                    this._changeDetectorRef.markForCheck();
+                })
+            );
+        } else {
+            // INSERT
+            const asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
+                payload,
+                this.ngRedux);
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    OfiUmbrellaFundService.setRequested(false, this.ngRedux);
+                    this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully saved!');
+                    this._location.back();
+                },
+                (data) => {
+                    this.logService.log('Error: ', data);
+                    this._toasterService.pop('error', 'Failed to create the draft umbrella fund.');
                     this._changeDetectorRef.markForCheck();
                 })
             );
@@ -704,14 +805,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+        .replace('DD', this.numPad(dateObj.getDate().toString()))
+        .replace('hh', this.numPad(dateObj.getHours()))
+        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+        .replace('mm', this.numPad(dateObj.getMinutes()))
+        .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     /**

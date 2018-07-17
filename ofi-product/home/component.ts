@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 
 import { fromJS } from 'immutable';
 
-import { Subscription } from 'rxjs';
 import { NgRedux, select } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -20,6 +19,7 @@ import {
     OfiManagementCompanyService,
 } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
+import { Observable, Subscription, combineLatest as observableCombineLatest } from 'rxjs';
 
 /* Models */
 
@@ -38,6 +38,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
     umbrellaFundList = [];
     filteredShareList = [];
     managementCompanyAccessList = [];
+    draftList = [];
     showOnlyActive = true;
 
     fundCurrencyItems = [];
@@ -145,6 +146,26 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             dataSource: 'modifiedBy',
             sortable: true,
         },
+        draftType: {
+            label: 'Type',
+            dataSource: 'draftType',
+            sortable: true,
+        },
+        draftName: {
+            label: 'Name',
+            dataSource: 'draftName',
+            sortable: true,
+        },
+        draftCreated: {
+            label: 'Created By',
+            dataSource: 'draftCreated',
+            sortable: true,
+        },
+        draftDate: {
+            label: 'Created Date',
+            dataSource: 'draftDate',
+            sortable: true,
+        },
     };
     panelDefs = [
         {
@@ -217,6 +238,31 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             count: this.filteredShareList.length,
             columnLink: 'shareName',
         },
+        {
+            title: 'Drafts',
+            columns: [
+                this.columns['draftType'],
+                this.columns['draftName'],
+                this.columns['draftCreated'],
+                this.columns['draftDate']
+            ],
+            open: true,
+            data: this.draftList,
+            count: this.draftList.length,
+            columnLink: '',
+            buttons: [
+                {
+                    text: 'Edit Draft',
+                    class: 'btn btn-sm btn-margin',
+                    click: 'edit',
+                },
+                {
+                    text: 'Delete Draft',
+                    class: 'btn btn-sm btn-warning',
+                    click: 'delete',
+                },
+            ],
+        },
     ];
 
     /* Private properties. */
@@ -283,6 +329,13 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         .subscribe((requested: any) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
 
+        //drafts
+        this.subscriptions.push(
+            observableCombineLatest(this.fundListObs, this.shareListObs, this.umbrellaFundAccessListOb).subscribe(([fundList, shareList, umbrellaList]) => {
+                this.getDrafts(fundList, shareList, umbrellaList);
+            })
+        );
+
         OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
         OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
         OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
@@ -316,24 +369,28 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         const fundList = [];
         if (_.values(funds).length > 0) {
             _.values(funds).map((fund) => {
-                const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
-                const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
-                const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
+                if (fund.draft == 0) {
 
-                fundList.push({
-                    fundID: fund.fundID,
-                    fundName: fund.fundName,
-                    legalEntityIdentifier: fund.legalEntityIdentifier || 'N/A',
-                    managementCompany: _.get(
-                        this.managementCompanyAccessList,
-                        [fund.managementCompanyID, 'companyName'],
-                        '',
-                    ),
-                    domicile: domicile.text,
-                    lawStatus: lawStatus.text,
-                    umbrellaFundName: fund.umbrellaFundName,
-                    fundCurrency: (fundCurrency) ? fundCurrency.text : '',
-                });
+                    const domicile = _.find(this.countryItems, { id: fund.domicile }) || { text: '' };
+                    const lawStatus = _.find(this.legalFormItems, { id: fund.legalForm }) || { text: '' };
+                    const fundCurrency = this.fundCurrencyItems.find(p => p.id === Number(fund.fundCurrency));
+
+                    fundList.push({
+                        fundID: fund.fundID,
+                        fundName: fund.fundName,
+                        legalEntityIdentifier: fund.legalEntityIdentifier || 'N/A',
+                        managementCompany: _.get(
+                            this.managementCompanyAccessList,
+                            [fund.managementCompanyID, 'companyName'],
+                            '',
+                        ),
+                        domicile: domicile.text,
+                        lawStatus: lawStatus.text,
+                        umbrellaFundName: fund.umbrellaFundName,
+                        fundCurrency: (fundCurrency) ? fundCurrency.text : '',
+                    });
+                }
+
             });
 
         }
@@ -355,25 +412,29 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if ((shares !== undefined) && Object.keys(shares).length > 0) {
             Object.keys(shares).map((key) => {
-                const share = shares[key];
-                const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
-                const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
-                    return item.id === share.shareClassInvestmentStatus;
-                }).text;
+                if (shares[key].draft == 0) {
+                    const share = shares[key];
+                    const keyFactsStatus = new FundShareModels.ShareKeyFactsStatus();
+                    const status = _.find(keyFactsStatus.shareClassInvestmentStatus.listItems, (item) => {
+                        return item.id === share.shareClassInvestmentStatus;
+                    }).text;
 
-                const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
+                    const shareCurrency = this.fundCurrencyItems.find(p => p.id === share.shareClassCurrency);
 
-                shareList.push({
-                    fundShareID: share.fundShareID,
-                    shareName: share.fundShareName,
-                    fundName: share.fundName,
-                    isin: share.isin,
-                    managementCompany: share.managementCompanyName,
-                    shareClass: share.shareClassCode,
-                    status,
-                    shareCurrency: (shareCurrency) ? shareCurrency.text : '',
-                    umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
-                });
+                    if (share.draft == 0) {
+                        shareList.push({
+                            fundShareID: share.fundShareID,
+                            shareName: share.fundShareName,
+                            fundName: share.fundName,
+                            isin: share.isin,
+                            managementCompany: share.managementCompanyName,
+                            shareClass: share.shareClassCode,
+                            status,
+                            shareCurrency: (shareCurrency) ? shareCurrency.text : '',
+                            umbrellaFundName: this.getUmbrellaFundName(share.umbrellaFundID),
+                        });
+                    }
+                }
             });
         }
 
@@ -397,36 +458,38 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
         if (data.length > 0) {
             data.map((item) => {
-                const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
+                if (item.get('draft') == 0) {
+                    const domicile = _.find(this.countryItems, { id: item.get('domicile') }) || { text: '' };
 
-                umbrellaFundList.push({
-                    umbrellaFundID: item.get('umbrellaFundID', 0),
-                    umbrellaFundName: item.get('umbrellaFundName', ''),
-                    registerOffice: item.get('registerOffice', ''),
-                    registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                    legalEntityIdentifier: item.get('legalEntityIdentifier', 0) || 'N/A',
-                    domicile: domicile.text,
-                    umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
-                    managementCompany: _.get(
-                        this.managementCompanyAccessList,
-                        [item.get('managementCompanyID', 0), 'companyName'],
-                        '',
-                    ),
-                    fundAdministratorID: item.get('fundAdministratorID', 0),
-                    custodianBankID: item.get('custodianBankID', 0),
-                    investmentManagerID: item.get('investmentManagerID', 0),
-                    investmentAdvisorID: item.get('investmentAdvisorID', 0),
-                    payingAgentID: item.get('payingAgentID', 0),
-                    transferAgentID: item.get('transferAgentID', 0),
-                    centralisingAgentID: item.get('centralisingAgentID', 0),
-                    giin: item.get('giin', 0),
-                    delegateManagementCompanyID: item.get('delegateManagementCompanyID', 0),
-                    auditorID: item.get('auditorID', 0),
-                    taxAuditorID: item.get('taxAuditorID', 0),
-                    principlePromoterID: item.get('principlePromoterID', 0),
-                    legalAdvisorID: item.get('legalAdvisorID', 0),
-                    directors: item.get('directors', ''),
-                });
+                    umbrellaFundList.push({
+                        umbrellaFundID: item.get('umbrellaFundID', 0),
+                        umbrellaFundName: item.get('umbrellaFundName', ''),
+                        registerOffice: item.get('registerOffice', ''),
+                        registerOfficeAddress: item.get('registerOfficeAddress', ''),
+                        legalEntityIdentifier: item.get('legalEntityIdentifier', 0) || 'N/A',
+                        domicile: domicile.text,
+                        umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
+                        managementCompany: _.get(
+                            this.managementCompanyAccessList,
+                            [item.get('managementCompanyID', 0), 'companyName'],
+                            '',
+                        ),
+                        fundAdministratorID: item.get('fundAdministratorID', 0),
+                        custodianBankID: item.get('custodianBankID', 0),
+                        investmentManagerID: item.get('investmentManagerID', 0),
+                        investmentAdvisorID: item.get('investmentAdvisorID', 0),
+                        payingAgentID: item.get('payingAgentID', 0),
+                        transferAgentID: item.get('transferAgentID', 0),
+                        centralisingAgentID: item.get('centralisingAgentID', 0),
+                        giin: item.get('giin', 0),
+                        delegateManagementCompanyID: item.get('delegateManagementCompanyID', 0),
+                        auditorID: item.get('auditorID', 0),
+                        taxAuditorID: item.get('taxAuditorID', 0),
+                        principlePromoterID: item.get('principlePromoterID', 0),
+                        legalAdvisorID: item.get('legalAdvisorID', 0),
+                        directors: item.get('directors', ''),
+                    });
+                }
             });
         }
 
@@ -434,6 +497,84 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.panelDefs[0].data = this.umbrellaFundList;
         this.panelDefs[0].count = this.umbrellaFundList.length;
         this._changeDetectorRef.markForCheck();
+    }
+
+    getDrafts(fundList, shareList, umbrellaList) {
+        this.draftList = [];
+
+        let data1 = fromJS(umbrellaList).toArray();
+        if (data1.length > 0) {
+            data1.map((item) => {
+                if (item.get('draft') == 1) {
+                    this.draftList.push({
+                        draftID: item.get('umbrellaFundID', 0),
+                        draftType: 'Umbrella Fund',
+                        draftName: item.get('umbrellaFundName', '[unnamed umbrella fund]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
+                    });
+                }
+            });
+        }
+
+        let data2 = fromJS(fundList).toArray();
+        if (data2.length > 0) {
+            data2.map((item) => {
+                if (item.get('draft') == 1) {
+                    this.draftList.push({
+                        draftID: item.get('fundID', 0),
+                        draftType: 'Fund',
+                        draftName: item.get('fundName', '[unnamed fund]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
+                    });
+                }
+            });
+        }
+
+        let data3 = fromJS(shareList).toArray();
+        if (data3.length > 0) {
+            data3.map((item) => {
+                if (item.get('draft') == 1) {
+                    this.draftList.push({
+                        draftID: item.get('fundShareID', 0),
+                        draftType: 'Fund Share',
+                        draftName: item.get('fundShareName', '[unnamed fund share]'),
+                        draftCreated: item.get('draftUser', ''),
+                        draftDate: item.get('draftDate', '')
+                    });
+                }
+            });
+        }
+
+        this.panelDefs[3].data = this.draftList;
+        this.panelDefs[3].count = this.draftList.length;
+        this._changeDetectorRef.markForCheck();
+    }
+
+    varBtn(btnType, dataType, id) {
+        let temp = {
+            'Umbrella Fund': 'umbrella-fund',
+            'Fund': 'fund',
+            'Fund Share': 'fund-share',
+        };
+
+        if (btnType == 'edit') {
+            this._router.navigateByUrl('/product-module/product/' + temp[dataType] + '/' + id);
+        } else if (btnType == 'delete') {
+            if (dataType == 'Umbrella Fund') {
+                this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
+                OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+            }
+            if (dataType == 'Fund') {
+                this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
+                OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+            }
+            if (dataType == 'Fund Share') {
+                this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
+                OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
+            }
+        }
     }
 
     getCurrencyList(data) {
@@ -444,12 +585,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     handleShareToggleClick() {
         this.showOnlyActive = !this.showOnlyActive;
-
-        // console.log(this.showOnlyActive);
-        // console.log(this.shareList);
-        // console.log(this.filteredShareList);
-
-
         this.filteredShareList = this.shareList.filter((share) => {
             return (this.showOnlyActive) ? share.status !== 'Closed for subscription and redemption' : share.status;
         });
