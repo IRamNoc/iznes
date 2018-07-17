@@ -16,12 +16,30 @@
         </button>
 
         <clr-tab-content>
-            <p *ngIf="isEditMode && umbrellaFund" class="text-overflow">{{'Please find below all the information for the umbrella fund @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}
+            <!-- Button container -->
+            <div class="row tab-header-container">
+                <p *ngIf="isEditMode" class="text-overflow">
+                    {{'Please find below all the information for the umbrella fund @umbrellaFundForm.controls.umbrellaFundName.value@' | translate: {'umbrellaFundForm.controls.umbrellaFundName.value': umbrellaFundForm.controls.umbrellaFundName.value} }}
+                </p>
+                <p id="new-fund-text-span" *ngIf="!isEditMode">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
 
-            </p>
-            <p id="new-fund-text-span" *ngIf="!isEditMode">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
+                </p>
+                <div class="form-group">
+                    <button *ngIf="isEditMode" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
+                        {{'Duplicate Umbrella' | translate}}
+                    </button>
+                    <ng-select
+                        *ngIf="!isEditMode"
+                        id="umbrella_select"
+                        [items]="umbrellaListItems"
+                        [allowClear]="true"
+                        [placeholder]="_translate.translate('Duplicate from an existing Umbrella Fund')"
+                        [formControl]="umbrellaControl"
+                    >
+                    </ng-select>
+                </div>
+            </div>
 
-            </p>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
                 <section class="form-block">
                     <div class="well">
@@ -49,7 +67,7 @@
                                 <label for="uf_lei" class="control-label">{{'Legal Entity Identifier (LEI)' | translate}}</label>
                                 <div class="lei">
                                     <label class="switch">
-                                        <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}" (click)="onClickLeiSwitch()">
+                                        <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}" (click)="toggleLeiSwitch(!isLeiVisible)">
                                         <span class="slider round"></span>
                                     </label>
                                     <div *ngIf="isLeiVisible">

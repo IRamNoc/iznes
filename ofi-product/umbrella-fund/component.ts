@@ -8,7 +8,7 @@ import {
     AfterViewInit,
     Inject,
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -48,6 +48,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     /* Public properties. */
     umbrellaFundForm: FormGroup;
     umbrellaFundList = [];
+    umbrellaListItems = [];
+    umbrellaControl = new FormControl([]);
     managementCompanyList = [];
 
     umbrellaFund: any;
@@ -278,15 +280,21 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // language
         this.requestLanguageObj
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe(d => this.getLanguage(d));
 
         this.requestedOfiUmbrellaFundListOb
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe(requested => this.getUmbrellaFundRequested(requested));
 
         this.requestedOfiManagementCompanyListOb
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe(requested => this.getManagementCompanyRequested(requested));
 
         combineLatest(
@@ -295,34 +303,57 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             this._activatedRoute.queryParams,
             this._activatedRoute.params,
         )
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
             .subscribe(([a, b, queryParams, params]) => {
                 if (!Object.keys(a) || !Object.keys(b)) {
                     return;
                 }
                 this.getManagementCompanyList(b);
                 this.getUmbrellaFundList(a);
+                if (queryParams.prefill) {
+                    this.umbrellaControl.setValue(
+                        UmbrellaFundComponent.getListItem(queryParams.prefill, this.umbrellaListItems),
+                    );
+                }
                 if (
                     this.managementCompanyList.length > 0
                     && this.managementCompanyList
-                    && (this.umbrellaFundID || queryParams.prefill)
+                    && this.umbrellaFundID || queryParams.prefill
                 ) {
                     this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
                     this._changeDetectorRef.markForCheck();
                 }
             });
+
+        this.umbrellaControl.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item.length) {
+                    this.umbrellaFundForm.reset();
+                    return;
+                }
+                this.fillFormByUmbrellaID(item[0].id);
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     ngOnInit() {
-        this._activatedRoute.queryParams.subscribe((params) => {
-            if (params.fromFund) {
-                this.currentRoute.fromFund = true;
-            }
-            if (params.fromShare) {
-                this.currentRoute.fromShare = true;
-            }
-        });
-
+        this._activatedRoute.queryParams
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((params) => {
+                if (params.fromFund) {
+                    this.currentRoute.fromFund = true;
+                }
+                if (params.fromShare) {
+                    this.currentRoute.fromShare = true;
+                }
+            });
     }
 
     ngAfterViewInit() {
@@ -393,8 +424,16 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     getUmbrellaFundList(list) {
         if (!Object.keys(list).length) {
             this.umbrellaFundList = [];
+            this.umbrellaListItems = [];
             return;
         }
+
+        this.umbrellaListItems = Object.keys(list).map((key) => {
+            return {
+                id: key,
+                text: list[key].umbrellaFundName,
+            };
+        });
 
         this.umbrellaFundList = Object.keys(list).map((key) => {
             const u = list[key];
@@ -471,7 +510,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     fillFormByUmbrellaID(umbrellaID: string) {
-
         const requestedUmbrella = this.umbrellaFundList
             .filter(item => item.umbrellaFundID === umbrellaID);
 
@@ -482,15 +520,12 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             umbrellaFundID: this.isEditMode ? umbrellaID : '',
             umbrellaFundName: this.isEditMode ? u.umbrellaFundName : '',
         };
-        if (u.legalEntityIdentifier) {
-            this.isLeiVisible = true;
-            this.umbrellaFundForm.controls['legalEntityIdentifier'].enable();
-            this.umbrellaFundForm.controls['legalEntityIdentifier'].setValidators(Validators.compose([
-                Validators.required,
-                validators.lei,
-            ]));
-        }
+        this.toggleLeiSwitch(!!u.legalEntityIdentifier);
         this.umbrellaFundForm.setValue(payload);
+    }
+
+    duplicate(umbrellaID: string) {
+        this._router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
     }
 
     cancel() {
@@ -538,7 +573,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.logService.log('save success new fund', data); // success
                     OfiUmbrellaFundService.setRequested(false, this.ngRedux);
                     this._toasterService.pop('success', formValues.umbrellaFundName + ' has been successfully updated!');
-                    this._location.back();
+                    this._router.navigateByUrl('/product-module/product');
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
@@ -608,8 +643,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['/product-module/product/fund/new'], extras);
     }
 
-    onClickLeiSwitch() {
-        if (this.isLeiVisible) {
+    toggleLeiSwitch(toggle?: boolean) {
+        if (!toggle) {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
             this.umbrellaFundForm.controls['legalEntityIdentifier'].clearValidators();
         } else {
@@ -619,7 +654,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 validators.lei,
             ]));
         }
-        this.isLeiVisible = !this.isLeiVisible;
+        this.isLeiVisible = toggle;
     }
 
     displayFundPopup(umbrellaFundName, umbrellaFundID) {
@@ -640,7 +675,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     creationSuccess(umbrellaFundName) {
         this._toasterService.pop('success', `${umbrellaFundName} has been successfully created!`);
-        this._location.back();
+        this._router.navigateByUrl('/product-module/product');
     }
 
     confirmModal(response) {
