@@ -25,12 +25,14 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
-    selector: 'am-share-holders',
+    // rename to a random name at the moment, as it is conflict with the one at ../share-holders
+    // need to remove once confirm it is not used.
+    selector: 'am-share-holders-unused',
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ShareHoldersComponent implements OnInit, OnDestroy {
+export class ShareHoldersComponentUnused implements OnInit, OnDestroy {
     searchListForm: FormGroup;
     searchInShareForm: FormGroup;
 
