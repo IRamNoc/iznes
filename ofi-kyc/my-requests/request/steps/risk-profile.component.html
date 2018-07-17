@@ -1,0 +1,8 @@
+<h3 class="text-center mb-1">
+    {{'RISK PROFILE DEFINITION' | translate}}
+</h3>
+<form [formGroup]="form" id="step-risk-profile" (ngSubmit)="handleSubmit($event)">
+    <investment-nature [form]="form.get('investmentNature')"></investment-nature>
+    <investment-objective [form]="form.get('investmentObjective')"></investment-objective>
+    <investment-constraint [form]="form.get('investmentConstraint')"></investment-constraint>
+</form>

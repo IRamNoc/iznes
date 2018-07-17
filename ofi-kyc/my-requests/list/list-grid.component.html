@@ -21,8 +21,13 @@
                     {{'View' | translate}}
                 </button>
             </div>
-            <div *ngIf="buttonToDisplay(kyc.status) === 'complete'">
-                <button class="btn btn-orange btn-sm">
+            <div *ngIf="buttonToDisplay(kyc.status) === 'waitingInformation'">
+                <button class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
+                    {{'To complete' | translate}}
+                </button>
+            </div>
+            <div *ngIf="buttonToDisplay(kyc.status) === 'draft'">
+                <button class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
                     {{'To complete' | translate}}
                 </button>
             </div>

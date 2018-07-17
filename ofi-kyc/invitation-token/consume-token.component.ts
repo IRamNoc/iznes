@@ -2,7 +2,13 @@ import {Component, OnInit} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 import {get as getValue, castArray} from 'lodash';
+import {NgRedux} from '@angular-redux/store';
 
+import {
+    ChainService,
+    MyWalletsService,
+    InitialisationService
+} from '@setl/core-req-services';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 @Component({
@@ -17,7 +23,10 @@ export class OfiConsumeTokenComponent implements OnInit {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private location: Location,
-        private ofiKycService: OfiKycService
+        private ofiKycService: OfiKycService,
+        private chainService : ChainService,
+        private myWalletsService : MyWalletsService,
+        private ngRedux : NgRedux<any>
     ) {
     }
 
@@ -44,6 +53,10 @@ export class OfiConsumeTokenComponent implements OnInit {
     async useInvitationToken(token) {
         return this.ofiKycService.useInvitationToken(token).then(response => {
             this.amcID = getValue(response, [1, 'Data', 0, 'amcID']);
+
+            // If it was the first signup, we also have granted chain access to the user
+            InitialisationService.requestMyOwnWallets(this.ngRedux, this.myWalletsService);
+            InitialisationService.requestMyChainAccess(this.ngRedux, this.chainService);
         });
     }
 

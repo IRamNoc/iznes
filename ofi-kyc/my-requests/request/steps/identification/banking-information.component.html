@@ -1,0 +1,74 @@
+<div [formGroup]="form" class="well">
+    <div class="row panel-header">
+        <div class="col-sm-9">
+            <a href="#" (click)="open = !open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="open"></i>
+                <h2>Banking information</h2>
+            </a>
+        </div>
+        <div class="col-sm-3 text-right">
+            <div class="pgContainer" [formpercent]="{form: form, animated : false, stripes: false}"></div>
+        </div>
+    </div>
+
+    <div class="row panel-body" [class.hidden]="!open">
+
+        <div class="col-xs-12">
+            <div class="row">
+                <div class="form-group required-field col-xs-6">
+                    <label for="custodianHolderAccount" class="control-label">{{'Custodian holder account'}}</label>
+                    <ng-select id="custodianHolderAccount" [items]="custodianHolderAccountList" [formControl]="form.get('custodianHolderAccount')"></ng-select>
+                </div>
+            </div>
+            <div class="holders" *ngIf="!isDisabled('custodianHolderCustom')">
+
+
+                <div class="holder my-1 pl-1" *ngFor="let holder of holders; let i = index" [formGroup]="holder">
+                    <a *ngIf="i > 0" class="close text-warning" (click)="removeHolder(i)"><i class="fa fa-times-circle"></i></a>
+
+                    <div class="row">
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianName" placeholder="{{'Please fill in the custodian\'s name'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianName'])">{{'Field is required' | translate}}</span>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianIban" placeholder="{{'Please fill in the custodian\'s IBAN'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'])">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+                    <p>
+                        {{'Please fill in the custodian\'s office address:' | translate}}
+                    </p>
+                    <div class="row">
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianAddressLine1" placeholder="{{'Address line 1'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianAddressLine1'])">{{'Field is required' | translate}}</span>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianAddressLine2" placeholder="{{'Address line 2'}}">
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianZipCode" placeholder="{{'Please fill in a ZIP code'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianZipCode'])">{{'Field is required' | translate}}</span>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <input type="text" formControlName="custodianCity" placeholder="{{'Please fill in a city'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianCity'])">{{'Field is required' | translate}}</span>
+                        </div>
+                        <div class="form-group col-xs-4">
+                            <ng-select [items]="countries" formControlName="custodianCountry" placeholder="{{'Please select a country' | translate}}"></ng-select>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianCountry'])">{{'Field is required' | translate}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-xs-12">
+                    <button class="btn btn-primary" (click)="addHolder()">
+                        {{'Add another account' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
