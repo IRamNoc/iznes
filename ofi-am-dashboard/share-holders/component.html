@@ -440,7 +440,7 @@
     </div>
 
     <div class="modal-footer">
-        <button id='exportFundOnly' type="button" class="btn btn-primary mr-1" [disabled]="!gotDataToExport" (click)="exportFile('only')">{{'Export at funds level only' | translate}}</button>
-        <button id='exportFundShares' type="button" class="btn btn-primary" [disabled]="!gotDataToExport" (click)="exportFile('shares')">{{'Export with shares details' | translate}}</button>
+        <button id='exportFundOnly' type="button" class="btn btn-primary mr-1" [disabled]="!gotDataToExport" (click)="exportFile('funds', 0)">{{'Export at funds level only' | translate}}</button>
+        <button id='exportFundShares' type="button" class="btn btn-primary" [disabled]="!gotDataToExport" (click)="exportFile('shares', 0)">{{'Export with shares details' | translate}}</button>
     </div>
 </clr-modal>
