@@ -9,7 +9,6 @@ import {
     Inject,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { fromJS } from 'immutable';
 import { select, NgRedux } from '@angular-redux/store';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -148,7 +147,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this._activatedRoute.params
             .pipe(
                 takeUntil(this.unSubscribe),
-        )
+            )
             .subscribe((params) => {
                 if (params['id']) {
                     this.umbrellaFundID = params['id'];
@@ -286,17 +285,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             .takeUntil(this.unSubscribe)
             .subscribe(requested => this.getUmbrellaFundRequested(requested));
 
-        this.umbrellaFundAccessListOb
-            .takeUntil(this.unSubscribe)
-            .subscribe(list => this.getUmbrellaFundList(list));
-
         this.requestedOfiManagementCompanyListOb
             .takeUntil(this.unSubscribe)
             .subscribe(requested => this.getManagementCompanyRequested(requested));
-
-        this.managementCompanyAccessListOb
-            .takeUntil(this.unSubscribe)
-            .subscribe(list => this.getManagementCompanyList(list));
 
         combineLatest(
             this.umbrellaFundAccessListOb,
@@ -306,7 +297,16 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         )
             .takeUntil(this.unSubscribe)
             .subscribe(([a, b, queryParams, params]) => {
-                if (this.managementCompanyList.length > 0 && this.umbrellaFundID || queryParams.prefill) {
+                if (!Object.keys(a) || !Object.keys(b)) {
+                    return;
+                }
+                this.getManagementCompanyList(b);
+                this.getUmbrellaFundList(a);
+                if (
+                    this.managementCompanyList.length > 0
+                    && this.managementCompanyList
+                    && (this.umbrellaFundID || queryParams.prefill)
+                ) {
                     this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
                     this._changeDetectorRef.markForCheck();
                 }
@@ -391,29 +391,29 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getUmbrellaFundList(list) {
-        const listImu = fromJS(list);
+        if (!Object.keys(list).length) {
+            this.umbrellaFundList = [];
+            return;
+        }
 
-        this.umbrellaFundList = listImu.reduce((result, item) => {
-
-            let investmentAdvisorID;
-            try {
-                investmentAdvisorID = item.get('investmentAdvisorID').toJS();
-            } catch (e) {
-                investmentAdvisorID = item.get('investmentAdvisorID');
-            }
-
-            result.push({
+        this.umbrellaFundList = Object.keys(list).map((key) => {
+            const u = list[key];
+            const investmentAdvisorID = u.investmentAdvisorID;
+            return {
                 // required on save
-                umbrellaFundID: item.get('umbrellaFundID', '0'),
-                umbrellaFundName: item.get('umbrellaFundName', ''),
-                legalEntityIdentifier: item.get('legalEntityIdentifier', '0'),
-                registerOffice: item.get('registerOffice', ''),
-                registerOfficeAddress: item.get('registerOfficeAddress', ''),
-                domicile: item.get('domicile', '0'),
-                umbrellaFundCreationDate: item.get('umbrellaFundCreationDate', ''),
-                managementCompanyID: item.get('managementCompanyID', null),
-                fundAdministratorID: item.get('fundAdministratorID', null),
-                custodianBankID: item.get('custodianBankID', null),
+                umbrellaFundID: u.umbrellaFundID,
+                umbrellaFundName: u.umbrellaFundName,
+                legalEntityIdentifier: u.legalEntityIdentifier,
+                registerOffice: u.registerOffice,
+                registerOfficeAddress: u.registerOfficeAddress,
+                domicile: UmbrellaFundComponent.getListItem(u.domicile, this.countries),
+                umbrellaFundCreationDate: u.umbrellaFundCreationDate,
+                managementCompanyID: UmbrellaFundComponent.getListItem(
+                    Number(u.managementCompanyID),
+                    this.managementCompanyList,
+                ),
+                fundAdministratorID: UmbrellaFundComponent.getListItem(u.fundAdministratorID, this.fundAdminOptions),
+                custodianBankID: UmbrellaFundComponent.getListItem(u.custodianBankID, this.custodianBankOptions),
 
                 // optional on save
                 investmentAdvisorID: this.getListItems(
@@ -421,29 +421,31 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.investmentAdvisorOptions,
                 ),
                 payingAgentID: this.getListItems(
-                    (item.get('payingAgentID').toJS) ? item.get('payingAgentID').toJS() : 0,
-                    this.payingagentOptions
+                    u.payingAgentID,
+                    this.payingagentOptions,
                 ),
-                transferAgentID: item.get('transferAgentID') || '0',
-                centralisingAgentID: item.get('centralisingAgentID') || '0',
-                transferAgent: item.get('transferAgentID') || '0',
-                centralizingAgent: item.get('centralisingAgentID') || '0',
-                giin: item.get('giin'),
-                delegatedManagementCompanyID: item.get('delegatedManagementCompanyID') || null,
-                auditorID: item.get('auditorID') || '0',
-                taxAuditorID: item.get('taxAuditorID') || '0',
+                transferAgentID: UmbrellaFundComponent.getListItem(u.transferAgentID, this.transferAgentOptions),
+                centralisingAgentID: UmbrellaFundComponent.getListItem(
+                    u.centralisingAgentID,
+                    this.centralizingAgentOptions,
+                ),
+                giin: u.giin,
+                delegatedManagementCompanyID: UmbrellaFundComponent.getListItem(
+                    u.delegatedManagementCompanyID,
+                    this.managementCompanyList,
+                ),
+                auditorID: UmbrellaFundComponent.getListItem(u.auditorID, this.auditorOptions),
+                taxAuditorID: UmbrellaFundComponent.getListItem(u.taxAuditorID, this.taxAuditorOptions),
                 principlePromoterID: this.getListItems(
-                    (item.get('principlePromoterID') && item.get('principlePromoterID').toJS) ? item.get('principlePromoterID').toJS() : 0,
+                    u.principlePromoterID,
                     this.principalPromoterOptions,
                 ),
-                legalAdvisorID: item.get('legalAdvisorID') || '0',
-                directors: item.get('directors') || '',
-                internalReference: item.get('internalReference') || '',
-                additionnalNotes: item.get('additionnalNotes') || '',
-            });
-
-            return result;
-        }, []);
+                legalAdvisorID: UmbrellaFundComponent.getListItem(u.legalAdvisorID, this.legalAdvisorOptions),
+                directors: u.directors || '',
+                internalReference: u.internalReference || '',
+                additionnalNotes: u.additionnalNotes || '',
+            };
+        });
     }
 
     getManagementCompanyRequested(requested): void {
@@ -453,17 +455,19 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getManagementCompanyList(list) {
-        const listImu = fromJS(list);
+        if (!Object.keys(list).length) {
+            this.managementCompanyList = [];
+            return;
+        }
 
-        this.managementCompanyList = listImu.reduce((result, item) => {
-            if (!item.get('companyID')) return null;
-            result.push({
-                id: item.get('companyID'),
-                text: item.get('companyName', ''),
-            });
-
-            return result;
-        }, []);
+        this.managementCompanyList = Object.keys(list).map((key) => {
+            const item = list[key];
+            if (!item.companyID) return null;
+            return {
+                id: item.companyID,
+                text: item.companyName,
+            };
+        });
     }
 
     fillFormByUmbrellaID(umbrellaID: string) {
@@ -472,31 +476,20 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             .filter(item => item.umbrellaFundID === umbrellaID);
 
         const u = requestedUmbrella[0];
+
         const payload = {
+            ...u,
             umbrellaFundID: this.isEditMode ? umbrellaID : '',
             umbrellaFundName: this.isEditMode ? u.umbrellaFundName : '',
-            registerOffice: u.registerOffice,
-            registerOfficeAddress: u.registerOfficeAddress,
-            legalEntityIdentifier: u.legalEntityIdentifier,
-            domicile: UmbrellaFundComponent.getListItem(u.domicile, this.countries),
-            umbrellaFundCreationDate: u.umbrellaFundCreationDate,
-            managementCompanyID: UmbrellaFundComponent.getListItem(u.managementCompanyID, this.managementCompanyList),
-            fundAdministratorID: UmbrellaFundComponent.getListItem(u.fundAdministratorID, this.fundAdminOptions),
-            custodianBankID: UmbrellaFundComponent.getListItem(u.custodianBankID, this.custodianBankOptions),
-            investmentAdvisorID: u.investmentAdvisorID,
-            payingAgentID: u.payingAgentID,
-            transferAgentID: UmbrellaFundComponent.getListItem(u.transferAgentID, this.transferAgentOptions),
-            centralisingAgentID: UmbrellaFundComponent.getListItem(u.centralisingAgentID, this.centralizingAgentOptions),
-            giin: u.giin,
-            delegatedManagementCompanyID: UmbrellaFundComponent.getListItem(u.delegatedManagementCompanyID, this.managementCompanyList),
-            auditorID: UmbrellaFundComponent.getListItem(u.auditorID, this.auditorOptions),
-            taxAuditorID: UmbrellaFundComponent.getListItem(u.taxAuditorID, this.taxAuditorOptions),
-            principlePromoterID: u.principlePromoterID,
-            legalAdvisorID: UmbrellaFundComponent.getListItem(u.legalAdvisorID, this.legalAdvisorOptions),
-            directors: u.directors,
-            internalReference: u.internalReference,
-            additionnalNotes: u.additionnalNotes,
         };
+        if (u.legalEntityIdentifier) {
+            this.isLeiVisible = true;
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].enable();
+            this.umbrellaFundForm.controls['legalEntityIdentifier'].setValidators(Validators.compose([
+                Validators.required,
+                validators.lei,
+            ]));
+        }
         this.umbrellaFundForm.setValue(payload);
     }
 
