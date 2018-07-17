@@ -9,6 +9,7 @@
     -ms-transition: color 0.5s ease-in, border-color 0.5s ease-in;
     -o-transition: color 0.5s ease-in, border-color 0.5s ease-in;
     transition: color 0.5s ease-in, border-color 0.5s ease-in;
+    z-index: 1;
 }
 
 .drop-file-zone .tablet {
