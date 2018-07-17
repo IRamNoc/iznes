@@ -348,6 +348,7 @@ const myAssetManagers = {
     label_txt: 'txt_my_asset_managers',
     icon_class: 'fa fa-users',
     element_id: 'top-menu-my-asset-managers',
+    always_displayed : true,
     children: [
         {
             label: 'My documents',
