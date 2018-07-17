@@ -87,7 +87,7 @@ const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDet
                 shareCurrency: iteratee.shareCurrency,
                 shareAum: iteratee.shareAum,
                 shareHolderNumber: iteratee.shareHolderNumber,
-                shareRatio: iteratee.shareRatio
+                shareRatio: iteratee.shareRatio,
             };
             response = response.push(holderItem);
         });
@@ -174,6 +174,7 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
             aum: response.aum,
             holderNumber: response.holderNumber,
             ratio: response.ratio,
+            lastSettlementDate: response.lastSettlementDate,
             holders,
         };
 
