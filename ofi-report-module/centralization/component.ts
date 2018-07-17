@@ -21,6 +21,7 @@ import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
 import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
 import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
 import * as moment from 'moment';
+import {MultilingualService} from '@setl/multilingual';
 
 import {mDateHelper} from '@setl/utils';
 
@@ -39,10 +40,19 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     unknownValue = '???';
 
-    centralizationReportsList: Array<any> = [];
+    filtersForm: FormGroup;
+
+    fundsUrl = '/reports/precentralisation/funds';
+    sharesUrl = '/reports/precentralisation/shares';
+
+    centralizationReportsFundsList: Array<any> = [];
+    centralizationReportsSharesList: Array<any> = [];
 
     // Locale
     language = 'en';
+
+    isFundLevel = true;
+    isShareLevel = false;
 
     // Datepicker config
     configDate = {
@@ -70,12 +80,27 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         {id: 13, text: 'PLN'},
     ];
 
-    searchForm: FormGroup;
+    colorScheme = {domain: ['#AF2418','#51AD5B']};
+    pieChartDatas = [
+        {
+            'name': 'Subscription (%)',
+            'value': 21.32,
+        },
+        {
+            'name': 'Redemption (%)',
+            'value': 78.68,
+        }
+    ];
+
+    fundSpecificDates = [];
+    isPeriod = false;
+    isSettlementSelected = false;
 
     private myDetails: any = {};
     private appConfig: any = {};
     private subscriptions: Array<any> = [];
 
+    fundsList: Array<any> = [];
     dataListForSearch: Array<any> = [];
 
     /* Observables. */
@@ -96,9 +121,22 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 private _confirmationService: ConfirmationService,
                 private _numberConverterService: NumberConverterService,
                 private _fileDownloader: FileDownloader,
+                private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
+
+        this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
+        this.isShareLevel = (this.router.url.indexOf('/precentralisation/shares') !== -1) ? true : false;
+
+        this.fundSpecificDates = [
+            {id: 0, text: _translate.translate('Specific NAV Date')},
+            {id: 1, text: _translate.translate('Specific Settlement Date')},
+            {id: 2, text: _translate.translate('Specific NAV Period')},
+            {id: 3, text: _translate.translate('Specific Settlement Period')},
+        ];
+
         this.appConfig = appConfig;
-        this.createsearchForm();
+
+        this.createFiltersForm();
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
@@ -136,7 +174,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     getCentralizationReportsListFromRedux(list) {
         const listImu = fromJS(list);
 
-        this.centralizationReportsList = listImu.reduce((result, item) => {
+        this.centralizationReportsFundsList = listImu.reduce((result, item) => {
 
             result.push({
                 aum: item.get('aum'),
@@ -161,22 +199,14 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
             return result;
         }, []);
 
-        for (const report of this.centralizationReportsList) {
+        for (const report of this.centralizationReportsFundsList) {
             this.dataListForSearch.push({
                 id: report.fundShareID,
                 text: report.fundShareName,
             });
         }
 
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-
         this.changeDetectorRef.markForCheck();
-    }
-
-    requestSearch(form) {
-        if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
-            this.buildLink(this.searchForm.get('search').value[0].id);
-        }
     }
 
     buildLink(id) {
@@ -184,12 +214,29 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(dest);
     }
 
-    createsearchForm() {
-        this.searchForm = this._fb.group({
-            search: [
+    createFiltersForm() {
+        this.filtersForm = this._fb.group({
+            fundsList: [
+                '',
+            ],
+            specificDate: [
+                '',
+            ],
+            dateFrom: [
+                '',
+            ],
+            dateTo: [
                 '',
             ],
         });
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+    }
+
+    requestSearch(form) {
+        if (this.filtersForm.controls['specificDate'].value.length > 0) {
+            this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
+            this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
+        }
     }
 
     showCurrency(currency) {
@@ -235,7 +282,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickViewCorrespondingOrders(id) {
-        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        const obj = this.centralizationReportsFundsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
             const orderFilters = {
                 filters: {
@@ -256,7 +303,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     onClickDownloadCorrespondingOrders(id) {
 
-        const obj = this.centralizationReportsList.find(o => o.fundShareID === id);
+        const obj = this.centralizationReportsFundsList.find(o => o.fundShareID === id);
         if (obj !== undefined) {
             const navDate = moment(obj.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
