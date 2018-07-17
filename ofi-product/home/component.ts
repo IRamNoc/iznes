@@ -468,7 +468,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             this._router.navigateByUrl('/product-module/product/fund/new');
             break;
         case 'ufund':
-            this._router.navigateByUrl('/product-module/product/umbrella-fund/0');
+            this._router.navigateByUrl('/product-module/product/umbrella-fund/new');
             break;
         }
     }
