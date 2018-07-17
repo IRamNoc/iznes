@@ -1,7 +1,7 @@
 <div class="header-breadcrumbs">
     <h1 class="text-overflow">
         <i class="fa fa-umbrella"></i>
-        <span *ngIf="!editForm; else editTitle" id="add-fund-title">{{'Add a New Umbrella Fund' | translate}}</span>
+        <span *ngIf="!isEditMode; else editTitle" id="add-fund-title">{{'Add a New Umbrella Fund' | translate}}</span>
 
         <ng-template #editTitle>
             <span *ngIf="umbrellaFund" id="edit-fund-title">{{'Umbrella fund: @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}</span>
@@ -16,10 +16,10 @@
         </button>
 
         <clr-tab-content>
-            <p *ngIf="editForm && umbrellaFund" class="text-overflow">{{'Please find below all the information for the umbrella fund @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}
+            <p *ngIf="isEditMode && umbrellaFund" class="text-overflow">{{'Please find below all the information for the umbrella fund @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}
 
             </p>
-            <p id="new-fund-text-span" *ngIf="!editForm">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
+            <p id="new-fund-text-span" *ngIf="!isEditMode">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
 
             </p>
             <form [formGroup]="umbrellaFundForm" novalidate (ngSubmit)="save(umbrellaFundForm.value)">
@@ -314,7 +314,7 @@
 
 
 
-                            <div *ngIf="!editForm; else editCloseButton">{{'Cancel' | translate}}</div>
+                            <div *ngIf="!isEditMode; else editCloseButton">{{'Cancel' | translate}}</div>
                             <ng-template #editCloseButton>{{'Close' | translate}}</ng-template>
                         </button>
 
@@ -323,7 +323,7 @@
 
 
 
-                            <div *ngIf="!editForm; else editUfFBtSubmit">
+                            <div *ngIf="!isEditMode; else editUfFBtSubmit">
                                 <i class="fa fa-save"></i>{{'Save' | translate}}
 
                             </div>

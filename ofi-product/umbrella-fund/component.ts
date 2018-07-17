@@ -16,6 +16,7 @@ import { Location } from '@angular/common';
 import * as _ from 'lodash';
 
 import { Subject } from 'rxjs/Subject';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { takeUntil } from 'rxjs/operators';
 
 /* Services */
@@ -51,8 +52,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     managementCompanyList = [];
 
     umbrellaFund: any;
-    umbrellaFundID: any = 0;
-    editForm = false;
+    umbrellaFundID: string;
+    prefill: string;
+    isEditMode = false;
     showModal = false;
     showConfirmModal = false;
     modalTitle = '';
@@ -144,10 +146,13 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // param url
         this._activatedRoute.params
-            .takeUntil(this.unSubscribe)
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
             .subscribe((params) => {
-                if (!params['id']) {
-                    this.editForm = true;
+                if (params['id']) {
+                    this.umbrellaFundID = params['id'];
+                    this.isEditMode = true;
                 }
             });
 
@@ -266,7 +271,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             .takeUntil(this.unSubscribe)
             .subscribe((name) => {
                 const registerOffice = this.umbrellaFundForm.controls['registerOffice'];
-                if (registerOffice.dirty || this.editForm) {
+                if (registerOffice.dirty || this.isEditMode) {
                     return;
                 }
                 this.umbrellaFundForm.controls['registerOffice'].setValue(name);
@@ -292,10 +297,24 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.managementCompanyAccessListOb
             .takeUntil(this.unSubscribe)
             .subscribe(list => this.getManagementCompanyList(list));
+
+        combineLatest(
+            this.umbrellaFundAccessListOb,
+            this.managementCompanyAccessListOb,
+            this._activatedRoute.queryParams,
+            this._activatedRoute.params,
+        )
+            .takeUntil(this.unSubscribe)
+            .subscribe(([a, b, queryParams, params]) => {
+                if (this.managementCompanyList.length > 0 && this.umbrellaFundID || queryParams.prefill) {
+                    this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
+                    this._changeDetectorRef.markForCheck();
+                }
+            });
     }
 
     ngOnInit() {
-        this._activatedRoute.queryParams.subscribe(params => {
+        this._activatedRoute.queryParams.subscribe((params) => {
             if (params.fromFund) {
                 this.currentRoute.fromFund = true;
             }
@@ -303,6 +322,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.currentRoute.fromShare = true;
             }
         });
+
     }
 
     ngAfterViewInit() {
@@ -424,12 +444,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
             return result;
         }, []);
-
-        if (this.editForm && this.umbrellaFundID !== 0 && this.managementCompanyList.length > 0) {
-            this.fillForm();
-        }
-
-        this._changeDetectorRef.markForCheck();
     }
 
     getManagementCompanyRequested(requested): void {
@@ -450,81 +464,40 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
             return result;
         }, []);
-
-        if (this.editForm && this.umbrellaFundID !== 0 && this.managementCompanyList.length > 0) {
-            this.fillForm();
-        }
-
-        this._changeDetectorRef.markForCheck();
     }
 
-    fillForm(): void {
-        this.umbrellaFund = this.umbrellaFundList.filter(element => element.umbrellaFundID.toString() === this.umbrellaFundID.toString());
+    fillFormByUmbrellaID(umbrellaID: string) {
 
-        this.umbrellaFundForm.get('umbrellaFundID').patchValue(this.umbrellaFund[0].umbrellaFundID, { emitEvent: false });
-        this.umbrellaFundForm.get('umbrellaFundName').patchValue(this.umbrellaFund[0].umbrellaFundName, { emitEvent: false });
-        this.umbrellaFundForm.get('registerOffice').patchValue(this.umbrellaFund[0].registerOffice, { emitEvent: false });
-        this.umbrellaFundForm.get('registerOfficeAddress').patchValue(this.umbrellaFund[0].registerOfficeAddress, { emitEvent: false });
-        if (this.umbrellaFund[0].legalEntityIdentifier) {
-            this.isLeiVisible = true;
-        }
-        this.umbrellaFundForm.get('legalEntityIdentifier').patchValue(this.umbrellaFund[0].legalEntityIdentifier, { emitEvent: false });
-        const domicile = this.countries.filter(element => element.id.toString() === this.umbrellaFund[0].domicile.toString());
-        if (domicile.length > 0) {
-            this.umbrellaFundForm.get('domicile').patchValue(domicile, { emitEvent: true });
-        }
-        this.umbrellaFundForm.get('umbrellaFundCreationDate').patchValue(this.umbrellaFund[0].umbrellaFundCreationDate, { emitEvent: false });
-        const managementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].managementCompanyID, this.managementCompanyList);
-        if (managementCompany.length > 0) {
-            this.umbrellaFundForm.get('managementCompanyID').patchValue(managementCompany, { emitEvent: false });
-        }
-        const fundAdministrator = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].fundAdministratorID, this.fundAdminOptions);
+        const requestedUmbrella = this.umbrellaFundList
+            .filter(item => item.umbrellaFundID === umbrellaID);
 
-        this.umbrellaFundForm.get('fundAdministratorID').patchValue(fundAdministrator, { emitEvent: false });
-
-        const custodianBank = this.custodianBankOptions.filter(element => element.id.toString() === this.umbrellaFund[0].custodianBankID.toString());
-        if (custodianBank.length > 0) {
-            this.umbrellaFundForm.get('custodianBankID').patchValue(custodianBank, { emitEvent: false });
-        }
-
-        this.umbrellaFundForm.get('investmentAdvisorID')
-        .patchValue(this.umbrellaFund[0].investmentAdvisorID, { emitEvent: false });
-
-        this.umbrellaFundForm.get('payingAgentID').patchValue(this.umbrellaFund[0].payingAgentID, { emitEvent: false });
-
-        const transferAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].transferAgentID, this.transferAgentOptions);
-        const centralizingAgent = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].centralisingAgentID, this.centralizingAgentOptions);
-        this.umbrellaFundForm.get('transferAgentID').patchValue(transferAgent, { emitEvent: false });
-        this.umbrellaFundForm.get('centralisingAgentID').patchValue(centralizingAgent, { emitEvent: false });
-        this.umbrellaFundForm.get('giin').patchValue(this.umbrellaFund[0].giin, { emitEvent: false });
-
-        const delegatedManagementCompany = UmbrellaFundComponent.getListItem(this.umbrellaFund[0].delegatedManagementCompanyID, this.managementCompanyList);
-        if (delegatedManagementCompany.length > 0) {
-            this.umbrellaFundForm.get('delegatedManagementCompanyID').patchValue(delegatedManagementCompany, { emitEvent: false });
-        }
-
-        const auditor = this.auditorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].auditorID.toString());
-        if (auditor.length > 0) {
-            this.umbrellaFundForm.get('auditorID').patchValue(auditor, { emitEvent: false });
-        }
-        const taxAuditor = this.taxAuditorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].taxAuditorID.toString());
-        if (taxAuditor.length > 0) {
-            this.umbrellaFundForm.get('taxAuditorID').patchValue(auditor, { emitEvent: false });
-        }
-
-        this.umbrellaFundForm.get('principlePromoterID')
-        .patchValue(this.umbrellaFund[0].principlePromoterID, { emitEvent: false });
-
-        const legalAdvisor = this.legalAdvisorOptions.filter(element => element.id.toString() === this.umbrellaFund[0].legalAdvisorID.toString());
-        if (legalAdvisor.length > 0) {
-            this.umbrellaFundForm.get('legalAdvisorID').patchValue(legalAdvisor, { emitEvent: false });
-        }
-        this.umbrellaFundForm.get('directors').patchValue(this.umbrellaFund[0].directors, { emitEvent: false });
-        this.umbrellaFundForm.get('internalReference').patchValue(this.umbrellaFund[0].internalReference, { emitEvent: false });
-        this.umbrellaFundForm.get('additionnalNotes').patchValue(this.umbrellaFund[0].additionnalNotes, { emitEvent: false });
-
-        this.umbrellaFundForm.updateValueAndValidity({ emitEvent: false }); // emitEvent = true cause infinite loop (make a valueChange)
-
+        const u = requestedUmbrella[0];
+        const payload = {
+            umbrellaFundID: this.isEditMode ? umbrellaID : '',
+            umbrellaFundName: this.isEditMode ? u.umbrellaFundName : '',
+            registerOffice: u.registerOffice,
+            registerOfficeAddress: u.registerOfficeAddress,
+            legalEntityIdentifier: u.legalEntityIdentifier,
+            domicile: UmbrellaFundComponent.getListItem(u.domicile, this.countries),
+            umbrellaFundCreationDate: u.umbrellaFundCreationDate,
+            managementCompanyID: UmbrellaFundComponent.getListItem(u.managementCompanyID, this.managementCompanyList),
+            fundAdministratorID: UmbrellaFundComponent.getListItem(u.fundAdministratorID, this.fundAdminOptions),
+            custodianBankID: UmbrellaFundComponent.getListItem(u.custodianBankID, this.custodianBankOptions),
+            investmentAdvisorID: u.investmentAdvisorID,
+            payingAgentID: u.payingAgentID,
+            transferAgentID: UmbrellaFundComponent.getListItem(u.transferAgentID, this.transferAgentOptions),
+            centralisingAgentID: UmbrellaFundComponent.getListItem(u.centralisingAgentID, this.centralizingAgentOptions),
+            giin: u.giin,
+            delegatedManagementCompanyID: UmbrellaFundComponent.getListItem(u.delegatedManagementCompanyID, this.managementCompanyList),
+            auditorID: UmbrellaFundComponent.getListItem(u.auditorID, this.auditorOptions),
+            taxAuditorID: UmbrellaFundComponent.getListItem(u.taxAuditorID, this.taxAuditorOptions),
+            principlePromoterID: u.principlePromoterID,
+            legalAdvisorID: UmbrellaFundComponent.getListItem(u.legalAdvisorID, this.legalAdvisorOptions),
+            directors: u.directors,
+            internalReference: u.internalReference,
+            additionnalNotes: u.additionnalNotes,
+        };
+        this.umbrellaFundForm.setValue(payload);
     }
 
     cancel() {
@@ -557,7 +530,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             additionnalNotes: formValues.additionnalNotes,
         };
 
-        if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.editForm) {
+        if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
             // UPDATE
             const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
                 {
@@ -614,11 +587,11 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                     // this.modalText = JSON.stringify(data);
                     // this.showTextModal = true;
                     const errMsg = _.get(data, '[1].Data[0].Message', '');
-                    let userErrMsg =  'Failed to create the umbrella fund.';
-                    if(errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
+                    let userErrMsg = 'Failed to create the umbrella fund.';
+                    if (errMsg === 'Umbrella Fund is already exist with the same umbrella fund name.') {
                         userErrMsg = 'Umbrella fund is already exist.';
                     }
-                    this._toasterService.pop('error',  userErrMsg);
+                    this._toasterService.pop('error', userErrMsg);
                     this._changeDetectorRef.markForCheck();
                 })
             );
@@ -703,14 +676,14 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-        .replace('YYYY', dateObj.getFullYear().toString())
-        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-        .replace('DD', this.numPad(dateObj.getDate().toString()))
-        .replace('hh', this.numPad(dateObj.getHours()))
-        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-        .replace('mm', this.numPad(dateObj.getMinutes()))
-        .replace('ss', this.numPad(dateObj.getSeconds()))
+            .replace('YYYY', dateObj.getFullYear().toString())
+            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+            .replace('DD', this.numPad(dateObj.getDate().toString()))
+            .replace('hh', this.numPad(dateObj.getHours()))
+            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+            .replace('mm', this.numPad(dateObj.getMinutes()))
+            .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     /**
