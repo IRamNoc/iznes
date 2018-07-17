@@ -4,7 +4,7 @@ import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
 
 import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
@@ -19,7 +19,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
-    @Input() form : FormGroup;
+    @Input() form: FormGroup;
+
     @Input() set isListedCompany(isCompany) {
         if (isCompany) {
             (this.form.get('other') as FormGroup).disable();
@@ -49,16 +50,17 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         this.getCurrentFormData();
     }
 
-    initSubscriptions(){
+    initSubscriptions() {
         this.requests$
             .pipe(
                 takeUntil(this.unsubscribe),
-                map(kycs => kycs[0])
+                map(kycs => kycs[0]),
+                rxFilter((kyc: any) => {
+                    return kyc && kyc.completedStep
+                })
             )
             .subscribe(kyc => {
-                console.log('***check persist docs');
-                if(kyc && (steps[kyc.completedStep] < steps.documents)){
-                    console.log('***persisting documents');
+                if (steps[kyc.completedStep] < steps.documents) {
                     this.persistForm();
                 }
             })
@@ -132,7 +134,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     getCurrentFormData() {
         this.requests$
             .pipe(
-                filter(requests => !isEmpty(requests)),
+                rxFilter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
                 takeUntil(this.unsubscribe)
             )

@@ -2,7 +2,7 @@ import {Component, Input, OnInit, OnDestroy} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Router} from '@angular/router';
 import {Subject, combineLatest} from 'rxjs';
-import {filter, map, take, takeUntil} from 'rxjs/operators';
+import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
 import {isEmpty, find, get as getValue, castArray} from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
@@ -56,12 +56,13 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         this.requests$
             .pipe(
                 takeUntil(this.unsubscribe),
-                map(kycs => kycs[0])
+                map(kycs => kycs[0]),
+                rxFilter((kyc: any) => {
+                    return kyc && kyc.completedStep
+                })
             )
             .subscribe(kyc => {
-                console.log('***check persist validation');
-                if(kyc && (steps[kyc.completedStep] < steps.validation)){
-                    console.log('***persisting validation');
+                if(steps[kyc.completedStep] < steps.validation){
                     this.persistForm();
                 }
             })
@@ -196,7 +197,7 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
     getCurrentFormData() {
         this.requests$
             .pipe(
-                filter(requests => !isEmpty(requests)),
+                rxFilter(requests => !isEmpty(requests)),
                 map(requests => castArray(requests[0])),
                 takeUntil(this.unsubscribe)
             )

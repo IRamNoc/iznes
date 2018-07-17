@@ -159,7 +159,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         if (this.preselectedManagementCompany.id) {
             values = values.concat([this.preselectedManagementCompany]);
         }
-
         let ids = await this.selectAmcService.createMultipleDrafts(values, this.connectedWallet);
 
         this.newRequestService.storeCurrentKycs(ids);

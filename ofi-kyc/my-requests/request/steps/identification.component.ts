@@ -4,7 +4,7 @@ import {select} from '@angular-redux/store';
 import {PersistService} from '@setl/core-persist';
 
 import {Subject} from 'rxjs';
-import {map, take, takeUntil} from 'rxjs/operators';
+import {map, take, takeUntil, filter as rxFilter} from 'rxjs/operators';
 
 import {NewRequestService} from '../new-request.service';
 import {IdentificationService} from './identification.service';
@@ -51,14 +51,11 @@ export class NewKycIdentificationComponent implements OnInit {
                 netRevenuesNetIncomeValue < 40000000 &&
                 shareholderEquityValue < 2000000
             ) {
-                console.log('proByNature');
                 return "proByNature";
             } else {
-                console.log('proBySize');
                 return "proBySize";
             }
         } else {
-            console.log('nonPro');
             return "nonPro";
         }
     }
@@ -77,12 +74,13 @@ export class NewKycIdentificationComponent implements OnInit {
         this.requests$
             .pipe(
                 takeUntil(this.unsubscribe),
-                map(kycs => kycs[0])
+                map(kycs => kycs[0]),
+                rxFilter((kyc: any) => {
+                    return kyc && kyc.completedStep
+                })
             )
             .subscribe(kyc => {
-                console.log('***check persist ident');
-                if(kyc && (steps[kyc.completedStep] < steps.identification)){
-                    console.log('***persisting identification');
+                if(steps[kyc.completedStep] < steps.identification){
                     this.persistForm();
                 }
             })
