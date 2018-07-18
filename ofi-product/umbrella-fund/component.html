@@ -290,7 +290,7 @@
 
                     <div class="form-group col-sm-6">
                         <button id="ufBtnResetForm" type="button" class="btn btn-info" (click)="cancel()">
-                            {{(!editForm ? 'Cancel' : 'Close') | translate}}
+                            {{(!isEditMode ? 'Cancel' : 'Close') | translate}}
                         </button>
 
                         <button *ngIf="currDraft == 1 || !isEditMode"
@@ -299,7 +299,7 @@
                                 class="btn btn-primary"
                                 (click)="saveDraft(umbrellaFundForm.value)"
                                 [disabled]="umbrellaFundForm.value.managementCompanyID.length == 0">
-                            <i class="fa fa-save"></i> {{(!editForm ? 'Save Draft' : 'Update Draft') | translate}}
+                            <i class="fa fa-save"></i> {{(!isEditMode ? 'Save Draft' : 'Update Draft') | translate}}
                         </button>
 
                         <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!umbrellaFundForm.valid">
