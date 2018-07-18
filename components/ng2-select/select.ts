@@ -104,6 +104,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                     return new SelectItem(data);
                 });
             }
+            this.changeDetectorRef.markForCheck();
         } catch (e) {
             this._active = [];
         }
