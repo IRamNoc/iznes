@@ -1,5 +1,5 @@
 import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup, FormControl, AbstractControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
 import {Subject} from 'rxjs';
@@ -55,14 +55,33 @@ export class UiFormPercentComponent implements OnInit {
 
     ngOnInit() {}
 
+    multipleCheckboxValidator(formGroup) {
+        for (let key in formGroup.controls) {
+            if (formGroup.controls.hasOwnProperty(key)) {
+                let control: FormControl = <FormControl>formGroup.controls[key];
+                if (!control.disabled && control.value) {
+                    return null;
+                }
+            }
+        }
+        return {
+            field1: {
+                valid: false
+            }
+        };
+    }
+
     createForms() {
         this.myForm1 = this._fb.group({
-            field1: [
-                '',
-                Validators.compose([
-                    Validators.required,
-                ]),
-            ],
+            field1: this._fb.group({
+                red: '',
+                blue: '',
+                orange: ''
+            }, {
+                validator: (formGroup) => {
+                    return this.multipleCheckboxValidator(formGroup);
+                }
+            }),
             field2: [
                 { value: 'disabled', disabled: true },
                 Validators.compose([
