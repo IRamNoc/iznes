@@ -25,4 +25,5 @@ export interface MyDetailState {
     companyName: string;
     phoneCode: string;
     phoneNumber: string;
+    defaultWalletID: number;
 }
