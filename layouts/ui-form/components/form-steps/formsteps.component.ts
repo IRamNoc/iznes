@@ -14,6 +14,70 @@ import {FormStepsDirective} from "@setl/utils/directives/form-steps/formsteps";
         .red {
             color: red;
         }
+        input[type=checkbox] {
+            visibility: hidden;
+        }
+        .customCheckbox {
+            width: 50px;
+            margin: -10px 0;
+            position: relative;
+        }
+
+        .customCheckbox label {
+            cursor: pointer;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            top: 0;
+            border-radius: 4px;
+
+            -webkit-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+            -moz-box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+            box-shadow: inset 0px 1px 1px white, 0px 1px 3px rgba(0,0,0,0.5);
+            background: #fcfff4;
+
+            background: -webkit-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -moz-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -o-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: -ms-linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            background: linear-gradient(top, #fcfff4 0%, #dfe5d7 40%, #b3bead 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfff4', endColorstr='#b3bead',GradientType=0 );
+        }
+
+        .customCheckbox label:after {
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+            filter: alpha(opacity=0);
+            opacity: 0;
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 10px;
+            background: transparent;
+            top: 8px;
+            left: 7px;
+            border: 4px solid green;
+            border-top: none;
+            border-right: none;
+
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+
+        .customCheckbox label:hover::after {
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+            filter: alpha(opacity=30);
+            opacity: 0.5;
+        }
+
+        .customCheckbox input[type=checkbox]:checked + label:after {
+            -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+            filter: alpha(opacity=100);
+            opacity: 1;
+        }
+
     `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +89,7 @@ export class UiFormStepsComponent implements OnInit {
     myFormSteps1: FormGroup;
     myFormSteps2: FormGroup;
     myFormSteps3: FormGroup;
+    myFormSteps4: FormGroup;
 
     names = [
         { id: 1, text: 'Laurent' },
@@ -32,6 +97,9 @@ export class UiFormStepsComponent implements OnInit {
         { id: 3, text: 'Bob' },
         { id: 4, text: 'Who?' },
     ];
+
+    dynamicConfig = [];
+    isFullForm = false;
 
     showInfoPanes: boolean = true;
     lang: string;
@@ -47,6 +115,8 @@ export class UiFormStepsComponent implements OnInit {
     ) {
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
         this.createFormSteps();
+
+        this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}];
     }
 
     ngOnInit() {}
@@ -204,6 +274,15 @@ export class UiFormStepsComponent implements OnInit {
                 ],
             }),
         });
+        this.myFormSteps4 = this._fb.group({
+            isFull: [
+                '',
+                Validators.compose([
+                    Validators.required,
+                ]),
+            ],
+        });
+        this.myFormSteps4.valueChanges.subscribe((form) => this.formChanges(form));
     }
 
     save1(formValues) {
@@ -216,6 +295,20 @@ export class UiFormStepsComponent implements OnInit {
 
     save3(formValues) {
         console.log('save3: ' + JSON.stringify(formValues));
+    }
+
+    save4(formValues) {
+        console.log('save4: ' + JSON.stringify(formValues));
+    }
+
+    formChanges(form) {
+        if (this.myFormSteps4.controls['isFull'].value) {
+            this.isFullForm = true;
+            this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}, {title: 'Outro'}, {form: this.myFormSteps3, id: 'myFormSteps3', title: 'Form again'}];
+        } else {
+            this.isFullForm = false;
+            this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}];
+        }
     }
 
     addField() {
