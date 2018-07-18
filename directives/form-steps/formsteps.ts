@@ -11,7 +11,21 @@ import {Observable} from 'rxjs/Rx';
 export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     private el: any;
-    @Input('formsteps') config: any;
+    config: any;
+    formstepsConstructed = false;
+    isNewFormSteps = false;
+
+    get formsteps(): any {
+        return this.config;
+    }
+
+    @Input('formsteps')
+    set formsteps(val) {
+        this.config = val;
+        if (this.formstepsConstructed) {
+            this.constructFormSteps();
+        }
+    }
 
     isMultiForm = false;
 
@@ -67,187 +81,11 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        this.initConfig();
-
-        // calculate nbSteps
-        this.nbSteps = (this.isMultiForm) ? this.config.length : Object.keys(this.config.form.controls).length;
-        this.stepSize = 100 / this.nbSteps;
-
-        // create slider view
-        this.divSlider = document.createElement('div');
-        this.divSlider.className = 'fs-slider';
-        this.el.appendChild(this.divSlider);
-
-        // create slider movable container
-        this.divSliderContainer = document.createElement('div');
-        this.divSliderContainer.className = 'fs-slider-container';
-        this.divSlider.appendChild(this.divSliderContainer);
-
-        // step size
-        this.divSliderSize = this.divSlider.offsetWidth;
-
-        // move sections into slider container + assign step size on each section
-        const sections = this.el.getElementsByTagName('section');
-        for (let i = sections.length; i > 0; i--) {
-            this.divSliderContainer.prepend(sections[i - 1]);
-            sections[i - 1].style.width = this.divSliderSize + 'px';
-        }
-
-        // add finish screen
-        this.divFinished = document.createElement('div');
-        this.divFinished.className = 'fs-slider-finished';
-        this.divFinished.innerHTML = this._translate.translate('Finished!');
-        this.divSliderContainer.appendChild(this.divFinished);
-        this.divFinished.style.width = this.divSliderSize + 'px';
-
-        // assign slider container size
-        this.divSliderContainer.style.width = (this.divSliderSize * (this.nbSteps + 1)) + 'px'; // +1 because Finished screen
-
-        // add steps info
-        this.divContainer = document.createElement('div');
-        this.divContainer.className = 'fs-container';
-        this.el.insertBefore(this.divContainer, this.el.firstChild);
-
-        this.divProgressBar = document.createElement('div');
-        this.divProgressBar.className = 'fs-progressbar';
-        this.divContainer.appendChild(this.divProgressBar);
-
-        let divStep: any;
-        for (let i = 0; i < this.nbSteps; i++) {
-            divStep = document.createElement('div');
-            divStep.style.width = this.stepSize + '%';
-            if (this.currentStep === (i + 1)) {
-                divStep.className = 'fs-active';
-            }
-            if (this.isMultiForm) {
-                if (this.config[i].title !== undefined && this.config[i].title !== '') {
-                    divStep.innerHTML = this.config[i].title;
-                }
-            } else {
-                if (this.config['title' + (i + 1)] !== undefined && this.config['title' + (i + 1)] !== '') {
-                    divStep.innerHTML = this.config['title' + (i + 1)];
-                }
-            }
-            this.divProgressBar.appendChild(divStep);
-            // add click on progress bar steps to go directly to it
-            divStep.onclick = (event) => {
-                if (!this.isAllFinished) {
-                    // check previous
-                    let checkStep;
-                    if (this.isMultiForm) {
-                        checkStep = (i === 0) ? 0 : (i - 1);
-                        if (this.config[checkStep].form !== undefined) {
-                            if (this.config[checkStep].form.valid) {
-                                this.currentStep = i;
-                                this.move();
-                            }
-                        } else {
-                            this.currentStep = i;
-                            this.move();
-                        }
-                    } else {
-                        checkStep = (i === 0) ? 1 : i;
-                        if (this.config.form.controls['step' + checkStep].valid) {
-                            this.currentStep = i;
-                            this.move();
-                        }
-                    }
-                }
-            };
-        }
-
-        // add buttons
-        this.divButtons = document.createElement('div');
-        this.divButtons.className = 'fs-buttons';
-        this.el.appendChild(this.divButtons);
-
-        // PREV
-        this.btPrev = document.createElement('button');
-        this.btPrev.className = 'btn btn-info btPrev';
-        this.btPrev.innerHTML = 'Previous';
-        this.btPrev.setAttribute('type', 'button');
-        this.divButtons.appendChild(this.btPrev);
-        this.btPrev.onclick = (event) => {
-            this.currentStep--;
-            this.move();
-        };
-
-        // NEXT
-        this.btNext = document.createElement('button');
-        this.btNext.className = 'btn btn-success btNext';
-        this.btNext.innerHTML = 'Next';
-        this.btNext.setAttribute('type', 'button');
-        this.divButtons.appendChild(this.btNext);
-        this.btNext.onclick = (event) => {
-            if (this.isValid()) {
-                setTimeout(() => {
-                    if (this.isMultiForm) {
-                        if (this.config[this.currentStep].form !== undefined) {
-                            this.config[this.currentStep].submitted = true;
-                        }
-                    }
-                    this.currentStep++;
-                    this.move();
-                }, 50);
-            }
-        };
-
-        // SUBMIT
-        this.btSubmit = document.createElement('button');
-        this.btSubmit.className = 'btn btn-success btSubmit';
-        this.btSubmit.innerHTML = 'Finish';
-        this.divButtons.appendChild(this.btSubmit);
-        this.btSubmit.onclick = (event) => {
-            if (this.isValid()) {
-                // check if one step has not been done
-                const missingSteps = this.applyStepToProgressBar();
-                if (missingSteps.length > 0 && this.isMultiForm && this.config[this.nbSteps - 1].form !== undefined) {
-                    setTimeout(() => {
-                        if (this.config[this.nbSteps - 1].form !== undefined) {
-                            this.config[this.nbSteps - 1].submitted = true;
-                        }
-                        this.currentStep = missingSteps[0];
-                        this.move();
-                    }, 50);
-                } else if (missingSteps.length > 0 && !this.isMultiForm && this.config.form !== undefined) {
-                    setTimeout(() => {
-                        this.currentStep = missingSteps[0];
-                        this.move();
-                    }, 50);
-                } else {
-                    // if all ok, redirect at the end
-                    let url = '';
-                    if (this.isMultiForm) {
-                        if (this.config[this.nbSteps - 1].redirect !== undefined && this.config[this.nbSteps - 1].redirect !== '') {
-                            url = this.config[this.nbSteps - 1].redirect;
-                        }
-                    } else {
-                        if (this.config.redirect !== undefined && this.config.redirect !== '') {
-                            url = this.config.redirect;
-                        }
-                    }
-                    if (url !== undefined && url !== '') {
-                        setTimeout(() => {
-                            this.router.navigateByUrl(url);
-                        }, 50);
-                    } else {
-                        setTimeout(() => {
-                            this.currentStep++;
-                            this.move();
-                            this.divButtons.remove();
-                            this.isAllFinished = true;
-                        }, 50);
-                    }
-                }
-            }
-        };
-
-        if (this.currentStep > 0) {
-            this.move();
-        }
+        this.constructFormSteps();
     }
 
     initConfig() {
+
         if (this.config.length > 1 && Array.isArray(this.config)) {
             this.isMultiForm = true;
 
@@ -272,6 +110,226 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             }
             // listen to changes on form
             this.config.form.valueChanges.subscribe((form) => this.showHideButtons(this.config.form));
+        }
+    }
+
+    constructFormSteps() {
+        if (this.nbSteps > 0) {
+            this.isNewFormSteps = true;
+            // move old sections to root
+            let sections = this.divSliderContainer.getElementsByTagName('section');
+            for (let i = sections.length; i > 0; i--) {
+                this.el.appendChild(sections[i - 1]);
+            }
+            // delete old divs
+            this.divSlider.remove();
+            this.divButtons.remove();
+            this.divContainer.remove();
+            // reset steps
+            this.nbSteps = 0;
+            // construct all
+            setTimeout(() => {
+                this.constructFormSteps();
+                this.resizeWidth();
+                this.resizeHeight();
+            }, 0);
+        } else {
+            this.initConfig();
+
+            // calculate nbSteps
+            this.nbSteps = (this.isMultiForm) ? this.config.length : Object.keys(this.config.form.controls).length;
+            this.stepSize = 100 / this.nbSteps;
+
+            // create slider view
+            this.divSlider = document.createElement('div');
+            this.divSlider.className = 'fs-slider';
+            this.el.appendChild(this.divSlider);
+
+            // create slider movable container
+            this.divSliderContainer = document.createElement('div');
+            this.divSliderContainer.className = 'fs-slider-container';
+            this.divSlider.appendChild(this.divSliderContainer);
+
+            // step size
+            this.divSliderSize = this.divSlider.offsetWidth;
+
+            // move sections into slider container + assign step size on each section
+            let sections = this.el.getElementsByTagName('section');
+            for (let i = sections.length; i > 0; i--) {
+                let mySection = this.el.querySelector('[order="' + i  + '"]');
+                if (mySection === null) {
+                    this.divSliderContainer.prepend(sections[i - 1]);
+                    sections[i - 1].style.width = this.divSliderSize + 'px';
+                } else {
+                    this.divSliderContainer.prepend(mySection);
+                    mySection.style.width = this.divSliderSize + 'px';
+                }
+            }
+
+            // add finish screen
+            this.divFinished = document.createElement('div');
+            this.divFinished.className = 'fs-slider-finished';
+            this.divFinished.innerHTML = this._translate.translate('Finished!');
+            this.divSliderContainer.appendChild(this.divFinished);
+            this.divFinished.style.width = this.divSliderSize + 'px';
+
+            // assign slider container size
+            this.divSliderContainer.style.width = (this.divSliderSize * (this.nbSteps + 1)) + 'px'; // +1 because Finished screen
+
+            // add steps info
+            this.divContainer = document.createElement('div');
+            this.divContainer.className = 'fs-container';
+            this.el.insertBefore(this.divContainer, this.el.firstChild);
+
+            this.divProgressBar = document.createElement('div');
+            this.divProgressBar.className = 'fs-progressbar';
+            this.divContainer.appendChild(this.divProgressBar);
+
+            let divStep: any;
+            for (let i = 0; i < this.nbSteps; i++) {
+                divStep = document.createElement('div');
+                divStep.style.width = this.stepSize + '%';
+                if (this.currentStep === (i + 1)) {
+                    divStep.className = 'fs-active';
+                }
+                if (this.isMultiForm) {
+                    if (this.config[i].title !== undefined && this.config[i].title !== '') {
+                        divStep.innerHTML = this.config[i].title;
+                    }
+                } else {
+                    if (this.config['title' + (i + 1)] !== undefined && this.config['title' + (i + 1)] !== '') {
+                        divStep.innerHTML = this.config['title' + (i + 1)];
+                    }
+                }
+                this.divProgressBar.appendChild(divStep);
+                // add click on progress bar steps to go directly to it
+                // removed click on progressbar steps for the moment
+                // divStep.onclick = (event) => {
+                //     if (!this.isAllFinished) {
+                //         // check previous
+                //         let checkStep;
+                //         if (this.isMultiForm) {
+                //             checkStep = (i === 0) ? 0 : (i - 1);
+                //             if (this.config[checkStep].form !== undefined) {
+                //                 if (this.config[checkStep].form.valid) {
+                //                     this.currentStep = i;
+                //                     this.move();
+                //                 }
+                //             } else {
+                //                 this.currentStep = i;
+                //                 this.move();
+                //             }
+                //         } else {
+                //             checkStep = (i === 0) ? 1 : i;
+                //             if (this.config.form.controls['step' + checkStep].valid) {
+                //                 this.currentStep = i;
+                //                 this.move();
+                //             }
+                //         }
+                //     }
+                // };
+            }
+
+            // add buttons
+            this.divButtons = document.createElement('div');
+            this.divButtons.className = 'fs-buttons';
+            this.el.appendChild(this.divButtons);
+
+            // PREV
+            this.btPrev = document.createElement('button');
+            this.btPrev.className = 'btn btn-info btPrev';
+            this.btPrev.innerHTML = 'Previous';
+            this.btPrev.setAttribute('type', 'button');
+            this.divButtons.appendChild(this.btPrev);
+            this.btPrev.onclick = (event) => {
+                if (this.config[this.currentStep].goPrevious !== undefined) {
+                    this.currentStep = this.config[this.currentStep].goPrevious - 1;
+                } else {
+                    this.currentStep--;
+                }
+                this.move();
+            };
+
+            // NEXT
+            this.btNext = document.createElement('button');
+            this.btNext.className = 'btn btn-success btNext';
+            this.btNext.innerHTML = 'Next';
+            this.btNext.setAttribute('type', 'button');
+            this.divButtons.appendChild(this.btNext);
+            this.btNext.onclick = (event) => {
+                if (this.isValid()) {
+                    setTimeout(() => {
+                        if (this.isMultiForm) {
+                            if (this.config[this.currentStep].form !== undefined) {
+                                this.config[this.currentStep].submitted = true;
+                            }
+                            if (this.config[this.currentStep].goNext !== undefined) {
+                                this.currentStep = this.config[this.currentStep].goNext - 1;
+                            } else {
+                                this.currentStep++;
+                            }
+                        } else {
+                            this.currentStep++;
+                        }
+                        this.move();
+                    }, 50);
+                }
+            };
+
+            // SUBMIT
+            this.btSubmit = document.createElement('button');
+            this.btSubmit.className = 'btn btn-success btSubmit';
+            this.btSubmit.innerHTML = 'Finish';
+            this.divButtons.appendChild(this.btSubmit);
+            this.btSubmit.onclick = (event) => {
+                if (this.isValid()) {
+                    // check if one step has not been done
+                    const missingSteps = this.applyStepToProgressBar();
+                    if (missingSteps.length > 0 && this.isMultiForm && this.config[this.nbSteps - 1].form !== undefined) {
+                        setTimeout(() => {
+                            if (this.config[this.nbSteps - 1].form !== undefined) {
+                                this.config[this.nbSteps - 1].submitted = true;
+                            }
+                            this.currentStep = missingSteps[0];
+                            this.move();
+                        }, 50);
+                    } else if (missingSteps.length > 0 && !this.isMultiForm && this.config.form !== undefined) {
+                        setTimeout(() => {
+                            this.currentStep = missingSteps[0];
+                            this.move();
+                        }, 50);
+                    } else {
+                        // if all ok, redirect at the end
+                        let url = '';
+                        if (this.isMultiForm) {
+                            if (this.config[this.nbSteps - 1].redirect !== undefined && this.config[this.nbSteps - 1].redirect !== '') {
+                                url = this.config[this.nbSteps - 1].redirect;
+                            }
+                        } else {
+                            if (this.config.redirect !== undefined && this.config.redirect !== '') {
+                                url = this.config.redirect;
+                            }
+                        }
+                        if (url !== undefined && url !== '') {
+                            setTimeout(() => {
+                                this.router.navigateByUrl(url);
+                            }, 50);
+                        } else {
+                            setTimeout(() => {
+                                this.currentStep++;
+                                this.move();
+                                this.divButtons.remove();
+                                this.isAllFinished = true;
+                            }, 50);
+                        }
+                    }
+                }
+            };
+
+            if (this.currentStep > 0) {
+                this.move();
+            }
+            this.formstepsConstructed = true;
         }
     }
 
@@ -378,7 +436,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         } else {
             // NEXT
             if (this.currentStep < (this.nbSteps - 1)) {
-                // console.log('next');
                 if (this.config.form.controls['step' + (this.currentStep + 1)].valid || (this.config.forceNext !== undefined && this.config.forceNext === true)) {
                     return true;
                 } else {
@@ -391,7 +448,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 }
             // SUBMIT
             } else {
-                // console.log('submit');
                 if (this.config.form.controls['step' + (this.currentStep + 1)].valid) {
                     return true;
                 } else {
@@ -459,7 +515,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 allInvalid[i].tagName.toLocaleLowerCase() === 'textarea' ||
                 allInvalid[i].tagName.toLocaleLowerCase() === 'ng-select'
             ) {
-                console.log(allInvalid[i]);
+                // console.log(allInvalid[i]);
                 allInvalid[i].focus();
                 break;
             }
@@ -482,7 +538,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         const el = (element.parentNode as Element);
         const parent = document.getElementsByClassName('content-area')[0];
         if (parent) {
-            parent.scrollTo(0, this.getOffset(el).top - 100); // 75 for topbar + 25 margin :)
+            parent.scrollTo(0, this.getOffset(el).top - 75); // 75 for topbar
         }
     }
 
