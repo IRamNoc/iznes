@@ -981,7 +981,7 @@ The IZNES Team.</p>`;
 
     handleOrderConfirmation() {
 
-        if (this.handleCutOffDateError()) {
+        if (this.doValidate && this.handleCutOffDateError()) {
             return;
         }
 
@@ -1099,23 +1099,25 @@ The IZNES Team.</p>`;
     }
 
     showAlertCutOffError() {
-        this._alertsService
-            .create('error', `
-                <table class="table grid">
-                    <tbody>
-                        <tr>
-                            <td class="text-center text-danger">The Cut-off has been reached</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `)
-            .pipe(
-                take(1),
-            )
-            .subscribe(() => {
-                this.disclaimer.setValue(false);
-                this.cutoffDate.setErrors({ tooLate: true });
-            });
+        if (this.doValidate) {
+            this._alertsService
+                .create('error', `
+                    <table class="table grid">
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">The Cut-off has been reached</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+                .pipe(
+                    take(1),
+                )
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
+        }
     }
 
     handleCutOffDateError(): Boolean {
