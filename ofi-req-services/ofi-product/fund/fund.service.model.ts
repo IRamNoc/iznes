@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 import {
     isFundStructure,
@@ -92,6 +92,7 @@ export interface SaveFundHistoryRequestBody extends MemberNodeMessageBody {
 }
 
 export interface Fund {
+    draft: string;
     fundName: string;
     isFundStructure: isFundStructure;
     umbrellaFundID: number;
@@ -115,8 +116,8 @@ export interface Fund {
     fundAdministrator: number;
     custodianBank: number;
     investmentManager: number;
-    principalPromoter: string|string[];
-    payingAgent: string|string[];
+    principalPromoter: string | string[];
+    payingAgent: string | string[];
     fundManagers: string;
     transferAgent: number;
     centralizingAgent: number;
@@ -124,7 +125,7 @@ export interface Fund {
     portfolioCurrencyHedge: number; // number enum
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
-    investmentAdvisor: string|string[];
+    investmentAdvisor: string | string[];
     auditor: number;
     taxAuditor: number;
     legalAdvisor: number;
@@ -166,4 +167,9 @@ export interface IznesUpdateFundRequestBody extends MemberNodeMessageBody, Fund 
     principalPromoter: string;
     payingAgent: string;
     investmentAdvisor: string;
+}
+
+export interface IznDeleteFundDraftRequestBody extends MemberNodeMessageBody {
+    token: any;
+    id: string;
 }

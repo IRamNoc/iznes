@@ -99,6 +99,7 @@ const iznCreateFund = jasmine.createSpy('iznCreateFund')
                 additionnalNotes: '',
                 useDefaultHolidayMgmt: [],
                 holidayMgmtConfig: [],
+                draft: 0,
             };
             resolve([null, { Data: [{ ...payload }] }]);
         }),
@@ -131,7 +132,7 @@ const fundServiceSpy = {
 
 const ActivatedRouteStub = {
     params: of({
-        id: 'new',
+        id: null,
     }),
     setParams: (id: string) => {
         this.params = of({
@@ -220,6 +221,10 @@ describe('FundComponent', () => {
                                 component: ProductHomeComponent,
                             },
                             {
+                                path: 'product/fund/new',
+                                component: FundComponent,
+                            },
+                            {
                                 path: 'product/fund/:id',
                                 component: FundComponent,
                             },
@@ -257,7 +262,6 @@ describe('FundComponent', () => {
         fixture = TestBed.createComponent(FundComponent);
 
         comp = fixture.componentInstance;
-        comp.param = 'new';
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
@@ -284,6 +288,7 @@ describe('FundComponent', () => {
                 directors: '0',
                 internalReference: '',
                 additionnalNotes: '',
+                draft: null,
             },
         };
         comp.umbrellaItems = [
@@ -336,10 +341,10 @@ describe('FundComponent', () => {
     });
 
     describe('structure', () => {
-        it('should display a form with 1 select and 3 buttons', () => {
+        it('should display a form with 2 select and 3 buttons', () => {
 
             const selectEls = fixture.debugElement.queryAllNodes(By.css('ng-select'));
-            expect(selectEls.length).toEqual(1);
+            expect(selectEls.length).toEqual(2);
 
             const anchorEl = fixture.debugElement.queryAllNodes(By.css('a.btn'))[0];
             expect(anchorEl.nativeNode.innerText).toEqual('Add a new Umbrella Fund');
@@ -374,7 +379,7 @@ describe('FundComponent', () => {
         }));
 
         it('should navigate to the umbrella creation page', fakeAsync(() => {
-            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/0');
+            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/new');
         }));
 
         it('should enable the next button', fakeAsync(() => {
@@ -833,11 +838,12 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
+                        draft: 0,
                     });
                     comp.submitFundForm();
 
                     tick();
-
+                    console.log(iznCreateFund.calls[0])
                     expect(iznCreateFund).toHaveBeenCalledTimes(1);
                     expect(iznCreateFund).toHaveBeenCalledWith(expectedResult);
                 }));
@@ -888,6 +894,7 @@ describe('FundComponent', () => {
                         custodianBank: testPayload.custodianBank[0].id,
                         managementCompanyID: testPayload.managementCompanyID[0].id,
                         umbrellaFundID: comp.umbrellaControl.value[0].id,
+                        draft: 0,
                     });
                     comp.submitFundForm();
 

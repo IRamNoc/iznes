@@ -1,12 +1,11 @@
-
-import {take, filter, map} from 'rxjs/operators';
+import { take, filter, map } from 'rxjs/operators';
 import * as _ from 'lodash';
-import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-import {Location} from '@angular/common';
-import {FormGroup, FormControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {select, NgRedux} from '@angular-redux/store';
-import {Observable, Subscription} from 'rxjs';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Location } from '@angular/common';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { select, NgRedux } from '@angular-redux/store';
+import { Observable, Subscription } from 'rxjs';
 
 import {
     setRequestedFund,
@@ -18,8 +17,8 @@ import {
     ofiClearCurrentFundShareSelectedFund
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
-import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
-import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -46,7 +45,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
                 private ofiFundService: OfiFundService,
                 private ofiFundShareService: OfiFundShareService,
                 private route: ActivatedRoute,
-                private location : Location) {
+                private location: Location) {
     }
 
     ngOnInit() {
@@ -57,9 +56,9 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         this.redux.dispatch(ofiClearCurrentFundShareSelectedFund());
     }
 
-    checkIfFromFund(){
+    checkIfFromFund() {
         this.route.queryParams.subscribe(params => {
-            if(params.fund){
+            if (params.fund) {
                 let fundID = parseInt(params.fund);
                 this.waitForCurrentFund(fundID);
             }
@@ -73,18 +72,18 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
             }),
             filter(fundItem => !!fundItem),
             take(1),)
-            .subscribe(fundItem => {
-                let newUrl = this.router.createUrlTree([], {
-                    queryParams: { fund: null },
-                    queryParamsHandling: "merge"
-                });
-                this.location.replaceState(this.router.serializeUrl(newUrl));
-
-                this.newFundShareForm.controls['fund'].patchValue([{
-                    id : fundItem.fundID,
-                    text : fundItem.fundName
-                }]);
+        .subscribe(fundItem => {
+            let newUrl = this.router.createUrlTree([], {
+                queryParams: { fund: null },
+                queryParamsHandling: "merge"
             });
+            this.location.replaceState(this.router.serializeUrl(newUrl));
+
+            this.newFundShareForm.controls['fund'].patchValue([{
+                id: fundItem.fundID,
+                text: fundItem.fundName
+            }]);
+        });
     }
 
     private initForms(): void {
@@ -129,7 +128,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private requestFundList(requested: boolean): void {
-        if(requested) return;
+        if (requested) return;
 
         OfiFundService.defaultRequestFundList(this.ofiFundService, this.redux);
     }
@@ -140,10 +139,15 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundList(fundList: any): void {
-        this.fundList = fundList ? fundList : undefined;
-        this.fundListItems = fundList ? this.processFundList(fundList) : undefined;
+        let filteredFundList = {};
+        Object.keys(fundList).forEach((key) => {
+            if (fundList[key].draft == 0) filteredFundList[key] = fundList[key];
+        });
 
-        if(this.fundList) this.redux.dispatch(setRequestedFund());
+        this.fundList = filteredFundList ? filteredFundList : undefined;
+        this.fundListItems = filteredFundList ? this.processFundList(filteredFundList) : undefined;
+
+        if (this.fundList) this.redux.dispatch(setRequestedFund());
 
         this.changeDetectorRef.markForCheck();
     }
@@ -162,7 +166,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     selectFund(): void {
-        if(!this.isValid) return;
+        if (!this.isValid) return;
 
         const selectedFundId = this.newFundShareForm.value.fund[0].id;
 

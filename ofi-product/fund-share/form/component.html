@@ -70,7 +70,7 @@
                                     {{ 'The share will be / is closed, and unavailable to investors, with the selected status.' | translate }}
                                 </div>
                             </div>
-                            
+
                             <div class="row panel-header">
                                 <div class="col-xs-6">
                                     <a href="#" (click)="openPanel(panels['keyFacts'].mandatory, $event)">
@@ -386,11 +386,17 @@
                 <div class="col-sm-12">
                     <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">{{'Cancel' | translate}}</button>
 
-                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
+                    <button *ngIf="isCreate() || currDraft == 1"
+                            id="saveDraftFundShareBottom"
+                            type="button"
+                            class="btn btn-primary"
+                            (click)="saveDraft()">
+                        <i class="fa fa-save"></i> {{(isCreate() ? 'Save Draft' : 'Update Draft') | translate}}
+                    </button>
 
+                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
-                        <span [hidden]="!isCreate()">{{'Add new Share' | translate}}</span>
-                        <span [hidden]="!isUpdate()">{{'Update Share' | translate}}</span>
+                        {{(isCreate() || currDraft == 1 ? 'Add new Share' : 'Update Share') | translate}}
                     </button>
                 </div>
             </div>

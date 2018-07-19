@@ -1,10 +1,10 @@
-
-import {takeUntil, take, filter} from 'rxjs/operators';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil, take, filter } from 'rxjs/operators';
+import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Component, Inject, OnDestroy, OnInit, ViewEncapsulation, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { Subject } from 'rxjs';
 
 import * as _ from 'lodash';
 import { NgRedux, select } from '@angular-redux/store';
@@ -68,6 +68,7 @@ export class FundComponent implements OnInit, OnDestroy {
     viewMode = 'UMBRELLA';
     selectedUmbrella: number;
     param: string;
+    prefill: string;
 
     // local copy of config
     fundItems: any;
@@ -77,6 +78,7 @@ export class FundComponent implements OnInit, OnDestroy {
     // local copy of the state
     umbrellaList: UmbrellaList;
     fundList: FundList;
+    fundListItems = [];
 
     // select items
     domicileItems = [];
@@ -106,6 +108,7 @@ export class FundComponent implements OnInit, OnDestroy {
     language = 'en';
 
     // forms
+    fundControl = new FormControl([]);
     umbrellaForm: FormGroup;
     umbrellaEditForm: FormGroup;
     fundForm: FormGroup;
@@ -148,6 +151,8 @@ export class FundComponent implements OnInit, OnDestroy {
         fromShare?: boolean,
     } = {};
 
+    currDraft: number = 0;
+
     constructor(
         private router: Router,
         private location: Location,
@@ -176,6 +181,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.domicileItems = this.fundItems.domicileItems;
         this.umbrellaItems = this.fundItems.umbrellaItems;
+
         this.typeOfEuDirectiveItems = this.fundItems.typeOfEuDirectiveItems;
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
@@ -193,20 +199,21 @@ export class FundComponent implements OnInit, OnDestroy {
         this.transferAgentItems = this.fundItems.transferAgentItems;
         this.centralizingAgentItems = this.fundItems.centralizingAgentItems;
 
-        this.language$.pipe(
-            takeUntil(this.unSubscribe)
+        this.language$
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe((d) => {
-            this.language = d.substr(0, 2);
-            this.configDate = {
-                ...this.configDate,
-                locale: this.language,
-            };
-            this.configMonth = {
-                ...this.configMonth,
-                locale: this.language,
-            };
-        });
+            .subscribe((d) => {
+                this.language = d.substr(0, 2);
+                this.configDate = {
+                    ...this.configDate,
+                    locale: this.language,
+                };
+                this.configMonth = {
+                    ...this.configMonth,
+                    locale: this.language,
+                };
+            });
 
         this.umbrellaForm = fb.group({
             umbrellaFundName: { value: '', disabled: true },
@@ -245,7 +252,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
         this.fundForm = fb.group({
             isFundStructure: { value: '', disabled: true },
-            fundName: [''],
+            fundName: ['', Validators.compose([Validators.required, this.validators.alphanumeric])],
             legalEntityIdentifier: [null, this.validators.lei],
             registerOffice: [null, Validators.compose([this.validators.alphanumeric])],
             registerOfficeAddress: [null],
@@ -310,13 +317,15 @@ export class FundComponent implements OnInit, OnDestroy {
         this.umbrellaEditForm.addControl('umbrellaFund', this.umbrellaControl);
         this.umbrellaForm.addControl('umbrellaFundID', this.umbrellaControl);
 
-        this.umbrellaControl.valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (!d.length) {
-                this.selectedUmbrella = null;
-                return;
-            }
+        this.umbrellaControl.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                if (!d || !d.length) {
+                    this.selectedUmbrella = null;
+                    return;
+                }
 
                 if (d[0].id === '0') {
                     this.umbrellaForm.controls['umbrellaFundName'].setValue('');
@@ -415,91 +424,105 @@ export class FundComponent implements OnInit, OnDestroy {
                 return;
             });
 
-        this.fundForm.controls['domicile'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            this.fundForm.controls['transferAgent'].setValue([]);
-            this.fundForm.controls['centralizingAgent'].setValue([]);
-            this.fundForm.controls['homeCountryLegalType'].setValue([]);
+        this.fundForm.controls['domicile'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                this.fundForm.controls['transferAgent'].setValue([]);
+                this.fundForm.controls['centralizingAgent'].setValue([]);
+                this.fundForm.controls['homeCountryLegalType'].setValue([]);
 
-            if (this.isHomeCountryLegalTypeVisible()) {
-                this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
-                this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
-            } else {
-                this.homeCountryLegalTypeItems = [];
-                this.fundForm.controls['homeCountryLegalType'].clearValidators();
-                this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
-            }
-        });
-
-        this.fundForm.controls['isEuDirective'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (d === this.enums.isEuDirective.NO.toString()) {
-                this.fundForm.controls['typeOfEuDirective'].setValue([]);
-                this.fundForm.controls['typeOfEuDirective'].clearValidators();
-                this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
-            } else {
-                this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
-            }
-        });
-
-        this.fundForm.controls['typeOfEuDirective'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
-                this.fundForm.controls['UcitsVersion'].setValue([]);
-                this.fundForm.controls['UcitsVersion'].clearValidators();
-                this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
-            } else {
-                this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
-            }
-        });
-
-        this.fundForm.controls['legalForm'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([]);
-            if (!d[0]) {
-                this.nationalNomenclatureOfLegalFormItems = [];
-                return;
-            }
-            this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[d[0].id] || [];
-            if (this.nationalNomenclatureOfLegalFormItems.length === 1) {
-                this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([this.nationalNomenclatureOfLegalFormItems[0]]);
-            }
-        });
-
-        this.fundForm.controls['hasCapitalPreservation'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (d === this.enums.hasCapitalPreservation.NO.toString()) {
-                this.fundForm.controls['capitalPreservationLevel'].setValue(null);
-                this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
-            }
-        });
-
-        this.fundForm.controls['hasCppi'].valueChanges.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (d === this.enums.hasCppi.NO.toString()) {
-                this.fundForm.controls['cppiMultiplier'].setValue(null);
-            }
-        });
-
-        this.umbrellaFundList$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            const values = _.values(d);
-            if (!values.length) {
-                return [];
-            }
-            const newItems = values.map((item) => {
-                return {
-                    id: item.umbrellaFundID,
-                    text: item.umbrellaFundName,
-                };
+                if (d && this.isHomeCountryLegalTypeVisible()) {
+                    this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[d[0].id] || [];
+                    this.fundForm.controls['homeCountryLegalType'].setValidators(Validators.required);
+                } else {
+                    this.homeCountryLegalTypeItems = [];
+                    this.fundForm.controls['homeCountryLegalType'].clearValidators();
+                    this.fundForm.controls['homeCountryLegalType'].updateValueAndValidity();
+                }
             });
+
+        this.fundForm.controls['isEuDirective'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                if (d === this.enums.isEuDirective.NO.toString()) {
+                    this.fundForm.controls['typeOfEuDirective'].setValue([]);
+                    this.fundForm.controls['typeOfEuDirective'].clearValidators();
+                    this.fundForm.controls['typeOfEuDirective'].updateValueAndValidity();
+                } else {
+                    this.fundForm.controls['typeOfEuDirective'].setValidators(Validators.required);
+                }
+            });
+
+        this.fundForm.controls['typeOfEuDirective'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                if (_.get(d, ['0', 'id'], false) !== this.enums.typeOfEuDirective.UCITS.toString()) {
+                    this.fundForm.controls['UcitsVersion'].setValue([]);
+                    this.fundForm.controls['UcitsVersion'].clearValidators();
+                    this.fundForm.controls['UcitsVersion'].updateValueAndValidity();
+                } else {
+                    this.fundForm.controls['UcitsVersion'].setValidators(Validators.required);
+                }
+            });
+
+        this.fundForm.controls['legalForm'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([]);
+                if (!d || !d[0]) {
+                    this.nationalNomenclatureOfLegalFormItems = [];
+                    return;
+                }
+                this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[d[0].id] || [];
+                if (this.nationalNomenclatureOfLegalFormItems.length === 1) {
+                    this.fundForm.controls['nationalNomenclatureOfLegalForm'].setValue([this.nationalNomenclatureOfLegalFormItems[0]]);
+                }
+            });
+
+        this.fundForm.controls['hasCapitalPreservation'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                if (d === this.enums.hasCapitalPreservation.NO.toString()) {
+                    this.fundForm.controls['capitalPreservationLevel'].setValue(null);
+                    this.fundForm.controls['capitalPreservationPeriod'].setValue(null);
+                }
+            });
+
+        this.fundForm.controls['hasCppi'].valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                if (d === this.enums.hasCppi.NO.toString()) {
+                    this.fundForm.controls['cppiMultiplier'].setValue(null);
+                }
+            });
+
+        this.umbrellaFundList$
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe((d) => {
+                const values = _.values(d);
+                if (!values.length) {
+                    return [];
+                }
+                const newItems = values.map((item) => {
+                    return {
+                        id: item.umbrellaFundID,
+                        text: item.umbrellaFundName,
+                    };
+                });
 
                 this.umbrellaList = d;
                 this.umbrellaItems = _.uniq([
@@ -508,43 +531,58 @@ export class FundComponent implements OnInit, OnDestroy {
                 ]);
             });
 
-        this.fundList$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            this.fundList = d;
-        });
-
-        this.reqConfig$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((requested) => {
-            this.requestConfig(requested);
-        });
-
-        this.config$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((config) => {
-            this.productConfig = config;
-        });
-
-        this.managementCompanyAccessList$.pipe(
-            takeUntil(this.unSubscribe))
-            .subscribe((d) => {
-                const values = _.values(d);
-                if (!values.length) {
-                    return [];
+        combineLatest(
+            this.fundList$,
+            this.managementCompanyAccessList$,
+            this.umbrellaFundList$,
+            this.route.params,
+            this.route.queryParams,
+        )
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(([funds, m, u, params, queryParams]) => {
+                if (!Object.keys(funds) || !Object.keys(m) || !Object.keys(u)) {
+                    return;
                 }
-                this.managementCompanyItems = values.map((item) => {
-                    return {
-                        id: item.companyID,
-                        text: item.companyName,
-                    };
-                });
+                this.setManagementCompanyItems(m);
+                this.setFundList(funds);
+                this.param = params.id;
+                this.prefill = queryParams.prefill;
+                if (queryParams.prefill) {
+                    this.fundControl.setValue(
+                        FundComponent.getListItem(queryParams.prefill, this.fundListItems),
+                    );
+                }
+                if (
+                    this.managementCompanyItems.length > 0
+                    && this.fundList.length > 0
+                    && (this.param || this.prefill)
+                ) {
+                    this.fillFormByFundID(this.param || this.prefill);
+                    this.viewMode = 'FUND';
+                    return;
+                }
             });
 
-        this.currencyList$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            const data = d.toJS();
+        this.reqConfig$.pipe(
+            takeUntil(this.unSubscribe))
+            .subscribe((requested) => {
+                this.requestConfig(requested);
+            });
+
+        this.config$.pipe(
+            takeUntil(this.unSubscribe))
+            .subscribe((config) => {
+                this.productConfig = config;
+            });
+
+        this.currencyList$
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const data = d.toJS();
 
                 if (!data.length) {
                     return [];
@@ -626,6 +664,10 @@ export class FundComponent implements OnInit, OnDestroy {
         return homeCountryLegalTypesKeys.indexOf(id) !== -1;
     }
 
+    isNationalNomenclatureOfLegalFormVisible() {
+        return _.get(this.fundForm.controls['legalForm'].value, ['length'], false);
+    }
+
     isTransferAgentActive() {
         const id = _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], false);
         return id === 'IE' || id === 'LU';
@@ -646,79 +688,155 @@ export class FundComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.route.params.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((params) => {
-            this.param = params.id;
-
-                if (params.id === 'new') {
+        this.fundControl.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((item) => {
+                if (!item || !item.length) {
+                    this.umbrellaControl.reset();
+                    this.umbrellaEditForm.reset();
+                    this.fundForm.reset();
                     return;
                 }
-                if (Object.keys(this.fundList).indexOf(params.id) !== -1) {
-                    if (this.fundList[params.id].umbrellaFundID) {
-                        this.umbrellaControl.setValue([{
-                            id: this.fundList[params.id].umbrellaFundID,
-                            text: this.fundList[params.id].umbrellaFundName,
-                        }]);
-                    } else {
-                        this.umbrellaControl.setValue([
-                            this.umbrellaItems[0],
-                        ]);
-                    }
-
-                    const fund = _.omit(
-                        this.fundList[params.id],
-                        ['fundID', 'umbrellaFundID', 'umbrellaFundName', 'companyName'],
-                    );
-
-                    this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
-                    this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
-
-                    this.fundForm.setValue({
-                        ...fund,
-                        domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
-                        typeOfEuDirective: FundComponent.getListItem(fund.typeOfEuDirective, this.typeOfEuDirectiveItems),
-                        UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
-                        legalForm: FundComponent.getListItem(fund.legalForm, this.legalFormItems),
-                        nationalNomenclatureOfLegalForm: FundComponent.getListItem(fund.nationalNomenclatureOfLegalForm, this.nationalNomenclatureOfLegalFormItems),
-                        homeCountryLegalType: FundComponent.getListItem(fund.homeCountryLegalType, this.homeCountryLegalTypeItems),
-                        fundCurrency: FundComponent.getListItem(fund.fundCurrency, this.fundCurrencyItems),
-                        managementCompanyID: FundComponent.getListItem(fund.managementCompanyID, this.managementCompanyItems),
-                        fundAdministrator: FundComponent.getListItem(fund.fundAdministrator, this.fundAdministratorItems),
-                        custodianBank: FundComponent.getListItem(fund.custodianBank, this.custodianBankItems),
-                        investmentManager: FundComponent.getListItem(fund.investmentManager, this.investmentManagerItems),
-                        principalPromoter: this.getListItems(fund.principalPromoter, this.principalPromoterItems),
-                        payingAgent: this.getListItems(fund.payingAgent, this.payingAgentItems),
-                        portfolioCurrencyHedge: FundComponent.getListItem(fund.portfolioCurrencyHedge, this.portfolioCurrencyHedgeItems),
-                        investmentAdvisor: this.getListItems(fund.investmentAdvisor, this.investmentAdvisorItems),
-                        auditor: FundComponent.getListItem(fund.auditor, this.auditorItems),
-                        taxAuditor: FundComponent.getListItem(fund.taxAuditor, this.taxAuditorItems),
-                        legalAdvisor: FundComponent.getListItem(fund.legalAdvisor, this.legalAdvisorItems),
-                        capitalPreservationPeriod: FundComponent.getListItem(fund.capitalPreservationPeriod, this.capitalPreservationPeriodItems),
-                        transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
-                        centralizingAgent: FundComponent.getListItem(fund.centralizingAgent, this.centralizingAgentItems),
-                        delegatedManagementCompany: FundComponent.getListItem(fund.delegatedManagementCompany, this.managementCompanyItems),
-                        holidayMgmtConfig: JSON.parse(fund.holidayMgmtConfig),
-                    });
-                    if (fund.legalEntityIdentifier) {
-                        this.isLeiVisible = true;
-                    }
-                    this.viewMode = 'FUND';
-                    return;
-                }
-
-                this.router.navigate(['product-module', 'product', 'fund', 'new']);
-                return;
-
+                this.fillFormByFundID(item[0].id);
+                this.changeDetectorRef.markForCheck();
             });
+    }
+
+    setManagementCompanyItems(d) {
+        const values = _.values(d);
+        if (!values.length) {
+            return [];
+        }
+        this.managementCompanyItems = values.map((item) => {
+            return {
+                id: item.companyID,
+                text: item.companyName,
+            };
+        });
+    }
+
+    setFundList(funds) {
+        if (!Object.keys(funds).length) {
+            this.fundList = [];
+            this.fundListItems = [];
+            return;
+        }
+
+        this.fundListItems = Object.keys(funds).map((key) => {
+            return {
+                id: key,
+                text: funds[key].fundName,
+            };
+        });
+
+        this.fundList = Object.keys(funds).map((key) => {
+            const fund = funds[key];
+
+            const homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
+            const nationalNomenclatureOfLegalFormItems = this.fundItems
+                .nationalNomenclatureOfLegalFormItems[fund.legalForm];
+
+            return {
+                ...fund,
+                domicile: FundComponent.getListItem(fund.domicile, this.domicileItems),
+                typeOfEuDirective: FundComponent.getListItem(
+                    fund.typeOfEuDirective,
+                    this.typeOfEuDirectiveItems,
+                ),
+                UcitsVersion: FundComponent.getListItem(fund.UcitsVersion, this.UcitsVersionItems),
+                legalForm: FundComponent.getListItem(fund.legalForm, this.legalFormItems),
+                nationalNomenclatureOfLegalForm: FundComponent.getListItem(
+                    fund.nationalNomenclatureOfLegalForm,
+                    nationalNomenclatureOfLegalFormItems,
+                ),
+                homeCountryLegalType: FundComponent.getListItem(
+                    fund.homeCountryLegalType,
+                    homeCountryLegalTypeItems,
+                ),
+                fundCurrency: FundComponent.getListItem(fund.fundCurrency, this.fundCurrencyItems),
+                managementCompanyID: FundComponent.getListItem(
+                    fund.managementCompanyID,
+                    this.managementCompanyItems,
+                ),
+                fundAdministrator: FundComponent.getListItem(
+                    fund.fundAdministrator,
+                    this.fundAdministratorItems,
+                ),
+                custodianBank: FundComponent.getListItem(fund.custodianBank, this.custodianBankItems),
+                investmentManager: FundComponent.getListItem(
+                    fund.investmentManager,
+                    this.investmentManagerItems,
+                ),
+                principalPromoter: this.getListItems(fund.principalPromoter, this.principalPromoterItems),
+                payingAgent: this.getListItems(fund.payingAgent, this.payingAgentItems),
+                portfolioCurrencyHedge: FundComponent.getListItem(
+                    fund.portfolioCurrencyHedge,
+                    this.portfolioCurrencyHedgeItems,
+                ),
+                investmentAdvisor: this.getListItems(fund.investmentAdvisor, this.investmentAdvisorItems),
+                auditor: FundComponent.getListItem(fund.auditor, this.auditorItems),
+                taxAuditor: FundComponent.getListItem(fund.taxAuditor, this.taxAuditorItems),
+                legalAdvisor: FundComponent.getListItem(fund.legalAdvisor, this.legalAdvisorItems),
+                capitalPreservationPeriod: FundComponent.getListItem(
+                    fund.capitalPreservationPeriod,
+                    this.capitalPreservationPeriodItems,
+                ),
+                transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
+                centralizingAgent: FundComponent.getListItem(
+                    fund.centralizingAgent,
+                    this.centralizingAgentItems,
+                ),
+                delegatedManagementCompany: FundComponent.getListItem(
+                    fund.delegatedManagementCompany,
+                    this.managementCompanyItems,
+                ),
+                holidayMgmtConfig: JSON.parse(fund.holidayMgmtConfig),
+            };
+        });
+    }
+
+    fillFormByFundID(fundID: string) {
+        const fund = _.find(this.fundList, { fundID: Number(fundID) });
+        if (fund.umbrellaFundID) {
+            this.umbrellaControl.setValue(
+                FundComponent.getListItem(fund.umbrellaFundID.toString(), this.umbrellaItems),
+            );
+        } else {
+            this.umbrellaControl.setValue([
+                this.umbrellaItems[0],
+            ]);
+        }
+
+        this.homeCountryLegalTypeItems = this.fundItems.homeCountryLegalTypeItems[fund.domicile] || [];
+        this.nationalNomenclatureOfLegalFormItems = this.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
+
+        this.currDraft = fund.draft;
+
+        this.fundForm.setValue({
+            ..._.omit(fund, [
+                'fundID',
+                'umbrellaFundID',
+                'umbrellaFundName',
+                'companyName',
+                'draft',
+                'draftUser',
+                'draftDate',
+            ]),
+            fundName: this.param ? fund.fundName : '',
+        });
+        this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
+
+        return;
     }
 
     waitForCurrentUmbrella(umbrellaID) {
         this.umbrellaFundList$
             .pipe(
                 filter(umbrellas => umbrellas[umbrellaID]),
-                take(1)
-            )
+                take(1),
+        )
             .subscribe((umbrellas) => {
                 this.setCurrentUmbrella(umbrellas[umbrellaID]);
             });
@@ -745,6 +863,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
     submitFundForm() {
         const payload: Fund = {
+            draft: 0,
             ...this.fundForm.getRawValue(),
             domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
             typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
@@ -774,7 +893,7 @@ export class FundComponent implements OnInit, OnDestroy {
             legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
         };
 
-        if (this.param === 'new') {
+        if (!this.param) {
 
             this.fundService.iznCreateFund(payload)
                 .then(fund => {
@@ -817,12 +936,84 @@ export class FundComponent implements OnInit, OnDestroy {
         }
     }
 
+    saveDraft() {
+        const payload: Fund = {
+            draft: 1,
+            ...this.fundForm.getRawValue(),
+            domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
+            typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
+            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
+            legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
+            nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
+            homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
+            fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
+            portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
+            investmentAdvisor: this.getIdsFromList(this.fundForm.controls['investmentAdvisor'].value),
+            auditor: _.get(this.fundForm.controls['auditor'].value, ['0', 'id'], null),
+            taxAuditor: _.get(this.fundForm.controls['taxAuditor'].value, ['0', 'id'], null),
+            legalAdvisor: _.get(this.fundForm.controls['legalAdvisor'].value, ['0', 'id'], null),
+            fiscalYearEnd: (this.fundForm.controls['fiscalYearEnd'].value != null ? this.fundForm.controls['fiscalYearEnd'].value + '-01' : null),
+            fundAdministrator: _.get(this.fundForm.controls['fundAdministrator'].value, ['0', 'id'], null),
+            custodianBank: _.get(this.fundForm.controls['custodianBank'].value, ['0', 'id'], null),
+            investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
+            principalPromoter: this.getIdsFromList(this.fundForm.controls['principalPromoter'].value),
+            payingAgent: this.getIdsFromList(this.fundForm.controls['payingAgent'].value),
+            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
+            umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
+            transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
+            centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
+            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            holidayMgmtConfig: this.getHolidayMgmtConfig(),
+            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+        };
+
+        if (!this.param) {
+
+            this.fundService.iznCreateFund(payload)
+                .then(() => {
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
+                    );
+                    OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                    this.location.back();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to create the draft fund. ' + errMsg);
+                    return;
+                });
+        } else {
+            this.fundService.iznUpdateFund(this.param, payload)
+                .then(() => {
+                    this.toasterService.pop(
+                        'success',
+                        `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
+                    );
+                    OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                    this.location.back();
+                    return;
+                })
+                .catch((err) => {
+                    const errMsg = _.get(err, '[1].Data[0].Message', '');
+                    this.toasterService.pop('error', 'Failed to update the draft fund. ' + errMsg);
+                    return;
+                });
+        }
+    }
+
     redirectToShare(fundID?) {
         let query = {};
         if (fundID) {
             query = { fund: fundID };
         }
         this.router.navigate(['/product-module/product/fund-share/new'], { queryParams: query });
+    }
+
+    duplicate(fundID: string) {
+        this.router.navigateByUrl(`/product-module/product/fund/new?prefill=${fundID}`);
     }
 
     displaySharePopup(fundName, fundID) {
@@ -867,8 +1058,8 @@ export class FundComponent implements OnInit, OnDestroy {
         return this.fundForm.value.useDefaultHolidayMgmt === '0';
     }
 
-    onClickLeiSwitch() {
-        if (this.isLeiVisible) {
+    toggleLeiSwitch(nextState: boolean) {
+        if (!nextState) {
             this.fundForm.controls['legalEntityIdentifier'].disable();
             this.fundForm.controls['legalEntityIdentifier'].clearValidators();
         } else {
@@ -878,7 +1069,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.validators.lei,
             ]));
         }
-        this.isLeiVisible = !this.isLeiVisible;
+        this.isLeiVisible = nextState;
     }
 
     ngOnDestroy() {
