@@ -1,4 +1,4 @@
-import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
+import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export class AccountAdminUser {
@@ -12,12 +12,13 @@ export class AccountAdminUser {
     userTypeID: number;
     userType: string;
     userStatus: number;
-    isInTeam?: boolean;
+    isActivated?: boolean;
 }
 
-export class AccountAdminUserForm {
+export class AccountAdminUserForm extends DynamicFormsValidator {
     constructor(userTypePreset: string,
                 userTypesList: any[]) {
+        super();
         this.userType.preset = userTypePreset;
         this.userType.listItems = userTypesList;
     }
@@ -26,46 +27,60 @@ export class AccountAdminUserForm {
         label: 'Email address (username)',
         type: FormItemType.text,
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.WidthThird],
     };
 
     firstName: FormItem = {
         label: 'First name',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.WidthThird],
     };
 
     lastName: FormItem = {
         label: 'Last name',
         type: FormItemType.text,
         required: true,
+        style: [FormItemStyle.WidthThird],
     };
 
     phoneNumber: FormItem = {
         label: 'Phone number',
         type: FormItemType.text,
-        required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        required: false,
+        style: [FormItemStyle.WidthThird],
     };
 
     userType: FormItem = {
         label: 'Type',
         type: FormItemType.list,
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
+        style: [FormItemStyle.WidthThird],
     };
 
     reference: FormItem = {
         label: 'Reference',
         type: FormItemType.text,
-        required: true,
+        required: false,
+        style: [FormItemStyle.WidthThird],
     };
+}
+
+export class AccountAdminUserAuditEntry {
+    userID: number;
+    reference: string;
+    userName: string;
+    field: string;
+    oldValue: any;
+    newValue: any;
+    dateModified: string;
 }
 
 export interface ReadUsersRequest extends MemberNodeMessageBody {
     token: string;
-    userID?: number;
-    accountID?: number;
+    userID: number;
+    accountID: number;
+    textSearch: string;
 }
 
 export interface CreateUserRequest extends MemberNodeMessageBody {
@@ -75,6 +90,21 @@ export interface CreateUserRequest extends MemberNodeMessageBody {
     email: string;
     userType: number;
     password: string;
+}
+
+export interface InviteUserRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+    userFirstName: string;
+    recipientEmailAddress: string;
+    localeCode: string;
+    assetManagerName: string;
+}
+
+export interface UpdateUserStatusRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+    status: boolean;
 }
 
 export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {
@@ -88,4 +118,16 @@ export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {
     phoneNumber: string;
     userType: number;
     reference: string;
+}
+
+export interface DeleteUserRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+}
+
+export interface ReadUsersAuditRequest extends MemberNodeMessageBody {
+    token: string;
+    search: string;
+    dateFrom: string;
+    dateTo: string;
 }

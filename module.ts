@@ -19,7 +19,10 @@ import {
     AccountAdminAuditBase,
     AccountAdminListBase,
     UserManagementServiceBase,
-    UserTeamsUsersMgmtComponentBase,
+    AccountAdminUsersMgmtComponentBase,
+    AccountAdminPermissionsComponentBase,
+    AccountAdminPermissionsServiceBase,
+    AccountAdminStatusComponentBase,
 } from './base';
 
 import {
@@ -28,6 +31,7 @@ import {
     UserTeamsListComponent,
     UserTeamsService,
     UserTeamsUsersMgmtTeamsComponent,
+    UserTeamsStatusComponent,
 } from './teams';
 
 import {
@@ -36,6 +40,7 @@ import {
     UsersListComponent,
     UsersService,
     UserTeamsUsersMgmtUsersComponent,
+    UsersStatusComponent,
 } from './users';
 
 @NgModule({
@@ -65,13 +70,18 @@ import {
         UsersListComponent,
         UserTeamsUsersMgmtTeamsComponent,
         UserTeamsUsersMgmtUsersComponent,
-        UserTeamsUsersMgmtComponentBase,
+        AccountAdminUsersMgmtComponentBase,
         UsersCreateUpdateComponent,
+        AccountAdminPermissionsComponentBase,
+        AccountAdminStatusComponentBase,
+        UserTeamsStatusComponent,
+        UsersStatusComponent,
     ],
     providers: [
         UserTeamsService,
         UsersService,
         UserManagementServiceBase,
+        AccountAdminPermissionsServiceBase,
     ],
     exports: [],
 })

@@ -1,24 +1,112 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 
 import { MultilingualService } from '@setl/multilingual';
+
+import {
+    clearRequestedAccountAdminUsersAudit,
+} from '@setl/core-store';
 import { AccountAdminAuditBase } from '../../base/audit/component';
+import { UsersService } from '../service';
+import * as Model from '../model';
 
 @Component({
     selector: 'app-core-admin-users-audit',
-    templateUrl: 'component.html',
-    styleUrls: ['component.scss'],
+    templateUrl: '../../base/audit/component.html',
+    styleUrls: ['../../base/audit/component.scss'],
 })
-export class UsersAuditComponent extends AccountAdminAuditBase implements OnInit, OnDestroy {
+export class UsersAuditComponent
+    extends AccountAdminAuditBase<Model.AccountAdminUserAuditEntry> implements OnInit, OnDestroy {
 
-    constructor(redux: NgRedux<any>,
+    @select(['accountAdmin', 'usersAudit', 'requested']) usersRequestedOb;
+    @select(['accountAdmin', 'usersAudit', 'users']) usersOb;
+
+    constructor(private service: UsersService,
+                redux: NgRedux<any>,
                 router: Router,
                 translate: MultilingualService) {
         super(redux, router, translate);
+        this.noun = 'User';
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        super.ngOnInit();
+
+        this.subscriptions.push(this.usersRequestedOb.subscribe((requested: boolean) => {
+            this.requestUsersAudit(requested);
+        }));
+
+        this.subscriptions.push(this.usersOb.subscribe((audit: Model.AccountAdminUserAuditEntry[]) => {
+            this.audit = audit;
+        }));
+    }
+
+    private requestUsersAudit(requested: boolean): void {
+        if (requested) return;
+
+        const request = this.getSearchRequest('userID');
+
+        this.service.readUsersAudit(request.search,
+                                    request.dateFrom,
+                                    request.dateTo,
+                                    () => {},
+                                    () => {});
+    }
+
+    protected updateData(): void {
+        this.redux.dispatch(clearRequestedAccountAdminUsersAudit());
+    }
+
+    initDataGridConfig(): void {
+        this.datagridConfig = {
+            idIndex: 'userID',
+            columns: [
+                {
+                    id: 'Ref',
+                    dataIndex: 'reference',
+                    styleClass: 'ref',
+                    title: 'Ref',
+                },
+                {
+                    id: 'User',
+                    dataIndex: 'userName',
+                    styleClass: 'name',
+                    title: 'Team',
+                },
+                {
+                    id: 'Field',
+                    dataIndex: 'field',
+                    styleClass: 'field',
+                    title: 'field',
+                },
+                {
+                    id: 'Previous',
+                    dataIndex: 'oldValue',
+                    styleClass: 'previous',
+                    title: 'Previous value',
+                },
+                {
+                    id: 'New',
+                    dataIndex: 'newValue',
+                    styleClass: 'new',
+                    title: 'New value',
+                },
+                {
+                    id: 'ModifiedBy',
+                    dataIndex: 'userName',
+                    styleClass: 'modifiedby',
+                    title: 'Modified by',
+                },
+                {
+                    id: 'Date',
+                    dataIndex: 'dateModified',
+                    styleClass: 'date',
+                    title: 'Date',
+                },
+            ],
+        };
+    }
 
     ngOnDestroy() {
         super.ngOnDestroy();

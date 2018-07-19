@@ -59,7 +59,7 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     private requestUsers(requested: boolean): void {
         if (requested) return;
 
-        this.service.readUsers(null, this.accountId, () => {}, () => {});
+        this.service.readUsers(null, this.accountId, '', () => {}, () => {});
     }
 
     ngOnDestroy() {

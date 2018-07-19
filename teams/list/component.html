@@ -10,7 +10,9 @@
                 <div class="col">
                     <a [routerLink]="'/account-admin/teams/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
                 </div>
-
+                <div class="col">
+                    <button class="btn btn-primary" (click)="exportEntitiesAsCSV()">{{ 'Export Teams as CSV' | translate }}</button>
+                </div>
                 <div class="col">
                     <a [routerLink]="'/account-admin/teams/new'" class="btn btn-primary">{{ 'Add New Team' | translate }}</a>
                 </div>
@@ -54,12 +56,6 @@
                     <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
-
-            <div class="row buttons bottom">
-                <div class="col">
-                    <button class="btn" (click)="exportEntitiesAsCSV()">{{ 'Export Teams as CSV' | translate }}</button>
-                </div>
-            </div>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

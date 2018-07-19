@@ -10,7 +10,10 @@ clr-dg-row.selected {
 
         .slider {
             left: 2px;
-            top: 3px;
+            top: 1px;
         }
     }
 }
+
+.col.search-name { margin-left: -.5rem; }
+.col.show-active { line-height: 40px; }

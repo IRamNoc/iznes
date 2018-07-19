@@ -1,28 +1,37 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
+import * as UsersModel from '../../users/model';
+import { UserManagementServiceBase } from '../../base/create-update/user-management/service';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
-import { AccountAdminErrorResponse, AccountAdminNouns } from '../../base/model';
+import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-crud',
-    templateUrl: '../../base/create-update/component.html',
+    templateUrl: 'component.html',
 })
-export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
+export class UserTeamsCreateUpdateComponent
+    extends AccountAdminCreateUpdateBase<Model.AccountAdminTeamForm> implements OnInit, OnDestroy {
 
     form: Model.AccountAdminTeamForm = new Model.AccountAdminTeamForm();
 
+    private usersSelected: UsersModel.AccountAdminUser[];
+
     constructor(private service: UserTeamsService,
+                private userMgmtService: UserManagementServiceBase,
                 route: ActivatedRoute,
-                router: Router,
+                protected router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService) {
-        super(route, router, alerts, toaster);
+                toaster: ToasterService,
+                confirmations: ConfirmationService) {
+        super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.Team;
     }
 
@@ -31,8 +40,9 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
 
         if (this.isUpdateMode()) {
             this.service.readUserTeams(this.entityId,
+                                       null,
                                        (data: any) => this.onReadTeamSuccess(data),
-                                       (e: any) => this.onReadEntityError(e));
+                                       (e: any) => this.onReadEntityError());
         }
     }
 
@@ -42,7 +52,12 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         this.form.description.control.setValue(team.description);
         this.form.name.control.setValue(team.name);
         this.form.reference.control.setValue(team.reference);
-        this.form.status.control.setValue(team.status);
+
+        this.status = team.status;
+    }
+
+    getTeamUsers(users: UsersModel.AccountAdminUser[]): void {
+        this.usersSelected = users;
     }
 
     save(): void {
@@ -53,27 +68,64 @@ export class UserTeamsCreateUpdateComponent extends AccountAdminCreateUpdateBase
         }
     }
 
+    protected onDeleteConfirm(): void {
+        if (this.isUpdateMode()) this.deleteTeam();
+    }
+
     private createTeam(): void {
         this.service.createUserTeam(
             this.accountId,
-            this.form.status.value(),
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            () => this.onSaveSuccess(this.form.name.value()),
+            (data: AccountAdminSuccessResponse) => {
+                this.onSaveSuccess(
+                    this.form.name.value(),
+                    data[1].Data[0].userTeamID,
+                );
+
+                this.addUsersToTeam(
+                    data[1].Data[0].userTeamID,
+                    `${this.form.name}`,
+                );
+
+                this.router.navigateByUrl(this.getBackUrl());
+            },
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
+    }
+
+    private addUsersToTeam(userTeamId: number, teamName: string): void {
+        _.forEach(this.usersSelected, (user: UsersModel.AccountAdminUser) => {
+            this.userMgmtService.updateTeamUserMap(
+                user.isActivated ? true : false,
+                user.userID,
+                userTeamId,
+                () => {},
+                (e: AccountAdminErrorResponse) => this.onSaveError(
+                    teamName,
+                    e,
+                ),
+            );
+        });
     }
 
     private updateTeam(): void {
         this.service.updateUserTeam(
             this.entityId,
-            this.form.status.value(),
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            () => this.onSaveSuccess(this.form.name.value()),
+            () => this.onSaveSuccess(this.form.name.value(), this.entityId),
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
+        );
+    }
+
+    private deleteTeam(): void {
+        this.service.deleteUserTeam(
+            this.entityId,
+            () => this.onDeleteSuccess(this.form.name.value()),
+            (e: AccountAdminErrorResponse) => this.onDeleteError(this.form.name.value(), e),
         );
     }
 

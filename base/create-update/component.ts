@@ -5,15 +5,17 @@ import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 
 @Component({
     selector: 'app-account-admin-crud-base',
-    templateUrl: 'component.html',
+    template: 'component.html',
+    styles: ['.row.actions .btn { margin-right: 0; }'],
 })
-export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
+export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     entityId: number;
     form;
@@ -23,6 +25,7 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
     permissionLevels: any[] = [];
     permissionsEmitter: EventEmitter<any> = new EventEmitter();
     permissionsForm: FormGroup;
+    status: boolean; // team / user status
 
     protected accountId: number;
     protected subscriptions: Subscription[] = [];
@@ -38,9 +41,10 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
      * @param route ActivatedRoute
      */
     constructor(private route: ActivatedRoute,
-                private router: Router,
+                protected router: Router,
                 private alerts: AlertsService,
-                private toaster: ToasterService) {}
+                protected toaster: ToasterService,
+                private confirmations: ConfirmationService) {}
 
     ngOnInit() {
         this.processParams();
@@ -93,11 +97,15 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
+    private getUpdateUrl(id): string {
+        return `/account-admin/${this.noun.toLowerCase()}s/${id}`;
+    }
+
     save(): void {
         console.error('Method not implemented');
     }
 
-    protected onSaveSuccess(entityName: string): void {
+    protected onSaveSuccess(entityName: string, entityId: number): void {
         let message = `${entityName} successfully `;
 
         if (this.isCreateMode()) {
@@ -107,11 +115,12 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
         }
 
         this.toaster.pop('success', message);
-
-        this.router.navigateByUrl(this.getBackUrl());
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {
+        const errorMessage = error[1].Data[0] ?
+            error[1].Data[0].Message :
+            (error[1].Data as any).Message;
         let message = `${entityName} failed to be `;
 
         if (this.isCreateMode()) {
@@ -120,14 +129,43 @@ export class AccountAdminCreateUpdateBase implements OnInit, OnDestroy {
             message += 'updated';
         }
 
-        message += `.<br /><i>${error[1].Data[0].Message}</i>`;
+        message += `.<br /><i>${errorMessage}</i>`;
 
         this.alerts.create('error', message);
-
-        console.log(error);
     }
 
-    protected onReadEntityError(error: AccountAdminErrorResponse): void {
+    delete(): void {
+        this.confirmations.create(
+            `Delete ${this.noun}`,
+            `Are you sure you wish to delete this ${this.noun.toLowerCase()}?`,
+        ).subscribe((value) => {
+            if (value.resolved) {
+                this.onDeleteConfirm();
+                return;
+            }
+        });
+    }
+
+    protected onDeleteConfirm(): void {
+        console.error('Method not implemented');
+    }
+
+    protected onDeleteSuccess(entityName: string): void {
+        const message = `${entityName} successfully deleted`;
+
+        this.toaster.pop('success', message);
+
+        this.router.navigateByUrl(this.getBackUrl());
+    }
+
+    protected onDeleteError(entityName: string, error: AccountAdminErrorResponse): void {
+        const message = `${entityName} failed to delete` +
+            `.<br /><i>${error[1].Data[0].Message}</i>`;
+
+        this.alerts.create('error', message);
+    }
+
+    protected onReadEntityError(): void {
         this.toaster.pop('error', `Failed to read ${this.noun}`);
 
         this.router.navigateByUrl(this.getBackUrl());

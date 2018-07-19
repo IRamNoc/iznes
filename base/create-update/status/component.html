@@ -1,0 +1,16 @@
+<div class="row actions">
+    <div class="col-sm-12">
+        <h3>{{ noun + ' Status' | translate }}</h3>
+
+        <p>Current status: <span class="status"
+            [class.enabled]="status"
+            [class.disabled]="!status">{{ status ? 'Enabled' : 'Disabled' | translate }}</span>
+        </p>
+
+        <button class="btn btn-warning"
+            (click)="updateStatus()"
+            [class.btn-success]="!status"
+            [class.btn-warning]="status">{{ status ? 'Disable' : 'Enable' | translate }}
+        </button>
+    </div>
+</div>

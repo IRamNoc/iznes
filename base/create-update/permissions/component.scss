@@ -1,3 +1,8 @@
+:host {
+    display: block;
+    margin-top: -20px;
+}
+
 clr-dg-row.selected {
     background: rgba(34,139,34,0.05) !important
 }
@@ -10,7 +15,8 @@ clr-dg-row.selected {
 
         .slider {
             left: 2px;
-            top: 3px;
+            top: 1px;
         }
     }
 }
+
