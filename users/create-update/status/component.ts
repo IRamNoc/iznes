@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
+import { ConfirmationService } from '@setl/utils';
 
 import { AccountAdminStatusComponentBase } from '../../../base/create-update/status/component';
 import { UsersService } from '../../service';
@@ -15,8 +16,9 @@ export class UsersStatusComponent extends AccountAdminStatusComponentBase<null> 
 
     constructor(toaster: ToasterService,
                 translate: MultilingualService,
+                confirmation: ConfirmationService,
                 private service: UsersService) {
-        super(toaster, translate);
+        super(toaster, translate, confirmation);
     }
 
     onUpdateStatus(): void {

@@ -10,7 +10,11 @@
     <clr-tab>
         <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
         <clr-tab-content class="outer">
-            <app-core-admin-user-teams-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-user-teams-status>
+            <app-core-admin-user-teams-status *ngIf="isUpdateMode()"
+                [noun]="noun"
+                [status]="status"
+                [entityId]="entityId">
+            </app-core-admin-user-teams-status>
 
             <h3>{{ noun + ' Details' | translate }}</h3>
 
@@ -34,35 +38,37 @@
                 </div>
             </div>
             
-            <ng-container *ngIf="isUpdateMode()">
-                <div class="row actions bottom">
-                    <div class="col-sm-12">
-                        <h3>{{ 'User Memberships' | translate }}</h3>
-                    </div>
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{ 'User Memberships' | translate }}</h3>
                 </div>
-                
-                <div class="row">
-                    <div class="col-sm-12">
-                        <app-core-admin-teams-user-mgmt *ngIf="isTeamsPage()" [entityId]="entityId"></app-core-admin-teams-user-mgmt>
-                    </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-teams-user-mgmt
+                        [entityId]="entityId"
+                        [doUpdate]="isUpdateMode()"
+                        (entitiesFn)="getTeamUsers($event)">
+                    </app-core-admin-teams-user-mgmt>
                 </div>
-                
-                <div class="row actions bottom">
-                    <div class="col-sm-12">
-                        <h3>{{
-                            (isTeamsPage()) ?
-                            'Team Permissions':
-                            'User Permissions'
-                            | translate }}</h3>
-                    </div>
+            </div>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{
+                        (isTeamsPage()) ?
+                        'Team Permissions':
+                        'User Permissions'
+                        | translate }}</h3>
                 </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-sm-12">
-                        <app-core-admin-permissions></app-core-admin-permissions>
-                    </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-permissions></app-core-admin-permissions>
                 </div>
-            </ng-container>
+            </div>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

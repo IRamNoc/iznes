@@ -43,7 +43,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     constructor(private route: ActivatedRoute,
                 protected router: Router,
                 private alerts: AlertsService,
-                private toaster: ToasterService,
+                protected toaster: ToasterService,
                 private confirmations: ConfirmationService) {}
 
     ngOnInit() {
@@ -118,6 +118,9 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {
+        const errorMessage = error[1].Data[0] ?
+            error[1].Data[0].Message :
+            (error[1].Data as any).Message;
         let message = `${entityName} failed to be `;
 
         if (this.isCreateMode()) {
@@ -126,7 +129,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
             message += 'updated';
         }
 
-        message += `.<br /><i>${error[1].Data[0].Message}</i>`;
+        message += `.<br /><i>${errorMessage}</i>`;
 
         this.alerts.create('error', message);
     }

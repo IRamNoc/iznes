@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
+import { MultilingualService } from '@setl/multilingual';
 
 import {
     setRequestedUserTypes,
@@ -31,24 +32,31 @@ export class UsersCreateUpdateComponent
     extends AccountAdminCreateUpdateBase<Model.AccountAdminUserForm> implements OnInit, OnDestroy {
 
     addAdditionalUserTooltip: TooltipConfig;
-    userPermissionsTooltip: TooltipConfig;
+    createUserTooltip: TooltipConfig;
+    createInviteUserTooltip: TooltipConfig;
     teamMembershipsTooltip: TooltipConfig;
+    userPermissionsTooltip: TooltipConfig;
     forms: Model.AccountAdminUserForm[] = [];
+    myDetails;
+    siteSettings;
     usersPanelOpen: boolean = true;
     userTypes;
 
-    private userTeamsSelected: any[];
+    private userTeamsSelected: TeamModel.AccountAdminTeam[];
 
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
     @select(['userAdmin', 'userTypes', 'requested']) userTypesReqOb;
+    @select(['user', 'myDetail']) myDetailsOb;
+    @select(['user', 'siteSettings']) siteSettingsOb;
 
     constructor(private service: UsersService,
                 private redux: NgRedux<any>,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
-                toaster: ToasterService,
+                protected toaster: ToasterService,
                 confirmations: ConfirmationService,
+                private translate: MultilingualService,
                 private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.User;
@@ -63,20 +71,28 @@ export class UsersCreateUpdateComponent
 
     private initTooltips(): void {
         this.addAdditionalUserTooltip = {
-            text: `If you add another user here, then the teams you assign below
-                will apply to all those users.`,
+            text: this.translate.translate(`If you add another user here, then the teams you assign below
+                will apply to all those users.`),
             size: 'small',
         };
 
         this.userPermissionsTooltip = {
-            text: `User permissions allow you to set the rights that users will have over IZNES.
-                You can assign permissions in two ways; either you can give permissions to a single
-                user with the matrix below or you can create teams with specific permissions and add users to them.`,
+            text: this.translate.translate(`User permissions allow you to set the rights
+                that users will have over IZNES. You can assign permissions in two ways;
+                either you can give permissions to a single user with the matrix below
+                or you can create teams with specific permissions and add users to them.`),
             size: 'small',
         };
 
         this.teamMembershipsTooltip = {
-            text: 'Add users to this team. Users will inherit the permissions outlined in User permissions.',
+            text: this.translate.translate(`Add users to this team. Users will inherit
+                the permissions outlined in User permissions.`),
+            size: 'small',
+        };
+
+        this.createUserTooltip = {
+            text: this.translate.translate(`Create a new user on the platform. You maybe also send them
+                and invitation to use the platform.`),
             size: 'small',
         };
     }
@@ -113,7 +129,15 @@ export class UsersCreateUpdateComponent
             this.requestUserTypes(requested);
         });
 
-        this.subscriptions.push(userTypesSub, userTypesReqSub);
+        const myDetailsSub = this.myDetailsOb.subscribe((details) => {
+            this.myDetails = details;
+        });
+
+        const siteSettingsSub = this.siteSettingsOb.subscribe((settings) => {
+            this.siteSettings = settings;
+        });
+
+        this.subscriptions.push(userTypesSub, userTypesReqSub, myDetailsSub, siteSettingsSub);
     }
 
     private requestUserTypes(requested: boolean): void {
@@ -161,7 +185,7 @@ export class UsersCreateUpdateComponent
         this.status = user.userStatus === 1 ? true : false;
     }
 
-    getUserTeams(teams: any[]): void {
+    getUserTeams(teams: TeamModel.AccountAdminTeam[]): void {
         this.userTeamsSelected = teams;
     }
 
@@ -185,28 +209,15 @@ export class UsersCreateUpdateComponent
         return valid;
     }
 
-    save(): void {
+    save(invite: boolean = false): void {
         if (this.isCreateMode()) {
-            this.createUsers();
+            this.createUsers(invite);
         } else if (this.isUpdateMode()) {
-            this.updateUser();
+            this.updateUser(invite);
         }
     }
 
-    protected onDeleteConfirm(): void {
-        this.service.deleteUser(
-            this.entityId,
-            () => this.onDeleteSuccess(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-            ),
-            (e: AccountAdminErrorResponse) => this.onDeleteError(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                e,
-            ),
-        );
-    }
-
-    private createUsers(): void {
+    private createUsers(invite: boolean): void {
         _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
             this.service.createUser(
                 this.accountId,
@@ -227,7 +238,13 @@ export class UsersCreateUpdateComponent
                         `${form.firstName.value()} ${form.lastName.value()}`,
                     );
 
-                    if (this.forms.length === index + 1) this.router.navigateByUrl(this.getBackUrl());
+                    if (this.forms.length === index + 1) {
+                        _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
+                            if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
+                        });
+
+                        this.router.navigateByUrl(this.getBackUrl());
+                    }
                 },
                 (e: AccountAdminErrorResponse) => this.onSaveError(
                     `${form.firstName.value()} ${form.lastName.value()}`,
@@ -240,7 +257,7 @@ export class UsersCreateUpdateComponent
     private addUserToTeams(userId: number, username: string): void {
         _.forEach(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
             this.userMgmtService.updateTeamUserMap(
-                team.isActivated,
+                team.isActivated ? true : false,
                 userId,
                 team.userTeamID,
                 () => {},
@@ -252,7 +269,7 @@ export class UsersCreateUpdateComponent
         });
     }
 
-    private updateUser(): void {
+    private updateUser(invite: boolean): void {
         this.service.updateUser(
             this.entityId,
             this.accountId,
@@ -262,11 +279,63 @@ export class UsersCreateUpdateComponent
             this.form.phoneNumber.value(),
             this.form.userType.value()[0].id,
             this.form.reference.value(),
-            () => this.onSaveSuccess(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                this.entityId,
-            ),
+            () => {
+                this.onSaveSuccess(
+                    `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                    this.entityId,
+                );
+
+                if (invite) this.inviteUser(this.entityId, this.form, false);
+            },
             (e: AccountAdminErrorResponse) => this.onSaveError(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                e,
+            ),
+        );
+    }
+
+    private inviteUser(userId: number, form: Model.AccountAdminUserForm, showToaster: boolean = true): void {
+        this.service.inviteUser(
+            userId,
+            form.firstName.value(),
+            form.emailAddress.value(),
+            this.siteSettings.language,
+            this.myDetails.displayName,
+            () => this.onInviteSuccess(
+                `${form.firstName.value()} ${form.lastName.value()}`,
+                showToaster,
+            ),
+            () => this.onInviteError(
+                `${form.firstName.value()} ${form.lastName.value()}`,
+            ),
+        );
+    }
+
+    private onInviteSuccess(userName: string, showToaster): void {
+        if (showToaster) {
+            const message = `${userName} successfully invited`;
+
+            this.toaster.pop('success', message);
+
+            this.router.navigateByUrl(this.getBackUrl());
+        }
+    }
+
+    private onInviteError(userName: string): void {
+        const message = `An error occured whilst inviting ${userName}`;
+
+        this.toaster.pop('error', message);
+
+        this.router.navigateByUrl(this.getBackUrl());
+    }
+
+    protected onDeleteConfirm(): void {
+        this.service.deleteUser(
+            this.entityId,
+            () => this.onDeleteSuccess(
+                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+            ),
+            (e: AccountAdminErrorResponse) => this.onDeleteError(
                 `${this.form.firstName.value()} ${this.form.lastName.value()}`,
                 e,
             ),

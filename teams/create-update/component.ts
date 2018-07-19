@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
+import * as UsersModel from '../../users/model';
+import { UserManagementServiceBase } from '../../base/create-update/user-management/service';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
 import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
@@ -19,7 +22,10 @@ export class UserTeamsCreateUpdateComponent
 
     form: Model.AccountAdminTeamForm = new Model.AccountAdminTeamForm();
 
+    private usersSelected: UsersModel.AccountAdminUser[];
+
     constructor(private service: UserTeamsService,
+                private userMgmtService: UserManagementServiceBase,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
@@ -50,6 +56,10 @@ export class UserTeamsCreateUpdateComponent
         this.status = team.status;
     }
 
+    getTeamUsers(users: UsersModel.AccountAdminUser[]): void {
+        this.usersSelected = users;
+    }
+
     save(): void {
         if (this.isCreateMode()) {
             this.createTeam();
@@ -68,12 +78,36 @@ export class UserTeamsCreateUpdateComponent
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            (data: AccountAdminSuccessResponse) => this.onSaveSuccess(
-                this.form.name.value(),
-                data[1].Data[0].userTeamID,
-            ),
+            (data: AccountAdminSuccessResponse) => {
+                this.onSaveSuccess(
+                    this.form.name.value(),
+                    data[1].Data[0].userTeamID,
+                );
+
+                this.addUsersToTeam(
+                    data[1].Data[0].userTeamID,
+                    `${this.form.name}`,
+                );
+
+                this.router.navigateByUrl(this.getBackUrl());
+            },
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
+    }
+
+    private addUsersToTeam(userTeamId: number, teamName: string): void {
+        _.forEach(this.usersSelected, (user: UsersModel.AccountAdminUser) => {
+            this.userMgmtService.updateTeamUserMap(
+                user.isActivated ? true : false,
+                user.userID,
+                userTeamId,
+                () => {},
+                (e: AccountAdminErrorResponse) => this.onSaveError(
+                    teamName,
+                    e,
+                ),
+            );
+        });
     }
 
     private updateTeam(): void {

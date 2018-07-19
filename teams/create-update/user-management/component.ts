@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
@@ -19,6 +19,9 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 })
 export class UserTeamsUsersMgmtTeamsComponent
     extends AccountAdminUsersMgmtComponentBase<UserModel.AccountAdminUser> implements OnInit, OnDestroy {
+
+    @Input() doUpdate: boolean = true;
+    @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
 
     @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
     @select(['accountAdmin', 'users', 'users']) usersOb;
@@ -135,13 +138,15 @@ export class UserTeamsUsersMgmtTeamsComponent
     }
 
     updateState(value: boolean, entity: UserModel.AccountAdminUser): void {
-        this.service.updateTeamUserMap(
-            value,
-            entity.userID,
-            this.entityId,
-            () => this.onUpdateStateSuccess(value),
-            (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
-        );
+        if (this.doUpdate) {
+            this.service.updateTeamUserMap(
+                value,
+                entity.userID,
+                this.entityId,
+                () => this.onUpdateStateSuccess(value),
+                (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
+            );
+        }
     }
 
     ngOnDestroy() {

@@ -92,6 +92,15 @@ export interface CreateUserRequest extends MemberNodeMessageBody {
     password: string;
 }
 
+export interface InviteUserRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+    userFirstName: string;
+    recipientEmailAddress: string;
+    localeCode: string;
+    assetManagerName: string;
+}
+
 export interface UpdateUserStatusRequest extends MemberNodeMessageBody {
     token: string;
     userID: number;

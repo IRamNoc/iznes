@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
+import { ConfirmationService } from '@setl/utils';
 
 @Component({
     selector: 'app-core-admin-status',
@@ -14,15 +15,31 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     @Input() entityId: number;
     @Input() status: boolean = false;
 
+    private textEnable: string = '';
+    private textDisable: string = '';
+
     constructor(private toaster: ToasterService,
-                private translate: MultilingualService) { }
+                private translate: MultilingualService,
+                private confirmation: ConfirmationService) {
+
+        this.textEnable = this.translate.translate('Enable');
+        this.textDisable = this.translate.translate('Disable');
+    }
 
     ngOnInit() {}
 
     updateStatus(): void {
-        this.status = !this.status;
+        const title = `${this.status ? this.textDisable : this.textEnable} ${this.translate.translate(this.noun)}`;
+        const message = this.translate.translate(`Are you sure you wish to ### this ${this.noun}?`)
+            .replace('###', this.status ? this.textDisable : this.textEnable);
 
-        this.onUpdateStatus();
+        this.confirmation.create(title, message).subscribe((ans) => {
+            if (ans.resolved) {
+                this.status = !this.status;
+
+                this.onUpdateStatus();
+            }
+        });
     }
 
     onUpdateStatus(): void {

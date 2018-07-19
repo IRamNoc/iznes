@@ -23,6 +23,7 @@ import {
     DeleteUserRequest,
     ReadUsersAuditRequest,
     UpdateUserStatusRequest,
+    InviteUserRequest,
 } from './model';
 
 @Injectable()
@@ -88,7 +89,7 @@ export class UsersService extends AccountAdminBaseService {
                onError: RequestCallback): void {
 
         const request: CreateUserRequest = {
-            RequestName: 'nu',
+            RequestName: 'createuser',
             token: this.memberSocketService.token,
             account,
             email,
@@ -286,6 +287,40 @@ export class UsersService extends AccountAdminBaseService {
         this.callAccountAdminAPI(asyncTaskPipe,
                                  setRequestedAccountAdminUsersAudit,
                                  SET_ACCOUNT_ADMIN_USERS_AUDIT,
+                                 onSuccess,
+                                 onError);
+    }
+
+    /**
+     * Invite User
+     *
+     * @param userId request a specific user
+     * @param onSuccess
+     * @param onError
+     */
+    inviteUser(userId: number,
+               userFirstName: string,
+               recipientEmailAddress: string,
+               localeCode: string,
+               assetManagerName: string,
+               onSuccess: RequestCallback,
+               onError: RequestCallback): void {
+
+        const request: InviteUserRequest = {
+            RequestName: 'inviteuser',
+            token: this.memberSocketService.token,
+            userID: userId,
+            userFirstName,
+            recipientEmailAddress,
+            localeCode,
+            assetManagerName,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 undefined,
+                                 undefined,
                                  onSuccess,
                                  onError);
     }

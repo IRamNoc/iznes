@@ -29,7 +29,7 @@
                             <span class="remove-user" (click)="removeUser(idx)">Remove user</span>
                         </div>
 
-                        <div class="row buttons" *ngIf="isCreateMode()">
+                        <div class="row buttons">
                             <div class="col-sm-12">
                                 <button class="btn btn-primary btn-right" (click)="addAdditionalUser()">
                                     <i class="fa fa-plus"></i>
@@ -42,11 +42,13 @@
                 </div>
             </ng-container>
 
-            <app-core-admin-users-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-users-status>
+            <ng-container *ngIf="isUpdateMode()">
+                <app-core-admin-users-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-users-status>
 
-            <h3>{{ 'User Details' | translate }}</h3>
+                <h3>{{ 'User Details' | translate }}</h3>
 
-            <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
+                <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
+            </ng-container>
 
             <div class="row actions bottom">
                 <div class="col">
@@ -56,9 +58,17 @@
                 <div class="col">
                     <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
-                        'Create user(s)' :
-                        'Update user Details'
-                        | translate }}</button>
+                        'Create User(s)' :
+                        'Update User Details'
+                        | translate }}
+                    </button>
+                    <button class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
+                        (isCreateMode()) ?
+                        'Create &amp; Send Invitation(s)' :
+                        'Update &amp; Send Invitation'
+                        | translate }}
+                    </button>
+                    <i class="tooltip fa fa-question-circle" [tooltip]="createUserTooltip"></i>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">
@@ -77,7 +87,7 @@
             
             <div class="row">
                 <div class="col-sm-12">
-                    <app-core-admin-users-team-mgmt *ngIf="isUsersPage()"
+                    <app-core-admin-users-team-mgmt
                         [entityId]="entityId"
                         [doUpdate]="isUpdateMode()"
                         (entitiesFn)="getUserTeams($event)">
