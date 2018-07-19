@@ -16,6 +16,7 @@ import {FormPercentDirective} from './form-percent/formpercent';
 import {ActiveHeaderButtonDirective} from './activeHeaderButton/active-header-button.directive';
 import {ClrDgRowClickableDirective} from './clr-dg-row-clickable/directive';
 import {MoneyValuePipe} from '../pipes';
+import {RowsPerPageDirective} from './rows-per-page/rowsperpage.directive';
 
 @NgModule({
     declarations: [
@@ -31,6 +32,7 @@ import {MoneyValuePipe} from '../pipes';
         FormStepsDirective,
         FormPercentDirective,
         ActiveHeaderButtonDirective,
+        RowsPerPageDirective,
     ],
     exports: [
         NumberFormatterDirective,
@@ -45,6 +47,7 @@ import {MoneyValuePipe} from '../pipes';
         FormStepsDirective,
         FormPercentDirective,
         ActiveHeaderButtonDirective,
+        RowsPerPageDirective,
     ],
     imports: [
         CommonModule,
