@@ -306,9 +306,9 @@ export class NewRequestService {
         const investmentNature = fb.group({
             kycID: '',
             financialAssetManagementMethod: fb.group({
-                internalManagement: '',
-                withAdviceOfAuthorisedThirdPartyInstitution: '',
-                mandateEntrustedToManagers: ''
+                    internalManagement: '',
+                    withAdviceOfAuthorisedThirdPartyInstitution: '',
+                    mandateEntrustedToManagers: ''
             }, {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);

@@ -101,13 +101,26 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     private subscriptions: Array<any> = [];
 
     fundsList: Array<any> = [];
-    dataListForSearch: Array<any> = [];
+    selectedFund = 0;
+    sharesList: Array<any> = [];
+    selectedShare = 0;
+
+    dateFrom = '';
+    dateTo = '';
+    mode = 0;   // 1 = NAV ; 2 = Settlement
 
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+    // @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
+    // @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+
+    // share list for ng-select
+    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedSharesList']) requestedSharesListOb;
+    @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesList']) sharesListOb;
+
+    // shares details
+    // @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesDetailsList']) sharesDetailsListOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -142,11 +155,20 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
         /* Subscribe for this user's details. */
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.myDetails = myDetails));
-        this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
-        this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
+
+        // this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
+        // this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
+
+        // share list for ng-select
+        this.subscriptions.push(this.requestedSharesListOb.subscribe((requestedSharesList) => this.requestedSharesListFromRedux(requestedSharesList)));
+        this.subscriptions.push(this.sharesListOb.subscribe((sharesList) => this.getSharesListFromRedux(sharesList)));
+
+        // shares details
+        // this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => this.getSharesDetailsListFromRedux(sharesDetailsList)));
     }
 
     public ngOnInit() {
+
     }
 
     getLanguage(requested): void {
@@ -165,49 +187,88 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         }
     }
 
-    getCentralizationReportsRequested(requested): void {
-        if (!requested) {
-            OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
+    requestedSharesListFromRedux(requestedSharesList): void {
+        if (!requestedSharesList) {
+            OfiReportsService.defaultRequestPrecentralizationReportsSharesList(this.ofiReportsService, this.ngRedux);
         }
     }
 
-    getCentralizationReportsListFromRedux(list) {
-        const listImu = fromJS(list);
+    getSharesListFromRedux(sharesList) {
+        const listImu = fromJS(sharesList);
 
-        this.centralizationReportsFundsList = listImu.reduce((result, item) => {
+        this.sharesList = listImu.reduce((result, item) => {
 
             result.push({
-                aum: item.get('aum'),
-                subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
-                redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
-                fundShareID: item.get('fundShareID'),
-                fundShareName: item.get('fundShareName'),
-                isin: item.get('isin'),
-                latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-                navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'), 'YYYY-MM-DD'),
-                netPosition: item.get('netPosition'),
-                netPositionPercentage: item.get('netPositionPercentage'),
-                redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
-                redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
-                redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'), 'YYYY-MM-DD'),
-                shareClassCurrency: item.get('shareClassCurrency'),
-                subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
-                subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
-                subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'), 'YYYY-MM-DD'),
+                id: item.get('shareId'),
+                text: item.get('shareName') + ' (' + item.get('isin') + ')',
             });
 
             return result;
         }, []);
 
-        for (const report of this.centralizationReportsFundsList) {
-            this.dataListForSearch.push({
-                id: report.fundShareID,
-                text: report.fundShareName,
-            });
-        }
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getSharesDetailsListFromRedux(list) {
+        const listImu = fromJS(list);
+        console.log('fromRedux', list);
+
+        // this.centralizationReportsFundsList = listImu.reduce((result, item) => {
+        //
+        //     result.push({
+        //         id: item.get('shareId'),
+        //         text: item.get('shareId'),
+        //     });
+        //
+        //     return result;
+        // }, []);
 
         this.changeDetectorRef.markForCheck();
     }
+
+    // getCentralizationReportsRequested(requested): void {
+    //     if (!requested) {
+    //         OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
+    //     }
+    // }
+    //
+    // getCentralizationReportsListFromRedux(list) {
+    //     const listImu = fromJS(list);
+    //
+    //     this.centralizationReportsFundsList = listImu.reduce((result, item) => {
+    //
+    //         result.push({
+    //             aum: item.get('aum'),
+    //             subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
+    //             redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
+    //             fundShareID: item.get('fundShareID'),
+    //             fundShareName: item.get('fundShareName'),
+    //             isin: item.get('isin'),
+    //             latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
+    //             navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'), 'YYYY-MM-DD'),
+    //             netPosition: item.get('netPosition'),
+    //             netPositionPercentage: item.get('netPositionPercentage'),
+    //             redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
+    //             redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
+    //             redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'), 'YYYY-MM-DD'),
+    //             shareClassCurrency: item.get('shareClassCurrency'),
+    //             subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
+    //             subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
+    //             subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'), 'YYYY-MM-DD'),
+    //         });
+    //
+    //         return result;
+    //     }, []);
+    //
+    //     for (const report of this.centralizationReportsFundsList) {
+    //         this.dataListForSearch.push({
+    //             id: report.fundShareID,
+    //             text: report.fundShareName,
+    //         });
+    //     }
+    //
+    //     this.changeDetectorRef.markForCheck();
+    // }
 
     buildLink(id) {
         const dest = 'am-reports-section/centralization-history/' + id;
@@ -216,7 +277,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     createFiltersForm() {
         this.filtersForm = this._fb.group({
-            fundsList: [
+            selectList: [
                 '',
             ],
             specificDate: [
@@ -236,6 +297,60 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         if (this.filtersForm.controls['specificDate'].value.length > 0) {
             this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
             this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
+            this.mode = (this.isSettlementSelected) ? 2 : 1;    // 1 = NAV ; 2 = Settlement
+        }
+        if (this.filtersForm.controls['selectList'].value.length > 0) {
+            if (this.isFundLevel) {
+                this.selectedFund = this.filtersForm.controls['selectList'].value[0].id;
+            }
+            if (this.isShareLevel) {
+                this.selectedShare = this.filtersForm.controls['selectList'].value[0].id;
+            }
+        } else {
+            this.selectedFund = 0;
+            this.selectedShare = 0;
+        }
+
+        this.dateFrom = (this.filtersForm.controls['dateFrom'].value !== '') ? this.filtersForm.controls['dateFrom'].value : '';
+        this.dateTo = (this.filtersForm.controls['dateTo'].value !== '' && this.isPeriod) ? this.filtersForm.controls['dateTo'].value : '';
+
+        // check data in futur
+        let today = new Date();
+        today.setHours(0,0,0,0); // fix time
+        let dateFrom = new Date(this.dateFrom + ' 00:00:00');
+        let dateTo = new Date(this.dateTo + ' 00:00:00');
+        if (dateFrom < today) {
+            this.dateFrom = '';
+            this.filtersForm.controls['dateFrom'].patchValue('', { emitEvent: false });
+            alert('DateFrom must be at least today\'s date');
+        }
+        if (dateTo < dateFrom) {
+            this.dateTo = '';
+            this.filtersForm.controls['dateTo'].patchValue('', { emitEvent: false });
+            alert('DateTo should be equal or after DateFrom');
+        }
+
+        if (this.isFundLevel) {
+
+        }
+        if (this.isShareLevel) {
+            if (this.selectedShare > 0 && this.mode > 0 && this.dateFrom !== '') {
+                let isPayloadOK = true;
+                if (this.isPeriod && this.dateTo === '') {
+                    isPayloadOK = false;
+                }
+                if (isPayloadOK) {
+                    let payload = {
+                        shareId: this.selectedShare,
+                        dateFrom: this.dateFrom,
+                        dateTo: this.dateTo,
+                        mode: this.mode,
+                    };
+                    console.clear();
+                    console.log(payload);
+                    this.ofiReportsService.requestPrecentralizationReportsSharesDetailsList(payload);
+                }
+            }
         }
     }
 

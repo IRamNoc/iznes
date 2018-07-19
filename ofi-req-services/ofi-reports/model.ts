@@ -47,3 +47,11 @@ export interface OfiInvHoldingsDetailRequestData {
     walletID: any;
     amCompanyID: any;
 }
+
+export interface PrecentralizationRequestSharesBody extends OfiMemberNodeBody {
+    token: string;
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}

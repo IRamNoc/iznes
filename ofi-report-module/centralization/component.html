@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="input-button-group">
-                                <ng-select id="precentra-funds-list" [items]="fundsList" [allowClear]="true" [placeholder]="_translate.translate('All Funds')" [formControl]="filtersForm.controls['fundsList']">
+                                <ng-select id="precentra-funds-list" [items]="fundsList" [allowClear]="true" [placeholder]="_translate.translate('All Funds')" [formControl]="filtersForm.controls['selectList']">
                                 </ng-select>
                             </div>
                         </div>
@@ -190,7 +190,7 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <div class="input-button-group">
-                                <ng-select id="precentra-shares-list" [items]="sharesList" [allowClear]="true" [placeholder]="_translate.translate('All Funds')" [formControl]="filtersForm.controls['fundsList']">
+                                <ng-select id="precentra-shares-list" [items]="sharesList" [allowClear]="true" [placeholder]="_translate.translate('All Shares')" [formControl]="filtersForm.controls['selectList']">
                                 </ng-select>
                             </div>
                         </div>
