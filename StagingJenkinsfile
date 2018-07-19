@@ -1,8 +1,4 @@
 node {
-
-}
-
-node {
     timestamps {
 
         stage('Deploy Membership-db to Test Environment') {

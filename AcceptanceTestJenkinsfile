@@ -1,10 +1,6 @@
 node {
 
-}
-
-
-timestamps {
-    node {
+    timestamps {
 
         stage('Establish Tunnel Connection') {
             try{
