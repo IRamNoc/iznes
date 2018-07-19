@@ -4,6 +4,7 @@ $setlSelected: darken($setl, 5%);
 $setlHover: darken($setl, 2%);
 
 @import 'general';
+@import 'grid';
 @import 'navbar';
 @import 'sidebar';
 @import 'forms';
