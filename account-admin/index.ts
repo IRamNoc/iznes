@@ -21,6 +21,26 @@ export {
 };
 
 import {
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
+    setRequestedAccountAdminUsersAudit,
+    clearRequestedAccountAdminUsersAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS_AUDIT,
+    UsersAuditState,
+    getAccountAdminUsersAudit,
+    usersAuditReducer,
+} from './users-audit';
+
+export {
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
+    setRequestedAccountAdminUsersAudit,
+    clearRequestedAccountAdminUsersAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS_AUDIT,
+    UsersAuditState,
+    getAccountAdminUsersAudit,
+    usersAuditReducer,
+};
+
+import {
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
     clearRequestedAccountAdminTeams,
@@ -86,6 +106,7 @@ export {
 
 export interface AccountAdminState {
     users: UsersState;
+    usersAudit: UsersAuditState;
     teams: UserTeamsState;
     teamsAudit: UserTeamsAuditState;
     permissionAreas: PermissionAreasState;
@@ -93,6 +114,7 @@ export interface AccountAdminState {
 
 export const accountAdminReducer: Reducer<AccountAdminState> = combineReducers<AccountAdminState>({
     users: usersReducer,
+    usersAudit: usersAuditReducer,
     teams: userTeamsReducer,
     teamsAudit: userTeamsAuditReducer,
     permissionAreas: permissionAreasReducer,
