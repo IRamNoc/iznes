@@ -3,7 +3,8 @@
         <i class="fa fa-bars"></i>
         <span *ngIf="!param">{{'Add a New Fund' | translate}}</span>
         <span *ngIf="param">{{'Fund: @fundForm.controls[\'fundName\'].value@' | translate: {'fundForm.controls[\'fundName\'].value': fundForm.controls['fundName'].value}
-            }}</span>
+            }}
+        </span>
     </h1>
 </div>
 
@@ -17,29 +18,48 @@
 
         <clr-tab-content *clrIfActive>
 
+            <!-- Button container -->
+            <div *ngIf="viewMode === 'FUND'" class="row tab-header-container">
+                <div class="form-group">
+                    <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
+                        {{'Duplicate Fund' | translate}}
+                    </button>
+                    <ng-select *ngIf="!param" id="fund-prefill-select" [items]="fundListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Fund')"
+                        [formControl]="fundControl">
+                    </ng-select>
+                </div>
+            </div>
+
             <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
                 <h3>{{'Please fill up the following information to create a new Fund:' | translate}}</h3>
 
                 <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
                     <section class="form-block">
                         <div class="row">
-                            <div class="form-group required-field col-sm-6">
+                            <div class="form-group required-field col-sm-3">
                                 <label class="control-label" for="fund-umbrellaControl-select-1">{{'Is this Fund part of an Umbrella Fund?' | translate}}
 
                                 </label>
                                 <ng-select id="fund-umbrellaControl-select-1" [items]="umbrellaItems" [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund name')"
-                                           [formControl]="umbrellaControl">
+                                    [formControl]="umbrellaControl">
 
 
                                 </ng-select>
                             </div>
-                            <div class="form-group col-sm-6 btn-container">
+                            <div class="form-group col-sm-3 btn-container">
                                 <p>{{'or' | translate}}</p>
                                 <a id="fund-add-new-umbrella-btn" class="btn btn-default" [routerLink]="['/product-module/product/umbrella-fund/new']" [queryParams]="{fromFund: 'true', umbrella : null}"
-                                   queryParamsHandling="merge">Add a new Umbrella Fund
+                                    queryParamsHandling="merge">Add a new Umbrella Fund
 
 
                                 </a>
+                                <p>{{'or' | translate}}</p>
+                            </div>
+                            <div class="form-group col-sm-3 prefill-container">
+                                <label class="control-label" for="fund-prefill-select"></label>
+                                <ng-select id="fund-prefill-select" [items]="fundListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Fund')"
+                                    [formControl]="fundControl">
+                                </ng-select>
                             </div>
                         </div>
 
@@ -87,7 +107,8 @@
                             <a id="fundsUmbrellaFundHeading" href="#" (click)="panels[0].open = !panels[0].open; $event.preventDefault();">
                                 <i class="fa fa-chevron-right" [class.rotate]="panels[0].open"></i>
                                 <h2>{{isUmbrellaSelected() ? 'Umbrella Fund: ' + umbrellaControl.value[0].text : 'No Umbrella
-                                    Fund'}}</h2>
+                                    Fund'}}
+                                </h2>
                             </a>
                         </div>
                     </div>
@@ -128,7 +149,7 @@
 
                                                 </label>
                                                 <ng-select id="fund-umbrellaControl-select-2" [items]="umbrellaItems" [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund')"
-                                                           [formControl]="umbrellaControl">
+                                                    [formControl]="umbrellaControl">
 
 
                                                 </ng-select>
@@ -203,7 +224,7 @@
                                             <div class="input-group date-pick-wrapper">
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
                                                 <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                       mode="day" theme="dp-material">
+                                                    mode="day" theme="dp-material">
                                             </div>
                                         </div>
                                     </div>
@@ -239,14 +260,8 @@
 
                                             </label>
                                             <div>
-                                                <ng-select
-                                                    id="uf_investmentAdvisor"
-                                                    [items]="investmentAdvisorItems"
-                                                    [allowClear]="true"
-                                                    [multiple]="true"
-                                                    [disabled]="umbrellaEditForm.controls['investmentAdvisorID'].disabled"
-                                                    [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
+                                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [multiple]="true" [disabled]="umbrellaEditForm.controls['investmentAdvisorID'].disabled"
+                                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -255,14 +270,8 @@
 
                                             </label>
                                             <div>
-                                                <ng-select
-                                                    id="uf_payingAgent"
-                                                    [items]="payingAgentItems"
-                                                    [allowClear]="true"
-                                                    [multiple]="true"
-                                                    [disabled]="umbrellaEditForm.controls['payingAgentID']"
-                                                    [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="umbrellaEditForm.controls['payingAgentID']">
+                                                <ng-select id="uf_payingAgent" [items]="payingAgentItems" [allowClear]="true" [multiple]="true" [disabled]="umbrellaEditForm.controls['payingAgentID']"
+                                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['payingAgentID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -342,14 +351,8 @@
 
                                             </label>
                                             <div>
-                                                <ng-select
-                                                    id="uf_principalPromoter"
-                                                    [items]="principalPromoterItems"
-                                                    [allowClear]="true"
-                                                    [multiple]="true"
-                                                    [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
-                                                    [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="umbrellaEditForm.controls['principlePromoterID']">
+                                                <ng-select id="uf_principalPromoter" [items]="principalPromoterItems" [allowClear]="true" [multiple]="true" [disabled]="umbrellaEditForm.controls['principlePromoterID'].disabled"
+                                                    [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['principlePromoterID']">
                                                 </ng-select>
                                             </div>
                                         </div>
@@ -447,13 +450,13 @@
                                                 <div class="lei">
                                                     <label class="switch">
                                                         <input type="checkbox" class="form-control" id="switchActiveShares" [ngModel]="isLeiVisible" [ngModelOptions]="{standalone: true}"
-                                                               (click)="onClickLeiSwitch()">
+                                                            (click)="toggleLeiSwitch(!isLeiVisible)">
                                                         <span class="slider round"></span>
                                                     </label>
                                                     <div *ngIf="isLeiVisible">
                                                         <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
-                                                              class="field-error">{{'Incorrect LEI' | translate}}</span>
+                                                            class="field-error">{{'Incorrect LEI' | translate}}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -469,7 +472,7 @@
                                                 <label class="control-label" for="registerOfficeAddress">{{'Address of the register Office of the Fund' | translate}}</label>
                                                 <input type="text" name="registerOfficeAddress" id="registerOfficeAddress" formControlName="registerOfficeAddress">
                                                 <span *ngIf="fundForm.controls['registerOfficeAddress'].touched && fundForm.controls['registerOfficeAddress'].hasError('pattern')"
-                                                      class="field-error">{{'Incorrect address' | translate}}</span>
+                                                    class="field-error">{{'Incorrect address' | translate}}</span>
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
@@ -487,7 +490,7 @@
                                                 <div *ngIf="isHomeCountryLegalTypeVisible()">
                                                     <label class="control-label" for="homeCountryLegalType">{{'Home Country Legal Type of Fund' | translate}}</label>
                                                     <ng-select id="homeCountryLegalType" [items]="homeCountryLegalTypeItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['homeCountryLegalType']">
+                                                        [formControl]="fundForm.controls['homeCountryLegalType']">
 
 
                                                     </ng-select>
@@ -513,7 +516,7 @@
                                                 <div>
                                                     <label class="control-label" for="typeOfEuDirective">{{'Type of EU Directive' | translate}}</label>
                                                     <ng-select id="typeOfEuDirective" [items]="typeOfEuDirectiveItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['typeOfEuDirective']">
+                                                        [formControl]="fundForm.controls['typeOfEuDirective']">
 
 
                                                     </ng-select>
@@ -525,7 +528,7 @@
                                                 <div *ngIf="fundForm.controls['isEuDirective'].value === enums.isEuDirective.YES.toString() && getEuDirectiveType() === enums.typeOfEuDirective.UCITS">
                                                     <label class="control-label" for="UcitsVersion">{{'UCITS Version' | translate}}</label>
                                                     <ng-select id="UcitsVersion" [items]="UcitsVersionItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['UcitsVersion']">
+                                                        [formControl]="fundForm.controls['UcitsVersion']">
 
 
                                                     </ng-select>
@@ -547,10 +550,10 @@
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <div *ngIf="fundForm.controls['legalForm'].value.length">
+                                                <div *ngIf="isNationalNomenclatureOfLegalFormVisible()">
                                                     <label class="control-label" for="nationalNomenclatureOfLegalForm">{{'National Nomenclature of Legal Fund' | translate}}</label>
                                                     <ng-select id="nationalNomenclatureOfLegalForm" [items]="nationalNomenclatureOfLegalFormItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
+                                                        [formControl]="fundForm.controls['nationalNomenclatureOfLegalForm']">
 
 
                                                     </ng-select>
@@ -563,10 +566,10 @@
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                           mode="day" theme="dp-material">
+                                                        mode="day" theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')"
-                                                      class="field-error">{{'Incorrect date' | translate}}</span>
+                                                    class="field-error">{{'Incorrect date' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
@@ -574,7 +577,7 @@
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fundLaunchate" formControlName="fundLaunchate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
-                                                           mode="day" theme="dp-material">
+                                                        mode="day" theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundLaunchate'].touched && fundForm.controls['fundLaunchate'].hasError('pattern')" class="field-error">{{'Incorrect date' | translate}}</span>
                                             </div>
@@ -583,7 +586,7 @@
                                                 <div>
                                                     <label class="control-label" for="fundCurrency">{{'Fund Currency' | translate}}</label>
                                                     <ng-select id="fundCurrency" [items]="fundCurrencyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['fundCurrency']">
+                                                        [formControl]="fundForm.controls['fundCurrency']">
 
 
                                                     </ng-select>
@@ -608,7 +611,7 @@
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" [placeholder]="_translate.translate('Choose a date')"
-                                                           mode="month" theme="dp-material">
+                                                        mode="month" theme="dp-material">
                                                 </div>
                                                 <div *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('required')" class="text-danger">{{'Field is required' | translate}}</div>
                                                 <span *ngIf="fundForm.controls['fiscalYearEnd'].touched && fundForm.controls['fiscalYearEnd'].hasError('pattern')" class="field-error">{{'Incorrect date' | translate}}</span>
@@ -630,7 +633,7 @@
                                                 <div>
                                                     <label class="control-label" for="managementCompanyID">{{'Management Company' | translate}}</label>
                                                     <ng-select id="managementCompanyID" [items]="managementCompanyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['managementCompanyID']">
+                                                        [formControl]="fundForm.controls['managementCompanyID']">
 
 
                                                     </ng-select>
@@ -642,7 +645,7 @@
                                                 <div>
                                                     <label class="control-label" for="fundAdministrator">{{'Fund Administrator' | translate}}</label>
                                                     <ng-select id="fundAdministrator" [items]="fundAdministratorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['fundAdministrator']">
+                                                        [formControl]="fundForm.controls['fundAdministrator']">
 
 
                                                     </ng-select>
@@ -654,7 +657,7 @@
                                                 <div>
                                                     <label class="control-label" for="custodianBank">{{'Custodian Bank' | translate}}</label>
                                                     <ng-select id="custodianBank" [items]="custodianBankItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['custodianBank']">
+                                                        [formControl]="fundForm.controls['custodianBank']">
 
 
                                                     </ng-select>
@@ -665,7 +668,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentManager">{{'Investment Manager' | translate}}</label>
                                                 <ng-select id="investmentManager" [items]="investmentManagerItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['investmentManager']">
+                                                    [formControl]="fundForm.controls['investmentManager']">
 
 
                                                 </ng-select>
@@ -674,7 +677,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="principalPromoter">{{'Principal Promoter' | translate}}</label>
                                                 <ng-select id="principalPromoter" [items]="principalPromoterItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['principalPromoter']">
+                                                    [formControl]="fundForm.controls['principalPromoter']">
 
 
                                                 </ng-select>
@@ -683,7 +686,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="payingAgent">{{'Paying Agent' | translate}}</label>
                                                 <ng-select id="payingAgent" [items]="payingAgentItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['payingAgent']">
+                                                    [formControl]="fundForm.controls['payingAgent']">
 
 
                                                 </ng-select>
@@ -699,7 +702,7 @@
                                                 <div>
                                                     <label class="control-label" for="transferAgent">{{'Transfer Agent' | translate}}</label>
                                                     <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['transferAgent']">
+                                                        [formControl]="fundForm.controls['transferAgent']">
 
 
                                                     </ng-select>
@@ -710,7 +713,7 @@
                                                 <div>
                                                     <label class="control-label" for="centralizingAgent">{{'Centralizing Agent' | translate}}</label>
                                                     <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['centralizingAgent']">
+                                                        [formControl]="fundForm.controls['centralizingAgent']">
 
 
                                                     </ng-select>
@@ -733,7 +736,7 @@
                                                 <div>
                                                     <label class="control-label" for="portfolioCurrencyHedge">{{'Portfolio Currency Hedge' | translate}}</label>
                                                     <ng-select id="portfolioCurrencyHedge" [items]="portfolioCurrencyHedgeItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                               [formControl]="fundForm.controls['portfolioCurrencyHedge']">
+                                                        [formControl]="fundForm.controls['portfolioCurrencyHedge']">
 
 
                                                     </ng-select>
@@ -802,15 +805,15 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="globalItermediaryIdentification">{{'Global Intermediary Identification Number (GIIN)' | translate}}</label>
                                                 <input type="text" name="globalItermediaryIdentification" id="globalItermediaryIdentification" formControlName="globalItermediaryIdentification"
-                                                       maxlength="19">
+                                                    maxlength="19">
                                                 <span *ngIf="fundForm.controls['globalItermediaryIdentification'].touched && fundForm.controls['globalItermediaryIdentification'].hasError('pattern')"
-                                                      class="field-error">{{'Incorrect GIIN' | translate}}</span>
+                                                    class="field-error">{{'Incorrect GIIN' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="delegatedManagementCompany">{{'Delegated Management Company' | translate}}</label>
                                                 <ng-select id="delegatedManagementCompany" [items]="managementCompanyItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['delegatedManagementCompany']">
+                                                    [formControl]="fundForm.controls['delegatedManagementCompany']">
 
 
                                                 </ng-select>
@@ -819,7 +822,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentAdvisor">{{'Investment Advisor' | translate}}</label>
                                                 <ng-select id="investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['investmentAdvisor']">
+                                                    [formControl]="fundForm.controls['investmentAdvisor']">
 
 
                                                 </ng-select>
@@ -844,7 +847,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="legalAdvisor">{{'Legal Advisor' | translate}}</label>
                                                 <ng-select id="legalAdvisor" [items]="legalAdvisorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['legalAdvisor']">
+                                                    [formControl]="fundForm.controls['legalAdvisor']">
 
 
                                                 </ng-select>
@@ -889,7 +892,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="capitalPreservationPeriod">{{'Capital Preservation Period' | translate}}</label>
                                                 <ng-select id="capitalPreservationPeriod" [items]="capitalPreservationPeriodItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['capitalPreservationPeriod']">
+                                                    [formControl]="fundForm.controls['capitalPreservationPeriod']">
 
 
                                                 </ng-select>
@@ -1046,11 +1049,7 @@
                 <div class="form-group col-sm-6">
                     <button id="fund-cancelfund-btn" type="button" class="btn btn-default" (click)="onClickBack()">{{'Cancel' | translate}}</button>
 
-                    <button *ngIf="currDraft == 1 || !param"
-                            id="fund-savedraftfund-btn"
-                            type="button"
-                            class="btn btn-primary"
-                            (click)="saveDraft()">
+                    <button *ngIf="currDraft == 1 || !param" id="fund-savedraftfund-btn" type="button" class="btn btn-primary" (click)="saveDraft()">
                         <i class="fa fa-save"></i> {{(!param ? 'Save Draft' : 'Update Draft') | translate}}
                     </button>
 
