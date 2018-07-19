@@ -223,27 +223,21 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
 
-        String test = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
-        assertTrue(test.equals("testops" + userNo + "@setl.io"));
-
-        String test2 = driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value");
-        assertTrue(test2.equals("Management Company"));
-
-        String test3 = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
-        assertTrue(test3.equals("Jordan" + userNo));
-
-        String test4 = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
-        assertTrue(test4.equals("Miller" + userNo));
+        String kycEmail = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
+        assertTrue(kycEmail.equals("testops" + userNo + "@setl.io"));
+        String kycInvitedBy = driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value");
+        assertTrue(kycInvitedBy.equals("Management Company"));
+        String kycFirstName = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
+        assertTrue(kycFirstName.equals("Jordan" + userNo));
+        String kycLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
+        assertTrue(kycLastName.equals("Miller" + userNo));
 
         driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("Jordan Corp");
         openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
 
         String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
-        System.out.println(disabled);
         assertTrue(disabled.equals("true"));
-
         driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
-
         driver.findElement(By.id("btnKycSubmit")).click();
 
         try {
@@ -254,35 +248,87 @@ public class OpenCSDKYCModuleAcceptanceTest {
         }
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")));
-
         String myRequests = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")).getText();
         assertTrue(myRequests.equals("My requests"));
-
-        try {
-            driver.findElement(By.id("kyc-newRequestBtn")).click();
-        }catch (Exception e){
-            fail(e.getMessage());}
-
+        driver.findElement(By.id("kyc-newRequestBtn")).click();
         String newRequests = driver.findElement(By.id("new-request-title")).getText();
         assertTrue(newRequests.equals("Make a new request"));
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")));
         driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")).click();
-
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")));
         driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")).sendKeys("Management Company");
         driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/ul/li[1]/div/a")).click();
 
         try {
-            String testf = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[2]/div/div[1]/div/div[1]")).getAttribute("class");
-            assertTrue(testf.equals("fs-active"));
+            String selectionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[1]/div/div[1]")).getAttribute("class");
+            assertTrue(selectionStepKYC.equals("fs-active"));
         }catch (Exception e){
             fail(e.getMessage());
         }
 
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("document.getElementById('registered_1').click();");
 
+
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[2]")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[2]/kyc-step-introduction")));
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[2]")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[3]/kyc-step-identification/h3")));
+        try {
+            String introductionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[1]/div/div[2]")).getAttribute("class");
+            assertTrue(introductionStepKYC.equals("fs-active"));
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+
+        String generalInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        assertTrue(generalInfoPercent.equals("0%"));
+        String companyInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        assertTrue(companyInfoPercent.equals("0%"));
+        String bankingInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        assertTrue(bankingInfoPercent.equals("0%"));
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
+
+        driver.findElement(By.id("registeredCompanyName")).sendKeys("Jordan Millers Company");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("10%");
+
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/div/input")).sendKeys("EARL : Entreprise agricole à responsabilité limitée");
+        driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("20%");
+
+        driver.findElement(By.id("registeredCompanyAddressLine1")).sendKeys("21 Something Street");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("30%");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[1]/input")).sendKeys("IP11EY");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("40%");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[2]/input")).sendKeys("Ipswich");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("50%");
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input")).sendKeys("Jordan");
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText().equals("60%");
 
     }
 
@@ -373,6 +419,14 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     public void shouldTakeAMToFundAuthPageAfterAcceptingKYC() throws IOException, InterruptedException {
 
+    }
+
+    public static void searchSelectTopOptionXpath(String option) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input")));
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/div/input")).sendKeys("Jordan");
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[2]/div/div[4]/div[3]/ng-select/div/div[3]/ul/li[1]/div/a")).click();
     }
 
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
