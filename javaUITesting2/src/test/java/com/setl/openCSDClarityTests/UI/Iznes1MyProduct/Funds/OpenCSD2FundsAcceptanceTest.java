@@ -382,6 +382,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
+    @Repeat
     public void shouldUpdateFund() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
@@ -415,7 +416,7 @@ public class OpenCSD2FundsAcceptanceTest {
             String test2 = driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText();
             System.out.println(test2);
             System.out.println(umbFundNamePrev + "Updated");
-            assertTrue(driver.findElement(By.id("product-dashboard-fundID-0-fundName")).getText().equals(umbFundNamePrev + "Updated"));
+            assertTrue(test2.equals(umbFundNamePrev + "Updated"));
 
         }
 
