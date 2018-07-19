@@ -311,6 +311,14 @@ export {
     User,
     UsersState,
     usersReducer,
+    // users audit
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
+    setRequestedAccountAdminUsersAudit,
+    clearRequestedAccountAdminUsersAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS_AUDIT,
+    UsersAuditState,
+    getAccountAdminUsersAudit,
+    usersAuditReducer,
     // teams
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
