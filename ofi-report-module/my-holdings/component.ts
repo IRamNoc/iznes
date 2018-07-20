@@ -1,7 +1,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-import 'rxjs/add/operator/takeUntil';
+
 import {MultilingualService} from '@setl/multilingual';
 import {fromJS} from 'immutable';
 import * as _ from 'lodash';
@@ -94,7 +94,7 @@ export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
     getINVManagementCompanyListRequested(requested): void {
         // this.logService.log('requested', requested);
         if (!requested) {
-            OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.mcService, this.ngRedux);
+            OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.mcService, this.ngRedux, true);
         }
     }
 
@@ -156,7 +156,7 @@ export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
                 shareID: item.get('shareID', 0),
                 fundShareName: item.get('fundShareName', ''),
                 isin: item.get('isin', ''),
-                shareClassCurrency: item.get('shareClassCurrency', ''),
+                shareClassCurrency: this.showCurrency(item.get('shareClassCurrency', '')),
                 latestNav: item.get('latestNav', 0),
                 portfolioAddr: item.get('portfolioAddr', ''),
                 portfolioLabel: item.get('portfolioLabel', ''),
@@ -192,9 +192,8 @@ export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
         const obj = this.currencyList.find(o => o.id === currency);
         if (obj !== undefined) {
             return obj.text;
-        } else {
-            return currency;
         }
+        return currency;
     }
 
     ngOnDestroy() {

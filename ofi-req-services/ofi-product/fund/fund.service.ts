@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import {
     FundRequestMessageBody,
@@ -16,7 +16,8 @@ import {
     IznesCreateFundRequestBody,
     IznesUpdateFundRequestBody,
     Fund,
-    IznesFundRequestMessageBody
+    IznesFundRequestMessageBody,
+    IznDeleteFundDraftRequestBody
 } from './fund.service.model';
 import {
     setRequestedFund,
@@ -26,7 +27,8 @@ import {
     SET_FUND_LIST,
     SET_FUND_SHARE_LIST
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
-import {GET_IZN_FUND_LIST} from '../../../ofi-store/ofi-product/fund/fund-list';
+import { GET_IZN_FUND_LIST } from '../../../ofi-store/ofi-product/fund/fund-list';
+import { OfiUmbrellaFundService } from "../umbrella-fund/service";
 
 interface FundData {
     fundID?: any;
@@ -42,6 +44,7 @@ interface FundData {
     shareName?: any;
     status?: any;
 }
+
 interface HistoryData {
     fundId?: any;
     shareId?: any;
@@ -251,6 +254,7 @@ export class OfiFundService {
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
     }
+
     buildRequest(options) {
         return new Promise((resolve, reject) => {
             /* Dispatch the request. */
@@ -285,6 +289,22 @@ export class OfiFundService {
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
+    }
+
+    iznDeleteFundDraft(ofiFundService: OfiFundService, ngRedux: NgRedux<any>, id: string) {
+        // Request the list.
+        const asyncTaskPipe = ofiFundService.deleteFundDraft(id);
+        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
+    }
+
+    deleteFundDraft(id: string): any {
+        const messageBody: IznDeleteFundDraftRequestBody = {
+            RequestName: 'izndeleteFundDraft',
+            token: this.memberSocketService.token,
+            id: id,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }

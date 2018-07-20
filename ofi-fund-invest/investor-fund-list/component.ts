@@ -1,27 +1,26 @@
 // Vendor
-import {Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
+import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
 import * as _ from 'lodash';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 
 // Internal
 import {
     MemberService,
 } from '@setl/core-req-services';
-import {OfiFundInvestService} from '../../ofi-req-services/ofi-fund-invest/service';
-import {Subscription} from 'rxjs/Subscription';
-import {NumberConverterService, immutableHelper} from '@setl/utils';
-import {ActivatedRoute, Router, Params} from '@angular/router';
-import {ofiListOfFundsComponentActions, clearRequestedFundAccessMy} from '@ofi/ofi-main/ofi-store';
+import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
+import { Subscription, Observable } from 'rxjs';
+import { NumberConverterService, immutableHelper } from '@setl/utils';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ofiListOfFundsComponentActions, clearRequestedFundAccessMy } from '@ofi/ofi-main/ofi-store';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {CalendarHelper} from '../../ofi-product/fund-share/helper/calendar-helper';
-import {OrderType} from '../../ofi-orders/order.model';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/combineLatest';
-import {HoldingByAsset} from '@setl/core-store/wallet/my-wallet-holding';
-import {ReportingService} from '@setl/core-balances/reporting.service';
-import has = Reflect.has;
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
+import { OrderType } from '../../ofi-orders/order.model';
+
+import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
+import { ReportingService } from '@setl/core-balances/reporting.service';
 
 
 @Component({
@@ -87,7 +86,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
 
-        const combinedFundShare$ = this.fundShareAccessListOb.combineLatest(this.balancesOb);
+        const combinedFundShare$ = observableCombineLatest(this.fundShareAccessListOb, this.balancesOb);
         this.subscriptionsArray.push(combinedFundShare$.subscribe(
             ([fundShareAccessList, balances]) => this.updateFundList(fundShareAccessList, balances)));
 
@@ -171,7 +170,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const shareName = item.get('fundShareName', '');
 
             let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
-            if(!isNaN(position)){
+            if (!isNaN(position)) {
                 position = this._numberConverterService.toFrontEnd(position);
             }
 
@@ -188,7 +187,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
                 nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
                 hasNoNav: Boolean(nav <= 0),
-                position : position
+                position: position
             });
 
             return result;
@@ -213,9 +212,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     /**
      * Handle subscribe button is click in the list of funds.
-     * @param index
+     * @param shareId
      */
-    handleSubscribe(index: number): any {
+    handleSubscribe(shareId: number): any {
 
         if (!this.allowOrder) {
             this._alerts.create('warning', `
@@ -232,8 +231,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
-            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
+            if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'subscribe')) {
                 this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -241,21 +240,20 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }
 
         /* Push the edit tab into the array. */
-        const fundShareId = _.get(this.fundList, [index, 'id'], 0);
-        const fundShareData = _.get(this.fundListObj, [fundShareId], {});
+        const fundShareData = _.get(this.fundListObj, [shareId], {});
         const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
                 icon: 'fa-sign-in',
                 text: fundShareName,
-                colorClass: 'text-green-title'
+                colorClass: 'text-green-title',
             },
-            fundShareId: fundShareId,
-                fundShareData: fundShareData,
+            fundShareId: shareId,
+            fundShareData,
             actionType: 'subscribe',
             active: false,
-            formData: {}
+            formData: {},
         });
 
         // Activate the new tab.
@@ -264,9 +262,9 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
     /**
      * Handle redeem button is click in the list of funds.
-     * @param index
+     * @param shareId
      */
-    handleRedeem(index: number): any {
+    handleRedeem(shareId: number): any {
         if (!this.allowOrder) {
             this._alerts.create('warning', `
             <table class="table grid">
@@ -282,8 +280,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
 
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
-            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'redeem')) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
+            if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'redeem')) {
                 this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -291,23 +289,21 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }
 
         /* Push the edit tab into the array. */
-        const fundShareId = _.get(this.fundList, [index, 'id'], 0);
-        const fundShareData = _.get(this.fundListObj, [fundShareId], {});
+        const fundShareData = _.get(this.fundListObj, [shareId], {});
         const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
                 icon: 'fa-sign-out',
                 text: fundShareName,
-                colorClass: 'text-red-title'
+                colorClass: 'text-red-title',
             },
-            fundShareId: fundShareId,
-            fundShareData: fundShareData,
+            fundShareId: shareId,
+            fundShareData,
             actionType: 'redeem',
             active: false,
-            formData: {}
-        })
-        ;
+            formData: {},
+        });
 
         // Activate the new tab.
         this._router.navigateByUrl(`/list-of-funds/${this.tabsControl.length - 1}`);

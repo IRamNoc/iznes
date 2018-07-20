@@ -2,7 +2,7 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {select, NgRedux} from '@angular-redux/store';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 // Internal
 import {MemberSocketService} from '@setl/websocket-service';

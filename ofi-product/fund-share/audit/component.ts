@@ -1,3 +1,5 @@
+
+import {debounceTime, filter} from 'rxjs/operators';
 import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -5,8 +7,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import {fromJS} from 'immutable';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 
 import {FundShareAuditService} from './service';
 import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
@@ -73,7 +74,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
             this.updateFundShareAudit(fundShareAudit);
         }));
 
-        const fundShareRequestedSubscription = this.fundShareRequestedOb.filter(requested => !requested).subscribe(() => {
+        const fundShareRequestedSubscription = this.fundShareRequestedOb.pipe(filter(requested => !requested)).subscribe(() => {
             this.requestFundShare();
         });
         this.subscriptionsArray.push(fundShareRequestedSubscription);
@@ -91,7 +92,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
             dateTo: new FormControl(moment().format('YYYY-MM-DD'))
         });
 
-        this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe((values) => {
+        this.subscriptionsArray.push(this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((values) => {
             if(this.ignoreFormChange) {
                 this.ignoreFormChange = false;
                 return;

@@ -12,8 +12,9 @@ import {
     SET_REQUESTED_PRODUCT_CHARACTERISTICS,
 } from '@ofi/ofi-main/ofi-store/ofi-product';
 
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { List } from 'immutable';
 import * as _ from 'lodash';
 
@@ -31,8 +32,8 @@ export class ProductCharacteristicsService implements OnDestroy {
         private location: Location,
         private ngRedux: NgRedux<any>,
     ) {
-        this.productList$
-            .takeUntil(this.unSubscribe)
+        this.productList$.pipe(
+            takeUntil(this.unSubscribe))
             .subscribe((d) => {
                 if (!d) {
                     return;

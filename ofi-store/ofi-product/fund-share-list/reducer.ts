@@ -1,11 +1,11 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as _ from 'lodash';
-import {immutableHelper} from '@setl/utils';
+import { immutableHelper } from '@setl/utils';
 
 import * as actions from './actions';
 
-import {AllFundShareDetail, IznesShareDetail, OfiFundShareListState} from './model';
-import {OrderedMap} from 'immutable';
+import { AllFundShareDetail, IznesShareDetail, OfiFundShareListState } from './model';
+import { OrderedMap } from 'immutable';
 
 const initialState: OfiFundShareListState = {
     amAllFundShareList: {},
@@ -23,26 +23,26 @@ const initialState: OfiFundShareListState = {
  */
 export const OfiFundShareListReducer = function (state: OfiFundShareListState = initialState, action: Action): OfiFundShareListState {
     switch (action.type) {
-        case actions.SET_AM_ALL_FUND_SHARE_LIST:
-            return handleSetOfiNavFundsList(state, action);
+    case actions.SET_AM_ALL_FUND_SHARE_LIST:
+        return handleSetOfiNavFundsList(state, action);
 
-        case actions.SET_REQUESTED_AM_All_FUND_SHARE:
-            return toggleAmAllFundShareListRequested(state, true);
+    case actions.SET_REQUESTED_AM_All_FUND_SHARE:
+        return toggleAmAllFundShareListRequested(state, true);
 
-        case actions.CLEAR_REQUESTED_AM_All_FUND_SHARE:
-            return toggleAmAllFundShareListRequested(state, false);
+    case actions.CLEAR_REQUESTED_AM_All_FUND_SHARE:
+        return toggleAmAllFundShareListRequested(state, false);
 
-        case actions.SET_REQUESTED_IZN_SHARES:
-            return handleSetIznesShareListRequested(state);
+    case actions.SET_REQUESTED_IZN_SHARES:
+        return handleSetIznesShareListRequested(state);
 
-        case actions.CLEAR_REQUESTED_IZN_SHARES:
-            return handleClearIznesShareListRequested(state);
+    case actions.CLEAR_REQUESTED_IZN_SHARES:
+        return handleClearIznesShareListRequested(state);
 
-        case actions.GET_IZN_SHARES_LIST:
-            return handleGetIznesShareList(state, action);
+    case actions.GET_IZN_SHARES_LIST:
+        return handleGetIznesShareList(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -116,12 +116,16 @@ function handleGetIznesShareList(state: OfiFundShareListState, action: Action) {
     data.map((share) => {
         const shareData: IznesShareDetail = {
             fundShareID: share.fundShareID,
+            draft: share.draft,
+            draftUser: share.draftUser,
+            draftDate: share.draftDate,
             fundShareName: share.fundShareName,
             fundID: share.fundID,
             isin: share.isin,
             shareClassCode: share.shareClassCode,
             shareClassInvestmentStatus: share.shareClassInvestmentStatus,
             shareClassCurrency: share.shareClassCurrency,
+            iban: share.iban,
             valuationFrequency: share.valuationFrequency,
             historicOrForwardPricing: share.historicOrForwardPricing,
             hasCoupon: share.hasCoupon,

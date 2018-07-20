@@ -1,15 +1,16 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { immutableHelper } from '@setl/utils';
 import { select, NgRedux } from '@angular-redux/store';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subscription,  Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
@@ -33,30 +34,15 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         // {id: 'sch', text: '中文'}
     ];
 
+    investorTypes = [
+        { id: 45, text: 'Institutional Investor' },
+        { id: 55, text: 'Retail Investor' },
+    ];
+
     enums = {
-        status: {
-            [-2]: {
-                label: 'Rejected',
-                type: 'danger',
-            },
-            [-1]: {
-                label: 'Accepted',
-                type: 'success',
-            },
-            [0]: {
-                label: 'Draft',
-                type: 'info',
-            },
-            [1]: {
-                label: 'Waiting For Approval',
-                type: 'warning',
-            },
-            [2]: {
-                label: 'Awaiting Informations',
-                type: 'warning',
-            },
-        }
-    }
+        status: {},
+    };
+
 
     panel: any;
 
@@ -74,7 +60,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
                 public _translate: MultilingualService,
+                @Inject('kycEnums') kycEnums,
                 private redux: NgRedux<any>) {
+
+        this.enums.status = kycEnums.status;
 
         this.invitationForm = this._fb.group({
             investors: this._fb.array([
@@ -93,6 +82,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                         ])
                     ],
                     clientReference: [
+                        '',
+                    ],
+                    investorType: [
                         '',
                     ],
                     firstName: [
@@ -125,8 +117,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this._ofiKycService.getInvitationsByUserAmCompany();
 
-        this.investorInvitations$
-        .takeUntil(this.unSubscribe)
+        this.investorInvitations$.pipe(
+        takeUntil(this.unSubscribe))
         .subscribe((d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
@@ -135,7 +127,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
                     return {
                         ...invite,
-                        invitationLink: `${window.location.origin}/#/signup/${invite.lang}/${invite.invitationToken}`,
+                        invitationLink: `${window.location.origin}/#/redirect/${invite.lang}/${invite.invitationToken}`,
                         inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
                         tokenUsedAt,
                         kycStarted,
@@ -216,11 +208,12 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
 
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
+            const alreadyInitiatedList = response[1].Data[0].alreadyInitiatedEmailAddresses;
             const validEmailList = [];
             const invalidEmailList = [];
 
             formValues.investors.map(investor => {
-                if (emailAddressList.indexOf(investor.email) === -1) {
+                if ((emailAddressList.indexOf(investor.email) === -1) && alreadyInitiatedList.indexOf(investor.email) === -1) {
                     validEmailList.push(investor.email);
                 } else {
                     invalidEmailList.push(investor.email);
@@ -292,6 +285,18 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         selBox.select();
         document.execCommand('copy');
         document.body.removeChild(selBox);
+    }
+
+    isRetailInvestor(investorType: FormControl): boolean {
+        const val = investorType.value;
+        const userType = _.get(val, '[0].id');
+        if (userType === 55) {
+            investorType.setErrors({ investorType: true });
+            return true;
+        }
+
+        investorType.setErrors(null);
+        return false;
     }
 }
 

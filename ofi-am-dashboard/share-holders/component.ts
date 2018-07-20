@@ -3,17 +3,27 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestro
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { NgRedux, select } from '@angular-redux/store';
+// redux
+import {NgRedux, select} from '@angular-redux/store';
+import {fromJS} from 'immutable';
+import * as _ from 'lodash';
+import * as SagaHelper from '@setl/utils/sagaHelper';
+
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+
 /* Clarity */
 import { ClrDatagridStateInterface } from '@clr/angular';
+
 /* Utils. */
 import { immutableHelper, NumberConverterService, FileDownloader } from '@setl/utils';
+
 /* services */
 import { MemberSocketService } from '@setl/websocket-service';
+import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-import { Subscription } from 'rxjs/Subscription';
+
+import { Subscription } from 'rxjs';
 import { APP_CONFIG, AppConfig } from "@setl/utils/index";
 import { MultilingualService } from '@setl/multilingual';
 
@@ -32,8 +42,30 @@ interface SelectedItem {
 })
 
 export class ShareHoldersComponent implements OnInit, OnDestroy {
-    searchListForm: FormGroup;
-    searchInShareForm: FormGroup;
+
+    // list forms
+    listSearchForm: FormGroup;
+
+    // funds forms
+    searchForm: FormGroup;
+    filtersForm: FormGroup;
+
+    // share forms
+    searchSharesForm: FormGroup;
+    filtersSharesForm: FormGroup;
+
+    // ng-select selected
+    selectedFundId = 0;
+    selectedShareId = 0;
+    selectedTopHolders = 0;
+
+    // modal data
+    showModal = false;
+    exportType = '';
+
+    isListLevel = true;
+    isFundLevel = false;
+    isShareLevel = false;
 
     /* Datagrid server driven */
     total: number;
@@ -56,51 +88,65 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     /* Tabs Control array */
     tabsControl: Array<any> = [];
-    shareID = 0;
-
-    /* expandable div */
+    tabTitle = '';
 
     /* Ui Lists. */
     holderFilters: Array<SelectedItem> = [
-        { id: 1, text: 'All' },
-        { id: 2, text: 'Top 10 holders' },
-        { id: 3, text: 'Top 20 holders' },
-        { id: 4, text: 'Top 50 holders' },
-        { id: 5, text: 'Top 100 holders' },
+        { id: 0, text: 'All' },
+        { id: 10, text: 'Top 10 holders' },
+        { id: 20, text: 'Top 20 holders' },
+        { id: 50, text: 'Top 50 holders' },
+        { id: 100, text: 'Top 100 holders' },
     ];
 
-    shareTabTitle: string;
-    dataListForSearch: Array<any> = [];
-    holdersList: Array<any> = [];
-    holderDetailData: any;
+    /* datas */
 
-    /* Observables. */
-    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
-    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
-    @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
-    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
+    fundsNbHolders = 0;
+    fundsAUM = 0;
+    fundsCCY = 'EUR';
+    fundSettlementDate = '';
+
+    sharesNbHolders = 0;
+    sharesNbUnits = 0;
+    sharesLatestNAV = 0;
+    shareSettlementDate = '';
+    sharesAUM = 0;
+    sharesCCY = '';
+
+
+    allList: any = [];
+    fundList: any = [];
+    sharesList: any = [];
+    fundsData: any = [];
+    sharesData: any = [];
+    holdersFundData: any = [];
+    holdersShareData: any = [];
+
+    gotDataToExport = false;
 
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
     private appConfig: any = {};
 
-    /**
-     * Constructor
-     *
-     * @param {NgRedux<any>} ngRedux
-     * @param {ChangeDetectorRef} changeDetectorRef
-     * @param {AlertsService} alertsService
-     * @param {ActivatedRoute} route
-     * @param {Router} router
-     * @param {NumberConverterService} _numberConverterService
-     * @param {FormBuilder} _fb
-     * @param {MemberSocketService} memberSocketService
-     * @param {FileDownloader} _fileDownloader
-     * @param {OfiReportsService} ofiReportsService
-     */
+    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'myDetail']) myDetailOb: any;
+
+    // fund select list
+    @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserRequested']) fundsByUserRequestedOb;
+    @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
+
+    // fund details
+    // @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersRequested']) fundWithHoldersRequestedOb;
+    @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersList']) fundWithHoldersListOb;
+
+    // shares select list
+    @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
+    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
+
+    // shares details
+    @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
+
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
@@ -110,97 +156,236 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private _fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
+                private ofiAmDashboardService: OfiAmDashboardService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
-                @Inject(APP_CONFIG) appConfig: AppConfig) {
+                @Inject(APP_CONFIG) appConfig: AppConfig
+    ) {
         this.appConfig = appConfig;
-        this.shareTabTitle = '';
-        this.createSearchListForm();
-        this.createSearchInShareForm();
-        this.setInitialTabs();
-    }
 
-    ngOnInit() {
-        this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], { emitEvent: false });
+        this.isListLevel = (this.router.url.indexOf('/holders-list/list') !== -1) ? true : false;
+        this.isFundLevel = (this.router.url.indexOf('/funds/') !== -1) ? true : false;
+        this.isShareLevel = (this.router.url.indexOf('/shares/') !== -1) ? true : false;
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
+
+        this.listSearchForm = this._fb.group({
+            searchFunds: [
+                '',
+            ],
+            searchShares: [
+                '',
+            ],
+        });
+
+        this.searchForm = this._fb.group({
+            search: [
+                '',
+            ],
+        });
+
+        this.filtersForm = this._fb.group({
+            topholders: [
+                '',
+            ],
+        });
+
+        // all list
         this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
         this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+
+        // fund select
+        this.subscriptions.push(this.fundsByUserRequestedOb.subscribe((requested) => this.fundsByUserRequested(requested)));
+        this.subscriptions.push(this.fundsByUserListOb.subscribe((list) => this.fundsByUserList(list)));
+
+        // fund list
+        // this.subscriptions.push(this.fundWithHoldersRequestedOb.subscribe((requested) => this.fundWithHoldersRequested(requested)));
+        this.subscriptions.push(this.fundWithHoldersListOb.subscribe((list) => this.fundWithHoldersList(list)));
+
+        // valueChange
+        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+
+        this.setInitialTabs();
+
         this.subscriptions.push(this.route.params.subscribe(params => {
-            this.shareID = Number(params['tabid']);
+            const tabId = Number(params['tabid']);
+            if (typeof tabId !== 'undefined' && tabId > 0) {
+                // reset tabs
+                this.tabsControl = [
+                    {
+                        'title': {
+                            'icon': 'fa fa-th-list',
+                            'text': 'List'
+                        },
+                        'link': '/reports/holders-list/',
+                        'id': 0,
+                        'type': 'list',
+                        'active': this.isListLevel,
+                    },
+                ];
 
-            if (typeof this.shareID !== 'undefined' && this.shareID > 0) {
-                const share = this.holdersList.find((item) => item.shareId === this.shareID);
+                if (this.isFundLevel) {
+                    this.selectedFundId = tabId;
 
-                if (share && typeof share !== 'undefined' && share !== undefined && share !== null) {
-                    this.tabsControl[0].active = false;
-                    this.shareTabTitle = `${share.shareName} - ${share.shareIsin}`;
+                    this.fundWithHoldersRequested(false);
 
-                    if (this.tabsControl.length > 1) {
-                        this.tabsControl.splice(1, this.tabsControl.length - 1);
+                    this.tabsControl.push({
+                        'title': {
+                            'icon': 'fa fa-th-list',
+                            'text': 'Funds Level'
+                        },
+                        'link': '/reports/holders-list/funds/',
+                        'type': 'funds',
+                        'id': this.selectedFundId,
+                        'active': this.isFundLevel,
+                    });
+
+                    let obj = this.fundList.find(o => o.id === this.selectedFundId);
+                    if (obj && obj !== undefined) {
+                        this.searchForm.get('search').patchValue([obj], { emitEvent: false });
+                    }
+                }
+                if (this.isShareLevel) {
+                    this.selectedShareId = tabId;
+
+                    OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, {
+                        shareId: this.selectedShareId,
+                        selectedFilter: this.holderFilters[0].id,
+                    });
+
+                    this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
+
+                    this.tabsControl.push({
+                            'title': {
+                                'icon': 'fa fa-th-list',
+                                'text': 'Shares Level'
+                            },
+                            'link': '/reports/holders-list/shares/',
+                            'type': 'shares',
+                            'id': this.selectedShareId,
+                            'active': this.isShareLevel,
+                        });
+
+                    let obj = this.sharesList.find(o => o.id === this.selectedShareId);
+                    if (obj && obj !== undefined) {
+                        this.searchForm.get('search').patchValue([obj], { emitEvent: false });
                     }
 
-                    this.tabsControl.push(
-                        {
-                            'title': {
-                                'icon': 'fa-sitemap',
-                                'text': 'Share view',
-                            },
-                            'active': true,
-                            shareData: share,
-                        }
-                    );
-                }
-            } else {
-                if (this.tabsControl.length > 1) {
-                    this.tabsControl.splice(1, this.tabsControl.length - 1);
-                }
+                    if (this.allList.length > 0 && this.isShareLevel && this.selectedShareId > 0) {
+                        const share = this.allList.find((item) => item.shareId === this.selectedShareId);
 
-                this.tabsControl[0].active = true;
-                this.searchListForm.get('search').patchValue(null, { emitEvent: false });
-                this.searchInShareForm.get('top').patchValue([this.holderFilters[0]], { emitEvent: false });
+                        this.tabTitle = `${share.shareName} - ${share.shareIsin}`;
+                    }
+                }
             }
         }));
-
-        this.subscriptions.push(this.searchListForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-        this.changeDetectorRef.markForCheck();
     }
 
-    ngOnDestroy(): void {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
+    ngOnInit() {
     }
 
-    /**
-     * Get the selected language set by the authenticated user from redux
-     *
-     * @param requested
-     */
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-            case 'fra':
-                this.language = 'fr';
-                break;
-            case 'eng':
-                this.language = 'en';
-                break;
-            default:
-                this.language = 'en';
-                break;
+                case 'fra':
+                    this.language = 'fr';
+                    break;
+                case 'eng':
+                    this.language = 'en';
+                    break;
+                default:
+                    this.language = 'en';
+                    break;
             }
         }
     }
 
-    /**
-     * Get the authenticated user's details
-     *
-     * @param userDetails
-     */
     getUserDetails(userDetails) {
         this.myDetails = userDetails;
+    }
+
+    fundsByUserRequested(requested): void {
+        if (!requested) {
+            OfiAmDashboardService.defaultRequestGetUserManagementCompanyFunds(this.ofiAmDashboardService, this.ngRedux);
+        }
+    }
+
+    fundsByUserList(list) {
+        const listImu = fromJS(list);
+        this.fundList = listImu.reduce((result, item) => {
+            let lei = (typeof item.lei !== 'undefined') ? ' (' + item.lei + ')' : '';
+            result.push({
+                id: item.fundId,
+                text: item.fundName + lei,
+            });
+            return result;
+        }, []);
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    fundWithHoldersRequested(requested): void {
+        if (!requested) {
+            let payload: any = {
+                fundId: this.selectedFundId,
+            };
+            if (this.selectedTopHolders !== 0) {
+                payload.selectedFilter = this.selectedTopHolders;
+            }
+            OfiAmDashboardService.defaultRequestGetFundWithHolders(this.ofiAmDashboardService, this.ngRedux, payload);
+        }
+    }
+
+    fundWithHoldersList(list) {
+        const listImu = fromJS(list);
+        this.fundsData = [];
+        this.fundsData = listImu.reduce((result, item) => {
+            result.push({
+                fundId: item.get('fundId'),
+                fundName: item.get('fundName'),
+                fundAum: item.get('fundAum'),
+                fundHolderNumber: item.get('fundHolderNumber'),
+                lastSettlementDate: item.get('lastSettlementDate'),
+                fundCurrency: item.get('fundCurrency'),
+                holders: item.get('holders'),
+            });
+            return result;
+        }, []);
+
+        this.fundsNbHolders = 0;
+        this.fundsAUM = 0;
+        this.fundsCCY = 'EUR';
+        this.fundSettlementDate = '';
+
+        if (list.length > 0) {
+            let lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
+            this.tabTitle = `${this.fundsData[0].fundName}${lei}`;
+            this.gotDataToExport = true;
+
+            this.fundSettlementDate = this.fundsData[0].lastSettlementDate;
+            this.fundsNbHolders = this.fundsData[0].fundHolderNumber;
+            this.fundsAUM = this.fundsData[0].fundAum;
+            this.fundsCCY = this.fundsData[0].fundCurrency;
+
+            this.holdersFundData = [];
+            this.holdersFundData = this.fundsData[0].holders.reduce((result, item) => {
+                result.push({
+                    ranking: item.get('ranking'),
+                    portfolio: item.get('portfolio'),
+                    investorName: item.get('investorName'),
+                    quantity: item.get('quantity'),
+                    amount: item.get('amount'),
+                    shareRatio: item.get('shareRatio'),
+                    fundRatio: item.get('fundRatio'),
+                });
+                return result;
+            }, []);
+        }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -221,9 +406,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      */
     getAmHoldersListFromRedux(holderList) {
         if (holderList) {
-            this.holdersList = holderList.toJS() || [];
+            this.allList = holderList.toJS() || [];
 
-            this.dataListForSearch = this.holdersList.filter(it => !it.isFund).map((holder) => {
+            this.sharesList = this.allList.filter(it => !it.isFund).map((holder) => {
                 return {
                     id: holder.shareId,
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
@@ -240,36 +425,22 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      * @param data
      */
     getHolderDetail(data) {
-
-        console.log(data);
-
         if (data) {
-            this.holderDetailData = data.holders.toJS() || [];
+            this.holdersShareData = data.holders.toJS() || [];
+            this.sharesNbHolders = data.holderNumber;
+            this.sharesAUM = data.aum;
+            this.sharesNbUnits = data.unitNumber;
+            this.sharesLatestNAV = data.nav;
+            this.sharesCCY = data.currency;
+            this.shareSettlementDate = data.lastSettlementDate;
         }
-
-        console.log(this.holderDetailData);
-
         this.changeDetectorRef.markForCheck();
-    }
-
-    createSearchListForm() {
-        this.searchListForm = this._fb.group({
-            search: [
-                '',
-            ],
-        });
-    }
-
-    createSearchInShareForm() {
-        this.searchInShareForm = this._fb.group({
-            top: [[this.holderFilters[0]]],
-            dateUsed: [''],
-        });
     }
 
     setInitialTabs() {
         // Get opened tabs from redux store.
-        const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
+        const openedTabs = [];
+        // const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
         if (openedTabs.length === 0) {
             /* Default tabs. */
@@ -277,140 +448,139 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 {
                     'title': {
                         'icon': 'fa fa-th-list',
-                        'text': 'All shares'
+                        'text': 'List'
                     },
-                    'shareId': -1,
-                    'active': true
-                }
+                    'link': '/reports/holders-list/',
+                    'id': 0,
+                    'type': 'list',
+                    'active': this.isListLevel,
+                },
             ];
             return true;
         }
 
-        this.tabsControl = openedTabs;
-    }
-
-    requestSearch(form) {
-        // Reset the flag for getting holder detail
-        OfiReportsService.setRequestedHolderDetail(false, this.ngRedux);
-
-        if (
-            this.searchListForm.get('search').value &&
-            this.searchListForm.get('search').value[0] &&
-            this.searchListForm.get('search').value[0].id
-        ) {
-            const shareId = this.searchListForm.get('search').value[0].id;
-            this.openShareId(shareId);
-
-        } else {
-            this.buildLink('0');
-        }
-    }
-
-    getShareNameByShareId(shareId): string {
-
-        let selectedShareName: string;
-
-        try {
-            selectedShareName = this.dataListForSearch.filter((item) => Number(item.id) === Number(shareId))[0].text;
-        } catch (e) {
-            selectedShareName = '';
-        }
-
-        return selectedShareName;
+        // this.tabsControl = openedTabs;
     }
 
     handleClickShare(data) {
-        if (!data.isFund && data.shareId) {
-            this.openShareId(data.shareId);
+        if (data.isFund) {
+            if (data.fundId && data.fundId > 0) {
+                this.router.navigateByUrl('/reports/holders-list/funds/' + data.fundId);
+            }
+        } else {
+            if (data.shareId && data.shareId > 0) {
+                this.router.navigateByUrl('/reports/holders-list/shares/' + data.shareId);
+            }
         }
     }
 
-    openShareId(shareId) {
-        this.holderDetailData = [];
-        const payload = {
-            shareId,
-            selectedFilter: this.holderFilters[0].id
-        };
-
-        const selectedShareName = this.getShareNameByShareId(shareId);
-
-        this.searchListForm.get('search').patchValue([{ id: shareId, text: selectedShareName }], { emitEvent: false });
-
-        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
-
-        OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
-
-        this.buildLink(shareId);
-
-        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
-    }
-
-    buildLink(id) {
-        this.router.navigateByUrl(`reports/holders-list/${id}`);
-    }
-
-    refresh(state: ClrDatagridStateInterface) {
-        // TODO: think to check with the backend team that server-data driven will be possible
-        let filters: { [prop: string]: any[] } = {};
-
-        if (state.filters) {
-            for (const filter of state.filters) {
-                const { property, value } = <{ property: string, value: string }>filter;
-                filters[property] = [value];
+    requestSearch(form) {
+        if (this.isListLevel) {
+            this.selectedFundId = (this.listSearchForm.controls['searchFunds'].value.length > 0) ? this.listSearchForm.controls['searchFunds'].value[0].id : 0;
+            this.selectedShareId = (this.listSearchForm.controls['searchShares'].value.length > 0) ? this.listSearchForm.controls['searchShares'].value[0].id : 0;
+            if (this.selectedFundId > 0) {
+                this.router.navigateByUrl('/reports/holders-list/funds/' + this.selectedFundId);
+            }
+            if (this.selectedShareId > 0) {
+                this.router.navigateByUrl('/reports/holders-list/shares/' + this.selectedShareId);
             }
         }
 
-        this.changeDetectorRef.markForCheck();
+        if (this.isFundLevel) {
+            let oldSelectedFundId = this.selectedFundId;
+            this.selectedFundId = (this.searchForm.controls['search'].value.length > 0) ? this.searchForm.controls['search'].value[0].id : 0;
+            this.selectedTopHolders = (this.filtersForm.controls['topholders'].value.length > 0) ? this.filtersForm.controls['topholders'].value[0].id : 0;
+            if (this.selectedFundId > 0) {
+                if (oldSelectedFundId !== this.selectedFundId) {
+                    this.router.navigateByUrl('/reports/holders-list/funds/' + this.selectedFundId);
+                } else {
+                    // same fund call with filters
+                    this.fundWithHoldersRequested(false);
+                }
+            } else {
+                this.fundsData = [];
+                this.holdersFundData = [];
+                this.fundsNbHolders = 0;
+                this.fundsAUM = 0;
+                this.fundsCCY = 'EUR';
+                this.fundSettlementDate = '';
+                this.gotDataToExport = false;
+                this.router.navigateByUrl('/reports/holders-list/list');
+            }
+        }
+
+        if (this.isShareLevel) {
+            let oldSelectedShareId = this.selectedShareId;
+            this.selectedShareId = (this.searchForm.controls['search'].value.length > 0) ? this.searchForm.controls['search'].value[0].id : 0;
+            this.selectedTopHolders = (this.filtersForm.controls['topholders'].value.length > 0) ? this.filtersForm.controls['topholders'].value[0].id : 0;
+            if (this.selectedShareId > 0) {
+                if (oldSelectedShareId !== this.selectedShareId) {
+                    this.router.navigateByUrl('/reports/holders-list/shares/' + this.selectedShareId);
+                } else {
+                    // same share call with filters
+                    OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, {
+                        shareId: this.selectedShareId,
+                        selectedFilter: this.selectedTopHolders,
+                    });
+                }
+            } else {
+                this.sharesNbHolders = 0;
+                this.sharesNbUnits = 0;
+                this.sharesLatestNAV = 0;
+                this.shareSettlementDate = '';
+                this.sharesAUM = 0;
+                this.sharesCCY = '';
+                this.gotDataToExport = false;
+                this.router.navigateByUrl('/reports/holders-list/list');
+            }
+        }
     }
 
-    handleHolderFilterSelect(selectedFilterId) {
-        const payload = {
-            shareId: this.searchListForm.get('search').value[0].id,
-            selectedFilter: selectedFilterId
-        };
+    exportFile(type, isSpecific) {
+        if (type === 'funds' && isSpecific === 0) {
+            // all fund
+            this._fileDownloader.downLoaderFile({
+                method: 'exportRecordKeepingFunds',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+            });
+        }
 
-        // Reset holder detail requested flag
-        OfiReportsService.setRequestedHolderDetail(true, this.ngRedux);
+        if (type === 'funds' && isSpecific === 1) {
+            // specific fund
+            this._fileDownloader.downLoaderFile({
+                method: 'exportRecordKeepingFund',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+                fundId: this.selectedFundId,
+                selectedFilter: this.selectedTopHolders,
+            });
+        }
 
-        // Fetch the holders with the newest selected filter
-        OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, payload);
+        if (type === 'shares' && isSpecific === 0) {
+            // all shares
+            this._fileDownloader.downLoaderFile({
+                method: 'exportRecordKeepingShares',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+            });
+        }
 
-        // Retrieve holder detail's data
-        this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
-        this.changeDetectorRef.markForCheck();
+        if (type === 'shares' && isSpecific === 1) {
+            // specific share
+            this._fileDownloader.downLoaderFile({
+                method: 'exportRecordKeepingShare',
+                token: this.memberSocketService.token,
+                userId: this.myDetails.userId,
+                shareId: this.selectedShareId,
+                selectedFilter: this.selectedTopHolders,
+            });
+        }
     }
 
-    /**
-     * Export the global list of holders to CSV
-     */
-    handleHoldersExportButtonClick(): void {
-
-        this._fileDownloader.downLoaderFile({
-            method: 'exportAssetManagerHolders',
-            token: this.memberSocketService.token,
-            userId: this.myDetails.userId
-        });
-    }
-
-    /**
-     * Export the holder detail page to CSV
-     */
-    handleHolderDetailExportButtonClick(): void {
-        const shareId = this.searchListForm.get('search').value[0].id;
-        const selectedFilter = this.searchInShareForm.get('top').value[0].id;
-        const shareIsin = this.holdersList.find((item) => item.shareId === this.shareID).shareIsin;
-
-        this._fileDownloader.downLoaderFile({
-            method: 'exportShareHolderDetail',
-            token: this.memberSocketService.token,
-            shareId,
-            shareIsin,
-            userId: this.myDetails.userId,
-            selectedFilter: selectedFilter,
-        });
-    }
-
-    private generateExportURL(url: string, isProd: boolean = true): string {
-        return isProd ? `https://${window.location.hostname}/mn/${url}` : `http://${window.location.hostname}:9788/${url}`;
+    ngOnDestroy(): void {
+        for (const subscription of this.subscriptions) {
+            subscription.unsubscribe();
+        }
     }
 }

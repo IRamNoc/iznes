@@ -13,7 +13,8 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, Subject } from 'rxjs';
+import { distinctUntilChanged, take, takeUntil, throttleTime } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
 import * as math from 'mathjs';
@@ -34,7 +35,7 @@ import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
 import { OrderByType } from '../../ofi-orders/order.model';
-import { ToasterService } from 'angular2-toaster';
+import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
@@ -72,8 +73,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
-    // List of observable subscription.
-    subscriptionsArray: Array<Subscription> = [];
+    toastTimer;
+    timerToast: Toast;
+    unSubscribe: Subject<any> = new Subject();
 
     connectedWalletId: number;
     requestedWalletAddress: boolean;
@@ -390,13 +392,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
+        if (this.toastTimer) {
+            clearInterval(this.toastTimer);
         }
 
-        // const formValue = Object.assign({}, this.form.value, {'actionBy': this.actionBy});
-        // this.formDataChange.emit(formValue);
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 
     ngOnInit() {
@@ -445,26 +446,133 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.actionBy = 'q';
 
         // List of observable subscription.
-        this.subscriptionsArray.push(this.shareDataOb.subscribe((shareData) => {
-            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
-            this.calenderHelper = new CalendarHelper(this.shareData);
+        this.shareDataOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((shareData) => {
+                this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+                this.calenderHelper = new CalendarHelper(this.shareData);
 
-            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+                this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
-            this.updateDateInputs();
+                this.updateDateInputs();
+            });
 
-        }));
+        this.connectedWalletOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(connected => {
+                this.connectedWalletId = connected;
+            });
 
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
-        }));
+        this.addressListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(addressList => this.updateAddressList(addressList));
 
-        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
+        this.requestedAddressListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(requested => this.requestAddressList(requested));
 
-        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
-            this.requestAddressList(requested);
-        }));
-        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+        this.requestedLabelListOb
+            .pipe(
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(requested => this.requestWalletLabel(requested));
+
+        this.cutoffDate.valueChanges
+            .pipe(
+                takeUntil(this.unSubscribe),
+                distinctUntilChanged(),
+                throttleTime(1000),
+            )
+            .subscribe((v) => {
+                if (this.toastTimer) {
+                    clearInterval(this.toastTimer);
+                }
+                if (this.timerToast) {
+                    this._toaster.clear(this.timerToast.toastId);
+                    this.timerToast = null;
+                }
+                if (!v) {
+                    return;
+                }
+
+                const cutOffValue = new Date(
+                    this.calenderHelper
+                        .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
+                        .format('YYYY-MM-DD HH:mm'),
+                );
+
+                const now = new Date();
+
+                const remainingTime = cutOffValue.getTime() - now.getTime();
+                this.updateToastTimer(remainingTime);
+                this.toastTimer = this.setToastTimer();
+            });
+    }
+
+    updateToastTimer(unixtime: number) {
+        if (this.timerToast) {
+            this._toaster.clear(this.timerToast.toastId);
+            this.timerToast = null;
+        }
+        this.timerToast = this._toaster.pop(
+            'warning',
+            `Time left before the next cut-off: ${this.getFormattedUnixTime(unixtime)}`,
+        );
+    }
+
+    setToastTimer() {
+        return setInterval(() => {
+            const cutOffValue = new Date(
+                this.calenderHelper
+                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
+                    .format('YYYY-MM-DD HH:mm'),
+            );
+
+            const now = new Date();
+
+            const remainingTime = cutOffValue.getTime() - now.getTime();
+            if (remainingTime > 0) {
+                this.updateToastTimer(remainingTime);
+            } else {
+                if (this.timerToast) {
+                    this._toaster.clear(this.timerToast.toastId);
+                    this.timerToast = null;
+                }
+                this.showAlertCutOffError();
+                clearInterval(this.toastTimer);
+            }
+        }, 1000);
+    }
+
+    getFormattedUnixTime(value: number): string {
+        const days = Math.trunc(value / (24 * 60 * 60 * 1000));
+        const hours = Math.trunc((value - (days * 24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+        const minutes = Math.trunc(
+            (value - (((days * 24) + hours) * 60 * 60 * 1000)) / (1000 * 60),
+        );
+        const seconds = Math.trunc(
+            (value - (((((days * 24) + hours) * 60) + minutes) * 60 * 1000)) / 1000,
+        );
+        return `${this.padInt(hours)}:${this.padInt(minutes)}:${this.padInt(seconds)}`;
+    }
+
+    padInt(value: number, length: number = 2): string {
+        let s = value.toString();
+        if (value < 0 || length < s.length) {
+            return value.toString();
+        }
+        while (s.length < length) {
+            s = '0' + s;
+        }
+        return s;
     }
 
     setInitialFormValue() {
@@ -736,7 +844,7 @@ The IZNES Team.</p>`;
             }
         }[type];
 
-        this.inputSubscription = triggering.valueChanges.distinctUntilChanged().subscribe(callBack);
+        this.inputSubscription = triggering.valueChanges.pipe(distinctUntilChanged()).subscribe(callBack);
     }
 
     /**
@@ -890,6 +998,10 @@ The IZNES Team.</p>`;
 
     handleOrderConfirmation() {
 
+        if (this.doValidate && this.handleCutOffDateError()) {
+            return;
+        }
+
         const subPortfolioName = this.address.value[0]['text'];
         const amount = this._moneyValuePipe.parse(this.amount.value, 4);
         const quantity = this._moneyValuePipe.parse(this.quantity.value, this.shareData.maximumNumDecimal);
@@ -1001,6 +1113,41 @@ The IZNES Team.</p>`;
             }
         }
         return 0;
+    }
+
+    showAlertCutOffError() {
+        if (this.doValidate) {
+            this._alertsService
+                .create('error', `
+                    <table class="table grid">
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-danger">The Cut-off has been reached</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+                .pipe(
+                    take(1),
+                )
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
+        }
+    }
+
+    handleCutOffDateError(): Boolean {
+        const cutOffValue = new Date(this.cutoffDate.value).getTime();
+        const now = new Date().getTime();
+
+        if (cutOffValue > now) {
+            return false;
+        }
+
+        this.showAlertCutOffError();
+
+        return true;
     }
 
     getDate(dateString: string): string {

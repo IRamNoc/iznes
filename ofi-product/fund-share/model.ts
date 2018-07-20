@@ -71,7 +71,8 @@ export class FundShare {
         optional: new ShareDocumentsOptional(),
     };
 
-    constructor() {}
+    constructor() {
+    }
 
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
@@ -80,9 +81,10 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {
+    getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
+            draft: draft,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
             fundShareID: this.fundShareId,
             fundID: this.fundID,
@@ -92,6 +94,7 @@ export class FundShare {
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
+            iban: this.keyFacts.mandatory.iban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
@@ -129,9 +132,9 @@ export class FundShare {
             mifiidServicesCosts: this.fees.mandatory.mifiidServicesCosts.value(),
             mifiidIncidentalCosts: this.fees.mandatory.mifiidIncidentalCosts.value(),
             subscriptionTradeCyclePeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklySubscriptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -142,9 +145,9 @@ export class FundShare {
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             redemptionTradeCyclePeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleRedemptionsWithinPeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklyRedemptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -175,6 +178,7 @@ export class FundShare {
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
         this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.keyFacts.mandatory.iban.preset = fundShare.iban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
@@ -430,9 +434,9 @@ export class FundShare {
     private setFeederPreset(value: any): void {
         const preset = (!value || value === 0) ?
             [this.keyFacts.mandatory.feeder.listItems[0]] :
-        [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
-            return item.id == value;
-        })];
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
 
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
     }
@@ -444,11 +448,13 @@ export class FundShare {
     }
 
     private isStatusMaster(): boolean {
+        if (!this.keyFacts.mandatory.status.value()) return null;
+
         return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
-        if (parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (!!this.keyFacts.mandatory.status.value() && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;
@@ -457,7 +463,6 @@ export class FundShare {
 
     private getSelectValue(formItem: FormItem): any {
         const rawValue = formItem.value();
-
         return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
 }

@@ -1,11 +1,11 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
-import {immutableHelper} from '@setl/utils';
+import { fromJS } from 'immutable';
+import { immutableHelper } from '@setl/utils';
 
 import * as actions from './actions';
 
-import {OfiFundShare, OfiFundShareState, CurrentRequest} from './model';
+import { OfiFundShare, OfiFundShareState, CurrentRequest } from './model';
 
 const initialState: OfiFundShareState = {
     fundShare: {},
@@ -22,20 +22,20 @@ const initialState: OfiFundShareState = {
  */
 export const OfiFundShareReducer = function (state: OfiFundShareState = initialState, action: Action): OfiFundShareState {
     switch (action.type) {
-        case actions.SET_FUND_SHARE:
-            return handleSetOfiFundShare(state, action);
-        
-        case actions.UPDATE_FUND_SHARE:
-            return handleSetOfiFundShare(state, action);
+    case actions.SET_FUND_SHARE:
+        return handleSetOfiFundShare(state, action);
 
-        case actions.SET_REQUESTED_FUND_SHARE:
-            return toggleFundShareRequested(state, true);
+    case actions.UPDATE_FUND_SHARE:
+        return handleSetOfiFundShare(state, action);
 
-        case actions.CLEAR_REQUESTED_FUND_SHARE:
-            return toggleFundShareRequested(state, false);
+    case actions.SET_REQUESTED_FUND_SHARE:
+        return toggleFundShareRequested(state, true);
 
-        default:
-            return state;
+    case actions.CLEAR_REQUESTED_FUND_SHARE:
+        return toggleFundShareRequested(state, false);
+
+    default:
+        return state;
     }
 };
 
@@ -59,6 +59,7 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
 
             result = {
                 fundShareID: shareId,
+                draft: item.get('draft', ''),
                 fundShareName: item.get('fundShareName', ''),
                 fundID: item.get('fundID', ''),
                 isin: item.get('isin', ''),
@@ -67,6 +68,7 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 subscriptionStartDate: item.get('subscriptionStartDate', ''),
                 launchDate: item.get('launchDate', ''),
                 shareClassCurrency: item.get('shareClassCurrency', ''),
+                iban: item.get('iban', ''),
                 valuationFrequency: item.get('valuationFrequency', ''),
                 historicOrForwardPricing: item.get('historicOrForwardPricing', ''),
                 hasCoupon: item.get('hasCoupon', ''),

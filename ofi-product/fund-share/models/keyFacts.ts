@@ -1,4 +1,4 @@
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
@@ -49,8 +49,18 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         type: FormItemType.date,
         label: 'Subscription Period Start Date',
         required: true,
-        style: [FormItemStyle.BreakOnAfter],
         mltag: 'txt_fundshare_substartdate',
+    };
+    iban: FormItem = {
+        type: FormItemType.text,
+        label: 'IBAN',
+        required: true,
+        mltag: 'txt_fundshare_iban',
+        validator: Validators.compose([
+            Validators.required,
+            Validators.minLength(14),
+            Validators.maxLength(34),
+        ]),
     };
     shareLaunchDate: FormItem = {
         type: FormItemType.date,
