@@ -162,6 +162,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             if (params['id']) {
                 this.umbrellaFundID = params['id'];
                 this.isEditMode = true;
+            } else {
+                this.umbrellaFundID = null;
+                this.isEditMode = false;
             }
         });
 
@@ -328,7 +331,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             if (
                 this.managementCompanyList.length > 0
                 && this.managementCompanyList
-                && this.umbrellaFundID || queryParams.prefill
+                && (this.umbrellaFundID || queryParams.prefill)
             ) {
                 this.fillFormByUmbrellaID(this.umbrellaFundID || queryParams.prefill);
                 this._changeDetectorRef.markForCheck();
@@ -750,8 +753,8 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigate(['/product-module/product/fund/new'], extras);
     }
 
-    toggleLeiSwitch(toggle?: boolean) {
-        if (!toggle) {
+    toggleLeiSwitch(nextState: boolean) {
+        if (!nextState) {
             this.umbrellaFundForm.controls['legalEntityIdentifier'].disable();
             this.umbrellaFundForm.controls['legalEntityIdentifier'].clearValidators();
         } else {
@@ -761,7 +764,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 validators.lei,
             ]));
         }
-        this.isLeiVisible = toggle;
+        this.isLeiVisible = nextState;
     }
 
     displayFundPopup(umbrellaFundName, umbrellaFundID) {
