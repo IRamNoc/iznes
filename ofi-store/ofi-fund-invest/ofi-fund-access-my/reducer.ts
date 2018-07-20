@@ -123,6 +123,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             fundName: item.get('fundName', ''),
             price: item.get('price', 0),
             priceDate: item.get('priceDate', ''),
+            priceStatus: item.get('priceStatus', ''),
             companyName: item.get('companyName', ''),
             subscriptionStartDate: item.get('subscriptionStartDate', 0),
             launchDate: item.get('launchDate', 0),

@@ -709,8 +709,10 @@ The IZNES Team.</p>`;
                  */
                 const val = Number(value.toString().replace(/\s+/g, ''));
 
-                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
-                beTriggered.patchValue(amount.toString(), {onlySelf: true, emitEvent: false});
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
+                const amountStr = this._moneyValuePipe.transform(amount, 4);
+                beTriggered.patchValue(amountStr, {onlySelf: true, emitEvent: false});
+
                 this.calcFeeNetAmount();
 
                 this.actionBy = 'q';
@@ -723,9 +725,10 @@ The IZNES Team.</p>`;
                  */
                 const newValue = this._moneyValuePipe.parse(value, 4);
 
-                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
-                let newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
-                beTriggered.patchValue(newQuantity, {onlySelf: true, emitEvent: false});
+                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), {notation: 'fixed', precision: 5}) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
+                const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
+                const newQuantityStr = this._moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
+                beTriggered.patchValue(newQuantityStr, {onlySelf: true, emitEvent: false});
 
                 this.calcFeeNetAmount();
 
@@ -743,7 +746,8 @@ The IZNES Team.</p>`;
     calcFeeNetAmount() {
 
         // get amount
-        const amount = math.format(math.chain(this.quantity.value).multiply(this.nav).done(), 14);
+        const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
+        const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
@@ -761,11 +765,16 @@ The IZNES Team.</p>`;
      * Updating it to be Round Down eg 0.15151 becomes 0.151
      */
     roundAmount() {
-        const amount = math.format(math.chain(this.quantity.value).multiply(this.nav).done(), 14);
-        this.amount.patchValue(amount, {onlySelf: true, emitEvent: false});
-        this.unSubscribeForChange();
+        if (this.isKnownNav() || this.orderType === 'r') {
+            const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
+            const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
+            const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
+            this.amount.patchValue(amountStr, {onlySelf: true, emitEvent: false});
 
-        this.calcFeeNetAmount();
+            this.unSubscribeForChange();
+
+            this.calcFeeNetAmount();
+        }
     }
 
     /**
@@ -779,7 +788,7 @@ The IZNES Team.</p>`;
      */
     roundDown(number: any, decimals: any) {
         decimals = decimals || 0;
-        return (Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals));
+        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), {notation: 'fixed', precision: 4});
     }
 
 
@@ -860,6 +869,19 @@ The IZNES Team.</p>`;
             beTriggered[1].setValue(valuationStr);
 
             this.dateBy = 'settlement';
+        }
+
+        // as when we subscribe by amount, the logic of working out the quantity by the amount is depended on whether the
+        // nav is known nav. so when we change the date. we need to clear the input of quantity and amount, and get user to
+        // enter it again.
+        if (this.actionBy === 'a') {
+            // clear amount
+           this.amount.patchValue(0);
+           this.amount.markAsUntouched();
+
+           // clear quantity
+           this.quantity.patchValue(0);
+           this.quantity.markAsUntouched();
         }
 
         return false;
@@ -984,6 +1006,43 @@ The IZNES Team.</p>`;
     getDate(dateString: string): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
     }
+
+    /**
+     * Get latest nav date with this format: YYYY-MM-DD
+     * @return {string}
+     */
+    latestNavDateFormated(): string {
+      return this.getDate(this.shareData.priceDate);
+    }
+
+    /**
+     * Check the order we placing is known nav.
+     * To be qualify as known nav:
+     * - latest nav is same nav date of the order
+     * - The nav is status is validated.
+     */
+    isKnownNav(): boolean {
+        // get the current chosen nav date
+        const orderNavDate = this.valuationDate.value;
+
+        // get the latest nav's date
+        const latestNavDate = this.latestNavDateFormated();
+
+        // get the latest nav's status
+        const latestNavStatus = this.shareData.priceStatus;
+
+        // check if latest nav's status is  validated
+        // check if latest nav's date is same as the order's
+        if (Number(latestNavStatus) !== -1) {
+           return false;
+        }
+
+        if (orderNavDate !== latestNavDate) {
+            return false;
+        }
+
+        return true;
+    }
 }
 
 /**
@@ -1047,7 +1106,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
+    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), {notation: 'fixed', precision: 4}));
 }
 
 /**
@@ -1062,7 +1121,7 @@ function calNetAmount(amount: number | string, fee: number | string, orderType: 
     amount = Number(amount);
     fee = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
+        s: Number(math.format(math.chain(amount).add(fee).done(), {notation: 'fixed', precision: 4})),
+        r: Number(math.format(math.chain(amount).subtract(fee).done(), {notation: 'fixed', precision: 4}))
     }[orderType];
 }

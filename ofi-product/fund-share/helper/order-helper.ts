@@ -47,6 +47,8 @@ export interface OrderRequest {
 
 export interface IznShareDetailWithNav extends IznesShareDetail {
     price: number;
+    priceDate: string;
+    priceStatus: number;
     amCompanyID: number;
     amWalletID: number;
     amAddress: string;
@@ -788,13 +790,40 @@ export class OrderHelper {
             /**
              * quantity = amount / nav
              */
-            // if redemption amount will always be estimated.
-            amount = this.orderType === OrderType.Subscription ? this.orderValue : 0;
-            estimatedAmount = this.orderValue;
 
             // if redemption amount will always be estimated.
-            estimatedQuantity = Number(math.format(math.chain(estimatedAmount).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+            estimatedQuantity = Number(math.format(math.chain(this.orderValue).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+
+            // make sure the quantity meet the share maximumNumberDecimal
+            // 1. convert back to normal number scale
+            // 2. meeting the maximumNumberDecimal, and always round down.
+            // 3. convert back to blockchain number scale
+            estimatedQuantity = estimatedQuantity / NumberMultiplier;
+            estimatedQuantity = roundDown(estimatedQuantity, this.fundShare.maximumNumDecimal);
+            estimatedQuantity = estimatedQuantity * NumberMultiplier;
+
             quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
+
+            // if subscription
+            if (this.orderType === OrderType.Subscription) {
+
+                // if we are using known nav, we use the quantity to work out the new amount
+                // if we are using unknow nav, we put the specified amount back.
+                if(this.isKnownNav()){
+                    estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+                    amount = estimatedAmount;
+                }else {
+                    estimatedAmount = this.orderValue;
+                    amount = this.orderValue;
+                }
+
+            } else {
+                // if redemption amount will always be estimated.
+                // and use the new quantity to work out amount.
+                amount = 0;
+                estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+            }
+
 
             // calculate fee
             fee = calFee(estimatedAmount, this.feePercentage);
@@ -926,10 +955,16 @@ export class OrderHelper {
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
+                // the formula before apply maximum number decimal.
+            let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
+            // apply maximum number decimal.
+            amountStr = 'floor(' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ') / ' + decimalDivider + ' * ' + NumberMultiplier;
+
             actionData = [
                 {
                     actionData: {
-                        amount: '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                        amount: amountStr,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -1169,6 +1204,35 @@ export class OrderHelper {
         };
     }
 
+    /**
+     * Check the order we placing is known nav.
+     * To be qualify as known nav:
+     * - latest nav is same nav date of the order
+     * - The nav is status is validated.
+     */
+    isKnownNav(): boolean {
+        // get the current chosen nav date
+        const orderNavDate = (this.getOrderDates() as OrderDates).valuation.format('YYYY-MM-DD');
+
+        // get the latest nav's date
+        const latestNavDate = moment(this.fundShare.priceDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+
+        // get the latest nav's status
+        const latestNavStatus = this.fundShare.priceStatus;
+
+        // check if latest nav's status is  validated
+        // check if latest nav's date is same as the order's
+        if (Number(latestNavStatus) !== -1) {
+            return false;
+        }
+
+        if (orderNavDate !== latestNavDate) {
+            return false;
+        }
+
+        return true;
+    }
+
 }
 
 /**
@@ -1223,4 +1287,15 @@ export function toNormalScale(num: number, numDecimal: number): number {
     return math.format(math.chain(num).divide(NumberMultiplier).done(), {notation: 'fixed', precision: numDecimal});
 }
 
-
+/**
+ * Round Down Numbers
+ * eg 0.15151 becomes 0.151
+ * eg 0.15250 becomes 0.152
+ *
+ * @param number
+ * @param decimals
+ * @returns {number}
+ */
+export function roundDown(number: any, decimals: any = 0) {
+    return (Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals));
+}
