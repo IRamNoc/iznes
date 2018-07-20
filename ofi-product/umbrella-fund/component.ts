@@ -655,75 +655,81 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     saveDraft(formValues) {
-        const payload: UmbrellaFundDetail = {
-            draft: 1,
-            umbrellaFundName: formValues.umbrellaFundName,
-            registerOffice: formValues.registerOffice,
-            registerOfficeAddress: formValues.registerOfficeAddress,
-            legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
-            domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
-            umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
-            managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
-            fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
-            custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
-            investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
-            payingAgentID: this.getIdsFromList(formValues.payingAgentID),
-            transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
-            centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
-            giin: formValues.giin || null,
-            delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : null,
-            auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : null,
-            taxAuditorID: (formValues.taxAuditorID.length > 0) ? formValues.taxAuditorID[0].id : null,
-            principlePromoterID: this.getIdsFromList(formValues.principlePromoterID),
-            legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
-            directors: formValues.directors,
-            internalReference: formValues.internalReference,
-            additionnalNotes: formValues.additionnalNotes,
-        };
+        if (formValues.managementCompanyID.length == 0) {
 
-        if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
-            // UPDATE
-            const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
-                {
-                    ...payload,
-                    umbrellaFundID: formValues.umbrellaFundID,
-                },
-                this.ngRedux);
+            this.showWarning('Please fill in at least the management company to be able to save as draft.');
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    // this.logService.log('save success new fund', data); // success
-                    OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                    this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully updated!');
-                    this._location.back();
-                },
-                (data) => {
-                    this.logService.log('Error: ', data);
-                    const errMsg = _.get(data, '[1].Data[0].Message', '');
-                    this._toasterService.pop('error', 'Failed to update the draft umbrella fund. ' + errMsg);
-                    this._changeDetectorRef.markForCheck();
-                })
-            );
         } else {
-            // INSERT
-            const asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
-                payload,
-                this.ngRedux);
+            const payload: UmbrellaFundDetail = {
+                draft: 1,
+                umbrellaFundName: formValues.umbrellaFundName,
+                registerOffice: formValues.registerOffice,
+                registerOfficeAddress: formValues.registerOfficeAddress,
+                legalEntityIdentifier: this.isLeiVisible ? formValues.legalEntityIdentifier : null,
+                domicile: (formValues.domicile.length > 0) ? formValues.domicile[0].id : null,
+                umbrellaFundCreationDate: (formValues.umbrellaFundCreationDate != '') ? formValues.umbrellaFundCreationDate : null,
+                managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
+                fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
+                custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
+                investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
+                payingAgentID: this.getIdsFromList(formValues.payingAgentID),
+                transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
+                centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
+                giin: formValues.giin || null,
+                delegatedManagementCompanyID: (formValues.delegatedManagementCompanyID.length > 0) ? formValues.delegatedManagementCompanyID[0].id : null,
+                auditorID: (formValues.auditorID.length > 0) ? formValues.auditorID[0].id : null,
+                taxAuditorID: (formValues.taxAuditorID.length > 0) ? formValues.taxAuditorID[0].id : null,
+                principlePromoterID: this.getIdsFromList(formValues.principlePromoterID),
+                legalAdvisorID: (formValues.legalAdvisorID.length > 0) ? formValues.legalAdvisorID[0].id : null,
+                directors: formValues.directors,
+                internalReference: formValues.internalReference,
+                additionnalNotes: formValues.additionnalNotes,
+            };
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-                asyncTaskPipe,
-                (data) => {
-                    OfiUmbrellaFundService.setRequested(false, this.ngRedux);
-                    this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully saved!');
-                    this._location.back();
-                },
-                (data) => {
-                    this.logService.log('Error: ', data);
-                    this._toasterService.pop('error', 'Failed to create the draft umbrella fund.');
-                    this._changeDetectorRef.markForCheck();
-                })
-            );
+            if (!!formValues.umbrellaFundID && formValues.umbrellaFundID !== '' && this.isEditMode) {
+                // UPDATE
+                const asyncTaskPipe = this._ofiUmbrellaFundService.updateUmbrellaFund(
+                    {
+                        ...payload,
+                        umbrellaFundID: formValues.umbrellaFundID,
+                    },
+                    this.ngRedux);
+
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        // this.logService.log('save success new fund', data); // success
+                        OfiUmbrellaFundService.setRequested(false, this.ngRedux);
+                        this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully updated!');
+                        this._location.back();
+                    },
+                    (data) => {
+                        this.logService.log('Error: ', data);
+                        const errMsg = _.get(data, '[1].Data[0].Message', '');
+                        this._toasterService.pop('error', 'Failed to update the draft umbrella fund. ' + errMsg);
+                        this._changeDetectorRef.markForCheck();
+                    })
+                );
+            } else {
+                // INSERT
+                const asyncTaskPipe = this._ofiUmbrellaFundService.saveUmbrellaFund(
+                    payload,
+                    this.ngRedux);
+
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        OfiUmbrellaFundService.setRequested(false, this.ngRedux);
+                        this._toasterService.pop('success', formValues.umbrellaFundName + ' draft has been successfully saved!');
+                        this._location.back();
+                    },
+                    (data) => {
+                        this.logService.log('Error: ', data);
+                        this._toasterService.pop('error', 'Failed to create the draft umbrella fund.');
+                        this._changeDetectorRef.markForCheck();
+                    })
+                );
+            }
         }
     }
 

@@ -11,7 +11,7 @@ import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-produ
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Utils. */
-import { NumberConverterService } from '@setl/utils';
+import { NumberConverterService, ConfirmationService } from '@setl/utils';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import * as FundShareModels from '@ofi/ofi-main/ofi-product/fund-share/models';
@@ -253,13 +253,15 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             buttons: [
                 {
                     text: 'Edit Draft',
-                    class: 'btn btn-sm btn-margin',
+                    class: 'btn btn-success btn-sm',
                     click: 'edit',
+                    iconClass: 'fa fa-edit',
                 },
                 {
                     text: 'Delete Draft',
-                    class: 'btn btn-sm btn-warning',
+                    class: 'btn btn-danger btn-sm',
                     click: 'delete',
+                    iconClass: 'fa fa-remove',
                 },
             ],
         },
@@ -302,6 +304,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiUmbrellaFundService: OfiUmbrellaFundService,
                 private ofiManagementCompanyService: OfiManagementCompanyService,
+                private _confirmationService: ConfirmationService,
                 @Inject('product-config') productConfig,
                 private ofiCurrenciesService: OfiCurrenciesService) {
 
@@ -562,18 +565,27 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (btnType == 'edit') {
             this._router.navigateByUrl('/product-module/product/' + temp[dataType] + '/' + id);
         } else if (btnType == 'delete') {
-            if (dataType == 'Umbrella Fund') {
-                this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
-                OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
-            }
-            if (dataType == 'Fund') {
-                this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
-                OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
-            }
-            if (dataType == 'Fund Share') {
-                this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
-                OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
-            }
+
+            this._confirmationService.create('Draft Delete', 'Are you sure you want to delete this ' + dataType + ' draft?', {
+                confirmText: 'Confirm Delete',
+                declineText: 'Cancel',
+                btnClass: 'error'
+            }).subscribe((ans) => {
+                if (ans.resolved) {
+                    if (dataType == 'Umbrella Fund') {
+                        this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
+                        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+                    }
+                    if (dataType == 'Fund') {
+                        this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
+                        OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+                    }
+                    if (dataType == 'Fund Share') {
+                        this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
+                        OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
+                    }
+                }
+            });
         }
     }
 
