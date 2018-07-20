@@ -36,6 +36,8 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/from';
 import { ToasterService } from 'angular2-toaster';
 import { FileDownloader } from '@setl/utils';
+import { MyWalletsService } from '@setl/core-req-services/my-wallets/my-wallets.service';
+import { MyWalletsServiceMock } from '@setl/core-test-util';
 
 const routes = [
     {
@@ -147,6 +149,7 @@ describe('SetlMessagesComponent', () => {
                 },
                 { provide: LogService, useClass: LogServiceMock },
                 { provide: FileDownloader },
+                { provide: MyWalletsService, useClass: MyWalletsServiceMock},
             ],
         }).compileComponents();
         MockNgRedux.reset();
