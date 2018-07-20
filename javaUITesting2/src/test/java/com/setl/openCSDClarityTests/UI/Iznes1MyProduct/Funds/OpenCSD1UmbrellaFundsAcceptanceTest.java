@@ -20,6 +20,7 @@ import java.sql.*;
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUmbrellaFundExists;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
@@ -385,5 +386,61 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         searchUmbrellaTable(uFundDetails[0]);
         getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
+    }
+    @Test
+    public void shouldDuplicateUmbrellaFund() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] dupFundDetails = generateRandomDuplicateDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+
+        String registeredOffice = driver.findElement(By.id("uf_registerOffice")).getAttribute("value");
+        String LEI = driver.findElement(By.id("uf_lei")).getAttribute("value");
+        String address = driver.findElement(By.id("uf_registerOfficeAddress")).getAttribute("value");
+        String custodianBank = driver.findElement(By.id("uf_custodian")).getText();
+        String managementCompany = driver.findElement(By.id("uf_managementCompany")).getText();
+        String umbrellaFundDomicile = driver.findElement(By.id("uf_domicile")).getText();
+        String fundAdmin = driver.findElement(By.id("uf_fundAdministrator")).getText();
+        String date = driver.findElement(By.id("uf_umbrellaFundCreationDate")).getAttribute("value");
+
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(uFundDetails[0]);
+        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
+
+        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
+        driver.findElement(By.id("uploadNavFileButton")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("uf_umbrellaFundName"))).isDisplayed();
+
+        if(driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value").isEmpty()) {
+        }
+        else {
+            fail("Duplicate UF Contain's Fund Name");
+        }
+        assertTrue(registeredOffice.contains(uFundDetails[0] + "testOffice"));
+        assertTrue(LEI.contains("16616758475934857432"));
+        assertTrue(address.contains("testAddress"));
+        assertTrue(custodianBank.contains("Custodian Bank 1"));
+        assertTrue(managementCompany.contains("Management Company"));
+        assertTrue(umbrellaFundDomicile.contains("Jordan"));
+        assertTrue(fundAdmin.contains("Fund Admin 1"));
+        assertTrue(date.equals("2019-10-20"));
+
+        fillFundNameRandom(dupFundDetails[0] + uFundDetails[0], "uf_umbrellaFundName");
+        String duplicateUFName = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(dupFundDetails[0]);
+        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
+        assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
+
     }
 }

@@ -52,6 +52,12 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[]{random};
     }
 
+    public static String[] generateRandomDuplicateDetails(){
+        String str = randomAlphabetic(7);
+        String duplicateFundName = "Duplicated_Umbrella_Fund_" + str;
+        return new String[]{duplicateFundName};
+    }
+
     public static void selectAddUmbrellaFund() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
@@ -65,6 +71,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
+    }
+    public static void fillFundNameRandom (String fundNameDuplicate, String IDname) throws InterruptedException {
+
+        driver.findElement(By.id(IDname)).sendKeys(fundNameDuplicate);
     }
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
