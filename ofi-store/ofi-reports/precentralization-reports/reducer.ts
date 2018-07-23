@@ -23,9 +23,9 @@ export const PrecentralizationReportsListReducer = function (state: Precentraliz
             const data1 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data1.Status !== 'Fail') {
-                const sharesDetails = formatPrecentralizationSharesDetailsListDataResponse(data1);
+                const sharesDetailsList = data1;
                 return Object.assign({}, state, {
-                    sharesDetails
+                    sharesDetailsList
                 });
             }
             return state;
@@ -60,6 +60,7 @@ function formatPrecentralizationSharesDetailsListDataResponse(rawData: Array<any
 
     const sharesDetails = Map(rawDataList.reduce(
         function (result, item) {
+            console.log(item);
             result[i] = {
                 totals: item.get('totals'),
                 shares: item.get('shares'),

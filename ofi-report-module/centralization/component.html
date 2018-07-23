@@ -91,7 +91,7 @@
                 </form>
 
                 <div class="text-right">
-                    <button id="precentra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="onClickExportCentralizationReport()">{{'Export Precentralisation' | translate}}</button>
+                    <button id="precentra-funds-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralizationReport('f')">{{'Export Precentralisation' | translate}}</button>
                 </div>
 
                 <clr-datagrid class="expandable">
@@ -148,7 +148,7 @@
                         <clr-dg-cell>{{data.totalRedemptions | moneyValue:5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountCcy | moneyValue:5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountPercent | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell><button class="btn btn-info">View</button></clr-dg-cell>
+                        <clr-dg-cell><button class="btn btn-info btn-sm">View</button></clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
@@ -229,7 +229,7 @@
                                 <div class="form-group col-lg-6">
                                     <div><strong><label>{{'Total Net Amount' | translate}}</label></strong></div>
                                     <span class="readonly-field" style="width: 100%">
-                                        {{unknownValue | moneyValue: 5}}€
+                                        {{sharesTotalNetAmount | moneyValue: 5}}€
                                     </span>
                                 </div>
                             </div>
@@ -237,13 +237,13 @@
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Subscription' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #50ad5a; color: #e1e1e1;">
-                                        {{unknownValue | moneyValue: 5}}€
+                                        {{sharesTotalSubscriptionAmount | moneyValue: 5}}€
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Redemptions' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
-                                        {{unknownValue | moneyValue: 5}}€
+                                        {{sharesTotalRedemptionAmount | moneyValue: 5}}€
                                     </span>
                                 </div>
                             </div>
@@ -252,6 +252,7 @@
                         <div class="col-lg-4">
                             <ngx-charts-pie-chart
                                     [scheme]="colorScheme"
+                                    [customColors]="customColors"
                                     [results]="pieChartDatas">
                             </ngx-charts-pie-chart>
                             <!--[labels]="true"-->
@@ -260,11 +261,11 @@
                 </form>
 
                 <div class="text-right">
-                    <button id="precentra-shares-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="onClickExportCentralizationReport()">{{'Export Precentralisation' | translate}}</button>
+                    <button *ngIf="isSharesPayloadOK" id="precentra-shares-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportPrecentralizationReport('s')">{{'Export Precentralisation' | translate}}</button>
                 </div>
 
                 <clr-datagrid class="expandable">
-                    <clr-dg-column *ngIf="isSettlementSelected" [clrDgField]="'settlementDate'" clrDgSortIcon>
+                    <clr-dg-column *ngIf="isSettlementSelected" [clrDgField]="'subscriptionSettlementDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Settlement Date' | translate}}
                         </ng-container>
                     </clr-dg-column>
@@ -272,7 +273,7 @@
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'NAV Date' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'cutoffDate'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'subscriptionCutoffDate'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Cut-Off' | translate}}
                         </ng-container>
                     </clr-dg-column>
@@ -280,44 +281,44 @@
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'ccy'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'CCY' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'shareAum'" clrDgSortIcon clrDgSortNoSearch>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUM' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'totalSubscriptions'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'subscriptionAmount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Subscriptions' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'totalRedemptions'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'redemptionAmount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Redemptions' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmountCcy'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (CCY)' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmountPercent'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'shareRatio'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount' | translate}}(%)
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let data of shareCentralizationReportsList" [clrDgItem]="data">
-                        <clr-dg-cell *ngIf="isSettlementSelected">{{data.settlementDate}}</clr-dg-cell>
+                    <clr-dg-row *clrDgItems="let data of sharesDetails.shares" [clrDgItem]="data">
+                        <clr-dg-cell *ngIf="isSettlementSelected">{{data.subscriptionSettlementDate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!isSettlementSelected">{{data.navDate}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.cutoffDate}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.subscriptionCutoffDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.shareName}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.ccy}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.aum}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalSubscriptions | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalRedemptions | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmountCcy | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmountPercent | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell><button class="btn btn-info">View</button></clr-dg-cell>
+                        <clr-dg-cell>{{data.shareCurrency}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareAum}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.subscriptionAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.redemptionAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.amount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareRatio | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
