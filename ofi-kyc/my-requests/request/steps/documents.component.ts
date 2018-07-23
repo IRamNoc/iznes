@@ -1,4 +1,4 @@
-import {Component, OnInit, Input, OnDestroy, ViewChild} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
@@ -42,7 +42,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
         private persistService: PersistService,
-        private documentsService: DocumentsService
+        private documentsService: DocumentsService,
+        private changeDetectorRef : ChangeDetectorRef
     ) {
     }
 
@@ -154,11 +155,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                             formData.forEach(value => {
                                 let type = value.type;
                                 let shouldContinue = (index === 1 || (index === 0 && value.common));
+                                let path = documentFormPaths[type];
+                                let control = this.form.get([path, type]);
 
-                                if (type && shouldContinue) {
-                                    let path = documentFormPaths[type];
-                                    let control = this.form.get([path, type]);
-
+                                if (type && shouldContinue && control) {
+                                    console.log('patching', type, control);
                                     control.patchValue(value);
                                 }
                             });
@@ -166,6 +167,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                         });
 
                         this.form.updateValueAndValidity();
+                        this.changeDetectorRef.markForCheck();
                     });
                 });
             })
