@@ -93,12 +93,15 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     sharesList: Array<any> = [];
     selectedShare = 0;
 
-    sharesDetails: any = {};
+    sharesDetails: any = [];
     sharesTotalNetAmount = 0;
     sharesTotalSubscriptionAmount = 0;
     sharesTotalRedemptionAmount = 0;
 
-    fundsDetails: any = {};
+    fundsDetails: any = [];
+    fundsTotalNetAmount = 0;
+    fundsTotalSubscriptionAmount = 0;
+    fundsTotalRedemptionAmount = 0;
 
     dateFrom = '';
     dateTo = '';
@@ -137,6 +140,13 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail']) myDetailOb: any;
     // @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
     // @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+
+    // share list for ng-select
+    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedFundsList']) requestedFundsListOb;
+    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsList']) fundsListOb;
+
+    // shares details
+    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsDetailsList']) fundsDetailsListOb;
 
     // share list for ng-select
     @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedSharesList']) requestedSharesListOb;
@@ -179,39 +189,71 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         /* Subscribe for this user's details. */
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.myDetails = myDetails));
 
-        // this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
-        // this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
+        if (this.isFundLevel) {
+            // funds list for ng-select
+            this.subscriptions.push(this.requestedFundsListOb.subscribe((requestedFundsList) => this.requestedFundsListFromRedux(requestedFundsList)));
+            this.subscriptions.push(this.fundsListOb.subscribe((fundsList) => this.getFundsListFromRedux(fundsList)));
 
-        // share list for ng-select
-        this.subscriptions.push(this.requestedSharesListOb.subscribe((requestedSharesList) => this.requestedSharesListFromRedux(requestedSharesList)));
-        this.subscriptions.push(this.sharesListOb.subscribe((sharesList) => this.getSharesListFromRedux(sharesList)));
-
-        // shares details
-        this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
-            this.sharesDetails = sharesDetailsList;
-            if (this.sharesDetails.totals) {
-                if (this.sharesDetails.totals.hasOwnProperty('totalNetAmount')) {
-                    this.sharesTotalNetAmount = Number(this.sharesDetails.totals.totalNetAmount);
-                    if (this.sharesDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
-                        this.sharesTotalSubscriptionAmount = Number(this.sharesDetails.totals.totalSubscriptionAmount);
+            // funds details
+            this.subscriptions.push(this.fundsDetailsListOb.subscribe((fundsDetailsList) => {
+                this.fundsDetails = fundsDetailsList;
+                if (this.fundsDetails.totals) {
+                    if (this.fundsDetails.totals.hasOwnProperty('totalNetAmount')) {
+                        this.fundsTotalNetAmount = Number(this.fundsDetails.totals.totalNetAmount);
+                        if (this.fundsDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
+                            this.fundsTotalSubscriptionAmount = Number(this.fundsDetails.totals.totalSubscriptionAmount);
+                        }
+                        if (this.fundsDetails.totals.hasOwnProperty('totalRedemptionAmount')) {
+                            this.fundsTotalRedemptionAmount = Number(this.fundsDetails.totals.totalRedemptionAmount);
+                        }
                     }
-                    if (this.sharesDetails.totals.hasOwnProperty('totalRedemptionAmount')) {
-                        this.sharesTotalRedemptionAmount = Number(this.sharesDetails.totals.totalRedemptionAmount);
-                    }
+                    this.pieChartDatas = [
+                        {
+                            name: 'Subscription (%)',
+                            value: (this.fundsTotalSubscriptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
+                        },
+                        {
+                            name: 'Redemption (%)',
+                            value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
+                        }
+                    ];
                 }
-                this.pieChartDatas = [
-                    {
-                        name: 'Subscription (%)',
-                        value: (this.sharesTotalSubscriptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
-                    },
-                    {
-                        name: 'Redemption (%)',
-                        value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
+                this.changeDetectorRef.markForCheck();
+            }));
+        }
+
+        if (this.isShareLevel) {
+            // share list for ng-select
+            this.subscriptions.push(this.requestedSharesListOb.subscribe((requestedSharesList) => this.requestedSharesListFromRedux(requestedSharesList)));
+            this.subscriptions.push(this.sharesListOb.subscribe((sharesList) => this.getSharesListFromRedux(sharesList)));
+
+            // shares details
+            this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
+                this.sharesDetails = sharesDetailsList;
+                if (this.sharesDetails.totals) {
+                    if (this.sharesDetails.totals.hasOwnProperty('totalNetAmount')) {
+                        this.sharesTotalNetAmount = Number(this.sharesDetails.totals.totalNetAmount);
+                        if (this.sharesDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
+                            this.sharesTotalSubscriptionAmount = Number(this.sharesDetails.totals.totalSubscriptionAmount);
+                        }
+                        if (this.sharesDetails.totals.hasOwnProperty('totalRedemptionAmount')) {
+                            this.sharesTotalRedemptionAmount = Number(this.sharesDetails.totals.totalRedemptionAmount);
+                        }
                     }
-                ];
-            }
-            this.changeDetectorRef.markForCheck();
-        }));
+                    this.pieChartDatas = [
+                        {
+                            name: 'Subscription (%)',
+                            value: (this.sharesTotalSubscriptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
+                        },
+                        {
+                            name: 'Redemption (%)',
+                            value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
+                        }
+                    ];
+                }
+                this.changeDetectorRef.markForCheck();
+            }));
+        }
     }
 
     public ngOnInit() {
@@ -235,6 +277,28 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         }
     }
 
+    requestedFundsListFromRedux(requestedFundsList): void {
+        if (!requestedFundsList) {
+            OfiReportsService.defaultRequestPrecentralizationReportsFundsList(this.ofiReportsService, this.ngRedux);
+        }
+    }
+
+    getFundsListFromRedux(fundsList) {
+        const listImu = fromJS(fundsList);
+
+        this.fundsList = listImu.reduce((result, item) => {
+            let isLei = (item.get('lei') === '' || item.get('lei') === null) ? '' : ' (' + item.get('isin') + ')';
+            result.push({
+                id: item.get('fundId'),
+                text: item.get('fundName') + isLei,
+            });
+
+            return result;
+        }, []);
+
+        this.changeDetectorRef.markForCheck();
+    }
+
     requestedSharesListFromRedux(requestedSharesList): void {
         if (!requestedSharesList) {
             OfiReportsService.defaultRequestPrecentralizationReportsSharesList(this.ofiReportsService, this.ngRedux);
@@ -245,10 +309,10 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         const listImu = fromJS(sharesList);
 
         this.sharesList = listImu.reduce((result, item) => {
-
+            let isIsin = (item.get('isin') === '' || item.get('isin') === null) ? '' : ' (' + item.get('isin') + ')';
             result.push({
                 id: item.get('shareId'),
-                text: item.get('shareName') + ' (' + item.get('isin') + ')',
+                text: item.get('shareName') + isIsin,
             });
 
             return result;
@@ -256,50 +320,6 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
         this.changeDetectorRef.markForCheck();
     }
-
-    // getCentralizationReportsRequested(requested): void {
-    //     if (!requested) {
-    //         OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
-    //     }
-    // }
-    //
-    // getCentralizationReportsListFromRedux(list) {
-    //     const listImu = fromJS(list);
-    //
-    //     this.centralizationReportsFundsList = listImu.reduce((result, item) => {
-    //
-    //         result.push({
-    //             aum: item.get('aum'),
-    //             subCutoffDate: mDateHelper.convertToLocal(item.get('subCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
-    //             redCutoffDate: mDateHelper.convertToLocal(item.get('redCutoffDate'), 'YYYY-MM-DD HH:mm:ss'),
-    //             fundShareID: item.get('fundShareID'),
-    //             fundShareName: item.get('fundShareName'),
-    //             isin: item.get('isin'),
-    //             latestNav: (item.get('latestNav') === null) ? 0 : item.get('latestNav'),
-    //             navDate: (item.get('navDate') === null) ? '-' : mDateHelper.convertToLocal(item.get('navDate'), 'YYYY-MM-DD'),
-    //             netPosition: item.get('netPosition'),
-    //             netPositionPercentage: item.get('netPositionPercentage'),
-    //             redAmount: (item.get('redAmount') === null) ? 0 : item.get('redAmount'),
-    //             redQuantity: (item.get('redQuantity') === null) ? 0 : item.get('redQuantity'),
-    //             redSettlementDate: mDateHelper.convertToLocal(item.get('redSettlementDate'), 'YYYY-MM-DD'),
-    //             shareClassCurrency: item.get('shareClassCurrency'),
-    //             subAmount: (item.get('subAmount') === null) ? 0 : item.get('subAmount'),
-    //             subQuantity: (item.get('subQuantity') === null) ? 0 : item.get('subQuantity'),
-    //             subSettlementDate: mDateHelper.convertToLocal(item.get('subSettlementDate'), 'YYYY-MM-DD'),
-    //         });
-    //
-    //         return result;
-    //     }, []);
-    //
-    //     for (const report of this.centralizationReportsFundsList) {
-    //         this.dataListForSearch.push({
-    //             id: report.fundShareID,
-    //             text: report.fundShareName,
-    //         });
-    //     }
-    //
-    //     this.changeDetectorRef.markForCheck();
-    // }
 
     buildLink(id) {
         const dest = 'am-reports-section/centralization-history/' + id;
@@ -347,24 +367,25 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.dateFrom = (this.filtersForm.controls['dateFrom'].value !== '') ? this.filtersForm.controls['dateFrom'].value : '';
         this.dateTo = (this.filtersForm.controls['dateTo'].value !== '' && this.isPeriod) ? this.filtersForm.controls['dateTo'].value : '';
 
-        // // check data in futur
-        // let today = new Date();
-        // today.setHours(0,0,0,0); // fix time
-        // let dateFrom = new Date(this.dateFrom + ' 00:00:00');
-        // let dateTo = new Date(this.dateTo + ' 00:00:00');
-        // if (dateFrom < today) {
-        //     this.dateFrom = '';
-        //     this.filtersForm.controls['dateFrom'].patchValue('', { emitEvent: false });
-        //     alert('DateFrom must be at least today\'s date');
-        // }
-        // if (dateTo < dateFrom) {
-        //     this.dateTo = '';
-        //     this.filtersForm.controls['dateTo'].patchValue('', { emitEvent: false });
-        //     alert('DateTo should be equal or after DateFrom');
-        // }
-
         if (this.isFundLevel) {
-
+            this.isFundsPayloadOK = true;
+            if (this.mode > 0 && this.dateFrom !== '') {
+                if (this.isPeriod && this.dateTo === '') {
+                    this.isFundsPayloadOK = false;
+                }
+                if (this.isFundsPayloadOK) {
+                    this.fundsPayload = {
+                        fundId: this.selectedFund,
+                        dateFrom: this.dateFrom,
+                        dateTo: this.dateTo,
+                        mode: this.mode,
+                    };
+                    this.ofiReportsService.requestPrecentralizationReportsFundsDetailsList(this.fundsPayload);
+                }
+            } else {
+                this.isFundsPayloadOK = false;
+                this.fundsDetails = [];
+            }
         }
         if (this.isShareLevel) {
             this.isSharesPayloadOK = true;
@@ -383,102 +404,48 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 }
             } else {
                 this.isSharesPayloadOK = false;
+                this.sharesDetails = [];
             }
         }
     }
 
-    showCurrency(currency) {
-        const obj = this.currencyList.find(o => o.id === currency);
-        if (obj !== undefined) {
-            return obj.text;
-        } else {
-            return currency;
-        }
-    }
-
-    calculNetPosition(suba, reda, redq, subq, latestNav) {
-        return (isFinite(((suba - reda) / ((redq + subq) * latestNav)) * 100)) ? ((suba - reda) / ((redq + subq) * latestNav)) * 100 : 0;
-    }
-
-    convertDate(inputDate) {
-        let today: any = new Date(inputDate);
-        let dd: any = today.getDate();
-        let mm: any = today.getMonth() + 1;
-        let yyyy: any = today.getFullYear();
-        if (dd < 10) {
-            dd = '0' + dd;
-        }
-        if (mm < 10) {
-            mm = '0' + mm;
-        }
-        return yyyy + '/' + mm + '/' + dd;
-    }
-
-    onClickExportCentralizationReport(id) {
-
-        this._fileDownloader.downLoaderFile({
-            method: 'getAllShareInfoCsv',
-            token: this.memberSocketService.token,
-            userId: this.myDetails.userId
-        });
-
-    }
-
-
-    onClickViewCentralizationHistory(id) {
-        this.buildLink(id);
-    }
-
     onClickViewCorrespondingOrders(id) {
-        const obj = this.sharesDetails.shares.find(o => o.shareId === id);
-        if (obj !== undefined) {
-            const orderFilters = {
-                filters: {
-                    isin: obj.isin,
-                    sharename: obj.shareName,
-                    status: {id : -3},
-                    type: {id : 0},
-                    dateType: {id : 'navDate'},
-                    fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
-                    toDate: moment(obj.navDate).format('YYYY-MM-DD')
-                }
-            };
+        if (this.isShareLevel) {
+            const obj = this.sharesDetails.shares.find(o => o.shareId === id);
+            if (obj !== undefined) {
+                const orderFilters = {
+                    filters: {
+                        isin: obj.isin,
+                        sharename: obj.shareName,
+                        status: {id : -3},
+                        type: {id : 0},
+                        dateType: {id : 'navDate'},
+                        fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
+                        toDate: moment(obj.navDate).format('YYYY-MM-DD')
+                    }
+                };
 
-            this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
-            this.router.navigateByUrl('manage-orders/list');
+                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+                this.router.navigateByUrl('manage-orders/list');
+            }
+        }
+        if (this.isFundLevel) {
+            alert('Coming soon...');
         }
     }
 
-    onClickDownloadCorrespondingOrders(id) {
-
-        const obj = this.centralizationReportsFundsList.find(o => o.fundShareID === id);
-        if (obj !== undefined) {
-            const navDate = moment(obj.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
-            const params = {
-                shareName: obj.fundShareName,
-                isin: obj.isin,
-                status: null,
-                orderType: null,
-                pageSize: 1000,
-                rowOffSet: 0,
-                sortByField: 'userEntered',
-                sortOrder: 'desc',
-                dateSearchField: 'navDate',
-                fromDate: navDate,
-                toDate: navDate + ' 23:59',
-            };
-
+    exportPrecentralizationReport() {
+        if (this.isFundLevel && this.isFundsPayloadOK) {
             this._fileDownloader.downLoaderFile({
-                method: 'exportAssetManagerOrders',
+                method: 'exportPrecentralisationFunds',
                 token: this.memberSocketService.token,
-                userId: this.myDetails.userId,
-                ...params
+                fundId: this.fundsPayload.fundId,
+                dateFrom: this.fundsPayload.dateFrom,
+                dateTo: this.fundsPayload.dateTo,
+                mode: this.fundsPayload.mode,
             });
         }
-    }
-
-    exportPrecentralizationReport(type) {
-        if (type === 's' && this.isSharesPayloadOK) {
+        if (this.isShareLevel && this.isSharesPayloadOK) {
             this._fileDownloader.downLoaderFile({
                 method: 'exportPrecentralisationShares',
                 token: this.memberSocketService.token,
@@ -488,15 +455,6 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 mode: this.sharesPayload.mode,
             });
         }
-    }
-
-    onClickDownloadCentralizationHistory(id) {
-        this._fileDownloader.downLoaderFile({
-            method: 'getSingleShareInfoCsv',
-            token: this.memberSocketService.token,
-            fundShareID: id,
-            userId: this.myDetails.userId
-        });
     }
 
     ngOnDestroy() {

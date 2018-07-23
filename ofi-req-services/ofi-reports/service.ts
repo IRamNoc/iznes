@@ -25,6 +25,10 @@ import {
     SET_PRECENTRA_SHARES_LIST,
     setRequestedPrecentraSharesList,
     clearRequestedPrecentraSharesList,
+    SET_PRECENTRA_FUNDS_DETAILS_LIST,
+    SET_PRECENTRA_FUNDS_LIST,
+    setRequestedPrecentraFundsList,
+    clearRequestedPrecentraFundsList,
 } from '../../ofi-store/ofi-reports';
 
 /* Import interfaces for message bodies. */
@@ -39,6 +43,7 @@ import {
     OfiInvHoldingsDetailRequestData,
     OfiInvHoldingsDetailRequestBody,
     PrecentralizationRequestSharesBody,
+    PrecentralizationRequestFundsBody,
 } from './model';
 
 interface CentralizationReportsData {
@@ -54,6 +59,13 @@ interface CentralizationHistoryData {
 
 interface PrecentralizationSharesData {
     shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+interface PrecentralizationFundsData {
+    fundId: number;
     dateFrom: string;
     dateTo: string;
     mode: number;
@@ -168,6 +180,31 @@ export class OfiReportsService {
         ));
     }
 
+    /* PRECENTRALIZATION FUNDS */
+
+    static setRequestedPrecentralizationFundsList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(setRequestedPrecentraFundsList());
+        } else {
+            ngRedux.dispatch(clearRequestedPrecentraFundsList());
+        }
+    }
+
+    static defaultRequestPrecentralizationReportsFundsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedPrecentraFundsList());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestPrecentralizationReportsFundsList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_FUNDS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
     /* PRECENTRALIZATION SHARES */
 
     static setRequestedPrecentralizationSharesList(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -192,6 +229,38 @@ export class OfiReportsService {
             {},
         ));
     }
+
+    /* PRECENTRALIZATION FUNDS */
+
+    requestPrecentralizationReportsFundsList(): any {
+
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimplefunds',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestPrecentralizationReportsFundsDetailsList(data: PrecentralizationFundsData): any {
+        const messageBody: PrecentralizationRequestFundsBody = {
+            RequestName: 'iznprecentralisationgetfunds',
+            token: this.memberSocketService.token,
+            fundId: data.fundId,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+            mode: data.mode,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_FUNDS_DETAILS_LIST],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    /* PRECENTRALIZATION SHARES */
 
     requestPrecentralizationReportsSharesList(): any {
 

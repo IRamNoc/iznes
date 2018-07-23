@@ -55,3 +55,11 @@ export interface PrecentralizationRequestSharesBody extends OfiMemberNodeBody {
     dateTo: string;
     mode: number;
 }
+
+export interface PrecentralizationRequestFundsBody extends OfiMemberNodeBody {
+    token: string;
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
