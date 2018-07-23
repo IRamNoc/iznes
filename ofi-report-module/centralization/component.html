@@ -111,27 +111,27 @@
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Fund' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'ccy'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'fundCurrency'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'CCY' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'aum'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'fundAum'" clrDgSortIcon clrDgSortNoSearch>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUM' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'totalSubscriptions'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'subscriptionAmount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Subscriptions' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'totalRedemptions'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'redemptionAmount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Redemptions' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmountCcy'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'netAmount'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (CCY)' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'netAmountPercent'" clrDgSortIcon>
+                    <clr-dg-column [clrDgField]="'netAmountRatio'" clrDgSortIcon>
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount' | translate}}(%)
                         </ng-container>
                     </clr-dg-column>
@@ -144,10 +144,10 @@
                         <clr-dg-cell>{{data.fundName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundCurrency}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundAum | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalSubscriptionAmount | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalRedemptionAmount | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalNetAmount | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.totalNetAmountRatio | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.subscriptionAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.redemptionAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
                     </clr-dg-row>
 

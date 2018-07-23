@@ -404,7 +404,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 }
             } else {
                 this.isSharesPayloadOK = false;
-                this.sharesDetails = [];
+
             }
         }
     }
