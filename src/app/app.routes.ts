@@ -54,6 +54,7 @@ import {
     OfiRedirectTokenComponent,
     OfiConsumeTokenComponent,
     MyHoldingsComponent,
+    OfiSubPortfolioComponent
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -538,7 +539,7 @@ export const ROUTES: Routes = [
                     },
                     {
                         path: 'subportfolio',
-                        component: ManageSubPortfolioComponent,
+                        component: OfiSubPortfolioComponent,
                         canActivate: [LoginGuardService],
                     },
 
@@ -701,7 +702,7 @@ export const ROUTES: Routes = [
             },
             {
                 path: 'my-requests',
-                children : requestsRoute,
+                children: requestsRoute,
             },
             {
                 path: 'account-admin',
