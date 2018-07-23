@@ -56,7 +56,7 @@ function formatDataResponse(rawData: Array<any>): Array<InvMyDocumentDetails> {
                 hash: item.get('hash'),
                 type: item.get('type'),
                 common: item.get('common'),
-                'default': item.get('default'),
+                isDefault: item.get('default'),
             };
             return result;
         },

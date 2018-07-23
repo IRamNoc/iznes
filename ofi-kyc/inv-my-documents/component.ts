@@ -54,7 +54,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                     name: '',
                     type: this.kycEnums[k],
                     common: 0,
-                    'default': 1,
+                    isDefault: 1,
                     preset: {
                         fileID: 0,
                         hash: '',
@@ -134,7 +134,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 hash: item.get('hash'),
                 type: item.get('type'),
                 common: item.get('common'),
-                'default': item.get('default'),
+                isDefault: item.get('default'),
             });
             return result;
         }, []);
@@ -152,7 +152,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                         name: this.filesFromRedux[j].name,
                         type: this.filesFromRedux[j].type,
                         common: this.filesFromRedux[j].common,
-                        'default': 1,
+                        isDefault: 1,
                         preset: {
                             fileID: this.filesFromRedux[j].kycDocumentID,
                             hash: this.filesFromRedux[j].hash,
@@ -214,6 +214,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     getUpload(event, fileRelated) {
+        console.log('send', event, fileRelated)
         this.uploadFile(event, fileRelated, this._changeDetectorRef);
     }
 
@@ -305,7 +306,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 hash: this.allUploadsFiles[fileRelated].hash,
                 type: this.allUploadsFiles[fileRelated].type,
                 common: this.allUploadsFiles[fileRelated].common,
-                'default': this.allUploadsFiles[fileRelated].default,
+                isDefault: this.allUploadsFiles[fileRelated].default,
             });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(

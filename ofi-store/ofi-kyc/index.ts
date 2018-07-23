@@ -1,13 +1,13 @@
-import {AmKycMyRequestDetailsReducer, KycMyRequestDetailsState} from './ofi-my-request-details';
-import { combineReducers, Reducer } from 'redux';
-import { KycMyInformationsReducer, KycMyInformationsState } from './my-informations';
-import { AmKycListReducer, AmKycListState } from './ofi-am-kyc-list';
-import { investorInvitationState, investorInvitationReducer } from './invitationsByUserAmCompany';
-import { kycStatusAuditTrailState, kycStatusAuditTrailReducer } from './status-audit-trail';
-import { MyKycListState, MyKycListReducer } from './kyc-list';
+import {KycDetailsReducer, KycDetailsState} from './kyc-details';
+import {combineReducers, Reducer} from 'redux';
+import {KycMyInformationsReducer, KycMyInformationsState} from './my-informations';
+import {AmKycListReducer, AmKycListState} from './ofi-am-kyc-list';
+import {investorInvitationState, investorInvitationReducer} from './invitationsByUserAmCompany';
+import {kycStatusAuditTrailState, kycStatusAuditTrailReducer} from './status-audit-trail';
+import {MyKycListState, MyKycListReducer} from './kyc-list';
 import {MyKycRequestedState, MyKycRequestedReducer, MyKycSetRequestedKycs} from './kyc-request';
-import { kycInformationAuditTrailState, kycInformationAuditTrailReducer } from './information-audit-trail';
-import { OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState } from './inv-my-documents';
+import {kycInformationAuditTrailState, kycInformationAuditTrailReducer} from './information-audit-trail';
+import {OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState} from './inv-my-documents';
 
 export {
     KycMyInformations,
@@ -25,31 +25,33 @@ export {
 } from './ofi-am-kyc-list';
 
 export {
-    SET_KYC_MYREQ_DETAILS_GENERAL,
-    setkycmyreqdetailsgeneralrequested,
-    clearkycmyreqdetailsgeneralrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANY,
-    setkycmyreqdetailscompanyrequested,
-    clearkycmyreqdetailscompanyrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANYBENEFICIARIES,
-    setkycmyreqdetailscompanybeneficiariesrequested,
-    clearkycmyreqdetailscompanybeneficiariesrequested,
-    SET_KYC_MYREQ_DETAILS_BANKING,
-    setkycmyreqdetailsbankingrequested,
-    clearkycmyreqdetailsbankingrequested,
-    SET_KYC_MYREQ_DETAILS_CLASSIFICATION,
-    setkycmyreqdetailsclassificationrequested,
-    clearkycmyreqdetailsclassificationrequested,
-    SET_KYC_MYREQ_DETAILS_RISKNATURE,
-    setkycmyreqdetailsrisknaturerequested,
-    clearkycmyreqdetailsrisknaturerequested,
-    SET_KYC_MYREQ_DETAILS_RISKOBJECTIVES,
-    setkycmyreqdetailsriskobjectivesrequested,
-    clearkycmyreqdetailsriskobjectivesrequested,
-    SET_KYC_MYREQ_DETAILS_DOCUMENTS,
-    setkycmyreqdetailsdocumentsrequested,
-    clearkycmyreqdetailsdocumentsrequested,
-} from './ofi-my-request-details';
+    SET_KYC_DETAILS_GENERAL,
+    SET_KYC_DETAILS_COMPANY,
+    SET_KYC_DETAILS_COMPANYBENEFICIARIES,
+    SET_KYC_DETAILS_BANKING,
+    SET_KYC_DETAILS_CLASSIFICATION,
+    SET_KYC_DETAILS_RISKNATURE,
+    SET_KYC_DETAILS_RISKOBJECTIVES,
+    SET_KYC_DETAILS_DOCUMENTS,
+
+    setkycdetailsgeneralrequested,
+    setkycdetailscompanyrequested,
+    setkycdetailscompanybeneficiariesrequested,
+    setkycdetailsbankingrequested,
+    setkycdetailsclassificationrequested,
+    setkycdetailsrisknaturerequested,
+    setkycdetailsriskobjectivesrequested,
+    setkycdetailsdocumentsrequested,
+
+    clearkycdetailsgeneralrequested,
+    clearkycdetailscompanyrequested,
+    clearkycdetailscompanybeneficiariesrequested,
+    clearkycdetailsbankingrequested,
+    clearkycdetailsclassificationrequested,
+    clearkycdetailsrisknaturerequested,
+    clearkycdetailsriskobjectivesrequested,
+    clearkycdetailsdocumentsrequested,
+} from './kyc-details';
 
 export * from './invitationsByUserAmCompany';
 
@@ -70,8 +72,8 @@ export interface KycState {
     amKycList: AmKycListState;
     investorInvitations: investorInvitationState;
     myKycList: MyKycListState;
-    myKycRequested : MyKycRequestedState
-    kycMyRequestDetails: KycMyRequestDetailsState;
+    myKycRequested: MyKycRequestedState
+    kycDetails: KycDetailsState;
     statusAuditTrail: kycStatusAuditTrailState;
     informationAuditTrail: kycInformationAuditTrailState;
     invMyDocuments: OfiInvMyDocumentsState;
@@ -82,8 +84,8 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     amKycList: AmKycListReducer,
     investorInvitations: investorInvitationReducer,
     myKycList: MyKycListReducer,
-    myKycRequested : MyKycRequestedReducer,
-    kycMyRequestDetails: AmKycMyRequestDetailsReducer,
+    myKycRequested: MyKycRequestedReducer,
+    kycDetails: KycDetailsReducer,
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,
     invMyDocuments: OfiInvMyDocumentsListReducer,

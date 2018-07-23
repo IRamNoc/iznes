@@ -87,7 +87,7 @@ export interface SaveKycDocumentRequestData {
     hash: string;
     type: string;
     common: boolean;
-    'default': number;
+    isDefault: number;
 }
 
 export interface GetKycDocumentRequestData {
@@ -161,10 +161,6 @@ export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMe
     token: string;
 }
 
-export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
-    kycID: number;
-}
-
 export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
@@ -198,7 +194,7 @@ export interface SaveKycDocumentRequestBody extends MemberNodeMessageBody {
     hash: string;
     type: string;
     common: boolean;
-    'default': number;
+    isDefault: number;
 }
 
 export interface GetKycDocumentRequestBody extends MemberNodeMessageBody {

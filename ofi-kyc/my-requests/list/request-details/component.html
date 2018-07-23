@@ -79,69 +79,7 @@
         <div class="hr-line-dashed"></div>
         <p>{{'Please find below the information and documents you provided during the application for @companyName@.' | translate: {'companyName': companyName} }}</p>
     </div>
-    <div *ngFor="let panel of panelDefs" class="well">
-        <!-- Panel header -->
-        <div class="row panel-header">
-            <div class="col-xs-12">
-                <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                    <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
-                    <h2>{{panel.title | translate}}</h2>
-                </a>
-            </div>
-        </div>
-
-        <!-- Panel body -->
-        <div class="row panel-body" [class.hidden]="!panel.open">
-            <div class="col-xs-12">
-                <!--Parent contents-->
-                <clr-datagrid *ngIf="panel.data.length > 0">
-                    <clr-dg-column *ngFor="let column of panel.columns">
-                        {{column.label | translate}}
-                    </clr-dg-column>
-                    <clr-dg-row *clrDgItems="let data of panel.data">
-                        <clr-dg-cell *ngFor="let dataCol of data">
-                            <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
-                            <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
-                            <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
-                            <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
-                        </clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid>
-
-                <!--Childs-->
-                <div class="well dashed" *ngFor="let child of panel.childs">
-                    <!-- Panel header -->
-                    <div class="row panel-header">
-                        <div class="col-xs-12">
-                            <a href="#" (click)="child.open = !child.open; $event.preventDefault();">
-                                <i class="fa fa-chevron-right" [class.rotate]="child.open"></i>
-                                <h2>{{child.title}}</h2>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Panel body -->
-                    <div class="row panel-body" [class.hidden]="!child.open">
-                        <div class="col-xs-12">
-                            <!--Child Contents-->
-                            <clr-datagrid *ngIf="child.data.length > 0">
-                                <clr-dg-column *ngFor="let column of child.columns">
-                                    {{column.label | translate}}
-                                </clr-dg-column>
-                                <clr-dg-row *clrDgItems="let data of child.data">
-                                    <clr-dg-cell *ngFor="let dataCol of data">
-                                        <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
-                                        <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
-                                        <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
-                                        <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
-                                    </clr-dg-cell>
-                                </clr-dg-row>
-                            </clr-datagrid>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <kyc-details [kycID]="kycID"></kyc-details>
 </ng-container>
 
 <!-- NAV upload modal -->

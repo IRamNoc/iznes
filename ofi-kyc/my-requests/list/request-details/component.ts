@@ -8,30 +8,32 @@ import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
 import {
-    SET_KYC_MYREQ_DETAILS_GENERAL,
-    setkycmyreqdetailsgeneralrequested,
-    clearkycmyreqdetailsgeneralrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANY,
-    setkycmyreqdetailscompanyrequested,
-    clearkycmyreqdetailscompanyrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANYBENEFICIARIES,
-    setkycmyreqdetailscompanybeneficiariesrequested,
-    clearkycmyreqdetailscompanybeneficiariesrequested,
-    SET_KYC_MYREQ_DETAILS_BANKING,
-    setkycmyreqdetailsbankingrequested,
-    clearkycmyreqdetailsbankingrequested,
-    SET_KYC_MYREQ_DETAILS_CLASSIFICATION,
-    setkycmyreqdetailsclassificationrequested,
-    clearkycmyreqdetailsclassificationrequested,
-    SET_KYC_MYREQ_DETAILS_RISKNATURE,
-    setkycmyreqdetailsrisknaturerequested,
-    clearkycmyreqdetailsrisknaturerequested,
-    SET_KYC_MYREQ_DETAILS_RISKOBJECTIVES,
-    setkycmyreqdetailsriskobjectivesrequested,
-    clearkycmyreqdetailsriskobjectivesrequested,
-    SET_KYC_MYREQ_DETAILS_DOCUMENTS,
-    setkycmyreqdetailsdocumentsrequested,
-    clearkycmyreqdetailsdocumentsrequested,
+    SET_KYC_DETAILS_GENERAL,
+    SET_KYC_DETAILS_COMPANY,
+    SET_KYC_DETAILS_COMPANYBENEFICIARIES,
+    SET_KYC_DETAILS_BANKING,
+    SET_KYC_DETAILS_CLASSIFICATION,
+    SET_KYC_DETAILS_RISKNATURE,
+    SET_KYC_DETAILS_RISKOBJECTIVES,
+    SET_KYC_DETAILS_DOCUMENTS,
+
+    setkycdetailsgeneralrequested,
+    setkycdetailscompanyrequested,
+    setkycdetailscompanybeneficiariesrequested,
+    setkycdetailsbankingrequested,
+    setkycdetailsclassificationrequested,
+    setkycdetailsrisknaturerequested,
+    setkycdetailsriskobjectivesrequested,
+    setkycdetailsdocumentsrequested,
+
+    clearkycdetailsgeneralrequested,
+    clearkycdetailscompanyrequested,
+    clearkycdetailscompanybeneficiariesrequested,
+    clearkycdetailsbankingrequested,
+    clearkycdetailsclassificationrequested,
+    clearkycdetailsrisknaturerequested,
+    clearkycdetailsriskobjectivesrequested,
+    clearkycdetailsdocumentsrequested,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/index';
 
 import { MultilingualService } from '@setl/multilingual';
@@ -129,22 +131,22 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     private subscriptions: Array<any> = [];
 
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsGeneralRequested']) kycMyRequestDetailsGeneralRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsGeneral']) kycMyRequestDetailsGeneralOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsCompanyRequested']) kycMyRequestDetailsCompanyRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsCompany']) kycMyRequestDetailsCompanyOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsCompanyBeneficiariesRequested']) kycMyRequestDetailsCompanyBeneficiariesRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsCompanyBeneficiaries']) kycMyRequestDetailsCompanyBeneficiariesOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsBankingRequested']) kycMyRequestDetailsBankingRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsBanking']) kycMyRequestDetailsBankingOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsClassificationRequested']) kycMyRequestDetailsClassificationRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsClassification']) kycMyRequestDetailsClassificationOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsRisknatureRequested']) kycMyRequestDetailsRisknatureRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsRisknature']) kycMyRequestDetailsRisknatureOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsRiskobjectiveRequested']) kycMyRequestDetailsRiskobjectiveRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsRiskobjective']) kycMyRequestDetailsRiskobjectiveOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsDocumentsRequested']) kycMyRequestDetailsDocumentsRequestedOb;
-    @select(['ofi', 'ofiKyc', 'kycMyRequestDetails', 'kycMyRequestDetailsDocuments']) kycMyRequestDetailsDocumentsOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsGeneralRequested']) kycDetailsGeneralRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsGeneral']) kycDetailsGeneralOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsCompanyRequested']) kycDetailsCompanyRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsCompany']) kycDetailsCompanyOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsCompanyBeneficiariesRequested']) kycDetailsCompanyBeneficiariesRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsCompanyBeneficiaries']) kycDetailsCompanyBeneficiariesOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsBankingRequested']) kycDetailsBankingRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsBanking']) kycDetailsBankingOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassificationRequested']) kycDetailsClassificationRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsClassification']) kycDetailsClassificationOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRisknatureRequested']) kycDetailsRisknatureRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRisknature']) kycDetailsRisknatureOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRiskobjectiveRequested']) kycDetailsRiskobjectiveRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsRiskobjective']) kycDetailsRiskobjectiveOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsDocumentsRequested']) kycDetailsDocumentsRequestedOb;
+    @select(['ofi', 'ofiKyc', 'kycDetails', 'kycDetailsDocuments']) kycDetailsDocumentsOb;
 
     constructor(
         private _fb: FormBuilder,
@@ -160,32 +162,32 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     }
 
     ngOnInit() {
-        this.subscriptions.push(this.kycMyRequestDetailsGeneralRequestedOb.subscribe((kycMyRequestDetailsGeneralRequested) => this.requestKycMyRequestDetailsGeneral(kycMyRequestDetailsGeneralRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsGeneralOb.subscribe(kycMyRequestDetailsGeneral => this.getKycMyRequestDetailsGeneral(kycMyRequestDetailsGeneral)));
-        this.subscriptions.push(this.kycMyRequestDetailsCompanyRequestedOb.subscribe((kycMyRequestDetailsCompanyRequested) => this.requestKycMyRequestDetailsCompany(kycMyRequestDetailsCompanyRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsCompanyOb.subscribe(kycMyRequestDetailsCompany => this.getKycMyRequestDetailsCompany(kycMyRequestDetailsCompany)));
-        this.subscriptions.push(this.kycMyRequestDetailsCompanyBeneficiariesRequestedOb.subscribe((kycMyRequestDetailsCompanyBeneficiariesRequested) => this.requestKycMyRequestDetailsCompanyBeneficiaries(kycMyRequestDetailsCompanyBeneficiariesRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsCompanyBeneficiariesOb.subscribe(kycMyRequestDetailsCompanyBeneficiaries => this.getKycMyRequestDetailsCompanyBeneficiaries(kycMyRequestDetailsCompanyBeneficiaries)));
-        this.subscriptions.push(this.kycMyRequestDetailsBankingRequestedOb.subscribe((kycMyRequestDetailsBankingRequested) => this.requestKycMyRequestDetailsBanking(kycMyRequestDetailsBankingRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsBankingOb.subscribe(kycMyRequestDetailsBanking => this.getKycMyRequestDetailsBanking(kycMyRequestDetailsBanking)));
-        this.subscriptions.push(this.kycMyRequestDetailsClassificationRequestedOb.subscribe((kycMyRequestDetailsClassificationRequested) => this.requestKycMyRequestDetailsClassification(kycMyRequestDetailsClassificationRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsClassificationOb.subscribe(kycMyRequestDetailsClassification => this.getKycMyRequestDetailsClassification(kycMyRequestDetailsClassification)));
-        this.subscriptions.push(this.kycMyRequestDetailsRisknatureRequestedOb.subscribe((kycMyRequestDetailsRisknatureRequested) => this.requestKycMyRequestDetailsRisknature(kycMyRequestDetailsRisknatureRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsRisknatureOb.subscribe(kycMyRequestDetailsRisknature => this.getKycMyRequestDetailsRisknature(kycMyRequestDetailsRisknature)));
-        this.subscriptions.push(this.kycMyRequestDetailsRiskobjectiveRequestedOb.subscribe((kycMyRequestDetailsRiskobjectiveRequested) => this.requestKycMyRequestDetailsRiskobjective(kycMyRequestDetailsRiskobjectiveRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsRiskobjectiveOb.subscribe(kycMyRequestDetailsRiskobjective => this.getKycMyRequestDetailsRiskobjective(kycMyRequestDetailsRiskobjective)));
-        this.subscriptions.push(this.kycMyRequestDetailsDocumentsRequestedOb.subscribe((kycMyRequestDetailsDocumentsRequested) => this.requestKycMyRequestDetailsDocuments(kycMyRequestDetailsDocumentsRequested)));
-        this.subscriptions.push(this.kycMyRequestDetailsDocumentsOb.subscribe(kycMyRequestDetailsDocuments => this.getKycMyRequestDetailsDocuments(kycMyRequestDetailsDocuments)));
+        this.subscriptions.push(this.kycDetailsGeneralRequestedOb.subscribe((kycDetailsGeneralRequested) => this.requestKycDetailsGeneral(kycDetailsGeneralRequested)));
+        this.subscriptions.push(this.kycDetailsGeneralOb.subscribe(kycDetailsGeneral => this.getKycDetailsGeneral(kycDetailsGeneral)));
+        this.subscriptions.push(this.kycDetailsCompanyRequestedOb.subscribe((kycDetailsCompanyRequested) => this.requestKycDetailsCompany(kycDetailsCompanyRequested)));
+        this.subscriptions.push(this.kycDetailsCompanyOb.subscribe(kycDetailsCompany => this.getKycDetailsCompany(kycDetailsCompany)));
+        this.subscriptions.push(this.kycDetailsCompanyBeneficiariesRequestedOb.subscribe((kycDetailsCompanyBeneficiariesRequested) => this.requestKycDetailsCompanyBeneficiaries(kycDetailsCompanyBeneficiariesRequested)));
+        this.subscriptions.push(this.kycDetailsCompanyBeneficiariesOb.subscribe(kycDetailsCompanyBeneficiaries => this.getKycDetailsCompanyBeneficiaries(kycDetailsCompanyBeneficiaries)));
+        this.subscriptions.push(this.kycDetailsBankingRequestedOb.subscribe((kycDetailsBankingRequested) => this.requestKycDetailsBanking(kycDetailsBankingRequested)));
+        this.subscriptions.push(this.kycDetailsBankingOb.subscribe(kycDetailsBanking => this.getKycDetailsBanking(kycDetailsBanking)));
+        this.subscriptions.push(this.kycDetailsClassificationRequestedOb.subscribe((kycDetailsClassificationRequested) => this.requestKycDetailsClassification(kycDetailsClassificationRequested)));
+        this.subscriptions.push(this.kycDetailsClassificationOb.subscribe(kycDetailsClassification => this.getKycDetailsClassification(kycDetailsClassification)));
+        this.subscriptions.push(this.kycDetailsRisknatureRequestedOb.subscribe((kycDetailsRisknatureRequested) => this.requestKycDetailsRisknature(kycDetailsRisknatureRequested)));
+        this.subscriptions.push(this.kycDetailsRisknatureOb.subscribe(kycDetailsRisknature => this.getKycDetailsRisknature(kycDetailsRisknature)));
+        this.subscriptions.push(this.kycDetailsRiskobjectiveRequestedOb.subscribe((kycDetailsRiskobjectiveRequested) => this.requestKycDetailsRiskobjective(kycDetailsRiskobjectiveRequested)));
+        this.subscriptions.push(this.kycDetailsRiskobjectiveOb.subscribe(kycDetailsRiskobjective => this.getKycDetailsRiskobjective(kycDetailsRiskobjective)));
+        this.subscriptions.push(this.kycDetailsDocumentsRequestedOb.subscribe((kycDetailsDocumentsRequested) => this.requestKycDetailsDocuments(kycDetailsDocumentsRequested)));
+        this.subscriptions.push(this.kycDetailsDocumentsOb.subscribe(kycDetailsDocuments => this.getKycDetailsDocuments(kycDetailsDocuments)));
     }
 
-    requestKycMyRequestDetailsGeneral(kycMyRequestDetailsGeneralRequested): void {
-        if (!kycMyRequestDetailsGeneralRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsGeneral(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsGeneral(kycDetailsGeneralRequested): void {
+        if (!kycDetailsGeneralRequested) {
+            OfiKycService.defaultRequestKycDetailsGeneral(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsGeneral(kycMyRequestDetailsGeneral) {
-        const listImu = fromJS(kycMyRequestDetailsGeneral);
+    getKycDetailsGeneral(kycDetailsGeneral) {
+        const listImu = fromJS(kycDetailsGeneral);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -200,14 +202,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsCompany(kycMyRequestDetailsCompanyRequested): void {
-        if (!kycMyRequestDetailsCompanyRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsCompany(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsCompany(kycDetailsCompanyRequested): void {
+        if (!kycDetailsCompanyRequested) {
+            OfiKycService.defaultRequestKycDetailsCompany(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsCompany(kycMyRequestDetailsCompany) {
-        const listImu = fromJS(kycMyRequestDetailsCompany);
+    getKycDetailsCompany(kycDetailsCompany) {
+        const listImu = fromJS(kycDetailsCompany);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -222,14 +224,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsCompanyBeneficiaries(kycMyRequestDetailsCompanyBeneficiariesRequested): void {
-        if (!kycMyRequestDetailsCompanyBeneficiariesRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsCompanyBeneficiaries(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsCompanyBeneficiaries(kycDetailsCompanyBeneficiariesRequested): void {
+        if (!kycDetailsCompanyBeneficiariesRequested) {
+            OfiKycService.defaultRequestKycDetailsCompanyBeneficiaries(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsCompanyBeneficiaries(kycMyRequestDetailsCompanyBeneficiaries) {
-        const listImu = fromJS(kycMyRequestDetailsCompanyBeneficiaries);
+    getKycDetailsCompanyBeneficiaries(kycDetailsCompanyBeneficiaries) {
+        const listImu = fromJS(kycDetailsCompanyBeneficiaries);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -244,14 +246,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsBanking(kycMyRequestDetailsBankingRequested): void {
-        if (!kycMyRequestDetailsBankingRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsBanking(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsBanking(kycDetailsBankingRequested): void {
+        if (!kycDetailsBankingRequested) {
+            OfiKycService.defaultRequestKycDetailsBanking(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsBanking(kycMyRequestDetailsBanking) {
-        const listImu = fromJS(kycMyRequestDetailsBanking);
+    getKycDetailsBanking(kycDetailsBanking) {
+        const listImu = fromJS(kycDetailsBanking);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -266,14 +268,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsClassification(kycMyRequestDetailsClassificationRequested): void {
-        if (!kycMyRequestDetailsClassificationRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsClassification(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsClassification(kycDetailsClassificationRequested): void {
+        if (!kycDetailsClassificationRequested) {
+            OfiKycService.defaultRequestKycDetailsClassification(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsClassification(kycMyRequestDetailsClassification) {
-        const listImu = fromJS(kycMyRequestDetailsClassification);
+    getKycDetailsClassification(kycDetailsClassification) {
+        const listImu = fromJS(kycDetailsClassification);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -288,14 +290,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsRisknature(kycMyRequestDetailsRisknatureRequested): void {
-        if (!kycMyRequestDetailsRisknatureRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsRiskNature(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsRisknature(kycDetailsRisknatureRequested): void {
+        if (!kycDetailsRisknatureRequested) {
+            OfiKycService.defaultRequestKycDetailsRiskNature(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsRisknature(kycMyRequestDetailsRisknature) {
-        const listImu = fromJS(kycMyRequestDetailsRisknature);
+    getKycDetailsRisknature(kycDetailsRisknature) {
+        const listImu = fromJS(kycDetailsRisknature);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -310,14 +312,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsRiskobjective(kycMyRequestDetailsRiskobjectiveRequested): void {
-        if (!kycMyRequestDetailsRiskobjectiveRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsRiskObjectives(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsRiskobjective(kycDetailsRiskobjectiveRequested): void {
+        if (!kycDetailsRiskobjectiveRequested) {
+            OfiKycService.defaultRequestKycDetailsRiskObjectives(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsRiskobjective(kycMyRequestDetailsRiskobjective) {
-        const listImu = fromJS(kycMyRequestDetailsRiskobjective);
+    getKycDetailsRiskobjective(kycDetailsRiskobjective) {
+        const listImu = fromJS(kycDetailsRiskobjective);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {
@@ -332,14 +334,14 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         this._changeDetectorRef.markForCheck();
     }
 
-    requestKycMyRequestDetailsDocuments(kycMyRequestDetailsDocumentsRequested): void {
-        if (!kycMyRequestDetailsDocumentsRequested) {
-            OfiKycService.defaultRequestKycMyRequestDetailsDocuments(this._ofiKycService, this.ngRedux, this.kycID);
+    requestKycDetailsDocuments(kycDetailsDocumentsRequested): void {
+        if (!kycDetailsDocumentsRequested) {
+            OfiKycService.defaultRequestKycDetailsDocuments(this._ofiKycService, this.ngRedux, this.kycID);
         }
     }
 
-    getKycMyRequestDetailsDocuments(kycMyRequestDetailsDocuments) {
-        const listImu = fromJS(kycMyRequestDetailsDocuments);
+    getKycDetailsDocuments(kycDetailsDocuments) {
+        const listImu = fromJS(kycDetailsDocuments);
 
         let myArray = [];
         myArray = listImu.reduce((result, item) => {

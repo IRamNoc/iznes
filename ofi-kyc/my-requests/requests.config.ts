@@ -1,6 +1,23 @@
 import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
 
-export const checkboxControls = ['capitalNature', 'financialInstruments', 'financialInstruments', 'marketArea', 'financialAssetManagementMethod', 'investmentvehiclesAlreadyUsed', 'frequencyFinancialTransactions', 'clientNeeds', 'investmentHorizonWanted', 'performanceProfile'];
+export const fileControls = [
+    'documentID',
+    'electronicSignatureDocumentID'
+];
+
+export const checkboxControls = [
+    'capitalNature',
+    'financialInstruments',
+    'financialInstruments',
+    'marketArea',
+    'financialAssetManagementMethod',
+    'investmentvehiclesAlreadyUsed',
+    'frequencyFinancialTransactions',
+    'clientNeeds',
+    'investmentHorizonWanted',
+    'performanceProfile'
+];
+
 export const selectControls = [
     'custodianHolderAccount',
     'custodianCountry',
@@ -27,12 +44,12 @@ export const selectControls = [
 ];
 
 export const steps = {
-    'amcSelection' : 1,
-    'introduction' : 2,
-    'identification' : 3,
-    'riskProfile' : 4,
-    'documents' : 5,
-    'validation' : 6
+    'amcSelection': 1,
+    'introduction': 2,
+    'identification': 3,
+    'riskProfile': 4,
+    'documents': 5,
+    'validation': 6
 };
 
 export const countries = fundItems.domicileItems;
@@ -1074,3 +1091,133 @@ export const riskAcceptanceList = [
         sri: "6 & 7"
     }
 ];
+
+export const controlToName = {
+    // General
+    registeredCompanyName : 'Registered Company Name or Legal Name',
+    legalForm : 'Legal form',
+    leiCode : 'LEI Code',
+    otherIdentificationNumber : 'Other indentification number',
+    registeredCompanyAddressLine1 : "Registered company's headquarters address (including country)",
+    registeredCompanyAddressLine2 : 'Address line 2',
+    registeredCompanyZipCode : 'ZIP Code',
+    registeredCompanyCity : 'City',
+    registeredCompanyCountry : 'Country',
+    commercialDomiciliation : 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
+    countryTaxResidence : 'Country of tax residence',
+    sectorActivity : 'Sector of activity',
+    sectorActivityText : 'Sector of activity text',
+    legalStatus : 'Legal status',
+    legalStatusInsurerType : 'Insurer type',
+    legalStatusPublicEstablishmentType : 'Public establishment type',
+    legalStatusPublicEstablishmentTypeOther : 'Public establishment type text',
+    legalStatusListingMarkets : 'Listing market(s)',
+    legalStatusListingOther : 'Listing market(s) text',
+
+    // Company
+    activities : 'Activities',
+    ownAccountinvestor : 'Own-account investor',
+    investorOnBehalfList : 'Investor on behalf of third parties',
+    geographicalAreaOfActivity : 'Geographical area of the activity',
+    geographicalAreaOfActivitySpecification : 'Geographical area of the activity text',
+    activityRegulated : 'Is the activity regulated ?',
+    regulator : 'Regulator or a supervisory authority',
+    approvalNumber : 'Approval number',
+    companyListed : 'Is the company listed ?',
+    listingMarkets : 'Listing market(s)',
+    bloombergCode : "Bloomberg code",
+    isinCode : 'ISIN code of the listed share',
+    keyFinancialData : 'Key Financial Data',
+    balanceSheetTotal : 'Balance Sheet Total',
+    netRevenuesNetIncome : 'Net Revenues or Net Income',
+    shareholderEquity : "Shareholder's Equity",
+    equityAndReserves : 'Equity & reserves',
+    generalAssets : 'General assets (insurance contracts)',
+    premiumsAndContributions : 'Premiums & contributions',
+    saleGoodsServices : 'Sale of goods and services',
+    treasury : 'Treasury',
+    others : 'Others',
+    geographicalOrigin1 : 'Geographical origin (specify by area or country)',
+    geographicalOrigin2 : 'Geographical origin precision',
+
+    // Beneficiaries
+    beneficiaries : {
+        firstName : 'First name',
+        lastName : 'Last name',
+        address : 'Address',
+        nationality : 'Nationality',
+        dateOfBirth : 'Date of birth',
+        cityOfBirth : 'City of birth',
+        countryOfBirth : 'Country of birth',
+        document : 'Document',
+        holdingPercentage : 'Holding percentage'
+    },
+
+    custodianHolderAccount : 'Custodian holder account',
+    custodianName : "Custodian's name",
+    custodianIban : "Custodian's IBAN",
+    custodianAddressLine1 : 'Address line 1',
+    custodianAddressLine2 : 'Address line 2',
+    custodianZipCode : 'ZIP code',
+    custodianCity : 'City',
+    custodianCountry : 'Country',
+
+    // Classification
+    excludeProducts : 'Excluded category of products/services',
+    changeProfessionalStatus : 'Opted for non professional status',
+    firstName : 'First name',
+    lastName : 'Last name',
+    jobPosition : 'Job position',
+    numberYearsExperienceRelatedFunction : 'Number of years of experience in a function related to financial markets',
+    numberYearsCurrentPosition : 'Number of years of experience in current position',
+    financialInstruments : 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
+    financialInstrumentsSpecification : 'Financial instruments text',
+    marketArea : 'Market area(s) which have been the subject of transactions',
+    natureTransactionPerYear : 'Nature of transactions per year (in €)',
+    volumeTransactionPerYear : 'Volume of transactions per year (in €)',
+    activitiesBenefitFromExperience : 'Activities/professions allow to benefit from experience in the financial field',
+    activitiesBenefitFromExperienceSpecification : 'Benefit text',
+
+    // Risk nature
+    financialAssetManagementMethod : 'Financial asset management method',
+    internalManagement : 'Internal management',
+    withAdviceOfAuthorisedThirdPartyInstitution : 'With the advice of an authorised third party institution',
+    mandateEntrustedToManagers : 'By mandate(s) entrusted to a manager(s)',
+    frequencyFinancialTransactions : 'Frequency of financial transactions',
+    investmentvehiclesAlreadyUsed : 'Investment vehicles already used',
+
+    // Risk objective
+    performanceProfile : 'Performance profile',
+    clientNeeds : 'Client needs (purpose of the investment)',
+    otherFinancialInformation : 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation',
+    investmentHorizonWanted : 'Investment horizons wanted',
+    investmentHorizonWantedSpecificPeriod : 'investmentHorizonWantedSpecificPeriod',
+    riskProfile : 'Risk profile: ability to incur losses',
+    riskProfileCapital : 'Risk profile capital',
+    riskAcceptanceLevel1 : 'Risk acceptance Level 1',
+    riskAcceptanceLevel2 : 'Risk acceptance Level 2',
+    riskAcceptanceLevel3 : 'Risk acceptance Level 3',
+    riskAcceptanceLevel4 : 'Risk acceptance Level 4',
+
+    // Risk constraints
+    statutoryConstraints : 'Statutory constraints/special rules concerning eligible assets',
+    taxConstraints : 'Tax constraints',
+    otherConstraints : 'Others (including SRI, ESG, ...)',
+    investmentDecisionsAdHocCommittee : 'Are investment decisions validated by an ad hoc committee?',
+    investmentDecisionsAdHocCommitteeSpecification : 'Ad hoc committee text',
+    otherPersonsAuthorised : 'Other persons authorised to take investment decisions and give instructions',
+};
+
+export const controlToList = {
+    legalForm : 'legalFormList',
+    sectorActivity : 'sectorActivityList',
+    legalStatus : 'legalStatusList',
+    legalStatusInsurerType : 'legalStatusInsurerTypeList',
+    legalStatusPublicEstablishmentType : 'publicEstablishmentList',
+    activities : 'companyActivitiesList',
+    ownAccountinvestor : 'ownAccountInvestorList',
+    investorOnBehalfThirdParties : 'investorOnBehalfList',
+    geographicalAreaOfActivity : 'geographicalAreaList',
+    geographicalOrigin1 : 'geographicalOriginTypeList',
+    totalFinancialAssetsAlreadyInvested : 'financialAssetsInvestedList'
+};
