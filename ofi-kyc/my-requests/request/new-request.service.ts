@@ -386,7 +386,7 @@ export class NewRequestService {
         });
     }
 
-    createInvestmentObjective(id) {
+    createInvestmentObjective(id): FormGroup {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
