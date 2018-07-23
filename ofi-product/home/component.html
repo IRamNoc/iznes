@@ -61,7 +61,7 @@
                         <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
                             {{row[dataCol.dataSource]}}
                         </clr-dg-cell>
-                        <clr-dg-cell class="actions">
+                        <clr-dg-cell>
                             <div class="btn-group btn-sm">
                                 <button
                                     *ngFor="let rowBtn of panel.buttons"

@@ -353,16 +353,16 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
-                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc'),
+                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc', true),
                 kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc'),
                 kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc'),
                 kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc'),
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc'),
-                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc'),
+                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
             }),
             listedCompany: fb.group({
-                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc'),
-                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc'),
+                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
+                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc'),
             }),
             other: fb.group({
@@ -375,18 +375,24 @@ export class NewRequestService {
         });
     }
 
-    createDocumentFormGroup(name) {
-        return this.formBuilder.group({
+    createDocumentFormGroup(name, optional = false) {
+        let group : any = {
             name: '',
             kycDocumentID: '',
-            hash: ['', Validators.required],
             type: name,
             common: 0,
             isDefault: 0
-        });
+        };
+
+        if(optional){
+            group.hash = '';
+        } else{
+            group.hash = ['', Validators.required];
+        }
+        return this.formBuilder.group(group);
     }
 
-    createInvestmentObjective(id) {
+    createInvestmentObjective(id): FormGroup {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {

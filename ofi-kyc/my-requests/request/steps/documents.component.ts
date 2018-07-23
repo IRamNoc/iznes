@@ -1,11 +1,12 @@
-import {Component, OnInit, Input, OnDestroy} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef} from '@angular/core';
+import {FormGroup, FormControl} from '@angular/forms';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
 
+import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
 import {DocumentsService, documentFormPaths} from './documents.service';
@@ -17,6 +18,7 @@ import {steps} from "../../requests.config";
 })
 export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
+    @ViewChild(FormPercentDirective) formPercent: FormPercentDirective;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Input() form: FormGroup;
@@ -40,7 +42,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         private requestsService: RequestsService,
         private newRequestService: NewRequestService,
         private persistService: PersistService,
-        private documentsService: DocumentsService
+        private documentsService: DocumentsService,
+        private changeDetectorRef : ChangeDetectorRef
     ) {
     }
 
@@ -94,11 +97,17 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         );
     }
 
-    uploadFile($event, formControl) {
-        this.requestsService.uploadFile($event).then((file: any) => {
-            formControl.get('hash').patchValue(file.fileHash);
-            formControl.get('name').patchValue(file.fileTitle);
-        });
+    uploadFile($event, formControl: FormControl) {
+        if(!$event.files.length){
+            let type = formControl.get('type').value;
+            let newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
+            formControl.patchValue(newDocumentControl);
+        } else{
+            this.requestsService.uploadFile($event).then((file: any) => {
+                formControl.get('hash').patchValue(file.fileHash);
+                formControl.get('name').patchValue(file.fileTitle);
+            });
+        }
     }
 
     isDisabled(path) {
@@ -146,11 +155,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                             formData.forEach(value => {
                                 let type = value.type;
                                 let shouldContinue = (index === 1 || (index === 0 && value.common));
+                                let path = documentFormPaths[type];
+                                let control = this.form.get([path, type]);
 
-                                if (type && shouldContinue) {
-                                    let path = documentFormPaths[type];
-                                    let control = this.form.get([path, type]);
-
+                                if (type && shouldContinue && control) {
+                                    console.log('patching', type, control);
                                     control.patchValue(value);
                                 }
                             });
@@ -158,6 +167,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                         });
 
                         this.form.updateValueAndValidity();
+                        this.changeDetectorRef.markForCheck();
                     });
                 });
             })
