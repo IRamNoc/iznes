@@ -27,6 +27,7 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
     @Input() showWeekendToggle: boolean = true;
     @Input() areYouSureMessage: string = '';
     @Input() dateConfig: any;
+    @Input() disabled: boolean = false;
 
     @Output() datesEmitter: EventEmitter<() => string[]> = new EventEmitter();
 
@@ -60,6 +61,9 @@ export class DatePickerExtendedComponent implements OnInit, OnDestroy {
         });
 
         this.form.controls.excludeWeekends.valueChanges.subscribe((value) => {
+            if (this.disabled) {
+                return;
+            }
             if (value) {
                 this.selectedDates =
                     DatePickerExtendedHelper.addWeekendsToArray(this.selectedDates,

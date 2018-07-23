@@ -40,6 +40,7 @@ export enum FormItemType {
     file,
     textarea,
     time,
+    extendedDate,
 }
 
 export enum FormItemStyle {
