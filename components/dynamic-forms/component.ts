@@ -41,6 +41,11 @@ export class DynamicFormComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
     }
 
+    // this is to enforce proper re-render for fund holidays management in the share form component
+    markForCheck() {
+        this.changeDetectorRef.markForCheck();
+    }
+
     /**
      * Return the value of the form control's `touched` property.
      *
@@ -123,5 +128,12 @@ export class DynamicFormComponent implements OnInit {
 
     showDropdown(item: FormItem): boolean {
         return (!!item.listItems) && item.listItems.length > 0;
+    }
+
+    getExtendedDates(item: FormItem) {
+        if (item.control) {
+            return item.control.value;
+        }
+        return item.preset;
     }
 }

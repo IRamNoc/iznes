@@ -91,6 +91,19 @@
                                            formControlName="{{item}}"/>
                                 </div>
                             </ng-container>
+
+                            <!-- TODO: add datesEmitter prop feat (this is only display atm) -->
+                            <ng-container *ngSwitchCase="8">
+                                <date-picker-extended
+                                    id="{{item}}"
+                                    [hidden]="model[item].hidden()"
+                                    [dates]="model[item].control.value"
+                                    [showClearButton]="!model[item].disabled"
+                                    [showWeekendToggle]="!model[item].disabled"
+                                    [disabled]="model[item].disabled"
+                                >
+                                </date-picker-extended>
+                            </ng-container>
                         </ng-container>
                        
                         <span class="field-error" *ngIf="hasErrorMessage(model[item])">{{(getErrorMessage(model[item]))}}</span>
