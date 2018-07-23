@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -19,7 +20,9 @@ import java.sql.*;
 import static SETLAPIHelpers.DatabaseHelper.validateDatabaseUmbrellaFundExists;
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.*;
 
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.navigateToAddNewMemberTab;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.assertPopupNextFundNo;
@@ -28,6 +31,7 @@ import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelp
 import static org.junit.Assert.*;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
@@ -68,7 +72,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         navigateToPageByID("menu-product-home");
 
         selectAddUmbrellaFund();
-        String [] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
         submitUmbrellaFund();
@@ -91,7 +95,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         int umbFundCount = Integer.parseInt(umbFundCountXpath.replaceAll("[\\D]", ""));
 
         selectAddUmbrellaFund();
-        String [] umbFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] umbFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(umbFundDetails[0], "16616758475934857431");
         searchAndSelectTopDropdownXpath("uf_domicile", "Afghanistan");
         submitUmbrellaFund();
@@ -105,7 +109,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-umbrella-fund/div/h1")));
-        String [] updateChars = generateRandomDetails();
+        String[] updateChars = generateRandomDetails();
 
         driver.findElement(By.id("uf_umbrellaFundName")).sendKeys(updateChars);
         driver.findElement(By.id("uf_lei")).clear();
@@ -283,5 +287,160 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void shouldDisplaySaveDraftEnable() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
+    }
+
+    @Test
+    public void shouldDisplaySaveDraftDisable() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        selectAddUmbrellaFund();
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("disabled");
+    }
+
+    @Test
+    public void shouldsaveDraft() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[1]/div[1]/a/h2");
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"toast-container\"]/div/div/div[1]")));
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uFundDetails);
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
+        String umbrellaFundName = driver.findElement(By.id("product-dashboard-undefined-0-draftName")).getText();
+        assertTrue(umbrellaFundName.equals(uFundDetails[0]));
+        String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
+        assertTrue(fundType.equals("Umbrella Fund"));
+
+    }
+    @Test
+    public void shouldDeleteDraft() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[1]/div[1]/a/h2");
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uFundDetails);
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
+        String umbrellaFundName = driver.findElement(By.id("product-dashboard-undefined-0-draftName")).getText();
+        assertTrue(umbrellaFundName.equals(uFundDetails[0]));
+        String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
+        assertTrue(fundType.equals("Umbrella Fund"));
+        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"toast-container\"]/div/div/div[1]")));
+        driver.findElement(By.xpath("//*[@id=\"product-dashboard-Draftsundefined\"]/div/clr-dg-cell[5]/button[2]")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-placeholder/div/div")).isDisplayed();
+    }
+    @Test
+    public void shouldEditAndSaveDraft() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
+        driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[1]/div[1]/a/h2");
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uFundDetails);
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
+        String umbrellaFundName = driver.findElement(By.id("product-dashboard-undefined-0-draftName")).getText();
+        assertTrue(umbrellaFundName.equals(uFundDetails[0]));
+        String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
+        assertTrue(fundType.equals("Umbrella Fund"));
+        driver.findElement(By.xpath("//*[@id=\"product-dashboard-Draftsundefined\"]/div/clr-dg-cell[5]/button[1]")).click();
+        driver.findElement(By.id("uf_umbrellaFundName")).getText();
+        assertTrue(umbrellaFundName.equals(uFundDetails[0]));
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(uFundDetails[0]);
+        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
+    }
+    @Test
+    public void shouldDuplicateUmbrellaFund() throws InterruptedException, SQLException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-my-products");
+        navigateToPageByID("menu-product-home");
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        selectAddUmbrellaFund();
+        String[] uFundDetails = generateRandomUmbrellaFundsDetails();
+        String[] dupFundDetails = generateRandomDuplicateDetails();
+        fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
+        searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
+
+        String registeredOffice = driver.findElement(By.id("uf_registerOffice")).getAttribute("value");
+        String LEI = driver.findElement(By.id("uf_lei")).getAttribute("value");
+        String address = driver.findElement(By.id("uf_registerOfficeAddress")).getAttribute("value");
+        String custodianBank = driver.findElement(By.id("uf_custodian")).getText();
+        String managementCompany = driver.findElement(By.id("uf_managementCompany")).getText();
+        String umbrellaFundDomicile = driver.findElement(By.id("uf_domicile")).getText();
+        String fundAdmin = driver.findElement(By.id("uf_fundAdministrator")).getText();
+        String date = driver.findElement(By.id("uf_umbrellaFundCreationDate")).getAttribute("value");
+
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(uFundDetails[0]);
+        getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
+        validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
+
+        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
+        driver.findElement(By.id("uploadNavFileButton")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("uf_umbrellaFundName"))).isDisplayed();
+
+        if(driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value").isEmpty()) {
+        }
+        else {
+            fail("Duplicate UF Contain's Fund Name");
+        }
+        assertTrue(registeredOffice.contains(uFundDetails[0] + "testOffice"));
+        assertTrue(LEI.contains("16616758475934857432"));
+        assertTrue(address.contains("testAddress"));
+        assertTrue(custodianBank.contains("Custodian Bank 1"));
+        assertTrue(managementCompany.contains("Management Company"));
+        assertTrue(umbrellaFundDomicile.contains("Jordan"));
+        assertTrue(fundAdmin.contains("Fund Admin 1"));
+        assertTrue(date.equals("2019-10-20"));
+
+        fillFundNameRandom(dupFundDetails[0] + uFundDetails[0], "uf_umbrellaFundName");
+        String duplicateUFName = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
+        submitUmbrellaFund();
+        assertPopupNextFundNo("Fund");
+        searchUmbrellaTable(dupFundDetails[0]);
+        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
+        assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
+
     }
 }
