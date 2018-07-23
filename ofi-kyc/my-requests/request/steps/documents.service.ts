@@ -4,7 +4,7 @@ import * as moment from 'moment';
 import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
 
-import {merge, get as getValue, values, isEmpty} from 'lodash';
+import {merge, get as getValue, values, isEmpty, filter} from 'lodash';
 
 export const documentFormPaths = {
     kyclistshareholdersdoc: 'common',
@@ -96,13 +96,13 @@ export class DocumentsService {
             getValue(formValue, 'listedCompany', {})
         );
 
+        merged = filter(merged, 'hash');
         return values(merged);
     }
 
     getCurrentFormDocumentsData(kycID, connectedWallet) {
-        let documentsData = this.requestsService.getKycDocuments(kycID, connectedWallet);
-
         let globalDocumentsData = this.requestsService.getKycDocuments(0, connectedWallet);
+        let documentsData = this.requestsService.getKycDocuments(kycID, connectedWallet);
 
         return Promise.all([globalDocumentsData, documentsData]);
     }
