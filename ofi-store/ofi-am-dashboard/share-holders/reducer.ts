@@ -70,10 +70,8 @@ const formatDataResponse = (rawData: Array<FundsByUserDetails>): List<FundsByUse
     let response: List<FundsByUserDetails> = List();
     rawData.forEach((item) => {
         const items = {
-            managementCompanyId: item.managementCompanyId,
             fundId: item.fundId,
             fundName: item.fundName,
-            fundCurrency: item.fundCurrency,
             fundLei: item.fundLei || '',
         };
         response = response.push(items);
