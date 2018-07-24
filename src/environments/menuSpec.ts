@@ -88,7 +88,7 @@ const reportsCentralization = {
     label_txt: 'txt_precentralisation',
     icon_class: 'fa fa-book',
     element_id: 'menu-report-centralization',
-    router_link: '/reports/centralization',
+    router_link: '/reports/precentralisation/funds',
 };
 const reportsCentralizationSelect = {
     label: 'Centralisation',
