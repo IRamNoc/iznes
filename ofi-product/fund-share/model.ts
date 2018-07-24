@@ -172,9 +172,53 @@ export class FundShare {
         };
     }
 
+    resetFundShare() {
+
+        this.calendar = {
+            mandatory: new ShareCalendarMandatory(),
+            subscriptionTradeCycle: null,
+            redemptionTradeCycle: null,
+        };
+        this.characteristic = {
+            mandatory: new ShareCharacteristicMandatory(),
+        };
+        this.fees = {
+            mandatory: new ShareFeesMandatory(),
+            optional: new ShareFeesOptional(),
+        };
+        this.keyFacts = {
+            status: new ShareKeyFactsStatus(),
+            mandatory: new ShareKeyFactsMandatory(),
+            optional: new ShareKeyFactsOptional(),
+        };
+        this.listing = {
+            optional: new ShareListingOptional(),
+        };
+        this.priip = {
+            optional: new SharePRIIPOptional(),
+        };
+        this.profile = {
+            mandatory: new ShareProfileMandatory(),
+            optional: new ShareProfileOptional(),
+        };
+        this.representation = {
+            optional: new ShareRepresentationOptional(),
+        };
+        this.solvency = {
+            optional: new ShareSolvencyOptional(),
+        };
+        this.taxation = {
+            optional: new ShareTaxationOptional(),
+        };
+        this.documents = {
+            mandatory: new ShareDocumentsMandatory(),
+            optional: new ShareDocumentsOptional(),
+        };
+    }
+
     setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
         this.fundID = fundShare.fundID;
-        this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
+        this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
@@ -445,7 +489,9 @@ export class FundShare {
         this.fundOptionnal.internalReference.control.setValue(fund.internalReference);
         this.fundOptionnal.additionnalNotes.control.setValue(fund.additionnalNotes);
 
-        this.updateUmbrella(umbrella);
+        if (umbrella) {
+            this.updateUmbrella(umbrella);
+        }
 
     }
 

@@ -8,7 +8,7 @@ import { take, first, takeUntil } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import * as _ from 'lodash';
 import { fromJS } from 'immutable';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -41,6 +41,7 @@ import { FundShareTestData } from './TestData';
 import * as Enum from '../FundShareEnum';
 import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -58,6 +59,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private prefill: number;
     private fundList;
     fundListItems = [];
+    shareListItems = [];
     private umbrellaFundList;
     private managementCompanyList;
 
@@ -68,6 +70,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private iznShareList;
 
     selectFundForm: FormGroup;
+    shareControl = new FormControl([]);
     currDraft: number;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
@@ -102,6 +105,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private ofiFundService: OfiFundService,
         private ofiCurrenciesService: OfiCurrenciesService,
         private fb: FormBuilder,
+        public _translate: MultilingualService,
     ) {
         this.ofiCurrenciesService.getCurrencyList();
 
@@ -161,7 +165,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
                         return;
                     }
                     const newFund = this.fundList[id];
-                    this.model.updateFund(newFund, this.umbrellaFundList[newFund.umbrellaFundID]);
+                    const newUmbrella = newFund.umbrellaFundID ? this.umbrellaFundList[newFund.umbrellaFundID] : null;
+                    this.model.updateFund(newFund, newUmbrella);
 
                     this.selectFundForm.controls.lei.setValue(
                         this.model.fund.LEI.value() || 'N/A',
@@ -176,6 +181,38 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     this.changeDetectorRef.detectChanges();
                 }),
         );
+
+        this.subscriptionsArray.push(
+            this.shareControl.valueChanges
+                .subscribe((v) => {
+                    if (!v.length) {
+                        this.model.resetFundShare();
+
+                    } else {
+                        const id = Number(v[0].id);
+                        const newShare = this.iznShareList[id];
+
+                        this.model.setFundShare(newShare);
+
+                        this.selectFundForm.controls.fund.setValue(
+                            [_.find(this.fundListItems, { id: newShare.fundID.toString() })],
+                        );
+
+                        const newFund = this.fundList[newShare.fundID];
+                        const newUmbrella = newFund.umbrellaFundID
+                            ? this.umbrellaFundList[newFund.umbrellaFundID]
+                            : null;
+
+                        this.model.updateFund(newFund, newUmbrella);
+                    }
+
+                    this.isReady = true;
+                    this.fundHolidayInput.markForCheck();
+                    this.changeDetectorRef.markForCheck();
+                    this.changeDetectorRef.detectChanges();
+                }),
+        );
+
         this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
             const fundShareId = params.get('shareId') as any;
             this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
@@ -217,6 +254,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if ((!fundShareList) || Object.keys(fundShareList).length === 0) {
                 _.remove(this.model.keyFacts.mandatory.status.listItems, (item) => {
                     return item.id === Enum.StatusEnum.Feeder;
+                });
+
+            } else {
+                this.shareListItems = Object.keys(fundShareList).map((key) => {
+                    return {
+                        id: key,
+                        text: fundShareList[key].fundShareName,
+                    };
                 });
             }
 
@@ -319,7 +364,6 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     this.model.documents.mandatory.prospectus.required = false;
                 }
                 this.isReady = true;
-                console.log(this.model);
 
                 this.changeDetectorRef.markForCheck();
                 this.changeDetectorRef.detectChanges();
@@ -690,6 +734,12 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     goToAuditTrail(): void {
         this.router.navigateByUrl(`product-module/product/fund-share/${this.fundShareId}/audit`);
+    }
+
+    duplicateShare() {
+        const url = `product-module/product/fund-share?prefill=${this.fundShareId}`;
+
+        this.router.navigateByUrl(url);
     }
 
     previousTab(): void {
