@@ -81,9 +81,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        if (this.config) {
-            this.constructFormSteps();
-        }
+        // if (this.config) {
+        //     this.constructFormSteps();
+        // }
     }
 
     initConfig() {
@@ -336,6 +336,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
+        this.constructFormSteps();
         const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
         setTimeout(() => {
             this.showHideButtons(form);
@@ -362,61 +363,62 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     showHideButtons(form) {
-        // PREV
-        if (this.currentStep > 0) {
-            // show
-            this.btPrev.style.display = 'inline-block';
-        } else {
-            // hide
-            this.btPrev.style.display = 'none';
-        }
-        // NEXT
-        if (this.currentStep < (this.nbSteps - 1)) {
-            // show
-            this.btNext.style.display = 'inline-block';
-            this.btSubmit.style.display = 'none';
-            // transform into submit if form
-            if (this.isMultiForm) {
-                if (this.config[this.currentStep].form !== undefined && (this.config[this.currentStep].submitted === undefined || this.config[this.currentStep].submitted === false)) {
-                    this.btNext.removeAttribute('type');
-                    this.btNext.setAttribute('form', this.config[this.currentStep].id);
-                } else {
-                    this.btNext.removeAttribute('form');
-                    this.btNext.setAttribute('type', 'button');
-                }
+        if (this.nbSteps > 0) {
+            // PREV
+            if (this.currentStep > 0) {
+                // show
+                this.btPrev.style.display = 'inline-block';
+            } else {
+                // hide
+                this.btPrev.style.display = 'none';
             }
-        // SUBMIT
-        } else {
-            // hide
-            this.btNext.style.display = 'none';
-            this.btSubmit.style.display = 'inline-block';
-            if (this.isMultiForm) {
-                // last step
-                if (this.config[this.nbSteps - 1].form !== undefined) {
-                    if (this.config[this.nbSteps - 1].form.valid && (this.config[this.nbSteps - 1].submitted === undefined || this.config[this.nbSteps - 1].submitted === false)) {
-                        this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
-                        this.btSubmit.removeAttribute('type');
+            // NEXT
+            if (this.currentStep < (this.nbSteps - 1)) {
+                // show
+                this.btNext.style.display = 'inline-block';
+                this.btSubmit.style.display = 'none';
+                // transform into submit if form
+                if (this.isMultiForm) {
+                    if (this.config[this.currentStep].form !== undefined && (this.config[this.currentStep].submitted === undefined || this.config[this.currentStep].submitted === false)) {
+                        this.btNext.removeAttribute('type');
+                        this.btNext.setAttribute('form', this.config[this.currentStep].id);
+                    } else {
+                        this.btNext.removeAttribute('form');
+                        this.btNext.setAttribute('type', 'button');
+                    }
+                }
+            // SUBMIT
+            } else {
+                // hide
+                this.btNext.style.display = 'none';
+                this.btSubmit.style.display = 'inline-block';
+                if (this.isMultiForm) {
+                    // last step
+                    if (this.config[this.nbSteps - 1].form !== undefined) {
+                        if (this.config[this.nbSteps - 1].form.valid && (this.config[this.nbSteps - 1].submitted === undefined || this.config[this.nbSteps - 1].submitted === false)) {
+                            this.btSubmit.setAttribute('form', this.config[this.nbSteps - 1].id);
+                            this.btSubmit.removeAttribute('type');
+                        } else {
+                            this.btSubmit.removeAttribute('form');
+                            this.btSubmit.setAttribute('type', 'button');
+                        }
                     } else {
                         this.btSubmit.removeAttribute('form');
                         this.btSubmit.setAttribute('type', 'button');
                     }
                 } else {
-                    this.btSubmit.removeAttribute('form');
-                    this.btSubmit.setAttribute('type', 'button');
-                }
-            } else {
-                if (this.config.form.valid && (this.config.submitted === undefined || this.config.submitted === false)) {
-                    this.btSubmit.setAttribute('form', this.el.id);
-                    this.btSubmit.removeAttribute('type');
-                } else {
-                    this.btSubmit.removeAttribute('form');
-                    this.btSubmit.setAttribute('type', 'button');
+                    if (this.config.form.valid && (this.config.submitted === undefined || this.config.submitted === false)) {
+                        this.btSubmit.setAttribute('form', this.el.id);
+                        this.btSubmit.removeAttribute('type');
+                    } else {
+                        this.btSubmit.removeAttribute('form');
+                        this.btSubmit.setAttribute('type', 'button');
+                    }
                 }
             }
+            this.resizeHeight();
+            this.applyStepToProgressBar();
         }
-
-        this.resizeHeight();
-        this.applyStepToProgressBar();
     }
 
     isValid() {
