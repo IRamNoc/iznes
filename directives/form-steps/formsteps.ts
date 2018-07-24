@@ -21,11 +21,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @Input('formsteps')
     set formsteps(val) {
-        if (val) {
-            this.config = val;
-            // if (this.formstepsConstructed) {
+        this.config = val;
+        if (this.formstepsConstructed) {
             this.constructFormSteps();
-            // }
         }
     }
 
@@ -83,9 +81,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        // if (this.config) {
-        //     this.constructFormSteps();
-        // }
+        if (this.config) {
+            this.constructFormSteps();
+        }
     }
 
     initConfig() {
