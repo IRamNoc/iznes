@@ -19,7 +19,7 @@ node {
                 sh '''rm -f yarn.lock &&
                         yarn install &&
                         yarn upgrade &&
-                        yarn test-single &&
+                        yarn test &&
                         cd src &&
                         sass styles.scss:styles.css &&
                         cd ../ '''

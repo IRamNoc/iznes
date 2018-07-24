@@ -52,6 +52,48 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[]{random};
     }
 
+    public static String[] generateRandomDuplicateDetails(){
+        String str = randomAlphabetic(7);
+        String duplicateFundName = "Duplicated_Umbrella_Fund_" + str;
+        return new String[]{duplicateFundName};
+    }
+
+    public static void fillInOptionalDetails() throws InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.id("uf_payingAgent")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_payingAgent\"]/div/div[2]/ul/li[1]/div/a/div")).click();
+        driver.findElement(By.id("uf_investmentAdvisor")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_investmentAdvisor\"]/div/div[2]/ul/li[1]/div")).click();
+        driver.findElement(By.cssSelector("div.well:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a:nth-child(1) > h2:nth-child(2)")).click();
+        scrollElementIntoViewById("ufBtnResetForm");
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div/div[2]/span/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_delegatedManagementCompany\"]/div/div[3]/ul/li/div")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[3]/ng-select/div/div[2]/span/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_auditor\"]/div/div[3]/ul/li[1]/div")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[4]/ng-select/div/div[2]/span/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_taxAuditor\"]/div/div[3]/ul/li[1]/div")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[5]/ng-select/div/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_principalPromoter\"]/div/div[2]/ul/li[1]/div")).click();
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[6]/ng-select/div/div[2]/span/span")).click();
+        driver.findElement(By.xpath("//*[@id=\"uf_legalAdvisor\"]/div/div[3]/div/input")).sendKeys("Legal Advisor 1");
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[6]/ng-select/div/div[3]/ul/li[1]/div/a/div");
+        wait.until(elementToBeClickable(By.cssSelector("div.active > a:nth-child(1) > div:nth-child(1)")));
+        driver.findElement(By.cssSelector("div.active > a:nth-child(1) > div:nth-child(1)")).click();
+        driver.findElement(By.id("uf_directors")).sendKeys("Michael Bindley");
+        driver.findElement(By.id("uf_internalReference")).sendKeys("Internal Reference - Michael");
+        driver.findElement(By.id("uf_additionnalNotes")).sendKeys("This test was created to allow the optional information to be filled in automatically");
+
+    }
+
+    public static void selectAndSearchDuplicateFrom(String fund) throws InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        driver.findElement(By.xpath("//*[@id=\"umbrella_select\"]/div/div[2]/span/i[2]")).click();
+        driver.findElement(By.xpath("//*[@id=\"umbrella_select\"]/div/div[3]/div/input")).sendKeys(fund);
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"umbrella_select\"]/div/div[3]/ul/li[1]/div/a/div")));
+        driver.findElement(By.xpath("//*[@id=\"umbrella_select\"]/div/div[3]/ul/li[1]/div/a/div")).click();
+        wait.until(visibilityOfElementLocated(By.id("uf_umbrellaFundName")));
+    }
+
     public static void selectAddUmbrellaFund() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("new-umbrella-fund-btn")));
@@ -65,6 +107,10 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         } catch (Exception e) {
             fail("Page heading text was not correct : " + e.getMessage());
         }
+    }
+    public static void fillFundNameRandom (String fundNameDuplicate, String IDname) throws InterruptedException {
+
+        driver.findElement(By.id(IDname)).sendKeys(fundNameDuplicate);
     }
 
     public static void fillUmbrellaDetailsNotCountry(String fundName, String lei) throws InterruptedException {
