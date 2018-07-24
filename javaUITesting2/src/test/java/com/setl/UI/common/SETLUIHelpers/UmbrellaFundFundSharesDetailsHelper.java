@@ -29,16 +29,16 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         waitForNewShareButton();
         driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")))));
         driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage()); }
         WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
-        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
-        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        waiting.until(refreshed(visibilityOfElementLocated(By.id("buttonSelectFund"))));
+        waiting.until(refreshed(elementToBeClickable(By.id("buttonSelectFund"))));
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
         selectFundBtn.click();
         try {
@@ -56,16 +56,16 @@ public class UmbrellaFundFundSharesDetailsHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         waitForNewShareButton();
         driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")))));
         driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage()); }
         WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
-        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
-        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        waiting.until(refreshed(visibilityOfElementLocated(By.id("buttonSelectFund"))));
+        waiting.until(refreshed(elementToBeClickable(By.id("buttonSelectFund"))));
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
         selectFundBtn.click();
         try {
@@ -76,16 +76,16 @@ public class UmbrellaFundFundSharesDetailsHelper {
     public static void createShareFromYesPopup(String fundDetails, String shareDetails, String isinDetails) throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         driver.findElement(By.xpath("//*[@id='selectFund']/div")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")));
-        wait.until(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input"))));
+        wait.until(refreshed(elementToBeClickable(driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")))));
         driver.findElement(By.xpath("//*[@id=\"selectFund\"]/div/div[3]/div/input")).sendKeys(fundDetails);
         try {
             driver.findElement(By.cssSelector("div > ul > li:nth-child(1) > div > a")).click();
         } catch (Exception e) {
             fail("dropdown not selected. " + e.getMessage()); }
         WebDriverWait waiting = new WebDriverWait(driver, timeoutInSeconds);
-        waiting.until(visibilityOfElementLocated(By.id("buttonSelectFund")));
-        waiting.until(elementToBeClickable(By.id("buttonSelectFund")));
+        waiting.until(refreshed(visibilityOfElementLocated(By.id("buttonSelectFund"))));
+        waiting.until(refreshed(elementToBeClickable(By.id("buttonSelectFund"))));
         WebElement selectFundBtn = driver.findElement(By.id("buttonSelectFund"));
         selectFundBtn.click();
         try {
@@ -121,14 +121,14 @@ public class UmbrellaFundFundSharesDetailsHelper {
         openDropdownAndSelectOption("status", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
         Thread.sleep(500);
-        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
-        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("cancelFundShareBottom"))));
+        wait.until(refreshed(elementToBeClickable(By.id("cancelFundShareBottom"))));
         openDropdownAndSelectOption("valuationFrequency", 3);
         driver.findElement(By.id("hasCoupon")).click();
         openDropdownAndSelectOption("valuationFrequency", 3);
         scrollElementIntoViewById("couponType");
         wait.until(visibilityOfAllElementsLocatedBy(By.id("couponType")));
-        wait.until(elementToBeClickable(By.id("couponType")));
+        wait.until(refreshed(elementToBeClickable(By.id("couponType"))));
         openDropdownAndSelectOption("couponType", 1);
         openDropdownAndSelectOption("freqOfDistributionDeclaration", 1);
         openDropdownAndSelectOption("historicOrForwardPricing", 1);
@@ -139,7 +139,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewById("tabFundShareButton");
-        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("tabFundShareButton"))));
         scrollElementIntoViewById("tabFundShareButton");
 
         Thread.sleep(500);
@@ -168,7 +168,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         try {
             scrollElementIntoViewById("tabFundShareButton");
-            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+            wait.until(refreshed(visibilityOfElementLocated(By.id("tabFundShareButton"))));
             driver.findElement(By.id("tabCalendarButton")).click();
         }catch (Exception e){ fail(e.getMessage()); }
 
@@ -182,13 +182,13 @@ public class UmbrellaFundFundSharesDetailsHelper {
         setTime("13:13", "redemptionCutOffTime");
         scrollElementIntoViewById("cancelFundShareBottom");
         Thread.sleep(500);
-        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
-        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("cancelFundShareBottom"))));
+        wait.until(refreshed(elementToBeClickable(By.id("cancelFundShareBottom"))));
         openDropdownAndSelectOption("redemptionCutOffTimeZone", 1);
         openDropdownAndSelectOption("navPeriodForRedemption", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
-        wait.until(visibilityOfElementLocated(By.id("cancelFundShareBottom")));
-        wait.until(elementToBeClickable(By.id("cancelFundShareBottom")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("cancelFundShareBottom"))));
+        wait.until(refreshed(elementToBeClickable(By.id("cancelFundShareBottom"))));
         openDropdownAndSelectOption("subscriptionSettlementPeriod", 1);
         openDropdownAndSelectOption("redemptionSettlementPeriod", 1);
     }
@@ -203,11 +203,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
             fail(e.getMessage());
         }
 
-        wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("tabFundShareButton"))));
 
         try {
             scrollElementIntoViewById("tabFundShareButton");
-            wait.until(elementToBeClickable(By.id("tabFundShareButton")));
+            wait.until(refreshed(elementToBeClickable(By.id("tabFundShareButton"))));
         }catch (Exception e){
             fail(e.getMessage());
         }
@@ -245,7 +245,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         try {
             scrollElementIntoViewById("tabFundShareButton");
-            wait.until(visibilityOfElementLocated(By.id("tabFundShareButton")));
+            wait.until(refreshed(visibilityOfElementLocated(By.id("tabFundShareButton"))));
             driver.findElement(By.id("tabProfileButton")).click();
         }catch (Exception e){
             fail(e.getMessage());
