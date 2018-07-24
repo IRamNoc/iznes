@@ -3,6 +3,7 @@ export interface AddressDetail {
     addr: string;
     label: string;
     iban: string;
+    deleted: string;
 }
 
 export interface AddressDetailList {
