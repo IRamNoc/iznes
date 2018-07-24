@@ -1,6 +1,16 @@
 export class PanelData {
-    umbrella = { open: false };
-    fund = { open: false };
+    umbrella = {
+        root: { open: false },
+        main: { open: true },
+        optionnal: { open: false },
+    };
+    fund = {
+        root: { open: false },
+        select:  { open: true },
+        main: { open: false },
+        holiday: { open: false },
+        optionnal: { open: false },
+    };
     keyFacts = {
         status: { open: true },
         mandatory: { open: true },

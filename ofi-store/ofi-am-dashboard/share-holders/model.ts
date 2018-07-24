@@ -1,10 +1,8 @@
 import {List} from 'immutable';
 
 export interface FundsByUserDetails {
-    managementCompanyId: number;
     fundId: number;
     fundName: string;
-    fundCurrency: string;
     fundLei: string;
 }
 
