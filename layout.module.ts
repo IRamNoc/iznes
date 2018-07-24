@@ -58,6 +58,9 @@ import {PersistModule} from '@setl/core-persist';
 
 import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.service';
 
+import { FileDropModule } from '@setl/core-filedrop';
+import { FileViewerModule } from '@setl/core-fileviewer';
+
 @NgModule({
     imports: [
         RouterModule,
@@ -73,6 +76,8 @@ import {MockFundService} from './layouts/ui-form/components/layout2/fund.mock.se
         MultilingualModule,
         PersistModule,
         SetlServicesModule,
+        FileDropModule,
+        FileViewerModule,
     ],
     declarations: [
         /* Directives. */

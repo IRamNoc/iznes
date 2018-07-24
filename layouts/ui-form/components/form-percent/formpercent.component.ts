@@ -1,9 +1,13 @@
-import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren} from '@angular/core';
+import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewChildren, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
 import {FormBuilder, FormGroup, FormControl, AbstractControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
-
+import * as _ from 'lodash';
+import * as SagaHelper from '@setl/utils/sagaHelper';
+import { ToasterService } from 'angular2-toaster';
 import {Subject} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
+
+import { FileService } from '@setl/core-req-services/file/file.service';
 
 import {FormPercentDirective} from "@setl/utils/directives/form-percent/formpercent";
 
@@ -48,6 +52,8 @@ export class UiFormPercentComponent implements OnInit {
         private _ngRedux: NgRedux<any>,
         private _changeDetectorRef: ChangeDetectorRef,
         public _translate: MultilingualService,
+        private fileService: FileService,
+        private toaster: ToasterService,
     ) {
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
         this.createForms();
@@ -95,7 +101,7 @@ export class UiFormPercentComponent implements OnInit {
                 ]),
             ],
             mygroup: this._fb.group({
-                field4: [
+                field3: [
                     '',
                     Validators.compose([
                         Validators.required,
@@ -195,6 +201,64 @@ export class UiFormPercentComponent implements OnInit {
     removeField() {
         (this.myForm1.get('mygroup') as FormGroup).removeControl('nickname');
         this.formPercents.toArray()[0].refreshFormPercent();
+    }
+
+    getUpload(event, fileRelated) {
+        this.uploadFile(event, fileRelated, this._changeDetectorRef);
+    }
+
+    uploadFile(event, fileRelated, changeDetectorRef: ChangeDetectorRef): void {
+        // save file into server
+        const asyncTaskPipe = this.fileService.addFile({
+            files: _.filter(event.files, (file) => {
+                return file.status !== 'uploaded-file';
+            }),
+        });
+
+        this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
+            asyncTaskPipe,
+            (data) => {
+                if (data[1] && data[1].Data) {
+                    let errorMessage;
+
+                    _.each(data[1].Data, (file) => {
+                        if (file.error) {
+                            errorMessage = file.error;
+                            event.target.updateFileStatus(file.id, 'file-error');
+                        } else {
+                            event.target.updateFileStatus(file[0].id, 'uploaded-file');
+                        }
+                    });
+
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+
+                    if (data[1].Data.length === 0) {
+                        // removed file
+                    }
+
+                    changeDetectorRef.markForCheck();
+                    changeDetectorRef.detectChanges();
+                }
+            },
+            (data) => {
+                let errorMessage;
+
+                _.each(data[1].Data, (file) => {
+                    if (file.error) {
+                        errorMessage += file.error + '<br/>';
+                        event.target.updateFileStatus(file.id, 'file-error');
+                    }
+                });
+
+                if (errorMessage) {
+                    if (errorMessage) {
+                        this.toaster.pop('error', errorMessage);
+                    }
+                }
+            }),
+        );
     }
 
     toggleInfoPanes(event: Event): void {
