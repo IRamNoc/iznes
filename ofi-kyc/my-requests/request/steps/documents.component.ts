@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, OnDestroy, ViewChild, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, AbstractControl} from '@angular/forms';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
 import {select} from '@angular-redux/store';
@@ -97,7 +97,9 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         );
     }
 
-    uploadFile($event, formControl: FormControl) {
+    uploadFile($event, formControl: AbstractControl) {
+        formControl = <FormControl> formControl;
+
         if(!$event.files.length){
             let type = formControl.get('type').value;
             let newDocumentControl = this.newRequestService.createDocumentFormGroup(type).value;
