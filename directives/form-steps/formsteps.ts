@@ -81,7 +81,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        this.constructFormSteps();
+        if (this.config) {
+            this.constructFormSteps();
+        }
     }
 
     initConfig() {
