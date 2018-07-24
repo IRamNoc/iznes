@@ -41,9 +41,9 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         let cpt = 0;
         // count all field into form & formgroup
-        this.iterateForm(this.config.form.controls, 'push');
+        this.iterateForm(this.config.form.controls, 'push', '');
         // listen to changes
-        this.config.form.valueChanges.subscribe((form) => this.iterateForm(this.config.form.controls, 'check'));
+        this.config.form.valueChanges.subscribe((form) => this.iterateForm(this.config.form.controls, 'check', ''));
 
         this.constructProgressBar();
     }
@@ -51,29 +51,29 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
     }
 
-    iterateForm(controls, action) {
+    iterateForm(controls, action, groupname) {
         Object.keys(controls).forEach((key) => {
             if (!controls[key].disabled) { // not check or push disabled fields
                 if (controls[key].controls) {
                     if (controls[key].validator) {
                         if (action === 'push') {
-                            this.allFields[key] = {field: key, valid: false};
+                            this.allFields[groupname + key] = {field: groupname + key, valid: false};
                         }
-                        if (action === 'check' && this.allFields[key] !== undefined) {
-                            if (this.allFields[key].hasOwnProperty('valid')) {
-                                this.allFields[key].valid = controls[key].valid;
+                        if (action === 'check' && this.allFields[groupname + key] !== undefined) {
+                            if (this.allFields[groupname + key].hasOwnProperty('valid')) {
+                                this.allFields[groupname + key].valid = controls[key].valid;
                             }
                         }
                     } else {
-                        this.iterateForm(controls[key].controls, action);
+                        this.iterateForm(controls[key].controls, action, key);
                     }
                 } else if(controls[key].validator){
                     if (action === 'push') {
-                        this.allFields[key] = {field: key, valid: false};
+                        this.allFields[groupname + key] = {field: groupname + key, valid: false};
                     }
-                    if (action === 'check' && this.allFields[key] !== undefined) {
-                        if (this.allFields[key].hasOwnProperty('valid')) {
-                            this.allFields[key].valid = controls[key].valid;
+                    if (action === 'check' && this.allFields[groupname + key] !== undefined) {
+                        if (this.allFields[groupname + key].hasOwnProperty('valid')) {
+                            this.allFields[groupname + key].valid = controls[key].valid;
                         }
                     }
                 }
@@ -130,6 +130,7 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     calculatePercent() {
+        console.log(this.allFields);
         let total: any = 0;
         let valid: any = 0;
         Object.keys(this.allFields).forEach((key) => {
@@ -168,8 +169,8 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     refreshFormPercent() {
         this.allFields = []; // reset
         if(this.config){
-            this.iterateForm(this.config.form.controls, 'push'); // re-parse
-            this.iterateForm(this.config.form.controls, 'check'); // re-check
+            this.iterateForm(this.config.form.controls, 'push', ''); // re-parse
+            this.iterateForm(this.config.form.controls, 'check', ''); // re-check
         }
     }
 
