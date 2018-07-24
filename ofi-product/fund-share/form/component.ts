@@ -55,13 +55,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
     isReady: boolean = false;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
+    private prefill: number;
     private fundList;
     fundListItems = [];
     private umbrellaFundList;
     private managementCompanyList;
 
     private fundShareId: number;
-    private isNewFundShare: boolean = false;
     private routeParams: Subscription;
     private subscriptionsArray: Subscription[] = [];
     private panels: { [key: string]: any } = new PanelData();
@@ -104,21 +104,22 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private fb: FormBuilder,
     ) {
         this.ofiCurrenciesService.getCurrencyList();
+
+        this.selectFundForm = this.fb.group({
+            fund: [],
+            domicile: [{ value: '', disabled: true }],
+            lei: [{ value: '', disabled: true }],
+        });
     }
 
     ngOnInit() {
-        this.route.queryParams.subscribe(params => {
-            const fundID = parseInt(params.fund);
-            if (fundID) {
-                this.setCurrentFund(fundID);
+        this.model = new FundShare();
+        this.route.queryParams.subscribe((params) => {
+            if (params.prefill) {
+                this.prefill = Number(params.prefill);
+            } else if (params.fund) {
+                this.setCurrentFund(parseInt(params.fund, 10));
             }
-
-            this.model = new FundShare();
-            this.selectFundForm = this.fb.group({
-                fund: [],
-                domicile: [{ value: '', disabled: true }],
-                lei: [{ value: '', disabled: true }],
-            });
 
             this.initSubscriptions();
 
@@ -128,11 +129,17 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     get fund() {
-        const foundFund = this.model.fundID ? _.find(this.fundList, (fundItem) => {
-            return fundItem.fundID === this.model.fundID;
-        }) : null;
-
-        return foundFund;
+        if (this.model.fundID) {
+            return _.find(this.fundList, (fundItem) => {
+                return fundItem.fundID === this.model.fundID;
+            });
+        }
+        const prefillShare = _.find(this.iznShareList, (share) => {
+            return share.fundShareID === this.prefill;
+        });
+        return _.find(this.fundList, (fundItem) => {
+            return fundItem.fundID === prefillShare.fundID;
+        });
     }
 
     get umbrellaFund() {
@@ -266,7 +273,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 this.router.navigateByUrl(`product-module/product`);
             },
             () => {
-                if (this.mode === FundShareMode.Update) {
+                if (this.prefill) {
+
+                    const prefillShare = this.iznShareList[this.prefill];
+
+                    this.setCurrentFund(prefillShare.fundID);
+                    this.model.setFundShare(prefillShare, true);
+
+                } else if (this.mode === FundShareMode.Update) {
                     if (this.fundShareData) this.model.setFundShare(this.fundShareData);
 
                     if (this.fundShareId === this.fundShareData.fundShareID &&
@@ -305,6 +319,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     this.model.documents.mandatory.prospectus.required = false;
                 }
                 this.isReady = true;
+                console.log(this.model);
 
                 this.changeDetectorRef.markForCheck();
                 this.changeDetectorRef.detectChanges();
@@ -345,14 +360,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     private configureFormForMode(): void {
         if (this.mode === FundShareMode.Update) {
-            if (this.currDraft != 1) {
+            if (this.currDraft !== 1) {
                 this.model.keyFacts.mandatory.fundShareName.disabled = true;
                 this.model.keyFacts.mandatory.isin.disabled = true;
             }
         } else {
             this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
 
-            if (this.model.fundID == undefined) {
+            if (!this.model.fundID && !this.prefill) {
                 this.router.navigateByUrl(`product-module/product/fund-share/new`);
             }
         }
@@ -465,7 +480,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.fundShareData = fundShare;
 
-        if (this.currDraft == 1) {
+        if (this.currDraft === 1) {
             this.model.keyFacts.mandatory.fundShareName.disabled = false;
             this.model.keyFacts.mandatory.isin.disabled = false;
         }

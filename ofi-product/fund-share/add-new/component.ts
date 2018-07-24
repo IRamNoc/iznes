@@ -30,7 +30,8 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
 export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     fundList: any;
-    fundListItems: any;
+    fundListItems: any[];
+    shareListItems: any[];
     newFundShareForm: FormGroup;
     fundForm: FormGroup;
 
@@ -38,6 +39,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) fundListRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
+    @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -88,7 +90,8 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     private initForms(): void {
         this.newFundShareForm = new FormGroup({
-            fund: new FormControl()
+            fund: new FormControl([]),
+            share: new FormControl([]),
         });
 
         this.fundForm = new FormGroup({
@@ -107,12 +110,47 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.fundListOb.subscribe(navFund => {
             this.updateFundList(navFund);
         }));
-        this.subscriptionsArray.push(this.newFundShareForm.controls.fund.valueChanges.subscribe(fund => {
+        this.subscriptionsArray.push(this.newFundShareForm.controls.fund.valueChanges.subscribe((fund) => {
             this.updateFundForm(fund);
+            if (!fund.length) {
+                return;
+            }
+            this.newFundShareForm.controls.share.setValue([]);
         }));
+        this.subscriptionsArray.push(
+            this.newFundShareForm.controls.share.valueChanges
+                .subscribe((share) => {
+                    if (!share.length) {
+                        return;
+                    }
+                    this.newFundShareForm.controls.fund.setValue([]);
+                    this.newFundShareForm.controls.fund.markAsUntouched();
+                }),
+        );
+        this.subscriptionsArray.push(
+            this.shareListOb.subscribe((shareList) => {
+                if (!Object.keys(shareList).length) {
+                    this.shareListItems = [];
+                    return;
+                }
+                this.shareListItems = Object.keys(shareList).map((key) => {
+                    return {
+                        id: key,
+                        text: shareList[key].fundShareName,
+                    };
+                });
+            }),
+        );
     }
 
     private updateFundForm(fund): void {
+        if (!fund.length) {
+            this.fundForm.setValue({
+                legalEntity: null,
+                domicile: null,
+            });
+            return;
+        }
         const fundObj = _.find(this.fundList, (fundItem) => {
             return fundItem.fundID === fund[0].id;
         });
@@ -168,15 +206,20 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     selectFund(): void {
         if (!this.isValid) return;
 
-        const selectedFundId = this.newFundShareForm.value.fund[0].id;
+        const selectedFundId = _.get(this.newFundShareForm.value.fund, [0, 'id'], false);
+        if (selectedFundId) {
+            this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(selectedFundId));
+        }
 
-        this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(selectedFundId));
+        const url = `product-module/product/fund-share${
+            selectedFundId ? '' : `?prefill=${this.newFundShareForm.value.share[0].id}`
+        }`;
 
-        this.router.navigateByUrl('product-module/product/fund-share');
+        this.router.navigateByUrl(url);
     }
 
     isValid(): boolean {
-        return this.newFundShareForm.valid;
+        return this.newFundShareForm.valid || this.newFundShareForm.controls.share.value.length > 0;
     }
 
     ngOnDestroy() {

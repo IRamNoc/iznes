@@ -1,5 +1,6 @@
 <div class="header-breadcrumbs">
-    <h1><i class="fa fa-bars"></i> {{'Add a New Share' | translate}}</h1>
+    <h1>
+        <i class="fa fa-bars"></i> {{'Add a New Share' | translate}}</h1>
 </div>
 
 <clr-tabs>
@@ -8,32 +9,43 @@
         <clr-tab-content class="outer">
             <h3>{{'Please fill out the following information to create a new Share:' | translate}}</h3>
 
-            <div class="row" *ngIf="newFundShareForm">
-                <div class="col-sm-6">
-                    <form [formGroup]="newFundShareForm">
-                        <section class="form-block">
-                            <div class="form-group">
-                                <label class="control-label required-field">{{'Is this Share part of an existing Fund?' | translate}}</label>
-                                <ng-select id="selectFund" [items]="fundListItems" placeholder="" [formControl]="newFundShareForm.controls['fund']" [required]="true">
+            <form [formGroup]="newFundShareForm">
+                <section class="form-block">
+                    <div class="row" *ngIf="newFundShareForm">
+                        <div class="form-group col-sm-3">
+                            <label class="control-label required-field">{{'Is this Share part of an existing Fund?' | translate}}</label>
+                            <ng-select
+                                id="selectFund"
+                                [containerWidth]="'100%'"
+                                [items]="fundListItems"
+                                placeholder=""
+                                [formControl]="newFundShareForm.controls['fund']"
+                                [required]="true"
+                            >
+                            </ng-select>
+                        </div>
+                        <div class="form-group col-sm-3 alt-option btn-container">
+                            <p>{{'or' | translate}}</p>
+                            <a class="btn btn-default action-button add-new-fund" [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}"
+                                id="buttonAddNewFund">
+                                {{'Add a new Fund' | translate}}
+                            </a>
+                            <p>{{'or' | translate}}</p>
+                        </div>
+                        <div class="form-group col-sm-3">
+                                <label class="control-label" for="share-prefill-select">&nbsp;</label>
+                                <ng-select
+                                    id="share-prefill-select"
+                                    [containerWidth]="'100%'"
+                                    [items]="shareListItems"
+                                    placeholder=""
+                                    [formControl]="newFundShareForm.controls['share']"
+                                >
                                 </ng-select>
                             </div>
-                        </section>
-                    </form>
-                </div>
-                <div class="col-sm-6">
-                    <section class="form-block">
-                        <div class="form-group alt-option">
-                            <label class="control-label">{{'&nbsp;' | translate}}</label>
-                            <div>{{'or' | translate}}
-
-                                <a class="btn btn-default action-button add-new-fund" [routerLink]="['/product-module/product/fund/new']" [queryParams]="{fromShare : 'true', fund : null}" id="buttonAddNewFund">
-									{{'Add a new Fund' | translate}}
-                                </a>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-            </div>
+                    </div>
+                </section>
+            </form>
 
             <div class="row" *ngIf="fundForm.value.legalEntity">
                 <form [formGroup]="fundForm">

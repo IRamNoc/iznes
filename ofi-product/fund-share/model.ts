@@ -172,10 +172,10 @@ export class FundShare {
         };
     }
 
-    setFundShare(fundShare: OfiFundShare): void {
+    setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
-        this.keyFacts.mandatory.isin.preset = fundShare.isin;
+        this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
