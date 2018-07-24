@@ -121,6 +121,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.route.queryParams.subscribe((params) => {
             if (params.prefill) {
                 this.prefill = Number(params.prefill);
+                const requestData = getOfiFundShareCurrentRequest(this.redux.getState());
+                requestData.fundShareID = this.prefill;
+                OfiFundShareService.defaultRequestFundShareDocs(this.ofiFundShareService, this.redux, requestData);
             } else if (params.fund) {
                 this.setCurrentFund(parseInt(params.fund, 10));
             }
@@ -243,7 +246,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             if (this.mode === FundShareMode.Update) this.requestFundShareDocs(requested);
         }));
         this.subscriptionsArray.push(this.fundShareDocsOb.subscribe(fundShareDocs => {
-            if (this.fundShareId === fundShareDocs.fundShareID) this.updateFundShareDocs(fundShareDocs);
+            if (this.fundShareId === fundShareDocs.fundShareID || this.prefill) this.updateFundShareDocs(fundShareDocs);
         }));
         this.subscriptionsArray.push(this.shareListObs.subscribe(fundShareList => {
             this.model.keyFacts.mandatory.feeder.listItems = this.generateListItems(fundShareList);
@@ -324,6 +327,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
                     this.setCurrentFund(prefillShare.fundID);
                     this.model.setFundShare(prefillShare, true);
+                    this.model.setFundShareDocs(this.fundShareDocsData);
 
                 } else if (this.mode === FundShareMode.Update) {
                     if (this.fundShareData) this.model.setFundShare(this.fundShareData);
