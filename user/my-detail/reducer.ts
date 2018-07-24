@@ -22,6 +22,7 @@ const initialState: MyDetailState = {
     companyName: '',
     phoneCode: '',
     phoneNumber: '',
+    defaultWalletID: -1,
 };
 
 const UserTypeStr = {
@@ -65,6 +66,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const admin = !!_.get(loginedData, 'admin', 0);
             const accountId = _.get(loginedData, 'accontID', '');
             const memberId = _.get(loginedData, 'memberID', '');
+            const defaultWalletID = _.get(loginedData, 'defaultWalletID', '');
 
             return Object.assign({}, state, {
                 username,
@@ -76,6 +78,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 admin,
                 accountId,
                 memberId,
+                defaultWalletID,
             });
 
         case MyDetailActions.SET_USER_DETAILS:
@@ -119,7 +122,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 profileText,
                 companyName,
                 phoneCode,
-                phoneNumber,
+                phoneNumber
             });
 
         case MyDetailActions.RESET_LOGIN_DETAIL:
