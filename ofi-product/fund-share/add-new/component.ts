@@ -31,6 +31,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     fundList: any;
     fundListItems: any[];
+    shareList = {};
     shareListItems: any[];
     newFundShareForm: FormGroup;
     fundForm: FormGroup;
@@ -42,12 +43,12 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private router: Router,
-                private ofiFundService: OfiFundService,
-                private ofiFundShareService: OfiFundShareService,
-                private route: ActivatedRoute,
-                private location: Location) {
+        private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
+        private ofiFundService: OfiFundService,
+        private ofiFundShareService: OfiFundShareService,
+        private route: ActivatedRoute,
+        private location: Location) {
     }
 
     ngOnInit() {
@@ -73,19 +74,20 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
                 return _.find(fundItems, ['fundID', fundID]);
             }),
             filter(fundItem => !!fundItem),
-            take(1),)
-        .subscribe(fundItem => {
-            let newUrl = this.router.createUrlTree([], {
-                queryParams: { fund: null },
-                queryParamsHandling: "merge"
-            });
-            this.location.replaceState(this.router.serializeUrl(newUrl));
+            take(1),
+        )
+            .subscribe(fundItem => {
+                let newUrl = this.router.createUrlTree([], {
+                    queryParams: { fund: null },
+                    queryParamsHandling: "merge"
+                });
+                this.location.replaceState(this.router.serializeUrl(newUrl));
 
-            this.newFundShareForm.controls['fund'].patchValue([{
-                id: fundItem.fundID,
-                text: fundItem.fundName
-            }]);
-        });
+                this.newFundShareForm.controls['fund'].patchValue([{
+                    id: fundItem.fundID,
+                    text: fundItem.fundName
+                }]);
+            });
     }
 
     private initForms(): void {
@@ -115,28 +117,40 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
             if (!fund.length) {
                 return;
             }
-            this.newFundShareForm.controls.share.setValue([]);
+            this.newFundShareForm.controls.share.setValue([], { emitEvent: false });
         }));
         this.subscriptionsArray.push(
             this.newFundShareForm.controls.share.valueChanges
                 .subscribe((share) => {
-                    if (!share.length) {
+                    if (!share || !share.length) {
                         return;
                     }
-                    this.newFundShareForm.controls.fund.setValue([]);
+                    const id = share[0].id;
+                    const newFundItem = [_.find(this.fundListItems, { id: this.shareList[id] })];
+                    this.newFundShareForm.controls.fund.setValue(
+                        newFundItem,
+                        { emitEvent: false },
+                    );
+                    this.updateFundForm(newFundItem);
                     this.newFundShareForm.controls.fund.markAsUntouched();
                 }),
         );
         this.subscriptionsArray.push(
-            this.shareListOb.subscribe((shareList) => {
-                if (!Object.keys(shareList).length) {
+            this.shareListOb.subscribe((list) => {
+                const keys = Object.keys(list);
+                if (!keys.length) {
                     this.shareListItems = [];
                     return;
                 }
-                this.shareListItems = Object.keys(shareList).map((key) => {
+
+                keys.forEach((key) => {
+                    this.shareList[key] = list[key].fundID;
+                });
+
+                this.shareListItems = keys.map((key) => {
                     return {
                         id: key,
-                        text: shareList[key].fundShareName,
+                        text: list[key].fundShareName,
                     };
                 });
             }),
@@ -213,7 +227,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
         const url = `product-module/product/fund-share${
             selectedFundId ? '' : `?prefill=${this.newFundShareForm.value.share[0].id}`
-        }`;
+            }`;
 
         this.router.navigateByUrl(url);
     }
