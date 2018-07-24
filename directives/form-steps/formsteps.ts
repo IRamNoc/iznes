@@ -21,9 +21,11 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @Input('formsteps')
     set formsteps(val) {
-        this.config = val;
-        if (this.formstepsConstructed) {
+        if (val) {
+            this.config = val;
+            // if (this.formstepsConstructed) {
             this.constructFormSteps();
+            // }
         }
     }
 
@@ -81,9 +83,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        if (this.config) {
-            this.constructFormSteps();
-        }
+        // if (this.config) {
+        //     this.constructFormSteps();
+        // }
     }
 
     initConfig() {
@@ -568,7 +570,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
         // assign slider container size
         this.divSliderContainer.style.width = (this.divSliderSize * (this.nbSteps + 1)) + 'px'; // +1 because Finished screen
-
 
         this.move();
     }
