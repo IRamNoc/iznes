@@ -93,7 +93,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             for (let i in this.config) {
                 if (this.config[i].form !== undefined) {
                     if (this.config[i].submitted === undefined) {
-                        this.config[i].submitted = false; // si on repasse sur la page et qu'un form a deja été rempli - on recup via auto save l'info et on popule cette propriete
+                        this.config[i].submitted = false;
                     }
                     this.config[i].form.valueChanges.subscribe((form) => this.showHideButtons(form));
                 }
@@ -260,9 +260,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 if (this.isValid()) {
                     setTimeout(() => {
                         if (this.isMultiForm) {
-                            if (this.config[this.currentStep].form !== undefined) {
-                                this.config[this.currentStep].submitted = true;
-                            }
+                            // if (this.config[this.currentStep].form !== undefined) {
+                            //     this.config[this.currentStep].submitted = true;
+                            // }
                             if (this.config[this.currentStep].goNext !== undefined) {
                                 this.currentStep = this.config[this.currentStep].goNext - 1;
                             } else {
@@ -287,9 +287,9 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                     const missingSteps = this.applyStepToProgressBar();
                     if (missingSteps.length > 0 && this.isMultiForm && this.config[this.nbSteps - 1].form !== undefined) {
                         setTimeout(() => {
-                            if (this.config[this.nbSteps - 1].form !== undefined) {
-                                this.config[this.nbSteps - 1].submitted = true;
-                            }
+                            // if (this.config[this.nbSteps - 1].form !== undefined) {
+                            //     this.config[this.nbSteps - 1].submitted = true;
+                            // }
                             this.currentStep = missingSteps[0];
                             this.move();
                         }, 50);
