@@ -51,9 +51,15 @@
                             <input type="checkbox" id="orange" class="form-control" formControlName="orange" value="orange"><label for="orange" style="margin: -5px 20px 0 5px">Orange</label>
                         </div>
                         <div class="form-group"><input type="text" class="form-control" formControlName="field2" [placeholder]="_translate.translate('type here')"></div>
-                        <div class="form-group"><input type="text" class="form-control" formControlName="field3" [placeholder]="_translate.translate('type here')"></div>
+                        <div class="mb-1">
+                            <setl-file-drop [formControl]="myForm1.controls['field3']" (onDrop)="getUpload($event, 'myFile1')" [inline]="false" ngDefaultControl></setl-file-drop>
+                        </div>
                         <div formGroupName="mygroup">
-                            <div class="form-group"><input type="text" class="form-control" formControlName="field4" [placeholder]="_translate.translate('type here')"></div>
+                            <div class="form-group">
+                                <div class="mb-1">
+                                    <setl-file-drop [formControl]="myForm1.controls.mygroup.controls['field3']" (onDrop)="getUpload($event, 'myFile2')" [inline]="false" ngDefaultControl></setl-file-drop>
+                                </div>
+                            </div>
                             <div class="form-group"><input type="text" class="form-control" formControlName="field5" [placeholder]="_translate.translate('type here')"></div>
                             <div class="form-group" *ngIf="myForm1.controls.mygroup.controls.nickname"><input type="text" class="form-control" formControlName="nickname" [placeholder]="_translate.translate('your nickname here')"></div>
                         </div>
