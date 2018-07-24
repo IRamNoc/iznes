@@ -959,7 +959,7 @@ export class OrderHelper {
                 // the formula before apply maximum number decimal.
             let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
             // apply maximum number decimal.
-            amountStr = 'floor(' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ') / ' + decimalDivider + ' * ' + NumberMultiplier;
+            amountStr = 'floor((' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ')) / ' + decimalDivider + ' * ' + NumberMultiplier;
 
             actionData = [
                 {
@@ -979,7 +979,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.getEncumberReference(), '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                [this.investorAddress, this.orderAsset, this.getEncumberReference(), amountStr,
                     [], [[this.amIssuingAddress, 0, 0]]]];
 
 
