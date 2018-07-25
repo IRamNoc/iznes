@@ -118,9 +118,7 @@
 <clr-modal [(clrModalOpen)]="showAddModal">
     <h3 id="override_header" class="modal-title">{{'Create a new sub-portfolio' | translate}}</h3>
     <div class="modal-body">
-        <form (submit)="handleNewSubPortfolio(portfolioName.value, portfolioIban.value)" class="p-0"
-              [formGroup]="this.tabDetail[0]['formControl']">
-
+        <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
             <div class="row">
                 <div class="form-group col-sm-12">
                     <label class="control-label required-field" mltag="txt_subportfolioname">Sub-portfolio
