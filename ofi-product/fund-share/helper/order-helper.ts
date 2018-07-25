@@ -979,7 +979,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.getEncumberReference(), '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier,
+                [this.investorAddress, this.orderAsset, this.getEncumberReference(), amountStr,
                     [], [[this.amIssuingAddress, 0, 0]]]];
 
 
