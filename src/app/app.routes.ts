@@ -27,7 +27,6 @@ import {
     ShareHoldersComponent,
     ManageOrdersComponent,
     MyDashboardComponent,
-    MyOrdersComponent,
     OfiAmDocumentsComponent,
     OfiCollectiveArchiveComponent,
     CentralizationReportComponent,
