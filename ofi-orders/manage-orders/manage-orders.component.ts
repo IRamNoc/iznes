@@ -565,11 +565,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
-                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
+                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== null) {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
-                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
+                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== null) {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
