@@ -1,5 +1,4 @@
-
-import {throttleTime} from 'rxjs/operators';
+import { throttleTime } from 'rxjs/operators';
 import { AfterViewInit, Component, HostListener, OnInit } from '@angular/core';
 import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 import {
@@ -25,7 +24,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any = new ToasterConfig({
-        positionClass: 'toast-bottom-right'
+        positionClass: 'toast-top-right'
     });
     jasperoAlertoptions: any = {
         overlay: true,
