@@ -609,6 +609,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return Object.keys(list).reduce((result, orderId) => {
             const order = list[orderId];
             const orderFigure = getOrderFigures(order);
+
             result.push(
                 {
                     amAddress: _.get(order, 'amAddress', ''),
