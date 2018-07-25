@@ -65,6 +65,7 @@ public class OpenCSDNavigationAcceptanceTest {
     }
 
     @Test
+    @Ignore ("This page has been removed for the moment 24/07/2018")
     public void shouldNavigateToManagementCompany() throws IOException, InterruptedException {
         //test thread.sleep to see if not having time to connect to the wallet node is causing issues.
         Thread.sleep(45000);
@@ -107,14 +108,14 @@ public class OpenCSDNavigationAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-am-report-section");
         navigateToPageByID("menu-report-centralization");
-        verifyCorrectPage("Precentralisation Report: All Shares");
+        verifyCorrectPage("Precentralisation");
     }
 
     @Test
     public void shouldNavigateToPrecentralizationHomepage() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-dashboard/div/app-counter-tile[3]/div/a")).click();
-        verifyCorrectPage("Precentralisation Report: All Shares");
+        verifyCorrectPage("Precentralisation");
     }
 
     @Test

@@ -21,9 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
@@ -56,6 +54,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         String str = randomAlphabetic(7);
         String duplicateFundName = "Duplicated_Umbrella_Fund_" + str;
         return new String[]{duplicateFundName};
+    }
+
+    public static void searchDraftByName(String fund) throws InterruptedException {
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).clear();
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(fund);
+        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
     }
 
     public static void fillInOptionalDetails() throws InterruptedException{
@@ -161,6 +166,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void submitUmbrellaFund() throws InterruptedException {
         try {
+            scrollElementIntoViewById("mcBtnSubmitForm");
             driver.findElement(By.id("mcBtnSubmitForm")).click();
         } catch (Exception e) {
             fail("Save button was not clicked. " + e.getMessage());
@@ -277,8 +283,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
             fundCount = fundCount - 10;
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[3]/button")).click();
         String fundId = "product-dashboard-link-fundID-" + fundCount;
-        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id(fundId))));
-        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id(fundId))));
+        wait.until(refreshed(visibilityOfElementLocated(By.id(fundId))));
+        wait.until(refreshed(elementToBeClickable(By.id(fundId))));
         WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
         }
@@ -344,8 +350,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id("new-fund-btn"))));
-        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id("new-fund-btn"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("new-fund-btn"))));
+        wait.until(refreshed(elementToBeClickable(By.id("new-fund-btn"))));
 
 
         driver.findElement(By.id("new-fund-btn")).click();

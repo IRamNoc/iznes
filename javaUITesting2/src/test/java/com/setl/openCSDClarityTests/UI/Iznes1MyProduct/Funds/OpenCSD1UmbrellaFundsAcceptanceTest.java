@@ -29,10 +29,7 @@ import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelp
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchFundsTable;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.searchUmbrellaTable;
 import static org.junit.Assert.*;
-
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -347,20 +344,29 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[1]/div[1]/a/h2");
-        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uFundDetails);
-        driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
+        wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
+        searchDraftByName(uFundDetails[0]);
         String umbrellaFundName = driver.findElement(By.id("product-dashboard-undefined-0-draftName")).getText();
         assertTrue(umbrellaFundName.equals(uFundDetails[0]));
         String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
         assertTrue(fundType.equals("Umbrella Fund"));
-        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"toast-container\"]/div/div/div[1]")));
         driver.findElement(By.cssSelector("div.well:nth-child(6) > div:nth-child(2) > div:nth-child(1) > clr-datagrid:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > clr-dg-table-wrapper:nth-child(1) > div:nth-child(2) > clr-dg-row:nth-child(1) > div:nth-child(1) > clr-dg-cell:nth-child(5) > div:nth-child(1) > button:nth-child(2)")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]"))).isDisplayed();
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")))).isDisplayed();
+        String draftDeletePopUp = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();
+        assertEquals(draftDeletePopUp, "Draft Delete");
         String confirmDelete =  driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).getText();
         assertTrue(confirmDelete.contains("Confirm Delete"));
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-placeholder/div/div")).isDisplayed();
+        driver.findElement(By.cssSelector("#iznes > app-root > jaspero-confirmations > jaspero-confirmation > div.jaspero__dialog.ng-trigger.ng-trigger-wrapperAn > div.jaspero__dialog-actions > button.error")).click();
+        wait.until(refreshed(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))));
+        searchDraftByName(uFundDetails[0]);
+        if (wait.until(refreshed(invisibilityOfElementLocated(By.cssSelector("#product-dashboard-Draftsundefined > div > clr-dg-cell:nth-child(5) > div > button.btn.btn-danger.btn-sm.ng-star-inserted"))))) {
+            }
+            else
+                {
+            fail("Draft was not deleted");
+        }
+
     }
     @Test
     public void shouldEditAndSaveDraft() throws InterruptedException, SQLException {
@@ -382,7 +388,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         assertTrue(umbrellaFundName.equals(uFundDetails[0]));
         String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
         assertTrue(fundType.equals("Umbrella Fund"));
-        driver.findElement(By.xpath("//*[@id=\"product-dashboard-Draftsundefined\"]/div/clr-dg-cell[5]/button[1]")).click();
+        driver.findElement(By.cssSelector("#product-dashboard-Draftsundefined > div > clr-dg-cell:nth-child(5) > div > button.btn.btn-success.btn-sm.ng-star-inserted")).click();
         driver.findElement(By.id("uf_umbrellaFundName")).getText();
         assertTrue(umbrellaFundName.equals(uFundDetails[0]));
         submitUmbrellaFund();
@@ -492,7 +498,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(dupFundDetails[0]);
-        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        wait.until(refreshed(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0"))));
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
         assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
     }
@@ -540,7 +546,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         assertTrue(internalReference.equals("Internal Reference - Michael"));
         assertTrue(additionalNotes.equals("This test was created to allow the optional information to be filled in automatically"));
         scrollElementIntoViewById("uf_umbrellaFundName");
-        wait.until(elementToBeClickable(By.id("uf_umbrellaFundName"))).isDisplayed();
+        wait.until(refreshed(elementToBeClickable(By.id("uf_umbrellaFundName")))).isDisplayed();
         fillFundNameRandom(dupFundDetails[0] + uFundDetails[0], "uf_umbrellaFundName");
         String duplicateUFName = driver.findElement(By.id("uf_umbrellaFundName")).getAttribute("value");
         scrollElementIntoViewById("mcBtnSubmitForm");
@@ -548,7 +554,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("mcBtnSubmitForm")).click();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(dupFundDetails[0]);
-        wait.until(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0")));
+        wait.until(refreshed(elementToBeClickable(By.id("product-dashboard-link-umbrellaFundID-0"))));
         driver.findElement(By.id("product-dashboard-link-umbrellaFundID-0")).click();
         assertTrue(duplicateUFName.equals(dupFundDetails[0] + uFundDetails[0]));
         assertTrue(payingAgent.equals("Paying Agent 1"));

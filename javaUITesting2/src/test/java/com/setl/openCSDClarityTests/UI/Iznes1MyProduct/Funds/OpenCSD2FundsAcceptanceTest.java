@@ -32,9 +32,7 @@ import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelp
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 @RunWith(OrderedJUnit4ClassRunner.class)
 
@@ -92,9 +90,11 @@ public class OpenCSD2FundsAcceptanceTest {
         getFundTableRow(0, uFundDetails[0], randomLei, "EUR", "Management Company", "Afghanistan","Contractual Fund", umbFundDetails[0]);
 
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
-        scrollElementIntoViewById("product-dashboard-fundID-0-fundName");
-        wait.until(elementToBeClickable(By.id("product-dashboard-fundID-0-fundName")));
+        scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button");
+        wait.until(refreshed(invisibilityOfElementLocated(By.className("toast-title"))));
+        scrollElementIntoViewById("new-fund-btn");
+        Thread.sleep(1000);
+        wait.until(refreshed(elementToBeClickable(By.id("product-dashboard-fundID-0-fundName"))));
         driver.findElement(By.id("product-dashboard-fundID-0-fundName")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[1]/h1")));
 
@@ -382,7 +382,7 @@ public class OpenCSD2FundsAcceptanceTest {
     }
 
     @Test
-    @Repeat
+    @Ignore ("Test needs to be re-written")
     public void shouldUpdateFund() throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         loginAndVerifySuccess("am", "alex01");
