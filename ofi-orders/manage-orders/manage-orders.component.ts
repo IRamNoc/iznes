@@ -339,14 +339,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let routeParams$ = this.route.params;
         let routeCombinedSubscription = orderListStream$
-            .pipe(
-                filter(orders => !_.isEmpty(orders)),
-                take(1),
-                switchMap(() => routeParams$),
-            )
-            .subscribe(params => {
-                this.routeUpdate(params);
-            });
+        .pipe(
+            filter(orders => !_.isEmpty(orders)),
+            take(1),
+            switchMap(() => routeParams$),
+        )
+        .subscribe(params => {
+            this.routeUpdate(params);
+        });
 
         this.route.queryParams.subscribe(queryParams => {
             if (queryParams.orderID) {
@@ -780,7 +780,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     showConfirmationSettleAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
-            '<span>Are you sure you want settle the ' + confMessage + '?</span>',
+            '<span>Are you sure you want to settle the ' + confMessage + '?</span>',
             { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' },
         ).subscribe((ans) => {
             if (ans.resolved) {
