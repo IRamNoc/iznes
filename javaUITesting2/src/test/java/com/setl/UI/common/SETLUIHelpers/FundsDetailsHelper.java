@@ -168,6 +168,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void submitUmbrellaFund() throws InterruptedException {
         try {
+            scrollElementIntoViewById("mcBtnSubmitForm");
             driver.findElement(By.id("mcBtnSubmitForm")).click();
         } catch (Exception e) {
             fail("Save button was not clicked. " + e.getMessage());
