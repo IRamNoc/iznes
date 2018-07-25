@@ -25,9 +25,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
@@ -85,10 +83,10 @@ public class OpenCSDNAVAcceptanceTest {
 
         navigateToNAVPageFromFunds();
 
-        wait.until(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo)));
-        wait.until(elementToBeClickable(By.id("Btn-AddNewNAV-" + rowNo)));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("Btn-AddNewNAV-" + rowNo))));
+        wait.until(refreshed(elementToBeClickable(By.id("Btn-AddNewNAV-" + rowNo))));
         driver.findElement(By.id("Btn-AddNewNAV-" + rowNo)).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span"))));
         String NAVpopupTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3/span")).getText();
         assertTrue(NAVpopupTitle.equals("Add New NAV"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).click();
@@ -96,7 +94,7 @@ public class OpenCSDNAVAcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[2]/form/div/div[4]/input")).sendKeys("12");
         searchAndSelectTopDropdown("Status-nav-btn", "Validated");
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-nav-manage-list/app-nav-add/clr-modal/div/div[1]/div/div[1]/div/div[3]/button[2]")).click();
-        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+        wait.until(refreshed(visibilityOfElementLocated(By.className("jaspero__dialog-title"))));
         String successSubText = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]/table/tbody/tr/td")).getText();
         assertTrue(successSubText.equals("Successfully Updated NAV"));
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
@@ -133,10 +131,10 @@ public class OpenCSDNAVAcceptanceTest {
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
         wait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         String shareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
         assertTrue(shareName.equals(uShareDetails[0]));
         String ISIN = driver.findElement(By.id("NAV-ISIN-0")).getText();
@@ -163,12 +161,12 @@ public class OpenCSDNAVAcceptanceTest {
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("Search-field")).sendKeys("WrongShare");
         wait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-0")));
         driver.findElement(By.id("Search-field")).clear();
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         assertTrue(driver.findElement(By.id("NAV-Share-Name-0")).isDisplayed());
         String navShareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
         assertTrue(navShareName.equals(uShareDetails[0]));
@@ -192,12 +190,12 @@ public class OpenCSDNAVAcceptanceTest {
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
 
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.id("NAV-ISIN-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-ISIN-0"))));
         driver.findElement(By.id("Search-field")).sendKeys("WrongISIN");
         wait.until(invisibilityOfElementLocated(By.id("NAV-ISIN-0")));
         driver.findElement(By.id("Search-field")).clear();
         driver.findElement(By.id("Search-field")).sendKeys(uIsin[0]);
-        wait.until(visibilityOfElementLocated(By.id("NAV-ISIN-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-ISIN-0"))));
         assertTrue(driver.findElement(By.id("NAV-ISIN-0")).isDisplayed());
         String navShareName = driver.findElement(By.id("NAV-ISIN-0")).getText();
         assertTrue(navShareName.equals(uIsin[0]));
@@ -219,16 +217,15 @@ public class OpenCSDNAVAcceptanceTest {
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("Search-field")).sendKeys(uShareDetails[0]);
-        WebDriverWait SearchWait = new WebDriverWait(driver, 2);
-        SearchWait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
+        wait.until(invisibilityOfElementLocated(By.id("NAV-Share-Name-1")));
         String ShareName = driver.findElement(By.id("NAV-Share-Name-0")).getText();
         System.out.println(uShareDetails[0]);
         System.out.println(ShareName);
         assertTrue(ShareName.equals(uShareDetails[0]));
         driver.findElement(By.id("NAV-Share-Name-0")).click();
-        wait.until(visibilityOfElementLocated(By.id("shareName")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("shareName"))));
         String shareName = driver.findElement(By.id("shareName")).getAttribute("value");
         assertTrue(shareName.equals(uShareDetails[0]));
         String navISIN = driver.findElement(By.id("isin")).getAttribute("value");
@@ -263,7 +260,7 @@ public class OpenCSDNAVAcceptanceTest {
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToNAVPageFromFunds();
-        wait.until(visibilityOfElementLocated(By.id("NAV-Share-Name-0")));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("NAV-Share-Name-0"))));
         driver.findElement(By.id("NAV-Share-Name-0")).click();
         driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[2]/span/span")).click();
         assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[1]/div/a/div")).isDisplayed());
@@ -273,7 +270,7 @@ public class OpenCSDNAVAcceptanceTest {
         String L3m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[2]/div/a/div")).getText();
         assertTrue(L3m.equals("Last 3 months"));
         scrollElementIntoViewByXpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div");
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")));
+        wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div"))));
         assertTrue(driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")).isDisplayed());
         String L6m = driver.findElement(By.xpath("//*[@id=\"searchDatePeriod\"]/div/div[3]/ul/li[3]/div/a/div")).getText();
         assertTrue(L6m.equals("Last 6 months"));
