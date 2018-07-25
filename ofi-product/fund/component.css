@@ -1,0 +1,67 @@
+.fundCreateComponent .tab-header-container {
+  width: 100%;
+  margin: 0;
+  padding: .5rem;
+  display: flex;
+  justify-content: flex-end; }
+  .fundCreateComponent .tab-header-container > div {
+    display: inline-block;
+    width: auto; }
+.fundCreateComponent h2 {
+  width: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; }
+.fundCreateComponent .field-error {
+  color: red;
+  height: 0; }
+.fundCreateComponent .btn-container {
+  padding-left: 60px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  flex-wrap: nowrap; }
+  .fundCreateComponent .btn-container p {
+    height: 1.5rem;
+    line-height: 1.5rem;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 0;
+    display: inline-block;
+    width: auto; }
+  .fundCreateComponent .btn-container a {
+    margin: 0; }
+.fundCreateComponent .prefill-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  flex-wrap: nowrap; }
+.fundCreateComponent form {
+  width: 100%; }
+  .fundCreateComponent form .form-group > .checkbox {
+    margin-left: 24px; }
+  .fundCreateComponent form .form-group > .radio-inline {
+    margin-left: 24px;
+    width: initial; }
+  .fundCreateComponent form .lei {
+    align-self: flex-start;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; }
+    .fundCreateComponent form .lei label.switch:first-child {
+      margin: 4px !important;
+      width: 15%; }
+    .fundCreateComponent form .lei div:last-child {
+      width: 85%; }
+    .fundCreateComponent form .lei .slider {
+      top: unset;
+      bottom: unset; }
+.fundCreateComponent .checkbox label:first-child {
+  padding-left: 0; }
+.fundCreateComponent .radio-inline label:after {
+  content: ''; }
+.fundCreateComponent textarea {
+  min-height: 40px;
+  max-height: 160px; }
+
+/*# sourceMappingURL=component.css.map */

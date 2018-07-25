@@ -57,9 +57,7 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         required: true,
         mltag: 'txt_fundshare_iban',
         validator: Validators.compose([
-            Validators.required,
-            Validators.minLength(14),
-            Validators.maxLength(34),
+            validateIBAN
         ]),
     };
     shareLaunchDate: FormItem = {
@@ -532,5 +530,13 @@ function validateISIN(c: FormControl) {
 
     return ISIN_REGEXP.test(c.value) && c.value.length === 12 ? null : {
         'ISIN must meet ISO 6166 format (12 characters).': c.value,
+    };
+}
+
+function validateIBAN(c: FormControl) {
+    const IBAN_REGEXP = new RegExp(/\b^[A-Za-z]{2}[A-Za-z0-9]{12,32}\b/);
+
+    return IBAN_REGEXP.test(c.value) ? null : {
+        'IBAN must be between 14 to 34 characters and start with 2 letters.': c.value,
     };
 }
