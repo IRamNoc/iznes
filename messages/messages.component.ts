@@ -143,8 +143,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
         this.subscriptionsArray.push(
             this.getDefaultWalletId.subscribe((data) => {
-                this.connectedWalletId = data;
-                this.setWallet(this.connectedWalletId);
+                if (data != null) {
+                    this.connectedWalletId = data;
+                    this.setWallet(this.connectedWalletId);
+                }
             }),
         );
 
