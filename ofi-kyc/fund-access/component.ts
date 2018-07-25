@@ -16,7 +16,7 @@ import {FileService} from '@setl/core-req-services';
 import {SagaHelper} from '@setl/utils';
 
 @Component({
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

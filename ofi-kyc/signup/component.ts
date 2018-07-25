@@ -39,7 +39,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-signup',
     templateUrl: 'component.html',
-    styleUrls: ['component.css'],
+    styleUrls: ['component.scss'],
 })
 
 /* Class. */

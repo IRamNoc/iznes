@@ -37,7 +37,7 @@ import {
 } from '@setl/core-store';
 
 @Component({
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -17,7 +17,7 @@ interface ContentType {
 @Component({
     selector: 'app-text-input-list',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
 })
 export class TextInputListComponent implements OnInit, OnChanges {
 
