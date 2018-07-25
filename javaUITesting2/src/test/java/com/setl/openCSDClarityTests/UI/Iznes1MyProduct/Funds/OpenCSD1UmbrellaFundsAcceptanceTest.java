@@ -344,12 +344,13 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[1]/div[1]/a/h2");
+        wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         searchDraftByName(uFundDetails[0]);
         String umbrellaFundName = driver.findElement(By.id("product-dashboard-undefined-0-draftName")).getText();
         assertTrue(umbrellaFundName.equals(uFundDetails[0]));
         String fundType = driver.findElement(By.id("product-dashboard-undefined-0-draftType")).getText();
         assertTrue(fundType.equals("Umbrella Fund"));
-        wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"toast-container\"]/div/div/div[1]")));
         driver.findElement(By.cssSelector("div.well:nth-child(6) > div:nth-child(2) > div:nth-child(1) > clr-datagrid:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > clr-dg-table-wrapper:nth-child(1) > div:nth-child(2) > clr-dg-row:nth-child(1) > div:nth-child(1) > clr-dg-cell:nth-child(5) > div:nth-child(1) > button:nth-child(2)")).click();
         wait.until(refreshed(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")))).isDisplayed();
         String draftDeletePopUp = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")).getText();

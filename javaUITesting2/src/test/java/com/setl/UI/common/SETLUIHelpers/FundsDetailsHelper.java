@@ -21,9 +21,7 @@ import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.invisibilityOfElementLocated;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
@@ -285,8 +283,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
             fundCount = fundCount - 10;
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[3]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/clr-dg-pagination/ul/li[3]/button")).click();
         String fundId = "product-dashboard-link-fundID-" + fundCount;
-        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id(fundId))));
-        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id(fundId))));
+        wait.until(refreshed(visibilityOfElementLocated(By.id(fundId))));
+        wait.until(refreshed(elementToBeClickable(By.id(fundId))));
         WebElement fund = driver.findElement(By.id(fundId));
         fund.click();
         }
@@ -352,8 +350,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
 
     public static void fillOutFundDetails(String fundName, String umbFundName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        wait.until(ExpectedConditions.refreshed(visibilityOfElementLocated(By.id("new-fund-btn"))));
-        wait.until(ExpectedConditions.refreshed(elementToBeClickable(By.id("new-fund-btn"))));
+        wait.until(refreshed(visibilityOfElementLocated(By.id("new-fund-btn"))));
+        wait.until(refreshed(elementToBeClickable(By.id("new-fund-btn"))));
 
 
         driver.findElement(By.id("new-fund-btn")).click();
