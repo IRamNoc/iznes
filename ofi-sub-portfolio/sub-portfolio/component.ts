@@ -222,11 +222,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     handleLabelResponse(message) {
         switch (message) {
         case 'Duplicate Label':
-            this.toaster.pop('error', 'Sub-portfolio name already exist');
+            this.toaster.pop('error', 'Sub-portfolio name already exists');
             break;
 
         case 'Duplicate IBAN':
-            this.toaster.pop('error', 'IBAN already exist');
+            this.toaster.pop('error', 'IBAN already exists');
             break;
 
         case 'Duplicate Label and IBAN':
