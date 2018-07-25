@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     title = 'app';
     users: Array<object>;
     public toasterconfig: any = new ToasterConfig({
-        positionClass: 'toast-top-right'
+        positionClass: 'toast-bottom-right'
     });
     jasperoAlertoptions: any = {
         overlay: true,
