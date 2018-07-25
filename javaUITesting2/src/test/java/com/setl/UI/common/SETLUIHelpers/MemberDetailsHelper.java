@@ -7,8 +7,6 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
-
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.WalletsDetailsHelper.selectLEIFromLEISearch;
 import static junit.framework.TestCase.assertEquals;
@@ -268,6 +266,11 @@ public class MemberDetailsHelper extends LoginAndNavigationHelper {
         } catch (NoSuchElementException e) {
             return false;
         }
+    }
+
+    public static void scrollElementIntoViewById(WebElement WebElement){
+        WebElement element = WebElement;
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);",element);
     }
 
     public static void scrollElementIntoViewById(String elementId){
