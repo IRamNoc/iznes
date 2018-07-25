@@ -339,14 +339,14 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let routeParams$ = this.route.params;
         let routeCombinedSubscription = orderListStream$
-            .pipe(
-                filter(orders => !_.isEmpty(orders)),
-                take(1),
-                switchMap(() => routeParams$),
-            )
-            .subscribe(params => {
-                this.routeUpdate(params);
-            });
+        .pipe(
+            filter(orders => !_.isEmpty(orders)),
+            take(1),
+            switchMap(() => routeParams$),
+        )
+        .subscribe(params => {
+            this.routeUpdate(params);
+        });
 
         this.route.queryParams.subscribe(queryParams => {
             if (queryParams.orderID) {
@@ -565,11 +565,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
-                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
+                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== null) {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
-                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
+                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== null) {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
@@ -780,7 +780,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     showConfirmationSettleAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
-            '<span>Are you sure you want settle the ' + confMessage + '?</span>',
+            '<span>Are you sure you want to settle the ' + confMessage + '?</span>',
             { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' },
         ).subscribe((ans) => {
             if (ans.resolved) {
