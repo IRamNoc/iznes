@@ -130,7 +130,6 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     calculatePercent() {
-        console.log(this.allFields);
         let total: any = 0;
         let valid: any = 0;
         Object.keys(this.allFields).forEach((key) => {
