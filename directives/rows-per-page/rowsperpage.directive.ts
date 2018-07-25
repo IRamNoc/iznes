@@ -75,7 +75,7 @@ export class RowsPerPageDirective implements OnInit {
 
         // Count the rows in the datagrid
         const datagrid = this.el.nativeElement.closest('clr-datagrid').outerHTML;
-        const rowCount = (datagrid.match(/<clr-dg-row class="datagrid-row/g) || []).length;
+        const rowCount = (datagrid.match(/datagrid-row-master/g) || []).length;
 
         // If datagrid is more than one page then render the HTML
         if (rowCount >= this.defaultRows) {
