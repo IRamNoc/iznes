@@ -100,9 +100,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
     // rekordkeeping
     @select(['ofi', 'ofiReports', 'amHolders', 'requested']) requestedOfiAmHoldersObj;
-    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) OfiAmHoldersListObj;
-    // @select(['ofi', 'ofiReports', 'amHolders', 'holderDetailRequested']) requestedHolderDetailObs;
-    // @select(['ofi', 'ofiReports', 'amHolders', 'shareHolderDetail']) shareHolderDetailObs;
+    @select(['ofi', 'ofiReports', 'amHolders', 'amHoldersList']) ofiAmHoldersListObj;
 
     // inv my holdings
     @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedOfiInvHoldingsObj;
@@ -244,7 +242,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
                 this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
                 // recordkeeping
                 this.subscriptions.push(this.requestedOfiAmHoldersObj.subscribe((requested) => this.getAmHoldersRequested(requested)));
-                this.subscriptions.push(this.OfiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
+                this.subscriptions.push(this.ofiAmHoldersListObj.subscribe((list) => this.getAmHoldersListFromRedux(list)));
             } else if (this.userType === 46) {
                 // inv - my holdings
                 this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
@@ -450,41 +448,6 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
         }
 
         this._ngRedux.dispatch(ofiSetRequestedHomeOrder());
-
-        /* Now, let's fetch the precentralised orders list. */
-        let request;
-        if (this.myDetails.userType !== 46) {
-            /* Is am. */
-            request = {
-                partyType: 2,
-                pageNum: 0,
-                pageSize: 123456789,
-                asset: '',
-                sortBy: 'deliveryDate',
-                arrangementType: 0,
-                status: 1,
-                sortOrder: 'DESC'
-            };
-        } else {
-            /* Is holder. */
-            request = {
-                partyType: 1,
-                pageNum: 0,
-                pageSize: 123456789,
-                asset: '',
-                sortBy: 'dateEntered',
-                arrangementType: 0,
-                status: 4,
-                sortOrder: 'DESC'
-            };
-        }
-
-        this.ofiOrdersService.getHomeOrdersList(request)
-            .then(() => true)
-            .catch((error) => {
-                /* Handle error. */
-                console.warn('Failed to fetch precentralised orders:', error);
-            });
     }
 
     /**
