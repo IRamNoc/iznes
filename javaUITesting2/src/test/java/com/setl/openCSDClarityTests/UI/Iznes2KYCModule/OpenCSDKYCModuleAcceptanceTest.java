@@ -216,7 +216,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Test
     //@Ignore("waiting for id to be added")
     public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
-        String userNo = "003";
+        String userNo = "005";
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -288,6 +288,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         assertTrue(bankingInfoPercent.equals("0%"));
 
         KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
     }
 
     @Test
@@ -430,6 +431,80 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(invisibilityOfElementLocated(By.id("registeredCompanyName")));
+    }
+
+    public static void KYCProcessStep3CompanyInfoComplete() throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
+        wait.until(visibilityOfElementLocated(By.id("activities")));
+
+        String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent0);
+        assertTrue(percent0.equals("0%"));
+
+        searchSelectTopOptionXpath("Own-account investor", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
+
+        String percent1 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent1);
+        assertTrue(percent1.equals("6%"));
+
+        searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalAreaOfActivity\"]/div", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/div/input", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/ul/li[1]/div/a");
+
+        String percent2 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent2);
+        assertTrue(percent2.equals("11%"));
+
+        searchSelectTopOptionXpath("Embassies and Consulates", "//*[@id=\"ownAccountinvestor\"]/div", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/div/input", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/ul/li[1]/div/a");
+
+        String percent3 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent3);
+        assertTrue(percent3.equals("17%"));
+
+        driver.findElement(By.id("balanceSheetTotal")).sendKeys("9");
+
+        String percent4 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent4);
+        assertTrue(percent4.equals("22%"));
+
+        driver.findElement(By.id("netRevenuesNetIncome")).sendKeys("9");
+
+        String percent5 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent5);
+        //assertTrue(percent5.equals("2%"));
+
+        driver.findElement(By.id("shareholderEquity")).sendKeys("9");
+
+        String percent6 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent6);
+        //assertTrue(percent6.equals("35%"));
+
+        driver.findElement(By.id("firstName")).sendKeys("Jordan");
+
+        String percent7 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent7);
+        //assertTrue(percent7.equals("17%"));
+
+        driver.findElement(By.id("lastName")).sendKeys("Miller");
+
+        String percent8 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent8);
+        //assertTrue(percent8.equals("17%"));
+
+        driver.findElement(By.id("address")).sendKeys("159 Connextions");
+
+        String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent9);
+        //assertTrue(percent9.equals("17%"));
+
+        searchSelectTopOptionXpath("Jordan", "//*[@id=\"nationality\"]/div", "//*[@id=\"nationality\"]/div/div[3]/div/input", "//*[@id=\"nationality\"]/div/div[3]/ul/li[1]/div/a");
+
+        String percent10 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println(percent10);
+        //assertTrue(percent10.equals("17%"));
+
+        driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
+        wait.until(invisibilityOfElementLocated(By.id("activities")));
     }
 
     public static void selectOptionAndSubmitKYC(String option) throws IOException, InterruptedException{
