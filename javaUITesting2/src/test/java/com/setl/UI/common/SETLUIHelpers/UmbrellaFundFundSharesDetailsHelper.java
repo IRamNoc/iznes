@@ -114,7 +114,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         driver.findElement(By.id("isin")).sendKeys(isin);
         driver.findElement(By.id("iban")).clear();
         driver.findElement(By.id("iban")).sendKeys(isin + "33");
-        driver.findElement(By.id("shareClassCode")).sendKeys("share class");
+        driver.findElement(By.id("shareClassCode")).clear();
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
