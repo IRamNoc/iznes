@@ -1,8 +1,7 @@
 <div class="header-breadcrumbs">
     <h1>
         <i class="fa fa-bars"></i>
-        <span [hidden]="!isCreate()">{{'Add new Share' | translate}}</span>
-        <span [hidden]="!isUpdate()">{{'View Share' | translate}}</span>
+        <span>{{(isCreate() || currDraft == 1 ? 'Add new Share' : 'View Share') | translate}}</span>
     </h1>
 </div>
 
@@ -14,8 +13,8 @@
         <clr-tab-content class="outer">
             <div class="row">
                 <div class="col-sm-12">
-                    <p>{{'Please fill in the following information to create a new Share.' | translate}}</p>
-                    <button class="btn btn-default btn-audit-trail" (click)="goToAuditTrail()" [hidden]="isCreate()">{{'Share Audit Trail' | translate}}</button>
+                    <p>{{(isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate}}</p>
+                    <button class="btn btn-default btn-audit-trail" (click)="goToAuditTrail()" [hidden]="isCreate() || currDraft == 1">{{'Share Audit Trail' | translate}}</button>
                 </div>
             </div>
             <div class="well" *ngIf="hasUmbrellaFund()">
@@ -86,7 +85,7 @@
                         </div>
                         <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund']['select'])">
                             <form [formGroup]="selectFundForm" class="selectFund">
-                            <section class="form-block">
+                                <section class="form-block">
                                     <div class="row">
                                         <div class="form-group col-sm-6">
                                             <label class="control-label" for="lei">{{'Legal Entity Identifier (LEI)' | translate}}</label>
@@ -129,19 +128,19 @@
                     </div>
 
                     <div class="well">
-                            <div class="row panel-header">
-                                <div class="col-sm-12">
-                                    <a href="#" (click)="openPanel(panels['fund']['holiday'], $event)">
-                                        <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['holiday'])"></i>
-                                        <h2 id="toggleFund">{{'Holiday Information' | translate}}
-                                        </h2>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund']['holiday'])">
-                                <app-dynamic-form #fundHolidayInput [model]="model.fundHoliday"></app-dynamic-form>
+                        <div class="row panel-header">
+                            <div class="col-sm-12">
+                                <a href="#" (click)="openPanel(panels['fund']['holiday'], $event)">
+                                    <i class="fa fa-chevron-right" [class.rotate]="isPanelOpen(panels['fund']['holiday'])"></i>
+                                    <h2 id="toggleFund">{{'Holiday Information' | translate}}
+                                    </h2>
+                                </a>
                             </div>
                         </div>
+                        <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund']['holiday'])">
+                            <app-dynamic-form #fundHolidayInput [model]="model.fundHoliday"></app-dynamic-form>
+                        </div>
+                    </div>
 
                     <div class="well">
                         <div class="row panel-header">
