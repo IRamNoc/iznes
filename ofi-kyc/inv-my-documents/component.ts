@@ -22,6 +22,7 @@ import * as SagaHelper from '@setl/utils/sagaHelper';
 import { ToasterService } from 'angular2-toaster';
 import { FileService } from '@setl/core-req-services/file/file.service';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { ofiClearRequestedMyDocuments } from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -175,6 +176,9 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                     };
                 }
             }
+            if (this.filesFromRedux.length == 0 && this.allUploadsFiles[i].common !== 1) {
+                allChecked = false;
+            }
         }
         if (allChecked) {
             this.uploadMyDocumentsForm.get('shareAll').patchValue(true, { emitEvent: false });
@@ -325,6 +329,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             asyncTaskPipe,
             (data) => {
                 // success
+                this.ngRedux.dispatch(ofiClearRequestedMyDocuments());
             },
             (data) => {
                 console.log('error: ', data);
