@@ -1,11 +1,9 @@
 export interface PermissionArea {
-    permissionID: number;
-    permissionName: string;
-    canDelegate: number;
-    canRead: number;
-    canInsert: number;
-    canUpdate: number;
-    canDelete: number;
+    permissionAreaID: number;
+    parentID: number;
+    name: string;
+    description: string;
+    state: number;
 }
 
 export interface PermissionAreasState {

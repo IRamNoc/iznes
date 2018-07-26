@@ -104,9 +104,30 @@ export {
     permissionAreasReducer,
 };
 
+import {
+    SET_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    setRequestedAccountAdminUserPermissionAreas,
+    clearRequestedAccountAdminUserPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    UserPermissionAreasState,
+    getAccountAdminUserPermissions,
+    userPermissionAreasReducer,
+} from './users-permissions';
+
+export {
+    SET_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    setRequestedAccountAdminUserPermissionAreas,
+    clearRequestedAccountAdminUserPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    UserPermissionAreasState,
+    getAccountAdminUserPermissions,
+    userPermissionAreasReducer,
+};
+
 export interface AccountAdminState {
     users: UsersState;
     usersAudit: UsersAuditState;
+    userPermissionAreas: UserPermissionAreasState;
     teams: UserTeamsState;
     teamsAudit: UserTeamsAuditState;
     permissionAreas: PermissionAreasState;
@@ -115,6 +136,7 @@ export interface AccountAdminState {
 export const accountAdminReducer: Reducer<AccountAdminState> = combineReducers<AccountAdminState>({
     users: usersReducer,
     usersAudit: usersAuditReducer,
+    userPermissionAreas: userPermissionAreasReducer,
     teams: userTeamsReducer,
     teamsAudit: userTeamsAuditReducer,
     permissionAreas: permissionAreasReducer,
