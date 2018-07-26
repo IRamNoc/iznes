@@ -38,7 +38,6 @@ import {MultilingualService} from '@setl/multilingual';
 
 /* Decorator. */
 @Component({
-    styleUrls: ['./coupon-payment.component.css'],
     templateUrl: './coupon-payment.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

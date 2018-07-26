@@ -23,7 +23,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-nav-add',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiManageNavPopup implements OnInit {
 
