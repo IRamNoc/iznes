@@ -48,7 +48,6 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         // force overflow hidden to prevent scroll outside website
         document.body.style.overflow = 'hidden';
 
-        // this.config.autoshow = (this.el.id !== 'bug') ? false : true;   // debug: keep auto only if id="bug"
         if (this.config.length > 1) { // tooltip Tour
             this.isTour = true;
 
@@ -95,7 +94,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         if (this.parentDiv) {
             this.scrollListener = this.parentDiv.addEventListener('scroll', (event) => {
                 this.getScroll(event);
-            },                                                    false);
+            }, false);
             this.scrollTop = this.parentDiv.scrollTop;
         }
         if (this.config.autoshow === undefined || this.config.autoshow === false) {
@@ -103,7 +102,14 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    @HostListener('mousemove', ['$event']) onMouseOver(event: MouseEvent): void {
+    @HostListener('mouseover') onMouseOver(): void {
+        this.checkIfTooltipExists();
+        if (this.config.autoshow === undefined || this.config.autoshow === false) {
+            this.showTooltip();
+        }
+    }
+
+    @HostListener('mousemove', ['$event']) onMouseMove(event: MouseEvent): void {
         if (this.config.autoshow === undefined || this.config.autoshow === false) {
             if (this.el === event.target) {
                 this.checkIfTooltipExists();
@@ -141,6 +147,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     checkIfTooltipExists() {
         if (this.divTooltip === null || this.divTooltip === undefined) {
+            const isTitle = (this.config.title !== undefined && this.config.title !== '');
             this.divTooltip = document.createElement('div');
             this.divTooltip.className = 'tooltips';
             const randomID = this.generateID(50);
@@ -150,11 +157,13 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 addCloseButton = '<i class="fa fa-times tooltipCloseBtnTitle" id="tooltipCloseBtn_' + randomID + '"></i>';
             }
             // add default title
-            this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title"></div>';
+            if (isTitle) {
+                this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title"></div>';
+            }
             // if autoshow
             if (this.config.autoshow !== undefined && this.config.autoshow === true) {
                 // if title
-                if (this.config.title !== undefined || this.config.title !== '') {
+                if (isTitle) {
                     this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title">' + addCloseButton + '</div>';
                 }
             }
@@ -162,7 +171,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             let tmpInnerHTML = '<div id="tooltipText_' + randomID + '" class="text"></div>';
             if (this.config.autoshow !== undefined && this.config.autoshow === true) {
                 // if title
-                if (this.config.title === undefined || this.config.title === '') {
+                if (!isTitle) {
                     // change button if no title
                     addCloseButton = '<i class="fa fa-times tooltipCloseBtnText" id="tooltipCloseBtn_' + randomID + '"></i>';
                     tmpInnerHTML = '<div id="tooltipText_' + randomID + '" class="text">' + addCloseButton + '</div>';
@@ -171,7 +180,9 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.divTooltip.innerHTML += tmpInnerHTML;
             document.body.appendChild(this.divTooltip);
             // assign
-            this.divTooltipTitle = document.getElementById('tooltipTitle_' + randomID);
+            if (isTitle) {
+                this.divTooltipTitle = document.getElementById('tooltipTitle_' + randomID);
+            }
             this.divTooltipText = document.getElementById('tooltipText_' + randomID);
             this.divTooltipCloseBtn = document.getElementById('tooltipCloseBtn_' + randomID);
             // add click function
@@ -189,9 +200,41 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 // add step into Title
                 tourNum = (this.step + 1) + '. ';
             }
-
-            this.divTooltipTitle.innerHTML += tourNum + this.config.title;
+            if (isTitle) {
+                this.divTooltipTitle.innerHTML += tourNum + this.config.title;
+            }
             this.divTooltipText.innerHTML += this.config.text;
+
+            // reset css
+            this.divTooltip.className = 'tooltips';
+
+            // size rules
+            if (!this.config.size) {
+                if (!isTitle && this.config.text.length <= 50) {
+                    this.divTooltip.classList.add('t-small');
+                } else {
+                    this.divTooltip.classList.add('t-medium');
+                }
+            } else {
+                if (this.config.size === 'small') {
+                    if (this.config.text.length > 50) { // small no max-width
+                        this.divTooltip.classList.add('t-medium'); // force max-width
+                    } else {
+                        this.divTooltip.classList.add('t-' + this.config.size);
+                    }
+                } else {
+                    // force small if no title & <50 chars
+                    if (!isTitle) {
+                        if (this.config.text.length <= 50) {
+                            this.divTooltip.classList.add('t-small');
+                        } else {
+                            this.divTooltip.classList.add('t-medium');
+                        }
+                    } else {
+                        this.divTooltip.classList.add('t-' + this.config.size);
+                    }
+                }
+            }
 
             if (this.isTour) {
                 this.divTooltip.style.zIndex = 1003;
@@ -288,46 +331,6 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     showTooltip(): void {
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
-            const elRect = this.el.getBoundingClientRect();
-
-            // reset css
-            this.divTooltip.className = 'tooltips';
-            // no title case
-            if (this.config.title === undefined || this.config.title === '') {
-                this.divTooltipTitle.classList.add('hideTitle');
-                this.divTooltipText.classList.add('hideTitle');
-            } else {
-                this.divTooltipTitle.classList.remove('hideTitle');
-                this.divTooltipText.classList.remove('hideTitle');
-            }
-
-            // size rules
-            if (!this.config.size) {
-                if ((this.config.title === undefined || this.config.title === '') && this.config.text.length <= 50) {
-                    this.divTooltip.classList.add('t-small');
-                } else {
-                    this.divTooltip.classList.add('t-medium');
-                }
-            } else {
-                if (this.config.size === 'small') {
-                    if (this.config.text.length > 50) { // small no max-width
-                        this.divTooltip.classList.add('t-medium'); // force max-width
-                    } else {
-                        this.divTooltip.classList.add('t-' + this.config.size);
-                    }
-                } else {
-                    // force small if no title & <50 chars
-                    if (this.config.title === undefined || this.config.title === '') {
-                        if (this.config.text.length <= 50) {
-                            this.divTooltip.classList.add('t-small');
-                        } else {
-                            this.divTooltip.classList.add('t-medium');
-                        }
-                    } else {
-                        this.divTooltip.classList.add('t-' + this.config.size);
-                    }
-                }
-            }
 
             this.moveTooltip();
 
