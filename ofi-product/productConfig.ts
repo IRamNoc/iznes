@@ -663,10 +663,15 @@ export const fundItems = {
         { id : 4, text: 'Partial Hedge' },
     ],
     fundAdministratorItems: [
-        { id : '1', text: 'CACEIS Fund Administrator France' },
+        { id : 1, text: 'Fund Admin 1' },
+        { id : 2, text: 'Fund Admin 2' },
+        { id : 3, text: 'Fund Admin 3' },
+
     ],
     custodianBankItems: [
-        { id : '1', text: 'CACEIS Bank' },
+        { id : 1, text: 'Custodian Bank 1' },
+        { id : 2, text: 'Custodian Bank 2' },
+        { id : 3, text: 'Custodian Bank 3' },
     ],
     investmentManagerItems: [
         { id : 1, text: 'Investment Manager 1' },
