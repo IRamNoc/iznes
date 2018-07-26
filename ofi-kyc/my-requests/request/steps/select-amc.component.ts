@@ -176,8 +176,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     onRegisteredChange() {
         let accumulator = !isNil(this.preselectedManagementCompany.registered) ? this.preselectedManagementCompany.registered : true;
+        let selectedManagementCompanies = filter(this.selectedManagementCompanies, company => !isEmpty(company));
 
-        let result = reduce(this.selectedManagementCompanies, (result, value) => {
+        let result = reduce(selectedManagementCompanies, (result, value) => {
             return result && value.registered;
         }, accumulator);
 

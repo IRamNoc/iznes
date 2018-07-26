@@ -38,11 +38,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr *ngIf="preselectedManagementCompany.id">
+                <tr *ngIf="managementCompanies && preselectedManagementCompany.id">
                     <td>{{managementCompanies[preselectedManagementCompany.id]?.companyName}}</td>
                     <td>
                         <label class="switch">
-                            <input [attr.disabled]="submitted" type="checkbox" name="registered" class="form-control" [(ngModel)]="preselectedManagementCompany.registered" [ngModelOptions]="{standalone: true}" (ngModelChange)="onRegisteredChange()">
+                            <input [attr.disabled]="submitted ? 'true' : null" type="checkbox" name="registered" class="form-control" [(ngModel)]="preselectedManagementCompany.registered" [ngModelOptions]="{standalone: true}" (ngModelChange)="onRegisteredChange()">
                             <span class="slider round" data-yes="YES" data-no="NO"></span>
                         </label>
                     </td>
