@@ -317,11 +317,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         WebElement targetShare = (driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/button")));
         try {
-            scrollElementIntoViewById("product-dashboard-undefined-0-draftType");
+            scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/div");
         }catch (Exception e){
             fail(e.getMessage());
         }
-        Thread.sleep(2000);
+        Thread.sleep(1000);
         try {
             targetShare.click();
             WebElement shareNameField = (driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
