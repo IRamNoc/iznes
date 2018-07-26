@@ -26,7 +26,7 @@ import { ReportingService } from '@setl/core-balances/reporting.service';
 @Component({
     selector: 'app-investor-fund-list',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

@@ -38,7 +38,7 @@ interface ClientTxViewListItem {
 @Component({
     selector: 'app-ofi-tax-report',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

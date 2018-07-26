@@ -25,7 +25,7 @@ enum Statuses {
 @Component({
     selector: 'app-waiting-approval',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {

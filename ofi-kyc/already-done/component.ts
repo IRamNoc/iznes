@@ -15,7 +15,7 @@ import {immutableHelper} from '@setl/utils';
 @Component({
     selector: 'app-ofi-kyc-already-done',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiKycAlreadyDoneComponent implements OnInit, OnDestroy {
 

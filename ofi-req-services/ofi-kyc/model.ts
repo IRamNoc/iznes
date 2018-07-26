@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 // Invitation
 interface Invitation {
@@ -22,7 +22,7 @@ export interface SendInvestInvitationRequestBody extends MemberNodeMessageBody {
     investors: Array<Invitation>;
 }
 
-export interface UseTokenRequestBody extends MemberNodeMessageBody{
+export interface UseTokenRequestBody extends MemberNodeMessageBody {
     token: string,
     invitationToken: string
 }
@@ -87,7 +87,7 @@ export interface SaveKycDocumentRequestData {
     hash: string;
     type: string;
     common: boolean;
-    'default': number;
+    isDefault: number;
 }
 
 export interface GetKycDocumentRequestData {
@@ -170,7 +170,7 @@ export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
     kycID: number;
 }
 
-export interface createKYCDraftRequestData{
+export interface createKYCDraftRequestData {
     inviteToken: string;
     managementCompanyID: number;
     investorWalletID: number;
@@ -178,7 +178,7 @@ export interface createKYCDraftRequestData{
     alreadyCompleted: number;
 }
 
-export interface createKYCDraftMessageBody extends MemberNodeMessageBody{
+export interface createKYCDraftMessageBody extends MemberNodeMessageBody {
     token: string;
     inviteToken: string;
     managementCompanyID: number;
@@ -199,7 +199,7 @@ export interface SaveKycDocumentRequestBody extends MemberNodeMessageBody {
     hash: string;
     type: string;
     common: boolean;
-    'default': number;
+    isDefault: number;
 }
 
 export interface GetKycDocumentRequestBody extends MemberNodeMessageBody {
