@@ -32,7 +32,7 @@ import { ToasterService } from 'angular2-toaster';
 
 @Component({
     selector: 'ofi-sub-portfolio',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
