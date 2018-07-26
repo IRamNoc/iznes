@@ -1,5 +1,5 @@
 <form [formGroup]="form" class="well">
-    <div class="row panel-header">
+    <div class="row panel-header clr-align-items-center">
         <div class="col-sm-9">
             <a href="#" (click)="open = !open; $event.preventDefault();">
                 <i class="fa fa-chevron-right" [class.rotate]="open"></i>
@@ -108,7 +108,7 @@
 
             <div class="row">
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="balanceSheetTotal">{{'Net Revenues or Net Income' | translate}}</label>
+                    <label class="control-label" for="netRevenuesNetIncome">{{'Net Revenues or Net Income' | translate}}</label>
                     <input type="number" id="netRevenuesNetIncome" formControlName="netRevenuesNetIncome" placeholder="{{'€' | translate}}">
                     <span class="field-error" *ngIf="hasError('netRevenuesNetIncome')">{{'Field is required' | translate}}</span>
                 </div>

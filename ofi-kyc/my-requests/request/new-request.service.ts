@@ -100,6 +100,19 @@ export class NewRequestService {
         return this.saveContext;
     }
 
+    getContext(amcs){
+        amcs = map(amcs, 'kycID').sort();
+
+        let context = amcs.reduce((acc, curr) => {
+            return acc + curr;
+        }, '');
+
+
+        this.context = context;
+
+        return context;
+    }
+
     extractConfigData(configValue) {
         return configValue.map((singleValue, index) => {
             return {
@@ -306,9 +319,9 @@ export class NewRequestService {
         const investmentNature = fb.group({
             kycID: '',
             financialAssetManagementMethod: fb.group({
-                internalManagement: '',
-                withAdviceOfAuthorisedThirdPartyInstitution: '',
-                mandateEntrustedToManagers: ''
+                    internalManagement: '',
+                    withAdviceOfAuthorisedThirdPartyInstitution: '',
+                    mandateEntrustedToManagers: ''
             }, {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
@@ -353,16 +366,16 @@ export class NewRequestService {
 
         return fb.group({
             common: fb.group({
-                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc'),
+                kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc', true),
                 kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc'),
                 kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc'),
                 kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc'),
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc'),
-                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc'),
+                kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
             }),
             listedCompany: fb.group({
-                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc'),
-                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc'),
+                kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
+                kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc'),
             }),
             other: fb.group({
@@ -375,18 +388,24 @@ export class NewRequestService {
         });
     }
 
-    createDocumentFormGroup(name) {
-        return this.formBuilder.group({
+    createDocumentFormGroup(name, optional = false) {
+        let group : any = {
             name: '',
             kycDocumentID: '',
-            hash: ['', Validators.required],
             type: name,
             common: 0,
             isDefault: 0
-        });
+        };
+
+        if(optional){
+            group.hash = '';
+        } else{
+            group.hash = ['', Validators.required];
+        }
+        return this.formBuilder.group(group);
     }
 
-    createInvestmentObjective(id) {
+    createInvestmentObjective(id): FormGroup {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
             performanceProfile: this.formBuilder.group(this.transformToForm(this.performanceProfileList), {
@@ -572,7 +591,8 @@ export class NewRequestService {
             inviteToken: choice.invitationToken ? choice.invitationToken : '',
             managementCompanyID: choice.id,
             investorWalletID: connectedWallet || 0,
-            kycStatus: choice.registered ? 1 : 0
+            kycStatus: 0,
+            alreadyCompleted: choice.registered ? 1 : 0
         });
     }
 

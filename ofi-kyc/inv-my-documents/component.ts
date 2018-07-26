@@ -1,17 +1,28 @@
 /* Core/Angular imports. */
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, Inject, OnInit, ViewChild, AfterViewInit, ElementRef} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    Inject,
+    OnInit,
+    ViewChild,
+    AfterViewInit,
+    ElementRef
+} from '@angular/core';
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
-import {Observable} from 'rxjs/Observable';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MultilingualService} from '@setl/multilingual';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
+import { Observable } from 'rxjs/Observable';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MultilingualService } from '@setl/multilingual';
 
 import * as _ from 'lodash';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { ToasterService } from 'angular2-toaster';
 import { FileService } from '@setl/core-req-services/file/file.service';
-import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service'
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { ofiClearRequestedMyDocuments } from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -22,7 +33,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     public kycEnums;
 
-    public uploadMyDocumentsForm:FormGroup;
+    public uploadMyDocumentsForm: FormGroup;
     public connectedWalletId: number;
     public subscriptions: Array<any> = [];
 
@@ -119,7 +130,10 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     requestedOfiInvMyDocs(requested): void {
         if (!requested) {
-            OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {walletID: this.connectedWalletId, kycID: 0});
+            OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {
+                walletID: this.connectedWalletId,
+                kycID: 0
+            });
         }
     }
 
@@ -162,6 +176,9 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                     };
                 }
             }
+            if (this.filesFromRedux.length == 0 && this.allUploadsFiles[i].common !== 1) {
+                allChecked = false;
+            }
         }
         if (allChecked) {
             this.uploadMyDocumentsForm.get('shareAll').patchValue(true, { emitEvent: false });
@@ -173,8 +190,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     assignAllToggles() {
-        for (let i=0; i < this.nbUploads; i++) {
-            this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).patchValue(this.uploadMyDocumentsForm.get('shareAll').value, { emitEvent: false });
+        for (let i = 0; i < this.nbUploads; i++) {
+            this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).patchValue(this.uploadMyDocumentsForm.get('shareAll').value, { emitEvent: false });
         }
         for (let i in this.allUploadsFiles) {
             this.allUploadsFiles[i].common = (this.uploadMyDocumentsForm.get('shareAll').value) ? 1 : 0;
@@ -185,15 +202,15 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     checkToggles(fileRelated, value) {
         let isAllChecked = true;
-        for (let i=0; i < this.nbUploads; i++) {
-            if (this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).value === false || this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).value === 0) {
+        for (let i = 0; i < this.nbUploads; i++) {
+            if (this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).value === false || this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).value === 0) {
                 isAllChecked = false;
             }
         }
         if (isAllChecked) {
             if (this.uploadMyDocumentsForm.get('shareAll').value === true || this.uploadMyDocumentsForm.get('shareAll').value === 1) {
-                for (let i=0; i < this.nbUploads; i++) {
-                    this.uploadMyDocumentsForm.get('shareUpload' + (i+1)).patchValue(true, { emitEvent: false });
+                for (let i = 0; i < this.nbUploads; i++) {
+                    this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).patchValue(true, { emitEvent: false });
                 }
                 for (let i in this.allUploadsFiles) {
                     this.allUploadsFiles[i].common = 1;
@@ -299,7 +316,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     saveFileInDatabase(fileRelated) {
-            const asyncTaskPipe = this._ofiKycService.saveKycDocument(
+        const asyncTaskPipe = this._ofiKycService.saveKycDocument(
             {
                 walletID: this.connectedWalletId,
                 name: this.allUploadsFiles[fileRelated].name,
@@ -313,7 +330,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             asyncTaskPipe,
             (data) => {
                 // success
-
+                this.ngRedux.dispatch(ofiClearRequestedMyDocuments());
             },
             (data) => {
                 console.log('error: ', data);

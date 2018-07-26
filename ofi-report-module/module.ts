@@ -5,6 +5,7 @@ import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DpDatePickerModule} from '@setl/utils';
 import {RouterModule} from '@angular/router';
+import {NgxChartsModule} from '@swimlane/ngx-charts';
 
 // Local components
 import {OfiTaxReportComponent} from './ofi-tax-report/component';
@@ -45,6 +46,7 @@ export class TxTypePipe implements PipeTransform {
         SetlDirectivesModule,
         MultilingualModule,
         RouterModule,
+        NgxChartsModule,
     ],
     exports: [],
     declarations: [

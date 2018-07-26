@@ -1,0 +1,75 @@
+.wrapper.wrapper-content {
+    padding: 0px 20px;
+}
+
+.well .row.panel-header {
+    background-color: rgba(0, 0, 0, .02);
+}
+.well {
+    position: relative;
+    margin-bottom: 40px;
+}
+.text-red{
+    color: #d9534f;
+}
+.well:nth-last-child(n+2):after {
+    position: absolute;
+    content: '';
+    border: 1px dashed #e6e6e6;
+    height: 1px;
+    margin-top: 30px;
+    display: block;
+    width: 100%;
+}
+
+#blocStatus{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 15px;
+    /*modal = 1040*/
+    z-index: 1030;
+    background-color: rgba(249,249,249,.6);
+    border-radius: 6px;
+    margin: 10px;
+    transition: all ease-in-out .5s;
+    opacity: 0;
+    border: 3px solid white;
+}
+#blocStatus span{
+    font-size: 1.3em;
+    font-weight: 900;
+}
+#blocStatus i{
+    font-size: 2.5em;
+    margin: -5px 0 0 5px;
+}
+#blocStatus small{
+    font-size: 0.6em;
+    font-weight: 500;
+}
+#blocStatus table tr:nth-child(odd) {
+    background-color: transparent!important;
+}
+#debug{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /*modal = 1040*/
+    z-index: 1030;
+    background-color: rgba(0,0,0,.6);
+    border: 3px solid lightgrey;
+    border-radius: 6px;
+    margin: 20px;
+    padding: 20px;
+    width: 190px;
+    color: white;
+    font-weight: bold;
+}
+#debug button {
+    margin: 4px 0;
+}
+
+.modal-body {
+    overflow-y: auto!important;
+}

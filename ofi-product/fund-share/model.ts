@@ -13,8 +13,8 @@ import { ShareProfileMandatory, ShareProfileOptional } from './models/profile';
 import { ShareRepresentationOptional } from './models/representation';
 import { ShareSolvencyOptional } from './models/solvency';
 import { ShareTaxationOptional } from './models/taxation';
-import { ShareFund } from './models/fund';
-import { ShareUmbrellaFund } from './models/umbrella';
+import { ShareFund, ShareFundHolidayManagement, ShareFundOptionnal } from './models/fund';
+import { ShareUmbrellaFund, ShareUmbrellaFundOptionnal } from './models/umbrella';
 import { ShareDocumentsMandatory, ShareDocumentsOptional } from './models/documents';
 import { FundShareTradeCycleModel } from './form/trade-cycle/model';
 import * as PC from '../productConfig';
@@ -29,7 +29,10 @@ export class FundShare {
     isProduction: boolean;
 
     fund = new ShareFund();
+    fundHoliday = new ShareFundHolidayManagement();
+    fundOptionnal = new ShareFundOptionnal();
     umbrella = new ShareUmbrellaFund();
+    umbrellaOptionnal = new ShareUmbrellaFundOptionnal();
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,
@@ -71,7 +74,8 @@ export class FundShare {
         optional: new ShareDocumentsOptional(),
     };
 
-    constructor() {}
+    constructor() {
+    }
 
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
@@ -80,9 +84,10 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {
+    getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
+            draft: draft,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
             fundShareID: this.fundShareId,
             fundID: this.fundID,
@@ -323,6 +328,8 @@ export class FundShare {
 
     setFund(fund: any): void {
         this.umbrellaFundID = fund.umbrellaFundID;
+        this.fundID = fund.fundID;
+
         this.fund.name.preset = fund.fundName;
         this.fund.aumFund.preset = fund.fundName;
         this.fund.aumFundDate.preset = fund.fundName;
@@ -349,13 +356,104 @@ export class FundShare {
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
         this.fund.isDedicatedFund.preset = fund.isDedicatedFund;
         this.setListItemPreset(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
+
+        this.fundHoliday.useDefaultHolidayMgmt.preset = fund.useDefaultHolidayMgmt;
+        this.fundHoliday.holidayMgmtConfig.preset = JSON.parse(fund.holidayMgmtConfig);
+
+        this.fundOptionnal.globalItermediaryIdentification.preset = fund.globalItermediaryIdentification;
+        this.setListItemPreset(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
+        this.setListItemPresetMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
+        this.setListItemPreset(this.fundOptionnal.auditor, fund.auditor);
+        this.setListItemPreset(this.fundOptionnal.taxAuditor, fund.taxAuditor);
+        this.setListItemPreset(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
+        this.fundOptionnal.directors.preset = fund.directors;
+        this.fundOptionnal.hasEmbeddedDirective.preset = fund.hasEmbeddedDirective;
+        this.fundOptionnal.hasCapitalPreservation.preset = fund.hasCapitalPreservation;
+        this.fundOptionnal.capitalPreservationLevel.preset = fund.capitalPreservationLevel;
+        this.setListItemPreset(this.fundOptionnal.capitalPreservationPeriod, fund.capitalPreservationPeriod);
+        this.fundOptionnal.hasCppi.preset = fund.hasCppi;
+        this.fundOptionnal.cppiMultiplier.preset = fund.cppiMultiplier;
+        this.fundOptionnal.hasHedgeFundStrategy.preset = fund.hasHedgeFundStrategy;
+        this.fundOptionnal.isLeveraged.preset = fund.isLeveraged;
+        this.fundOptionnal.has130Or30Strategy.preset = fund.has130Or30Strategy;
+        this.fundOptionnal.isFundTargetingEos.preset = fund.isFundTargetingEos;
+        this.fundOptionnal.isFundTargetingSri.preset = fund.isFundTargetingSri;
+        this.fundOptionnal.isPassiveFund.preset = fund.isPassiveFund;
+        this.fundOptionnal.hasSecurityiesLending.preset = fund.hasSecurityiesLending;
+        this.fundOptionnal.hasSwap.preset = fund.hasSwap;
+        this.fundOptionnal.hasDurationHedge.preset = fund.hasDurationHedge;
+        this.fundOptionnal.internalReference.preset = fund.internalReference;
+        this.fundOptionnal.additionnalNotes.preset = fund.additionnalNotes;
+
+    }
+
+    updateFund(fund: any, umbrella: any): void {
+        this.umbrellaFundID = fund.umbrellaFundID;
+        this.fundID = fund.fundID;
+        this.fund.name.control.setValue(fund.fundName);
+        this.fund.aumFund.control.setValue(fund.fundName);
+        this.fund.aumFundDate.control.setValue(fund.fundName);
+        this.fund.LEI.control.setValue(fund.legalEntityIdentifier);
+        this.fund.fundRegisteredOfficeName.control.setValue(fund.registerOffice);
+        this.fund.fundRegisteredOfficeAddress.control.setValue(fund.registerOfficeAddress);
+        this.setListItemValue(this.fund.domicile, fund.domicile);
+        this.fund.isEUDirectiveRelevant.control.setValue(fund.isEuDirective);
+        this.setListItemValue(this.fund.legalForm, fund.legalForm);
+        this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
+        this.setListItemValue(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
+        this.fund.creationDate.control.setValue(fund.fundCreationDate);
+        this.fund.launchDate.control.setValue(fund.fundLaunchate);
+        this.setListItemValue(this.fund.currency, fund.fundCurrency);
+        this.fund.openOrCloseEnded.control.setValue(fund.openOrCloseEnded);
+        this.fund.fiscalYearEnd.control.setValue(fund.fiscalYearEnd);
+        this.fund.isFundOfFunds.control.setValue(fund.isFundOfFund);
+        this.setListItemValue(this.fund.managementCompany, fund.managementCompanyID);
+        this.setListItemValue(this.fund.fundAdministrator, fund.fundAdministrator);
+        this.setListItemValue(this.fund.custodianBank, fund.custodianBank);
+        this.setListItemValue(this.fund.investmentManager, fund.investmentManager);
+        this.setListItemValueMultiple(this.fund.principalPromoter, fund.principalPromoter);
+        this.setListItemValueMultiple(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemValue(this.fund.fundManagers, fund.fundManagers);
+        this.fund.isDedicatedFund.control.setValue(fund.isDedicatedFund);
+        this.setListItemValue(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
+
+        this.fundHoliday.useDefaultHolidayMgmt.control.setValue(fund.useDefaultHolidayMgmt === '1');
+        this.fundHoliday.holidayMgmtConfig.control.setValue(JSON.parse(fund.holidayMgmtConfig));
+
+        this.fundOptionnal.globalItermediaryIdentification.control.setValue(fund.globalItermediaryIdentification);
+        this.setListItemValue(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
+        this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
+        this.setListItemValue(this.fundOptionnal.auditor, fund.auditor);
+        this.setListItemValue(this.fundOptionnal.taxAuditor, fund.taxAuditor);
+        this.setListItemValue(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
+        this.fundOptionnal.directors.control.setValue(fund.directors);
+        this.fundOptionnal.hasEmbeddedDirective.control.setValue(fund.hasEmbeddedDirective);
+        this.fundOptionnal.hasCapitalPreservation.control.setValue(fund.hasCapitalPreservation);
+        this.fundOptionnal.capitalPreservationLevel.control.setValue(fund.capitalPreservationLevel);
+        this.setListItemValue(this.fundOptionnal.capitalPreservationPeriod, fund.capitalPreservationPeriod);
+        this.fundOptionnal.hasCppi.control.setValue(fund.hasCppi);
+        this.fundOptionnal.cppiMultiplier.control.setValue(fund.cppiMultiplier);
+        this.fundOptionnal.hasHedgeFundStrategy.control.setValue(fund.hasHedgeFundStrategy);
+        this.fundOptionnal.isLeveraged.control.setValue(fund.isLeveraged);
+        this.fundOptionnal.has130Or30Strategy.control.setValue(fund.has130Or30Strategy);
+        this.fundOptionnal.isFundTargetingEos.control.setValue(fund.isFundTargetingEos);
+        this.fundOptionnal.isFundTargetingSri.control.setValue(fund.isFundTargetingSri);
+        this.fundOptionnal.isPassiveFund.control.setValue(fund.isPassiveFund);
+        this.fundOptionnal.hasSecurityiesLending.control.setValue(fund.hasSecurityiesLending);
+        this.fundOptionnal.hasSwap.control.setValue(fund.hasSwap);
+        this.fundOptionnal.hasDurationHedge.control.setValue(fund.hasDurationHedge);
+        this.fundOptionnal.internalReference.control.setValue(fund.internalReference);
+        this.fundOptionnal.additionnalNotes.control.setValue(fund.additionnalNotes);
+
+        this.updateUmbrella(umbrella);
+
     }
 
     setUmbrellaFund(umbrellaFund: any): void {
         this.umbrella.umbrellaFundName.preset = umbrellaFund.umbrellaFundName;
+        this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
         this.umbrella.registerOffice.preset = umbrellaFund.registerOffice;
         this.umbrella.registerOfficeAddress.preset = umbrellaFund.registerOfficeAddress;
-        this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
         this.setListItemPreset(this.umbrella.domicile, umbrellaFund.domicile);
         this.umbrella.umbrellaFundCreationDate.preset = umbrellaFund.umbrellaFundCreationDate;
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
@@ -363,6 +461,56 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
         this.setListItemPresetMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
         this.setListItemPresetMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+
+        this.umbrellaOptionnal.giin.preset = umbrellaFund.giin;
+        this.setListItemPreset(
+            this.umbrellaOptionnal.delegatedManagementCompanyID,
+            umbrellaFund.delegatedManagementCompanyID,
+        );
+        this.setListItemPreset(this.umbrellaOptionnal.auditorID, umbrellaFund.auditorID);
+        this.setListItemPreset(this.umbrellaOptionnal.taxAuditorID, umbrellaFund.taxAuditorID);
+        this.setListItemPresetMultiple(this.umbrellaOptionnal.principlePromoterID, umbrellaFund.principlePromoterID);
+        this.setListItemPreset(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
+        this.umbrellaOptionnal.directors.preset = umbrellaFund.directors;
+        this.umbrellaOptionnal.internalReference.preset = umbrellaFund.internalReference;
+        this.umbrellaOptionnal.additionnalNotes.preset = umbrellaFund.additionnalNotes;
+    }
+
+    updateUmbrella(umbrellaFund?: any) {
+        if (!umbrellaFund) {
+            this.umbrellaFundID = null;
+            Object.keys(this.umbrella).forEach((key) => {
+                this.umbrella[key].control.reset();
+            });
+            Object.keys(this.umbrellaOptionnal).forEach((key) => {
+                this.umbrellaOptionnal[key].control.reset();
+            });
+            return;
+        }
+        this.umbrella.umbrellaFundName.control.setValue(umbrellaFund.umbrellaFundName);
+        this.umbrella.legalEntityIdentifier.control.setValue(umbrellaFund.legalEntityIdentifier);
+        this.umbrella.registerOffice.control.setValue(umbrellaFund.registerOffice);
+        this.umbrella.registerOfficeAddress.control.setValue(umbrellaFund.registerOfficeAddress);
+        this.setListItemValue(this.umbrella.domicile, umbrellaFund.domicile);
+        this.umbrella.umbrellaFundCreationDate.control.setValue(umbrellaFund.umbrellaFundCreationDate);
+        this.setListItemValue(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
+        this.setListItemValue(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
+        this.setListItemValue(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
+        this.setListItemValueMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
+        this.setListItemValueMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+
+        this.umbrellaOptionnal.giin.control.setValue(umbrellaFund.giin);
+        this.setListItemValue(
+            this.umbrellaOptionnal.delegatedManagementCompanyID,
+            umbrellaFund.delegatedManagementCompanyID,
+        );
+        this.setListItemValue(this.umbrellaOptionnal.auditorID, umbrellaFund.auditorID);
+        this.setListItemValue(this.umbrellaOptionnal.taxAuditorID, umbrellaFund.taxAuditorID);
+        this.setListItemValueMultiple(this.umbrellaOptionnal.principlePromoterID, umbrellaFund.principlePromoterID);
+        this.setListItemValue(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
+        this.umbrellaOptionnal.directors.control.setValue(umbrellaFund.directors);
+        this.umbrellaOptionnal.internalReference.control.setValue(umbrellaFund.internalReference);
+        this.umbrellaOptionnal.additionnalNotes.control.setValue(umbrellaFund.additionnalNotes);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
@@ -429,12 +577,39 @@ export class FundShare {
         }).filter(d => d !== null);
     }
 
+    private setListItemValue(field: FormItem, value: any): void {
+        if (!value) {
+            field.control.setValue([]);
+            return;
+        }
+        field.control.setValue([_.find(field.listItems, (item) => {
+            return item.id === value;
+        })]);
+    }
+
+    private setListItemValueMultiple(field: FormItem, value: number[]): void {
+        if (!value || !value.length) {
+            field.control.setValue([]);
+            return;
+        }
+        const newValue = value
+            .map((id: number) => {
+                const newItem = _.find(field.listItems, { id });
+                if (!newItem) {
+                    return null;
+                }
+                return newItem;
+            })
+            .filter(d => d !== null);
+        field.control.setValue(newValue);
+    }
+
     private setFeederPreset(value: any): void {
         const preset = (!value || value === 0) ?
             [this.keyFacts.mandatory.feeder.listItems[0]] :
-        [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
-            return item.id == value;
-        })];
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
 
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
     }
@@ -446,11 +621,13 @@ export class FundShare {
     }
 
     private isStatusMaster(): boolean {
+        if (!this.keyFacts.mandatory.status.value()) return null;
+
         return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
-        if (parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (!!this.keyFacts.mandatory.status.value() && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;
@@ -459,7 +636,6 @@ export class FundShare {
 
     private getSelectValue(formItem: FormItem): any {
         const rawValue = formItem.value();
-
         return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
 }

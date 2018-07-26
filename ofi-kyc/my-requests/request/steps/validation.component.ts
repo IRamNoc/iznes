@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, OnDestroy} from '@angular/core';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {Router} from '@angular/router';
 import {Subject, combineLatest} from 'rxjs';
 import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
@@ -13,6 +13,7 @@ import {NewRequestService, configDate} from '../new-request.service';
 import {ValidationService} from './validation.service';
 import {DocumentsService} from './documents.service';
 import {steps} from "../../requests.config";
+import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
 
 @Component({
     selector: 'kyc-step-validation',
@@ -39,7 +40,8 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         private alerts: AlertsService,
         private router: Router,
         private persistService: PersistService,
-        private documentsService: DocumentsService
+        private documentsService: DocumentsService,
+        private ngRedux: NgRedux<any>
     ) {
     }
 
@@ -154,7 +156,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         `).pipe(
             take(1)
         ).subscribe(() => {
-            this.router.navigate(['my-requests', 'list']);
+            this.router.navigate(['my-requests', 'list']).then(() => {
+                this.ngRedux.dispatch(ClearMyKycListRequested());
+            });
         });
     }
 
@@ -210,7 +214,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                             if(formData.electronicSignatureDocumentID){
                                 this.documentsService.getDocument(formData.electronicSignatureDocumentID).then(document => {
                                     let control = this.form.get('electronicSignatureDocument');
-                                    control.patchValue(document);
+                                    if(document){
+                                        control.patchValue(document);
+                                    }
                                 });
                             }
                         }

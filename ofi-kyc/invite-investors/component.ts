@@ -20,7 +20,7 @@ const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+")
 
 @Component({
     selector: 'app-invite-investors',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush
 })

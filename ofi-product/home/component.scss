@@ -1,21 +1,28 @@
 .subtitle {
-  margin: 0 20px;
+    margin: 0 20px;
 }
 
 .slider {
-  top: inherit !important;
+    top: inherit !important;
 }
 
 .fakeLink {
-  color: #007cbb;
-  cursor: pointer;
+    color: #007cbb;
+    cursor: pointer;
 
-  &:hover{
-    text-decoration: underline;
-  }
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 label.switch {
-  position: absolute !important;
-  margin: 4px !important;
+    position: absolute !important;
+    margin: 4px !important;
+}
+
+.btn-margin {
+    margin-right: 10px;
+    background-color: #56a4df;
+    color: #fff;
+    border-color: #56a4df;
 }

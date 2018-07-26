@@ -370,7 +370,7 @@
                                 <b>{{'Number of units' | translate}}</b>
                             </label>
                             <div>
-                                <span class="readonly-field">{{sharesNbUnits}}</span>
+                                <span class="readonly-field">{{sharesNbUnits | moneyValue:5}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-3">
@@ -378,7 +378,7 @@
                                 <b>{{'Latest NAV' | translate}}</b>
                             </label>
                             <div>
-                                <span class="readonly-field">{{sharesLatestNAV}}</span>
+                                <span class="readonly-field">{{sharesLatestNAV | moneyValue:2}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-2">
@@ -399,6 +399,7 @@
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
 
@@ -406,6 +407,7 @@
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.quantity | moneyValue:4}}</clr-dg-cell>
                     <clr-dg-cell>{{item.amount | moneyValue:5}}</clr-dg-cell>
                     <clr-dg-cell>{{item.ratio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>

@@ -59,6 +59,7 @@ function formatFundDataResponse(rawFundData: Array<any>): Array<FundDetail> {
         function (result, item) {
             result[item.get('fundID')] = {
                 fundID: item.get('fundID'),
+                draft: item.get('draft'),
                 fundName: item.get('fundName'),
                 fundProspectus: item.get('fundProspectus'),
                 fundReport: item.get('fundReport'),
@@ -138,22 +139,25 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
     const iznFundList = data.reduce((sum, fund) => {
         const fundData: IznesFundDetail = {
             ..._.omit(fund, ['Status']),
+            draft: fund.draft,
+            draftUser: fund.draftUser,
+            draftDate: fund.draftDate,
             isFundStructure: fund.isFundStructure !== null ? fund.isFundStructure.toString() : null,
             homeCountryLegalType: fund.homeCountryLegalType !== null ? fund.homeCountryLegalType.toString() : null,
-            isEuDirective: fund.isEuDirective.toString(),
+            isEuDirective: fund.isEuDirective !== null ? fund.isEuDirective.toString() : null,
             typeOfEuDirective: fund.typeOfEuDirective !== null ? fund.typeOfEuDirective.toString() : null,
             UcitsVersion: fund.UcitsVersion !== null ? fund.UcitsVersion.toString() : null,
-            legalForm: fund.legalForm.toString(),
+            legalForm: fund.legalForm !== null ? fund.legalForm.toString() : null,
             nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm !== null ? fund.nationalNomenclatureOfLegalForm.toString() : null,
             fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
             fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-            openOrCloseEnded: fund.openOrCloseEnded.toString(),
+            openOrCloseEnded: fund.openOrCloseEnded !== null ? fund.openOrCloseEnded.toString() : null,
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
-            isFundOfFund: fund.isFundOfFund.toString(),
+            isFundOfFund: fund.isFundOfFund !== null ? fund.isFundOfFund.toString() : null,
             managementCompanyID: fund.managementCompanyID,
             principalPromoter: JSON.parse(fund.principalPromoter),
             payingAgent: JSON.parse(fund.payingAgent),
-            isDedicatedFund: fund.isDedicatedFund.toString(),
+            isDedicatedFund: fund.isDedicatedFund !== null ? fund.isDedicatedFund.toString() : null,
 
             investmentAdvisor: JSON.parse(fund.investmentAdvisor),
             hasEmbeddedDirective: fund.hasEmbeddedDirective !== null ? fund.hasEmbeddedDirective.toString() : null,
@@ -175,7 +179,7 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
             ...sum,
             [fund.fundID]: fundData,
         };
-    },                              {});
+    }, {});
 
     return {
         ...state,

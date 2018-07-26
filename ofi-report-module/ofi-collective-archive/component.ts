@@ -16,7 +16,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-ofi-pnl-report',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

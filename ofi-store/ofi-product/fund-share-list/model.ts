@@ -15,6 +15,9 @@ export interface AllFundShareDetail {
 
 export interface IznesShareDetail {
     fundShareID: number;
+    draft: string;
+    draftUser?: string;
+    draftDate?: string;
     fundShareName: string;
     fundID: number;
     isin: string;

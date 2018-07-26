@@ -43,15 +43,36 @@
                 <clr-dg-column [clrDgField]="column.dataSource" *ngFor="let column of panel.columns">{{column.label}}
 
                 </clr-dg-column>
+                <clr-dg-column *ngIf="panel.buttons">Actions</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}" (click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
-                    <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+                <ng-container *ngIf="!panel.buttons">
+                    <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}" (click)="goToView(panel.link, row[panel.linkIdent])" clrDgRowClickable>
+                        <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
                         <span *ngIf="dataCol.dataSource == panel.columnLink" id="{{'product-dashboard-link-' + panel.linkIdent + '-' + i }}">
                             {{row[dataCol.dataSource]}}
                         </span>
-                        <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
-                    </clr-dg-cell>
-                </clr-dg-row>
+                            <span *ngIf="dataCol.dataSource != panel.columnLink">{{row[dataCol.dataSource]}}</span>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </ng-container>
+
+                <ng-container *ngIf="panel.buttons">
+                    <clr-dg-row *clrDgItems="let row of panel.data; index as i" id="{{'product-dashboard-' + panel.title + row[panel.linkIdent]}}">
+                        <clr-dg-cell *ngFor="let dataCol of panel.columns" data-id="{{row.id}}" id="{{'product-dashboard-' + panel.linkIdent + '-' + i + '-' + dataCol.dataSource }}">
+                            {{row[dataCol.dataSource]}}
+                        </clr-dg-cell>
+                        <clr-dg-cell>
+                            <div class="btn-group btn-sm">
+                                <button
+                                    *ngFor="let rowBtn of panel.buttons"
+                                    class="{{rowBtn['class']}}"
+                                    (click)="varBtn(rowBtn['click'], row.draftType, row.draftID)">
+                                    <i class="{{rowBtn['iconClass']}}"></i> {{rowBtn['text']}}
+                                </button>
+                            </div>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </ng-container>
 
                 <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
 

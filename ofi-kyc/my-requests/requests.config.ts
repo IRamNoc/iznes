@@ -358,7 +358,7 @@ export const legalStatusList = [
         "text": "SICAV"
     },
     {
-        "id": "FinancialInstitutionauthorisedorregulatedunderEUornationallawofamemberstate",
+        "id": "autorisedRegulatedUnderEUorState",
         "text": "Financial Institution authorised or regulated under EU or national law of a member state"
     },
     {
@@ -410,7 +410,7 @@ export const ownAccountInvestorList = [
         "text": "Unions/Political Parties"
     },
     {
-        "id": "Cultsandreligiousassociationspresentingaspecificriskradical",
+        "id": "cultsReligiousAssociations",
         "text": "Cults and religious associations presenting a specific risk (radical...)"
     },
     {
@@ -501,11 +501,11 @@ export const ownAccountInvestorList = [
 
 export const investorOnBehalfList = [
     {
-        "id": "ManagementCompanyInvestmentserviceprovidermanagingaUCITS",
+        "id": "UCITS",
         "text": "Management Company / Investment service provider managing a UCITS"
     },
     {
-        "id": "ManagementCompanyInvestmentserviceprovidermanagingamandate",
+        "id": "mandate",
         "text": "Management Company / Investment service provider managing a mandate"
     }
 ];
@@ -539,19 +539,19 @@ export const geographicalOriginTypeList = [
 export const financialAssetsInvestedList = [
     {
         "id": "0to50millions",
-        "text": "0 to 50 millions €"
+        "text": "0 to 50 million €"
     },
     {
         "id": "50to100millions",
-        "text": "50 to 100 millions €"
+        "text": "50 to 100 million €"
     },
     {
         "id": "100to500millions",
-        "text": "100 to 500 millions €"
+        "text": "100 to 500 million €"
     },
     {
         "id": "500millionsto1milliard",
-        "text": "500 millions to 1 milliard €"
+        "text": "500 million to 1 billion €"
     },
     {
         "id": "Beyond",
