@@ -1,15 +1,15 @@
-import {Component, OnInit, Input, OnDestroy, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy, Output, EventEmitter, ChangeDetectorRef} from '@angular/core';
 import {combineLatest, Subject} from 'rxjs';
-import {takeUntil, filter as rxFilter} from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
-import { select, NgRedux } from '@angular-redux/store';
-import { ActivatedRoute } from '@angular/router';
+import {takeUntil, filter as rxFilter, tap, map} from 'rxjs/operators';
+import {FormGroup} from '@angular/forms';
+import {select, NgRedux} from '@angular-redux/store';
+import {ActivatedRoute} from '@angular/router';
 import {isEmpty, isNil, keyBy, filter, reduce} from 'lodash';
 
-import { ClearMyKycListRequested } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { OfiManagementCompanyService } from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
-import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import { RequestsService } from '../../requests.service';
+import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import {RequestsService} from '../../requests.service';
 import {NewRequestService} from '../new-request.service';
 import {SelectAmcService} from './select-amc.service';
 
@@ -28,23 +28,18 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     connectedWallet;
 
     preselectedManagementCompany: any = {};
-
-    get filteredManagementCompanies() {
-        const id = this.preselectedManagementCompany.id;
-
-        if (id) {
-            return filter(this.managementCompaniesExtract, company => {
-                return company.id !== id;
-            });
-        }
-
-        return this.managementCompaniesExtract;
-    }
+    submitted = false;
 
     @Input() form: FormGroup;
+    @Input() set disabled(isDisabled){
+        if(isDisabled){
+            this.submitted = true;
+        }
+    }
     @Output() registered = new EventEmitter<boolean>();
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requestedKycList$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'requested']) requestedManagementCompanyList$;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) managementCompanyList$;
@@ -56,8 +51,21 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         private ofiKycService: OfiKycService,
         private ngRedux: NgRedux<any>,
         private route: ActivatedRoute,
-        private selectAmcService: SelectAmcService
+        private selectAmcService: SelectAmcService,
+        private changeDetectorRef: ChangeDetectorRef
     ) {
+    }
+
+    get filteredManagementCompanies() {
+        const id = this.preselectedManagementCompany.id;
+
+        if (id) {
+            return filter(this.managementCompaniesExtract, company => {
+                return company.id !== id;
+            });
+        }
+
+        return this.managementCompaniesExtract;
     }
 
     get selectedManagementCompanies() {
@@ -85,18 +93,33 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 this.getAssetManagementCompanies();
             });
 
-        combineLatest(this.managementCompanyList$, this.myKycList$)
+        let companyCombination$ = combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
                 rxFilter(([managementCompanies, kycList]) => {
-                    return managementCompanies && kycList;
+                    return !isEmpty(managementCompanies);
+                }),
+                tap(([managementCompanies, kycList]) => {
+                    this.managementCompanies = keyBy(managementCompanies, 'companyID');
                 }),
                 takeUntil(this.unsubscribe)
             )
-            .subscribe(([managementCompanies, kycList]) => {
-                this.managementCompanies = keyBy(managementCompanies, 'companyID');
+        ;
+
+        companyCombination$.subscribe(([managementCompanies, kycList]) => {
                 this.kycList = kycList;
                 this.managementCompaniesExtract = this.requestsService
                     .extractManagementCompanyData(managementCompanies, kycList);
+            })
+        ;
+
+        combineLatest(companyCombination$, this.requestedKycList$)
+            .pipe(
+                map(([company, kycs]) => kycs),
+                rxFilter((kycs : Array<any>) => !!kycs.length),
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(kycs => {
+                this.populateForm(kycs);
             })
         ;
 
@@ -106,7 +129,20 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
             )
             .subscribe(connectedWallet => {
                 this.connectedWallet = connectedWallet;
-            });
+            })
+        ;
+    }
+
+    populateForm(kycs){
+        let formValue = kycs.map(kyc => {
+            console.log('looking for', kyc.amcID);
+            return {
+                id : kyc.amcID,
+                text : this.managementCompanies[kyc.amcID].companyName
+            };
+        });
+
+        this.form.get('managementCompanies').setValue(formValue);
     }
 
     getQueryParams() {
@@ -116,6 +152,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 this.preselectedManagementCompany = {
                     id: parseInt(queryParams.amcID, 10),
                     invitationToken: queryParams.invitationToken,
+                    registered: false
                 };
                 this.disableValidators();
             }
@@ -138,7 +175,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     onRegisteredChange() {
-        let accumulator = this.preselectedManagementCompany ? this.preselectedManagementCompany.registered : false;
+        let accumulator = !isNil(this.preselectedManagementCompany.registered) ? this.preselectedManagementCompany.registered : true;
 
         let result = reduce(this.selectedManagementCompanies, (result, value) => {
             return result && value.registered;
@@ -150,7 +187,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     async handleFormSubmit($event) {
         $event.preventDefault();
 
-        if (!this.form.valid) {
+        if (!this.form.valid || this.submitted) {
             return;
         }
 
@@ -164,6 +201,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.newRequestService.storeCurrentKycs(ids);
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
+
+        this.submitted = true;
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnDestroy() {

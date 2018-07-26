@@ -100,6 +100,19 @@ export class NewRequestService {
         return this.saveContext;
     }
 
+    getContext(amcs){
+        amcs = map(amcs, 'kycID').sort();
+
+        let context = amcs.reduce((acc, curr) => {
+            return acc + curr;
+        }, '');
+
+
+        this.context = context;
+
+        return context;
+    }
+
     extractConfigData(configValue) {
         return configValue.map((singleValue, index) => {
             return {
@@ -578,7 +591,8 @@ export class NewRequestService {
             inviteToken: choice.invitationToken ? choice.invitationToken : '',
             managementCompanyID: choice.id,
             investorWalletID: connectedWallet || 0,
-            kycStatus: choice.registered ? 1 : 0
+            kycStatus: 0,
+            alreadyCompleted: choice.registered ? 1 : 0
         });
     }
 

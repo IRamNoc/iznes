@@ -43,13 +43,6 @@ export class MyRequestsGridComponent {
         let currentKyc = find(this.kycList, ['kycID', kycID]);
         let completedStep = currentKyc.completedStep;
         let extras = {};
-        if(completedStep){
-            extras = {
-                queryParams : {
-                    step : completedStep
-                }
-            };
-        }
 
         let grouped = groupBy(this.kycList, 'currentGroup');
         let currentGroup = grouped[currentKyc.currentGroup];
@@ -62,6 +55,15 @@ export class MyRequestsGridComponent {
                 completedStep : completedStep
             });
         });
+
+        if(completedStep){
+            extras = {
+                queryParams : {
+                    step : completedStep,
+                    completed : currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true)
+                }
+            };
+        }
 
         this.newRequestService.storeCurrentKycs(kycIDs);
 
