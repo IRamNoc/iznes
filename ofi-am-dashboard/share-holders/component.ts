@@ -37,7 +37,7 @@ interface SelectedItem {
 @Component({
     selector: 'am-share-holders',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

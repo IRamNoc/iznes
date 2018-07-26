@@ -29,6 +29,7 @@ interface SelectedItem {
     // need to remove once confirm it is not used.
     selector: 'am-share-holders-unused',
     templateUrl: './component.html',
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

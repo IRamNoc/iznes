@@ -23,7 +23,7 @@ import { Endpoints } from '../config';
 import { ConfirmationService } from '@setl/utils';
 
 @Component({
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

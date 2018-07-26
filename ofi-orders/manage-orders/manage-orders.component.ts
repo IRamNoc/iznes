@@ -64,7 +64,7 @@ interface SelectedItem {
 /* Decorator. */
 @Component({
     selector: 'app-manage-orders',
-    styleUrls: ['./manage-orders.component.css'],
+    styleUrls: ['./manage-orders.component.scss'],
     templateUrl: './manage-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
