@@ -110,26 +110,26 @@ export class OfiKycService {
         });
 
         this.informationAuditTrailList$
-            .takeUntil(this.unSubscribe)
-            .subscribe((list) => {
-                this.informationAuditTrailList = list;
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((list) => {
+            this.informationAuditTrailList = list;
+        });
 
         this.statusAuditTrailList$
-            .takeUntil(this.unSubscribe)
-            .subscribe((list) => {
-                this.statusAuditTrailList = list;
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((list) => {
+            this.statusAuditTrailList = list;
+        });
 
         this.statusAuditTrailRequested$
-            .takeUntil(this.unSubscribe)
-            .subscribe((b) => {
-                if (!b) {
-                    this.statusAuditTrailList.map((kycID) => {
-                        this.fetchStatusAuditByKycID(kycID);
-                    });
-                }
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((b) => {
+            if (!b) {
+                this.statusAuditTrailList.map((kycID) => {
+                    this.fetchStatusAuditByKycID(kycID);
+                });
+            }
+        });
     }
 
     /**
@@ -306,7 +306,7 @@ export class OfiKycService {
 
     static defaultRequestGetInvKycDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, getKycDocumentRequestData: GetKycDocumentRequestData) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({type: OFI_SET_REQUESTED_MY_DOCUMENTS,});
+        ngRedux.dispatch({ type: OFI_SET_REQUESTED_MY_DOCUMENTS, });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycDocuments(getKycDocumentRequestData);
@@ -482,12 +482,12 @@ export class OfiKycService {
         }
         this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$.pipe(
             takeUntil(this.unSubscribe))
-            .subscribe((d) => {
-                if (d) {
-                    return;
-                }
-                this.fetchInvitationsByUserAmCompany();
-            });
+        .subscribe((d) => {
+            if (d) {
+                return;
+            }
+            this.fetchInvitationsByUserAmCompany();
+        });
 
     }
 
@@ -685,7 +685,7 @@ export class OfiKycService {
             hash: _.get(requestData, 'hash', ''),
             type: _.get(requestData, 'type', ''),
             common: _.get(requestData, 'common', ''),
-            'default': _.get(requestData, 'default', 0),
+            isDefault: _.get(requestData, 'default', 0),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -712,6 +712,7 @@ export class OfiKycService {
             managementCompanyID: _.get(requestData, 'managementCompanyID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
+            alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

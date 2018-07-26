@@ -43,7 +43,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-nav',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

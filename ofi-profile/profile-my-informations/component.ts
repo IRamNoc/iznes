@@ -15,7 +15,7 @@ import { take } from 'rxjs/operators';
 @Component({
     selector: 'app-profile-my-informations',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiProfileMyInformationsComponent implements OnInit {
 

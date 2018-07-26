@@ -75,12 +75,10 @@ export class NewKycIdentificationComponent implements OnInit {
             .pipe(
                 takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
-                rxFilter((kyc: any) => {
-                    return kyc && kyc.completedStep
-                })
+                rxFilter((kyc: any) => (kyc && kyc.amcID))
             )
             .subscribe(kyc => {
-                if(steps[kyc.completedStep] < steps.identification){
+                if(!kyc.completedStep || (steps[kyc.completedStep] < steps.identification)){
                     this.persistForm();
                 }
             })

@@ -1,8 +1,9 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {select} from '@angular-redux/store';
+import {NgRedux, select} from '@angular-redux/store';
 import {find} from 'lodash';
+import {ClearMyKycRequestedIds} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
@@ -19,11 +20,12 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     private unsubscribe: Subject<any> = new Subject();
 
-    constructor() {
+    constructor(private ngRedux : NgRedux<any>) {
     }
 
     ngOnInit() {
         this.initSubscriptions();
+        this.ngRedux.dispatch(ClearMyKycRequestedIds());
     }
 
     initSubscriptions() {
