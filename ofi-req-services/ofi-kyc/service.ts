@@ -712,6 +712,7 @@ export class OfiKycService {
             managementCompanyID: _.get(requestData, 'managementCompanyID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
+            alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);

@@ -15,8 +15,7 @@ export class SelectAmcService {
 
     async createMultipleDrafts(values, connectedWallet) {
         let ids = await this.newRequestService.createMultipleDrafts(values, connectedWallet);
-        let context = this.newRequestService.context;
-
+        let context = this.newRequestService.getContext(ids);
         ids.forEach(id => {
             let kycID = id.kycID;
             this.sendRequestUpdateCurrentStep(kycID, context);

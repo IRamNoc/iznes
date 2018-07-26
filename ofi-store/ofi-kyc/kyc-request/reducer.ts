@@ -1,7 +1,8 @@
 import {MyKycRequestedState} from './model';
 import {
     MyKycRequestedAction,
-    SET_MY_KYC_REQUESTED_IDS
+    SET_MY_KYC_REQUESTED_IDS,
+    CLEAR_MY_KYC_REQUESTED_IDS
 } from './actions';
 
 import {get as getValue} from 'lodash';
@@ -19,6 +20,10 @@ export function MyKycRequestedReducer(
         case SET_MY_KYC_REQUESTED_IDS:
             return {
                 kycs : payload
+            };
+        case CLEAR_MY_KYC_REQUESTED_IDS:
+            return {
+                kycs : []
             };
         default:
             return state;

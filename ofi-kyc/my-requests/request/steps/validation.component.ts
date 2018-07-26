@@ -214,7 +214,9 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
                             if(formData.electronicSignatureDocumentID){
                                 this.documentsService.getDocument(formData.electronicSignatureDocumentID).then(document => {
                                     let control = this.form.get('electronicSignatureDocument');
-                                    control.patchValue(document);
+                                    if(document){
+                                        control.patchValue(document);
+                                    }
                                 });
                             }
                         }
