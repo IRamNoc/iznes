@@ -1,3 +1,5 @@
+import { OfiSubPortfolioComponent } from "./ofi-sub-portfolio/sub-portfolio/component";
+
 export { OfiFundInvestModule } from './ofi-fund-invest/module';
 export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-list/component';
 
@@ -19,11 +21,11 @@ export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';
 export { OfiKycHomeComponent } from './ofi-kyc/home/component';
 export { OfiFundAccessComponent } from './ofi-kyc/fund-access/component';
 export { OfiKycAlreadyDoneComponent } from './ofi-kyc/already-done/component';
-export {OfiRedirectTokenComponent} from './ofi-kyc/invitation-token/redirect-token.component';
-export {OfiConsumeTokenComponent} from './ofi-kyc/invitation-token/consume-token.component';
-export {MyRequestsComponent} from './ofi-kyc/my-requests/list/my-requests.component';
-export {NewKycRequestComponent} from './ofi-kyc/my-requests/request/new-request.component';
-export {MyRequestsContainerComponent} from './ofi-kyc/my-requests/my-requests-container.component';
+export { OfiRedirectTokenComponent } from './ofi-kyc/invitation-token/redirect-token.component';
+export { OfiConsumeTokenComponent } from './ofi-kyc/invitation-token/consume-token.component';
+export { MyRequestsComponent } from './ofi-kyc/my-requests/list/my-requests.component';
+export { NewKycRequestComponent } from './ofi-kyc/my-requests/request/new-request.component';
+export { MyRequestsContainerComponent } from './ofi-kyc/my-requests/my-requests-container.component';
 /**
  * My informations
  */
@@ -86,7 +88,6 @@ export { CouponPaymentComponent } from './ofi-corp-actions/coupon-payment/coupon
 export { OfiOrdersModule } from './ofi-orders/ofi-orders.module';
 export { OfiOrdersService } from './ofi-req-services/ofi-orders/service';
 export { ManageOrdersComponent } from './ofi-orders/manage-orders/manage-orders.component';
-export { MyOrdersComponent } from './ofi-orders/my-orders/my-orders.component';
 export { PlaceOrdersComponent } from './ofi-orders/place-orders/place-orders.component';
 
 /**
@@ -124,3 +125,8 @@ export {
  * Ofi main module
  */
 export { OfiMainModule } from './module';
+
+/**
+ * Sub portfolio
+ */
+export { OfiSubPortfolioComponent } from './ofi-sub-portfolio/sub-portfolio/component';

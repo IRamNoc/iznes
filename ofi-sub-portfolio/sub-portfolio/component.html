@@ -1,0 +1,163 @@
+<div class="header-breadcrumbs">
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></h1>
+</div>
+
+<div class="wrapper wrapper-content">
+
+    <clr-tabs>
+        <clr-tab>
+            <button clrTabLink><i class="fa {{ this.tabDetail[0]['title'].icon }}"></i> {{
+                this.tabDetail[0]['title'].text }}
+            </button>
+            <clr-tab-content *clrIfActive="true">
+                <!-- Address list tab. -->
+                <ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="addressListTab; context: {'formControl': this.tabDetail[0]['formControl']}">
+
+                    </ng-container>
+                </ng-container>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+
+    <!-- Address Data Table. -->
+    <ng-template #addressListTab let-formControl="formControl">
+        <div class="panel-body">
+
+            <div align="right">
+                <button class="btn btn-success" (click)="toggleAddModal();">
+                    <i class="fa fa-plus"></i> Add a new sub-portfolio
+                </button>
+            </div>
+
+            <clr-datagrid>
+                <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
+                    <span mltag="txt_subportfolioname">Sub-portfolio Name</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon>
+                    <span class="clr-sort-label" mltag="txt_iban">IBAN</span>
+                    <span class="column-label"></span>
+                </clr-dg-column>
+                <clr-dg-column>
+                    <span mltag="txt_actions">Actions</span>
+                </clr-dg-column>
+
+                <clr-dg-row *clrDgItems="let address of addressList;">
+                    <clr-dg-cell>
+                        <span *ngIf="!address.editing">
+                            {{address.label}}
+                        </span>
+                        <div *ngIf="address.editing">
+
+                            <form (submit)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"
+                                  style="padding: 0">
+                                <input type="text" [value]="address.label" #subportfolio style="width: inherit">
+                                <i
+                                    class="fa fa-floppy-o icon-btn"
+                                    aria-hidden="true"
+                                    type="submit"
+                                    (click)="handleUpdateLabel(subportfolio.value, address.address, address.iban)"
+                                ></i>
+                            </form>
+                        </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell>
+
+                        <span *ngIf="!address.editing">
+                            {{address.iban}}
+                        </span>
+                        <div *ngIf="address.editing">
+
+                            <form (submit)="handleUpdateLabel(address.label, address.address, iban.value)"
+                                  style="padding: 0">
+                                <input type="text" [value]="address.iban" #iban style="width: inherit">
+                                <i
+                                    class="fa fa-floppy-o icon-btn"
+                                    aria-hidden="true"
+                                    type="submit"
+                                    (click)="handleUpdateLabel(address.label, address.address, iban.value)"
+                                ></i>
+                            </form>
+                        </div>
+                    </clr-dg-cell>
+
+                    <clr-dg-cell class="actions">
+                        <div class="btn-group btn-sm">
+                            <button *ngIf="!address.editing" (click)="handleEdit(address.address)"
+                                    class="btn btn-success">
+                                <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span>
+                            </button>
+
+                            <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)"
+                                    class="btn btn-danger">
+                                <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
+                            </button>
+
+                            <button *ngIf="!address.editing" (click)="handleDelete(address.address)"
+                                    class="btn btn-danger">
+                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
+                            </button>
+                        </div>
+                    </clr-dg-cell>
+                </clr-dg-row>
+
+                <clr-dg-footer>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                </clr-dg-footer>
+            </clr-datagrid>
+        </div>
+    </ng-template>
+
+</div>
+
+
+<clr-modal [(clrModalOpen)]="showAddModal">
+    <h3 id="override_header" class="modal-title">{{'Create a new sub-portfolio' | translate}}</h3>
+    <div class="modal-body">
+        <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label required-field" mltag="txt_subportfolioname">Sub-portfolio
+                        Name</label>
+                    <input type="text" #portfolioName placeholder="Sub-portfolio name"
+                           class="form-control mlp_translated" mltag="txt_subportfolioname"
+                           formControlName="subPortfolioName">
+                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid && this.tabDetail[0]['formControl'].controls['subPortfolioName'].touched"
+                         class="field-error" mltag="txt_thisfieldisrequired">
+                        This field is required
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-sm-12">
+                    <label class="control-label required-field" mltag="txt_subportfolioiban">Sub-portfolio
+                        IBAN</label>
+                    <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN"
+                           class="form-control mlp_translated" mltag="txt_subportfolioiban"
+                           formControlName="subPortfolioIban" maxlength="34">
+                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched"
+                         class="field-error" mltag="txt_thisfieldisrequired">
+                        This field is required.
+                    </div>
+                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched"
+                         class="field-error">
+                        IBAN must be 14 to 34 characters long with 2 letters at the beginning.
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button id="override_cancel" type="button" class="btn btn-warning margin-right-10" (click)="closeAddModal(0);">
+            {{'Cancel' | translate}}
+        </button>
+        <button id="override_save" type="button" class="btn btn-success" (click)="closeAddModal(1);" [disabled]="!this.tabDetail[0]['formControl'].valid">
+            {{'Create' | translate}}
+        </button>
+    </div>
+</clr-modal>
+

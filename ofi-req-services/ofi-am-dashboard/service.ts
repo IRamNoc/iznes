@@ -99,7 +99,7 @@ export class OfiAmDashboardService {
 
     getUserManagementCompanyFunds(): any {
         const messageBody: OfiMemberNodeBody = {
-            RequestName: 'izngetfundlist',
+            RequestName: 'izngetsimplefunds',
             token: this.memberSocketService.token,
         };
 

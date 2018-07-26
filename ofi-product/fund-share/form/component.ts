@@ -2,13 +2,13 @@ import {
     forkJoin as observableForkJoin,
     Observable,
     Subscription,
-    combineLatest as observableCombineLatest
+    combineLatest as observableCombineLatest,
 } from 'rxjs';
-
-import { take, first } from 'rxjs/operators';
+import { take, first, takeUntil } from 'rxjs/operators';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import * as _ from 'lodash';
 import { fromJS } from 'immutable';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -56,6 +56,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
     private fundList;
+    fundListItems = [];
     private umbrellaFundList;
     private managementCompanyList;
 
@@ -66,9 +67,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private panels: { [key: string]: any } = new PanelData();
     private iznShareList;
 
+    selectFundForm: FormGroup;
     currDraft: number;
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
+    @ViewChild('fundHolidayInput') fundHolidayInput;
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
@@ -85,18 +88,21 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs: Observable<any>;
     @select(['user', 'siteSettings', 'production']) productionOb;
 
-    constructor(private router: Router,
-                private route: ActivatedRoute,
-                private redux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private alerts: AlertsService,
-                private toaster: ToasterService,
-                private confirmationService: ConfirmationService,
-                private ofiFundShareService: OfiFundShareService,
-                private ofiUmbrellaFundService: OfiUmbrellaFundService,
-                private ofiManagementCompanyService: OfiManagementCompanyService,
-                private ofiFundService: OfiFundService,
-                private ofiCurrenciesService: OfiCurrenciesService) {
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private redux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private alerts: AlertsService,
+        private toaster: ToasterService,
+        private confirmationService: ConfirmationService,
+        private ofiFundShareService: OfiFundShareService,
+        private ofiUmbrellaFundService: OfiUmbrellaFundService,
+        private ofiManagementCompanyService: OfiManagementCompanyService,
+        private ofiFundService: OfiFundService,
+        private ofiCurrenciesService: OfiCurrenciesService,
+        private fb: FormBuilder,
+    ) {
         this.ofiCurrenciesService.getCurrencyList();
     }
 
@@ -108,6 +114,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
             }
 
             this.model = new FundShare();
+            this.selectFundForm = this.fb.group({
+                fund: [],
+                domicile: [{ value: '', disabled: true }],
+                lei: [{ value: '', disabled: true }],
+            });
 
             this.initSubscriptions();
 
@@ -135,6 +146,29 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
+        this.subscriptionsArray.push(
+            this.selectFundForm.controls.fund.valueChanges
+                .subscribe((d) => {
+                    const id = _.get(d, [0, 'id'], false);
+                    if (!id) {
+                        return;
+                    }
+                    const newFund = this.fundList[id];
+                    this.model.updateFund(newFund, this.umbrellaFundList[newFund.umbrellaFundID]);
+
+                    this.selectFundForm.controls.lei.setValue(
+                        this.model.fund.LEI.value() || 'N/A',
+                    );
+                    this.selectFundForm.controls.domicile.setValue(
+                        _.get(this.model.fund.domicile.value(), [0, 'text'], ''),
+                    );
+
+                    this.isReady = true;
+                    this.fundHolidayInput.markForCheck();
+                    this.changeDetectorRef.markForCheck();
+                    this.changeDetectorRef.detectChanges();
+                }),
+        );
         this.subscriptionsArray.push(this.route.paramMap.subscribe(params => {
             const fundShareId = params.get('shareId') as any;
             this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
@@ -223,13 +257,15 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.model.isProduction = production));
 
-        fork.subscribe(data => {
+        fork.subscribe(
+            data => {
                 // nothing to do here
             },
             (err) => {
                 this.toaster.pop('error', 'An error occured.');
                 this.router.navigateByUrl(`product-module/product`);
-            }, () => {
+            },
+            () => {
                 if (this.mode === FundShareMode.Update) {
                     if (this.fundShareData) this.model.setFundShare(this.fundShareData);
 
@@ -251,6 +287,18 @@ export class FundShareComponent implements OnInit, OnDestroy {
                         return index === this.model.umbrellaFundID.toString();
                     }));
                 }
+
+                this.selectFundForm.setValue(
+                    {
+                        fund: [{
+                            id: this.model.fundID,
+                            text: this.model.fund.name.preset,
+                        }],
+                        domicile: _.get(this.model.fund.domicile.preset, [0, 'text'], ''),
+                        lei: this.model.fund.LEI.preset || 'N/A',
+                    },
+                    { emitEvent: false },
+                );
 
                 if (!this.model.isProduction) {
                     this.model.documents.mandatory.kiid.required = false;
@@ -375,6 +423,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.fundList = fundList ? fundList : undefined;
 
+        this.fundListItems = Object.keys(fundList).map((id) => {
+            return {
+                id,
+                text: fundList[id].fundName,
+            };
+        });
+
         if (this.fundList) {
             this.redux.dispatch(setRequestedFund());
         }
@@ -493,9 +548,9 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     </tbody>
                 </table>
             `, {
-                showCloseButton: false,
-                overlayClickToClose: false,
-            });
+                    showCloseButton: false,
+                    overlayClickToClose: false,
+                });
 
             OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
                 this.redux,

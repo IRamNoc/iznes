@@ -31,7 +31,7 @@ export enum ViewMode {
 
 @Component({
     selector: 'app-my-informations',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
 })
 

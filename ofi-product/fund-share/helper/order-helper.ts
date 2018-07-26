@@ -276,7 +276,7 @@ export class OrderHelper {
         // this.fakeSettlement = moment().add(20, 'seconds');
 
         this.fakeCuoff = moment().add(5, 'minutes');
-        this.fakeValuation = this.fakeCuoff.clone().utc().set({hour: 0, minute: 0, second: 1});
+        this.fakeValuation = this.fakeCuoff.clone().utc().set({ hour: 0, minute: 0, second: 1 });
         this.fakeSettlement = moment().add(15, 'minutes');
 
     }
@@ -387,7 +387,7 @@ export class OrderHelper {
         let subject;
 
         if (orderType === OrderType.Subscription) {
-            subject = 'Certification of Book Entry - SOUSCRIPTION ' + orderReference;
+            subject = 'Certification of Book Entry - SUBSCRIPTION ' + orderReference;
         } else {
             subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
         }
@@ -449,7 +449,7 @@ export class OrderHelper {
         };
     }
 
-    static buildAddressRecipients(addresses: Array<string>): {[address: string]: 0} {
+    static buildAddressRecipients(addresses: Array<string>): { [address: string]: 0 } {
         return addresses.reduce((result, item, index) => {
             result[item] = 0;
             return result;
@@ -1021,7 +1021,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
             creatorAddress: 'not being used'  // not being used
         };
     }
@@ -1137,7 +1137,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
             creatorAddress: 'not being used' // not being used
         };
     }
@@ -1284,7 +1284,7 @@ export function pad(num: number, width: number, fill: string): string {
 }
 
 export function toNormalScale(num: number, numDecimal: number): number {
-    return math.format(math.chain(num).divide(NumberMultiplier).done(), {notation: 'fixed', precision: numDecimal});
+    return math.format(math.chain(num).divide(NumberMultiplier).done(), { notation: 'fixed', precision: numDecimal });
 }
 
 /**
