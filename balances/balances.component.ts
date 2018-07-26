@@ -32,6 +32,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     public exportModalDisplay: boolean = false;
     public exportFilename: string = 'BalancesExport.csv';
     public exportFileHash: string = '';
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
 
     /**
      * Constructor
@@ -57,14 +59,14 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     public ngOnInit() {
         let previous = [];
         this.balances$ = this.reportingService
-            .getBalances()
-            .pipe(
-                map((assets) => {
-                    const updated = this.markUpdated([previous, assets]);
-                    previous = assets;
-                    return updated;
-                })
-            );
+        .getBalances()
+        .pipe(
+            map((assets) => {
+                const updated = this.markUpdated([previous, assets]);
+                previous = assets;
+                return updated;
+            })
+        );
 
         this.balances$.subscribe((balances) => {
             this.balances = balances;
