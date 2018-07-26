@@ -75,6 +75,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
     @ViewChild('tabsRef') tabsRef: ClrTabs;
     @ViewChild('fundHolidayInput') fundHolidayInput;
+    @ViewChild('tradeCycleSubscription') tradeCycleSubscription;
+    @ViewChild('tradeCycleRedemption') tradeCycleRedemption;
 
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'requested']) fundShareRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShare', 'fundShare']) fundShareOb: Observable<any>;
@@ -124,6 +126,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 const requestData = getOfiFundShareCurrentRequest(this.redux.getState());
                 requestData.fundShareID = this.prefill;
                 OfiFundShareService.defaultRequestFundShareDocs(this.ofiFundShareService, this.redux, requestData);
+
+                this.shareControl.setValue(
+                    [_.find(this.shareListItems, { id: this.prefill })],
+                );
             } else if (params.fund) {
                 this.setCurrentFund(parseInt(params.fund, 10));
             }
@@ -195,7 +201,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
                         const id = Number(v[0].id);
                         const newShare = this.iznShareList[id];
 
-                        this.model.setFundShare(newShare);
+                        this.model.updateFundShare(newShare);
 
                         this.selectFundForm.controls.fund.setValue(
                             [_.find(this.fundListItems, { id: newShare.fundID.toString() })],
@@ -211,6 +217,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
                     this.isReady = true;
                     this.fundHolidayInput.markForCheck();
+                    this.tradeCycleSubscription.markForCheck();
+                    this.tradeCycleRedemption.markForCheck();
                     this.changeDetectorRef.markForCheck();
                     this.changeDetectorRef.detectChanges();
                 }),
@@ -371,6 +379,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
                 this.changeDetectorRef.markForCheck();
                 this.changeDetectorRef.detectChanges();
+
+                if (this.prefill) {
+                    const prefillShare = this.iznShareList[this.prefill];
+                    this.model.setRedemptionTradeCycleData(prefillShare);
+                    this.model.setSubscriptionTradeCycleData(prefillShare);
+                    this.tradeCycleSubscription.markForCheck();
+                    this.tradeCycleRedemption.markForCheck();
+                }
             });
 
     }
