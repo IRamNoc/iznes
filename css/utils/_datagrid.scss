@@ -41,8 +41,15 @@
   }
 }
 
+.dg-height-fix {
+  height: inherit !important;
+}
+
 .datagrid-foot {
   border-top: 0px solid #ccc;
+  .page-size {
+    float: left;
+  }
 }
 
 .datagrid .datagrid-body .datagrid-row .datagrid-cell {

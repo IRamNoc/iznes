@@ -1913,27 +1913,6 @@ dp-date-picker div {
     line-height: 14px
 }
 
-.row.actions {
-    border-bottom: 1px dotted #DDD;
-    margin: 20px 0 20px;
-    padding: 0 0 20px;
-    width: 100%;
-
-    &.bottom {
-        border-bottom: none;
-        border-top: 1px dotted #DDD;
-        padding: 20px 0 0;
-    }
-
-    > div {
-        padding: 0;
-    }
-
-    .btn {
-        margin-top: 0
-    }
-}
-
 .fa {
     margin-right: 0.2rem;
 }
