@@ -21,10 +21,10 @@ import {SelectAmcService} from './select-amc.service';
 export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     private unsubscribe: Subject<any> = new Subject();
-    private managementCompanies;
     private kycList;
     private managementCompaniesExtract;
 
+    managementCompanies;
     connectedWallet;
 
     preselectedManagementCompany: any = {};

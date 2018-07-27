@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { immutableHelper } from '@setl/utils';
-import { select, NgRedux } from '@angular-redux/store';
-import { Subscription,  Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { NgRedux } from '@angular-redux/store';
+import { Subject } from 'rxjs';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -14,15 +14,17 @@ import * as _ from 'lodash';
 
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
+import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-
+@AppObservableHandler
 @Component({
     selector: 'app-invite-investors',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [OfiKycObservablesService],
 })
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
@@ -43,14 +45,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         status: {},
     };
 
-
     panel: any;
 
     inviteItems: investorInvitation[];
 
     unSubscribe: Subject<any> = new Subject();
-
-    @select(['ofi', 'ofiKyc', 'investorInvitations', 'data']) investorInvitations$;
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -60,6 +59,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
                 public _translate: MultilingualService,
+                private _ofiKycObservablesService: OfiKycObservablesService,
                 @Inject('kycEnums') kycEnums,
                 private redux: NgRedux<any>) {
 
@@ -115,11 +115,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this._ofiKycService.getInvitationsByUserAmCompany();
 
-        this.investorInvitations$.pipe(
-        takeUntil(this.unSubscribe))
-        .subscribe((d: investorInvitation[]) => {
+        (<any>this).appSubscribe(this._ofiKycObservablesService.investorInvitationsSub(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
@@ -132,17 +129,10 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                         tokenUsedAt,
                         kycStarted,
                     };
-                })
+                });
             }
             this.markForCheck();
         });
-    }
-
-    ngOnDestroy(): void {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -297,6 +287,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
 
         investorType.setErrors(null);
         return false;
+    }
+
+    ngOnDestroy(){
     }
 }
 

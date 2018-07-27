@@ -207,7 +207,7 @@ export class OfiFundShareService {
 
         this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
-
+        
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
