@@ -1,37 +1,42 @@
-import {Action} from 'redux';
-import {SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION} from './actions';
-import {SiteSettingsState} from './model';
+import { Action } from 'redux';
+import { SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU } from './actions';
+import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
 let defaultLanguage;
 switch (window.navigator.language) {
-    case 'en-GB':
-        defaultLanguage = 'en-Latn';
-        break;
-    case 'fr-FR':
-        defaultLanguage = 'fr-Latn';
-        break;
-    default:
-        defaultLanguage = 'fr-Latn';
-        break;
+case 'en-GB':
+    defaultLanguage = 'en-Latn';
+    break;
+case 'fr-FR':
+    defaultLanguage = 'fr-Latn';
+    break;
+default:
+    defaultLanguage = 'fr-Latn';
+    break;
 }
 
 const initialState: SiteSettingsState = {
     language: defaultLanguage,
     menuShown: true,
-    production: true
+    production: true,
+    siteMenu: {
+        fetched: false,
+    },
 };
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
     switch (action.type) {
-        case SET_LANGUAGE:
-            return setLanguage(SET_LANGUAGE, action, state);
-        case SET_MENU_SHOWN:
-            return setMenuShown(SET_MENU_SHOWN, action, state);
-        case SET_PRODUCTION:
-            return setProduction(state, action);
-        default:
-            return state;
+    case SET_LANGUAGE:
+        return setLanguage(SET_LANGUAGE, action, state);
+    case SET_MENU_SHOWN:
+        return setMenuShown(SET_MENU_SHOWN, action, state);
+    case SET_PRODUCTION:
+        return setProduction(state, action);
+    case SET_SITE_MENU:
+        return setSiteMenu(SET_SITE_MENU, action, state);
+    default:
+        return state;
     }
 };
 
@@ -57,7 +62,7 @@ function setLanguage(actionType, action, state) {
     language = (language !== '' && language !== null ? language : 'en-Latn');
 
     newState = Object.assign({}, state, {
-        language
+        language,
     });
 
     return newState;
@@ -68,7 +73,7 @@ function setMenuShown(actionType, action, state) {
     const menuShown = _.get(action, 'menuShown', []);
 
     newState = Object.assign({}, state, {
-        menuShown
+        menuShown,
     });
 
     return newState;
@@ -85,5 +90,18 @@ function setProduction(state: SiteSettingsState, action: any): SiteSettingsState
     const isProduction = _.get(loginData, 'setting', '1');
 
     const production = isProduction === '1';
-    return Object.assign({}, state, {production});
+    return Object.assign({}, state, { production });
+}
+
+function setSiteMenu(actionType, action, state) {
+    let newState;
+
+    const siteMenu = _.get(action, 'payload[1].Data', []);
+    siteMenu.fetched = true;
+
+    newState = Object.assign({}, state, {
+        siteMenu,
+    });
+
+    return newState;
 }
