@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "node --max-old-space-size=8192 node_modules/.bin/ng serve",
     "build": "ng build",
     "test": "ng test",
     "test-watch": "ng test --watch",
