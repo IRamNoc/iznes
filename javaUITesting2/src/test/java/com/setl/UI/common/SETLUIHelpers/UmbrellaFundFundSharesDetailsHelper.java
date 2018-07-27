@@ -319,8 +319,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         try {
             scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/div");
         }catch (Exception e){
-            fail(e.getMessage());
-        }
+            fail(e.getMessage());}
         Thread.sleep(1000);
         try {
             targetShare.click();
@@ -332,8 +331,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
             shareNameButton.click();
             wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[4]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/clr-dg-string-filter/clr-dg-filter/div/input")));
         } catch (Exception e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace();}
     }
 
     private static void scrollElementIntoViewByWebElement(WebElement targetShare) {
