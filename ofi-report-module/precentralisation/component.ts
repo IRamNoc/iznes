@@ -36,7 +36,7 @@ interface SelectedItem {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CentralizationReportComponent implements OnInit, OnDestroy {
+export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
     unknownValue = '???';
 
@@ -45,8 +45,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     fundsUrl = '/reports/precentralisation/funds';
     sharesUrl = '/reports/precentralisation/shares';
 
-    centralizationReportsFundsList: Array<any> = [];
-    centralizationReportsSharesList: Array<any> = [];
+    centralisationReportsFundsList: Array<any> = [];
+    centralisationReportsSharesList: Array<any> = [];
 
     // Locale
     language = 'en';
@@ -138,22 +138,22 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
-    // @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
-    // @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
+    // @select(['ofi', 'ofiReports', 'centralisationReports', 'requested']) requestedOfiCentralisationReportsObj;
+    // @select(['ofi', 'ofiReports', 'centralisationReports', 'centralisationReportsList']) OfiCentralisationReportsListObj;
 
     // share list for ng-select
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedFundsList']) requestedFundsListOb;
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsList']) fundsListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'requestedFundsList']) requestedFundsListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'fundsList']) fundsListOb;
 
     // shares details
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsDetailsList']) fundsDetailsListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'fundsDetailsList']) fundsDetailsListOb;
 
     // share list for ng-select
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedSharesList']) requestedSharesListOb;
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesList']) sharesListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'requestedSharesList']) requestedSharesListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'sharesList']) sharesListOb;
 
     // shares details
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesDetailsList']) sharesDetailsListOb;
+    @select(['ofi', 'ofiReports', 'precentralisationReports', 'sharesDetailsList']) sharesDetailsListOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -169,6 +169,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 private _fileDownloader: FileDownloader,
                 private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
+        // reset datagrid
+        this.fundsDetails = [];
+        this.sharesDetails = [];
 
         this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
         this.isShareLevel = (this.router.url.indexOf('/precentralisation/shares') !== -1) ? true : false;
@@ -257,7 +260,9 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-
+        // reset datagrid
+        this.fundsDetails = [];
+        this.sharesDetails = [];
     }
 
     getLanguage(requested): void {
@@ -279,7 +284,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     requestedFundsListFromRedux(requestedFundsList): void {
         if (!requestedFundsList) {
-            OfiReportsService.defaultRequestPrecentralizationReportsFundsList(this.ofiReportsService, this.ngRedux);
+            OfiReportsService.defaultRequestPrecentralisationReportsFundsList(this.ofiReportsService, this.ngRedux);
         }
     }
 
@@ -301,7 +306,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     requestedSharesListFromRedux(requestedSharesList): void {
         if (!requestedSharesList) {
-            OfiReportsService.defaultRequestPrecentralizationReportsSharesList(this.ofiReportsService, this.ngRedux);
+            OfiReportsService.defaultRequestPrecentralisationReportsSharesList(this.ofiReportsService, this.ngRedux);
         }
     }
 
@@ -322,7 +327,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     buildLink(id) {
-        const dest = 'am-reports-section/centralization-history/' + id;
+        const dest = 'am-reports-section/centralisation/' + id;
         this.router.navigateByUrl(dest);
     }
 
@@ -380,7 +385,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                         dateTo: this.dateTo,
                         mode: this.mode,
                     };
-                    this.ofiReportsService.requestPrecentralizationReportsFundsDetailsList(this.fundsPayload);
+                    this.ofiReportsService.requestPrecentralisationReportsFundsDetailsList(this.fundsPayload);
                 }
             } else {
                 this.isFundsPayloadOK = false;
@@ -400,13 +405,15 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                         dateTo: this.dateTo,
                         mode: this.mode,
                     };
-                    this.ofiReportsService.requestPrecentralizationReportsSharesDetailsList(this.sharesPayload);
+                    this.ofiReportsService.requestPrecentralisationReportsSharesDetailsList(this.sharesPayload);
                 }
             } else {
                 this.isSharesPayloadOK = false;
+                this.sharesDetails = [];
 
             }
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     onClickViewCorrespondingOrders(id) {
@@ -434,7 +441,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         }
     }
 
-    exportPrecentralizationReport() {
+    exportPrecentralisationReport() {
         if (this.isFundLevel && this.isFundsPayloadOK) {
             this._fileDownloader.downLoaderFile({
                 method: 'exportPrecentralisationFunds',
@@ -458,6 +465,10 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
+        // reset datagrid
+        this.fundsDetails = [];
+        this.sharesDetails = [];
+
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }

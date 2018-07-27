@@ -1,17 +1,29 @@
 import {combineReducers, Reducer} from 'redux';
 
-import {PrecentralizationReports, PrecentralizationReportsListReducer} from './precentralization-reports';
-import {CentralizationReports, OfiCentralizationReportsListReducer} from './centralization-reports';
+import {CentralisationReports, CentralisationReportsListReducer} from './centralisation-reports';
+import {PrecentralisationReports, PrecentralisationReportsListReducer} from './precentralisation-reports';
+import {CentralisationHistoryReports, OfiCentralisationHistoryReportsListReducer} from './centralisation-history-reports';
 import {OfiAmHoldersListReducer, OfiHolderState} from './holders';
 
 export {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
     OFI_SET_BASE_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_HISTORY,
-    ofiClearRequestedCentralizationReports,
-    ofiSetRequestedCentralizationReports,
-    ofiCentralizationReportsActions
-} from './centralization-reports';
+    ofiClearRequestedCentralisationHistoryReports,
+    ofiSetRequestedCentralisationHistoryReports,
+    ofiCentralisationHistoryReportsActions
+} from './centralisation-history-reports';
+
+export {
+    SET_CENTRA_SHARES_DETAILS_LIST,
+    SET_CENTRA_SHARES_LIST,
+    setRequestedCentraSharesList,
+    clearRequestedCentraSharesList,
+    SET_CENTRA_FUNDS_DETAILS_LIST,
+    SET_CENTRA_FUNDS_LIST,
+    setRequestedCentraFundsList,
+    clearRequestedCentraFundsList,
+} from './centralisation-reports';
 
 export {
     SET_PRECENTRA_SHARES_DETAILS_LIST,
@@ -22,7 +34,7 @@ export {
     SET_PRECENTRA_FUNDS_LIST,
     setRequestedPrecentraFundsList,
     clearRequestedPrecentraFundsList,
-} from './precentralization-reports';
+} from './precentralisation-reports';
 
 export {
     OFI_SET_AM_HOLDERS_LIST,
@@ -37,13 +49,15 @@ export {
 } from './holders';
 
 export interface OfiReportsState {
-    centralizationReports: CentralizationReports;
-    precentralizationReports: PrecentralizationReports;
+    centralisationHistoryReports: CentralisationHistoryReports;
+    centralisationReports: CentralisationReports;
+    precentralisationReports: PrecentralisationReports;
     amHolders: OfiHolderState;
 }
 
 export const OfiReportsReducer: Reducer<OfiReportsState> = combineReducers<OfiReportsState>({
-    precentralizationReports: PrecentralizationReportsListReducer,
-    centralizationReports: OfiCentralizationReportsListReducer,
+    centralisationReports: CentralisationReportsListReducer,
+    precentralisationReports: PrecentralisationReportsListReducer,
+    centralisationHistoryReports: OfiCentralisationHistoryReportsListReducer,
     amHolders: OfiAmHoldersListReducer,
 });
