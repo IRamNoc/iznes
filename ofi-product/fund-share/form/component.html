@@ -474,7 +474,7 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].mandatory)">
-                                <app-dynamic-form [model]="model.documents.mandatory"></app-dynamic-form>
+                                <app-dynamic-form #documentsMandatory [model]="model.documents.mandatory"></app-dynamic-form>
                             </div>
 
                             <div class="row panel-header">
@@ -486,7 +486,7 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].optional)">
-                                <app-dynamic-form [model]="model.documents.optional"></app-dynamic-form>
+                                <app-dynamic-form #documentsOptional [model]="model.documents.optional"></app-dynamic-form>
                             </div>
                         </div>
                     </clr-tab-content>

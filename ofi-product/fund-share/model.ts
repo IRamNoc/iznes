@@ -175,10 +175,13 @@ export class FundShare {
     resetFundShare() {
 
         this.calendar = {
+            ...this.calendar,
             mandatory: new ShareCalendarMandatory(),
-            subscriptionTradeCycle: null,
-            redemptionTradeCycle: null,
         };
+
+        this.calendar.subscriptionTradeCycle.reset();
+        this.calendar.redemptionTradeCycle.reset();
+
         this.characteristic = {
             mandatory: new ShareCharacteristicMandatory(),
         };
@@ -374,6 +377,8 @@ export class FundShare {
         this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
         this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
 
+        this.setRedemptionTradeCycleData(fundShare);
+        this.setSubscriptionTradeCycleData(fundShare);
         this.fundID = fundShare.fundID;
     }
 
@@ -457,6 +462,38 @@ export class FundShare {
         );
         this.setDocumentItem(this.documents.optional.tpts2, fundShareDocs.tpts2);
         this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
+    }
+
+    setFundShareDocsValue(fundShareDocs: OfiFundShareDocuments): void {
+        this.setDocumentItemValue(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
+        this.setDocumentItemValue(this.documents.mandatory.kiid, fundShareDocs.kiid);
+
+        this.setDocumentItemValue(this.documents.optional.annualActivityReport, fundShareDocs.annualActivityReport);
+        this.setDocumentItemValue(this.documents.optional.businessLetter, fundShareDocs.businessLetter);
+        this.setDocumentItemValue(this.documents.optional.emt, fundShareDocs.emt);
+        this.setDocumentItemValue(this.documents.optional.ept, fundShareDocs.ept);
+        this.setDocumentItemValue(this.documents.optional.kid, fundShareDocs.kid);
+        this.setDocumentItemValue(this.documents.optional.letterToShareholders, fundShareDocs.letterToShareholders);
+        this.setDocumentItemValue(
+            this.documents.optional.monthlyExtraFinancialReport,
+            fundShareDocs.monthlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.monthlyFinancialReport, fundShareDocs.monthlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.productSheet, fundShareDocs.productSheet);
+        this.setDocumentItemValue(
+            this.documents.optional.quarterlyExtraFinancialReport,
+            fundShareDocs.quarterlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.quarterlyFinancialReport, fundShareDocs.quarterlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.semiAnnualSummary, fundShareDocs.semiAnnualSummary);
+        this.setDocumentItemValue(this.documents.optional.sharesAllocation, fundShareDocs.sharesAllocation);
+        this.setDocumentItemValue(this.documents.optional.sriPolicy, fundShareDocs.sriPolicy);
+        this.setDocumentItemValue(
+            this.documents.optional.statutoryAuditorsCertification,
+            fundShareDocs.statutoryAuditorsCertification,
+        );
+        this.setDocumentItemValue(this.documents.optional.tpts2, fundShareDocs.tpts2);
+        this.setDocumentItemValue(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
     }
 
     setFund(fund: any): void {
@@ -654,6 +691,21 @@ export class FundShare {
         const arr = str.split('|');
 
         formItem.preset = arr[0];
+        formItem.fileData = {
+            fileID: arr[0],
+            hash: arr[1],
+            name: arr[2],
+        };
+
+        if (!this.isProduction) formItem.required = false;
+    }
+
+    private setDocumentItemValue(formItem: FormItem, str: any): void {
+        if (!str) return null;
+
+        const arr = str.split('|');
+
+        formItem.control.setValue(arr[0]);
         formItem.fileData = {
             fileID: arr[0],
             hash: arr[1],

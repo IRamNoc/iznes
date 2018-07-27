@@ -30,13 +30,15 @@ export const UPDATE_FUND_SHARE_DOCS = `${name}/UPDATE_FUND_SHARE_DOCS`;
 /**
  * Set request
  */
-export const OFI_SET_CURRENT_FUND_SHARE_DOCS = `${name}/OFI_SET_CURRENT_FUND_SHARE_DOCS`;
+export const SET_CURRENT_FUND_SHARE_DOCS = `${name}/SET_CURRENT_FUND_SHARE_DOCS`;
 
-interface OfiSetCurrentFundShareDocsRequest extends Action {
+export interface setCurrentFundShareDocsRequestAction extends Action {
     currentRequest: CurrentRequest;
 }
 
-export const ofiSetCurrentFundShareDocsRequest: ActionCreator<OfiSetCurrentFundShareDocsRequest> = (currentRequest) => ({
-    type: OFI_SET_CURRENT_FUND_SHARE_DOCS,
-    currentRequest
+export const setCurrentFundShareDocsRequest: ActionCreator<setCurrentFundShareDocsRequestAction> = id => ({
+    type: SET_CURRENT_FUND_SHARE_DOCS,
+    currentRequest: {
+        fundShareID: id,
+    },
 });

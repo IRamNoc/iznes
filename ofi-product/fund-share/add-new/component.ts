@@ -226,7 +226,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         }
 
         const url = `product-module/product/fund-share${
-            selectedFundId ? '' : `?prefill=${this.newFundShareForm.value.share[0].id}`
+            this.newFundShareForm.value.share.length ? `?prefill=${this.newFundShareForm.value.share[0].id}` : ''
             }`;
 
         this.router.navigateByUrl(url);
