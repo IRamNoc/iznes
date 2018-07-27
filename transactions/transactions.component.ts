@@ -1,7 +1,6 @@
-
-import {first} from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import {Observable,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
@@ -23,11 +22,14 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
     tabControl: TabControl;
     transactions$: Observable<Transaction[]>;
     readonly transactionFields = new WalletTxHelperModel.WalletTransactionFields().fields;
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
 
     constructor(private reportingService: ReportingService,
                 private changeDetector: ChangeDetectorRef,
                 private location: Location,
-                private route: ActivatedRoute) { }
+                private route: ActivatedRoute) {
+    }
 
     ngOnInit() {
         this.tabControl = new TabControl({

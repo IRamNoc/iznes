@@ -20,12 +20,14 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
     private subscriptions: Array<Subscription> = [];
     public tabs: Tab[] = [];
     public connectedWalletId;
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
 
     constructor(private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetector: ChangeDetectorRef,
                 private reportingService: ReportingService) {
 
-            this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
+        this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
                 this.connectedWalletId = connectedWalletId;
                 this.closeTabs();
             }
@@ -35,7 +37,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit() {
         this.issuers$ = this.reportingService.getIssuers();
 
-        this.tabControl =  new TabControl({
+        this.tabControl = new TabControl({
             title: 'Issue Reports',
             icon: 'money',
             active: true,
