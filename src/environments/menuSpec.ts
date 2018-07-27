@@ -482,6 +482,7 @@ export const menuSpec: MenuSpec = {
                     productConfiguration,
                 ],
             },
+            accountAdmin,
         ],
         valuer: [
             home,
