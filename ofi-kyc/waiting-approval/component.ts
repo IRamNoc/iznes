@@ -46,6 +46,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     alreadyCompleted;
     investorID;
     isProOpen = true;
+    message;
 
     /* Public statuses */
     APPROVED_STATUS = Statuses.approved;

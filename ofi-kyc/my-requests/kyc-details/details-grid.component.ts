@@ -4,7 +4,8 @@ import {KycDetailsService} from './details.service';
 
 @Component({
     selector: 'kyc-details-grid',
-    templateUrl: './details-grid.component.html'
+    templateUrl: './details-grid.component.html',
+    styleUrls : ['./details-grid.component.scss']
 })
 export class KycDetailsGridComponent {
 

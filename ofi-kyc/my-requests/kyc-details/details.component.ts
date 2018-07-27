@@ -202,15 +202,11 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
         this.kycRiskNature$
             .pipe(
-                tap(val => {console.log(val);}),
                 rxFilter(value => !isEmpty(value)),
-                tap(val => {console.log(val);}),
                 map(data => this.kycDetailsService.toArray(data)),
-                tap(val => {console.log(val);}),
                 takeUntil(this.unsubscribe)
             )
             .subscribe(data => {
-                console.log('risk nature', data);
                 riskNature.data = data;
             })
         ;

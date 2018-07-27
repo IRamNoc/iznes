@@ -1,5 +1,10 @@
 import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const booleanControls = [
+    'commercialDomiciliation',
+    'investorStatus'
+];
+
 export const fileControls = [
     'documentID',
     'electronicSignatureDocumentID'
@@ -7,7 +12,6 @@ export const fileControls = [
 
 export const checkboxControls = [
     'capitalNature',
-    'financialInstruments',
     'financialInstruments',
     'marketArea',
     'financialAssetManagementMethod',
@@ -946,6 +950,21 @@ export const investmentVehiclesList = [
     }
 ];
 
+export const financialAssetManagementMethodList = [
+    {
+        id : 'internalManagement',
+        text : 'Internal management'
+    },
+    {
+        id : 'withAdviceOfAuthorisedThirdPartyInstitution',
+        text : 'With the advice of an authorised third party institution'
+    },
+    {
+        id : 'mandateEntrustedToManagers',
+        text : 'By mandate(s) entrusted to a manager(s)'
+    }
+];
+
 export const frequencyList = [
     {
         "id": "Daily",
@@ -1092,6 +1111,90 @@ export const riskAcceptanceList = [
     }
 ];
 
+export const capitalNatureList = [
+    {
+        id : 'equityAndReserves',
+        text : 'Equity & reserves'
+    },
+    {
+        id : 'generalAssets',
+        text : 'General assets (insurance contracts)'
+    },
+    {
+        id : 'premiumsAndContributions',
+        text : 'Premiums & contributions'
+    },
+    {
+        id : 'saleGoodsServices',
+        text : 'Sale of goods and services'
+    },
+    {
+        id : 'treasury',
+        text : 'Treasury'
+    },
+    {
+        id : 'others',
+        text : 'Others'
+    }
+];
+
+export const documentTypesList = [
+    {
+        id : 'kyclistshareholdersdoc',
+        text : 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%'
+    },
+    {
+        id : 'kyclistdirectorsdoc',
+        text : 'Official document (or equivalent) listing the directors'
+    },
+    {
+        id : 'kycbeneficialownersdoc',
+        text : 'List of beneficial owners'
+    },
+    {
+        id : 'kyclistauthoriseddoc',
+        text : 'List of persons authorised to give instructions'
+    },
+    {
+        id : 'kyctaxcertificationdoc',
+        text : 'Tax self-certification form '
+    },
+    {
+        id : 'kycw8benefatcadoc',
+        text : 'Form W-8BEN-E (FATCA'
+    },
+    {
+        id : 'kycstatuscertifieddoc',
+        text : 'Status "certified" (or equivalent) by the duly authorized representative of the client'
+    },
+    {
+        id : 'kyckbisdoc',
+        text : 'Kbis extract (or equivalent) less than 3 months old'
+    },
+    {
+        id : 'kycannualreportdoc',
+        text : 'Latest audited annual report '
+    },
+    {
+        id : 'kycidorpassportdoc',
+        text : 'National identity card or valid passport or residence card of the signatory with photograph'
+    },
+    {
+        id : 'kycproofofapprovaldoc',
+        text : 'Proof of approval or copy of decree'
+    },
+    {
+        id : 'kycisincodedoc',
+        text : 'ISIN code of the listed share'
+    },
+    {
+        id : 'kycwolfsbergdoc',
+        text : 'Wolfsberg Questionnaire or equivalentFor'
+    }
+
+];
+
+
 export const controlToName = {
     // General
     registeredCompanyName : 'Registered Company Name or Legal Name',
@@ -1120,6 +1223,8 @@ export const controlToName = {
     investorOnBehalfList : 'Investor on behalf of third parties',
     geographicalAreaOfActivity : 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification : 'Geographical area of the activity text',
+    totalFinancialAssetsAlreadyInvested : 'Total Financial assets already invested',
+    capitalNature : 'Nature and origin of the capital invested by the legal entity',
     activityRegulated : 'Is the activity regulated ?',
     regulator : 'Regulator or a supervisory authority',
     approvalNumber : 'Approval number',
@@ -1128,9 +1233,9 @@ export const controlToName = {
     bloombergCode : "Bloomberg code",
     isinCode : 'ISIN code of the listed share',
     keyFinancialData : 'Key Financial Data',
-    balanceSheetTotal : 'Balance Sheet Total',
-    netRevenuesNetIncome : 'Net Revenues or Net Income',
-    shareholderEquity : "Shareholder's Equity",
+    balanceSheetTotal : 'Balance Sheet Total (€)',
+    netRevenuesNetIncome : 'Net Revenues or Net Income (€)',
+    shareholderEquity : "Shareholder's Equity (€)",
     equityAndReserves : 'Equity & reserves',
     generalAssets : 'General assets (insurance contracts)',
     premiumsAndContributions : 'Premiums & contributions',
@@ -1163,6 +1268,7 @@ export const controlToName = {
     custodianCountry : 'Country',
 
     // Classification
+    investorStatus : 'Does investor have pro status?',
     excludeProducts : 'Excluded category of products/services',
     changeProfessionalStatus : 'Opted for non professional status',
     firstName : 'First name',
@@ -1219,5 +1325,20 @@ export const controlToList = {
     investorOnBehalfThirdParties : 'investorOnBehalfList',
     geographicalAreaOfActivity : 'geographicalAreaList',
     geographicalOrigin1 : 'geographicalOriginTypeList',
-    totalFinancialAssetsAlreadyInvested : 'financialAssetsInvestedList'
+    totalFinancialAssetsAlreadyInvested : 'financialAssetsInvestedList',
+    capitalNature : 'capitalNatureList',
+    custodianHolderAccount : 'custodianHolderAccountList',
+    financialAssetManagementMethod : 'financialAssetManagementMethodList',
+    investmentvehiclesAlreadyUsed : 'investmentVehiclesList',
+    performanceProfile : 'performanceProfileList',
+    riskProfile : 'riskProfileList',
+    investmentHorizonWanted : 'investmentHorizonList',
+    clientNeeds : 'clientNeedsList',
+
+    geographicalOrigin2 : 'countries',
+    registeredCompanyCountry : 'countries',
+    custodianCountry : 'countries',
+    nationality : 'countries',
+    countryOfBirth : 'countries',
+    countryTaxResidence : 'countries',
 };
