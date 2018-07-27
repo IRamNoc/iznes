@@ -45,6 +45,9 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
     managedWalletList: Array<any>;
     isSymAdmin: boolean;
 
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
@@ -106,7 +109,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         const accountListImu = fromJS(accountList);
         this.accountList = accountListImu.reduce(function (result, thisAccount) {
             const index = result.length;
-            const newThisAccount = thisAccount.set('index', index)
+            const newThisAccount = thisAccount.set('index', index);
             result.push(newThisAccount.toJS());
             return result;
         }, []);

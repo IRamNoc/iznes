@@ -53,8 +53,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -69,12 +70,13 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="chainId">
                                 <span class="ml_translated" mltag="txt_chainidentification">Chain Identification</span>
-                            </label> 
+                            </label>
 
                             <input type="number" id="chainId" class="form-control" formControlName="chainId"
                                    placeholder="Chain Identification" mltag="txt_chainidentification"/>
 
-                             <span *ngIf="formControl.controls.chainId.hasError('required') && formControl.controls.chainId.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span *ngIf="formControl.controls.chainId.hasError('required') && formControl.controls.chainId.touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
                 </div>
@@ -84,12 +86,13 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="chainName">
                                 <span class="ml_translated" mltag="txt_chainname">Chain Name</span>
-                            </label> 
+                            </label>
 
                             <input type="text" id="chainName" class="form-control" formControlName="chainName"
                                    maxlength="100"/>
 
-                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
                 </div>
@@ -129,9 +132,10 @@
 
                             <input type="text" id="chainName" class="form-control" formControlName="chainName"
                                    maxlength="100"/>
-                            
-                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched" class="field-error"
-                                mltag="txt_fieldisrequired">Field is required</span>
+
+                            <span *ngIf="formControl.controls.chainName.hasError('required') && formControl.controls.chainName.touched"
+                                  class="field-error"
+                                  mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -140,7 +144,8 @@
                             <div class="form-group button-group">
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                                        <i class="fa fa-save"></i> <span class="ml_translated"
+                                                                         mltag="txt_save">Save</span>
                                     </button>
                                     <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
                                         Close

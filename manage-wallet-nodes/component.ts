@@ -45,6 +45,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     walletNodesList = [];
     chainsListOptions = [];
 
+    // Rows Per Page datagrid size
+    public pageSize: number;
+
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['userAdmin', 'walletNode', 'requestedWalletNodeList']) requestedWalletNodesOb;
