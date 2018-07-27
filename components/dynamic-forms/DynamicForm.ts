@@ -41,6 +41,7 @@ export enum FormItemType {
     textarea,
     time,
     extendedDate,
+    dateRange,
 }
 
 export enum FormItemStyle {
