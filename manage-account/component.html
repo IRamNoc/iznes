@@ -51,8 +51,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -68,12 +69,13 @@
                             <label class="control-label required-field" for="accountName">
                                 <span class="ml_translated" mltag="txt_accountname">Account Name</span>
                             </label>
-                            
-                            <input id="accountName" type="text" formControlName="accountName" placeholder="Account Name"
-                                    class="form-control username mlp_translated" mltag="txt_accountname"/>
 
-                            <span *ngIf="formControl.controls.accountName.hasError('required') && formControl.controls.accountName.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                            
+                            <input id="accountName" type="text" formControlName="accountName" placeholder="Account Name"
+                                   class="form-control username mlp_translated" mltag="txt_accountname"/>
+
+                            <span *ngIf="formControl.controls.accountName.hasError('required') && formControl.controls.accountName.touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
                         </div>
                     </div>
 
@@ -82,13 +84,14 @@
                             <label class="control-label required-field" for="accountDescription">
                                 <span class="ml_translated" mltag="txt_accountdescription">Account Description</span>
                             </label>
-                           
-                            <input id="accountDescription" type="text" formControlName="accountDescription"
-                                    placeholder="Account Description" class="form-control username mlp_translated"
-                                    mltag="txt_accountdescription"/>
 
-                            <span *ngIf="formControl.controls.accountDescription.hasError('required') && formControl.controls.accountDescription.touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
-                           
+                            <input id="accountDescription" type="text" formControlName="accountDescription"
+                                   placeholder="Account Description" class="form-control username mlp_translated"
+                                   mltag="txt_accountdescription"/>
+
+                            <span *ngIf="formControl.controls.accountDescription.hasError('required') && formControl.controls.accountDescription.touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+
                         </div>
                     </div>
 

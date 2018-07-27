@@ -32,6 +32,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     isSymAdmin: boolean;
     allowedToSave: Array<boolean>;
 
+    // Rows Per Page datagrid size
+    public pageSize: number;
+
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 

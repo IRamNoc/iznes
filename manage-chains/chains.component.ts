@@ -24,6 +24,9 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     language = 'en';
     chainsList = [];
 
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
 
@@ -251,12 +254,12 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-    * Handle close tab click
-    *
-    * @param {index} number - the tab index to close
-    *
-    * @return {void}
-    */
+     * Handle close tab click
+     *
+     * @param {index} number - the tab index to close
+     *
+     * @return {void}
+     */
     closeTab(index: number): void {
         if (!index && index !== 0) {
             return;
