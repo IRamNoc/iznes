@@ -50,6 +50,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     isAcceptModalDisplayed: boolean;
     isEditTabClosed: boolean;
     connectionToBind: any;
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
     // List of observable subscription
     subscriptionsArray: Array<Subscription> = [];
     // List of Redux observable.
@@ -325,7 +327,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         const selectedSubPortfolio = connection.subPortfolio;
         const connectionFormControl = this.formGroup.controls['connection'];
 
-        if(getValue(connectionFormControl, ['value', '0', 'id']) !== selectedConnection.id){
+        if (getValue(connectionFormControl, ['value', '0', 'id']) !== selectedConnection.id) {
             this.formGroup.controls['connection'].patchValue([selectedConnection]);
             this.formGroup.controls['sub-portfolio'].patchValue([selectedSubPortfolio]);
         }
@@ -366,10 +368,10 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         );
     }
 
-    handleCloseButtonClick(){
+    handleCloseButtonClick() {
         this.formGroup.patchValue({
-            'connection' : [],
-            'sub-portfolio' : []
+            'connection': [],
+            'sub-portfolio': []
         });
 
         this.isEditTabDisplayed = false;

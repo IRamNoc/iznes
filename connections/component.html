@@ -22,11 +22,13 @@
                             <clr-dg-cell>{{acceptedConnection.connection}}</clr-dg-cell>
                             <clr-dg-cell>{{acceptedConnection.subPortfolio}}</clr-dg-cell>
                             <clr-dg-cell class="right">
-                                <button id="edit-button" class="btn btn-success btn-sm" (click)="handleEditButtonClick(acceptedConnection)">
+                                <button id="edit-button" class="btn btn-success btn-sm"
+                                        (click)="handleEditButtonClick(acceptedConnection)">
                                     <i class="fa fa-edit"></i>
                                     <span mltag="txt_edit">Edit</span>
                                 </button>
-                                <button id="delete-button" class="btn btn-danger btn-sm" (click)="handleDeleteButtonClick(acceptedConnection)">
+                                <button id="delete-button" class="btn btn-danger btn-sm"
+                                        (click)="handleDeleteButtonClick(acceptedConnection)">
                                     <i class="fa fa-trash-o"></i>
                                     <span mltag="txt_delete">Delete</span>
                                 </button>
@@ -34,8 +36,9 @@
                         </clr-dg-row>
 
                         <clr-dg-footer>
+                            <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                             {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                            <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                            <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                         </clr-dg-footer>
                     </clr-datagrid>
                 </section>
@@ -106,7 +109,8 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
+                            <label class="control-label required-field" for="add-connection-select"
+                                   mltag="txt_connection">Connection</label>
 
                             <ng-select
                                     id="add-connection-select"
@@ -115,15 +119,16 @@
                                     [allowClear]=true
                                     [formControl]="formGroup.controls['connection']">
                             </ng-select>
-                          
+
                             <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                 class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_subportfolio">Sub-portfolio</label>
+                            <label class="control-label required-field" for="add-subportfolio-select"
+                                   mltag="txt_subportfolio">Sub-portfolio</label>
 
                             <ng-select
                                     id="add-subportfolio-select"
@@ -133,7 +138,8 @@
                                     [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
-                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                            <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
+                                  class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>
 
@@ -160,7 +166,8 @@
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
+                                <label class="control-label required-field" for="add-connection-select"
+                                       mltag="txt_connection">Connection</label>
 
                                 <ng-select
                                         id="edit-connection-select"
@@ -172,13 +179,14 @@
                                 </ng-select>
 
                                 <span *ngIf="formGroup.controls['connection'].hasError('required') && formGroup.controls['connection'].touched"
-                                     class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                      class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_subportfolio">Sub-portfolio</label>
+                                <label class="control-label required-field" for="add-subportfolio-select"
+                                       mltag="txt_subportfolio">Sub-portfolio</label>
 
                                 <ng-select
                                         id="edit-subportfolio-select"
@@ -189,7 +197,7 @@
                                 </ng-select>
 
                                 <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-                                     class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                                      class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
 
@@ -232,7 +240,7 @@
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
     <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
     <div class="modal-body">
-        <label class="control-label required-field" for="accept-subportfolio-addr-link" mltag="txt_subportfolio">Sub-portfolio</label>       
+        <label class="control-label required-field" for="accept-subportfolio-addr-link" mltag="txt_subportfolio">Sub-portfolio</label>
         <ng-select
                 id="accept-subportfolio-addr-link"
                 [items]="addressList"
@@ -240,9 +248,9 @@
                 placeholder="Select a sub-portfolio"
                 [formControl]="formGroup.controls['sub-portfolio']">
         </ng-select>
-       
+
         <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
-             class="field-required">Field is required</span>
+              class="field-required">Field is required</span>
     </div>
 
     <div class="modal-footer">
