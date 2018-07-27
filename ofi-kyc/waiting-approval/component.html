@@ -1,6 +1,6 @@
 <div class="header-breadcrumbs">
     <h1>
-        <i class="fa fa-check-circle"></i>
+        <i class="fa fa-file-text-o"></i>
         <span *ngIf="investor">{{'KYC Documents Approval: @investor.companyName.value@' | translate: {'investor.companyName.value': investor.companyName.value} }}</span>
     </h1>
 </div>
@@ -19,7 +19,7 @@
                     {{'@investor.companyName.value@ says that they have already done the KYC process with your company' | translate: {'investor.companyName.value': investor.companyName.value} }}
                 </p>
                 <p>
-                    {{'Please confirm here if this KYC documents have been previously filled up by your client @investor.companyName.value@ and validated.' | translate: {'investor.companyName.value': investor.companyName.value} }}
+                    {{'Please confirm here if these KYC documents have been previously filled up by your client @investor.companyName.value@ and validated.' | translate: {'investor.companyName.value': investor.companyName.value} }}
                 </p>
 
                 <p>
@@ -65,7 +65,7 @@
                 </div>
 
                 <!-- Kyc details block -->
-                <kyc-details [kycID]="kycId"></kyc-details>
+                <kyc-details *ngIf="!alreadyCompleted" [kycID]="kycId"></kyc-details>
             </div>
 
             <!-- Waiting for approval form -->
@@ -92,7 +92,7 @@
                         <div class="form-group col-sm-12">
                             <div class="form-check" *ngIf="waitingApprovalFormGroup.controls['status'].value === APPROVED_STATUS">
 
-                                <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isKycAccepted" value="false">
+                                <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isKycAccepted" value="false">&nbsp;
                                 <label class="form-check-label" for="checkbox">{{'We hereby validate that this client has fully completed the KYC documents with us, and is authorised to trade with us.' | translate}}</label>
                             </div>
                         </div>
