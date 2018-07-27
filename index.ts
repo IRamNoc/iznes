@@ -64,6 +64,7 @@ export { OfiMemberNodeChannelService } from './ofi-req-services/ofi-member-node-
 export { OfiRequestServicesModule, ArrangementType } from './ofi-req-services/module';
 export { OfiPostTxService } from './ofi-post-tx/service';
 export { OfiWalletnodeChannelService } from './ofi-req-services/ofi-walletnode-channel/service';
+export { OfiUserTourService } from './ofi-req-services/ofi-usertour/service';
 
 /**
  * Store

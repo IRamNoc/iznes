@@ -12,8 +12,13 @@ import {
     MemberService,
     WalletnodeTxService,
     WalletNodeRequestService,
-    InitialisationService
+    InitialisationService,
 } from '@setl/core-req-services';
+
+import {
+    OfiUserTourService,
+} from '@ofi/ofi-main';
+
 import {
     SET_WALLET_ADDRESSES,
     SET_WALLET_LABEL,
@@ -22,6 +27,7 @@ import {
     setRequestedWalletAddresses,
     clearRequestedWalletAddresses
 } from '@setl/core-store';
+
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService, ConfirmationService } from '@setl/utils';
 import { OfiSubPortfolioService } from '../../ofi-req-services/ofi-sub-portfolio/service';
@@ -29,6 +35,8 @@ import { OfiUmbrellaFundService } from "../../ofi-req-services/ofi-product/umbre
 import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-share/service";
 import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
 import { ToasterService } from 'angular2-toaster';
+
+import {MultilingualService} from '@setl/multilingual';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -51,11 +59,21 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddModal: boolean = false;
 
+    private userTourDatas = [];
+    private showUsertour = false;
+    private tourAlreadyDone = false;
+    private tourObject = [];
+    private userTourInProgress = false;
+
     // List of Redux observable.
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+
+    @select(['ofi', 'ofiUserTour', 'inProgress', 'inProgress']) inProgressOb;
+    @select(['ofi', 'ofiUserTour', 'mySubportfolios', 'mySubPortfoliosRequested']) mySubPortfoliosRequestedOb;
+    @select(['ofi', 'ofiUserTour', 'mySubportfolios', 'mySubportfolios']) mySubportfoliosOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
@@ -64,7 +82,9 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _walletnodeTxService: WalletnodeTxService,
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private _ofiSubPortfolioService: OfiSubPortfolioService,
+                private _ofiUserTourService: OfiUserTourService,
                 private _confirmationService: ConfirmationService,
+                private _translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
                 private changeDetectorRef: ChangeDetectorRef) {
@@ -90,6 +110,12 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+
+        this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => {
+            this.userTourInProgress = inProgress;
+            this.subscriptionsArray.push(this.mySubPortfoliosRequestedOb.subscribe(mySubPortfoliosRequested => this.requestUserTourMySubPortfolios(mySubPortfoliosRequested)));
+            this.subscriptionsArray.push(this.mySubportfoliosOb.subscribe(mySubportfolios => this.updateUserTourMySubPortfolios(mySubportfolios)));
+        }));
     }
 
     newForm() {
@@ -154,6 +180,51 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
         }
+    }
+
+    requestUserTourMySubPortfolios(req) {
+        if (!req) {
+            OfiUserTourService.defaultRequestMySubportfolios(this._ofiUserTourService, this.ngRedux);
+        }
+    }
+
+    updateUserTourMySubPortfolios(mySubportfolios) {
+        if (mySubportfolios) {
+            const listImu = fromJS(mySubportfolios);
+            this.userTourDatas = listImu.reduce((result, item) => {
+                result.push({
+                    isDone: item.isDone,
+                });
+                return result;
+            }, []);
+        }
+
+        if (this.userTourDatas.length === 0 && !this.userTourInProgress) {
+            this.showUsertour = false;
+            this.tourObject = [];
+            this.tourObject.push(
+                {
+                    title: this._translate.translate('My Sub-portfolios'),
+                    text: this._translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
+                    target: 'menu-sub-portfolio',
+                },
+                {
+                    title: this._translate.translate('Add a new sub-portfolio'),
+                    text: this._translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
+                    target: 'btn-add-new-subportfolio',
+                },
+                {
+                    title: this._translate.translate('Manage your sub-portfolios'),
+                    text: this._translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
+                    target: 'subportfolios-col-actions',
+                },
+            );
+            this.showUsertour = true;
+        } else {
+            // this.tourAlreadyDone = this.userTourDatas[0].isDone;
+        }
+
+        this.changeDetectorRef.markForCheck();
     }
 
     ngOnInit() {

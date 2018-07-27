@@ -1,5 +1,5 @@
 <div class="header-breadcrumbs">
-    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> <span mltag="txt_subportfolio">Sub-portfolio</span></h1>
+    <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{'Sub-portfolio' | translate }}</h1>
 </div>
 
 <div class="wrapper wrapper-content">
@@ -26,22 +26,22 @@
         <div class="panel-body">
 
             <div align="right">
-                <button class="btn btn-success" (click)="toggleAddModal();">
+                <button id="btn-add-new-subportfolio" class="btn btn-success" (click)="toggleAddModal();">
                     <i class="fa fa-plus"></i> Add a new sub-portfolio
                 </button>
             </div>
 
             <clr-datagrid>
                 <clr-dg-column [clrDgField]="'label'" clrDgSortIcon>
-                    <span mltag="txt_subportfolioname">Sub-portfolio Name</span>
+                    <span>{{'Sub-portfolio Name' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
                 <clr-dg-column [clrDgField]="'iban'" clrDgSortIcon>
-                    <span class="clr-sort-label" mltag="txt_iban">IBAN</span>
+                    <span class="clr-sort-label">{{'IBAN' | translate }}</span>
                     <span class="column-label"></span>
                 </clr-dg-column>
-                <clr-dg-column>
-                    <span mltag="txt_actions">Actions</span>
+                <clr-dg-column id="subportfolios-col-actions">
+                    <span>{{'Actions' | translate }}</span>
                 </clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
@@ -88,17 +88,17 @@
                         <div class="btn-group btn-sm">
                             <button *ngIf="!address.editing" (click)="handleEdit(address.address)"
                                     class="btn btn-success">
-                                <i class="fa fa-edit"></i> <span mltag="txt_edit">Edit</span>
+                                <i class="fa fa-edit"></i> <span>{{'Edit' | translate }}</span>
                             </button>
 
                             <button *ngIf="address.editing" (click)="handleCancelEdit(address.address)"
                                     class="btn btn-danger">
-                                <i class="fa fa-times"></i> <span mltag="txt_cancel">Cancel</span>
+                                <i class="fa fa-times"></i> <span>{{'Cancel' | translate }}</span>
                             </button>
 
                             <button *ngIf="!address.editing" (click)="handleDelete(address.address)"
                                     class="btn btn-danger">
-                                <i class="fa fa-trash-o"></i> <span mltag="txt_delete">Delete</span>
+                                <i class="fa fa-trash-o"></i> <span>{{'Delete' | translate }}</span>
                             </button>
                         </div>
                     </clr-dg-cell>
@@ -121,31 +121,25 @@
         <form class="p-0" [formGroup]="this.tabDetail[0]['formControl']">
             <div class="row">
                 <div class="form-group col-sm-12">
-                    <label class="control-label required-field" mltag="txt_subportfolioname">Sub-portfolio
-                        Name</label>
-                    <input type="text" #portfolioName placeholder="Sub-portfolio name"
-                           class="form-control mlp_translated" mltag="txt_subportfolioname"
-                           formControlName="subPortfolioName">
-                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid && this.tabDetail[0]['formControl'].controls['subPortfolioName'].touched"
-                         class="field-error" mltag="txt_thisfieldisrequired">
-                        This field is required
+                    <label class="control-label required-field">
+                        {{'Sub-portfolio Name' | translate}}
+                    </label>
+                    <input type="text" #portfolioName [placeholder]="_translate.translate('Sub-portfolio name')" class="form-control mlp_translated" formControlName="subPortfolioName">
+                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid && this.tabDetail[0]['formControl'].controls['subPortfolioName'].touched" class="field-error">
+                        {{'This field is required' | translate }}
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="form-group col-sm-12">
-                    <label class="control-label required-field" mltag="txt_subportfolioiban">Sub-portfolio
-                        IBAN</label>
-                    <input type="text" #portfolioIban placeholder="Sub-portfolio IBAN"
-                           class="form-control mlp_translated" mltag="txt_subportfolioiban"
-                           formControlName="subPortfolioIban" maxlength="34">
-                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched"
-                         class="field-error" mltag="txt_thisfieldisrequired">
-                        This field is required.
+                    <label class="control-label required-field">{{'Sub-portfolio IBAN' | translate }}</label>
+                    <input type="text" #portfolioIban [placeholder]="_translate.translate('Sub-portfolio IBAN')"
+                           class="form-control mlp_translated" formControlName="subPortfolioIban" maxlength="34">
+                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
+                        {{'This field is required.' | translate }}
                     </div>
-                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched"
-                         class="field-error">
-                        IBAN must be 14 to 34 characters long with 2 letters at the beginning.
+                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
+                        {{'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}
                     </div>
                 </div>
             </div>
@@ -161,3 +155,6 @@
     </div>
 </clr-modal>
 
+<div *ngIf="showUsertour">
+    <i [tooltip]="tourObject"></i>
+</div>

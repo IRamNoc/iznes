@@ -49,6 +49,18 @@ import { clearrequested, KycReducer, KycState, setamkyclist, setrequested } from
 /* Currencies */
 import { CurrencyState, CurrencyActions, CurrencyReducer } from './ofi-currencies';
 
+/*
+ User tour
+ */
+import { OfiUserTourReducer, OfiUserTourState } from './ofi-usertour';
+
+export {
+    OFI_SET_USERTOUR_INPROGRESS,
+    OFI_SET_MY_SUBPORTFOLIOS,
+    ofiSetMySubportfoliosRequested,
+    ofiClearMySubportfoliosRequested,
+} from './ofi-usertour';
+
 export {
     SET_FUND_ACCESS_MY,
     clearRequestedFundAccessMy,
@@ -230,6 +242,7 @@ export interface OfiState {
     ofiKyc: KycState;
     ofiReports: OfiReportsState;
     ofiAmDashboard: OfiAmDashboardsState;
+    ofiUserTour: OfiUserTourState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -242,4 +255,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiKyc: KycReducer,
     ofiReports: OfiReportsReducer,
     ofiAmDashboard: OfiAmDashboardsReducer,
+    ofiUserTour: OfiUserTourReducer,
 });
