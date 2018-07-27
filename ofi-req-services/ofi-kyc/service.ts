@@ -82,16 +82,17 @@ import {
     OFI_SET_MY_DOCUMENTS_LIST,
     OFI_SET_REQUESTED_MY_DOCUMENTS,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
+import { Observable } from "rxjs/Rx";
+
+import { investorInvitation } from '../../ofi-store/ofi-kyc/invitationsByUserAmCompany/model';
 
 @Injectable()
 export class OfiKycService {
 
-    isListeningGetInvitationsByUserAmCompany;
     informationAuditTrailList;
     statusAuditTrailList;
     unSubscribe: Subject<any> = new Subject();
 
-    @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'requested']) statusAuditTrailRequested$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
@@ -475,22 +476,6 @@ export class OfiKycService {
         });
     }
 
-    getInvitationsByUserAmCompany() {
-
-        if (this.isListeningGetInvitationsByUserAmCompany) {
-            return;
-        }
-        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$.pipe(
-            takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (d) {
-                return;
-            }
-            this.fetchInvitationsByUserAmCompany();
-        });
-
-    }
-
     fetchInvitationsByUserAmCompany() {
         const messageBody: fetchInvitationsByUserAmCompanyRequestBody = {
             RequestName: 'getinvitationsbyuseramcompany',
@@ -778,5 +763,4 @@ export class OfiKycService {
             },
         ));
     }
-
 }

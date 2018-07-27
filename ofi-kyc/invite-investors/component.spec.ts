@@ -97,10 +97,6 @@ describe('OfiInviteInvestorsComponent', () => {
 
     }));
 
-    afterEach(() => {
-        ofiKycServiceSpy.getInvitationsByUserAmCompany.calls.reset();
-    });
-
     describe('structure', () => {
         describe('invites recap', () => {
             it('should render a datagrid', () => {
@@ -140,10 +136,6 @@ describe('OfiInviteInvestorsComponent', () => {
 
     describe('interface', () => {
         describe('invites recap', () => {
-            it('should call the method getInvitationsByUserAmCompany of OfiKycService', () => {
-                expect(ofiKycServiceSpy.getInvitationsByUserAmCompany).toHaveBeenCalledTimes(1);
-            });
-
             it('should display the correct formatted data', () => {
                 const datagridRowEls = fixture.debugElement.queryAll(By.css('clr-dg-cell'));
                 expect(datagridRowEls.length).toBe(10);

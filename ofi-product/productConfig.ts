@@ -666,6 +666,7 @@ export const fundItems = {
         { id : 1, text: 'Fund Admin 1' },
         { id : 2, text: 'Fund Admin 2' },
         { id : 3, text: 'Fund Admin 3' },
+
     ],
     custodianBankItems: [
         { id : 1, text: 'Custodian Bank 1' },

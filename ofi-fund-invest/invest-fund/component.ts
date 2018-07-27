@@ -820,6 +820,7 @@ The IZNES Team.</p>`;
                 const amount = math.format(math.chain(val).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
                 const amountStr = this._moneyValuePipe.transform(amount, 4);
                 beTriggered.patchValue(amountStr, {onlySelf: true, emitEvent: false});
+
                 this.calcFeeNetAmount();
 
                 this.actionBy = 'q';
@@ -832,7 +833,7 @@ The IZNES Team.</p>`;
                  */
                 const newValue = this._moneyValuePipe.parse(value, 4);
 
-                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), {notation: 'fixed', precision: this.shareData.maximumNumDecimal}) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
+                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), {notation: 'fixed', precision: 5}) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
                 const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
                 const newQuantityStr = this._moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, {onlySelf: true, emitEvent: false});
@@ -854,7 +855,18 @@ The IZNES Team.</p>`;
 
         // get amount
         const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
-        const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
+
+        // we have two scenario to handle in there.
+        // 1. if we working on known nav, as we always round the the amount down according to the quantity.
+        // we use the quantity to work out the amount.
+        // 2. if we working on unknown nav, as the nav is not known, we want to keep the amount as it is.
+        let amount = 0;
+
+        if(this.isKnownNav()){
+            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
+        }else {
+            amount = this._moneyValuePipe.parse(this.amount.value);
+        }
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
@@ -872,13 +884,16 @@ The IZNES Team.</p>`;
      * Updating it to be Round Down eg 0.15151 becomes 0.151
      */
     roundAmount() {
-        const amountParsed = this._moneyValuePipe.parse(this.quantity.value);
-        const amount = math.format(math.chain(amountParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
-        const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
-        this.amount.patchValue(amountStr, {onlySelf: true, emitEvent: false});
-        this.unSubscribeForChange();
+        if (this.isKnownNav() || this.orderType === 'r') {
+            const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
+            const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
+            const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
+            this.amount.patchValue(amountStr, {onlySelf: true, emitEvent: false});
 
-        this.calcFeeNetAmount();
+            this.unSubscribeForChange();
+
+            this.calcFeeNetAmount();
+        }
     }
 
     /**
@@ -973,6 +988,19 @@ The IZNES Team.</p>`;
             beTriggered[1].setValue(valuationStr);
 
             this.dateBy = 'settlement';
+        }
+
+        // as when we subscribe by amount, the logic of working out the quantity by the amount is depended on whether the
+        // nav is known nav. so when we change the date. we need to clear the input of quantity and amount, and get user to
+        // enter it again.
+        if (this.actionBy === 'a') {
+            // clear amount
+           this.amount.patchValue(0);
+           this.amount.markAsUntouched();
+
+           // clear quantity
+           this.quantity.patchValue(0);
+           this.quantity.markAsUntouched();
         }
 
         return false;
@@ -1135,6 +1163,43 @@ The IZNES Team.</p>`;
 
     getDate(dateString: string): string {
         return moment.utc(dateString, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
+    }
+
+    /**
+     * Get latest nav date with this format: YYYY-MM-DD
+     * @return {string}
+     */
+    latestNavDateFormated(): string {
+      return this.getDate(this.shareData.priceDate);
+    }
+
+    /**
+     * Check the order we placing is known nav.
+     * To be qualify as known nav:
+     * - latest nav is same nav date of the order
+     * - The nav is status is validated.
+     */
+    isKnownNav(): boolean {
+        // get the current chosen nav date
+        const orderNavDate = this.valuationDate.value;
+
+        // get the latest nav's date
+        const latestNavDate = this.latestNavDateFormated();
+
+        // get the latest nav's status
+        const latestNavStatus = this.shareData.priceStatus;
+
+        // check if latest nav's status is  validated
+        // check if latest nav's date is same as the order's
+        if (Number(latestNavStatus) !== -1) {
+           return false;
+        }
+
+        if (orderNavDate !== latestNavDate) {
+            return false;
+        }
+
+        return true;
     }
 }
 
