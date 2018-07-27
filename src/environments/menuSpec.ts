@@ -83,19 +83,19 @@ const reportsCollectsArchives = {
     element_id: 'holders-list',
     router_link: '/reports/holders-list/list',
 };
-const reportsCentralization = {
+const reportsPrecentralisation = {
     label: 'Precentralisation',
     label_txt: 'txt_precentralisation',
     icon_class: 'fa fa-book',
-    element_id: 'menu-report-centralization',
+    element_id: 'menu-report-centralisation',
     router_link: '/reports/precentralisation/funds',
 };
-const reportsCentralizationSelect = {
+const reportsCentralisation = {
     label: 'Centralisation',
     label_txt: 'txt_centralisation',
     icon_class: 'fa fa-book',
-    element_id: 'menu-report-centralization-select',
-    router_link: '/reports/select-centralization',
+    element_id: 'menu-report-centralisation-select',
+    router_link: '/reports/centralisation/funds',
 };
 // const reportsHistoricalOrders = {
 //     label: 'Holders Lists',
@@ -466,8 +466,8 @@ export const menuSpec: MenuSpec = {
                 element_id: 'menu-am-report-section',
                 children: [
                     reportsCollectsArchives,
-                    reportsCentralization,
-                    reportsCentralizationSelect,
+                    reportsPrecentralisation,
+                    reportsCentralisation,
                 ],
             },
             kycDocuments,
