@@ -1,30 +1,28 @@
-import { Inject, Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import {
     Router,
     CanActivate,
     ActivatedRouteSnapshot,
-    RouterStateSnapshot, CanDeactivate,
-
+    RouterStateSnapshot,
 } from '@angular/router';
 import { Observable ,  Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
+import * as _ from 'lodash';
+
 import { MyUserService } from '@setl/core-req-services';
 import { APP_CONFIG, AppConfig, immutableHelper, MenuItem } from '@setl/utils';
-import * as _ from 'lodash';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
 @Injectable()
 export class LoginGuardService implements CanActivate {
 
-    isLogin: boolean;
-    redirect = '';
-
-    // List of observable subscription
-    subscriptionsArray: Subscription[] = [];
-
-    userTypeStr: string;
-    menuSpec: {};
+    private isLogin: boolean;
+    private menuSpec: {};
+    private redirect = '';
+    private userTypeStr: string;
+    private subscriptionsArray: Subscription[] = [];
 
     @select(['user', 'authentication', 'isLogin']) isLoginOb;
     @select(['user', 'myDetail', 'userTypeStr']) userTypeOb;
@@ -37,7 +35,6 @@ export class LoginGuardService implements CanActivate {
                 private myUserService: MyUserService) {
         this.isLogin = false;
 
-        // Reduce observable subscription
         this.subscriptionsArray.push(this.isLoginOb.subscribe((isLogin) => {
             this.isLogin = isLogin;
         }));
@@ -45,59 +42,60 @@ export class LoginGuardService implements CanActivate {
         this.subscriptionsArray.push(this.userTypeOb.subscribe((userTypeStr) => {
             this.userTypeStr = userTypeStr;
         }));
-
-        this.subscriptionsArray.push(this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
-            this.menuSpec = menuSpec;
-        }));
     }
 
     canActivate(next: ActivatedRouteSnapshot,
-                state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-
+                state: RouterStateSnapshot): Promise<boolean> {
+        /*
+         * isLogin will commonly be false, as it will only be true
+         * when coming from the login screen.
+         */
         if (!this.isLogin) {
             this.redirect = state['url'];
             this.toasterService.pop('warning', 'Session Expired!');
             this.router.navigateByUrl('');
         } else {
-            // refresh token.
-            this.myUserService.defaultRefreshToken(this.ngRedux);
+            /*
+             * get the menuSpec from redux, then perform the login checks
+             */
+            return new Promise((resolve) => {
+                this.menuSpecService.getMenuSpec().pipe(first()).subscribe((menuSpec) => {
+                    this.menuSpec = menuSpec;
 
-            if (this.isMenuDisabled(state['url'])) {
-                this.toasterService.pop(
-                    'warning',
-                    'This page is not available in the current version.');
+                    // refresh token.
+                    this.myUserService.defaultRefreshToken(this.ngRedux);
 
-                return false;
-            }
-            // check if the url is allow for the user
-            const applyRestrictUrl = this.appConfig.applyRestrictUrl || false;
-            if (applyRestrictUrl) {
-                const allowedUrls = this.getUserAllowUrl();
+                    if (this.isMenuDisabled(state['url'])) {
+                        this.toasterService.pop(
+                            'warning',
+                            'This page is not available in the current version.');
 
-                if (!isUrlAllow(allowedUrls, state['url'])) {
-                    return false;
-                }
-            }
+                        resolve(false);
+                    }
+                    // check if the url is allow for the user
+                    const applyRestrictUrl = this.appConfig.applyRestrictUrl || false;
+                    if (applyRestrictUrl) {
+                        const allowedUrls = this.getUserAllowUrl();
+
+                        if (!isUrlAllow(allowedUrls, state['url'])) {
+                            resolve(false);
+                        }
+                    }
+
+                    resolve(true);
+                });
+            });
         }
-
-        return this.isLogin;
     }
 
     isMenuDisabled(url: string): boolean {
-        if (!this.menuSpec) {
-            this.menuSpec = Object.assign({}, this.appConfig.menuSpec, { hidden: this.appConfig.nonMenuLink });
-        }
-
         const disabledMenus: string[] = _.get(this.menuSpec, ['disabled'], []);
+
         return disabledMenus.indexOf(url) !== -1;
     }
 
-    getUserAllowUrl(): { static_link: string, dynamic_link: string }[] {
-        let allowUrls: { static_link: string, dynamic_link: string }[] = [];
-
-        if (!this.menuSpec) {
-            this.menuSpec = Object.assign({}, this.appConfig.menuSpec, { hidden: this.appConfig.nonMenuLink });
-        }
+    getUserAllowUrl(): AllowURL[] {
+        let allowUrls: AllowURL[] = [];
 
         const menuSpecs = this.menuSpec;
 
@@ -143,8 +141,8 @@ export class LoginGuardService implements CanActivate {
  * @param {MenuItem} sideMenu
  * @return {string[]}
  */
-function getSideMenuUrl(sideMenu: MenuItem): { static_link: string, dynamic_link: string }[] {
-    const urls: { static_link: string, dynamic_link: string }[] = [];
+function getSideMenuUrl(sideMenu: MenuItem): AllowURL[] {
+    const urls: AllowURL[] = [];
 
     if (typeof sideMenu.children === 'undefined') {
         urls.push({
@@ -169,7 +167,7 @@ function getSideMenuUrl(sideMenu: MenuItem): { static_link: string, dynamic_link
  * @param {string} urlToCheck
  * @return {boolean}
  */
-function isUrlAllow(allowUrls: { static_link: string, dynamic_link: string }[],
+function isUrlAllow(allowUrls: AllowURL[],
                     urlToCheck: string): boolean {
     let rVal = false;
 
@@ -193,3 +191,5 @@ function isUrlAllow(allowUrls: { static_link: string, dynamic_link: string }[],
 
     return rVal;
 }
+
+type AllowURL = { static_link: string, dynamic_link: string };
