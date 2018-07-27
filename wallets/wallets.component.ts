@@ -1,17 +1,17 @@
 /* Core / Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 /* Redux. */
-import {NgRedux, select} from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {ConfirmationService, immutableHelper} from '@setl/utils';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { ConfirmationService, immutableHelper } from '@setl/utils';
 /* User Admin Service. */
-import {PersistService} from '@setl/core-persist/';
-import {UserAdminService} from '../useradmin.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { PersistService } from '@setl/core-persist/';
+import { UserAdminService } from '../useradmin.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as _ from 'lodash';
-import {managedWalletsActions} from '@setl/core-store';
+import { managedWalletsActions } from '@setl/core-store';
 
 /* Decorator. */
 @Component({
@@ -36,6 +36,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     private accountTypes: any;
     private walletTypes: any;
     private countriesList: any;
+
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
 
     /* Subscriptions from service observables. */
     private subscriptions: { [key: string]: any } = {};
@@ -241,14 +244,14 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Send the creation request. */
         this.userAdminService.createNewWallet(newWallet)
-            .then(() => {
-                /* Handle response. */
-                this.showSuccess('Successfully created the new wallet.');
-            })
-            .catch(() => {
-                /* Show error if we failed to create the wallet. */
-                this.showError('Failed to create the new wallet.');
-            });
+        .then(() => {
+            /* Handle response. */
+            this.showSuccess('Successfully created the new wallet.');
+        })
+        .catch(() => {
+            /* Show error if we failed to create the wallet. */
+            this.showError('Failed to create the new wallet.');
+        });
 
         /* Clear new wallet form. */
         this.clearNewWallet(1, false);
