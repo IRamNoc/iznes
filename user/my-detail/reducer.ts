@@ -22,6 +22,7 @@ const initialState: MyDetailState = {
     companyName: '',
     phoneCode: '',
     phoneNumber: '',
+    defaultWalletID: -1,
 };
 
 const UserTypeStr = {
@@ -42,8 +43,7 @@ const UserTypeStr = {
 
 const DATE_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action) {
-    let newState = {};
+export const MyDetailReducer = function (state: MyDetailState = initialState, action: Action): MyDetailState {
     let emailAddress = '';
 
     switch (action.type) {
@@ -58,16 +58,17 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const userId = _.get(loginedData, 'UserID', 0);
 
             const l = _.get(loginedData, 'last_login', '');
-            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT)
-                : getCurrentUnixTimestampStr(DATE_FORMAT);
+            const lastLogin = l ? convertUtcStrToLocalStr(l, DATE_FORMAT, 'YYYY-MM-DD HH:mm')
+                : getCurrentUnixTimestampStr('YYYY-MM-DD HH:mm');
 
             const userType = _.get(loginedData, 'userType', 0);
             const userTypeStr = UserTypeStr[userType];
             const admin = !!_.get(loginedData, 'admin', 0);
             const accountId = _.get(loginedData, 'accontID', '');
             const memberId = _.get(loginedData, 'memberID', '');
+            const defaultWalletID = _.get(loginedData, 'defaultWalletID', '');
 
-            newState = Object.assign({}, state, {
+            return Object.assign({}, state, {
                 username,
                 emailAddress,
                 userId,
@@ -76,10 +77,9 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 userTypeStr,
                 admin,
                 accountId,
-                memberId
+                memberId,
+                defaultWalletID,
             });
-
-            return newState;
 
         case MyDetailActions.SET_USER_DETAILS:
 
@@ -104,7 +104,7 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
             const phoneCode = _.get(userDetailsData, 'phoneCode', '');
             const phoneNumber = _.get(userDetailsData, 'phoneNumber', '');
 
-            newState = Object.assign({}, state, {
+            return Object.assign({}, state, {
                 displayName,
                 firstName,
                 lastName,
@@ -124,8 +124,6 @@ export const MyDetailReducer = function (state: MyDetailState = initialState, ac
                 phoneCode,
                 phoneNumber
             });
-
-            return newState;
 
         case MyDetailActions.RESET_LOGIN_DETAIL:
             return initialState;

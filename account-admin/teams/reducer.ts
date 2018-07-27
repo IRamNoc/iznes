@@ -27,10 +27,10 @@ export const userTeamsReducer = function (state: UserTeamsState = initialState,
         return newState;
 
     case SET_REQUESTED_ACCOUNT_ADMIN_TEAMS:
-        return toggleAccountAdminTeamsRequested(state, action);
+        return toggleAccountAdminTeamsRequested(state, true);
 
     case CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS:
-        return toggleAccountAdminTeamsRequested(state, action);
+        return toggleAccountAdminTeamsRequested(state, false);
 
     default:
         return state;
@@ -44,7 +44,7 @@ export const userTeamsReducer = function (state: UserTeamsState = initialState,
  * @return {AccountAdminTeamsState}
  */
 function toggleAccountAdminTeamsRequested(state: UserTeamsState,
-                                          requested: Action): UserTeamsState {
+                                          requested: boolean): UserTeamsState {
     return Object.assign({}, state, {
         requested,
     });

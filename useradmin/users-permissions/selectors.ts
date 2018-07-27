@@ -18,3 +18,8 @@ export const getUsersTxPermissions = createSelector(
     getUsersPermissions,
     (state: UsersPermissionsState) => state.usersTxPermissions
 );
+
+export const getUsersMenuPermissions = createSelector(
+    getUsersPermissions,
+    (state: UsersPermissionsState) => state.usersMenuPermissions
+);

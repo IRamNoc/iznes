@@ -1,13 +1,54 @@
 import { combineReducers, Reducer } from 'redux';
 
 import {
+    SET_ACCOUNT_ADMIN_USERS,
+    setRequestedAccountAdminUsers,
+    clearRequestedAccountAdminUsers,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS,
+    User,
+    UsersState,
+    usersReducer,
+} from './users';
+
+export {
+    SET_ACCOUNT_ADMIN_USERS,
+    setRequestedAccountAdminUsers,
+    clearRequestedAccountAdminUsers,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS,
+    User,
+    UsersState,
+    usersReducer,
+};
+
+import {
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
+    setRequestedAccountAdminUsersAudit,
+    clearRequestedAccountAdminUsersAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS_AUDIT,
+    UsersAuditState,
+    getAccountAdminUsersAudit,
+    usersAuditReducer,
+} from './users-audit';
+
+export {
+    SET_ACCOUNT_ADMIN_USERS_AUDIT,
+    setRequestedAccountAdminUsersAudit,
+    clearRequestedAccountAdminUsersAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USERS_AUDIT,
+    UsersAuditState,
+    getAccountAdminUsersAudit,
+    usersAuditReducer,
+};
+
+import {
     SET_ACCOUNT_ADMIN_TEAMS,
     setRequestedAccountAdminTeams,
     clearRequestedAccountAdminTeams,
     CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS,
     UserTeam,
     UserTeamsState,
-    getAccountAdminUserTeams,
+    getAccountAdmin,
+    getAccountAdminTeams,
     userTeamsReducer,
 } from './teams';
 
@@ -18,14 +59,63 @@ export {
     CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS,
     UserTeam,
     UserTeamsState,
-    getAccountAdminUserTeams,
+    getAccountAdmin,
+    getAccountAdminTeams,
     userTeamsReducer,
 };
 
+import {
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
+    clearRequestedAccountAdminTeamsAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    UserTeamsAuditState,
+    getAccountAdminTeamsAudit,
+    userTeamsAuditReducer,
+} from './teams-audit';
+
+export {
+    SET_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    setRequestedAccountAdminTeamsAudit,
+    clearRequestedAccountAdminTeamsAudit,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_TEAMS_AUDIT,
+    UserTeamsAuditState,
+    getAccountAdminTeamsAudit,
+    userTeamsAuditReducer,
+};
+
+import {
+    SET_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    setRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    PermissionAreasState,
+    getAccountAdminPermissions,
+    permissionAreasReducer,
+} from './permissions';
+
+export {
+    SET_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    setRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    PermissionAreasState,
+    getAccountAdminPermissions,
+    permissionAreasReducer,
+};
+
 export interface AccountAdminState {
-    accountAdminTeams: UserTeamsState;
+    users: UsersState;
+    usersAudit: UsersAuditState;
+    teams: UserTeamsState;
+    teamsAudit: UserTeamsAuditState;
+    permissionAreas: PermissionAreasState;
 }
 
 export const accountAdminReducer: Reducer<AccountAdminState> = combineReducers<AccountAdminState>({
-    accountAdminTeams: userTeamsReducer,
+    users: usersReducer,
+    usersAudit: usersAuditReducer,
+    teams: userTeamsReducer,
+    teamsAudit: userTeamsAuditReducer,
+    permissionAreas: permissionAreasReducer,
 });

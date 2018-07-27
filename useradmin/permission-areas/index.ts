@@ -11,10 +11,12 @@ export {PermAreasState} from './model';
 export {
     SET_ADMIN_PERM_AREAS_LIST,
     SET_TX_PERM_AREAS_LIST,
+    SET_MENU_PERM_AREAS_LIST
 } from './actions';
 
 /* Selectors. */
 export {
     getAdminPermAreaList,
-    getTxPermAreaList
+    getTxPermAreaList,
+    getMenuPermAreaList
 } from './selectors';

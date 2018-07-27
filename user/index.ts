@@ -7,13 +7,13 @@ import {
     RESET_LOGIN_DETAIL,
     loginRequestAC,
     getMyDetail,
-    SET_USER_DETAILS
+    SET_USER_DETAILS,
 } from './my-detail';
-import {combineReducers, Reducer} from 'redux';
+import { combineReducers, Reducer } from 'redux';
 
 export {
     LOGIN_REQUEST, SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC, SET_USER_DETAILS,
-    getMyDetail
+    getMyDetail,
 };
 
 // authentication
@@ -25,14 +25,20 @@ import {
     getAuthentication,
     SET_NEW_PASSWORD,
     CLEAR_MUST_CHANGE_PASSWORD,
-    resetHomepage
+    resetHomepage,
 } from './authentication';
 
-export {SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL, getAuthentication, SET_NEW_PASSWORD, CLEAR_MUST_CHANGE_PASSWORD, resetHomepage};
+export {
+    SET_AUTH_LOGIN_DETAIL,
+    RESET_AUTH_LOGIN_DETAIL,
+    getAuthentication,
+    SET_NEW_PASSWORD,
+    CLEAR_MUST_CHANGE_PASSWORD,
+    resetHomepage,
+};
 
 // connected
 import {
-
     ConnectedReducer,
     ConnectedState,
     setConnectedWallet,
@@ -41,7 +47,7 @@ import {
     getConnectedChain,
     getConnectedWallet,
     setMembernodeSessionManager,
-    resetMembernodeSessionManager
+    resetMembernodeSessionManager,
 } from './connected';
 
 export {
@@ -51,7 +57,7 @@ export {
     getConnectedChain,
     getConnectedWallet,
     setMembernodeSessionManager,
-    resetMembernodeSessionManager
+    resetMembernodeSessionManager,
 };
 
 // site settings
@@ -62,7 +68,8 @@ import {
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
-    SET_LANGUAGE
+    SET_LANGUAGE,
+    SET_SITE_MENU
 } from './site-settings';
 
 export {
@@ -70,7 +77,8 @@ export {
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
-    SET_LANGUAGE
+    SET_LANGUAGE,
+    SET_SITE_MENU
 };
 
 export interface UserState {
@@ -84,5 +92,5 @@ export const userReducer: Reducer<UserState> = combineReducers<UserState>({
     myDetail: MyDetailReducer,
     authentication: AuthenticationReducer,
     connected: ConnectedReducer,
-    siteSettings: SiteSettingsReducer
+    siteSettings: SiteSettingsReducer,
 });

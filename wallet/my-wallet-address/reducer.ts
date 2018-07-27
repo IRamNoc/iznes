@@ -1,8 +1,8 @@
-import {AsyncTaskResponseAction} from '@setl/utils/sagaHelper/actions';
+import { AsyncTaskResponseAction } from '@setl/utils/sagaHelper/actions';
 import * as MyWalletAddressActions from './actions';
-import {AddressDetailList, MyWalletAddressState} from './model';
+import { AddressDetailList, MyWalletAddressState } from './model';
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 const initialState: MyWalletAddressState = {
     addressList: {},
@@ -14,26 +14,26 @@ const initialState: MyWalletAddressState = {
 export const MyWalletAddressReducer = function (state: MyWalletAddressState = initialState,
                                                 action: AsyncTaskResponseAction) {
     switch (action.type) {
-        case MyWalletAddressActions.SET_WALLET_ADDRESSES:
-            return handleSetWalletAddresses(state, action);
+    case MyWalletAddressActions.SET_WALLET_ADDRESSES:
+        return handleSetWalletAddresses(state, action);
 
-        case MyWalletAddressActions.SET_REQUESTED_WALLET_ADDRESSES:
-            return handleSetRequestedWalletAddresses(state);
+    case MyWalletAddressActions.SET_REQUESTED_WALLET_ADDRESSES:
+        return handleSetRequestedWalletAddresses(state);
 
-        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_ADDRESSES:
-            return handleClearRequestedWalletAddresses(state);
+    case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_ADDRESSES:
+        return handleClearRequestedWalletAddresses(state);
 
-        case MyWalletAddressActions.SET_WALLET_LABEL:
-            return handleSetWalletLabel(state, action);
+    case MyWalletAddressActions.SET_WALLET_LABEL:
+        return handleSetWalletLabel(state, action);
 
-        case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
-            return handleSetRequestedWalletLabel(state);
+    case MyWalletAddressActions.SET_REQUESTED_WALLET_LABEL:
+        return handleSetRequestedWalletLabel(state);
 
-        case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_LABEL:
-            return handleClearRequestedWalletLabel(state);
+    case MyWalletAddressActions.CLEAR_REQUESTED_WALLET_LABEL:
+        return handleClearRequestedWalletLabel(state);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -71,11 +71,13 @@ function handleSetWalletAddresses(state, action) {
     const addressListDataImu = fromJS(addressListData);
     const currentAddressListImu = fromJS(currentAddressList);
 
-    const newAddressListImu = addressListDataImu.mergeDeep(currentAddressListImu);
+    const newAddressListImu = _.pickBy(addressListDataImu.mergeDeep(currentAddressListImu).toJS(), (value) => {
+        return value.deleted == 0;
+    });
 
     return Object.assign({}, state, {
         requestedCompleteAddresses: true,
-        addressList: newAddressListImu.toJS()
+        addressList: newAddressListImu
     });
 
 }
@@ -121,16 +123,17 @@ function handleClearRequestedWalletAddresses(state) {
  */
 function handleSetWalletLabel(state, action): MyWalletAddressState {
     const labelData = _.get(action, 'payload[1][Data]', []);
-
     const formattedLabelData = labelData.reduce((result, item) => {
         const address = _.get(item, 'option', '');
         const label = _.get(item, 'label', '');
         const iban = _.get(item, 'iban', '');
+        const deleted = _.get(item, 'deleted', '');
 
         result[address] = {
             addr: address,
             label,
-            iban
+            iban,
+            deleted
         };
 
         return result;
@@ -140,10 +143,12 @@ function handleSetWalletLabel(state, action): MyWalletAddressState {
     const currentAddressListImu = fromJS(currentAddressLit);
     const formattedLabelDataImu = fromJS(formattedLabelData);
 
-    const newAddressListImu = currentAddressListImu.mergeDeep(formattedLabelDataImu);
+    const newAddressListImu = _.pickBy(currentAddressListImu.mergeDeep(formattedLabelDataImu).toJS(), (value) => {
+        return value.deleted == 0;
+    });
 
     return Object.assign({}, state, {
-        addressList: newAddressListImu.toJS()
+        addressList: newAddressListImu
     });
 }
 
