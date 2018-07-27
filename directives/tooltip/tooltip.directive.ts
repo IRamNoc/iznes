@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { NgRedux, select } from '@angular-redux/store';
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/highlight/actions';
+import { OFI_SET_USERTOUR_INPROGRESS } from '../../../ofi-main/ofi-store/ofi-usertour/inprogress/actions';
 import { Router } from '@angular/router';
 
 @Directive({
@@ -20,7 +21,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     btnContainer: any;
     btnBack: any;
     btnNext: any;
-    btnDone: any;
+    btnDone: any;   // when finished
+    btnClose: any;  // to close usertour before end
     arrowSize = 10; // arrow size
     scrollTop = 0;
     scrollListener = null;
@@ -29,7 +31,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     tourConfig = [];
     step = 0;
     autoNextTimeout: any;
-    tourDuration = 5000; // default
+    tourDuration = 10000; // default
     isAutoNext = true;
     isTour = false;
 
@@ -50,6 +52,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.config.length > 1) { // tooltip Tour
             this.isTour = true;
+            this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
 
             // add black bglayer
             this.divBackgroundTour = document.createElement('div');
@@ -198,7 +201,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             let tourNum = '';
             if (this.isTour) {
                 // add step into Title
-                tourNum = (this.step + 1) + '. ';
+                tourNum = (this.step + 1) + '/' + this.tourConfig.length + ') ';
             }
             if (isTitle) {
                 this.divTooltipTitle.innerHTML += tourNum + this.config.title;
@@ -288,6 +291,24 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                         }
                     };
                     this.btnContainer.appendChild(this.btnNext);
+
+                    // add button close usertour
+                    this.btnClose = document.createElement('button');
+                    this.btnClose.id = 'btnTourClose_' + randomID;
+                    this.btnClose.className = 'btn btn-sm btn-success';
+                    this.btnClose.innerHTML = this._translate.translate('Close');
+                    this.btnClose.onclick = (event) => {
+                        if (event.target.id === 'btnTourClose_' + randomID) {
+                            // this._ngRedux.dispatch(clearAppliedHighlight());
+                            // clearTimeout(this.autoNextTimeout);
+                            // this.isAutoNext = false;
+                            // this.step = this.tourConfig.length;
+                            // this.hideTooltip();
+                            // this.divBackgroundTour.remove();
+                            this.cleanAll(true);
+                        }
+                    };
+                    this.btnContainer.appendChild(this.btnClose);
                 } else {
                     this.btnDone = document.createElement('button');
                     this.btnDone.id = 'btnTourDone_' + randomID;
@@ -295,12 +316,13 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.btnDone.innerHTML = this._translate.translate('Done');
                     this.btnDone.onclick = (event) => {
                         if (event.target.id === 'btnTourDone_' + randomID) {
-                            this._ngRedux.dispatch(clearAppliedHighlight());
-                            clearTimeout(this.autoNextTimeout);
-                            this.isAutoNext = false;
-                            this.step += 1;
-                            this.hideTooltip();
-                            this.divBackgroundTour.remove();
+                            // this._ngRedux.dispatch(clearAppliedHighlight());
+                            // clearTimeout(this.autoNextTimeout);
+                            // this.isAutoNext = false;
+                            // this.step += 1;
+                            // this.hideTooltip();
+                            // this.divBackgroundTour.remove();
+                            this.cleanAll(true);
                         }
                     };
                     this.btnContainer.appendChild(this.btnDone);
@@ -314,17 +336,18 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                         this._ngRedux.dispatch(clearAppliedHighlight());
                         this.nextStep();
                     } else {
-                        this._ngRedux.dispatch(clearAppliedHighlight());
-                        clearTimeout(this.autoNextTimeout);
-                        this.isAutoNext = false;
-                        this.step += 1;
-                        this.hideTooltip();
-                        this.divBackgroundTour.remove();
+                        // this._ngRedux.dispatch(clearAppliedHighlight());
+                        // clearTimeout(this.autoNextTimeout);
+                        // this.isAutoNext = false;
+                        // this.step += 1;
+                        // this.hideTooltip();
+                        // this.divBackgroundTour.remove();
+                        this.cleanAll(true);
                         if (this.config.redirect !== undefined && this.config.redirect !== '') {
                             this._router.navigate([this.config.redirect]);
                         }
                     }
-                },                                this.config.duration);
+                }, this.config.duration);
             }
         }
     }
@@ -656,7 +679,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     cleanAll(forced): void {
         this.parentDiv.removeEventListener('scroll', (event) => {
             this.getScroll(event);
-        },                                 true);
+        }, true);
         // remove div tooltip
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             this.divTooltip.remove();
@@ -664,7 +687,12 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         }
         if (forced) {
             if (this.isTour) {
+                this._ngRedux.dispatch(clearAppliedHighlight());
+                clearTimeout(this.autoNextTimeout);
+                this.isAutoNext = false;
+                this.hideTooltip();
                 this.divBackgroundTour.remove();
+                this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false});
             }
         } else {
             if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
