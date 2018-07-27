@@ -43,6 +43,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     requestedWalletAddress: boolean;
 
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
     // List of Redux observable.
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
