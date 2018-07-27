@@ -14,29 +14,32 @@
         <clr-tab-content *clrIfActive>
             <app-dashboard [rows]="2" [columns]="4">
                 <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">{{'Actions' | translate}}
-
                 </app-counter-tile>
+
                 <app-counter-tile name="connections" icon="random" [count]="connectionCount" color="green" route="connections">{{'Connections' | translate}}
-
                 </app-counter-tile>
+
                 <app-counter-tile name="messages" icon="envelope" [count]="unreadCount" color="orange" route="messages">{{'New messages' | translate}}
-
                 </app-counter-tile>
+
                 <app-counter-tile name="contracts" icon="plug" count="0" color="blue">{{'Contracts' | translate}}</app-counter-tile>
+                
                 <app-basic-tile name="asset1" color="green">
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[0]}"></ng-container>
                 </app-basic-tile>
+                
                 <app-basic-tile name="asset2" color="orange">
-                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]} || {}"></ng-container>
+                    <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]}"></ng-container>
                 </app-basic-tile>
+                
                 <app-basic-tile name="search" color="blue">
                     <h1 class="tile-heading">{{'Search' | translate}}</h1>
                     <div class="input-group">
-                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" [placeholder]="_translate.translate('Search by Tx ID, Contract Address, Instruments or Address')">
+                        <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" [placeholder]="translate.translate('Search by Tx ID, Contract Address, Instruments or Address')">
                         <button class="btn btn-outline-secondary" style="margin-top: 3px;" type="button"><i class="fa fa-search"></i></button>
                     </div>
-
                 </app-basic-tile>
+
             </app-dashboard>
         </clr-tab-content>
     </clr-tab>
