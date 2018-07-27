@@ -31,6 +31,9 @@ export class ContractsComponent implements OnInit, OnChanges {
     public contract;
     public contractFields;
 
+    // Rows Per Page datagrid size
+    public pageSize: number;
+
     public tabControl: TabControl;
     public tabs: Tab[];
 
