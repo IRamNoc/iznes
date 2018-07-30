@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { select, NgRedux } from '@angular-redux/store';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, Subject } from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
 
 import { MultilingualService } from '@setl/multilingual';
+import {KycStatus as statusList} from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
 
 @Component({
     selector: 'my-requests-details',
@@ -20,15 +22,22 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     @Input() kycID: number;
 
-    isDebug = true;
+    kycList: Array<any>;
+    statusList;
+
     disabledForm: FormGroup;
 
-    companyName: string = '';
-    lastUpdate: string = 'YYYY-MM-DD 00:00:00';
     requestDetailStatus = 'accepted';
+    lastUpdate: string = 'YYYY-MM-DD 00:00:00';
+
+    companyName: string = '';
+
     isKYCFull = true;
 
     private subscriptions: Array<any> = [];
+    private unsubscribe: Subject<any> = new Subject();
+
+    @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
 
     constructor(
         private _fb: FormBuilder,
@@ -40,10 +49,27 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         private ngRedux: NgRedux<any>,
     ) {
         this.constructDisabledForm();
+        this.statusList = statusList;
     }
 
     ngOnInit() {
+        this.initSubscriptions();
+    }
 
+    initSubscriptions() {
+        this.myKycList$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(kycList => {
+                this.kycList = kycList;
+                const kyc = this.kycList.find((item) => item.kycID === this.kycID);
+                if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
+                    this.requestDetailStatus = this.statusList[kyc.status];
+                    this.isKYCFull = (kyc.alreadyCompleted === 1) ? false : true;
+                }
+            })
+        ;
     }
 
     ngAfterViewInit() {
