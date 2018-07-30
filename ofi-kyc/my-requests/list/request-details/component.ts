@@ -66,7 +66,8 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                 const kyc = this.kycList.find((item) => item.kycID === this.kycID);
                 if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
                     this.requestDetailStatus = this.statusList[kyc.status];
-                    this.isKYCFull = (kyc.alreadyCompleted === 1) ? false : true;
+                    this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
+                    this.companyName = kyc.companyName;
                 }
             })
         ;
