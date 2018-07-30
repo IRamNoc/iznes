@@ -22,9 +22,14 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     @Input('formsteps')
     set formsteps(val) {
         this.config = val;
-        if (this.formstepsConstructed) {
-            this.constructFormSteps();
-        }
+        this.el.style.height = this.el.offsetHeight + 'px';
+        this.el.style.overflow = 'hidden';
+        // this.renderer.setStyle(this.el, 'opacity', '0');
+        // setTimeout(() => {
+        //     if (this.formstepsConstructed) {
+        //         this.constructFormSteps();
+        //     }
+        // }, 300);
     }
 
     isMultiForm = false;
@@ -60,6 +65,8 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         private changeDetectorRef : ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
+        this.renderer.setStyle(this.el, 'transition', 'opacity ease-out .3s');
+        this.renderer.setStyle(this.el, 'opacity', '0');
     }
 
     @HostListener('window:keydown', ['$event']) onKeyDown(event: KeyboardEvent): void {
@@ -71,8 +78,8 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     @HostListener('window:mouseup', ['$event']) onMouseUp(event: MouseEvent): void {
         setTimeout(() => {
-            this.resizeHeight();
-        }, 50);
+            // this.resizeHeight();
+        }, 0);
     }
 
     @HostListener('window:resize', ['$event']) onResize(event): void {
@@ -86,18 +93,26 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         // }
     }
 
-    initConfig() {
+    ngAfterViewInit() {
+        this.constructFormSteps();
+        const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
+        setTimeout(() => {
+            this.showHideButtons(form);
+            this.resizeHeight();
+            this.resizeWidth();
+        }, 0);
+    }
 
+    initConfig() {
         if (this.config.length > 1 && Array.isArray(this.config)) {
             this.isMultiForm = true;
-
             let cpt = 0;
             for (let i in this.config) {
                 if (this.config[i].form !== undefined) {
                     if (this.config[i].submitted === undefined) {
                         this.config[i].submitted = false;
                     }
-                    this.config[i].form.valueChanges.subscribe((form) => this.showHideButtons(form));
+                    // this.config[i].form.valueChanges.subscribe((form) => this.showHideButtons(form));
                 }
                 if (this.config[i].startHere !== undefined && this.config[i].startHere) {
                     this.currentStep = cpt;
@@ -111,7 +126,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.forceNext = this.config.forceNext;
             }
             // listen to changes on form
-            this.config.form.valueChanges.subscribe((form) => this.showHideButtons(this.config.form));
+            // this.config.form.valueChanges.subscribe((form) => this.showHideButtons(this.config.form));
         }
     }
 
@@ -132,8 +147,8 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // construct all
             setTimeout(() => {
                 this.constructFormSteps();
-                this.resizeWidth();
-                this.resizeHeight();
+                // this.resizeWidth();
+                // this.resizeHeight();
             }, 0);
         } else {
             this.initConfig();
@@ -333,16 +348,11 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             }
             this.formstepsConstructed = true;
         }
-    }
-
-    ngAfterViewInit() {
-        this.constructFormSteps();
-        const form = (this.isMultiForm) ? this.config[this.currentStep].form : this.config.form;
         setTimeout(() => {
-            this.showHideButtons(form);
-            this.resizeHeight();
-            this.resizeWidth();
-        }, 0);
+            this.renderer.setStyle(this.el, 'opacity', '1');
+            this.el.style.height = null;
+            this.el.style.overflow = null;
+        }, 300);
     }
 
     move() {
@@ -575,12 +585,14 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     resizeHeight() {
+        // console.log('yo');
         const steps = this.el.getElementsByTagName('section');
         let marginsTop;
         if (steps[this.currentStep] && window.getComputedStyle(steps[this.currentStep],null)) {
             // calculate screens/sections height
             marginsTop = parseInt(window.getComputedStyle(steps[this.currentStep],null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
             this.divSlider.style.height = 10 + marginsTop + steps[this.currentStep].offsetHeight + (steps[this.currentStep].scrollHeight - steps[this.currentStep].offsetHeight) + 'px';
+
         } else {
             // calculate finished screen height
             marginsTop = parseInt(window.getComputedStyle(this.divFinished,null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
