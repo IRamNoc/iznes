@@ -763,7 +763,7 @@ The IZNES Team.</p>`;
         if (this.isKnownNav()) {
             amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 2});
         }else {
-            amount = this._moneyValuePipe.parse(this.amount.value);
+            amount = this._moneyValuePipe.parse(this.amount.value, 2);
         }
 
         // calculate fee
