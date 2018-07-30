@@ -372,7 +372,9 @@
                     </div>
                 </div>
 
-                <div class="row">{{'Please type below a quantity or an amount' | translate}} <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span></div>
+                <div class="row">{{'Please type below a quantity or an amount' | translate}}
+                    <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
+                </div>
 
                 <div class="row">
                     <div class="col-sm-6">
@@ -404,7 +406,7 @@
                             <div>
                                 <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control"
                                        formControlName="amount" (focus)="subscribeForChange('amount')"
-                                       (blur)="roundAmount();" appNumberFormatter="4" [fractionSize]="4" autocomplete="off">
+                                       (blur)="roundAmount();" appNumberFormatter="2" [fractionSize]="2" autocomplete="off">
                             </div>
                             <span *ngIf="amountTooBig" class="text-danger">{{'Warning: be aware the order amount exceeds 15 million' | translate}}</span>
                             <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
