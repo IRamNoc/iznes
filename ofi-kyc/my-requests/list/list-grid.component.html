@@ -17,7 +17,7 @@
         <clr-dg-cell>{{kyc.lastUpdated}}</clr-dg-cell>
         <clr-dg-cell class="actions">
             <div *ngIf="buttonToDisplay(kyc.status) === 'view'">
-                <button class="btn btn-sm">
+                <button class="btn btn-sm" (click)="viewDetails(kyc)">
                     {{'View' | translate}}
                 </button>
             </div>

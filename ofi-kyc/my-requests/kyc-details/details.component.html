@@ -1,0 +1,41 @@
+<div *ngFor="let panel of panelDefs" class="well">
+    <!-- Panel header -->
+    <div class="row panel-header">
+        <div class="col-xs-12">
+            <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
+                <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
+                <h2>{{panel.title | translate}}</h2>
+            </a>
+        </div>
+    </div>
+
+    <!-- Panel body -->
+    <div class="row panel-body" [class.hidden]="!panel.open">
+        <div class="col-xs-12">
+            <!--Parent contents-->
+            <kyc-details-grid *ngIf="panel.data" [data]="panel.data"></kyc-details-grid>
+
+            <!--Childs-->
+            <div class="well" *ngFor="let child of panel.children">
+                <!-- Panel header -->
+                <div class="row panel-header">
+                    <div class="col-xs-12">
+                        <a href="#" (click)="child.open = !child.open; $event.preventDefault();">
+                            <i class="fa fa-chevron-right" [class.rotate]="child.open"></i>
+                            <h2>{{child.title}}</h2>
+                        </a>
+                    </div>
+                </div>
+                <!-- Panel body -->
+                <div class="row panel-body" [class.hidden]="!child.open">
+                    <div class="col-xs-12">
+                        <!--Child Contents-->
+                        <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<kyc-details-beneficiaries [beneficiaries]="beneficiaries" *ngIf="modals.beneficiaries" (close)="modals.beneficiaries = !modals.beneficiaries"></kyc-details-beneficiaries>
