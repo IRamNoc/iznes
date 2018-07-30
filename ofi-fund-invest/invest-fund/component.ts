@@ -753,10 +753,18 @@ The IZNES Team.</p>`;
 
         // get amount
         const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
-        const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {
-            notation: 'fixed',
-            precision: 2
-        });
+
+        // we have two scenario to handle in there.
+        // 1. if we working on known nav, as we always round the the amount down according to the quantity.
+        // we use the quantity to work out the amount.
+        // 2. if we working on unknown nav, as the nav is not known, we want to keep the amount as it is.
+        let amount = 0;
+
+        if (this.isKnownNav()) {
+            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 2});
+        }else {
+            amount = this._moneyValuePipe.parse(this.amount.value, 2);
+        }
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
