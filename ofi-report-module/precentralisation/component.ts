@@ -468,6 +468,14 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         // reset datagrid
         this.fundsDetails = [];
         this.sharesDetails = [];
+        this.selectedFund = 0;
+        this.selectedShare = 0;
+        this.sharesTotalNetAmount = 0;
+        this.sharesTotalSubscriptionAmount = 0;
+        this.sharesTotalRedemptionAmount = 0;
+        this.fundsTotalNetAmount = 0;
+        this.fundsTotalSubscriptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;
 
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
