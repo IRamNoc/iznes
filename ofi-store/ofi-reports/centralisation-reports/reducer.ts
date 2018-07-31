@@ -2,14 +2,14 @@
 import {Action} from 'redux';
 
 /* Local types. */
-import {PrecentralizationReports, PrecentralizationReportsSharesDetails} from './model';
-import * as precentralizationReportsActions from './actions';
+import {CentralisationReports, CentralisationReportsSharesDetails} from './model';
+import * as centralisationReportsActions from './actions';
 import {immutableHelper} from '@setl/utils';
 import {List, fromJS, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
-const initialState: PrecentralizationReports = {
+const initialState: CentralisationReports = {
     fundsDetailsList: {},
     fundsList: {},
     requestedFundsList: false,
@@ -19,10 +19,10 @@ const initialState: PrecentralizationReports = {
 };
 
 /* Reducer. */
-export const PrecentralizationReportsListReducer = function (state: PrecentralizationReports = initialState, action: Action) {
+export const CentralisationReportsListReducer = function (state: CentralisationReports = initialState, action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
-        case precentralizationReportsActions.SET_PRECENTRA_FUNDS_DETAILS_LIST:
+        case centralisationReportsActions.SET_CENTRA_FUNDS_DETAILS_LIST:
             const data1 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data1.Status !== 'Fail') {
@@ -33,24 +33,24 @@ export const PrecentralizationReportsListReducer = function (state: Precentraliz
             }
             return state;
 
-        case precentralizationReportsActions.SET_PRECENTRA_FUNDS_LIST:
+        case centralisationReportsActions.SET_CENTRA_FUNDS_LIST:
             const data2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data2.Status !== 'Fail') {
-                const fundsList = formatPrecentralizationFundsListDataResponse(data2);
+                const fundsList = formatCentralisationFundsListDataResponse(data2);
                 return Object.assign({}, state, {
                     fundsList
                 });
             }
             return state;
 
-        case precentralizationReportsActions.SET_REQUESTED_PRECENTRA_FUNDS_LIST:
+        case centralisationReportsActions.SET_REQUESTED_CENTRA_FUNDS_LIST:
             return toggleRequestStateFundsList(state, true);
 
-        case precentralizationReportsActions.CLEAR_REQUESTED_PRECENTRA_FUNDS_LIST:
+        case centralisationReportsActions.CLEAR_REQUESTED_CENTRA_FUNDS_LIST:
             return toggleRequestStateFundsList(state, false);
 
-        case precentralizationReportsActions.SET_PRECENTRA_SHARES_DETAILS_LIST:
+        case centralisationReportsActions.SET_CENTRA_SHARES_DETAILS_LIST:
             const data3 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data3.Status !== 'Fail') {
@@ -61,21 +61,21 @@ export const PrecentralizationReportsListReducer = function (state: Precentraliz
             }
             return state;
 
-        case precentralizationReportsActions.SET_PRECENTRA_SHARES_LIST:
+        case centralisationReportsActions.SET_CENTRA_SHARES_LIST:
             const data4 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data4.Status !== 'Fail') {
-                const sharesList = formatPrecentralizationSharesListDataResponse(data4);
+                const sharesList = formatCentralisationSharesListDataResponse(data4);
                 return Object.assign({}, state, {
                     sharesList
                 });
             }
             return state;
 
-        case precentralizationReportsActions.SET_REQUESTED_PRECENTRA_SHARES_LIST:
+        case centralisationReportsActions.SET_REQUESTED_CENTRA_SHARES_LIST:
             return toggleRequestStateSharesList(state, true);
 
-        case precentralizationReportsActions.CLEAR_REQUESTED_PRECENTRA_SHARES_LIST:
+        case centralisationReportsActions.CLEAR_REQUESTED_CENTRA_SHARES_LIST:
             return toggleRequestStateSharesList(state, false);
 
         /* Default. */
@@ -84,7 +84,7 @@ export const PrecentralizationReportsListReducer = function (state: Precentraliz
     }
 };
 
-function formatPrecentralizationFundsDetailsListDataResponse(rawData: Array<any>): Array<PrecentralizationReportsSharesDetails> {
+function formatCentralisationFundsDetailsListDataResponse(rawData: Array<any>): Array<CentralisationReportsSharesDetails> {
     const rawDataList = fromJS(rawData);
 
     let i = 0;
@@ -104,7 +104,7 @@ function formatPrecentralizationFundsDetailsListDataResponse(rawData: Array<any>
     return fundsDetails.toJS();
 }
 
-function formatPrecentralizationSharesDetailsListDataResponse(rawData: Array<any>): Array<PrecentralizationReportsSharesDetails> {
+function formatCentralisationSharesDetailsListDataResponse(rawData: Array<any>): Array<CentralisationReportsSharesDetails> {
     const rawDataList = fromJS(rawData);
 
     let i = 0;
@@ -124,7 +124,7 @@ function formatPrecentralizationSharesDetailsListDataResponse(rawData: Array<any
     return sharesDetails.toJS();
 }
 
-function formatPrecentralizationFundsListDataResponse(rawData: Array<any>): Array<PrecentralizationReportsSharesDetails> {
+function formatCentralisationFundsListDataResponse(rawData: Array<any>): Array<CentralisationReportsSharesDetails> {
     const rawDataList = fromJS(rawData);
 
     let i = 0;
@@ -144,7 +144,7 @@ function formatPrecentralizationFundsListDataResponse(rawData: Array<any>): Arra
     return fundsList.toJS();
 }
 
-function formatPrecentralizationSharesListDataResponse(rawData: Array<any>): Array<PrecentralizationReportsSharesDetails> {
+function formatCentralisationSharesListDataResponse(rawData: Array<any>): Array<CentralisationReportsSharesDetails> {
     const rawDataList = fromJS(rawData);
 
     let i = 0;
@@ -164,10 +164,10 @@ function formatPrecentralizationSharesListDataResponse(rawData: Array<any>): Arr
     return sharesList.toJS();
 }
 
-function toggleRequestStateFundsList(state: PrecentralizationReports, requestedFundsList: boolean): PrecentralizationReports {
+function toggleRequestStateFundsList(state: CentralisationReports, requestedFundsList: boolean): CentralisationReports {
     return Object.assign({}, state, {requestedFundsList});
 }
 
-function toggleRequestStateSharesList(state: PrecentralizationReports, requestedSharesList: boolean): PrecentralizationReports {
+function toggleRequestStateSharesList(state: CentralisationReports, requestedSharesList: boolean): CentralisationReports {
     return Object.assign({}, state, {requestedSharesList});
 }

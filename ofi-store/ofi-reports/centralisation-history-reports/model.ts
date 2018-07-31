@@ -1,4 +1,4 @@
-export interface CentralizationReportsDetails {
+export interface CentralisationHistoryReportsDetails {
     aum: any;
     cutoffDate: any;
     fundShareID: any;
@@ -16,7 +16,7 @@ export interface CentralizationReportsDetails {
     subQuantity: any;
 }
 
-export interface BaseCentralizationHistoryDetails {
+export interface BaseCentralisationHistoryDetails {
     fundName: any;
     fundShareName: any;
     isin: any;
@@ -24,7 +24,7 @@ export interface BaseCentralizationHistoryDetails {
     umbrellaFundName: any;
 }
 
-export interface CentralizationHistoryDetails {
+export interface CentralisationHistoryDetails {
     walletID: any;
     latestNav: any;
     navDate: any;
@@ -41,15 +41,15 @@ export interface CentralizationHistoryDetails {
     netPositionPercentage: any;
 }
 
-export interface CentralizationReports {
-    centralizationReportsList: {
-        [key: string]: CentralizationReportsDetails
+export interface CentralisationHistoryReports {
+    centralisationHistoryReportsList: {
+        [key: string]: CentralisationHistoryReportsDetails
     };
-    baseCentralizationHistory: {
-        [key: string]: BaseCentralizationHistoryDetails
+    baseCentralisationHistory: {
+        [key: string]: BaseCentralisationHistoryDetails
     };
-    centralizationHistory: {
-        [key: string]: CentralizationHistoryDetails
+    centralisationHistory: {
+        [key: string]: CentralisationHistoryDetails
     };
     requested: boolean;
 }
