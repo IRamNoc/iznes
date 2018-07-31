@@ -104,6 +104,35 @@
                                 >
                                 </date-picker-extended>
                             </ng-container>
+
+                            <ng-container *ngSwitchCase="9">
+                                <div [ngClass]="{
+                                    'input-group': true,
+                                    'invalid': (hasErrorMessage(model[item])),
+                                    'touched': (isTouched(model[item]))
+                                    }">
+                                    <span>from</span>
+                                    <span class="fa fa-calendar"></span>
+                                    <input id="{{item}}_from" name="{{item}}_from" placeholder="{{model[item + '_from'].placeholder}}"
+                                           formControlName="{{item}}_from"
+                                           [dpDayPicker]="model[item + '_from'].dateOptions"
+                                           [readonly]="false"
+                                           mode="day"
+                                           type="text"
+                                           theme="dp-material"
+                                           autocomplete="off"/>
+                                    <span>to</span>
+                                    <span class="fa fa-calendar"></span>
+                                    <input id="{{item}}_to" name="{{item}}_to" placeholder="{{model[item + '_to'].placeholder}}"
+                                           formControlName="{{item}}_to"
+                                           [dpDayPicker]="model[item + '_to'].dateOptions"
+                                           [readonly]="false"
+                                           mode="day"
+                                           type="text"
+                                           theme="dp-material"
+                                           autocomplete="off"/>
+                                </div>
+                            </ng-container>
                         </ng-container>
                        
                         <span class="field-error" *ngIf="hasErrorMessage(model[item])">{{(getErrorMessage(model[item]))}}</span>
