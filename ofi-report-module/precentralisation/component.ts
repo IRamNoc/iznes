@@ -172,6 +172,24 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         // reset datagrid
         this.fundsDetails = [];
         this.sharesDetails = [];
+        this.selectedFund = 0;
+        this.selectedShare = 0;
+        this.sharesTotalNetAmount = 0;
+        this.sharesTotalSubscriptionAmount = 0;
+        this.sharesTotalRedemptionAmount = 0;
+        this.fundsTotalNetAmount = 0;
+        this.fundsTotalSubscriptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;
+        this.pieChartDatas = [
+            {
+                name: 'Subscription (%)',
+                value: 0,
+            },
+            {
+                name: 'Redemption (%)',
+                value: 0,
+            }
+        ];
 
         this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
         this.isShareLevel = (this.router.url.indexOf('/precentralisation/shares') !== -1) ? true : false;
@@ -186,6 +204,8 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.appConfig = appConfig;
 
         this.createFiltersForm();
+
+        this.filtersForm.reset();
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
@@ -259,10 +279,33 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         }
     }
 
-    public ngOnInit() {
+    resetDatas() {
         // reset datagrid
+        this.filtersForm.reset();
         this.fundsDetails = [];
         this.sharesDetails = [];
+        this.selectedFund = 0;
+        this.selectedShare = 0;
+        this.sharesTotalNetAmount = 0;
+        this.sharesTotalSubscriptionAmount = 0;
+        this.sharesTotalRedemptionAmount = 0;
+        this.fundsTotalNetAmount = 0;
+        this.fundsTotalSubscriptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;
+        this.pieChartDatas = [
+            {
+                name: 'Subscription (%)',
+                value: 0,
+            },
+            {
+                name: 'Redemption (%)',
+                value: 0,
+            }
+        ];
+    }
+
+    public ngOnInit() {
+        this.resetDatas();
     }
 
     getLanguage(requested): void {
@@ -350,32 +393,57 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     requestSearch(form) {
-        if (this.filtersForm.controls['specificDate'].value.length > 0) {
-            this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
-            this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
-            this.mode = (this.isSettlementSelected) ? 2 : 1;    // 1 = NAV ; 2 = Settlement
-        } else {
-            this.mode = 0;
-        }
-        if (this.filtersForm.controls['selectList'].value.length > 0) {
-            if (this.isFundLevel) {
-                this.selectedFund = this.filtersForm.controls['selectList'].value[0].id;
+        if (this.filtersForm.controls['specificDate'].value !== null) {
+            if (this.filtersForm.controls['specificDate'].value.length > 0) {
+                this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
+                this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
+                this.mode = (this.isSettlementSelected) ? 2 : 1;    // 1 = NAV ; 2 = Settlement
+            } else {
+                this.mode = 0;
+                this.filtersForm.get('dateFrom').patchValue(null, { emitEvent: false });
+                this.filtersForm.get('dateTo').patchValue(null, { emitEvent: false });
+                this.sharesTotalNetAmount = 0;
+                this.sharesTotalSubscriptionAmount = 0;
+                this.sharesTotalRedemptionAmount = 0;
+                this.fundsTotalNetAmount = 0;
+                this.fundsTotalSubscriptionAmount = 0;
+                this.fundsTotalRedemptionAmount = 0;
             }
-            if (this.isShareLevel) {
-                this.selectedShare = this.filtersForm.controls['selectList'].value[0].id;
+        }  else {
+            this.mode = 0;
+            this.filtersForm.get('dateFrom').patchValue(null, { emitEvent: false });
+            this.filtersForm.get('dateTo').patchValue(null, { emitEvent: false });
+            this.sharesTotalNetAmount = 0;
+            this.sharesTotalSubscriptionAmount = 0;
+            this.sharesTotalRedemptionAmount = 0;
+            this.fundsTotalNetAmount = 0;
+            this.fundsTotalSubscriptionAmount = 0;
+            this.fundsTotalRedemptionAmount = 0;
+        }
+        if (this.filtersForm.controls['selectList'].value !== null) {
+            if (this.filtersForm.controls['selectList'].value.length > 0) {
+                if (this.isFundLevel) {
+                    this.selectedFund = this.filtersForm.controls['selectList'].value[0].id;
+                }
+                if (this.isShareLevel) {
+                    this.selectedShare = this.filtersForm.controls['selectList'].value[0].id;
+                }
+            } else {
+                this.selectedFund = 0;
+                this.selectedShare = 0;
             }
         } else {
             this.selectedFund = 0;
             this.selectedShare = 0;
         }
 
-        this.dateFrom = (this.filtersForm.controls['dateFrom'].value !== '') ? this.filtersForm.controls['dateFrom'].value : '';
-        this.dateTo = (this.filtersForm.controls['dateTo'].value !== '' && this.isPeriod) ? this.filtersForm.controls['dateTo'].value : '';
+        this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '' : this.filtersForm.controls['dateFrom'].value;
+        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null ) && !this.isPeriod) ? '' : this.filtersForm.controls['dateTo'].value;
 
         if (this.isFundLevel) {
             this.isFundsPayloadOK = true;
             if (this.mode > 0 && this.dateFrom !== '') {
-                if (this.isPeriod && this.dateTo === '') {
+                if (this.isPeriod && (this.dateTo === '' || this.dateTo === null)) {
                     this.isFundsPayloadOK = false;
                 }
                 if (this.isFundsPayloadOK) {
@@ -390,12 +458,22 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             } else {
                 this.isFundsPayloadOK = false;
                 this.fundsDetails = [];
+                this.pieChartDatas = [
+                    {
+                        name: 'Subscription (%)',
+                        value: 0,
+                    },
+                    {
+                        name: 'Redemption (%)',
+                        value: 0,
+                    }
+                ];
             }
         }
         if (this.isShareLevel) {
             this.isSharesPayloadOK = true;
             if (this.mode > 0 && this.dateFrom !== '') {
-                if (this.isPeriod && this.dateTo === '') {
+                if (this.isPeriod && (this.dateTo === '' || this.dateTo === null)) {
                     this.isSharesPayloadOK = false;
                 }
                 if (this.isSharesPayloadOK) {
@@ -410,6 +488,16 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             } else {
                 this.isSharesPayloadOK = false;
                 this.sharesDetails = [];
+                this.pieChartDatas = [
+                    {
+                        name: 'Subscription (%)',
+                        value: 0,
+                    },
+                    {
+                        name: 'Redemption (%)',
+                        value: 0,
+                    }
+                ];
 
             }
         }
@@ -442,40 +530,37 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     exportPrecentralisationReport() {
-        if (this.isFundLevel && this.isFundsPayloadOK) {
-            this._fileDownloader.downLoaderFile({
-                method: 'exportPrecentralisationFunds',
-                token: this.memberSocketService.token,
-                fundId: this.fundsPayload.fundId,
-                dateFrom: this.fundsPayload.dateFrom,
-                dateTo: this.fundsPayload.dateTo,
-                mode: this.fundsPayload.mode,
-            });
-        }
-        if (this.isShareLevel && this.isSharesPayloadOK) {
-            this._fileDownloader.downLoaderFile({
-                method: 'exportPrecentralisationShares',
-                token: this.memberSocketService.token,
-                shareId: this.sharesPayload.shareId,
-                dateFrom: this.sharesPayload.dateFrom,
-                dateTo: this.sharesPayload.dateTo,
-                mode: this.sharesPayload.mode,
-            });
+        if (this.myDetails) {
+            if (this.myDetails.userId) {
+                if (this.isFundLevel && this.isFundsPayloadOK) {
+                    this._fileDownloader.downLoaderFile({
+                        method: 'exportPrecentralisationFunds',
+                        token: this.memberSocketService.token,
+                        fundId: this.fundsPayload.fundId,
+                        dateFrom: this.fundsPayload.dateFrom,
+                        dateTo: this.fundsPayload.dateTo,
+                        mode: this.fundsPayload.mode,
+                        userId: this.myDetails.userId,
+                    });
+                }
+                if (this.isShareLevel && this.isSharesPayloadOK) {
+                    this._fileDownloader.downLoaderFile({
+                        method: 'exportPrecentralisationShares',
+                        token: this.memberSocketService.token,
+                        shareId: this.sharesPayload.shareId,
+                        dateFrom: this.sharesPayload.dateFrom,
+                        dateTo: this.sharesPayload.dateTo,
+                        mode: this.sharesPayload.mode,
+                        userId: this.myDetails.userId,
+                    });
+                }
+            }
         }
     }
 
     ngOnDestroy() {
         // reset datagrid
-        this.fundsDetails = [];
-        this.sharesDetails = [];
-        this.selectedFund = 0;
-        this.selectedShare = 0;
-        this.sharesTotalNetAmount = 0;
-        this.sharesTotalSubscriptionAmount = 0;
-        this.sharesTotalRedemptionAmount = 0;
-        this.fundsTotalNetAmount = 0;
-        this.fundsTotalSubscriptionAmount = 0;
-        this.fundsTotalRedemptionAmount = 0;
+        this.resetDatas();
 
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
