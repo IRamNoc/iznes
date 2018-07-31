@@ -38,13 +38,13 @@ interface SelectedItem {
 
 /* Decorator. */
 @Component({
-    selector: 'app-am-centralization-history',
+    selector: 'app-am-centralisation-history',
     templateUrl: './component.html',
     styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
+export class OfiCentralisationHistoryComponent implements OnInit, AfterViewInit, OnDestroy {
 
     unknownValue = '???';
 
@@ -78,9 +78,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     shareID = 0;
     isFundUmbrella = true;
 
-    centralizationReportsList: Array<any> = [];
-    baseCentralizationHistory: any;
-    centralizationHistory: Array<any> = [];
+    centralisationReportsList: Array<any> = [];
+    baseCentralisationHistory: any;
+    centralisationHistory: Array<any> = [];
 
     /* expandable div */
 
@@ -114,10 +114,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'baseCentralizationHistory']) OfiBaseCentralizationHistoryObj;
-    @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationHistory']) OfiCentralizationHistoryObj;
+    @select(['ofi', 'ofiReports', 'centralisationHistoryReports', 'requested']) requestedOfiCentralisationReportsObj;
+    @select(['ofi', 'ofiReports', 'centralisationHistoryReports', 'centralisationHistoryReportsList']) OfiCentralisationReportsListObj;
+    @select(['ofi', 'ofiReports', 'centralisationHistoryReports', 'baseCentralisationHistory']) OfiBaseCentralisationHistoryObj;
+    @select(['ofi', 'ofiReports', 'centralisationHistoryReports', 'centralisationHistory']) OfiCentralisationHistoryObj;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
 
     constructor(private ngRedux: NgRedux<any>,
@@ -139,8 +139,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
 
         this.appConfig = appConfig;
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-        this.subscriptions.push(this.OfiBaseCentralizationHistoryObj.subscribe((requested) => this.getBaseCentralizationHistoryFromRedux(requested)));
-        this.subscriptions.push(this.OfiCentralizationHistoryObj.subscribe((requested) => this.getCentralizationHistoryFromRedux(requested)));
+        this.subscriptions.push(this.OfiBaseCentralisationHistoryObj.subscribe((requested) => this.getBaseCentralisationHistoryFromRedux(requested)));
+        this.subscriptions.push(this.OfiCentralisationHistoryObj.subscribe((requested) => this.getCentralisationHistoryFromRedux(requested)));
 
         /* Subscribe for this user's details. */
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {
@@ -156,9 +156,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             if (typeof this.shareID !== 'undefined' && this.shareID > 0) {
 
                 // launch only if got shareID from URL
-                this.subscriptions.push(this.requestedOfiCentralizationReportsObj.subscribe((requested) => this.getCentralizationReportsRequested(requested)));
-                this.subscriptions.push(this.OfiCentralizationReportsListObj.subscribe((list) => this.getCentralizationReportsListFromRedux(list)));
-                this.ofiReportsService.requestBaseCentralizationHistory(this.shareID);
+                this.subscriptions.push(this.requestedOfiCentralisationReportsObj.subscribe((requested) => this.getCentralisationReportsRequested(requested)));
+                this.subscriptions.push(this.OfiCentralisationReportsListObj.subscribe((list) => this.getCentralisationReportsListFromRedux(list)));
+                this.ofiReportsService.requestBaseCentralisationHistory(this.shareID);
 
                 const tabTitle = 'History';
                 const tabAlreadyHere = this.tabsControl.find(o => o.shareId === this.shareID);
@@ -177,7 +177,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
                 this.setTabActive(this.shareID);
             } else {
                 this.searchForm.get('search').patchValue(null, { emitEvent: false });
-                this.router.navigateByUrl('/reports/select-centralization');
+                this.router.navigateByUrl('/reports/select-centralisation');
             }
         }));
 
@@ -221,16 +221,16 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         }
     }
 
-    getCentralizationReportsRequested(requested): void {
+    getCentralisationReportsRequested(requested): void {
         if (!requested) {
-            OfiReportsService.defaultRequestCentralizationReportsList(this.ofiReportsService, this.ngRedux);
+            OfiReportsService.defaultRequestCentralisationReportsList(this.ofiReportsService, this.ngRedux);
         }
     }
 
-    getCentralizationReportsListFromRedux(list) {
+    getCentralisationReportsListFromRedux(list) {
         const listImu = fromJS(list);
 
-        this.centralizationReportsList = listImu.reduce((result, item) => {
+        this.centralisationReportsList = listImu.reduce((result, item) => {
 
             result.push({
                 id: item.get('fundShareID'),
@@ -241,8 +241,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
             return result;
         }, []);
 
-        if (this.centralizationReportsList.length > 0) {
-            const obj = this.centralizationReportsList.find(o => o.id.toString() === this.shareID.toString());
+        if (this.centralisationReportsList.length > 0) {
+            const obj = this.centralisationReportsList.find(o => o.id.toString() === this.shareID.toString());
             if (obj !== undefined) {
                 this.searchForm.get('search').patchValue([{ id: obj.id, text: obj.text }], { emitEvent: false });
             }
@@ -251,10 +251,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.changeDetectorRef.markForCheck();
     }
 
-    getBaseCentralizationHistoryFromRedux(list) {
+    getBaseCentralisationHistoryFromRedux(list) {
         const listImu = fromJS(list);
 
-        this.baseCentralizationHistory = listImu.reduce((result, item) => {
+        this.baseCentralisationHistory = listImu.reduce((result, item) => {
 
             result = {
                 fundName: item.get('fundName'),
@@ -268,9 +268,9 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         }, []);
 
 
-        if (this.baseCentralizationHistory.length > 0) {
-            // this.baseCentralizationHistory = JSON.parse(JSON.stringify(this.baseCentralizationHistory[0]));
-            this.ofiReportsService.requestCentralizationHistory({
+        if (this.baseCentralisationHistory.length > 0) {
+            // this.baseCentralisationHistory = JSON.parse(JSON.stringify(this.baseCentralisationHistory[0]));
+            this.ofiReportsService.requestCentralisationHistory({
                 fundShareID: this.shareID,
                 dateFrom: '',
                 dateTo: '',
@@ -281,10 +281,10 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         this.changeDetectorRef.markForCheck();
     }
 
-    getCentralizationHistoryFromRedux(list) {
+    getCentralisationHistoryFromRedux(list) {
         const listImu = fromJS(list);
 
-        this.centralizationHistory = listImu.reduce((result, item) => {
+        this.centralisationHistory = listImu.reduce((result, item) => {
 
             result.push({
                 walletID: item.get('walletID'),
@@ -508,7 +508,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         };
 
         if (JSON.stringify(tmpFilterParams) !== JSON.stringify(this.filterParams)) {
-            this.ofiReportsService.requestCentralizationHistory(this.filterParams);
+            this.ofiReportsService.requestCentralisationHistory(this.filterParams);
         }
     }
 
@@ -531,8 +531,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
         if (historyRow !== undefined) {
             const navDate = moment(historyRow.navDate, 'YYYY-MM-DD HH:mm').format('YYYY-MM-DD');
             const params = {
-                shareName: this.baseCentralizationHistory.fundShareName,
-                isin: this.baseCentralizationHistory.isin,
+                shareName: this.baseCentralisationHistory.fundShareName,
+                isin: this.baseCentralisationHistory.isin,
                 status: null,
                 orderType: null,
                 pageSize: 1000,
@@ -563,8 +563,8 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     viewOrder(cutoffDate) {
         const orderFilters = {
             filters: {
-                isin: this.baseCentralizationHistory.isin,
-                sharename: this.baseCentralizationHistory.fundShareName,
+                isin: this.baseCentralisationHistory.isin,
+                sharename: this.baseCentralisationHistory.fundShareName,
                 status: { id: -3 },
                 type: { id: 0 },
                 dateType: { id: 'navDate' },
@@ -609,7 +609,7 @@ export class OfiCentralizationHistoryComponent implements OnInit, AfterViewInit,
     }
 
     buildLink(id) {
-        const dest = 'am-reports-section/centralization-history/' + id;
+        const dest = 'am-reports-section/centralisation-history/' + id;
         this.router.navigateByUrl(dest);
     }
 

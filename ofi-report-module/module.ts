@@ -11,13 +11,14 @@ import {NgxChartsModule} from '@swimlane/ngx-charts';
 import {OfiTaxReportComponent} from './ofi-tax-report/component';
 import {OfiPnlReportComponent} from './ofi-pnl-report/component';
 import {OfiCollectiveArchiveComponent} from './ofi-collective-archive/component';
-import {OfiCentralizationHistoryComponent} from './centralization-history/component';
+import {OfiCentralisationHistoryComponent} from './centralisation-history/component';
 import {SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule} from '@setl/utils';
 import {ActionDirection} from './pnlHelper/class';
 import {OfiManageCsvComponent} from './ofi-csv-report/component';
 import {MultilingualModule} from '@setl/multilingual';
-import {CentralizationReportComponent} from './centralization/component';
-import {CentralizationSelectComponent} from './centralization-select/component';
+import {CentralisationReportComponent} from './centralisation/component';
+import {PrecentralisationReportComponent} from './precentralisation/component';
+import {CentralisationSelectComponent} from './centralisation-select/component';
 import {MyHoldingsComponent} from './my-holdings/component';
 
 @Pipe({name: 'txType'})
@@ -55,9 +56,10 @@ export class TxTypePipe implements PipeTransform {
         OfiCollectiveArchiveComponent,
         TxTypePipe,
         OfiManageCsvComponent,
-        CentralizationReportComponent,
-        OfiCentralizationHistoryComponent,
-        CentralizationSelectComponent,
+        CentralisationReportComponent,
+        PrecentralisationReportComponent,
+        OfiCentralisationHistoryComponent,
+        CentralisationSelectComponent,
         MyHoldingsComponent,
         TxTypePipe,
     ],

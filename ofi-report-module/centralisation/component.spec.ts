@@ -4,14 +4,14 @@
 //
 // import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 //
-// import {CentralizationReportComponent} from './component';
+// import {PrecentralisationReportComponent} from './component';
 // import {ClarityModule} from '@clr/angular';
 // import {SetlComponentsModule} from '@setl/utils/components';
 //
-// describe('CentralizationReportComponent', () => {
+// describe('PrecentralisationReportComponent', () => {
 //
-//     let comp: CentralizationReportComponent;
-//     let fixture: ComponentFixture<CentralizationReportComponent>;
+//     let comp: PrecentralisationReportComponent;
+//     let fixture: ComponentFixture<PrecentralisationReportComponent>;
 //     let de: DebugElement;
 //     let el: HTMLElement;
 //
@@ -20,7 +20,7 @@
 //     beforeAll((done) => (async () => {
 //         TestBed.resetTestingModule();
 //         TestBed.configureTestingModule({
-//             declarations: [CentralizationReportComponent],
+//             declarations: [PrecentralisationReportComponent],
 //             imports: [
 //                 FormsModule,
 //                 ReactiveFormsModule,
@@ -37,16 +37,16 @@
 //     });
 //
 //     beforeEach(() => {
-//         fixture = TestBed.createComponent(CentralizationReportComponent);
+//         fixture = TestBed.createComponent(PrecentralisationReportComponent);
 //         comp = fixture.componentInstance;
 //         de = fixture.debugElement.query(By.css('clr-tab'));
 //         el = de.nativeElement;
 //     });
 //
 //     // describe('structure', () => {
-//     //     it('should render a title with the wording: \'Centralization Report: All Shares\'', () => {
+//     //     it('should render a title with the wording: \'Centralisation Report: All Shares\'', () => {
 //     //         // const headerEl = fixture.debugElement.query(By.css('div')).nativeElement;
-//     //         // expect(headerEl.innerText.trim()).toEqual('Centralization Report: All Shares');
+//     //         // expect(headerEl.innerText.trim()).toEqual('Centralisation Report: All Shares');
 //     //     });
 //     // });
 // });
