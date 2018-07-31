@@ -107,11 +107,12 @@ export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
-    OfiCentralizationHistoryComponent,
+    OfiCentralisationHistoryComponent,
     OfiReportModule,
     OfiManageCsvComponent,
-    CentralizationReportComponent,
-    CentralizationSelectComponent,
+    CentralisationReportComponent,
+    PrecentralisationReportComponent,
+    CentralisationSelectComponent,
     MyHoldingsComponent,
 } from './ofi-report-module';
 

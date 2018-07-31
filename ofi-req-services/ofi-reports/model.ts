@@ -4,17 +4,17 @@ export interface OfiMemberNodeBody extends MemberNodeMessageBody {
     token: string;
 }
 
-export interface OfiCentralizationReportsRequestBody extends OfiMemberNodeBody {
+export interface OfiCentralisationReportsRequestBody extends OfiMemberNodeBody {
     token: string;
     search?: any;
 }
 
-export interface OfiBaseCentralizationHistoryRequestBody extends OfiMemberNodeBody {
+export interface OfiBaseCentralisationHistoryRequestBody extends OfiMemberNodeBody {
     token: string;
     fundShareID: any;
 }
 
-export interface OfiCentralizationHistoryRequestBody extends OfiMemberNodeBody {
+export interface OfiCentralisationHistoryRequestBody extends OfiMemberNodeBody {
     token: string;
     fundShareID: any;
     dateFrom: any;
@@ -48,7 +48,7 @@ export interface OfiInvHoldingsDetailRequestData {
     amCompanyID: any;
 }
 
-export interface PrecentralizationRequestSharesBody extends OfiMemberNodeBody {
+export interface CentralisationRequestSharesBody extends OfiMemberNodeBody {
     token: string;
     shareId: number;
     dateFrom: string;
@@ -56,7 +56,23 @@ export interface PrecentralizationRequestSharesBody extends OfiMemberNodeBody {
     mode: number;
 }
 
-export interface PrecentralizationRequestFundsBody extends OfiMemberNodeBody {
+export interface CentralisationRequestFundsBody extends OfiMemberNodeBody {
+    token: string;
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+export interface PrecentralisationRequestSharesBody extends OfiMemberNodeBody {
+    token: string;
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+export interface PrecentralisationRequestFundsBody extends OfiMemberNodeBody {
     token: string;
     fundId: number;
     dateFrom: string;

@@ -1,8 +1,8 @@
 /* Model. */
-export {PrecentralizationReports} from './model';
+export {PrecentralisationReports} from './model';
 
 /* Reducer. */
-export {PrecentralizationReportsListReducer} from './reducer';
+export {PrecentralisationReportsListReducer} from './reducer';
 
 /* Actions. */
 export {
@@ -16,6 +16,6 @@ export {
     clearRequestedPrecentraFundsList,
 } from './actions';
 
-import * as precentralizationReportsActions from './actions';
-export {precentralizationReportsActions};
+import * as precentralisationReportsActions from './actions';
+export {precentralisationReportsActions};
 

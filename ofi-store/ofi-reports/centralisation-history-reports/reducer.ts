@@ -2,63 +2,63 @@
 import {Action} from 'redux';
 
 /* Local types. */
-import {CentralizationReports, CentralizationReportsDetails} from './model';
-import * as ofiCentralizationReportsActions from './actions';
+import {CentralisationHistoryReports, CentralisationHistoryReportsDetails} from './model';
+import * as ofiCentralisationHistoryReportsActions from './actions';
 import {immutableHelper} from '@setl/utils';
 import {List, fromJS, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
-const initialState: CentralizationReports = {
-    centralizationReportsList: {},
-    baseCentralizationHistory: {},
-    centralizationHistory: {},
+const initialState: CentralisationHistoryReports = {
+    centralisationHistoryReportsList: {},
+    baseCentralisationHistory: {},
+    centralisationHistory: {},
     requested: false,
 };
 
 /* Reducer. */
-export const OfiCentralizationReportsListReducer = function (state: CentralizationReports = initialState, action: Action) {
+export const OfiCentralisationHistoryReportsListReducer = function (state: CentralisationHistoryReports = initialState, action: Action) {
     switch (action.type) {
         /* Set Coupon List. */
-        case ofiCentralizationReportsActions.OFI_SET_CENTRALIZATION_REPORTS_LIST:
+        case ofiCentralisationHistoryReportsActions.OFI_SET_CENTRALIZATION_REPORTS_LIST:
             const data1 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data1.Status !== 'Fail') {
-                const centralizationReportsList = formatCentralizationReportsDataResponse(data1);
+                const centralisationHistoryReportsList = formatCentralisationHistoryReportsDataResponse(data1);
                 return Object.assign({}, state, {
-                    centralizationReportsList
+                    centralisationHistoryReportsList
                 });
             }
             return state;
-        case ofiCentralizationReportsActions.OFI_SET_BASE_CENTRALIZATION_HISTORY:
+        case ofiCentralisationHistoryReportsActions.OFI_SET_BASE_CENTRALIZATION_HISTORY:
             const data2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data2.Status !== 'Fail') {
-                const baseCentralizationHistory = formatBaseCentralizationHistoryDataResponse(data2);
+                const baseCentralisationHistory = formatBaseCentralisationHistoryDataResponse(data2);
                 return Object.assign({}, state, {
-                    baseCentralizationHistory
+                    baseCentralisationHistory
                 });
             }
             return state;
-        case ofiCentralizationReportsActions.OFI_SET_CENTRALIZATION_HISTORY:
+        case ofiCentralisationHistoryReportsActions.OFI_SET_CENTRALIZATION_HISTORY:
             const data3 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
             if (data3.Status !== 'Fail') {
-                const centralizationHistory = formatCentralizationHistoryDataResponse(data3);
+                const centralisationHistory = formatCentralisationHistoryDataResponse(data3);
                 return Object.assign({}, state, {
-                    centralizationHistory
+                    centralisationHistory
                 });
             }else{
-                const centralizationHistory = {};
+                const centralisationHistory = {};
                 return Object.assign({}, state, {
-                    centralizationHistory
+                    centralisationHistory
                 });
             }
 
-        case ofiCentralizationReportsActions.OFI_SET_REQUESTED_CENTRALIZATION_REPORTS:
+        case ofiCentralisationHistoryReportsActions.OFI_SET_REQUESTED_CENTRALIZATION_REPORTS:
             return toggleRequestState(state, true);
 
-        case ofiCentralizationReportsActions.OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS:
+        case ofiCentralisationHistoryReportsActions.OFI_CLEAR_REQUESTED_CENTRALIZATION_REPORTS:
             return toggleRequestState(state, false);
 
         /* Default. */
@@ -67,12 +67,12 @@ export const OfiCentralizationReportsListReducer = function (state: Centralizati
     }
 };
 
-function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<CentralizationReportsDetails> {
+function formatCentralisationHistoryReportsDataResponse(rawData: Array<any>): Array<CentralisationHistoryReportsDetails> {
     const rawDataList = fromJS(rawData);
 
     let i = 0;
 
-    const centralizationReportsList = Map(rawDataList.reduce(
+    const centralisationHistoryReportsList = Map(rawDataList.reduce(
         function (result, item) {
             result[i] = {
                 aum: item.get('aum'),
@@ -98,10 +98,10 @@ function formatCentralizationReportsDataResponse(rawData: Array<any>): Array<Cen
         },
         {}));
 
-    return centralizationReportsList.toJS();
+    return centralisationHistoryReportsList.toJS();
 }
 
-function formatBaseCentralizationHistoryDataResponse(rawData: Array<any>): Array<CentralizationReportsDetails> {
+function formatBaseCentralisationHistoryDataResponse(rawData: Array<any>): Array<CentralisationHistoryReportsDetails> {
 
     const rawDataList = fromJS(rawData);
 
@@ -123,7 +123,7 @@ function formatBaseCentralizationHistoryDataResponse(rawData: Array<any>): Array
     return data.toJS();
 }
 
-function formatCentralizationHistoryDataResponse(rawData: Array<any>): Array<CentralizationReportsDetails> {
+function formatCentralisationHistoryDataResponse(rawData: Array<any>): Array<CentralisationHistoryReportsDetails> {
 
     const rawDataList = fromJS(rawData);
 
@@ -156,6 +156,6 @@ function formatCentralizationHistoryDataResponse(rawData: Array<any>): Array<Cen
     return data.toJS();
 }
 
-function toggleRequestState(state: CentralizationReports, requested: boolean): CentralizationReports {
+function toggleRequestState(state: CentralisationHistoryReports, requested: boolean): CentralisationHistoryReports {
     return Object.assign({}, state, {requested});
 }

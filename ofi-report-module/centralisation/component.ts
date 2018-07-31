@@ -36,17 +36,18 @@ interface SelectedItem {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CentralizationReportComponent implements OnInit, OnDestroy {
+
+export class CentralisationReportComponent implements OnInit, OnDestroy {
 
     unknownValue = '???';
 
     filtersForm: FormGroup;
 
-    fundsUrl = '/reports/precentralisation/funds';
-    sharesUrl = '/reports/precentralisation/shares';
+    fundsUrl = '/reports/centralisation/funds';
+    sharesUrl = '/reports/centralisation/shares';
 
-    centralizationReportsFundsList: Array<any> = [];
-    centralizationReportsSharesList: Array<any> = [];
+    centralisationReportsFundsList: Array<any> = [];
+    centralisationReportsSharesList: Array<any> = [];
 
     // Locale
     language = 'en';
@@ -89,8 +90,8 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     private subscriptions: Array<any> = [];
 
     fundsList: Array<any> = [];
-    selectedFund = 0;
     sharesList: Array<any> = [];
+    selectedFund = 0;
     selectedShare = 0;
 
     sharesDetails: any = [];
@@ -138,22 +139,20 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
-    // @select(['ofi', 'ofiReports', 'centralizationReports', 'requested']) requestedOfiCentralizationReportsObj;
-    // @select(['ofi', 'ofiReports', 'centralizationReports', 'centralizationReportsList']) OfiCentralizationReportsListObj;
 
     // share list for ng-select
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedFundsList']) requestedFundsListOb;
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsList']) fundsListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'requestedFundsList']) requestedFundsListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'fundsList']) fundsListOb;
 
     // shares details
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'fundsDetailsList']) fundsDetailsListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'fundsDetailsList']) fundsDetailsListOb;
 
     // share list for ng-select
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'requestedSharesList']) requestedSharesListOb;
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesList']) sharesListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'requestedSharesList']) requestedSharesListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'sharesList']) sharesListOb;
 
     // shares details
-    @select(['ofi', 'ofiReports', 'precentralizationReports', 'sharesDetailsList']) sharesDetailsListOb;
+    @select(['ofi', 'ofiReports', 'centralisationReports', 'sharesDetailsList']) sharesDetailsListOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -169,9 +168,30 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                 private _fileDownloader: FileDownloader,
                 private _translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
+        // reset datagrid
+        this.fundsDetails = [];
+        this.sharesDetails = [];
+        this.selectedFund = 0;
+        this.selectedShare = 0;
+        this.sharesTotalNetAmount = 0;
+        this.sharesTotalSubscriptionAmount = 0;
+        this.sharesTotalRedemptionAmount = 0;
+        this.fundsTotalNetAmount = 0;
+        this.fundsTotalSubscriptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;
+        this.pieChartDatas = [
+            {
+                name: 'Subscription (%)',
+                value: 0,
+            },
+            {
+                name: 'Redemption (%)',
+                value: 0,
+            }
+        ];
 
-        this.isFundLevel = (this.router.url.indexOf('/precentralisation/funds') !== -1) ? true : false;
-        this.isShareLevel = (this.router.url.indexOf('/precentralisation/shares') !== -1) ? true : false;
+        this.isFundLevel = (this.router.url.indexOf('/centralisation/funds') !== -1) ? true : false;
+        this.isShareLevel = (this.router.url.indexOf('/centralisation/shares') !== -1) ? true : false;
 
         this.fundSpecificDates = [
             {id: 0, text: _translate.translate('Specific NAV Date')},
@@ -183,6 +203,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         this.appConfig = appConfig;
 
         this.createFiltersForm();
+        this.filtersForm.reset();
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
 
@@ -256,8 +277,33 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         }
     }
 
-    public ngOnInit() {
+    resetDatas() {
+        // reset datagrid
+        this.filtersForm.reset();
+        this.fundsDetails = [];
+        this.sharesDetails = [];
+        this.selectedFund = 0;
+        this.selectedShare = 0;
+        this.sharesTotalNetAmount = 0;
+        this.sharesTotalSubscriptionAmount = 0;
+        this.sharesTotalRedemptionAmount = 0;
+        this.fundsTotalNetAmount = 0;
+        this.fundsTotalSubscriptionAmount = 0;
+        this.fundsTotalRedemptionAmount = 0;
+        this.pieChartDatas = [
+            {
+                name: 'Subscription (%)',
+                value: 0,
+            },
+            {
+                name: 'Redemption (%)',
+                value: 0,
+            }
+        ];
+    }
 
+    public ngOnInit() {
+        this.resetDatas();
     }
 
     getLanguage(requested): void {
@@ -279,7 +325,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     requestedFundsListFromRedux(requestedFundsList): void {
         if (!requestedFundsList) {
-            OfiReportsService.defaultRequestPrecentralizationReportsFundsList(this.ofiReportsService, this.ngRedux);
+            OfiReportsService.defaultRequestCentralisationReportsFundsList(this.ofiReportsService, this.ngRedux);
         }
     }
 
@@ -301,7 +347,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
 
     requestedSharesListFromRedux(requestedSharesList): void {
         if (!requestedSharesList) {
-            OfiReportsService.defaultRequestPrecentralizationReportsSharesList(this.ofiReportsService, this.ngRedux);
+            OfiReportsService.defaultRequestCentralisationReportsSharesList(this.ofiReportsService, this.ngRedux);
         }
     }
 
@@ -322,7 +368,7 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     buildLink(id) {
-        const dest = 'am-reports-section/centralization-history/' + id;
+        const dest = 'am-reports-section/centralisation/' + id;
         this.router.navigateByUrl(dest);
     }
 
@@ -345,32 +391,57 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
     }
 
     requestSearch(form) {
-        if (this.filtersForm.controls['specificDate'].value.length > 0) {
-            this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
-            this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
-            this.mode = (this.isSettlementSelected) ? 2 : 1;    // 1 = NAV ; 2 = Settlement
+        if (this.filtersForm.controls['specificDate'].value !== null) {
+            if (this.filtersForm.controls['specificDate'].value.length > 0) {
+                this.isPeriod = (this.filtersForm.controls['specificDate'].value[0].id < 2) ? false : true;
+                this.isSettlementSelected = (this.filtersForm.controls['specificDate'].value[0].id === 1 || this.filtersForm.controls['specificDate'].value[0].id === 3) ? true : false;
+                this.mode = (this.isSettlementSelected) ? 2 : 1;    // 1 = NAV ; 2 = Settlement
+            } else {
+                this.mode = 0;
+                this.filtersForm.get('dateFrom').patchValue(null, { emitEvent: false });
+                this.filtersForm.get('dateTo').patchValue(null, { emitEvent: false });
+                this.sharesTotalNetAmount = 0;
+                this.sharesTotalSubscriptionAmount = 0;
+                this.sharesTotalRedemptionAmount = 0;
+                this.fundsTotalNetAmount = 0;
+                this.fundsTotalSubscriptionAmount = 0;
+                this.fundsTotalRedemptionAmount = 0;
+            }
         } else {
             this.mode = 0;
+            this.filtersForm.get('dateFrom').patchValue(null, { emitEvent: false });
+            this.filtersForm.get('dateTo').patchValue(null, { emitEvent: false });
+            this.sharesTotalNetAmount = 0;
+            this.sharesTotalSubscriptionAmount = 0;
+            this.sharesTotalRedemptionAmount = 0;
+            this.fundsTotalNetAmount = 0;
+            this.fundsTotalSubscriptionAmount = 0;
+            this.fundsTotalRedemptionAmount = 0;
         }
-        if (this.filtersForm.controls['selectList'].value.length > 0) {
-            if (this.isFundLevel) {
-                this.selectedFund = this.filtersForm.controls['selectList'].value[0].id;
-            }
-            if (this.isShareLevel) {
-                this.selectedShare = this.filtersForm.controls['selectList'].value[0].id;
+        if (this.filtersForm.controls['selectList'].value !== null) {
+            if (this.filtersForm.controls['selectList'].value.length > 0) {
+                if (this.isFundLevel) {
+                    this.selectedFund = this.filtersForm.controls['selectList'].value[0].id;
+                }
+                if (this.isShareLevel) {
+                    this.selectedShare = this.filtersForm.controls['selectList'].value[0].id;
+                }
+            } else {
+                this.selectedFund = 0;
+                this.selectedShare = 0;
             }
         } else {
             this.selectedFund = 0;
             this.selectedShare = 0;
         }
 
-        this.dateFrom = (this.filtersForm.controls['dateFrom'].value !== '') ? this.filtersForm.controls['dateFrom'].value : '';
-        this.dateTo = (this.filtersForm.controls['dateTo'].value !== '' && this.isPeriod) ? this.filtersForm.controls['dateTo'].value : '';
+        this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '' : this.filtersForm.controls['dateFrom'].value;
+        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null ) && !this.isPeriod) ? '' : this.filtersForm.controls['dateTo'].value;
 
         if (this.isFundLevel) {
             this.isFundsPayloadOK = true;
             if (this.mode > 0 && this.dateFrom !== '') {
-                if (this.isPeriod && this.dateTo === '') {
+                if (this.isPeriod && (this.dateTo === '' || this.dateTo === null)) {
                     this.isFundsPayloadOK = false;
                 }
                 if (this.isFundsPayloadOK) {
@@ -380,17 +451,27 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                         dateTo: this.dateTo,
                         mode: this.mode,
                     };
-                    this.ofiReportsService.requestPrecentralizationReportsFundsDetailsList(this.fundsPayload);
+                    this.ofiReportsService.requestCentralisationReportsFundsDetailsList(this.fundsPayload);
                 }
             } else {
                 this.isFundsPayloadOK = false;
                 this.fundsDetails = [];
+                this.pieChartDatas = [
+                    {
+                        name: 'Subscription (%)',
+                        value: 0,
+                    },
+                    {
+                        name: 'Redemption (%)',
+                        value: 0,
+                    }
+                ];
             }
         }
         if (this.isShareLevel) {
             this.isSharesPayloadOK = true;
             if (this.mode > 0 && this.dateFrom !== '') {
-                if (this.isPeriod && this.dateTo === '') {
+                if (this.isPeriod && (this.dateTo === '' || this.dateTo === null)) {
                     this.isSharesPayloadOK = false;
                 }
                 if (this.isSharesPayloadOK) {
@@ -400,13 +481,24 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
                         dateTo: this.dateTo,
                         mode: this.mode,
                     };
-                    this.ofiReportsService.requestPrecentralizationReportsSharesDetailsList(this.sharesPayload);
+                    this.ofiReportsService.requestCentralisationReportsSharesDetailsList(this.sharesPayload);
                 }
             } else {
                 this.isSharesPayloadOK = false;
-
+                this.sharesDetails = [];
+                this.pieChartDatas = [
+                    {
+                        name: 'Subscription (%)',
+                        value: 0,
+                    },
+                    {
+                        name: 'Redemption (%)',
+                        value: 0,
+                    }
+                ];
             }
         }
+        this.changeDetectorRef.markForCheck();
     }
 
     onClickViewCorrespondingOrders(id) {
@@ -434,30 +526,39 @@ export class CentralizationReportComponent implements OnInit, OnDestroy {
         }
     }
 
-    exportPrecentralizationReport() {
-        if (this.isFundLevel && this.isFundsPayloadOK) {
-            this._fileDownloader.downLoaderFile({
-                method: 'exportPrecentralisationFunds',
-                token: this.memberSocketService.token,
-                fundId: this.fundsPayload.fundId,
-                dateFrom: this.fundsPayload.dateFrom,
-                dateTo: this.fundsPayload.dateTo,
-                mode: this.fundsPayload.mode,
-            });
-        }
-        if (this.isShareLevel && this.isSharesPayloadOK) {
-            this._fileDownloader.downLoaderFile({
-                method: 'exportPrecentralisationShares',
-                token: this.memberSocketService.token,
-                shareId: this.sharesPayload.shareId,
-                dateFrom: this.sharesPayload.dateFrom,
-                dateTo: this.sharesPayload.dateTo,
-                mode: this.sharesPayload.mode,
-            });
+    exportCentralisationReport() {
+        if (this.myDetails) {
+            if (this.myDetails.userId) {
+                if (this.isFundLevel && this.isFundsPayloadOK) {
+                    this._fileDownloader.downLoaderFile({
+                        method: 'exportCentralisationFunds',
+                        token: this.memberSocketService.token,
+                        fundId: this.fundsPayload.fundId,
+                        dateFrom: this.fundsPayload.dateFrom,
+                        dateTo: this.fundsPayload.dateTo,
+                        mode: this.fundsPayload.mode,
+                        userId: this.myDetails.userId,
+                    });
+                }
+                if (this.isShareLevel && this.isSharesPayloadOK) {
+                    this._fileDownloader.downLoaderFile({
+                        method: 'exportCentralisationShares',
+                        token: this.memberSocketService.token,
+                        shareId: this.sharesPayload.shareId,
+                        dateFrom: this.sharesPayload.dateFrom,
+                        dateTo: this.sharesPayload.dateTo,
+                        mode: this.sharesPayload.mode,
+                        userId: this.myDetails.userId,
+                    });
+                }
+            }
         }
     }
 
     ngOnDestroy() {
+        // reset datagrid
+        this.resetDatas();
+
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
