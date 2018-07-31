@@ -53,7 +53,8 @@ import {
     OfiRedirectTokenComponent,
     OfiConsumeTokenComponent,
     MyHoldingsComponent,
-    OfiSubPortfolioComponent
+    OfiSubPortfolioComponent,
+    OfiClientReferentialComponent
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -187,6 +188,11 @@ export const ROUTES: Routes = [
             {
                 path: 'invite-investors',
                 component: OfiInviteInvestorsComponent,
+                canActivate: [LoginGuardService],
+            },
+            {
+                path: 'client-referential/:kycID',
+                component: OfiClientReferentialComponent,
                 canActivate: [LoginGuardService],
             },
             {
