@@ -761,8 +761,11 @@ The IZNES Team.</p>`;
         let amount = 0;
 
         if (this.isKnownNav()) {
-            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 2});
-        }else {
+            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {
+                notation: 'fixed',
+                precision: 2
+            });
+        } else {
             amount = this._moneyValuePipe.parse(this.amount.value, 2);
         }
 
@@ -786,7 +789,7 @@ The IZNES Team.</p>`;
             const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
             const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {
                 notation: 'fixed',
-                precision: 4
+                precision: 2
             });
             const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
             this.amount.patchValue(amountStr, { onlySelf: true, emitEvent: false });
