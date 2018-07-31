@@ -58,6 +58,7 @@ function handleSetAmKycList(state: AmKycListState, action: Action): AmKycListSta
                 status: item.get('kycStatus', 0),
                 dateEntered: mDateHelper.convertUtcStrToLocalStr(item.get('dateEntered', 0), 'YYYY-MM-DD HH:mm'),
                 clientReference: item.get('clientReference', 0),
+                alreadyCompleted: item.get('alreadyCompleted', 0)
             });
 
             return result;

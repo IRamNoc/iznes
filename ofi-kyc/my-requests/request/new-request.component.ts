@@ -10,7 +10,8 @@ import {NewRequestService} from './new-request.service';
 import {steps} from '../requests.config';
 
 @Component({
-    templateUrl: './new-request.component.html'
+    templateUrl: './new-request.component.html',
+    styleUrls : ['./new-request.component.scss']
 })
 export class NewKycRequestComponent implements OnInit {
 
