@@ -22,5 +22,6 @@ export const nonMenuLink = {
         '\/management-company',
         '\/reports\/holders-list\/funds\/[^\\/]*',
         '\/reports\/holders-list\/shares\/[^\\/]*',
+        '\/invite-investors',
     ],
 };

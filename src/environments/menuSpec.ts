@@ -334,12 +334,20 @@ const kycDocuments = {
             dynamic_link: '/kyc-am-documents/[^\/]*',
         },
         {
-            label: 'Invite Investors',
-            label_txt: 'txt_invite_investors',
-            icon_class: 'fa fa-align-left',
-            element_id: 'top-menu-invite-investor',
-            router_link: '/invite-investors',
+            label: 'Client Referential',
+            label_txt: 'txt_client_referential',
+            icon_class: 'fa fa-users',
+            element_id: 'top-menu-client-referential',
+            router_link: '/client-referential/list',
+            dynamic_link: '/client-referential/[^\/]*',
         },
+        // {
+        //     label: 'Invite Investors',
+        //     label_txt: 'txt_invite_investors',
+        //     icon_class: 'fa fa-align-left',
+        //     element_id: 'top-menu-invite-investor',
+        //     router_link: '/invite-investors',
+        // },
     ],
 };
 
@@ -348,7 +356,7 @@ const myAssetManagers = {
     label_txt: 'txt_my_asset_managers',
     icon_class: 'fa fa-users',
     element_id: 'top-menu-my-asset-managers',
-    always_displayed : true,
+    always_displayed: true,
     children: [
         {
             label: 'My documents',
@@ -358,11 +366,11 @@ const myAssetManagers = {
             router_link: '/my-asset-managers/my-documents',
         },
         {
-            label : 'My Requests',
-            label_txt : 'txt_my_requests',
-            icon_class : 'fa fa-file-text',
-            element_id : 'top-menu-my-requests',
-            router_link : '/my-requests/list',
+            label: 'My Requests',
+            label_txt: 'txt_my_requests',
+            icon_class: 'fa fa-file-text',
+            element_id: 'top-menu-my-requests',
+            router_link: '/my-requests/list',
             dynamic_link: '/my-requests/list[^\/]*',
         },
     ],
