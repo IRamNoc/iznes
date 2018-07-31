@@ -769,4 +769,27 @@ export class OfiKycService {
             },
         ));
     }
+
+    notifyAMKycContinuedFromRequest(kycID){
+        const messageBody = {
+            RequestName: 'iznnotifyamfromrequest',
+            token : this.memberSocketService.token,
+            type : 'kycContinuedFromRequest',
+            kycID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    notifyAMKycContinuedFromAskMoreInfo(kycID){
+        const messageBody = {
+            RequestName: 'iznnotifyamfromaskmoreinfo',
+            token : this.memberSocketService.token,
+            type : 'kycContinuedFromAskMoreInfo',
+            kycID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
 }
