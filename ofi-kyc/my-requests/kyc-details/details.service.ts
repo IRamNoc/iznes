@@ -43,6 +43,7 @@ export class KycDetailsService {
             .pickBy()
             .toPairs()
             .map(([controlName, controlValue]) => ({
+                originalId : controlName,
                 id: this.getNameFromControl(controlName),
                 value: this.getValueFromControl(controlName, controlValue)
             }))

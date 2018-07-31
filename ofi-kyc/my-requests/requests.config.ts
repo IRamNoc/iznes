@@ -1246,17 +1246,15 @@ export const controlToName = {
     geographicalOrigin2 : 'Geographical origin precision',
 
     // Beneficiaries
-    beneficiaries : {
-        firstName : 'First name',
-        lastName : 'Last name',
-        address : 'Address',
-        nationality : 'Nationality',
-        dateOfBirth : 'Date of birth',
-        cityOfBirth : 'City of birth',
-        countryOfBirth : 'Country of birth',
-        document : 'Document',
-        holdingPercentage : 'Holding percentage'
-    },
+    firstName : 'First name',
+    lastName : 'Last name',
+    address : 'Address',
+    nationality : 'Nationality',
+    dateOfBirth : 'Date of birth',
+    cityOfBirth : 'City of birth',
+    countryOfBirth : 'Country of birth',
+    documentID : 'Document',
+    holdingPercentage : 'Holding percentage',
 
     custodianHolderAccount : 'Custodian holder account',
     custodianName : "Custodian's name",
@@ -1271,8 +1269,6 @@ export const controlToName = {
     investorStatus : 'Does investor have pro status?',
     excludeProducts : 'Excluded category of products/services',
     changeProfessionalStatus : 'Opted for non professional status',
-    firstName : 'First name',
-    lastName : 'Last name',
     jobPosition : 'Job position',
     numberYearsExperienceRelatedFunction : 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition : 'Number of years of experience in current position',
