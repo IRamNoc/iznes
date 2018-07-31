@@ -62,5 +62,59 @@ export const kycMessages = {
             thanks : 'Merci,',
             signature: 'L\'équipe IZNES.',
         }
+    },
+    kycInvestorCompletion: {
+        en : {
+            greeting : 'Hello {{investorFirstName}},',
+            line1 : '{{amCompanyName}} has reviewed your KYC application but would like you to complete the KYC form on IZNES.',
+            line2 : 'You will find your KYC request in the module My Asset Managers -> My Requests or by clicking on the button below.',
+            buttonLabel : 'Click here to complete your KYC request on IZNES',
+            thanks : 'Thank you,',
+            signature: 'The IZNES team.'
+        },
+        fr : {
+            greeting : 'Bonjour {{investorFirstName}},',
+            line1 : '{{amCompanyName}} a revu votre demande KYC mais souhaite que vous remplissiez tout de même le formulaire KYC sur IZNES.',
+            line2 : 'Vous trouverez votre demande KYC dans le module Mes Société de Gestions -> Mes Requêtes ou en cliquant sur le bouton ci-dessous.',
+            buttonLabel : 'Cliquez ici pour compléter votre demande KYC sur IZNES',
+            thanks : 'Merci,',
+            signature: 'L\'équipe IZNES.',
+        }
+    },
+    kycContinuedFromRequest: {
+        en : {
+            greeting : 'Hello,',
+            line1 : '{{investorCompanyName}} has taken into consideration your request and has just been redirected to KYC Introduction form step.',
+            line2 : 'You will be informed as soon as the request will be validated by the Investor.',
+            buttonLabel : 'Manage the request',
+            thanks : 'Thank you,',
+            signature: 'The IZNES team.'
+        },
+        fr : {
+            greeting : 'Bonjour,',
+            line1 : '{{investorCompanyName}} ont pris en considération votre demande et vient d\'être redirigé vers l\'introduction du formulaire KYC.',
+            line2 : 'Vous serez informés dès que la demande sera validée par l\'investisseur.\n',
+            buttonLabel : 'Gérer la demande',
+            thanks : 'Merci,',
+            signature: 'L\'équipe IZNES.',
+        }
+    },
+    kycContinuedFromAskMoreInfo: {
+        en : {
+            greeting : 'Hello,',
+            line1 : '{{investorCompanyName}} has taken into consideration your request and has just been redirected to the KYC Identification form.',
+            line2 : 'You will be informed as soon as the request will be validated by the Investor.',
+            buttonLabel : 'Manage the request',
+            thanks : 'Thank you,',
+            signature: 'The IZNES team.'
+        },
+        fr : {
+            greeting : 'Bonjour,',
+            line1 : '{{investorCompanyName}} ont pris en considération votre demande et vient d\'être redirigé vers le formulaire KYC d\'identification.',
+            line2 : 'Vous serez informé dès que la demande sera validée par l\'investisseur.',
+            buttonLabel : 'Gérer la demande',
+            thanks : 'Merci,',
+            signature: 'L\'équipe IZNES.',
+        }
     }
 };

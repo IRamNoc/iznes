@@ -40,6 +40,21 @@ export class SetlMessageKycComponent implements OnInit {
                     this.replaceMessageValue(kycMessages.kycUserFinished.fr) :
                     this.replaceMessageValue(kycMessages.kycUserFinished.en);
                 break;
+            case 'kycInvestorCompletion':
+                this.messageBody = (this.config.lang === 'fr-Latn') ?
+                    this.replaceMessageValue(kycMessages.kycInvestorCompletion.fr) :
+                    this.replaceMessageValue(kycMessages.kycInvestorCompletion.en);
+                break;
+            case 'kycContinuedFromRequest':
+                this.messageBody = (this.config.lang === 'fr-Latn') ?
+                    this.replaceMessageValue(kycMessages.kycContinuedFromRequest.fr) :
+                    this.replaceMessageValue(kycMessages.kycContinuedFromRequest.en);
+                break;
+            case 'kycContinuedFromAskMoreInfo':
+                this.messageBody = (this.config.lang === 'fr-Latn') ?
+                    this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.fr) :
+                    this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.en);
+                break;
         }
 
         this.logService.log('messageBody: ', this.messageBody);
@@ -54,6 +69,7 @@ export class SetlMessageKycComponent implements OnInit {
             const value = data[key].replace('{{amFirstName}}', this.config.amFirstName)
                                    .replace('{{amCompanyName}}', this.config.amCompanyName)
                                    .replace('{{investorCompanyName}}', this.config.investorCompanyName)
+                                   .replace('{{investorFirstName}}', this.config.investorFirstName)
                                    .replace('{{investorEmail}}', this.config.investorEmail)
                                    .replace('{{investorPhoneNumber}}', this.config.investorPhoneNumber);
 
