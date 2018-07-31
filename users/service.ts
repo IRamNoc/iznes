@@ -24,6 +24,7 @@ import {
     ReadUsersAuditRequest,
     UpdateUserStatusRequest,
     InviteUserRequest,
+    ReadUserPermissionsRequest,
 } from './model';
 
 @Injectable()

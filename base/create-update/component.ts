@@ -21,6 +21,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     form;
     mode: 0 | 1; // 0 - create, 1 - update
     noun: string;
+    nouns = AccountAdminNouns;
     permissionAreas: any[] = [];
     permissionLevels: any[] = [];
     permissionsEmitter: EventEmitter<any> = new EventEmitter();

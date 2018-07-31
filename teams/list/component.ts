@@ -10,6 +10,7 @@ import {
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
+import { AccountAdminBaseService } from '../../base/service';
 
 @Component({
     selector: 'app-core-admin-teams-list',
@@ -26,8 +27,9 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
     constructor(private service: UserTeamsService,
                 router: Router,
                 redux: NgRedux<any>,
-                fileDownloader: FileDownloader) {
-        super(router, redux, fileDownloader);
+                fileDownloader: FileDownloader,
+                baseService: AccountAdminBaseService) {
+        super(router, redux, fileDownloader, baseService);
         this.noun = 'Team';
         this.csvRequest = {
             userTeamID: null,

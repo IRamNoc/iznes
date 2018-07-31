@@ -8,7 +8,9 @@ import { ToasterService } from 'angular2-toaster';
 
 import * as Model from '../model';
 import * as UsersModel from '../../users/model';
+import { AccountAdminPermission } from '../../base/create-update/permissions/model';
 import { UserManagementServiceBase } from '../../base/create-update/user-management/service';
+import { AccountAdminPermissionsServiceBase } from '../../base/create-update/permissions/service';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
 import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
@@ -23,9 +25,11 @@ export class UserTeamsCreateUpdateComponent
     form: Model.AccountAdminTeamForm = new Model.AccountAdminTeamForm();
 
     private usersSelected: UsersModel.AccountAdminUser[];
+    private permissionsSelected: AccountAdminPermission[];
 
     constructor(private service: UserTeamsService,
                 private userMgmtService: UserManagementServiceBase,
+                private permissionsService: AccountAdminPermissionsServiceBase,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
@@ -60,6 +64,10 @@ export class UserTeamsCreateUpdateComponent
         this.usersSelected = users;
     }
 
+    getTeamPermissions(permissions: AccountAdminPermission[]): void {
+        this.permissionsSelected = permissions;
+    }
+
     save(): void {
         if (this.isCreateMode()) {
             this.createTeam();
@@ -89,6 +97,11 @@ export class UserTeamsCreateUpdateComponent
                     `${this.form.name}`,
                 );
 
+                this.addPermissionsToTeam(
+                    data[1].Data[0].userTeamID,
+                    `${this.form.name}`,
+                );
+
                 this.router.navigateByUrl(this.getBackUrl());
             },
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
@@ -107,6 +120,24 @@ export class UserTeamsCreateUpdateComponent
                     e,
                 ),
             );
+        });
+    }
+
+    private addPermissionsToTeam(userTeamId: number, teamName: string): void {
+        _.forEach(this.permissionsSelected, (permission: AccountAdminPermission) => {
+            // only update child permissions && permissions that are ticked as true
+            if (permission.parentID !== null && permission.state) {
+                this.permissionsService.updateTeamPermission(
+                    permission.state,
+                    userTeamId,
+                    permission.permissionAreaID,
+                    () => {},
+                    (e: AccountAdminErrorResponse) => this.onSaveError(
+                        teamName,
+                        e,
+                    ),
+                );
+            }
         });
     }
 

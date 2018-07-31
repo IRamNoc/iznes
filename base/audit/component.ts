@@ -80,12 +80,13 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.audit = undefined;
-
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach((sub: Subscription) => {
                 sub.unsubscribe();
             });
         }
+
+        this.subscriptions = [];
+        this.audit = undefined;
     }
 }

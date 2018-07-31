@@ -11,25 +11,30 @@
 
     <clr-dg-row *clrDgItems="let permission of permissions; let idx = index;" id="{{'permissionsRow' + idx}}"
         clrDgRowClickable
-        [class.selected]="permission.isActivated">
-        <clr-dg-cell id="permissionsCellName{{idx}}" class="col-name">
-            {{permission.name}}
+        [class.parent]="isPermissionParent(permission)"
+        [class.child]="!isPermissionParent(permission)"
+        [class.hidden]="permission.hidden && permission.parentID != null"
+        (click)="onRowClick(permission)">
+        <clr-dg-cell id="permissionsCellName{{idx}}" class="col-name"
+            [class.parent]="isPermissionParent(permission)"
+            [class.child]="!isPermissionParent(permission)">
+            <i class="fa"
+                [class.fa-angle-right]="!showParentAsOpen(permission)"
+                [class.fa-angle-down]="showParentAsOpen(permission)"
+                [hidden]="!isPermissionParent(permission)">
+            </i> {{permission.name}}
         </clr-dg-cell>
-        <clr-dg-cell id="permissionsCellDesc{{idx}}" class="col-desc">
+        <clr-dg-cell id="permissionsCellDesc{{idx}}" class="col-desc" [class.parent]="isPermissionParent(permission)">
             {{permission.description}}
         </clr-dg-cell>
         <clr-dg-cell id="permissionsCellActions{{idx}}" class="col-actions">
-            <label class="switch">
+            <label class="switch" *ngIf="!isPermissionParent(permission)">
                 <input class="form-control" id="{{'permissionsCellAction' + idx}}" type="checkbox"
-                    [disabled]="isProcessing() || readOnly"
-                    [(ngModel)]="permission.isActivated"
+                    [disabled]="isProcessing() || isUser"
+                    [(ngModel)]="permission.state"
                     (ngModelChange)="updateState($event, permission)">
                 <span class="slider round"></span>
             </label>
         </clr-dg-cell>
     </clr-dg-row>
-
-    <clr-dg-footer>{{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
-        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-    </clr-dg-footer>
 </clr-datagrid>

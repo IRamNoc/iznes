@@ -1,12 +1,18 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
+import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { ToasterService } from 'angular2-toaster';
+
 import { immutableHelper } from '@setl/utils';
+import {
+    clearRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminUserPermissionAreas,
+} from '@setl/core-store';
+
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
-import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
-import * as _ from 'lodash';
+import { AccountAdminErrorResponse, DataGridConfig, AccountAdminNouns } from '../../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -15,6 +21,7 @@ import * as _ from 'lodash';
 export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() entityId: number;
+    @Input() noun: string;
     @Input() doUpdate: boolean = true;
     @Output() entitiesFn: EventEmitter<Type[]> = new EventEmitter();
 
@@ -71,6 +78,16 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
         return this.state === UserMgmtModel.UserMgmtState.Processing;
     }
 
+    getCreateNewLink(): string {
+        if (this.noun === AccountAdminNouns.Team) {
+            return '/account-admin/teams/new';
+        } else if (this.noun === AccountAdminNouns.User) {
+            return '/account-admin/users/new';
+        } else {
+            return '/';
+        }
+    }
+
     protected processEntities(entities: any[]): any[] {
         const entitiesReturn: any[] = [];
 
@@ -87,24 +104,31 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
     }
 
     protected onUpdateStateSuccess(state: boolean): void {
+        this.redux.dispatch(clearRequestedAccountAdminPermissionAreas());
+        this.redux.dispatch(clearRequestedAccountAdminUserPermissionAreas());
+
+        this.toaster.clear();
+
         (state) ?
             this.toaster.pop('success', 'User added to team') :
             this.toaster.pop('info', 'User removed from team');
     }
 
     protected onRequestError(e: AccountAdminErrorResponse, entity?: any): void {
+        this.toaster.clear();
         this.toaster.pop('error', e[1].Data[0].Message);
 
         if (entity) entity.isActivated = !entity.isActivated;
     }
 
     ngOnDestroy() {
-        this.entities = undefined;
-
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach((sub: Subscription) => {
                 sub.unsubscribe();
             });
         }
+
+        this.subscriptions = [];
+        this.entities = undefined;
     }
 }

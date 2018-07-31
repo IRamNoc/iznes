@@ -56,10 +56,10 @@ export class UserTeamsUsersMgmtUsersComponent
             idIndex: 'userTeamID',
             columns: [
                 {
-                    id: 'Ref',
+                    id: 'Reference',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Ref',
+                    title: 'Reference',
                 },
                 {
                     id: 'Name',

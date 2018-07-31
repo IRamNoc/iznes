@@ -4,6 +4,7 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { FileDownloader } from '@setl/utils';
+import { AccountAdminBaseService } from '../service';
 
 @Component({
     selector: 'app-account-admin-list-base',
@@ -15,11 +16,13 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
 
     private token: string;
     private userId: number;
+    private username: string;
     protected csvRequest;
     protected subscriptions: Subscription[] = [];
 
     @select(['user', 'authentication', 'token']) tokenOb;
     @select(['user', 'myDetail', 'userId']) userIdOb;
+    @select(['user', 'myDetail', 'username']) userNameOb;
 
     /**
      *
@@ -29,7 +32,8 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
      */
     constructor(private router: Router,
                 protected redux: NgRedux<any>,
-                private fileDownloader: FileDownloader) {}
+                private fileDownloader: FileDownloader,
+                private baseService: AccountAdminBaseService) {}
 
     ngOnInit() {
         this.initSubscriptions();
@@ -43,6 +47,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
         this.subscriptions.push(this.userIdOb.subscribe((userId: number) => {
             this.userId = userId;
         }));
+
+        this.subscriptions.push(this.userNameOb.subscribe((username: string) => {
+            this.username = username;
+        }));
     }
 
     navigateToEntity(entityId: number) {
@@ -50,12 +58,15 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     }
 
     exportEntitiesAsCSV(): void {
-        this.fileDownloader.downLoaderFile({
-            ...this.csvRequest,
-            method: `export${this.noun}sCSV`,
-            token: this.token,
-            userId: this.userId,
-        });
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `export${this.noun}sCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
     }
 
     ngOnDestroy() {
@@ -64,5 +75,7 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
                 sub.unsubscribe();
             });
         }
+
+        this.subscriptions = [];
     }
 }

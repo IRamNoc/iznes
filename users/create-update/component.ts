@@ -137,7 +137,12 @@ export class UsersCreateUpdateComponent
             this.siteSettings = settings;
         });
 
-        this.subscriptions.push(userTypesSub, userTypesReqSub, myDetailsSub, siteSettingsSub);
+        this.subscriptions.push(
+            userTypesSub,
+            userTypesReqSub,
+            myDetailsSub,
+            siteSettingsSub,
+        );
     }
 
     private requestUserTypes(requested: boolean): void {

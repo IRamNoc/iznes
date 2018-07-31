@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 
-import { SagaHelper } from '@setl/utils';
+import { SagaHelper, FileDownloader } from '@setl/utils';
 
 @Injectable()
 export class AccountAdminBaseService {
@@ -33,6 +33,23 @@ export class AccountAdminBaseService {
             },
             errorCallback,
         ));
+    }
+
+    getCSVExport(service: FileDownloader,
+                 request: any,
+                 method: string,
+                 token: string,
+                 userId: number,
+                 username: string,
+                 type: string): void {
+        service.downLoaderFile({
+            ...request,
+            method,
+            token,
+            userId,
+            userName: username,
+            type,
+        });
     }
 
 }

@@ -89,6 +89,7 @@
                 <div class="col-sm-12">
                     <app-core-admin-users-team-mgmt
                         [entityId]="entityId"
+                        [noun]="nouns.Team"
                         [doUpdate]="isUpdateMode()"
                         (entitiesFn)="getUserTeams($event)">
                     </app-core-admin-users-team-mgmt>
@@ -110,7 +111,9 @@
 
                 <div class="row">
                     <div class="col-sm-12">
-                        <app-core-admin-permissions [readOnly]="true"></app-core-admin-permissions>
+                        <app-core-admin-permissions
+                            [isUser]="true"
+                            [entityId]="entityId"></app-core-admin-permissions>
                     </div>
                 </div>
             </ng-container>
