@@ -29,15 +29,18 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     requestDetailStatus = 'accepted';
     lastUpdate: string = 'YYYY-MM-DD 00:00:00';
+    statusAuditItems = [];
 
+    kycMessage = '';
     companyName: string = '';
 
     isKYCFull = true;
 
     private subscriptions: Array<any> = [];
-    private unsubscribe: Subject<any> = new Subject();
+    unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'data']) statusAuditTrail$;
 
     constructor(
         private _fb: FormBuilder,
@@ -48,18 +51,47 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         public _translate: MultilingualService,
         private ngRedux: NgRedux<any>,
     ) {
-        this.constructDisabledForm();
         this.statusList = statusList;
     }
 
     ngOnInit() {
+        if (this.kycID) {
+            this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
+        }
+        this.constructDisabledForm();
         this.initSubscriptions();
     }
 
     initSubscriptions() {
+        this.statusAuditTrail$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (!this.kycID || !Object.keys(d).length) {
+                    return;
+                }
+
+                this.statusAuditItems = d[this.kycID].map(item => ({
+                    oldStatus: item.oldStatus,
+                    newStatus: item.newStatus,
+                    modifiedBy: item.modifiedBy,
+                    dateEntered: item.dateEntered,
+                    message: item.message,
+                }));
+
+                if (this.statusAuditItems) {
+                    if (this.statusAuditItems[0].message) {
+                        this.disabledForm.get('rejectionMessage').patchValue(this.statusAuditItems[0].message, { emitEvent: false });
+                        this.disabledForm.get('informationMessage').patchValue(this.statusAuditItems[0].message, { emitEvent: false });
+                    }
+                }
+
+                this._changeDetectorRef.markForCheck();
+            })
+        ;
+
         this.myKycList$
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unSubscribe)
             )
             .subscribe(kycList => {
                 this.kycList = kycList;
@@ -68,6 +100,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     this.requestDetailStatus = this.statusList[kyc.status];
                     this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
                     this.companyName = kyc.companyName;
+                    this.lastUpdate = kyc.lastUpdated;
                 }
             })
         ;
@@ -76,7 +109,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     ngAfterViewInit() {
         setTimeout(() => {
             document.getElementById('blocStatus').style.opacity = '1';
-        }, 1500);
+        }, 200);
     }
 
     constructDisabledForm() {
