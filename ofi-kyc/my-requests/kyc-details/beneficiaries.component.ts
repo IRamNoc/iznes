@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
-import {isEmpty} from 'lodash';
+import {isEmpty, find} from 'lodash';
 
 @Component({
     selector: 'kyc-details-beneficiaries',
@@ -21,6 +21,13 @@ export class KycDetailsBeneficiariesComponent implements OnInit {
 
     modalOpenChange() {
         this.close.emit();
+    }
+
+    getName(beneficiary){
+        let firstName = find(beneficiary, ['originalId', 'firstName']).value;
+        let lastName = find(beneficiary, ['originalId', 'lastName']).value;
+
+        return [firstName, lastName].join(' ');
     }
 
 }

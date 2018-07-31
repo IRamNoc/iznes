@@ -21,11 +21,11 @@
         </td>
         <td class="left px-1">
             <span *ngIf="!row.hash">
-                <span *ngIf="!isFromForm(row.id)">
+                <span *ngIf="!isFromForm(row.originalId)">
                     {{row.value}}
                 </span>
 
-                <ng-container *ngIf="isFromForm(row.id)">
+                <ng-container *ngIf="isFromForm(row.originalId)">
                     <span *ngFor="let value of split(row.value)">
                         {{value | translate}}
                     </span>
