@@ -109,7 +109,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
     ngAfterViewInit() {
         setTimeout(() => {
             document.getElementById('blocStatus').style.opacity = '1';
-            document.getElementById('blocStatus').style.marginTop = 0;
+            document.getElementById('blocStatus').style.marginTop = '0';
         }, 200);
     }
 
