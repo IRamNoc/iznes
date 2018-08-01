@@ -233,6 +233,7 @@ public class LoginAndNavigationHelper {
 
         clickLoginButton();
             WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        Thread.sleep(2000);
         try {
             WebElement menuBar = driver.findElement(By.id("topBarMenu"));
             wait.until(visibilityOf(menuBar));
