@@ -1,10 +1,13 @@
 <!-- Breadcrumbs. -->
 <div class="header-breadcrumbs">
-    <h1 id="ofi-client-referential"><i class="fa fa-users"></i> {{'Client Referential: All Clients' | translate}}
+    <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
+        {{'Client Referential: ' | translate}}
+        <span *ngIf="kycId == 'list'">{{'All Clients' | translate}}</span>
+        <span *ngIf="kycId != 'list'">{{clients[kycId].registeredCompanyName}} - {{clients[kycId].clientReference}}</span>
     </h1>
 </div>
 
-<clr-tabs *ngIf="listView">
+<clr-tabs *ngIf="kycId == 'list'">
     <clr-tab>
         <button clrTabLink>
             <i class="fa fa-users"></i> {{'All Clients' | translate}}
@@ -25,8 +28,8 @@
                             id="investor-type-select"
                             class="form-control"
                             [items]="investorTypes"
-                            [allowClear]="false"
-                            [placeholder]="_translate.translate('Select Investor Type')"
+                            [allowClear]="true"
+                            [placeholder]="_translate.translate('All Investors')"
                             formControlName="investorType">
                         </ng-select>
                     </form>
@@ -48,9 +51,30 @@
             <div class="row">
                 <div class="col-sm-12">
 
-                    table goes here<br><br>
+                    <clr-datagrid #dataGrid>
+                        <clr-dg-column [clrDgField]="'clientReference'">{{'Client Reference' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'walletName'">{{'Iznes Reference' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'registeredCompanyName'">{{'Company' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'leiCode'">{{'LEI' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'legalForm'">{{'Legal Form' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'sectorActivity'">{{'Sector of Activity' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
 
-                    <button (click)="example();">Go to tabs</button>    <!--temporary button-->
+                        <clr-dg-row *clrDgItems="let item of clientReferential" (click)="kycId = item.kycID;">
+                            <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.registeredCompanyName}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.leiCode}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.legalForm}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.sectorActivity}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                        </clr-dg-row>
+
+                        <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                            <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                        </clr-dg-footer>
+                    </clr-datagrid>
 
                 </div>
             </div>
@@ -58,7 +82,7 @@
     </clr-tab>
 </clr-tabs>
 
-<clr-tabs *ngIf="!listView">
+<clr-tabs *ngIf="kycId != 'list'">
     <clr-tab>
         <button clrTabLink>{{'KYC Information' | translate}}</button>
         <clr-tab-content>

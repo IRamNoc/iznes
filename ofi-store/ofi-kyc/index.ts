@@ -1,13 +1,14 @@
-import {KycDetailsReducer, KycDetailsState} from './kyc-details';
-import {combineReducers, Reducer} from 'redux';
-import {KycMyInformationsReducer, KycMyInformationsState} from './my-informations';
-import {AmKycListReducer, AmKycListState} from './ofi-am-kyc-list';
-import {investorInvitationState, investorInvitationReducer} from './invitationsByUserAmCompany';
-import {kycStatusAuditTrailState, kycStatusAuditTrailReducer} from './status-audit-trail';
-import {MyKycListState, MyKycListReducer} from './kyc-list';
+import { KycDetailsReducer, KycDetailsState } from './kyc-details';
+import { combineReducers, Reducer } from 'redux';
+import { KycMyInformationsReducer, KycMyInformationsState } from './my-informations';
+import { AmKycListReducer, AmKycListState } from './ofi-am-kyc-list';
+import { investorInvitationState, investorInvitationReducer } from './invitationsByUserAmCompany';
+import { kycStatusAuditTrailState, kycStatusAuditTrailReducer } from './status-audit-trail';
+import { MyKycListState, MyKycListReducer } from './kyc-list';
 import { MyKycRequestedState, MyKycRequestedReducer, MyKycSetRequestedKycs } from './kyc-request';
-import {kycInformationAuditTrailState, kycInformationAuditTrailReducer} from './information-audit-trail';
-import {OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState} from './inv-my-documents';
+import { kycInformationAuditTrailState, kycInformationAuditTrailReducer } from './information-audit-trail';
+import { OfiInvMyDocumentsListReducer, OfiInvMyDocumentsState } from './inv-my-documents';
+import { OfiClientReferentialState, OfiClientReferentialReducer } from "./client-referential";
 
 export {
     KycMyInformations,
@@ -23,6 +24,14 @@ export {
     setrequested,
     clearrequested,
 } from './ofi-am-kyc-list';
+
+export {
+    OFI_SET_CLIENT_REFERENTIAL,
+    OFI_CLEAR_REQUESTED_CLIENT_REFERENTIAL,
+    OFI_SET_REQUESTED_CLIENT_REFERENTIAL,
+    ofiClearRequestedClientReferential,
+    ofiSetRequestedClientReferential
+} from './client-referential';
 
 export {
     SET_KYC_DETAILS_GENERAL,
@@ -78,6 +87,7 @@ export interface KycState {
     statusAuditTrail: kycStatusAuditTrailState;
     informationAuditTrail: kycInformationAuditTrailState;
     invMyDocuments: OfiInvMyDocumentsState;
+    clientReferential: OfiClientReferentialState
 }
 
 export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
@@ -90,4 +100,5 @@ export const KycReducer: Reducer<KycState> = combineReducers<KycState>({
     statusAuditTrail: kycStatusAuditTrailReducer,
     informationAuditTrail: kycInformationAuditTrailReducer,
     invMyDocuments: OfiInvMyDocumentsListReducer,
+    clientReferential: OfiClientReferentialReducer,
 });
