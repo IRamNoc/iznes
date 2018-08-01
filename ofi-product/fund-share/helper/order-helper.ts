@@ -381,7 +381,7 @@ export class OrderHelper {
     }
 
     static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse, holding: number) {
-        const decimalPlaces = 2;
+        const decimalPlaces = 5;
         const orderReference = pad(order.orderID, 11, '0');
         const orderType = Number(order.orderType);
         let subject;
