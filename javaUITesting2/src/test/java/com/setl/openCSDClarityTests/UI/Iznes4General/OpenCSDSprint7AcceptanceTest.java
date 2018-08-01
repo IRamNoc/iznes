@@ -70,7 +70,7 @@ public class OpenCSDSprint7AcceptanceTest {
 
     @Test
     public void shouldInviteInvestorAndCheckDBTG659() throws InterruptedException, SQLException {
-        String investorEmail = "jordan.miller2@setl.io";
+        String investorEmail = "jordan.miller1@setl.io";
 
         validateDatabaseInvestorInvited(0, investorEmail);
 

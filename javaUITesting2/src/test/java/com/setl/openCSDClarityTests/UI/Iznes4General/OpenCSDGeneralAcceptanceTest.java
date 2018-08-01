@@ -320,11 +320,17 @@ public class OpenCSDGeneralAcceptanceTest {
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
         }
-        wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
+        //wait.until(visibilityOfElementLocated(By.id("ofi-kyc-invite-investors")));
     }
 
     public static void inviteAnInvestor(String email, String firstname, String lastname, String expectedResult) throws InterruptedException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
+        wait.until(elementToBeClickable(By.id("invite-investors-btn")));
+        driver.findElement(By.id("invite-investors-btn")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("kyc_email_0")));
+
         driver.findElement(By.id("kyc_email_0")).sendKeys(email);
         driver.findElement(By.id("kyc_language_0")).click();
 
