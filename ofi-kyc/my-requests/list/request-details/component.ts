@@ -8,6 +8,9 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
+import {groupBy, find} from 'lodash';
+import {NewRequestService} from '../../request/new-request.service';
+import {Router} from '@angular/router';
 
 import { MultilingualService } from '@setl/multilingual';
 import {KycStatus as statusList} from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
@@ -50,45 +53,18 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         private _toasterService: ToasterService,
         public _translate: MultilingualService,
         private ngRedux: NgRedux<any>,
+        private newRequestService: NewRequestService,
+        private router : Router,
     ) {
         this.statusList = statusList;
     }
 
     ngOnInit() {
-        if (this.kycID) {
-            this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
-        }
         this.constructDisabledForm();
         this.initSubscriptions();
     }
 
     initSubscriptions() {
-        this.statusAuditTrail$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                if (!this.kycID || !Object.keys(d).length) {
-                    return;
-                }
-
-                this.statusAuditItems = d[this.kycID].map(item => ({
-                    oldStatus: item.oldStatus,
-                    newStatus: item.newStatus,
-                    modifiedBy: item.modifiedBy,
-                    dateEntered: item.dateEntered,
-                    message: item.message,
-                }));
-
-                if (this.statusAuditItems) {
-                    if (this.statusAuditItems[0].message) {
-                        this.disabledForm.get('rejectionMessage').patchValue(this.statusAuditItems[0].message, { emitEvent: false });
-                        this.disabledForm.get('informationMessage').patchValue(this.statusAuditItems[0].message, { emitEvent: false });
-                    }
-                }
-
-                this._changeDetectorRef.markForCheck();
-            })
-        ;
-
         this.myKycList$
             .pipe(
                 takeUntil(this.unSubscribe)
@@ -101,7 +77,29 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
                     this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
                     this.companyName = kyc.companyName;
                     this.lastUpdate = kyc.lastUpdated;
+                    this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
                 }
+            })
+        ;
+
+        this.statusAuditTrail$
+            .takeUntil(this.unSubscribe)
+            .subscribe((d) => {
+                if (!this.kycID || !Object.keys(d).length) {
+                    return;
+                }
+
+                if (d[this.kycID]) {
+                    if (d[this.kycID][0]) {
+                        if (d[this.kycID][0].message) {
+                            this.statusAuditItems = d[this.kycID][0].message;
+                            this.disabledForm.get('rejectionMessage').patchValue(this.statusAuditItems, {emitEvent: false});
+                            this.disabledForm.get('informationMessage').patchValue(this.statusAuditItems, {emitEvent: false});
+                        }
+                    }
+                }
+
+                this._changeDetectorRef.markForCheck();
             })
         ;
     }
@@ -119,8 +117,8 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             lastName: new FormControl({value: 'last name', disabled: true}),
             email: new FormControl({value: 'email address', disabled: true}),
             phone: new FormControl({value: 'phone number', disabled: true}),
-            rejectionMessage: new FormControl({value: '(AM\'s message when reject)', disabled: true}),
-            informationMessage: new FormControl({value: '(AM\'s message when ask for more information)', disabled: true}),
+            rejectionMessage: new FormControl({value: 'No message', disabled: true}),
+            informationMessage: new FormControl({value: 'No message', disabled: true}),
         });
     }
 
@@ -132,5 +130,36 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
         /* Detach the change detector on destroy. */
         this._changeDetectorRef.detach();
+    }
+
+    redirectToRelatedKycs(kycID) {
+        let currentKyc = find(this.kycList, ['kycID', kycID]);
+        let completedStep = currentKyc.completedStep;
+        let extras = {};
+
+        let grouped = groupBy(this.kycList, 'currentGroup');
+        let currentGroup = grouped[currentKyc.currentGroup];
+
+        let kycIDs = [];
+        currentGroup.forEach(kyc => {
+            kycIDs.push({
+                kycID: kyc.kycID,
+                amcID: kyc.amManagementCompanyID,
+                completedStep : completedStep
+            });
+        });
+
+        if(completedStep){
+            extras = {
+                queryParams : {
+                    step : completedStep,
+                    completed : currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true)
+                }
+            };
+        }
+
+        this.newRequestService.storeCurrentKycs(kycIDs);
+
+        this.router.navigate(['my-requests', 'new'], extras);
     }
 }
