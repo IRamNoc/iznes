@@ -311,11 +311,11 @@ public class OpenCSDGeneralAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("top-menu-my-clients")));
         wait.until(elementToBeClickable(By.id("top-menu-my-clients")));
         driver.findElement(By.id("top-menu-my-clients")).click();
-        wait.until(visibilityOfElementLocated(By.id("top-menu-invite-investor")));
-        wait.until(elementToBeClickable(By.id("top-menu-invite-investor")));
+        wait.until(visibilityOfElementLocated(By.id("top-menu-client-referential")));
+        wait.until(elementToBeClickable(By.id("top-menu-client-referential")));
 
         try {
-            driver.findElement(By.id("top-menu-invite-investor")).click();
+            driver.findElement(By.id("top-menu-client-referential")).click();
 
         } catch (Exception e) {
             fail("FAILED : " + e.getMessage());
