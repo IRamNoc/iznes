@@ -89,6 +89,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     // form config
     metadata: any;
 
+    trueAmount: number;
+
     // Date picker configuration
     configDateCutoff = {
         firstDayOfWeek: 'mo',
@@ -276,7 +278,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this._moneyValuePipe.parse(this.form.controls.quantity.value, 4)
             ),
             a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.form.controls.amount.value, 4)
+                this._moneyValuePipe.parse(this.trueAmount, 2)
             )
         }[this.actionBy];
     }
@@ -726,7 +728,9 @@ The IZNES Team.</p>`;
                  * quantity = amount / nav
                  * Warning: Before changing this logic check with team lead
                  */
-                const newValue = this._moneyValuePipe.parse(value, 4);
+                const newValue = this._moneyValuePipe.parse(value, 2);
+
+                this.trueAmount = newValue;
 
                 const quantity = math.format(math.chain(newValue).divide(this.nav).done(), {
                     notation: 'fixed',
@@ -791,7 +795,7 @@ The IZNES Team.</p>`;
                 notation: 'fixed',
                 precision: 2
             });
-            const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
+            const amountStr = this._moneyValuePipe.transform(amount.toString(), 2).toString();
             this.amount.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
             this.unSubscribeForChange();
@@ -813,7 +817,7 @@ The IZNES Team.</p>`;
         decimals = decimals || 0;
         return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), {
             notation: 'fixed',
-            precision: 4
+            precision: 5
         });
     }
 
