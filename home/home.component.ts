@@ -1,14 +1,14 @@
 
-import {tap, map, filter} from 'rxjs/operators';
+import { tap, map, filter } from 'rxjs/operators';
 /*
  * Copyright (c) 2016 VMware, Inc. All Rights Reserved.
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
-import { Component } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { select } from '@angular-redux/store';
-import { Subscription ,  Observable } from 'rxjs';
-import { isEmpty } from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { ReportingService } from '@setl/core-balances';
 import { MultilingualService } from '@setl/multilingual';
 
@@ -21,8 +21,7 @@ interface Asset {
     styleUrls: ['./home.component.scss'],
     templateUrl: './home.component.html',
 })
-export class HomeComponent {
-
+export class HomeComponent implements OnInit, OnDestroy {
     connectionCount: number;
     actionCount: number;
     unreadCount: number;
@@ -30,11 +29,11 @@ export class HomeComponent {
     lastLogin: string;
     connectedWalletId: number;
     holdingByAsset: any;
-    transactions$: Observable<Array<any>>;
+    transactions$: Observable<any[]>;
     myChainAccess: any;
 
     // List of observable subscription
-    subscriptions: Array<Subscription> = [];
+    subscriptions: Subscription[] = [];
 
     // List of redux observable.
     @select(['message', 'myMessages', 'counts', 'action']) actionCount$: Observable<number>;
@@ -43,12 +42,13 @@ export class HomeComponent {
     @select(['user', 'myDetail', 'displayName']) username$: Observable<string>;
     @select(['user', 'myDetail', 'lastLogin']) lastLogin$: Observable<string>;
 
-    public assetTiles: Array<Asset>;
-    public holdingByAsset$: Observable<Array<any>>;
+    public assetTiles: Asset[];
+    public holdingByAsset$: Observable<any[]>;
 
     public constructor(
         private reportingService: ReportingService,
-        public _translate: MultilingualService,
+        public translate: MultilingualService,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
     }
 
@@ -67,18 +67,26 @@ export class HomeComponent {
         ];
 
         this.transactions$ = this.reportingService.getTransactions().pipe(map(txs => txs.slice(0, 5)));
-        this.holdingByAsset$ = this.reportingService.getBalances().pipe(
-            tap((assets) => {
-                assets.slice(0, 2).map((asset, idx) => {
-                    this.assetTiles[idx] = asset;
-                });
-            }),
-            map(assets => assets.slice(0, 5)),);
+
+        this.holdingByAsset$ = this.reportingService.getBalances();
+
+        this.subscriptions.push(this.reportingService.getBalances().subscribe((assets) => {
+            assets.slice(0, 2).map((asset, idx) => {
+                this.assetTiles[idx] = asset;
+            });
+
+            if (this.assetTiles[0].asset) {
+                this.changeDetectorRef.detectChanges();
+            }
+        }));
     }
 
     ngOnDestroy() {
         for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
+
+        /* Detach the change detector on destroy. */
+        this.changeDetectorRef.detach();
     }
 }
