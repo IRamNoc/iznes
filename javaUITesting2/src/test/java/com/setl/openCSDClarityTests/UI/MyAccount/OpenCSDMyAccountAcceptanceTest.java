@@ -100,7 +100,7 @@ public class OpenCSDMyAccountAcceptanceTest {
         navigateToDropdown("menu-user-administration");
         navigateToPageByID("menu-user-admin-users");
         String userDetails[] = generateRandomUserDetails();
-        createUserAndVerifySuccess(userDetails[0], "testops033@setl.io", "asdasd");
+        createUserAndVerifySuccess(userDetails[0], "testops034@setl.io", "asdasd");
         logout();
         clickForgottenPassword("testops082@setl.io");
         //LoginToOutlook("test@setl.io", "Sphericals1057!");

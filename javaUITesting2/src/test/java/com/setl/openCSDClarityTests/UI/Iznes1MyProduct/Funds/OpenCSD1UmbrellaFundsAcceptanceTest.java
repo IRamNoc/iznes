@@ -360,14 +360,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.cssSelector("#iznes > app-root > jaspero-confirmations > jaspero-confirmation > div.jaspero__dialog.ng-trigger.ng-trigger-wrapperAn > div.jaspero__dialog-actions > button.error")).click();
         wait.until(refreshed(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))));
         searchDraftByName(uFundDetails[0]);
-        if (wait.until(refreshed(invisibilityOfElementLocated(By.cssSelector("#product-dashboard-Draftsundefined > div > clr-dg-cell:nth-child(5) > div > button.btn.btn-danger.btn-sm.ng-star-inserted"))))) {
-            }
-            else
-                {
-            fail("Draft was not deleted");
-        }
-
     }
+
     @Test
     public void shouldEditAndSaveDraft() throws InterruptedException, SQLException {
         loginAndVerifySuccess("am", "alex01");
