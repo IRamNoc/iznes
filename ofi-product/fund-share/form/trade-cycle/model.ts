@@ -71,6 +71,10 @@ export class FundShareTradeCycleModel {
         });
     }
 
+    public reset() {
+        this.form.reset();
+    }
+
     private clearValidators(c): void {
         _.forEach((c as any).controls, (control => control.clearValidators()));
     }

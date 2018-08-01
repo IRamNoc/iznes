@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {select} from '@angular-redux/store';
@@ -6,6 +6,7 @@ import {get as getValue, map, sort} from 'lodash';
 import {Subject, combineLatest} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
+import {FormStepsDirective} from '@setl/utils/directives/form-steps/formsteps';
 import {NewRequestService} from './new-request.service';
 import {steps} from '../requests.config';
 
@@ -15,6 +16,7 @@ import {steps} from '../requests.config';
 })
 export class NewKycRequestComponent implements OnInit {
 
+    @ViewChild(FormStepsDirective) formSteps;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
