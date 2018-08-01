@@ -698,6 +698,10 @@ app-login .modal-body {
 .modal-body {
     overflow-x: visible;
     overflow-y: visible;
+
+    &.modal-scroll {
+        overflow-y: auto;
+    }
 }
 
 .content-area p {
