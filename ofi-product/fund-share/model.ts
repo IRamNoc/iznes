@@ -172,10 +172,57 @@ export class FundShare {
         };
     }
 
-    setFundShare(fundShare: OfiFundShare): void {
+    resetFundShare() {
+
+        this.calendar = {
+            ...this.calendar,
+            mandatory: new ShareCalendarMandatory(),
+        };
+
+        this.calendar.subscriptionTradeCycle.reset();
+        this.calendar.redemptionTradeCycle.reset();
+
+        this.characteristic = {
+            mandatory: new ShareCharacteristicMandatory(),
+        };
+        this.fees = {
+            mandatory: new ShareFeesMandatory(),
+            optional: new ShareFeesOptional(),
+        };
+        this.keyFacts = {
+            status: new ShareKeyFactsStatus(),
+            mandatory: new ShareKeyFactsMandatory(),
+            optional: new ShareKeyFactsOptional(),
+        };
+        this.listing = {
+            optional: new ShareListingOptional(),
+        };
+        this.priip = {
+            optional: new SharePRIIPOptional(),
+        };
+        this.profile = {
+            mandatory: new ShareProfileMandatory(),
+            optional: new ShareProfileOptional(),
+        };
+        this.representation = {
+            optional: new ShareRepresentationOptional(),
+        };
+        this.solvency = {
+            optional: new ShareSolvencyOptional(),
+        };
+        this.taxation = {
+            optional: new ShareTaxationOptional(),
+        };
+        this.documents = {
+            mandatory: new ShareDocumentsMandatory(),
+            optional: new ShareDocumentsOptional(),
+        };
+    }
+
+    setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
         this.fundID = fundShare.fundID;
-        this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
-        this.keyFacts.mandatory.isin.preset = fundShare.isin;
+        this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
+        this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
@@ -207,6 +254,7 @@ export class FundShare {
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
             fundShare.minSubsequentRedemptionInAmount;
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(
             this.calendar.mandatory.subscriptionCutOffTimeZone,
@@ -221,6 +269,14 @@ export class FundShare {
         this.setListItemPreset(
             this.calendar.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
+        );
+        this.setListItemPreset(
+            this.calendar.mandatory.navPeriodForRedemption,
+            fundShare.navPeriodForRedemption,
+        );
+        this.setListItemPreset(
+            this.calendar.mandatory.navPeriodForSubscription,
+            fundShare.navPeriodForSubscription,
         );
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
@@ -245,6 +301,87 @@ export class FundShare {
         this.fundID = fundShare.fundID;
     }
 
+    updateFundShare(fundShare: OfiFundShare, isPrefill = false): void {
+        this.fundID = fundShare.fundID;
+        this.keyFacts.mandatory.fundShareName.control.setValue(isPrefill ? null : fundShare.fundShareName);
+        this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
+        this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
+        this.setListItemValue(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
+        this.keyFacts.mandatory.subscriptionStartDate.control.setValue(fundShare.subscriptionStartDate);
+        this.keyFacts.mandatory.shareLaunchDate.control.setValue(fundShare.launchDate);
+        this.setListItemValue(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.keyFacts.mandatory.iban.control.setValue(fundShare.iban);
+        this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
+        this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
+        this.setListItemValue(this.keyFacts.mandatory.couponType, fundShare.couponType);
+        this.setListItemValue(
+            this.keyFacts.mandatory.freqOfDistributionDeclaration,
+            fundShare.freqOfDistributionDeclaration,
+        );
+        this.setListItemValue(this.keyFacts.mandatory.status, fundShare.status);
+        this.setFeederValue(fundShare.feeder);
+        this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
+        this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
+        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(fundShare.minInitialSubscriptionInShare);
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(fundShare.minInitialSubscriptionInAmount);
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(fundShare.minSubsequentSubscriptionInAmount);
+        this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(fundShare.minSubsequentRedemptionInAmount);
+        this.setListItemValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+
+        this.calendar.mandatory.subscriptionCutOffTime.control.setValue(fundShare.subscriptionCutOffTime);
+        this.setListItemValue(
+            this.calendar.mandatory.subscriptionCutOffTimeZone,
+            fundShare.subscriptionCutOffTimeZone,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.subscriptionSettlementPeriod,
+            fundShare.subscriptionSettlementPeriod,
+        );
+        this.calendar.mandatory.redemptionCutOffTime.control.setValue(fundShare.redemptionCutOffTime);
+        this.setListItemValue(this.calendar.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
+        this.setListItemValue(
+            this.calendar.mandatory.redemptionSettlementPeriod,
+            fundShare.redemptionSettlementPeriod,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.navPeriodForRedemption,
+            fundShare.navPeriodForRedemption,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.navPeriodForSubscription,
+            fundShare.navPeriodForSubscription,
+        );
+        // removed by PZ 28/06/2018
+        // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
+        this.fees.mandatory.maxManagementFee.control.setValue(fundShare.maxManagementFee);
+        this.fees.mandatory.maxSubscriptionFee.control.setValue(fundShare.maxSubscriptionFee);
+        this.fees.mandatory.maxRedemptionFee.control.setValue(fundShare.maxRedemptionFee);
+        this.setListItemValue(this.profile.mandatory.investorProfile, fundShare.investorProfile);
+        this.fees.mandatory.mifiidChargesOngoing.control.setValue(fundShare.mifiidChargesOngoing);
+        this.fees.mandatory.mifiidChargesOneOff.control.setValue(fundShare.mifiidChargesOneOff);
+        this.fees.mandatory.mifiidTransactionCosts.control.setValue(fundShare.mifiidTransactionCosts);
+        this.fees.mandatory.mifiidServicesCosts.control.setValue(fundShare.mifiidServicesCosts);
+        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(fundShare.mifiidIncidentalCosts);
+
+        this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
+        this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
+        this.applyOptionalData((this.priip.optional as any), JSON.parse(fundShare.priipOptionalData));
+        this.applyOptionalData((this.listing.optional as any), JSON.parse(fundShare.listingOptionalData));
+        this.applyOptionalData((this.taxation.optional as any), JSON.parse(fundShare.taxationOptionalData));
+        this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
+        this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
+
+        this.setRedemptionTradeCycleData(fundShare);
+        this.setSubscriptionTradeCycleData(fundShare);
+        this.fundID = fundShare.fundID;
+    }
+
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays =
             JSON.parse(fundShare.weeklySubscriptionDealingDays);
@@ -255,6 +392,7 @@ export class FundShare {
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod =
             fundShare.subscriptionTradeCyclePeriod;
+
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
@@ -324,6 +462,38 @@ export class FundShare {
         );
         this.setDocumentItem(this.documents.optional.tpts2, fundShareDocs.tpts2);
         this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
+    }
+
+    setFundShareDocsValue(fundShareDocs: OfiFundShareDocuments): void {
+        this.setDocumentItemValue(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
+        this.setDocumentItemValue(this.documents.mandatory.kiid, fundShareDocs.kiid);
+
+        this.setDocumentItemValue(this.documents.optional.annualActivityReport, fundShareDocs.annualActivityReport);
+        this.setDocumentItemValue(this.documents.optional.businessLetter, fundShareDocs.businessLetter);
+        this.setDocumentItemValue(this.documents.optional.emt, fundShareDocs.emt);
+        this.setDocumentItemValue(this.documents.optional.ept, fundShareDocs.ept);
+        this.setDocumentItemValue(this.documents.optional.kid, fundShareDocs.kid);
+        this.setDocumentItemValue(this.documents.optional.letterToShareholders, fundShareDocs.letterToShareholders);
+        this.setDocumentItemValue(
+            this.documents.optional.monthlyExtraFinancialReport,
+            fundShareDocs.monthlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.monthlyFinancialReport, fundShareDocs.monthlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.productSheet, fundShareDocs.productSheet);
+        this.setDocumentItemValue(
+            this.documents.optional.quarterlyExtraFinancialReport,
+            fundShareDocs.quarterlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.quarterlyFinancialReport, fundShareDocs.quarterlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.semiAnnualSummary, fundShareDocs.semiAnnualSummary);
+        this.setDocumentItemValue(this.documents.optional.sharesAllocation, fundShareDocs.sharesAllocation);
+        this.setDocumentItemValue(this.documents.optional.sriPolicy, fundShareDocs.sriPolicy);
+        this.setDocumentItemValue(
+            this.documents.optional.statutoryAuditorsCertification,
+            fundShareDocs.statutoryAuditorsCertification,
+        );
+        this.setDocumentItemValue(this.documents.optional.tpts2, fundShareDocs.tpts2);
+        this.setDocumentItemValue(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
     }
 
     setFund(fund: any): void {
@@ -445,7 +615,9 @@ export class FundShare {
         this.fundOptionnal.internalReference.control.setValue(fund.internalReference);
         this.fundOptionnal.additionnalNotes.control.setValue(fund.additionnalNotes);
 
-        this.updateUmbrella(umbrella);
+        if (umbrella) {
+            this.updateUmbrella(umbrella);
+        }
 
     }
 
@@ -528,6 +700,21 @@ export class FundShare {
         if (!this.isProduction) formItem.required = false;
     }
 
+    private setDocumentItemValue(formItem: FormItem, str: any): void {
+        if (!str) return null;
+
+        const arr = str.split('|');
+
+        formItem.control.setValue(arr[0]);
+        formItem.fileData = {
+            fileID: arr[0],
+            hash: arr[1],
+            name: arr[2],
+        };
+
+        if (!this.isProduction) formItem.required = false;
+    }
+
     private generateJSONString(model): string {
         const json = {};
 
@@ -578,7 +765,7 @@ export class FundShare {
     }
 
     private setListItemValue(field: FormItem, value: any): void {
-        if (!value) {
+        if (!value && value !== 0) {
             field.control.setValue([]);
             return;
         }
@@ -612,6 +799,14 @@ export class FundShare {
             })];
 
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
+    }
+
+    private setFeederValue(value: any): void {
+        const preset = (!value || value === 0)
+            ? [this.keyFacts.mandatory.feeder.listItems[0]]
+            : [_.find(this.keyFacts.mandatory.feeder.listItems, item => item.id === value)];
+
+        this.keyFacts.mandatory.feeder.control.setValue(preset);
     }
 
     private convertArrayToJSON(arr: any[]): string {

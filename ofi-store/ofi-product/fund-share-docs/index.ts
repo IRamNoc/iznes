@@ -6,6 +6,7 @@ export {
     SET_REQUESTED_FUND_SHARE_DOCS,
     CLEAR_REQUESTED_FUND_SHARE_DOCS,
     setRequestedFundShareDocs,
-    clearRequestedFundShareDocs
+    clearRequestedFundShareDocs,
+    setCurrentFundShareDocsRequest,
 } from './actions';
 export { getOfiFundShareDocsCurrentRequest } from './selector';

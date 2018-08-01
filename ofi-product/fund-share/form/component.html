@@ -11,10 +11,18 @@
 
         </button>
         <clr-tab-content class="outer">
-            <div class="row">
-                <div class="col-sm-12">
+            <div class="row tab-header-container">
+                <div class="col-sm-6">
                     <p>{{(isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate}}</p>
-                    <button class="btn btn-default btn-audit-trail" (click)="goToAuditTrail()" [hidden]="isCreate() || currDraft == 1">{{'Share Audit Trail' | translate}}</button>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group btn-container">
+                        <button class="btn btn-default" (click)="goToAuditTrail()" *ngIf="!isCreate()">{{'Share Audit Trail' | translate}}</button>
+                        <button class="btn btn-default" (click)="duplicateShare()" *ngIf="!isCreate()">{{'Duplicate a share' | translate}}</button>
+                        <ng-select *ngIf="isCreate()" id="share-prefill-select" [items]="shareListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Share')"
+                            [formControl]="shareControl">
+                        </ng-select>
+                    </div>
                 </div>
             </div>
             <div class="well" *ngIf="hasUmbrellaFund()">
@@ -101,7 +109,8 @@
                                             <label class="control-label" for="selectFund">{{'Click here to select another Umbrella Fund for this Fund' | translate}}
 
                                             </label>
-                                            <ng-select class="form-control" id="selectFund" [items]="fundListItems" placeholder="" [formControl]="selectFundForm.controls['fund']" [required]="true">
+                                            <ng-select class="form-control" id="selectFund" [items]="fundListItems" placeholder="" [formControl]="selectFundForm.controls['fund']"
+                                                [required]="true">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -254,12 +263,12 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['calendar'].mandatory)">
-                                <app-ofi-am-trade-cycle [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)">
+                                <app-ofi-am-trade-cycle #tradeCycleSubscription [tradeType]="'Subscription'" (modelEmitter)="calendarSubscriptionModelEvent($event)">
 
 
                                 </app-ofi-am-trade-cycle>
 
-                                <app-ofi-am-trade-cycle [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)">
+                                <app-ofi-am-trade-cycle #tradeCycleRedemption [tradeType]="'Redemption'" (modelEmitter)="calendarRedemptionModelEvent($event)">
 
 
                                 </app-ofi-am-trade-cycle>
@@ -465,7 +474,7 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].mandatory)">
-                                <app-dynamic-form [model]="model.documents.mandatory"></app-dynamic-form>
+                                <app-dynamic-form #documentsMandatory [model]="model.documents.mandatory"></app-dynamic-form>
                             </div>
 
                             <div class="row panel-header">
@@ -477,7 +486,7 @@
                                 </div>
                             </div>
                             <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['documents'].optional)">
-                                <app-dynamic-form [model]="model.documents.optional"></app-dynamic-form>
+                                <app-dynamic-form #documentsOptional [model]="model.documents.optional"></app-dynamic-form>
                             </div>
                         </div>
                     </clr-tab-content>

@@ -1,12 +1,23 @@
 :host {
-    form { width: 100%; }
-    .alt-option {
-        margin-top: -5px;
-
-        span {
-            height: 40px;
-            line-height: 40px;
-            padding: 0 10px;
+    form {
+        width: 100%;
+        .btn-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-end;
+            flex-wrap: nowrap;
+            p {
+                height: 1.5rem;
+                line-height: 1.5rem;
+                margin-right: 10px;
+                margin-left: 10px;
+                margin-bottom: 0;
+                display: inline-block;
+                width: auto;
+            }
+            a {
+                margin: 0;
+            }
         }
     }
 }
