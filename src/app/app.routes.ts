@@ -192,7 +192,7 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'client-referential/:kycID',
+                path: 'client-referential',
                 component: OfiClientReferentialComponent,
                 canActivate: [LoginGuardService],
             },

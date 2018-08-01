@@ -338,8 +338,7 @@ const kycDocuments = {
             label_txt: 'txt_client_referential',
             icon_class: 'fa fa-users',
             element_id: 'top-menu-client-referential',
-            router_link: '/client-referential/list',
-            dynamic_link: '/client-referential/[^\/]*',
+            router_link: '/client-referential',
         },
         // {
         //     label: 'Invite Investors',
