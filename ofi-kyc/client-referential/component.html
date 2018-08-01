@@ -1,0 +1,80 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-client-referential"><i class="fa fa-users"></i> {{'Client Referential: All Clients' | translate}}
+    </h1>
+</div>
+
+<clr-tabs *ngIf="listView">
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-users"></i> {{'All Clients' | translate}}
+        </button>
+        <clr-tab-content>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{'Please find below the list of your clients.' | translate}}<br>
+                    {{'From here you will also be able to invite more investors to join IZNES.' | translate}}
+                    <button id="invite-investors-btn" class="btn btn-success" style="margin-left: 10px;" (click)="gotoInvite();">{{'Invite Investors' | translate}}</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-sm-6">
+                    <p>{{'Investor Type' | translate}}</p>
+                    <form [formGroup]="investorTypeForm">
+                        <ng-select
+                            id="investor-type-select"
+                            class="form-control"
+                            [items]="investorTypes"
+                            [allowClear]="false"
+                            [placeholder]="_translate.translate('Select Investor Type')"
+                            formControlName="investorType">
+                        </ng-select>
+                    </form>
+                </div>
+                <div class="col-sm-6" align="right">
+                    <button class="btn btn-primary">
+                        {{'View Shares Authorisation Audit Trail' | translate}}
+                    </button>
+                    <br>
+                    <button class="btn btn-success">
+                        {{'Export Clients Holdings' | translate}}
+                    </button>
+                    <br>
+                    <button class="btn btn-success">
+                        {{'Export Clients Referential' | translate}}
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+
+                    table goes here<br><br>
+
+                    <button (click)="example();">Go to tabs</button>    <!--temporary button-->
+
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<clr-tabs *ngIf="!listView">
+    <clr-tab>
+        <button clrTabLink>{{'KYC Information' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>{{'Holdings' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

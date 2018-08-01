@@ -36,6 +36,7 @@ import { KycStatusAuditTrailComponent } from './audit-trail/status-audit-trail/k
 import { KycInformationAuditTrailComponent } from './audit-trail/information-audit-trail/kyc-information-audit-trail.component';
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
+import {OfiClientReferentialComponent} from "./client-referential/component";
 
 import {KycRequestsModule} from './my-requests/requests.module'
 
@@ -64,6 +65,7 @@ import config, { kycEnums } from './config';
         KycAuditTrailComponent,
         KycStatusAuditTrailComponent,
         KycInformationAuditTrailComponent,
+        OfiClientReferentialComponent
     ],
     exports: [
         OfiInviteInvestorsComponent,
@@ -79,6 +81,7 @@ import config, { kycEnums } from './config';
         OfiRedirectTokenComponent,
         OfiConsumeTokenComponent,
         KycAuditTrailComponent,
+        OfiClientReferentialComponent
     ],
     imports: [
         ToasterModule,

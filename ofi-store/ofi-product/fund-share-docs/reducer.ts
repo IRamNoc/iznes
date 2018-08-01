@@ -1,16 +1,17 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
-import {immutableHelper} from '@setl/utils';
+import { fromJS } from 'immutable';
+import { immutableHelper } from '@setl/utils';
 
 import * as actions from './actions';
+import { setCurrentFundShareDocsRequestAction } from './actions';
 
-import {OfiFundShareDocuments, OfiFundShareDocsState, CurrentRequest} from './model';
+import { OfiFundShareDocuments, OfiFundShareDocsState, CurrentRequest } from './model';
 
 const initialState: OfiFundShareDocsState = {
     fundShareDocuments: {},
     requested: false,
-    currentRequest: {}
+    currentRequest: {},
 };
 
 /**
@@ -20,22 +21,28 @@ const initialState: OfiFundShareDocsState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundShareDocsReducer = function (state: OfiFundShareDocsState = initialState, action: Action): OfiFundShareDocsState {
+export const OfiFundShareDocsReducer = (
+    state: OfiFundShareDocsState = initialState,
+    action: Action,
+): OfiFundShareDocsState => {
     switch (action.type) {
-        case actions.SET_FUND_SHARE_DOCS:
-            return handleSetOfiFundShareDocs(state, action);
-        
-        case actions.UPDATE_FUND_SHARE_DOCS:
-            return handleSetOfiFundShareDocs(state, action);
+    case actions.SET_FUND_SHARE_DOCS:
+        return handleSetOfiFundShareDocs(state, action);
 
-        case actions.SET_REQUESTED_FUND_SHARE_DOCS:
-            return toggleFundShareDocsRequested(state, true);
+    case actions.UPDATE_FUND_SHARE_DOCS:
+        return handleSetOfiFundShareDocs(state, action);
 
-        case actions.CLEAR_REQUESTED_FUND_SHARE_DOCS:
-            return toggleFundShareDocsRequested(state, false);
+    case actions.SET_REQUESTED_FUND_SHARE_DOCS:
+        return toggleFundShareDocsRequested(state, true);
 
-        default:
-            return state;
+    case actions.CLEAR_REQUESTED_FUND_SHARE_DOCS:
+        return toggleFundShareDocsRequested(state, false);
+
+    case actions.SET_CURRENT_FUND_SHARE_DOCS:
+        return setCurrentShareDocs(state, action as setCurrentFundShareDocsRequestAction);
+
+    default:
+        return state;
     }
 };
 
@@ -96,10 +103,11 @@ function handleSetOfiFundShareDocs(state: OfiFundShareDocsState, action: Action)
  * @param state
  * @return {OfiFundShareDocsState}
  */
-function toggleFundShareDocsRequested(state: OfiFundShareDocsState, requestedFundShare): OfiFundShareDocsState {
-    return Object.assign({}, state, {
-        requestedFundShare
-    });
+function toggleFundShareDocsRequested(state: OfiFundShareDocsState, requested): OfiFundShareDocsState {
+    return {
+        ...state,
+        requested,
+    };
 }
 
 /**
@@ -112,6 +120,16 @@ function handleSetCurrentRequest(state: OfiFundShareDocsState, action: Action): 
     const currentRequest: CurrentRequest = _.get(action, 'currentRequest');
 
     return Object.assign({}, state, {
-        currentRequest
+        currentRequest,
     });
+}
+
+function setCurrentShareDocs(
+    state: OfiFundShareDocsState,
+    action: setCurrentFundShareDocsRequestAction,
+): OfiFundShareDocsState {
+    return {
+        ...state,
+        currentRequest: action.currentRequest,
+    };
 }
