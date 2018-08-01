@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
     ApprovedKycMessageBody,
     ApprovedKycRequestData,
@@ -27,13 +27,14 @@ import {
     GetMyKycListRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
+    GetClientReferentialMessageBody
 } from './model';
 
-import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 
 import * as _ from 'lodash';
-import {SagaHelper} from '@setl/utils';
-import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import { SagaHelper } from '@setl/utils';
+import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {
     SET_KYC_DETAILS_GENERAL,
     SET_KYC_DETAILS_COMPANY,
@@ -53,10 +54,14 @@ import {
     setkycdetailsriskobjectivesrequested,
     setkycdetailsdocumentsrequested,
 } from '../../ofi-store/ofi-kyc/kyc-details';
-import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import {SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {
+    ofiClearRequestedClientReferential,
+    SET_MY_KYC_LIST,
+    SET_MY_KYC_LIST_REQUESTED
+} from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {
     SET_INVESTOR_INVITATIONS_LIST,
@@ -77,6 +82,7 @@ import {
 import { Observable } from "rxjs/Rx";
 
 import { investorInvitation } from '../../ofi-store/ofi-kyc/invitationsByUserAmCompany/model';
+import { ofiSetRequestedClientReferential, OFI_SET_CLIENT_REFERENTIAL } from "@ofi/ofi-main/ofi-store/ofi-kyc";
 
 @Injectable()
 export class OfiKycService {
@@ -314,7 +320,7 @@ export class OfiKycService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-    notifyKycCompletion(investorID, message, kycID){
+    notifyKycCompletion(investorID, message, kycID) {
         let messageBody = {
             token: this.memberSocketService.token,
             RequestName: 'iznnotifyinvestorkyccompletion',
@@ -770,26 +776,62 @@ export class OfiKycService {
         ));
     }
 
-    notifyAMKycContinuedFromRequest(kycID){
+    notifyAMKycContinuedFromRequest(kycID) {
         const messageBody = {
             RequestName: 'iznnotifyamfromrequest',
-            token : this.memberSocketService.token,
-            type : 'kycContinuedFromRequest',
+            token: this.memberSocketService.token,
+            type: 'kycContinuedFromRequest',
             kycID
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-    notifyAMKycContinuedFromAskMoreInfo(kycID){
+    notifyAMKycContinuedFromAskMoreInfo(kycID) {
         const messageBody = {
             RequestName: 'iznnotifyamfromaskmoreinfo',
-            token : this.memberSocketService.token,
-            type : 'kycContinuedFromAskMoreInfo',
+            token: this.memberSocketService.token,
+            type: 'kycContinuedFromAskMoreInfo',
             kycID
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    getclientreferential(type: number): any {
+
+        const messageBody: GetClientReferentialMessageBody = {
+            RequestName: 'izngetclientreferential',
+            token: this.memberSocketService.token,
+            type: type,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    defaultrequestgetclientreferential(type) {
+        // Set the state flag to true. so we do not request it again.
+        this.setRequestedClientReferential(true);
+
+        // Request the list.
+        const asyncTaskPipe = this.getclientreferential(type);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_CLIENT_REFERENTIAL],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    setRequestedClientReferential(boolValue: boolean) {
+        // false = doRequest | true = already requested
+
+        if (!boolValue) {
+            this.ngRedux.dispatch(ofiClearRequestedClientReferential());
+        } else {
+            this.ngRedux.dispatch(ofiSetRequestedClientReferential());
+        }
     }
 
 }

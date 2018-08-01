@@ -4,9 +4,9 @@ import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
 import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { immutableHelper } from '@setl/utils';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -31,15 +31,20 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     unSubscribe: Subject<any> = new Subject();
 
-    kycId: string;
+    kycId: string = 'list';
 
-    listView: boolean = true;
+    public subscriptions: Array<any> = [];
+
+    clientReferential = [];
+    clients = {};
 
     investorTypes = [
-        { id: -1, text: 'All Investors' },
         { id: 45, text: 'Institutional Investor' },
         { id: 55, text: 'Retail Investor' },
     ];
+
+    @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
+    @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) clientReferentialOb;
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -50,9 +55,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private _toasterService: ToasterService,
                 public _translate: MultilingualService,
                 private _ofiKycObservablesService: OfiKycObservablesService,
-                private router: Router,
-                private _route: ActivatedRoute,
-                private redux: NgRedux<any>) {
+                private router: Router) {
 
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
@@ -60,28 +63,32 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // Get the parameter passed to URL
-        this._route.params.subscribe((params) => {
-            this.kycId = params.kycID;
+        this._ofiKycService.setRequestedClientReferential(false);
 
-            if (this.kycId == 'list') {
-                //list view
-                this.listView = true;
-            } else {
-                //tabs view
-
-                //before this loads need to go check if they have access to this.
-
-                this.listView = false;
+        this.subscriptions.push(this.requestedOb.subscribe((requested) => {
+            if (!requested) {
+                this.requestSearch();
             }
+        }));
 
-            console.log('listView', this.listView);
+        this.subscriptions.push(this.clientReferentialOb.subscribe((clientReferential) => {
+            this.clientReferential = clientReferential;
 
-        });
+            clientReferential.forEach((client) => {
+                this.clients[client.kycID] = client;
+            });
+
+            this._changeDetectorRef.markForCheck();
+        }));
+
+        this.subscriptions.push(this.investorTypeForm.valueChanges.subscribe(() => {
+            this._ofiKycService.setRequestedClientReferential(false);
+        }));
     }
 
-    example() {     //remove this later.
-        this.router.navigateByUrl('/client-referential/3');
+    requestSearch() {
+        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        this._ofiKycService.defaultrequestgetclientreferential(investorType);
     }
 
     gotoInvite() {
@@ -89,6 +96,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
+        for (let key of this.subscriptions) {
+            key.unsubscribe();
+        }
     }
+
 }

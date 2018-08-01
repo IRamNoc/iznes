@@ -203,3 +203,8 @@ export interface GetKycDocumentRequestBody extends MemberNodeMessageBody {
     walletID: number;
     kycID: number;
 }
+
+export interface GetClientReferentialMessageBody extends MemberNodeMessageBody {
+    token: string;
+    type: number;
+}
