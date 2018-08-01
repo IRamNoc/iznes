@@ -11,6 +11,10 @@ import {FileViewerModule} from '@setl/core-fileviewer';
 import {PersistModule} from '@setl/core-persist';
 //
 
+import {KycDetailsComponent} from './kyc-details/details.component';
+import {KycDetailsGridComponent} from './kyc-details/details-grid.component';
+import {KycDetailsBeneficiariesComponent} from './kyc-details/beneficiaries.component';
+
 import {MyRequestsContainerComponent} from './my-requests-container.component';
 import {MyRequestsComponent} from './list/my-requests.component';
 import {MyRequestsGridComponent} from './list/list-grid.component';
@@ -73,7 +77,15 @@ import {ValidationService} from './request/steps/validation.service';
 
         NewKycDocumentsComponent,
 
-        NewKycValidationComponent
+        NewKycValidationComponent,
+
+        KycDetailsComponent,
+        KycDetailsGridComponent,
+        KycDetailsBeneficiariesComponent
+    ],
+    exports : [
+        KycDetailsComponent,
+        KycDetailsGridComponent
     ],
     imports : [
         ClarityModule,

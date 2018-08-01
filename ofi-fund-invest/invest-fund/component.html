@@ -165,7 +165,7 @@
                                 <span class="">{{'Last NAV Date' | translate}}</span>
                             </label>
                             <div>
-                                <input type="text" class="form-control" [value]="getDate(shareData.priceDate)" [readonly]="true">
+                                <input type="text" class="form-control" [value]="this.latestNavDateFormated()" [readonly]="true">
                             </div>
                         </div>
                     </div>
@@ -373,7 +373,7 @@
                     </div>
                 </div>
 
-                <div class="row">{{'Please type below a quantity or an amount' | translate}}</div>
+                <div class="row">{{'Please type below a quantity or an amount' | translate}} <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span></div>
 
                 <div class="row">
                     <div class="col-sm-6">

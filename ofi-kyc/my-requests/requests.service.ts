@@ -250,4 +250,12 @@ export class RequestsService {
         });
     }
 
+    getContext(){
+
+    }
+
+    getText(){
+
+    }
+
 }

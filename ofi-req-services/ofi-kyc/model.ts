@@ -161,10 +161,6 @@ export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMe
     token: string;
 }
 
-export interface getKycRequestDetailsRequestData extends MemberNodeMessageBody {
-    kycID: number;
-}
-
 export interface getKycRequestDetailsRequestBody extends MemberNodeMessageBody {
     token: string;
     kycID: number;
@@ -175,6 +171,7 @@ export interface createKYCDraftRequestData {
     managementCompanyID: number;
     investorWalletID: number;
     kycStatus: number;
+    alreadyCompleted: number;
 }
 
 export interface createKYCDraftMessageBody extends MemberNodeMessageBody {

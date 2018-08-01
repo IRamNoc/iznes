@@ -26,6 +26,7 @@ export { OfiConsumeTokenComponent } from './ofi-kyc/invitation-token/consume-tok
 export { MyRequestsComponent } from './ofi-kyc/my-requests/list/my-requests.component';
 export { NewKycRequestComponent } from './ofi-kyc/my-requests/request/new-request.component';
 export { MyRequestsContainerComponent } from './ofi-kyc/my-requests/my-requests-container.component';
+export { OfiClientReferentialComponent } from './ofi-kyc/client-referential/component';
 /**
  * My informations
  */
@@ -107,11 +108,12 @@ export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
-    OfiCentralizationHistoryComponent,
+    OfiCentralisationHistoryComponent,
     OfiReportModule,
     OfiManageCsvComponent,
-    CentralizationReportComponent,
-    CentralizationSelectComponent,
+    CentralisationReportComponent,
+    PrecentralisationReportComponent,
+    CentralisationSelectComponent,
     MyHoldingsComponent,
 } from './ofi-report-module';
 

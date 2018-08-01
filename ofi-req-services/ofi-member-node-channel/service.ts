@@ -7,7 +7,7 @@ import {
     clearRequestedFundAccessMy,
     clearRequestedNavFundsList,
     OFI_SET_COUPON_LIST,
-    ofiClearRequestedCentralizationReports,
+    ofiClearRequestedCentralisationHistoryReports,
     ofiClearRequestedIssuedAssets,
     ofiClearRequestedManageOrder,
     ofiClearRequestedMyOrder,
@@ -93,7 +93,7 @@ export class OfiMemberNodeChannelService {
                 this.logService.log('got the broadcast order');
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(ofiClearRequestedCentralizationReports());
+                this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
                 this.ngRedux.dispatch(ofiClearRequestedAmHolders());
                 this.ngRedux.dispatch(ofiClearHolderDetailRequested());
                 

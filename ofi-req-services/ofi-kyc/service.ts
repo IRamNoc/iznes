@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { NgRedux, select } from '@angular-redux/store';
-import { MemberSocketService } from '@setl/websocket-service';
+import {Injectable} from '@angular/core';
+import {NgRedux, select} from '@angular-redux/store';
+import {MemberSocketService} from '@setl/websocket-service';
 import {
     ApprovedKycMessageBody,
     ApprovedKycRequestData,
@@ -19,7 +19,6 @@ import {
     VerifyInvitationTokenRequestBody,
     UseTokenRequestBody,
     fetchInvitationsByUserAmCompanyRequestBody,
-    getKycRequestDetailsRequestData,
     getKycRequestDetailsRequestBody,
     SaveKycDocumentRequestData,
     SaveKycDocumentRequestBody,
@@ -30,41 +29,34 @@ import {
     createKYCDraftRequestData,
 } from './model';
 
-import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
+import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
 
 import * as _ from 'lodash';
-import { SagaHelper } from '@setl/utils';
-import { SET_AMKYCLIST, SET_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import {SagaHelper} from '@setl/utils';
+import {SET_AMKYCLIST, SET_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
 import {
-    SET_KYC_MYREQ_DETAILS_GENERAL,
-    setkycmyreqdetailsgeneralrequested,
-    clearkycmyreqdetailsgeneralrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANY,
-    setkycmyreqdetailscompanyrequested,
-    clearkycmyreqdetailscompanyrequested,
-    SET_KYC_MYREQ_DETAILS_COMPANYBENEFICIARIES,
-    setkycmyreqdetailscompanybeneficiariesrequested,
-    clearkycmyreqdetailscompanybeneficiariesrequested,
-    SET_KYC_MYREQ_DETAILS_BANKING,
-    setkycmyreqdetailsbankingrequested,
-    clearkycmyreqdetailsbankingrequested,
-    SET_KYC_MYREQ_DETAILS_CLASSIFICATION,
-    setkycmyreqdetailsclassificationrequested,
-    clearkycmyreqdetailsclassificationrequested,
-    SET_KYC_MYREQ_DETAILS_RISKNATURE,
-    setkycmyreqdetailsrisknaturerequested,
-    clearkycmyreqdetailsrisknaturerequested,
-    SET_KYC_MYREQ_DETAILS_RISKOBJECTIVES,
-    setkycmyreqdetailsriskobjectivesrequested,
-    clearkycmyreqdetailsriskobjectivesrequested,
-    SET_KYC_MYREQ_DETAILS_DOCUMENTS,
-    setkycmyreqdetailsdocumentsrequested,
-    clearkycmyreqdetailsdocumentsrequested,
-} from '../../ofi-store/ofi-kyc/ofi-my-request-details';
-import { SET_INFORMATIONS_FROM_API } from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
-import { SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+    SET_KYC_DETAILS_GENERAL,
+    SET_KYC_DETAILS_COMPANY,
+    SET_KYC_DETAILS_COMPANYBENEFICIARIES,
+    SET_KYC_DETAILS_BANKING,
+    SET_KYC_DETAILS_CLASSIFICATION,
+    SET_KYC_DETAILS_RISKNATURE,
+    SET_KYC_DETAILS_RISKOBJECTIVES,
+    SET_KYC_DETAILS_DOCUMENTS,
+
+    setkycdetailsgeneralrequested,
+    setkycdetailscompanyrequested,
+    setkycdetailscompanybeneficiariesrequested,
+    setkycdetailsbankingrequested,
+    setkycdetailsclassificationrequested,
+    setkycdetailsrisknaturerequested,
+    setkycdetailsriskobjectivesrequested,
+    setkycdetailsdocumentsrequested,
+} from '../../ofi-store/ofi-kyc/kyc-details';
+import {SET_INFORMATIONS_FROM_API} from '@ofi/ofi-main/ofi-store/ofi-kyc/my-informations';
+import {SET_MY_KYC_LIST, SET_MY_KYC_LIST_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 import {
     SET_INVESTOR_INVITATIONS_LIST,
@@ -82,16 +74,17 @@ import {
     OFI_SET_MY_DOCUMENTS_LIST,
     OFI_SET_REQUESTED_MY_DOCUMENTS,
 } from '@ofi/ofi-main/ofi-store/ofi-kyc/inv-my-documents';
+import { Observable } from "rxjs/Rx";
+
+import { investorInvitation } from '../../ofi-store/ofi-kyc/invitationsByUserAmCompany/model';
 
 @Injectable()
 export class OfiKycService {
 
-    isListeningGetInvitationsByUserAmCompany;
     informationAuditTrailList;
     statusAuditTrailList;
     unSubscribe: Subject<any> = new Subject();
 
-    @select(['ofi', 'ofiKyc', 'investorInvitations', 'requested']) investorInvitationsRequested$;
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'requested']) statusAuditTrailRequested$;
     @select(['ofi', 'ofiKyc', 'statusAuditTrail', 'list']) statusAuditTrailList$;
@@ -158,144 +151,136 @@ export class OfiKycService {
 
     /* START My Request Details */
 
-    static defaultRequestKycMyRequestDetailsGeneral(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsGeneral(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailscompanyrequested,
+            type: setkycdetailscompanyrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycGeneral(kycID);
-        console.log('general', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_GENERAL],
+            [SET_KYC_DETAILS_GENERAL],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsCompany(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsCompany(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsgeneralrequested,
+            type: setkycdetailsgeneralrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycCompany(kycID);
-        console.log('company', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_COMPANY],
+            [SET_KYC_DETAILS_COMPANY],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsCompanyBeneficiaries(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsCompanyBeneficiaries(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailscompanybeneficiariesrequested,
+            type: setkycdetailscompanybeneficiariesrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycCompanyBeneficiaries(kycID);
-        console.log('companyBeneficiaries', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_COMPANYBENEFICIARIES],
+            [SET_KYC_DETAILS_COMPANYBENEFICIARIES],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsBanking(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsBanking(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsbankingrequested,
+            type: setkycdetailsbankingrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycBanking(kycID);
-        console.log('banking', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_BANKING],
+            [SET_KYC_DETAILS_BANKING],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsClassification(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsClassification(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsclassificationrequested,
+            type: setkycdetailsclassificationrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycClassification(kycID);
-        console.log('classification', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_CLASSIFICATION],
+            [SET_KYC_DETAILS_CLASSIFICATION],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsRiskNature(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsRiskNature(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsrisknaturerequested,
+            type: setkycdetailsrisknaturerequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycRiskNature(kycID);
-        console.log('risknature', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_RISKNATURE],
+            [SET_KYC_DETAILS_RISKNATURE],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsRiskObjectives(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsRiskObjectives(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsriskobjectivesrequested,
+            type: setkycdetailsriskobjectivesrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycRiskObjective(kycID);
-        console.log('riskobjective', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_RISKOBJECTIVES],
+            [SET_KYC_DETAILS_RISKOBJECTIVES],
             [],
             asyncTaskPipe,
             {}
         ));
     }
 
-    static defaultRequestKycMyRequestDetailsDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
+    static defaultRequestKycDetailsDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch({
-            type: setkycmyreqdetailsdocumentsrequested,
+            type: setkycdetailsdocumentsrequested,
         });
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycDocument(kycID);
-        console.log('documents', asyncTaskPipe);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_KYC_MYREQ_DETAILS_DOCUMENTS],
+            [SET_KYC_DETAILS_DOCUMENTS],
             [],
             asyncTaskPipe,
             {}
@@ -317,6 +302,28 @@ export class OfiKycService {
             asyncTaskPipe,
             {},
         ));
+    }
+
+    requestKycDocumentByID(ngRedux: NgRedux<any>, kycDocumentID) {
+        let messageBody = {
+            token: this.memberSocketService.token,
+            RequestName: 'getkycdocument',
+            kycDocumentID: kycDocumentID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    notifyKycCompletion(investorID, message, kycID){
+        let messageBody = {
+            token: this.memberSocketService.token,
+            RequestName: 'iznnotifyinvestorkyccompletion',
+            investorID,
+            message,
+            kycID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
     sendInvestInvitations(requstData: SendInvitationRequestData): any {
@@ -475,22 +482,6 @@ export class OfiKycService {
         });
     }
 
-    getInvitationsByUserAmCompany() {
-
-        if (this.isListeningGetInvitationsByUserAmCompany) {
-            return;
-        }
-        this.isListeningGetInvitationsByUserAmCompany = this.investorInvitationsRequested$.pipe(
-            takeUntil(this.unSubscribe))
-        .subscribe((d) => {
-            if (d) {
-                return;
-            }
-            this.fetchInvitationsByUserAmCompany();
-        });
-
-    }
-
     fetchInvitationsByUserAmCompany() {
         const messageBody: fetchInvitationsByUserAmCompanyRequestBody = {
             RequestName: 'getinvitationsbyuseramcompany',
@@ -588,89 +579,89 @@ export class OfiKycService {
 
     /* My Request Details */
 
-    getKycBanking(requestData: getKycRequestDetailsRequestData): any {
+    getKycBanking(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycbanking',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycClassification(requestData: getKycRequestDetailsRequestData): any {
+    getKycClassification(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycclassification',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycCompany(requestData: getKycRequestDetailsRequestData): any {
+    getKycCompany(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkyccompany',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycCompanyBeneficiaries(requestData: getKycRequestDetailsRequestData): any {
+    getKycCompanyBeneficiaries(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkyccompanybeneficiaries',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycGeneral(requestData: getKycRequestDetailsRequestData): any {
+    getKycGeneral(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycgeneral',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycDocument(requestData: getKycRequestDetailsRequestData): any {
+    getKycDocument(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycdocument',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycRiskNature(requestData: getKycRequestDetailsRequestData): any {
+    getKycRiskNature(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycrisknature',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    getKycRiskObjective(requestData: getKycRequestDetailsRequestData): any {
+    getKycRiskObjective(kycID: number): any {
 
         const messageBody: getKycRequestDetailsRequestBody = {
             RequestName: 'getkycriskobjective',
             token: this.memberSocketService.token,
-            kycID: _.get(requestData, 'kycID', ''),
+            kycID: kycID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -712,6 +703,7 @@ export class OfiKycService {
             managementCompanyID: _.get(requestData, 'managementCompanyID', ''),
             investorWalletID: _.get(requestData, 'investorWalletID', ''),
             kycStatus: _.get(requestData, 'kycStatus', ''),
+            alreadyCompleted: _.get(requestData, 'alreadyCompleted', '')
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
@@ -776,6 +768,28 @@ export class OfiKycService {
                 });
             },
         ));
+    }
+
+    notifyAMKycContinuedFromRequest(kycID){
+        const messageBody = {
+            RequestName: 'iznnotifyamfromrequest',
+            token : this.memberSocketService.token,
+            type : 'kycContinuedFromRequest',
+            kycID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    notifyAMKycContinuedFromAskMoreInfo(kycID){
+        const messageBody = {
+            RequestName: 'iznnotifyamfromaskmoreinfo',
+            token : this.memberSocketService.token,
+            type : 'kycContinuedFromAskMoreInfo',
+            kycID
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
 }

@@ -14,22 +14,26 @@
 </div>
 
 <div [formsteps]="stepsConfig">
-    <section>
-        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)"></kyc-step-select-amc>
+    <section order="1">
+        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep"></kyc-step-select-amc>
     </section>
-    <section>
+    <section order="2" *ngIf="fullForm">
         <kyc-step-introduction></kyc-step-introduction>
     </section>
-    <section>
+    <section order="3" *ngIf="fullForm">
         <kyc-step-identification [form]="forms.get('identification')"></kyc-step-identification>
     </section>
-    <section>
+    <section order="4" *ngIf="fullForm">
         <kyc-step-risk-profile [form]="forms.get('riskProfile')"></kyc-step-risk-profile>
     </section>
-    <section>
+    <section order="5" *ngIf="fullForm">
         <kyc-step-documents [form]="forms.get('documents')" [isListedCompany]="isListedCompany"></kyc-step-documents>
     </section>
-    <section>
+    <section [attr.order]="fullForm ? 6 : 2">
         <kyc-step-validation [form]="forms.get('validation')"></kyc-step-validation>
     </section>
 </div>
+
+<p class="info" *ngIf="formSteps.currentStep === 0">
+    {{'Be aware that once you click on "Next" this KYC request will be saved as a Draft in the module "My Requests". You will then be able to come back later on your KYC request to finalize and send it to the asset management company.' | translate}}
+</p>

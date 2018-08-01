@@ -39,6 +39,11 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
         this.modelEmitter.emit(this.model);
     }
 
+    // this is to enforce proper re-render for fund holidays management in the share form component
+    markForCheck() {
+        this.changeDetectorRef.markForCheck();
+    }
+
     getControls(controlName: string) {
         return (this.model.form.controls[controlName] as FormArray).controls;
     }

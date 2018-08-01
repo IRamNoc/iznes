@@ -231,6 +231,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     getUpload(event, fileRelated) {
+        console.log('send', event, fileRelated)
         this.uploadFile(event, fileRelated, this._changeDetectorRef);
     }
 

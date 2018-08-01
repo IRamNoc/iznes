@@ -267,7 +267,7 @@
                                 {{order.isin}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                        <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, i, $event)">
                             <!-- isin -->
                             {{order.isin}}
                         </clr-dg-cell>
@@ -280,7 +280,7 @@
                                 {{order.fundShareName}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                        <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, i, $event)">
                             <!-- shareName -->
                             {{order.fundShareName}}
                         </clr-dg-cell>
@@ -450,7 +450,7 @@
             <!--<div class="m-1">{{orderData | json}}</div>-->
             <!--<div class="m-1">{{fundShare | json}}</div>-->
 
-            <div class="well mb-1">
+            <div *ngIf="userType != 46" class="well mb-1">
                 <!-- Panel header -->
                 <div class="row panel-header">
                     <div class="col-xs-6">

@@ -95,6 +95,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     filtersFromRedux: any;
     lastPage: number;
     loading = true;
+    userType: number;
 
     // Locale
     language = 'en';
@@ -172,6 +173,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     amConfirmModal: any = {};
     cancelModalMessage: string;
     /* Observables. */
+    @select(['user', 'myDetail', 'userType']) userTypeOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
@@ -270,6 +272,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptions.push(this.userTypeOb.subscribe((requested) => this.getUserType(requested)));
 
         /* Subscribe for this user's details. */
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {
@@ -468,6 +471,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    getUserType(type): void {
+        if (type) {
+            this.userType = type;
+        }
+    }
+
     getCurrencyList(data) {
         if (data) {
             this.currencyList = data.toJS();
@@ -614,6 +623,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         return Object.keys(list).reduce((result, orderId) => {
             const order = list[orderId];
             const orderFigure = getOrderFigures(order);
+
             result.push(
                 {
                     amAddress: _.get(order, 'amAddress', ''),

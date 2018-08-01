@@ -2,24 +2,24 @@
     <table>
         <tr>
             <td class="text-right" style="line-height: 1.1em;">
-                <span *ngIf="requestDetailStatus === 'accepted'" class="text-success">{{'ACCEPTED' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'rejected'" class="text-red">{{'REJECTED' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'approval'" class="text-warning">{{'WAITING APPROVAL' | translate | uppercase}}</span>
-                <span *ngIf="requestDetailStatus === 'information'" class="text-warning">{{'WAITING INFORMATION' | translate | uppercase}}</span>
+                <span *ngIf="requestDetailStatus === 'Approved'" class="text-success">{{'ACCEPTED' | translate | uppercase}}</span>
+                <span *ngIf="requestDetailStatus === 'Rejected'" class="text-red">{{'REJECTED' | translate | uppercase}}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForApproval'" class="text-warning">{{'WAITING APPROVAL' | translate | uppercase}}</span>
+                <span *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" class="text-warning">{{'WAITING INFORMATION' | translate | uppercase}}</span>
                 <br>
                 <small>{{'Last Update' | translate}}: {{lastUpdate}}</small>
             </td>
             <td>
-                <i *ngIf="requestDetailStatus === 'accepted'" class="fa fa-check-circle text-success"></i>
-                <i *ngIf="requestDetailStatus === 'rejected'" class="fa fa-times-circle text-red"></i>
-                <i *ngIf="requestDetailStatus === 'approval' || requestDetailStatus === 'information'" class="fa fa-question-circle text-warning"></i>
+                <i *ngIf="requestDetailStatus === 'Approved'" class="fa fa-check-circle text-success"></i>
+                <i *ngIf="requestDetailStatus === 'Rejected'" class="fa fa-times-circle text-red"></i>
+                <i *ngIf="requestDetailStatus === 'WaitingForApproval' || requestDetailStatus === 'WaitingForMoreInfo'" class="fa fa-question-circle text-warning"></i>
             </td>
         </tr>
         <tr style="background-color: transparent">
             <td colspan="2" class="text-right">
                 <button type="button" class="btn btn-primary btn-sm" style="margin: 0;">{{'View previous updates' | translate}}</button>
-                <br *ngIf="requestDetailStatus === 'information'">
-                <button type="button" class="btn btn-success btn-sm" *ngIf="requestDetailStatus === 'information'" style="margin-right: 4px;">{{'Update your request' | translate}}</button>
+                <br *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
+                <button type="button" class="btn btn-success btn-sm" *ngIf="requestDetailStatus === 'WaitingForMoreInfo'" style="margin-right: 4px;">{{'Update your request' | translate}}</button>
             </td>
         </tr>
     </table>
@@ -27,13 +27,13 @@
 
 <div class="wrapper wrapper-content">
     <form [formGroup]="disabledForm">
-        <ng-container *ngIf="requestDetailStatus === 'rejected'">
+        <ng-container *ngIf="requestDetailStatus === 'Rejected'">
             <h1 class="mt-1">{{'Rejection\'s Cause' | translate}}</h1>
             <p>{{'Please find below the message attached by @companyName@ regarding your rejection:' | translate: {'companyName': companyName} }}</p>
             <textarea name="rejectionMessage" id="rejectionMessage" rows="4" cols="50" formControlName="rejectionMessage" style="width: 75%"></textarea>
             <div class="hr-line-dashed"></div>
         </ng-container>
-        <ng-container *ngIf="requestDetailStatus === 'information'">
+        <ng-container *ngIf="requestDetailStatus === 'WaitingForMoreInfo'">
             <h1 class="mt-1">{{'Ask for more Information Detail' | translate}}</h1>
             <p>{{'@companyName@ asked you for more information about your identification request. Here is the message associated:' | translate: {'companyName': companyName} }}</p>
             <textarea name="informationMessage" id="informationMessage" rows="4" cols="50" formControlName="informationMessage" style="width: 75%"></textarea>
@@ -44,8 +44,8 @@
             <div class="hr-line-dashed"></div>
         </ng-container>
         <ng-container>
-            <h1 [ngClass]="{'mt-1': (requestDetailStatus === 'accepted' || requestDetailStatus === 'approval')}">{{'@companyName@\'s Contact Details' | translate: {'companyName': companyName} }}</h1>
-            <div class="row" [ngClass]="{'mt-1': (requestDetailStatus === 'accepted' || requestDetailStatus === 'approval')}">
+            <h1 [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">{{'@companyName@\'s Contact Details' | translate: {'companyName': companyName} }}</h1>
+            <div class="row" [ngClass]="{'mt-1': (requestDetailStatus === 'Approved' || requestDetailStatus === 'WaitingForApproval')}">
                 <div class="col-md-12">
                     <section class="form-block">
                         <div class="row">
@@ -79,110 +79,5 @@
         <div class="hr-line-dashed"></div>
         <p>{{'Please find below the information and documents you provided during the application for @companyName@.' | translate: {'companyName': companyName} }}</p>
     </div>
-    <div *ngFor="let panel of panelDefs" class="well">
-        <!-- Panel header -->
-        <div class="row panel-header">
-            <div class="col-xs-12">
-                <a href="#" (click)="panel.open = !panel.open; $event.preventDefault();">
-                    <i class="fa fa-chevron-right" [class.rotate]="panel.open"></i>
-                    <h2>{{panel.title | translate}}</h2>
-                </a>
-            </div>
-        </div>
-
-        <!-- Panel body -->
-        <div class="row panel-body" [class.hidden]="!panel.open">
-            <div class="col-xs-12">
-                <!--Parent contents-->
-                <clr-datagrid *ngIf="panel.data.length > 0">
-                    <clr-dg-column *ngFor="let column of panel.columns">
-                        {{column.label | translate}}
-                    </clr-dg-column>
-                    <clr-dg-row *clrDgItems="let data of panel.data">
-                        <clr-dg-cell *ngFor="let dataCol of data">
-                            <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
-                            <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
-                            <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
-                            <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
-                        </clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid>
-
-                <!--Childs-->
-                <div class="well dashed" *ngFor="let child of panel.childs">
-                    <!-- Panel header -->
-                    <div class="row panel-header">
-                        <div class="col-xs-12">
-                            <a href="#" (click)="child.open = !child.open; $event.preventDefault();">
-                                <i class="fa fa-chevron-right" [class.rotate]="child.open"></i>
-                                <h2>{{child.title}}</h2>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Panel body -->
-                    <div class="row panel-body" [class.hidden]="!child.open">
-                        <div class="col-xs-12">
-                            <!--Child Contents-->
-                            <clr-datagrid *ngIf="child.data.length > 0">
-                                <clr-dg-column *ngFor="let column of child.columns">
-                                    {{column.label | translate}}
-                                </clr-dg-column>
-                                <clr-dg-row *clrDgItems="let data of child.data">
-                                    <clr-dg-cell *ngFor="let dataCol of data">
-                                        <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
-                                        <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
-                                        <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
-                                        <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
-                                    </clr-dg-cell>
-                                </clr-dg-row>
-                            </clr-datagrid>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <kyc-details [kycID]="kycID"></kyc-details>
 </ng-container>
-
-<!-- NAV upload modal -->
-<clr-modal [(clrModalOpen)]="showModal" [clrModalSize]="'lg'" [clrModalClosable]="true">
-    <h3 class="modal-title">
-        {{'Beneficiaries Details' | translate}}
-    </h3>
-
-    <div class="modal-body">
-        <ng-container *ngIf="beneficariesData.length > 0">
-            <div *ngFor="let bloc of beneficariesData" class="mb-1">
-                <h3 style="margin-bottom: 10px"><i class="fa fa-user"></i> {{bloc.title | translate}}</h3>
-                <clr-datagrid *ngIf="bloc.data.length > 0">
-                    <clr-dg-column *ngFor="let column of bloc.columns">
-                        {{column.label | translate}}
-                    </clr-dg-column>
-                    <clr-dg-row *clrDgItems="let data of bloc.data">
-                        <clr-dg-cell *ngFor="let dataCol of data">
-                            <a *ngIf="dataCol.link !== ''" [routerLink]="dataCol.link">{{dataCol.value}}</a>
-                            <a *ngIf="dataCol.action !== ''" href="#" (click)="this[dataCol.action](); $event.preventDefault();">{{dataCol.value}}</a>
-                            <setl-file-viewer *ngIf="dataCol.file !== ''" [fileHash]="dataCol.file"></setl-file-viewer>
-                            <span *ngIf="dataCol.link === '' && dataCol.action === '' && dataCol.file === ''">{{dataCol.value}}</span>
-                        </clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid>
-            </div>
-        </ng-container>
-    </div>
-
-    <div class="modal-footer">
-        <button class="btn btn-info" (click)="showModal = false;">{{'Close' | translate}}</button>
-    </div>
-</clr-modal>
-
-<div id="debug" *ngIf="isDebug">
-    <div class="text-center mb-1">TEST/DEBUG</div>
-    <button class="btn btn-success btn-sm" (click)="requestDetailStatus = 'accepted'; isKYCFull = true;">AFull</button>
-    <button class="btn btn-success btn-sm" (click)="requestDetailStatus = 'accepted'; isKYCFull = false;">ALight</button>
-    <button class="btn btn-danger btn-sm" (click)="requestDetailStatus = 'rejected'; isKYCFull = true;">RFull</button>
-    <button class="btn btn-danger btn-sm" (click)="requestDetailStatus = 'rejected'; isKYCFull = false;">RLight</button>
-    <button class="btn btn-warning btn-sm" (click)="requestDetailStatus = 'approval'; isKYCFull = true;">WAFull</button>
-    <button class="btn btn-warning btn-sm" (click)="requestDetailStatus = 'approval'; isKYCFull = false;">WALight</button>
-    <button class="btn btn-warning btn-sm" (click)="requestDetailStatus = 'information'; isKYCFull = false;">WIAll</button>
-</div>
