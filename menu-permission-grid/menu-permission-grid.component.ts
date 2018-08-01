@@ -6,10 +6,10 @@ import {
     AfterViewInit,
     EventEmitter
 } from '@angular/core';
-import {cloneDeep} from 'lodash';
+import { cloneDeep } from 'lodash';
 
 /* Import the option list. */
-import {MenuOptionListComponent} from '../menu-option-list/menu-option-list.component';
+import { MenuOptionListComponent } from '../menu-option-list/menu-option-list.component';
 
 @Component({
     selector: 'setl-menu-permission-grid',
@@ -113,8 +113,29 @@ export class MenuPermissionGridComponent implements OnInit, AfterViewInit {
                 }
 
                 for (let i = 0; i < this.permissionAreasCopy.length; i++) {
-                    this.permissionAreasCopy[i].order = data[this.permissionAreasCopy[i].id].menuOrder;
+                    if (!!data[this.permissionAreasCopy[i].id]) {
+                        this.permissionAreasCopy[i].order = data[this.permissionAreasCopy[i].id].menuOrder;
+                    } else {
+                        this.permissionAreasCopy[i].order = -1;
+                    }
                 }
+
+                //missing from database? chuck it on the end of the parentID. move the others if needed.
+                this.permissionAreasCopy.filter(item => item.order == -1).forEach((row) => {
+                    //get parentID, filter and find max order within that section.
+                    let nextId = Math.max.apply(Math, this.permissionAreasCopy.filter(item => item.parentID == row.parentID).map(function (o) {
+                        return o.order;
+                    })) + 1;
+
+                    //alter current menu order
+                    for (let i = 0; i < this.permissionAreasCopy.length; i++) {
+                        if (this.permissionAreasCopy[i].order >= nextId) this.permissionAreasCopy[i].order++;
+                    }
+
+                    //add new.
+                    this.permissionAreasCopy[this.permissionAreasCopy.findIndex(item => item.id == row.id)].order = nextId;
+                });
+
                 this.permissionAreasCopy.sort((a, b) => {
                     return (a.order == 0 || b.order == 0 ? b.order - a.order : a.order - b.order);
                 });
