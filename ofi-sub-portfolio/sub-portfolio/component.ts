@@ -184,7 +184,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     requestUserTourMySubPortfolios(req) {
         if (!req) {
-            OfiUserTourService.defaultRequestMySubportfolios(this._ofiUserTourService, this.ngRedux);
+            OfiUserTourService.defaultRequestUserTours(this._ofiUserTourService, this.ngRedux, this.connectedWalletId);
         }
     }
 

@@ -56,9 +56,9 @@ import { OfiUserTourReducer, OfiUserTourState } from './ofi-usertour';
 
 export {
     OFI_SET_USERTOUR_INPROGRESS,
-    OFI_SET_MY_SUBPORTFOLIOS,
-    ofiSetMySubportfoliosRequested,
-    ofiClearMySubportfoliosRequested,
+    OFI_SET_USER_TOURS,
+    ofiSetUserToursRequested,
+    ofiClearUserToursRequested,
 } from './ofi-usertour';
 
 export {

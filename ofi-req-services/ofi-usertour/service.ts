@@ -7,19 +7,19 @@ import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {SagaHelper} from '@setl/utils';
 /* Import actions. */
 import {
-    OFI_SET_MY_SUBPORTFOLIOS,
-    ofiSetMySubportfoliosRequested,
-    ofiClearMySubportfoliosRequested,
+    OFI_SET_USER_TOURS,
+    ofiSetUserToursRequested,
+    ofiClearUserToursRequested,
 } from '../../ofi-store/ofi-usertour';
 
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
-    OfiMySubportfoliosRequestBody,
+    OfiUsertoursRequestBody,
 } from './model';
 
-interface MySubportfoliosData {
-    isDone: string,
+interface usertourDatas {
+    walletID: string,
 }
 
 @Injectable()
@@ -30,48 +30,46 @@ export class OfiUserTourService {
                 private ngRedux: NgRedux<any>) {
     }
 
-    static setRequestedMySubportfolios(boolValue: boolean, ngRedux: NgRedux<any>) {
+    static setRequestedUserTours(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
         if (!boolValue) {
-            ngRedux.dispatch(ofiSetMySubportfoliosRequested());
+            ngRedux.dispatch(ofiSetUserToursRequested());
         } else {
-            ngRedux.dispatch(ofiClearMySubportfoliosRequested());
+            ngRedux.dispatch(ofiClearUserToursRequested());
         }
     }
 
-    static defaultRequestMySubportfolios(OfiUserTourService: OfiUserTourService, ngRedux: NgRedux<any>) {
+    static defaultRequestUserTours(OfiUserTourService: OfiUserTourService, ngRedux: NgRedux<any>, walletID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetMySubportfoliosRequested());
+        ngRedux.dispatch(ofiSetUserToursRequested());
 
         // Request the list.
-        const asyncTaskPipe = OfiUserTourService.requestMySubportfolios();
+        const asyncTaskPipe = OfiUserTourService.getUserTours(walletID);
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_MY_SUBPORTFOLIOS],
+            [OFI_SET_USER_TOURS],
             [],
             asyncTaskPipe,
             {},
         ));
     }
 
-    /* MY SUBPORTFOLIOS */
-
-    requestMySubportfolios(): any {
+    getUserTours(data: usertourDatas): any {
 
         const messageBody: OfiMemberNodeBody = {
-            RequestName: 'iznutgetmysubportfolio',
+            RequestName: 'getuserpreference',
             token: this.memberSocketService.token,
+            walletID: data.walletID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveMySubPortfolios(data: MySubportfoliosData): any {
+    saveUserTour(): any {
 
-        const messageBody: OfiMySubportfoliosRequestBody = {
+        const messageBody: OfiUsertoursRequestBody = {
             RequestName: 'iznsaveutmysubportfolios',
             token: this.memberSocketService.token,
-            isDone: data.isDone,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

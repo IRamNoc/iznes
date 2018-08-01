@@ -1,10 +1,10 @@
 import {List} from 'immutable';
 
-export interface MySubPortfoliosDetails {
-    isDone: boolean;
+export interface UserToursDetails {
+    walletID: boolean;
 }
 
 export interface UserTourState {
-    mySubPortfolios: List<MySubPortfoliosDetails>;
-    mySubPortfoliosRequested: boolean;
+    userTours: List<UserToursDetails>;
+    userToursRequested: boolean;
 }

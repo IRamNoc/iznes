@@ -8,17 +8,17 @@ export {
 } from './inprogress/actions';
 
 export {
-    OFI_SET_MY_SUBPORTFOLIOS,
-    ofiSetMySubportfoliosRequested,
-    ofiClearMySubportfoliosRequested,
+    OFI_SET_USER_TOURS,
+    ofiSetUserToursRequested,
+    ofiClearUserToursRequested,
 } from './usertour/actions';
 
 export interface OfiUserTourState {
     inProgress: UserTourInProgressState;
-    mySubportfolios: UserTourState;
+    userTours: UserTourState;
 }
 
 export const OfiUserTourReducer: Reducer<OfiUserTourState> = combineReducers<OfiUserTourState>({
     inProgress: UserTourInProgressReducer,
-    mySubportfolios: UserTourReducer,
+    userTours: UserTourReducer,
 });

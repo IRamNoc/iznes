@@ -4,7 +4,6 @@ export interface OfiMemberNodeBody extends MemberNodeMessageBody {
     token: string;
 }
 
-export interface OfiMySubportfoliosRequestBody extends OfiMemberNodeBody {
+export interface OfiUsertoursRequestBody extends OfiMemberNodeBody {
     token: string;
-    isDone: string;
 }
