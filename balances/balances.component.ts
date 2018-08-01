@@ -3,14 +3,15 @@ import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
 import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
 import { TabControl, Tab } from '../tabs';
 import { NgRedux, select } from '@angular-redux/store';
 import * as json2csv from 'json2csv';
 import * as SagaHelper from '@setl/utils/sagaHelper/index';
 import { FileService } from '@setl/core-req-services';
 import { isEqual, filter, each } from 'lodash';
-import { first, distinctUntilChanged, share, map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'setl-balances',
@@ -32,8 +33,10 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
     public exportModalDisplay: boolean = false;
     public exportFilename: string = 'BalancesExport.csv';
     public exportFileHash: string = '';
-    /* Rows Per Page datagrid size */
+    /* Datagrid properties */
     public pageSize: number;
+    public pageCurrent: number;
+    private editTab: boolean = false;
 
     /**
      * Constructor
@@ -49,7 +52,8 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                        private changeDetector: ChangeDetectorRef,
                        private ngRedux: NgRedux<any>,
                        private fileService: FileService,
-    ) { }
+    ) {
+    }
 
     /**
      * Ng On Init
@@ -65,7 +69,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
                 const updated = this.markUpdated([previous, assets]);
                 previous = assets;
                 return updated;
-            })
+            }),
         );
 
         this.balances$.subscribe((balances) => {
@@ -73,10 +77,10 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         });
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-                this.connectedWalletId = connectedWalletId;
-                this.closeTabs();
-                previous = [];
-            },
+            this.connectedWalletId = connectedWalletId;
+            this.closeTabs();
+            previous = [];
+        },
         ));
 
         this.initTabUpdates();
@@ -159,6 +163,7 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
      * @return void
      */
     public handleViewBreakdown(asset): void {
+        this.editTab = true;
         if (this.tabControl.activate(this.findTab(asset.hash, 'breakdown'))) {
             return;
         }
@@ -370,6 +375,18 @@ export class SetlBalancesComponent implements AfterViewInit, OnInit, OnDestroy {
         this.exportModalDisplay = false;
         this.changeDetector.markForCheck();
         this.changeDetector.detectChanges();
+    }
+
+    /**
+     * Sets Currently Viewed Page of Datagrid
+     *
+     * Note: When the datagrid is destroyed, the emitted value (1) is ignored when the View/Edit btn is clicked
+     *
+     * @param page - page number value emitted from datagrid
+     */
+    public setCurrentPage(page) {
+        if (!this.editTab) this.pageCurrent = page;
+        this.editTab = false;
     }
 
     /**

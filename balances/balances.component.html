@@ -10,14 +10,14 @@
             <!-- User list tab. -->
             <ng-container *ngIf="id === 0">
                 <ng-container
-                        *ngTemplateOutlet="staticBalanceList"
+                    *ngTemplateOutlet="staticBalanceList"
                 ></ng-container>
             </ng-container>
 
             <!-- User edit tabs. -->
             <ng-container *ngIf="id >= 1">
                 <ng-container
-                        *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.data.assetObject, 'transactions': tab.data.transactions, 'template': tab.data.template, 'transaction': tab.data.transaction}"
+                    *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'asset': tab.data.assetObject, 'transactions': tab.data.transactions, 'template': tab.data.template, 'transaction': tab.data.transaction}"
                 ></ng-container>
             </ng-container>
         </clr-tab-content>
@@ -77,7 +77,8 @@
                 <button *ngIf="myDataGrid.items['_filtered']" class="btn btn-sm" (click)="exportList()">Export</button>
                 &nbsp;
                 {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgPage]="pageCurrent"
+                                   (clrDgPageChange)="setCurrentPage($event)"></clr-dg-pagination>
             </clr-dg-footer>
         </clr-datagrid>
     </div>
@@ -111,8 +112,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -132,7 +134,7 @@
                 <clr-dg-row *clrDgItems="let transaction of transactions | async">
                     <clr-dg-cell>
                         <button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i
-                                class="fa fa-search"></i>View
+                            class="fa fa-search"></i>View
                         </button>
                     </clr-dg-cell>
                     <clr-dg-cell class="tooltip tooltip-xs" [title]="transaction.hash">{{transaction.shortHash}}
@@ -146,8 +148,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
