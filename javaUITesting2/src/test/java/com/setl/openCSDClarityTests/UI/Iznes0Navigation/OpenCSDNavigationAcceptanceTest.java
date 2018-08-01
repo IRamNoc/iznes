@@ -107,8 +107,16 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToPrecentralization() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("menu-am-report-section");
-        navigateToPageByID("menu-report-centralization");
+        navigateToPageByID("menu-report-centralisation");
         verifyCorrectPage("Precentralisation");
+    }
+
+    @Test
+    public void shouldNavigateToCentralization() throws IOException, InterruptedException {
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-am-report-section");
+        navigateToPageByID("menu-report-centralisation-select");
+        verifyCorrectPage("Centralisation");
     }
 
     @Test
@@ -130,8 +138,8 @@ public class OpenCSDNavigationAcceptanceTest {
     public void shouldNavigateToInviteInvestors() throws IOException, InterruptedException {
         loginAndVerifySuccess("am", "alex01");
         navigateToDropdown("top-menu-my-clients");
-        navigateToPageByID("top-menu-invite-investor");
-        verifyCorrectPage("Invite Investors to IZNES");
+        navigateToPageByID("top-menu-client-referential");
+        verifyCorrectPage("Client Referential: All Clients");
     }
 
     @Test
