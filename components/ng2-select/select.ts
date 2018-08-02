@@ -9,7 +9,7 @@ import { OptionsBehavior } from './select-interfaces';
 import { escapeRegexp } from './common';
 import { MultilingualService } from '@setl/multilingual';
 import * as xss from 'xss';
-import {find, castArray} from 'lodash';
+import { find, castArray } from 'lodash';
 
 const changeDetection = ChangeDetectionStrategy.OnPush;
 
@@ -80,7 +80,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             if (!selectedItems || selectedItems.length === 0) {
                 this._active = [];
             } else {
-                if(typeof selectedItems === 'string'){
+                if (typeof selectedItems === 'string') {
                     selectedItems = selectedItems.split(' ');
                     selectedItems = castArray(selectedItems);
                 }
@@ -97,7 +97,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                     else {
                         data = areItemsStrings
                             ? item
-                            : {id: item[this.idField], text: item[this.textField]}
+                            : { id: item[this.idField], text: item[this.textField] }
                         ;
                     }
 
@@ -166,7 +166,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             return;
         }
         if (isUpMode && (e.keyCode === 37 || e.keyCode === 39 || e.keyCode === 38 ||
-                e.keyCode === 40 || e.keyCode === 13)) {
+            e.keyCode === 40 || e.keyCode === 13)) {
             e.preventDefault();
             return;
         }
@@ -231,8 +231,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         const target = e.target || e.srcElement;
         if (target && target.value) {
             this.inputValue = target.value;
-            this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
-            this.doEvent('typed', this.inputValue);
+            // Only filter results if input is larger than 2 characters
+            if (this.inputValue.length >= 2) {
+                this.behavior.filter(new RegExp(escapeRegexp(this.inputValue), 'ig'));
+                this.doEvent('typed', this.inputValue);
+            }
         } else {
             this.open();
         }
@@ -360,6 +363,11 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         this.options = this.itemObjects
         .filter((option: SelectItem) => (this.multiple === false ||
             this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
+
+        // Override placeholder if items over 1,000
+        if (this.options.length >= 1000) {
+            this.placeholder = 'Type to search';
+        }
 
         if (this.options.length > 0) {
             this.behavior.first();

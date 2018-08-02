@@ -41,38 +41,41 @@
             <span class="fa fa-search"></span>
         </div>
 
-        <ul class="" role="menu" *ngIf="!firstItemHasChildren">
+        <ng-template [ngIf]="options.length < 1000">
 
-            <li *ngFor="let o of options" role="menuitem">
-                <div class="ui-select-choices-row"
-                     [class.active]="isActive(o)"
-                     (mouseenter)="selectActive(o)"
-                     (click)="selectMatch(o, $event)">
-                    <a href="javascript:void(0)" class="dropdown-item">
-                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                    </a>
-                </div>
-            </li>
-        </ul>
+            <ul class="" role="menu" *ngIf="!firstItemHasChildren">
 
-        <ul *ngIf="firstItemHasChildren" role="menu">
+                <li *ngFor="let o of options" role="menuitem">
+                    <div class="ui-select-choices-row"
+                         [class.active]="isActive(o)"
+                         (mouseenter)="selectActive(o)"
+                         (click)="selectMatch(o, $event)">
+                        <a href="javascript:void(0)" class="dropdown-item">
+                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
 
-            <li *ngFor="let c of options; let index=index" role="menuitem">
-                <div class="divider dropdown-divider" *ngIf="index > 0"></div>
-                <div class="dropdown-header">{{c.text}}</div>
+            <ul *ngIf="firstItemHasChildren" role="menu">
 
-                <div *ngFor="let o of c.children"
-                     class="ui-select-choices-row"
-                     [class.active]="isActive(o)"
-                     (mouseenter)="selectActive(o)"
-                     (click)="selectMatch(o, $event)"
-                     [ngClass]="{'active': isActive(o)}">
-                    <a href="javascript:void(0)" class="dropdown-item">
-                        <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
-                    </a>
-                </div>
-            </li>
-        </ul>
+                <li *ngFor="let c of options; let index=index" role="menuitem">
+                    <div class="divider dropdown-divider" *ngIf="index > 0"></div>
+                    <div class="dropdown-header">{{c.text}}</div>
+
+                    <div *ngFor="let o of c.children"
+                         class="ui-select-choices-row"
+                         [class.active]="isActive(o)"
+                         (mouseenter)="selectActive(o)"
+                         (click)="selectMatch(o, $event)"
+                         [ngClass]="{'active': isActive(o)}">
+                        <a href="javascript:void(0)" class="dropdown-item">
+                            <div [innerHtml]="sanitize(o.text | highlight:inputValue)"></div>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </ng-template>
     </div>
 
 </div>
