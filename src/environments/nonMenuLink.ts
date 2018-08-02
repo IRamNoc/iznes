@@ -27,5 +27,7 @@ export const nonMenuLink = {
         '\/reports\/precentralisation\/shares',
         '\/reports\/centralisation\/funds',
         '\/reports\/centralisation\/shares',
+        '\/product-module\/product\/umbrella-fund\/\d+\/audit',
+        '\/product-module\/product\/fund\/\d+\/audit',
     ],
 };

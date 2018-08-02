@@ -56,6 +56,8 @@ import {
     MyHoldingsComponent,
     OfiSubPortfolioComponent,
     OfiClientReferentialComponent
+    UmbrellaAuditComponent,
+    FundAuditComponent,
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -323,6 +325,16 @@ export const ROUTES: Routes = [
                     {
                         path: 'product/fund-share/:shareId/audit',
                         component: FundShareAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/umbrella-fund/:umbrellaID/audit',
+                        component: UmbrellaAuditComponent,
+                        canActivate: [LoginGuardService],
+                    },
+                    {
+                        path: 'product/fund/:fundID/audit',
+                        component: FundAuditComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
