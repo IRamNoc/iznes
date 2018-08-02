@@ -526,15 +526,12 @@ pagination-controls {
 }
 
 .message_list_menu_buttons button, .message_view_menu button, .message_view_header_buttons button {
-    padding: 5px;
+    padding: 4px 8px 3px 8px;
+    margin-right: 5px;
     border: 1px solid #ccc;
     background: white;
     border-radius: 3px;
-    padding-left: 8px;
-    padding-right: 8px;
     font-size: 85%;
-    padding-top: 4px;
-    padding-bottom: 3px;
     color: #636363;
     cursor: pointer;
 }
