@@ -303,12 +303,19 @@ export class UiFormStepsComponent implements OnInit {
 
     formChanges(form) {
         if (this.myFormSteps4.controls['isFull'].value) {
-            this.isFullForm = true;
             this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}, {title: 'Outro'}, {form: this.myFormSteps3, id: 'myFormSteps3', title: 'Form again'}];
+            setTimeout(()=>{
+                this.isFullForm = true;
+                this._changeDetectorRef.markForCheck();
+            }, 180);
         } else {
-            this.isFullForm = false;
             this.dynamicConfig = [{title: 'Introduction'}, {form: this.myFormSteps4, id: 'myFormSteps4', title: 'Form'}];
+            setTimeout(()=>{
+                this.isFullForm = false;
+                this._changeDetectorRef.markForCheck();
+            }, 180);
         }
+        this._changeDetectorRef.markForCheck();
     }
 
     addField() {
