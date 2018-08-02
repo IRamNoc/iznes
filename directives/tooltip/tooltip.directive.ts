@@ -1,10 +1,15 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import { ChangeDetectionStrategy, Injector, ChangeDetectorRef, Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import { fromJS } from 'immutable';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { NgRedux, select } from '@angular-redux/store';
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/highlight/actions';
-import { OFI_SET_USERTOUR_INPROGRESS } from '../../../ofi-main/ofi-store/ofi-usertour/inprogress/actions';
+import { OFI_SET_USERTOUR_INPROGRESS } from '@ofi/ofi-main/ofi-store/ofi-usertour/inprogress/actions';
+import { OFI_SET_USER_TOURS } from '@ofi/ofi-main/ofi-store/ofi-usertour/usertour/actions';
 import { Router } from '@angular/router';
+
+import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
 
 @Directive({
     selector: '[tooltip]',
@@ -35,51 +40,41 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     isAutoNext = true;
     isTour = false;
 
+    connectedWalletId = 0;
+
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
+
+    userTourDatas = [];
+    userTourInProgress = false;
+    userTourName = '';
+
+    OfiUserTourService: any;
+
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['ofi', 'ofiUserTour', 'inProgress', 'inProgress']) inProgressOb;
+    @select(['ofi', 'ofiUserTour', 'userTours', 'userToursRequested']) userToursRequestedOb;
+    @select(['ofi', 'ofiUserTour', 'userTours', 'userTours']) userToursOb;
+
     constructor(
         private _el: ElementRef,
         private renderer: Renderer2,
         private _ngRedux: NgRedux<any>,
         private _router: Router,
         private _translate: MultilingualService,
+        private injector: Injector,
+        private _changeDetectorRef: ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
+        this.OfiUserTourService = this.injector.get(OfiUserTourService);
+
         this.parentDiv = document.getElementsByClassName('content-area')[0];
-    }
 
-    ngOnInit() {
-        // force overflow hidden to prevent scroll outside website
-        document.body.style.overflow = 'hidden';
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+        }));
 
-        if (this.config.length > 1) { // tooltip Tour
-            this.isTour = true;
-            this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
-
-            // add black bglayer
-            this.divBackgroundTour = document.createElement('div');
-            this.divBackgroundTour.style.position = 'absolute';
-            this.divBackgroundTour.style.left = '0';
-            this.divBackgroundTour.style.top = '0';
-            this.divBackgroundTour.style.backgroundColor = 'rgba(0,0,0,0.6)';
-            this.divBackgroundTour.style.width = '100%';
-            this.divBackgroundTour.style.zIndex = 1002;
-            const pageSize = this.getPageSize();
-            this.divBackgroundTour.style.height = pageSize.height + 'px';
-            document.body.appendChild(this.divBackgroundTour);
-
-            for (const conf of this.config) {
-                this.tourConfig.push(_.clone(conf));
-            }
-            this.setConfig(this.step);
-        } else {
-            this.renderer.setStyle(this.el, 'cursor', 'pointer');
-        }
-        this.autoshowTooltip();
-    }
-
-    ngAfterViewInit() {
-        if (this.config.autoshow !== undefined && this.config.autoshow === true) {
-            this.moveTooltip();
-        }
+        this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => { this.userTourInProgress = inProgress; }));
     }
 
     @HostListener('click') onClick(): void {
@@ -130,6 +125,120 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('window:resize') onWindowResize(): void {
         this.checkIfTooltipExists();
         this.moveTooltip();
+    }
+
+    ngOnInit() {
+        // force overflow hidden to prevent scroll outside website
+        document.body.style.overflow = 'hidden';
+        if (this.config.length > 1) {
+            this.isTour = true;
+            if (this.config[0]) {
+                if (this.config[0].context) {
+                    this.userTourName = this.config[0].context;
+                }
+            }
+            this.subscriptionsArray.push(this.userToursRequestedOb.subscribe(userToursRequested => this.requestUserTours(userToursRequested)));
+            this.subscriptionsArray.push(this.userToursOb.subscribe(userTours => this.getUserTours(userTours)));
+        } else {
+            this.renderer.setStyle(this.el, 'cursor', 'pointer');
+        }
+        this.autoshowTooltip();
+    }
+
+    ngAfterViewInit() {
+        if (this.config.autoshow !== undefined && this.config.autoshow === true) {
+            this.moveTooltip();
+        }
+    }
+
+    requestUserTours(req) {
+        console.log('requestUserTours', req);
+        if (!req) {
+            console.log('userTourName', this.userTourName);
+            console.log('connectedWalletId', this.connectedWalletId);
+            if (this.userTourName !== '') {
+                const payload = {
+                    walletid: this.connectedWalletId,
+                    type: this.userTourName,
+                };
+                OfiUserTourService.defaultRequestUserTours(this.OfiUserTourService, this._ngRedux, payload);
+            }
+        }
+    }
+
+    getUserTours(userTours) {
+        console.log('getUserTours', userTours);
+        if (userTours) {
+            const listImu = fromJS(userTours);
+            this.userTourDatas = listImu.reduce((result, item) => {
+                result.push({
+                    type: item.type,
+                    value: item.value,
+                    walletID: item.walletID,
+                });
+                return result;
+            }, []);
+
+            if (this.isTour && this.userTourDatas.length === 0 && !this.userTourInProgress) {
+                this.initTour();
+            } else {
+                if (this.userTourDatas[0]) {
+                    if (this.userTourDatas[0].value !== '') {
+                        if (this.isTour && this.userTourDatas[0].value === '0' && !this.userTourInProgress) {
+                            this.initTour();
+                        }
+                    }
+                }
+            }
+        }
+
+        this._changeDetectorRef.markForCheck();
+    }
+
+    saveUserTour() {
+        if (this.userTourName !== '') {
+            const asyncTaskPipe = this.OfiUserTourService.saveUserTour({
+                type: this.userTourName,
+                value: 1,
+                walletid: this.connectedWalletId,
+            });
+
+            this._ngRedux.dispatch({
+                type: 'RUN_ASYNC_TASK',
+                successTypes: (data) => {},
+                failureTypes: (data) => {},
+                descriptor: asyncTaskPipe,
+                args: {},
+                successCallback: (response) => {
+                    OfiUserTourService.setRequestedUserTours(false, this._ngRedux);
+                },
+                failureCallback: (response) => {
+                    console.log('Error save userTour failed: ', response);
+                },
+            });
+        }
+    }
+
+    initTour() {
+        this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
+
+        // add black bglayer
+        this.divBackgroundTour = document.createElement('div');
+        this.divBackgroundTour.style.position = 'absolute';
+        this.divBackgroundTour.style.left = '0';
+        this.divBackgroundTour.style.top = '0';
+        this.divBackgroundTour.style.backgroundColor = 'rgba(0,0,0,0.6)';
+        this.divBackgroundTour.style.width = '100%';
+        this.divBackgroundTour.style.zIndex = 1002;
+        const pageSize = this.getPageSize();
+        this.divBackgroundTour.style.height = pageSize.height + 'px';
+        document.body.appendChild(this.divBackgroundTour);
+
+        for (const conf of this.config) {
+            this.tourConfig.push(_.clone(conf));
+        }
+        this.setConfig(this.step);
+        this.autoshowTooltip();
     }
 
     autoshowTooltip() {
@@ -687,12 +796,19 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         }
         if (forced) {
             if (this.isTour) {
+                this.saveUserTour();    // save UserTour done
                 this._ngRedux.dispatch(clearAppliedHighlight());
                 clearTimeout(this.autoNextTimeout);
                 this.isAutoNext = false;
                 this.hideTooltip();
-                this.divBackgroundTour.remove();
-                this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false});
+                if (this.divBackgroundTour) this.divBackgroundTour.remove();
+                this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
+                this._ngRedux.dispatch({type: OFI_SET_USER_TOURS, data: null}); // reset usertour datas
+                // this.isTour = false;
+                // this.userTourName = '';
+                // this.config = [];
+                // this.tourConfig = [];
+                // this.userTourDatas = [];
             }
         } else {
             if (this.tourConfig.length > 1 && this.step < this.tourConfig.length) {
@@ -703,6 +819,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
 
     setConfig(index) {
         this.config = {
+            context: (this.tourConfig[index].context) ? this.tourConfig[index].context : '',
             title: this.tourConfig[index].title,
             text: this.tourConfig[index].text,
             target: this.tourConfig[index].target,
