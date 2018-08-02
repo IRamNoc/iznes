@@ -2,8 +2,11 @@ import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDet
 import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
 
-import {Subject} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {MultilingualService} from '@setl/multilingual';
+
+import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
+import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
 
 @Component({
     selector: 'app-ui-layouts-tooltips',
@@ -201,7 +204,6 @@ export class UiTooltipsComponent implements OnInit {
     showInfoPanes: boolean = true;
 
     lang: string;
-    @select(['user', 'siteSettings', 'language']) language$;
     Arr = Array;
     nbMaxRandomTooltips = 100;
     allPosXYRandomTolltips = [];
@@ -209,8 +211,17 @@ export class UiTooltipsComponent implements OnInit {
     showRandomTooltips = false;
     showRandomTooltipsOpened = false;
 
+    connectedWalletId = 0;
+
     showTour = false;
     tourObject = [];
+    userTourEnums: any;
+
+    // List of observable subscription
+    subscriptionsArray: Array<Subscription> = [];
+
+    @select(['user', 'siteSettings', 'language']) language$;
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     private unsubscribe: Subject<any> = new Subject();
 
@@ -219,11 +230,20 @@ export class UiTooltipsComponent implements OnInit {
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         public _translate: MultilingualService,
+        private _ofiUserTourService: OfiUserTourService,
     ) {
+        this.userTourEnums = userToursEnums;
+
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
+
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletId = connected;
+        }));
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.launchTour();
+    }
 
     randomString(len) {
         const charSet = ' ABC DEFGHIJ KLMNOP QRSTUV WXYZ abcde fghijkl mnopq rstuvw xyz 0123 45678 9 ';
@@ -289,12 +309,40 @@ export class UiTooltipsComponent implements OnInit {
         this.changeDetectorRef.markForCheck();
     }
 
+    resetUserTour() {
+        this.showTour = false;
+        if (this.connectedWalletId > 0) {
+            setTimeout(()=>{
+                const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
+                    type: this.userTourEnums.names.utdemousertour,
+                    value: 0,
+                    walletid: this.connectedWalletId,
+                });
+
+                this.ngRedux.dispatch({
+                    type: 'RUN_ASYNC_TASK',
+                    successTypes: (data) => {},
+                    failureTypes: (data) => {},
+                    descriptor: asyncTaskPipe,
+                    args: {},
+                    successCallback: (response) => {
+                        OfiUserTourService.setRequestedUserTours(false, this.ngRedux);
+                    },
+                    failureCallback: (response) => {
+                        console.log('Error save userTour failed: ', response);
+                    },
+                });
+            }, 200);
+        }
+    }
+
     launchTour() {
         this.showTour = false;
         this.tourObject = [];
         setTimeout(() => {
             this.tourObject.push(
                 {
+                    context: this.userTourEnums.names.utdemousertour,
                     title: this._translate.translate('Auto-scroll to element'),
                     text: this._translate.translate('Duration forced to 3s (default 5s).'),
                     target: 'tooltip-label-directives',
