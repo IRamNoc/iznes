@@ -5,18 +5,18 @@ import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { MultilingualService } from '@setl/multilingual';
 
 @Component({
-    selector: 'umbrella-audit-datagrid',
-    templateUrl: './umbrella-audit-datagrid.component.html',
-    styleUrls: ['./umbrella-audit-datagrid.component.scss'],
+    selector: 'fund-audit-datagrid',
+    templateUrl: './fund-audit-datagrid.component.html',
+    styleUrls: ['./fund-audit-datagrid.component.scss'],
 })
-export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChanges {
+export class FundAuditDatagridComponent implements OnInit, OnDestroy, OnChanges {
 
-    umbrellaAuditItems = [];
-    umbrellaAuditList = [];
+    fundAuditItems = [];
+    fundAuditList = [];
     filteredAuditItems = [];
 
     searchForm: FormGroup;
@@ -32,12 +32,12 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
     };
 
     unSubscribe: Subject<any> = new Subject();
-    @Input('umbrellaID') umbrellaID;
-    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'audit']) umbrellaAuditList$;
+    @Input('fundID') fundID;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'audit']) fundAuditList$;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
-        private umbrellaService: OfiUmbrellaFundService,
+        private fundService: OfiFundService,
         private fb: FormBuilder,
         public translate: MultilingualService,
         @Inject('product-config') productConfig,
@@ -50,33 +50,32 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
                 '',
             ],
         });
-
     }
 
     ngOnInit() {
 
-        if (this.umbrellaID) {
-            this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(this.umbrellaID);
+        if (this.fundID) {
+            this.fundService.fetchFundAuditByFundID(this.fundID);
         }
 
-        this.umbrellaAuditList$
+        this.fundAuditList$
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                this.umbrellaAuditList = d;
-                this.updateUmbrellaAuditItems();
+                this.fundAuditList = d;
+                this.updateFundAuditItems();
             });
 
         this.searchForm.valueChanges
             .takeUntil(this.unSubscribe)
             .subscribe((d) => {
-                this.filterInformationAuditItems(d);
+                this.filterAuditItems(d);
             });
     }
 
     ngOnChanges(changes) {
-        if (changes.umbrellaID.currentValue !== changes.umbrellaID.previousValue && changes.umbrellaID.currentValue) {
-            this.umbrellaService.fetchUmbrellaAuditByUmbrellaID(changes.umbrellaID.currentValue);
-            this.updateUmbrellaAuditItems();
+        if (changes.fundID.currentValue !== changes.fundID.previousValue && changes.fundID.currentValue) {
+            this.fundService.fetchFundAuditByFundID(changes.fundID.currentValue);
+            this.updateFundAuditItems();
         }
     }
 
@@ -87,25 +86,26 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
         this.changeDetectorRef.detach();
     }
 
-    updateUmbrellaAuditItems() {
+    updateFundAuditItems() {
         if (
-            !this.umbrellaID
-            || !Object.keys(this.umbrellaAuditList).length
-            || !this.umbrellaAuditList[this.umbrellaID]
-            || !this.umbrellaAuditList[this.umbrellaID].length
+            !this.fundID
+            || !Object.keys(this.fundAuditList).length
+            || !this.fundAuditList[this.fundID]
+            || !this.fundAuditList[this.fundID].length
         ) {
-            this.umbrellaAuditItems = [];
+            this.fundAuditItems = [];
             return;
         }
 
-        this.umbrellaAuditItems = this.umbrellaAuditList[this.umbrellaID].map(item => ({
-            umbrellaName: item.umbrellaName,
+        this.fundAuditItems = this.fundAuditList[this.fundID].map(item => ({
+            fundName: item.fundName,
             field: item.field,
             oldValue: item.oldValue,
             newValue: item.newValue,
             modifiedBy: item.modifiedBy,
             dateModified: item.dateModified,
         }));
+        this.filterAuditItems(this.searchForm.value);
         this.changeDetectorRef.markForCheck();
     }
 
@@ -115,7 +115,7 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
                 filters.endDate,
                 this.filterByStartDate(
                     filters.startDate,
-                    this.umbrellaAuditItems,
+                    this.fundAuditItems,
                 ),
             );
     }
@@ -134,6 +134,7 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
             return list;
         }
         return list.filter((item) => {
+            console.log('endDate', filterValue, item.dateModified);
             return Date.parse(filterValue + ' 23:59:59') >= Date.parse(item.dateModified);
         });
     }

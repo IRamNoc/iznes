@@ -31,7 +31,7 @@
 
 <clr-datagrid class="expandable" clrDgSortIcon>
     <clr-dg-column [clrDgField]="'field'" clrDgSortIcon>
-        {{'Umbrella Name' | translate}}
+        {{'Fund Name' | translate}}
         <span class="column-label"></span>
     </clr-dg-column>
     <clr-dg-column [clrDgField]="'field'" clrDgSortIcon>
@@ -57,7 +57,7 @@
 
 
     <clr-dg-row *clrDgItems="let item of filteredAuditItems">
-        <clr-dg-cell>{{item.umbrellaName}}</clr-dg-cell>
+        <clr-dg-cell>{{item.fundName}}</clr-dg-cell>
         <clr-dg-cell>{{item.field}}</clr-dg-cell>
         <clr-dg-cell>{{item.oldValue}}</clr-dg-cell>
         <clr-dg-cell>{{item.newValue}}</clr-dg-cell>

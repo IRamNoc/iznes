@@ -33,6 +33,10 @@ import { UmbrellaAuditComponent } from './umbrella-audit/umbrella-audit.componen
 import {
     UmbrellaAuditDatagridComponent,
 } from './umbrella-audit/umbrella-audit-datagrid/umbrella-audit-datagrid.component';
+import { FundAuditComponent } from './fund-audit/fund-audit.component';
+import {
+    FundAuditDatagridComponent,
+} from './fund-audit/fund-audit-datagrid/fund-audit-datagrid.component';
 
 /* Graphs. */
 import { ChartsModule } from 'ng2-charts';
@@ -61,6 +65,8 @@ import productConfig from './productConfig';
         ProductCharacteristicComponent,
         UmbrellaAuditComponent,
         UmbrellaAuditDatagridComponent,
+        FundAuditComponent,
+        FundAuditDatagridComponent,
     ],
     exports: [
         ProductHomeComponent,
@@ -74,6 +80,8 @@ import productConfig from './productConfig';
         ProductCharacteristicComponent,
         UmbrellaAuditComponent,
         UmbrellaAuditDatagridComponent,
+        FundAuditComponent,
+        FundAuditDatagridComponent,
     ],
     imports: [
         CommonModule,

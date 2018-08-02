@@ -9,6 +9,7 @@ const initialState: FundListState = {
     requested: false,
     iznFundList: {},
     requestedIznesFund: false,
+    audit: {},
 };
 
 export const FundListReducer = function (state: FundListState = initialState, action: Action) {
@@ -45,6 +46,9 @@ export const FundListReducer = function (state: FundListState = initialState, ac
 
     case FundActions.GET_IZN_FUND_LIST:
         return handleGetIznesFunds(state, action);
+
+    case FundActions.SET_FUND_AUDIT:
+        return handleSetFundAudit(state, action);
 
     default:
         return state;
@@ -156,5 +160,19 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
     return {
         ...state,
         iznFundList,
+    };
+}
+
+function handleSetFundAudit(state: FundListState, action): FundListState {
+    const data = _.get(action.payload, [1, 'Data']);
+    if (!data.length) {
+        return state;
+    }
+    return {
+        ...state,
+        audit: {
+            ...state.audit,
+            [data[0].fundID]: data,
+        },
     };
 }

@@ -543,6 +543,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this._router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
     }
 
+    auditTrail(umbrellaID: string) {
+        this._router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
+    }
+
     cancel() {
         this._router.navigateByUrl('/product-module/product');
     }

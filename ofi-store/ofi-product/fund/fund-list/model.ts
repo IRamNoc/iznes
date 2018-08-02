@@ -32,8 +32,10 @@ export interface FundListState {
     iznFundList: {
         [key: string]: IznesFundDetail,
     };
-
     requestedIznesFund: boolean;
+    audit: {
+        [key: number]: any[],
+    };
 }
 
 export interface FundSharesToProcess {

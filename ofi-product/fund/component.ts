@@ -1059,6 +1059,10 @@ export class FundComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/product-module/product/fund/new?prefill=${fundID}`);
     }
 
+    auditTrail(fundID: string) {
+        this.router.navigateByUrl(`/product-module/product/fund/${fundID}/audit`);
+    }
+
     displaySharePopup(fundName, fundID) {
         const message = `<span>By clicking "Yes", you will be able to create a share directly linked to ${fundName}.</span>`;
 

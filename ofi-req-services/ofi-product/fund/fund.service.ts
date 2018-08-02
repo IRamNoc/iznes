@@ -17,7 +17,8 @@ import {
     IznesUpdateFundRequestBody,
     Fund,
     IznesFundRequestMessageBody,
-    IznDeleteFundDraftRequestBody
+    IznDeleteFundDraftRequestBody,
+    fetchFundAuditRequestBody,
 } from './fund.service.model';
 import {
     setRequestedFund,
@@ -25,7 +26,8 @@ import {
     setRequestedIznesFunds,
     clearRequestedIznesFunds,
     SET_FUND_LIST,
-    SET_FUND_SHARE_LIST
+    SET_FUND_SHARE_LIST,
+    SET_FUND_AUDIT,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list/actions';
 import { GET_IZN_FUND_LIST } from '../../../ofi-store/ofi-product/fund/fund-list';
 import { OfiUmbrellaFundService } from "../umbrella-fund/service";
@@ -62,7 +64,10 @@ export class OfiFundService {
     @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     accountId = 0;
 
-    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
         this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
     }
 
@@ -141,6 +146,20 @@ export class OfiFundService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    fetchFundList() {
+        const asyncTaskPipe = this.requestIznesFundList();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_IZN_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(setRequestedIznesFunds());
+            },
+        ));
     }
 
     saveFund(fData: FundData, ngRedux: NgRedux<any>): any {
@@ -305,6 +324,23 @@ export class OfiFundService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    fetchFundAuditByFundID(fundID: number) {
+        const messageBody: fetchFundAuditRequestBody = {
+            RequestName: 'izngetfundaudit',
+            token: this.memberSocketService.token,
+            fundID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
     }
 
 }

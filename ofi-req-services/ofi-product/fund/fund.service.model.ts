@@ -173,3 +173,8 @@ export interface IznDeleteFundDraftRequestBody extends MemberNodeMessageBody {
     token: any;
     id: string;
 }
+
+export interface fetchFundAuditRequestBody extends MemberNodeMessageBody {
+    token: any;
+    fundID: number;
+}

@@ -42,6 +42,7 @@ export { FundShareAuditComponent } from './ofi-product/fund-share/audit/componen
 export { FundComponent } from './ofi-product/fund/component';
 export { ProductCharacteristicComponent } from './ofi-product/characteristic/product-characteristic.component';
 export { UmbrellaAuditComponent } from './ofi-product/umbrella-audit/umbrella-audit.component';
+export { FundAuditComponent } from './ofi-product/fund-audit/fund-audit.component';
 /**
  * Nav
  */
