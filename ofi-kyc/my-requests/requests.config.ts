@@ -243,7 +243,7 @@ export const sectorActivityList = [
         "text": "Advertising"
     },
     {
-        "id": "TelecommunicationandNetworkEquipmentManufacturers",
+        "id": "TelecommunicationNetworkEquipmentManufacturer",
         "text": "Telecommunication and Network Equipment Manufacturers"
     },
     {
@@ -832,7 +832,7 @@ export const financialInstrumentsList = [
         "text": "IFT"
     },
     {
-        "id": "DerivativesandcomplexproductsstructuredproductsEMTNetc",
+        "id": "Derivativesandcomplexproducts",
         "text": "Derivatives and complex products (structured products, EMTN, etc.)"
     },
     {
@@ -952,16 +952,16 @@ export const investmentVehiclesList = [
 
 export const financialAssetManagementMethodList = [
     {
-        id : 'internalManagement',
-        text : 'Internal management'
+        id: 'internalManagement',
+        text: 'Internal management'
     },
     {
-        id : 'withAdviceOfAuthorisedThirdPartyInstitution',
-        text : 'With the advice of an authorised third party institution'
+        id: 'withAdviceOfAuthorisedThirdPartyInstitution',
+        text: 'With the advice of an authorised third party institution'
     },
     {
-        id : 'mandateEntrustedToManagers',
-        text : 'By mandate(s) entrusted to a manager(s)'
+        id: 'mandateEntrustedToManagers',
+        text: 'By mandate(s) entrusted to a manager(s)'
     }
 ];
 
@@ -1075,7 +1075,7 @@ export const riskProfileList = [
         "text": "Partially protected capital"
     },
     {
-        "id": "Nocapitalguaranteecapitallossuptotheamountinvested",
+        "id": "Nocapitalguarantee",
         "text": "No capital guarantee (capital loss up to the amount invested)"
     },
     {
@@ -1113,83 +1113,83 @@ export const riskAcceptanceList = [
 
 export const capitalNatureList = [
     {
-        id : 'equityAndReserves',
-        text : 'Equity & reserves'
+        id: 'equityAndReserves',
+        text: 'Equity & reserves'
     },
     {
-        id : 'generalAssets',
-        text : 'General assets (insurance contracts)'
+        id: 'generalAssets',
+        text: 'General assets (insurance contracts)'
     },
     {
-        id : 'premiumsAndContributions',
-        text : 'Premiums & contributions'
+        id: 'premiumsAndContributions',
+        text: 'Premiums & contributions'
     },
     {
-        id : 'saleGoodsServices',
-        text : 'Sale of goods and services'
+        id: 'saleGoodsServices',
+        text: 'Sale of goods and services'
     },
     {
-        id : 'treasury',
-        text : 'Treasury'
+        id: 'treasury',
+        text: 'Treasury'
     },
     {
-        id : 'others',
-        text : 'Others'
+        id: 'others',
+        text: 'Others'
     }
 ];
 
 export const documentTypesList = [
     {
-        id : 'kyclistshareholdersdoc',
-        text : 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%'
+        id: 'kyclistshareholdersdoc',
+        text: 'Official documents (or equivalent) listing the shareholders with their % of ownership if greater than 25%'
     },
     {
-        id : 'kyclistdirectorsdoc',
-        text : 'Official document (or equivalent) listing the directors'
+        id: 'kyclistdirectorsdoc',
+        text: 'Official document (or equivalent) listing the directors'
     },
     {
-        id : 'kycbeneficialownersdoc',
-        text : 'List of beneficial owners'
+        id: 'kycbeneficialownersdoc',
+        text: 'List of beneficial owners'
     },
     {
-        id : 'kyclistauthoriseddoc',
-        text : 'List of persons authorised to give instructions'
+        id: 'kyclistauthoriseddoc',
+        text: 'List of persons authorised to give instructions'
     },
     {
-        id : 'kyctaxcertificationdoc',
-        text : 'Tax self-certification form '
+        id: 'kyctaxcertificationdoc',
+        text: 'Tax self-certification form '
     },
     {
-        id : 'kycw8benefatcadoc',
-        text : 'Form W-8BEN-E (FATCA'
+        id: 'kycw8benefatcadoc',
+        text: 'Form W-8BEN-E (FATCA'
     },
     {
-        id : 'kycstatuscertifieddoc',
-        text : 'Status "certified" (or equivalent) by the duly authorized representative of the client'
+        id: 'kycstatuscertifieddoc',
+        text: 'Status "certified" (or equivalent) by the duly authorized representative of the client'
     },
     {
-        id : 'kyckbisdoc',
-        text : 'Kbis extract (or equivalent) less than 3 months old'
+        id: 'kyckbisdoc',
+        text: 'Kbis extract (or equivalent) less than 3 months old'
     },
     {
-        id : 'kycannualreportdoc',
-        text : 'Latest audited annual report '
+        id: 'kycannualreportdoc',
+        text: 'Latest audited annual report '
     },
     {
-        id : 'kycidorpassportdoc',
-        text : 'National identity card or valid passport or residence card of the signatory with photograph'
+        id: 'kycidorpassportdoc',
+        text: 'National identity card or valid passport or residence card of the signatory with photograph'
     },
     {
-        id : 'kycproofofapprovaldoc',
-        text : 'Proof of approval or copy of decree'
+        id: 'kycproofofapprovaldoc',
+        text: 'Proof of approval or copy of decree'
     },
     {
-        id : 'kycisincodedoc',
-        text : 'ISIN code of the listed share'
+        id: 'kycisincodedoc',
+        text: 'ISIN code of the listed share'
     },
     {
-        id : 'kycwolfsbergdoc',
-        text : 'Wolfsberg Questionnaire or equivalentFor'
+        id: 'kycwolfsbergdoc',
+        text: 'Wolfsberg Questionnaire or equivalentFor'
     }
 
 ];
@@ -1197,144 +1197,144 @@ export const documentTypesList = [
 
 export const controlToName = {
     // General
-    registeredCompanyName : 'Registered Company Name or Legal Name',
-    legalForm : 'Legal form',
-    leiCode : 'LEI Code',
-    otherIdentificationNumber : 'Other indentification number',
-    registeredCompanyAddressLine1 : "Registered company's headquarters address (including country)",
-    registeredCompanyAddressLine2 : 'Address line 2',
-    registeredCompanyZipCode : 'ZIP Code',
-    registeredCompanyCity : 'City',
-    registeredCompanyCountry : 'Country',
-    commercialDomiciliation : 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
-    countryTaxResidence : 'Country of tax residence',
-    sectorActivity : 'Sector of activity',
-    sectorActivityText : 'Sector of activity text',
-    legalStatus : 'Legal status',
-    legalStatusInsurerType : 'Insurer type',
-    legalStatusPublicEstablishmentType : 'Public establishment type',
-    legalStatusPublicEstablishmentTypeOther : 'Public establishment type text',
-    legalStatusListingMarkets : 'Listing market(s)',
-    legalStatusListingOther : 'Listing market(s) text',
+    registeredCompanyName: 'Registered Company Name or Legal Name',
+    legalForm: 'Legal form',
+    leiCode: 'LEI Code',
+    otherIdentificationNumber: 'Other indentification number',
+    registeredCompanyAddressLine1: "Registered company's headquarters address (including country)",
+    registeredCompanyAddressLine2: 'Address line 2',
+    registeredCompanyZipCode: 'ZIP Code',
+    registeredCompanyCity: 'City',
+    registeredCompanyCountry: 'Country',
+    commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
+    countryTaxResidence: 'Country of tax residence',
+    sectorActivity: 'Sector of activity',
+    sectorActivityText: 'Sector of activity text',
+    legalStatus: 'Legal status',
+    legalStatusInsurerType: 'Insurer type',
+    legalStatusPublicEstablishmentType: 'Public establishment type',
+    legalStatusPublicEstablishmentTypeOther: 'Public establishment type text',
+    legalStatusListingMarkets: 'Listing market(s)',
+    legalStatusListingOther: 'Listing market(s) text',
 
     // Company
-    activities : 'Activities',
-    ownAccountinvestor : 'Own-account investor',
-    investorOnBehalfList : 'Investor on behalf of third parties',
-    geographicalAreaOfActivity : 'Geographical area of the activity',
-    geographicalAreaOfActivitySpecification : 'Geographical area of the activity text',
-    totalFinancialAssetsAlreadyInvested : 'Total Financial assets already invested',
-    capitalNature : 'Nature and origin of the capital invested by the legal entity',
-    activityRegulated : 'Is the activity regulated ?',
-    regulator : 'Regulator or a supervisory authority',
-    approvalNumber : 'Approval number',
-    companyListed : 'Is the company listed ?',
-    listingMarkets : 'Listing market(s)',
-    bloombergCode : "Bloomberg code",
-    isinCode : 'ISIN code of the listed share',
-    keyFinancialData : 'Key Financial Data',
-    balanceSheetTotal : 'Balance Sheet Total (€)',
-    netRevenuesNetIncome : 'Net Revenues or Net Income (€)',
-    shareholderEquity : "Shareholder's Equity (€)",
-    equityAndReserves : 'Equity & reserves',
-    generalAssets : 'General assets (insurance contracts)',
-    premiumsAndContributions : 'Premiums & contributions',
-    saleGoodsServices : 'Sale of goods and services',
-    treasury : 'Treasury',
-    others : 'Others',
-    geographicalOrigin1 : 'Geographical origin (specify by area or country)',
-    geographicalOrigin2 : 'Geographical origin precision',
+    activities: 'Activities',
+    ownAccountinvestor: 'Own-account investor',
+    investorOnBehalfList: 'Investor on behalf of third parties',
+    geographicalAreaOfActivity: 'Geographical area of the activity',
+    geographicalAreaOfActivitySpecification: 'Geographical area of the activity text',
+    totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
+    capitalNature: 'Nature and origin of the capital invested by the legal entity',
+    activityRegulated: 'Is the activity regulated ?',
+    regulator: 'Regulator or a supervisory authority',
+    approvalNumber: 'Approval number',
+    companyListed: 'Is the company listed ?',
+    listingMarkets: 'Listing market(s)',
+    bloombergCode: "Bloomberg code",
+    isinCode: 'ISIN code of the listed share',
+    keyFinancialData: 'Key Financial Data',
+    balanceSheetTotal: 'Balance Sheet Total (€)',
+    netRevenuesNetIncome: 'Net Revenues or Net Income (€)',
+    shareholderEquity: "Shareholder's Equity (€)",
+    equityAndReserves: 'Equity & reserves',
+    generalAssets: 'General assets (insurance contracts)',
+    premiumsAndContributions: 'Premiums & contributions',
+    saleGoodsServices: 'Sale of goods and services',
+    treasury: 'Treasury',
+    others: 'Others',
+    geographicalOrigin1: 'Geographical origin (specify by area or country)',
+    geographicalOrigin2: 'Geographical origin precision',
 
     // Beneficiaries
-    firstName : 'First name',
-    lastName : 'Last name',
-    address : 'Address',
-    nationality : 'Nationality',
-    dateOfBirth : 'Date of birth',
-    cityOfBirth : 'City of birth',
-    countryOfBirth : 'Country of birth',
-    documentID : 'Document',
-    holdingPercentage : 'Holding percentage',
+    firstName: 'First name',
+    lastName: 'Last name',
+    address: 'Address',
+    nationality: 'Nationality',
+    dateOfBirth: 'Date of birth',
+    cityOfBirth: 'City of birth',
+    countryOfBirth: 'Country of birth',
+    documentID: 'Document',
+    holdingPercentage: 'Holding percentage',
 
-    custodianHolderAccount : 'Custodian holder account',
-    custodianName : "Custodian's name",
-    custodianIban : "Custodian's IBAN",
-    custodianAddressLine1 : 'Address line 1',
-    custodianAddressLine2 : 'Address line 2',
-    custodianZipCode : 'ZIP code',
-    custodianCity : 'City',
-    custodianCountry : 'Country',
+    custodianHolderAccount: 'Custodian holder account',
+    custodianName: "Custodian's name",
+    custodianIban: "Custodian's IBAN",
+    custodianAddressLine1: 'Address line 1',
+    custodianAddressLine2: 'Address line 2',
+    custodianZipCode: 'ZIP code',
+    custodianCity: 'City',
+    custodianCountry: 'Country',
 
     // Classification
-    investorStatus : 'Does investor have pro status?',
-    excludeProducts : 'Excluded category of products/services',
-    changeProfessionalStatus : 'Opted for non professional status',
-    jobPosition : 'Job position',
-    numberYearsExperienceRelatedFunction : 'Number of years of experience in a function related to financial markets',
-    numberYearsCurrentPosition : 'Number of years of experience in current position',
-    financialInstruments : 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
-    financialInstrumentsSpecification : 'Financial instruments text',
-    marketArea : 'Market area(s) which have been the subject of transactions',
-    natureTransactionPerYear : 'Nature of transactions per year (in €)',
-    volumeTransactionPerYear : 'Volume of transactions per year (in €)',
-    activitiesBenefitFromExperience : 'Activities/professions allow to benefit from experience in the financial field',
-    activitiesBenefitFromExperienceSpecification : 'Benefit text',
+    investorStatus: 'Does investor have pro status?',
+    excludeProducts: 'Excluded category of products/services',
+    changeProfessionalStatus: 'Opted for non professional status',
+    jobPosition: 'Job position',
+    numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
+    numberYearsCurrentPosition: 'Number of years of experience in current position',
+    financialInstruments: 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
+    financialInstrumentsSpecification: 'Financial instruments text',
+    marketArea: 'Market area(s) which have been the subject of transactions',
+    natureTransactionPerYear: 'Nature of transactions per year (in €)',
+    volumeTransactionPerYear: 'Volume of transactions per year (in €)',
+    activitiesBenefitFromExperience: 'Activities/professions allow to benefit from experience in the financial field',
+    activitiesBenefitFromExperienceSpecification: 'Benefit text',
 
     // Risk nature
-    financialAssetManagementMethod : 'Financial asset management method',
-    internalManagement : 'Internal management',
-    withAdviceOfAuthorisedThirdPartyInstitution : 'With the advice of an authorised third party institution',
-    mandateEntrustedToManagers : 'By mandate(s) entrusted to a manager(s)',
-    frequencyFinancialTransactions : 'Frequency of financial transactions',
-    investmentvehiclesAlreadyUsed : 'Investment vehicles already used',
+    financialAssetManagementMethod: 'Financial asset management method',
+    internalManagement: 'Internal management',
+    withAdviceOfAuthorisedThirdPartyInstitution: 'With the advice of an authorised third party institution',
+    mandateEntrustedToManagers: 'By mandate(s) entrusted to a manager(s)',
+    frequencyFinancialTransactions: 'Frequency of financial transactions',
+    investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
 
     // Risk objective
-    performanceProfile : 'Performance profile',
-    clientNeeds : 'Client needs (purpose of the investment)',
-    otherFinancialInformation : 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation',
-    investmentHorizonWanted : 'Investment horizons wanted',
-    investmentHorizonWantedSpecificPeriod : 'investmentHorizonWantedSpecificPeriod',
-    riskProfile : 'Risk profile: ability to incur losses',
-    riskProfileCapital : 'Risk profile capital',
-    riskAcceptanceLevel1 : 'Risk acceptance Level 1',
-    riskAcceptanceLevel2 : 'Risk acceptance Level 2',
-    riskAcceptanceLevel3 : 'Risk acceptance Level 3',
-    riskAcceptanceLevel4 : 'Risk acceptance Level 4',
+    performanceProfile: 'Performance profile',
+    clientNeeds: 'Client needs (purpose of the investment)',
+    otherFinancialInformation: 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation',
+    investmentHorizonWanted: 'Investment horizons wanted',
+    investmentHorizonWantedSpecificPeriod: 'investmentHorizonWantedSpecificPeriod',
+    riskProfile: 'Risk profile: ability to incur losses',
+    riskProfileCapital: 'Risk profile capital',
+    riskAcceptanceLevel1: 'Risk acceptance Level 1',
+    riskAcceptanceLevel2: 'Risk acceptance Level 2',
+    riskAcceptanceLevel3: 'Risk acceptance Level 3',
+    riskAcceptanceLevel4: 'Risk acceptance Level 4',
 
     // Risk constraints
-    statutoryConstraints : 'Statutory constraints/special rules concerning eligible assets',
-    taxConstraints : 'Tax constraints',
-    otherConstraints : 'Others (including SRI, ESG, ...)',
-    investmentDecisionsAdHocCommittee : 'Are investment decisions validated by an ad hoc committee?',
-    investmentDecisionsAdHocCommitteeSpecification : 'Ad hoc committee text',
-    otherPersonsAuthorised : 'Other persons authorised to take investment decisions and give instructions',
+    statutoryConstraints: 'Statutory constraints/special rules concerning eligible assets',
+    taxConstraints: 'Tax constraints',
+    otherConstraints: 'Others (including SRI, ESG, ...)',
+    investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
+    investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee text',
+    otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
 };
 
 export const controlToList = {
-    legalForm : 'legalFormList',
-    sectorActivity : 'sectorActivityList',
-    legalStatus : 'legalStatusList',
-    legalStatusInsurerType : 'legalStatusInsurerTypeList',
-    legalStatusPublicEstablishmentType : 'publicEstablishmentList',
-    activities : 'companyActivitiesList',
-    ownAccountinvestor : 'ownAccountInvestorList',
-    investorOnBehalfThirdParties : 'investorOnBehalfList',
-    geographicalAreaOfActivity : 'geographicalAreaList',
-    geographicalOrigin1 : 'geographicalOriginTypeList',
-    totalFinancialAssetsAlreadyInvested : 'financialAssetsInvestedList',
-    capitalNature : 'capitalNatureList',
-    custodianHolderAccount : 'custodianHolderAccountList',
-    financialAssetManagementMethod : 'financialAssetManagementMethodList',
-    investmentvehiclesAlreadyUsed : 'investmentVehiclesList',
-    performanceProfile : 'performanceProfileList',
-    riskProfile : 'riskProfileList',
-    investmentHorizonWanted : 'investmentHorizonList',
-    clientNeeds : 'clientNeedsList',
+    legalForm: 'legalFormList',
+    sectorActivity: 'sectorActivityList',
+    legalStatus: 'legalStatusList',
+    legalStatusInsurerType: 'legalStatusInsurerTypeList',
+    legalStatusPublicEstablishmentType: 'publicEstablishmentList',
+    activities: 'companyActivitiesList',
+    ownAccountinvestor: 'ownAccountInvestorList',
+    investorOnBehalfThirdParties: 'investorOnBehalfList',
+    geographicalAreaOfActivity: 'geographicalAreaList',
+    geographicalOrigin1: 'geographicalOriginTypeList',
+    totalFinancialAssetsAlreadyInvested: 'financialAssetsInvestedList',
+    capitalNature: 'capitalNatureList',
+    custodianHolderAccount: 'custodianHolderAccountList',
+    financialAssetManagementMethod: 'financialAssetManagementMethodList',
+    investmentvehiclesAlreadyUsed: 'investmentVehiclesList',
+    performanceProfile: 'performanceProfileList',
+    riskProfile: 'riskProfileList',
+    investmentHorizonWanted: 'investmentHorizonList',
+    clientNeeds: 'clientNeedsList',
 
-    geographicalOrigin2 : 'countries',
-    registeredCompanyCountry : 'countries',
-    custodianCountry : 'countries',
-    nationality : 'countries',
-    countryOfBirth : 'countries',
-    countryTaxResidence : 'countries',
+    geographicalOrigin2: 'countries',
+    registeredCompanyCountry: 'countries',
+    custodianCountry: 'countries',
+    nationality: 'countries',
+    countryOfBirth: 'countries',
+    countryTaxResidence: 'countries',
 };

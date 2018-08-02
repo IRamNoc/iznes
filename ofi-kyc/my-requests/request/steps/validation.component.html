@@ -34,8 +34,12 @@
                             {{amcs[0].companyName}}.
                         </span>
 
-                        <span class="field-error" *ngIf="hasError('undersigned') || hasError('actingOnBehalfOf')">{{'Fields are required' | translate}}</span>
                     </p>
+                    <p class="txtRed">
+                        <span class="txtRed" *ngIf="hasError('undersigned', ['required']) || hasError('actingOnBehalfOf', ['required'])">{{'Fields are required' | translate}}</span><br />
+                        <span class="txtRed" *ngIf="hasError('undersigned', ['maxlength']) || hasError('actingOnBehalfOf', ['maxlength'])">{{'Fields are too long' | translate}}</span>
+                    </p>
+
                     <ul *ngIf="amcs.length > 1" class="ml-1 mb-1">
                         <li *ngFor="let amc of amcs">
                             {{amc.companyName}}
@@ -48,7 +52,8 @@
                                 {{'Done at' | translate}}:
                             </label>
                             <input type="text" id="doneAt" formControlName="doneAt" placeholder="{{'Please fill in a city' | translate}}">
-                            <span class="field-error" *ngIf="hasError('doneAt')">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('doneAt', ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('doneAt', ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
 
                         <div class="form-group required-field col-sm-6">
@@ -71,7 +76,8 @@
                                 {{'Position of the representative of the legal system' | translate}}:
                             </label>
                             <input type="text" id="positionRepresentative" formControlName="positionRepresentative" placeholder="{{'Please fill in representative\'s position' | translate}}">
-                            <span class="field-error" *ngIf="hasError('positionRepresentative')">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError('positionRepresentative', ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
                         <div class="form-group required-field col-sm-6">
                             <label for="electronicSignatureDocument">

@@ -148,11 +148,11 @@ export class NewRequestService {
 
         return fb.group({
             kycID: '',
-            undersigned: ['', Validators.required],
-            actingOnBehalfOf: ['', Validators.required],
-            doneAt: ['', Validators.required],
+            undersigned: ['', this.getLengthValidator()],
+            actingOnBehalfOf: ['', this.getLengthValidator()],
+            doneAt: ['', this.getLengthValidator()],
             doneDate: ['', Validators.required],
-            positionRepresentative: ['', Validators.required],
+            positionRepresentative: ['', this.getLengthValidator()],
             electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature')
         });
     }
@@ -162,24 +162,24 @@ export class NewRequestService {
 
         const generalInformation = fb.group({
             kycID: '',
-            registeredCompanyName: ['', Validators.required],
+            registeredCompanyName: ['', this.getLengthValidator(255)],
             legalForm: ['', Validators.required],
             leiCode: ['', [
                 Validators.required,
                 Validators.pattern(/^\w{18}\d{2}$|n\/a/i)
             ]],
-            otherIdentificationNumber: null,
-            registeredCompanyAddressLine1: ['', Validators.required],
-            registeredCompanyAddressLine2: '',
-            registeredCompanyZipCode: ['', Validators.required],
-            registeredCompanyCity: ['', Validators.required],
+            otherIdentificationNumber: [null, Validators.maxLength(255)],
+            registeredCompanyAddressLine1: ['', this.getLengthValidator(255)],
+            registeredCompanyAddressLine2: ['', Validators.maxLength(255)],
+            registeredCompanyZipCode: ['', this.getLengthValidator(10)],
+            registeredCompanyCity: ['', this.getLengthValidator()],
             registeredCompanyCountry: ['', Validators.required],
             commercialDomiciliation: false,
             countryTaxResidence: ['', Validators.required],
             sectorActivity: ['', Validators.required],
             sectorActivityText: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator(255)
             ],
             legalStatus: ['', Validators.required],
             legalStatusInsurerType: [
@@ -218,17 +218,17 @@ export class NewRequestService {
             geographicalAreaOfActivity: ['', Validators.required],
             geographicalAreaOfActivitySpecification: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator(255)
             ],
 
             activityRegulated: false,
             regulator: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator(255)
             ],
             approvalNumber: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator()
             ],
 
             companyListed: false,
@@ -238,11 +238,11 @@ export class NewRequestService {
             ],
             bloombergCode: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator()
             ],
             isinCode: [
                 {value: '', disabled: true},
-                Validators.required
+                this.getLengthValidator()
             ],
 
             keyFinancialData: '',
@@ -281,13 +281,13 @@ export class NewRequestService {
             kycID: '',
             investorStatus: '',
             pro: fb.group({
-                excludeProducts: '',
+                excludeProducts: ['', Validators.maxLength(255)],
                 changeProfessionalStatus: 0
             }),
             nonPro: fb.group({
-                firstName: ['', Validators.required],
-                lastName: ['', Validators.required],
-                jobPosition: ['', Validators.required],
+                firstName: ['', this.getLengthValidator()],
+                lastName: ['', this.getLengthValidator()],
+                jobPosition: ['', this.getLengthValidator()],
                 numberYearsExperienceRelatedFunction: ['', Validators.required],
                 numberYearsCurrentPosition: ['', Validators.required],
                 financialInstruments: ['', Validators.required],
@@ -425,7 +425,7 @@ export class NewRequestService {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
                 }
             }),
-            otherFinancialInformation: '',
+            otherFinancialInformation: ['', Validators.maxLength(255)],
             investmentHorizonWanted: this.formBuilder.group(this.transformToForm(this.investmentHorizonList), {
                 validator: (formGroup) => {
                     return CustomValidators.multipleCheckboxValidator(formGroup);
@@ -481,12 +481,12 @@ export class NewRequestService {
     createConstraint(id) {
         return this.formBuilder.group({
             assetManagementCompanyID: id ? id : null,
-            statutoryConstraints: '',
-            taxConstraints: '',
-            otherConstraints: '',
+            statutoryConstraints: ['', Validators.maxLength(255)],
+            taxConstraints: ['', Validators.maxLength(255)],
+            otherConstraints: ['', Validators.maxLength(255)],
             investmentDecisionsAdHocCommittee: '',
-            investmentDecisionsAdHocCommitteeSpecification: [{value: '', disabled: true}, Validators.required],
-            otherPersonsAuthorised: ''
+            investmentDecisionsAdHocCommitteeSpecification: [{value: '', disabled: true}, this.getLengthValidator(255)],
+            otherPersonsAuthorised: ['', Validators.maxLength(255)]
         });
     }
 
@@ -506,12 +506,12 @@ export class NewRequestService {
         return this.formBuilder.group({
             kycID: '',
             companyBeneficiariesID: '',
-            firstName: ['', Validators.required],
-            lastName: ['', Validators.required],
+            firstName: ['', this.getLengthValidator()],
+            lastName: ['', this.getLengthValidator()],
             address: ['', Validators.required],
             nationality: ['', Validators.required],
             dateOfBirth: ['', Validators.required],
-            cityOfBirth: ['', Validators.required],
+            cityOfBirth: ['', this.getLengthValidator()],
             countryOfBirth: ['', Validators.required],
             document: this.createDocumentFormGroup('kycbeneficiarydoc'),
             holdingPercentage: ['', [
@@ -526,14 +526,19 @@ export class NewRequestService {
     createHolderCustom() {
         return this.formBuilder.group({
             custodianID : '',
-            custodianName: ['', Validators.required],
-            custodianIban: ['', Validators.required],
-            custodianAddressLine1: ['', Validators.required],
-            custodianAddressLine2: '',
-            custodianZipCode: ['', Validators.required],
-            custodianCity: ['', Validators.required],
+            custodianHolderAccount : '',
+            custodianName: ['', this.getLengthValidator()],
+            custodianIban: ['', this.getLengthValidator()],
+            custodianAddressLine1: ['', this.getLengthValidator(255)],
+            custodianAddressLine2: ['', Validators.maxLength(255)],
+            custodianZipCode: ['', this.getLengthValidator(10)],
+            custodianCity: ['', this.getLengthValidator()],
             custodianCountry: ['', Validators.required]
         });
+    }
+
+    getLengthValidator(maxLength = 45){
+        return [Validators.required, Validators.maxLength(maxLength)];
     }
 
     hasError(form, control: string, error: Array<string> = []) {
