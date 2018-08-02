@@ -69,9 +69,10 @@
                     </clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                <clr-dg-footer>
+                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
+                    {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -85,7 +86,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
-                            <input type="text" formControlName="name" placeholder="Group Name"
+                            <input id="group-name" type="text" formControlName="name" placeholder="Group Name"
                                    class="form-control groupname mlp_translated" mltag="txt_groupname">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -97,7 +98,7 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_groupdescription">Group
                                 Description</label>
-                            <input type="text" formControlName="description" name="description"
+                            <input id="group-description" type="text" formControlName="description" name="description"
                                    placeholder="Group Description"
                                    class="form-control groupdescription mlp_translated"
                                    mltag="txt_groupdescription">
@@ -110,12 +111,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_grouptype">Group Type</label>
-                            <ng-select
-                                    [items]="groupTypes"
-                                    [allowClear]="true"
-                                    placeholder="Choose Group Tag"
-                                    [formControl]="formControl.controls['type']"
-                                    mltag="txt_choosegrouptag"
+                            <ng-select id="group-type"
+                                       [items]="groupTypes"
+                                       [allowClear]="true"
+                                       placeholder="Choose Group Tag"
+                                       [formControl]="formControl.controls['type']"
+                                       mltag="txt_choosegrouptag"
                             ></ng-select>
                             <div *ngIf="formControl.controls.type.hasError('required') && formControl.controls.type.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -157,10 +158,11 @@
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
-                            <button
+                            <button id="group-clear-btn"
                                     (click)="clearNewGroup(tabid, $event)"
                                     class="btn btn-secondary"
                                     mltag="txt_clear"
@@ -183,7 +185,7 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_groupname">Group Name</label>
-                            <input type="text" formControlName="name" placeholder="Group Name"
+                            <input id="group-name" type="text" formControlName="name" placeholder="Group Name"
                                    class="form-control groupname mlp_translated" mltag="txt_groupname">
                             <div *ngIf="formControl.controls.name.hasError('required') && formControl.controls.name.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
@@ -195,7 +197,7 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" mltag="txt_groupdescription">Group
                                 Description</label>
-                            <input type="text" formControlName="description" name="description"
+                            <input id="group-description" type="text" formControlName="description" name="description"
                                    placeholder="Group Description"
                                    class="form-control groupdescription mlp_translated"
                                    mltag="txt_groupdescription">
@@ -212,12 +214,12 @@
                                 Disabled is added to this select by it's form
                                 control in the handleEdit function.
                             -->
-                            <ng-select
-                                    [items]="groupTypes"
-                                    [allowClear]="true"
-                                    placeholder="Choose Group Tag..."
-                                    [disabled]="true" [formControl]="formControl.controls['type']"
-                                    mltag="txt_choosegrouptag"
+                            <ng-select id="group-type"
+                                       [items]="groupTypes"
+                                       [allowClear]="true"
+                                       placeholder="Choose Group Tag..."
+                                       [disabled]="true" [formControl]="formControl.controls['type']"
+                                       mltag="txt_choosegrouptag"
                             ></ng-select>
                         </div>
                     </div>
@@ -259,10 +261,11 @@
 
                     <div class="form-group button-group">
                         <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                    [disabled]="!formControl.valid">
                                 <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
                             </button>
-                            <button (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
                                 <i class="fa fa-cancel"></i> <span class="ml_translated"
                                                                    mltag="txt_cancel">Cancel</span>
                             </button>

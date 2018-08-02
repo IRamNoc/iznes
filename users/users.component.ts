@@ -72,6 +72,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private manageWalletList: any;
 
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
                 private ngRedux: NgRedux<any>,

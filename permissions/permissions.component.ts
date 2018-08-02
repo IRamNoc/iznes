@@ -106,6 +106,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public new = false;
     public duplicateEvent = {};
 
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
                 private changeDetectorRef: ChangeDetectorRef,

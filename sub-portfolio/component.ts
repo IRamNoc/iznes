@@ -38,7 +38,10 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     connectedWalletId: number;
     requestedWalletAddress: boolean;
 
-    /* List of Redux observable. */
+    /* Rows Per Page datagrid size */
+    public pageSize: number;
+
+    /* List of Redux observables. */
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
@@ -253,6 +256,20 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('/user-administration/subportfolio/0');
         return;
     }
+
+    /**
+    * Clears the add sub-portfolio form.
+    *
+    * @param {number} tabid - The ID of the tab to clear.
+    *
+    * @return {void}
+    */
+    public clearAddSubportfolioForm(tabid): void {
+        /* Let's set all the values in the form controls. */
+        this.tabsControl[tabid].formControl.reset();
+        return;
+    }
+
     /**
      * Creates a sub-portfolio form.
      *
@@ -336,7 +353,7 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                     walletId: this.connectedWalletId,
                     option: address,
                     label: formData.name,
-                    iban: formData.iban,
+                    iban: formData.iban.trim(),
                 });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -345,15 +362,18 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                         this.ngRedux.dispatch(clearRequestedWalletLabel());
                         const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
                         this.handleLabelResponse(message);
+                        this.clearAddSubportfolioForm(tabId);
                     },
                     (labelResponse) => {
-                        this.showErrorMessage('<span mltag="txt_address_created_sub_fail">' +
+                        const message = '<span mltag="txt_address_created_sub_fail">' +
                             'Portfolio address was created in the blockchain, but sub-portfolio was not created.' +
-                            '</span>');
+                            '</span>';
+                        this.showMessage('error', message);
                     }));
             },
             (data) => {
-                this.showErrorResponse(data);
+                const message = _.get(data, [1, 'data', 'address'], '');
+                this.showMessage('error', message);
             }));
     }
 
@@ -386,7 +406,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 this.handleLabelResponse((message === 'All OK') ? 'Updated' : message);
             },
             (labelResponse) => {
-                this.showErrorResponse(labelResponse);
+                const message = _.get(labelResponse, '[1].Data[0].Message', '');
+                this.showMessage('error', message);
             }));
 
         /* Update the tab with updated data. */
@@ -394,90 +415,62 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Handles the message from which to create an alert.
+     * Sets the alert message text.
      *
      * @param {string} message - The short form of the message.
      *
      * @return {void}
      */
-    handleLabelResponse(message) {
+    handleLabelResponse(message: string) {
         switch (message) {
         case 'All OK':
-            this.showSuccessResponse('<span mltag="txt_portfolio_created">' +
+            this.showMessage('success', '<span mltag="txt_portfolio_created">' +
                 'Sub-portfolio created</span>');
             break;
 
         case 'Updated':
-            this.showSuccessResponse('<span>' +
+            this.showMessage('success', '<span>' +
                 'Sub-portfolio updated</span>');
             break;
 
         case 'Duplicate Label':
-            this.showWarningResponse('<span mltag="txt_subportfolioname_is_exist">' +
+            this.showMessage('warning', '<span mltag="txt_subportfolioname_is_exist">' +
                 'Sub-portfolio name already exists</span>');
             break;
 
         case 'Duplicate IBAN':
-            this.showWarningResponse('<span mltag="txt_iban_is_exist">' +
+            this.showMessage('warning', '<span mltag="txt_iban_is_exist">' +
                 'IBAN has already exists</span>');
             break;
 
         case 'Duplicate Label and IBAN':
-            this.showWarningResponse('<span mltag="txt_subportfolioname_and_iban_is_exist">' +
+            this.showMessage('warning', '<span mltag="txt_subportfolioname_and_iban_is_exist">' +
                 'Sub-portfolio and IBAN already exist</span>');
             break;
 
         default:
-            this.showSuccessResponse('<span mltag="txt_portfolio_created">' +
+            this.showMessage('success', '<span mltag="txt_portfolio_created">' +
                 'Sub-portfolio created</span>');
             break;
         }
     }
 
-    showErrorResponse(response) {
-        const message = _.get(response, '[1].Data[0].Message', '');
+    /**
+     * Shows an alert message.
+     *
+     * @param {any} type - The type of alert.
+     * @param {string} message - The message to show.
+     *
+     * @return {void}
+     */
+    showMessage(type: any, message: string) {
+        const alertClass = (type === 'error') ? 'danger' : type;
 
-        this.alertsService.create('error', `
+        this.alertsService.create(type, `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
-    }
-
-    showErrorMessage(message) {
-        this.alertsService.create('error', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-danger">${message}</td>
-                    </tr>
-                </tbody>
-            </table>
-        `);
-    }
-
-    showSuccessResponse(message) {
-        this.alertsService.create('success', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
-    showWarningResponse(message) {
-        this.alertsService.create('warning', `
-            <table class="table grid">
-                <tbody>
-                    <tr>
-                        <td class="text-center text-warning">${message}</td>
+                        <td class="text-center text-${alertClass}">${message}</td>
                     </tr>
                 </tbody>
             </table>
