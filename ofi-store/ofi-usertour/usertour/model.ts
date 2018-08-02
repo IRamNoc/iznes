@@ -1,7 +1,9 @@
 import {List} from 'immutable';
 
 export interface UserToursDetails {
-    walletID: boolean;
+    type: any;
+    value: number;
+    walletID: number;
 }
 
 export interface UserTourState {

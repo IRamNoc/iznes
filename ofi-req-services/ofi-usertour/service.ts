@@ -4,7 +4,6 @@ import {NgRedux, select} from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper} from '@setl/utils';
 /* Import actions. */
 import {
     OFI_SET_USER_TOURS,
@@ -19,7 +18,8 @@ import {
 } from './model';
 
 interface usertourDatas {
-    walletID: string,
+    type: string,
+    walletid: number,
 }
 
 @Injectable()
@@ -31,27 +31,29 @@ export class OfiUserTourService {
     }
 
     static setRequestedUserTours(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
+        if (boolValue) {
             ngRedux.dispatch(ofiSetUserToursRequested());
         } else {
             ngRedux.dispatch(ofiClearUserToursRequested());
         }
     }
 
-    static defaultRequestUserTours(OfiUserTourService: OfiUserTourService, ngRedux: NgRedux<any>, walletID) {
+    static defaultRequestUserTours(OfiUserTourService, ngRedux: NgRedux<any>, datas) {
         // Set the state flag to true. so we do not request it again.
         ngRedux.dispatch(ofiSetUserToursRequested());
 
         // Request the list.
-        const asyncTaskPipe = OfiUserTourService.getUserTours(walletID);
+        const asyncTaskPipe = OfiUserTourService.getUserTours(datas);
 
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_USER_TOURS],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
+        ngRedux.dispatch({
+            type: 'RUN_ASYNC_TASK',
+            successTypes: [OFI_SET_USER_TOURS],
+            failureTypes: [],
+            descriptor: asyncTaskPipe,
+            args: {},
+            successCallback : (response)=>true,
+            failureCallback : (response)=>true,
+        });
     }
 
     getUserTours(data: usertourDatas): any {
@@ -59,49 +61,24 @@ export class OfiUserTourService {
         const messageBody: OfiMemberNodeBody = {
             RequestName: 'getuserpreference',
             token: this.memberSocketService.token,
-            walletID: data.walletID,
+            type: data.type,
+            walletid: data.walletid,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveUserTour(): any {
+    saveUserTour(data): any {
 
         const messageBody: OfiUsertoursRequestBody = {
-            RequestName: 'iznsaveutmysubportfolios',
+            RequestName: 'newuserpreference',
             token: this.memberSocketService.token,
+            type: data.type,
+            value: data.value,
+            walletid: data.walletid,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    /**
-     * Build Request
-     * -------------
-     * Builds a request and sends it, responsing when it completes.
-     *
-     * @param {options} Object - and object of options.
-     *
-     * @return {Promise<any>} [description]
-     */
-    public buildRequest(options): Promise<any> {
-        /* Check for taskPipe,  */
-        return new Promise((resolve, reject) => {
-            /* Dispatch the request. */
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    options.successActions || [],
-                    options.failActions || [],
-                    options.taskPipe,
-                    {},
-                    (response) => {
-                        resolve(response);
-                    },
-                    (error) => {
-                        reject(error);
-                    }
-                )
-            );
-        });
-    }
 }

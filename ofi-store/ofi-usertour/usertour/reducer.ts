@@ -2,27 +2,27 @@
 import {Action} from 'redux';
 /* Local types. */
 import {UserToursDetails, UserTourState} from './model';
-import * as ofiShareHoldersActions from './actions';
+import * as ofiUserToursActions from './actions';
 import {List} from 'immutable';
 import {fromJS, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
 const initialState: UserTourState = {
-    userTours: List<UserToursDetails>(),
+    userTours: null,
     userToursRequested: false,
 };
 
 /* Reducer. */
 export const UserTourReducer = (state: UserTourState = initialState, action: Action) => {
     switch (action.type) {
-        case ofiShareHoldersActions.OFI_SET_USER_TOURS:
+        case ofiUserToursActions.OFI_SET_USER_TOURS:
             return handleUserTours(state, action);
 
-        case ofiShareHoldersActions.ofiSetUserToursRequested:
+        case ofiUserToursActions.OFI_SET_USER_TOURS_REQUESTED:
             return toggleRequestUserTours(state, true);
 
-        case ofiShareHoldersActions.ofiClearUserToursRequested:
+        case ofiUserToursActions.OFI_CLEAR_USER_TOURS_REQUESTED:
             return toggleRequestUserTours(state, false);
 
         default:
@@ -34,7 +34,7 @@ const handleUserTours = (state, action) => {
     const data = _.get(action, 'payload[1].Data', {});    // use [] not {} for list and Data not Data[0]
 
     if (data.Status !== 'Fail') {
-        const userTours = formatDataResponse(data);
+        const userTours = (data.length > 0) ? formatDataResponse(data) : null;
         return Object.assign({}, state, {
             userTours,
         });
@@ -47,7 +47,9 @@ const formatDataResponse = (rawData: Array<UserToursDetails>): List<UserToursDet
     let response: List<UserToursDetails> = List();
     rawData.forEach((item) => {
         const items = {
-            walletID: item.walletID || false,
+            type: item.type || '',
+            value: item.value || 0,
+            walletID: item.walletID || 0,
         };
         response = response.push(items);
     });
