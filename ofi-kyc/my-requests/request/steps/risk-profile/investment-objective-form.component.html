@@ -57,6 +57,7 @@
             </div>
 
             <textarea class="form-control" formControlName="otherFinancialInformation"></textarea>
+            <span class="field-error" *ngIf="hasError('otherFinancialInformation', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 

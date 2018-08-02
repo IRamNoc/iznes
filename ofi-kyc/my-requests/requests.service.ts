@@ -110,7 +110,9 @@ export class RequestsService {
         };
 
         return this.sendRequest(messageBody).then(response => {
-            return _.get(response, [1, 'Data', 0]);
+            let data = _.get(response, [1, 'Data']);
+
+            return data.map(custodian => this.shapeServerData(custodian));
         });
     }
 

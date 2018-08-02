@@ -265,6 +265,7 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                     this.identificationService.getCurrentFormCompanyData(request.kycID).then(formData => {
                         if (formData) {
                             this.form.patchValue(formData);
+                            this.formPercent.refreshFormPercent();
                         }
                     });
                     this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then(formData => {
@@ -272,9 +273,9 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                             let beneficiaries = (this.form.get('beneficiaries') as FormArray).controls;
                             beneficiaries.splice(0);
 
-                            formData.forEach((controlValue) => {
+                            let promises = formData.map((controlValue) => {
                                 let control = this.newRequestService.createBeneficiary();
-                                this.documentsService.getDocument(controlValue.documentID).then(document => {
+                                return this.documentsService.getDocument(controlValue.documentID).then(document => {
                                     controlValue.document = {
                                         name : document.name,
                                         hash : document.hash,
@@ -283,6 +284,10 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
                                     control.patchValue(controlValue);
                                     beneficiaries.push(control);
                                 });
+                            });
+
+                            Promise.all(promises).then(() => {
+                                this.formPercent.refreshFormPercent();
                             });
                         }
                     })

@@ -1,5 +1,5 @@
 import {Component, OnInit, Input, OnDestroy, ViewChild} from '@angular/core';
-import {FormArray} from '@angular/forms';
+import {FormArray, FormControl} from '@angular/forms';
 import {get as getValue, isEmpty, castArray} from 'lodash';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
@@ -101,7 +101,12 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
                                 let bankingAccounts = (this.form.get('custodianHolderCustom') as FormArray).controls;
                                 bankingAccounts.splice(0);
 
-                                formData.forEach((controlValue) => {
+                                let account = getValue(formData, [0, 'custodianHolderAccount']);
+                                let custodianHolderAccount : FormControl = this.form.get('custodianHolderAccount');
+                                custodianHolderAccount.patchValue(account);
+                                custodianHolderAccount.updateValueAndValidity();
+
+                                formData.forEach(controlValue => {
                                     let control = this.newRequestService.createHolderCustom();
 
                                     control.patchValue(controlValue);

@@ -29,11 +29,13 @@
                     <div class="row">
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianName" placeholder="{{'Please fill in the custodian\'s name'}}">
-                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianName'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianName'], ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianName'], ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianIban" placeholder="{{'Please fill in the custodian\'s IBAN'}}">
-                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'], ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'], ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
                     </div>
                     <p>
@@ -42,18 +44,22 @@
                     <div class="row">
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianAddressLine1" placeholder="{{'Address line 1'}}">
-                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianAddressLine1'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianAddressLine1'], ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianAddressLine1'], ['maxlength'])">{{'Field too long' | translate}}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianAddressLine2" placeholder="{{'Address line 2'}}">
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianAddressLine2'], ['maxlength'])">{{'Field too long' | translate}}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianZipCode" placeholder="{{'Please fill in a ZIP code'}}">
-                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianZipCode'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianZipCode'], ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianZipCode'], ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <input type="text" formControlName="custodianCity" placeholder="{{'Please fill in a city'}}">
-                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianCity'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianCity'], ['required'])">{{'Field is required' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianCity'], ['maxlength'])">{{'Field is too long' | translate}}</span>
                         </div>
                         <div class="form-group col-xs-4">
                             <ng-select [items]="countries" formControlName="custodianCountry" placeholder="{{'Please select a country' | translate}}"></ng-select>
