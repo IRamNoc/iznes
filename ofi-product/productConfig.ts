@@ -1,17 +1,17 @@
 import { Validators } from '@angular/forms';
 
 const unitTrustItems = [ // Unit Trust / Unit Investment Trust (UIT)
-    { id: '0', text: 'GB Authorised unit trust (AUT)' },
-    { id: '1', text: 'US For US UIT refer to "US Mutual Fund"' },
-    { id: '2', text: 'KY (Exempted) Unit trust' },
-    { id: '3', text: 'IE Unit trust' },
-    { id: '4', text: 'VG Unit trust' },
-    { id: '5', text: 'VM Unit trust' },
-    { id: '6', text: 'GG Unit trust' },
-    { id: '7', text: 'JE Unit trust' },
-    { id: '8', text: 'HK Unit trust' },
-    { id: '9', text: 'SG Unit trust' },
-    { id: '10', text: 'MT Unit trust' },
+    { id: 1, text: 'GB Authorised unit trust (AUT)' },
+    { id: 2, text: 'US For US UIT refer to "US Mutual Fund"' },
+    { id: 3, text: 'KY (Exempted) Unit trust' },
+    { id: 4, text: 'IE Unit trust' },
+    { id: 5, text: 'VG Unit trust' },
+    { id: 6, text: 'VM Unit trust' },
+    { id: 7, text: 'GG Unit trust' },
+    { id: 8, text: 'JE Unit trust' },
+    { id: 9, text: 'HK Unit trust' },
+    { id: 10, text: 'SG Unit trust' },
+    { id: 11, text: 'MT Unit trust' },
 ];
 
 export const validators = {
@@ -27,9 +27,9 @@ export const validators = {
 };
 
 export enum typeOfEuDirective {
-    UCITS = '0',
-    AIF = '1',
-    Other = '2',
+    UCITS = 1,
+    AIF,
+    Other,
 }
 
 export enum isFundStructure {
@@ -414,202 +414,202 @@ export const fundItems = {
     ],
     UCITSVersionItems: [
         {
-            id: '3',
+            id: 3,
             text: 'UCITS III',
         },
         {
-            id: '4',
+            id: 4,
             text: 'UCITS IV',
         },
         {
-            id: '5',
+            id: 5,
             text: 'UCITS V',
         },
         {
-            id: '6',
+            id: 6,
             text: 'UCITS VI',
         },
     ],
     fundLegalFormItems: [
-        { id: '0', text: 'Contractual Fund' },
-        { id: '1', text: 'Company With Variable Capital (SICAV)' },
-        { id: '2', text: 'Open-ended Investment Company (OEIC)' },
-        { id: '3', text: 'Company With Fixed Capital (SICAF)' },
-        { id: '4', text: 'Unit Trust' },
-        { id: '5', text: 'Unit Investment Trust (UIT)' },
-        { id: '6', text: 'Limited Partnership (LP)' },
-        { id: '7', text: 'Limited Liability Partnership (LLP)' },
-        { id: '8', text: 'Exempted Limited Partnership (ELP)' },
-        { id: '9', text: 'Company treated as Limited Partnership' },
-        { id: '10', text: 'Limited Company' },
-        { id: '11', text: 'Limited Liability Company (LLC)' },
-        { id: '12', text: 'Exempted Limited Liability Company' },
-        { id: '13', text: 'Exempted Company' },
-        { id: '14', text: 'Corporation' },
-        { id: '15', text: 'International Business Company (IBC)' },
-        { id: '16', text: 'Cell Company (ICC / PCC)' },
-        { id: '17', text: 'Trust' },
-        { id: '18', text: 'US Mutual Fund' },
-        { id: '19', text: 'US Face Amount Certificate Company (FAC)' },
-        { id: '20', text: 'US engaged Partnership' },
-        { id: '21', text: 'Delaware Limited Partnership' },
-        { id: '22', text: 'Delaware Limited Liability Company' },
-        { id: '23', text: 'Delaware Statutory Trust' },
-        { id: '24', text: 'Other' },
+        { id: 1, text: 'Contractual Fund' },
+        { id: 2, text: 'Company With Variable Capital (SICAV)' },
+        { id: 3, text: 'Open-ended Investment Company (OEIC)' },
+        { id: 4, text: 'Company With Fixed Capital (SICAF)' },
+        { id: 5, text: 'Unit Trust' },
+        { id: 6, text: 'Unit Investment Trust (UIT)' },
+        { id: 7, text: 'Limited Partnership (LP)' },
+        { id: 8, text: 'Limited Liability Partnership (LLP)' },
+        { id: 9, text: 'Exempted Limited Partnership (ELP)' },
+        { id: 10, text: 'Company treated as Limited Partnership' },
+        { id: 11, text: 'Limited Company' },
+        { id: 12, text: 'Limited Liability Company (LLC)' },
+        { id: 13, text: 'Exempted Limited Liability Company' },
+        { id: 14, text: 'Exempted Company' },
+        { id: 15, text: 'Corporation' },
+        { id: 16, text: 'International Business Company (IBC)' },
+        { id: 17, text: 'Cell Company (ICC / PCC)' },
+        { id: 18, text: 'Trust' },
+        { id: 19, text: 'US Mutual Fund' },
+        { id: 20, text: 'US Face Amount Certificate Company (FAC)' },
+        { id: 21, text: 'US engaged Partnership' },
+        { id: 22, text: 'Delaware Limited Partnership' },
+        { id: 23, text: 'Delaware Limited Liability Company' },
+        { id: 24, text: 'Delaware Statutory Trust' },
+        { id: 25, text: 'Other' },
     ],
     nationalNomenclatureOfLegalFormItems: {
-        0: [ // Contractual Fund
-            { id: '0', text: 'LU Fonds commun de placement (FCP)' },
-            { id: '1', text: 'FR Fonds commun de placement (FCP)' },
-            { id: '2', text: 'BE Fonds commun de placement (FCP)' },
-            { id: '3', text: 'CH Vertraglicher Anlagefonds' },
-            { id: '4', text: 'IE Common contractual fund (CCF)' },
-            { id: '5', text: 'DE Sondervermögen im Eigentum der Kapitalverwaltungsgesellschaft oder im Miteigentum der Anleger (KAGB §92, Abs. 1)' },
-            { id: '6', text: 'AT Kapitalanlagefonds verwaltet durch eine Kapitalanlagegesellschaft (Miteigentumsfonds)' },
-            { id: '7', text: 'LI Investmentfonds (vertraglicher Anlagefonds)' },
-            { id: '8', text: 'ES Fondo de inversión' },
-            { id: '9', text: 'IT Fondo comune di investimento, Fondo speculativo' },
-            { id: '10', text: 'MT Mutual fund' },
+        1: [ // Contractual Fund
+            { id: 1, text: 'LU Fonds commun de placement (FCP)' },
+            { id: 2, text: 'FR Fonds commun de placement (FCP)' },
+            { id: 3, text: 'BE Fonds commun de placement (FCP)' },
+            { id: 4, text: 'CH Vertraglicher Anlagefonds' },
+            { id: 5, text: 'IE Common contractual fund (CCF)' },
+            { id: 6, text: 'DE Sondervermögen im Eigentum der Kapitalverwaltungsgesellschaft oder im Miteigentum der Anleger (KAGB §92, Abs. 1)' },
+            { id: 7, text: 'AT Kapitalanlagefonds verwaltet durch eine Kapitalanlagegesellschaft (Miteigentumsfonds)' },
+            { id: 8, text: 'LI Investmentfonds (vertraglicher Anlagefonds)' },
+            { id: 9, text: 'ES Fondo de inversión' },
+            { id: 10, text: 'IT Fondo comune di investimento, Fondo speculativo' },
+            { id: 11, text: 'MT Mutual fund' },
         ],
-        1: [ // Company with variable capital (SICAV)
-            { id: '0', text: 'LU Société d\'investissement à capital variable' },
-            { id: '1', text: 'FR Société d\'investissement à capital variable' },
-            { id: '2', text: 'BE Société d\'investissement à capital variable' },
-            { id: '3', text: 'GB Investment company with variable capital (ICVC)' },
-            { id: '4', text: 'IE Investment company with variable capital (ICVC)' },
-            { id: '5', text: 'CH Investmentgesellschaft mit variablem Kapital' },
-            { id: '6', text: 'DE Investmentaktiengesellschaft (InvAG) mit veränderlichem Kapital (KAGB §108ff)' },
-            { id: '7', text: 'DE Offene Investmentkommanditgesellschaft (InvKG) (KAGB §124ff)' },
-            { id: '8', text: 'LI Investmentgesellschaft mit veränderlichem Kapital' },
-            { id: '9', text: 'ES Sociedad de inversión de capital variable' },
-            { id: '10', text: 'IT Società di investimento a capitale variabile' },
-            { id: '11', text: 'MT Investment company with variable share capital' },
+        2: [ // Company with variable capital (SICAV)
+            { id: 1, text: 'LU Société d\'investissement à capital variable' },
+            { id: 2, text: 'FR Société d\'investissement à capital variable' },
+            { id: 3, text: 'BE Société d\'investissement à capital variable' },
+            { id: 4, text: 'GB Investment company with variable capital (ICVC)' },
+            { id: 5, text: 'IE Investment company with variable capital (ICVC)' },
+            { id: 6, text: 'CH Investmentgesellschaft mit variablem Kapital' },
+            { id: 7, text: 'DE Investmentaktiengesellschaft (InvAG) mit veränderlichem Kapital (KAGB §108ff)' },
+            { id: 8, text: 'DE Offene Investmentkommanditgesellschaft (InvKG) (KAGB §124ff)' },
+            { id: 9, text: 'LI Investmentgesellschaft mit veränderlichem Kapital' },
+            { id: 10, text: 'ES Sociedad de inversión de capital variable' },
+            { id: 11, text: 'IT Società di investimento a capitale variabile' },
+            { id: 12, text: 'MT Investment company with variable share capital' },
         ],
-        2: [ // Open-Ended Investment Company (OEIC)
-            { id: '0', text: 'GB Open-ended investment company (OEIC)' },
-            { id: '1', text: 'IE Open-ended investment company (OEIC)' },
-            { id: '2', text: 'SG Open-ended investment company (OEIC)' },
-            { id: '3', text: 'ID Open-ended investment company (OEIC)' },
+        3: [ // Open-Ended Investment Company (OEIC)
+            { id: 1, text: 'GB Open-ended investment company (OEIC)' },
+            { id: 2, text: 'IE Open-ended investment company (OEIC)' },
+            { id: 3, text: 'SG Open-ended investment company (OEIC)' },
+            { id: 4, text: 'ID Open-ended investment company (OEIC)' },
         ],
-        3: [ // Company with fixed Capital (SICAF)
-            { id: '0', text: 'LU Société d\'investissement à capital fixe' },
-            { id: '1', text: 'CH Investmentgesellschaft mit festem Kapital' },
-            { id: '2', text: 'FR Société d\'investissement à capital fixe' },
-            { id: '3', text: 'BE Société d\'investissement à capital fixe' },
-            { id: '4', text: 'DE Investmentaktiengesellschaft (InvAG) mit fixem Kapital' },
-            { id: '5', text: 'MT Investment company with fixed share capital' },
+        4: [ // Company with fixed Capital (SICAF)
+            { id: 1, text: 'LU Société d\'investissement à capital fixe' },
+            { id: 2, text: 'CH Investmentgesellschaft mit festem Kapital' },
+            { id: 3, text: 'FR Société d\'investissement à capital fixe' },
+            { id: 4, text: 'BE Société d\'investissement à capital fixe' },
+            { id: 5, text: 'DE Investmentaktiengesellschaft (InvAG) mit fixem Kapital' },
+            { id: 6, text: 'MT Investment company with fixed share capital' },
         ],
-        4: unitTrustItems, // Unit Trust / Unit Investment Trust (UIT)
-        5: unitTrustItems,
-        6: [ // Limited Partnership (LP)
-            { id: '0', text: 'CH Kommanditgesellschaft für kollektive Kapitalanlage (KGK)' },
-            { id: '1', text: 'LI Kollektivtreuhänderschaft' },
-            { id: '2', text: 'GB English limited partnership, Scottish limited partnership' },
-            { id: '3', text: 'IE Investment limited partnership (ILP)' },
-            { id: '4', text: 'VG Limited partnership' },
-            { id: '5', text: 'GG Limited partnership' },
-            { id: '6', text: 'JE Limited partnership' },
-            { id: '7', text: 'SG Limited partnership' },
-            { id: '8', text: 'US Limited partnership (limited partnership organised under US laws other than the State of Delaware)' },
-            { id: '9', text: 'MT Investment partnership' },
+        5: unitTrustItems, // Unit Trust / Unit Investment Trust (UIT)
+        6: unitTrustItems,
+        7: [ // Limited Partnership (LP)
+            { id: 1, text: 'CH Kommanditgesellschaft für kollektive Kapitalanlage (KGK)' },
+            { id: 2, text: 'LI Kollektivtreuhänderschaft' },
+            { id: 3, text: 'GB English limited partnership, Scottish limited partnership' },
+            { id: 4, text: 'IE Investment limited partnership (ILP)' },
+            { id: 5, text: 'VG Limited partnership' },
+            { id: 6, text: 'GG Limited partnership' },
+            { id: 7, text: 'JE Limited partnership' },
+            { id: 8, text: 'SG Limited partnership' },
+            { id: 9, text: 'US Limited partnership (limited partnership organised under US laws other than the State of Delaware)' },
+            { id: 10, text: 'MT Investment partnership' },
 
         ],
-        7: [ // Limited Liability Partnership (LLP)
-            { id: '0', text: 'SG Limited Liability Partnership' },
+        8: [ // Limited Liability Partnership (LLP)
+            { id: 1, text: 'SG Limited Liability Partnership' },
         ],
-        8: [ // Exempted Limited Partnership (ELP)
-            { id: '0', text: 'KY Exempted Limited Partnership' },
-            { id: '1', text: 'BM Exempted Limited Partnership' },
+        9: [ // Exempted Limited Partnership (ELP)
+            { id: 1, text: 'KY Exempted Limited Partnership' },
+            { id: 2, text: 'BM Exempted Limited Partnership' },
         ],
-        9: [ // Company treated as Limited Partnership
-            { id: '0', text: 'Company treated as Limited Partnership' },
+        10: [ // Company treated as Limited Partnership
+            { id: 1, text: 'Company treated as Limited Partnership' },
         ],
-        10: [ // Limited Company
-            { id: '0', text: 'GB UK investment trust company (UK listed PLC\'s)' },
-            { id: '1', text: 'IE Irish Collective Asset-management Vehicle (ICAV)' },
-            { id: '2', text: 'US Corporation' },
-            { id: '3', text: 'GG Company' },
-            { id: '4', text: 'JE Company' },
+        11: [ // Limited Company
+            { id: 1, text: 'GB UK investment trust company (UK listed PLC\'s)' },
+            { id: 2, text: 'IE Irish Collective Asset-management Vehicle (ICAV)' },
+            { id: 3, text: 'US Corporation' },
+            { id: 4, text: 'GG Company' },
+            { id: 5, text: 'JE Company' },
         ],
-        11: [ // Limited Liability Company (LLC)
-            { id: '0', text: 'HK Mutual fund' },
-            { id: '1', text: 'US Limited liability company (organised under US laws other than the State of Delaware)' },
+        12: [ // Limited Liability Company (LLC)
+            { id: 1, text: 'HK Mutual fund' },
+            { id: 2, text: 'US Limited liability company (organised under US laws other than the State of Delaware)' },
         ],
-        12: [ // Exempted Limited Liability Company
-            { id: '0', text: 'Exempted Limited Liability Company' },
+        13: [ // Exempted Limited Liability Company
+            { id: 1, text: 'Exempted Limited Liability Company' },
         ],
-        13: [ // Exempted Company
-            { id: '0', text: 'KY Exempted company' },
-            { id: '1', text: 'KY Exempted Segregated portfolio company (SPC)' },
-            { id: '2', text: 'KY Exempted Limited duration company (LDC)' },
-            { id: '3', text: 'BM BVI business company' },
-            { id: '4', text: 'BM Segregated portfolio company (SPC)' },
-            { id: '5', text: 'BM Mutual fund (defined in the Companies Act as "a company limited by shares … and stating in its memorandum that it is a mutual fund.")' },
+        14: [ // Exempted Company
+            { id: 1, text: 'KY Exempted company' },
+            { id: 2, text: 'KY Exempted Segregated portfolio company (SPC)' },
+            { id: 3, text: 'KY Exempted Limited duration company (LDC)' },
+            { id: 4, text: 'BM BVI business company' },
+            { id: 5, text: 'BM Segregated portfolio company (SPC)' },
+            { id: 6, text: 'BM Mutual fund (defined in the Companies Act as "a company limited by shares … and stating in its memorandum that it is a mutual fund.")' },
         ],
-        14: [ // Corporation
-            { id: '0', text: 'Corporation' },
+        15: [ // Corporation
+            { id: 1, text: 'Corporation' },
         ],
-        15: [ // International Business Company (IBC)
-            { id: '0', text: 'International Business Company (IBC)' },
+        16: [ // International Business Company (IBC)
+            { id: 1, text: 'International Business Company (IBC)' },
         ],
-        16: [ // Cell Company (ICC / PCC)
-            { id: '0', text: 'GG Protected cell company (PCC)' },
-            { id: '1', text: 'JE Protected cell company (PCC)' },
-            { id: '2', text: 'JE Incorporated cell company (ICC)' },
+        17: [ // Cell Company (ICC / PCC)
+            { id: 1, text: 'GG Protected cell company (PCC)' },
+            { id: 2, text: 'JE Protected cell company (PCC)' },
+            { id: 3, text: 'JE Incorporated cell company (ICC)' },
         ],
-        17: [ // Trust
-            { id: '0', text: 'Trust' },
+        18: [ // Trust
+            { id: 1, text: 'Trust' },
         ],
-        18: [ // US Mutual Fund
-            { id: '0', text: 'US SEC registered Mutual fund' },
+        19: [ // US Mutual Fund
+            { id: 1, text: 'US SEC registered Mutual fund' },
         ],
-        19: [ // US Face amount certificate company (FAC)
-            { id: '0', text: 'US Face amount certificate company (FAC)' },
+        20: [ // US Face amount certificate company (FAC)
+            { id: 1, text: 'US Face amount certificate company (FAC)' },
         ],
-        20: [ // US engaged Partnership
-            { id: '0', text: 'US engaged Partnership' },
+        21: [ // US engaged Partnership
+            { id: 1, text: 'US engaged Partnership' },
         ],
-        21: [ // Delaware Limited Partnership
-            { id: '0', text: 'US Delaware limited partnership' },
+        22: [ // Delaware Limited Partnership
+            { id: 1, text: 'US Delaware limited partnership' },
         ],
-        22: [ // Delaware Limited Liability Company
-            { id: '0', text: 'US Delaware limited liability company' },
+        23: [ // Delaware Limited Liability Company
+            { id: 1, text: 'US Delaware limited liability company' },
         ],
-        23: [ // Delaware Statutory Trust
-            { id: '0', text: 'US Delaware statutory trust' },
+        24: [ // Delaware Statutory Trust
+            { id: 1, text: 'US Delaware statutory trust' },
         ],
-        24: [ // Other
-            { id: '0', text: 'Other' },
+        25: [ // Other
+            { id: 1, text: 'Other' },
         ],
     },
     homeCountryLegalTypeItems: {
         CH: [
-            { id: '0', text: 'Securities fund' },
-            { id: '1', text: 'Real estate fund' },
-            { id: '2', text: 'Other funds for traditional investments' },
-            { id: '3', text: 'Other funds for alternative investments' },
+            { id: 1, text: 'Securities fund' },
+            { id: 2, text: 'Real estate fund' },
+            { id: 3, text: 'Other funds for traditional investments' },
+            { id: 4, text: 'Other funds for alternative investments' },
         ],
         LU: [
-            { id : '0', text: 'Partie I' },
-            { id : '1', text: 'Partie II' },
-            { id : '2', text: 'Specialized investment fund (SIF)' },
+            { id : 1, text: 'Partie I' },
+            { id : 2, text: 'Partie II' },
+            { id : 3, text: 'Specialized investment fund (SIF)' },
         ],
         IE: [
-            { id : '0', text: 'Retail fund' },
-            { id : '1', text: 'Qualifying investor fund (QIF)' },
-            { id : '2', text: 'Professional investor fund (PIF)' },
-            { id : '3', text: 'Foreign fund' },
+            { id : 1, text: 'Retail fund' },
+            { id : 2, text: 'Qualifying investor fund (QIF)' },
+            { id : 3, text: 'Professional investor fund (PIF)' },
+            { id : 4, text: 'Foreign fund' },
         ],
         DE: [
-            { id : '0', text: 'Inländischer OGAW (162ff KAGB)' },
-            { id : '1', text: 'Offener inländischer Publikums-AIF (214ff KAGB)' },
-            { id : '2', text: 'Geschlossener inländischer Publikums-AIF (261ff KAGB)' },
-            { id : '3', text: 'Offener inländischer Spezial-AIF (278ff KAGB)' },
-            { id : '4', text: 'Geschlossener inländischer Spezial-AIF (285ff KAGB)' },
+            { id : 1, text: 'Inländischer OGAW (162ff KAGB)' },
+            { id : 2, text: 'Offener inländischer Publikums-AIF (214ff KAGB)' },
+            { id : 3, text: 'Geschlossener inländischer Publikums-AIF (261ff KAGB)' },
+            { id : 4, text: 'Offener inländischer Spezial-AIF (278ff KAGB)' },
+            { id : 5, text: 'Geschlossener inländischer Spezial-AIF (285ff KAGB)' },
         ],
         SG: [
-            { id : '0', text: 'Authorised CIS' },
-            { id : '1', text: 'Restricted authorised CIS' },
+            { id : 1, text: 'Authorised CIS' },
+            { id : 2, text: 'Restricted authorised CIS' },
         ],
     },
     fundCurrencyItems: [

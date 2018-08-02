@@ -270,23 +270,23 @@ export class FundComponent implements OnInit, OnDestroy {
             fiscalYearEnd: [null, Validators.compose([Validators.required, this.validators.date.month])],
             isFundOfFund: [null, Validators.required],
             managementCompanyID: [[], Validators.required],
-            fundAdministrator: [[], Validators.required],
-            custodianBank: [[], Validators.required],
-            investmentManager: [[]],
-            principalPromoter: [[]],
-            payingAgent: [[]],
+            fundAdministratorID: [[], Validators.required],
+            custodianBankID: [[], Validators.required],
+            investmentManagerID: [[]],
+            principlePromoterID: [[]],
+            payingAgentID: [[]],
             fundManagers: [null],
-            transferAgent: [[]],
-            centralizingAgent: [[]],
+            transferAgentID: [[]],
+            centralizingAgentID: [[]],
             isDedicatedFund: [null, Validators.required],
             portfolioCurrencyHedge: [[], Validators.required],
 
             globalItermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
-            investmentAdvisor: [[]],
-            auditor: [[]],
-            taxAuditor: [[]],
-            legalAdvisor: [[]],
+            investmentAdvisorID: [[]],
+            auditorID: [[]],
+            taxAuditorID: [[]],
+            legalAdvisorID: [[]],
             directors: [null],
             hasEmbeddedDirective: [null],
             hasCapitalPreservation: [null],
@@ -400,23 +400,23 @@ export class FundComponent implements OnInit, OnDestroy {
                         .setValue(FundComponent.getListItem(newUmbrella.domicile, this.domicileItems));
                     this.fundForm.controls['managementCompanyID']
                         .setValue(FundComponent.getListItem(newUmbrella.managementCompanyID, this.managementCompanyItems));
-                    this.fundForm.controls['fundAdministrator']
+                    this.fundForm.controls['fundAdministratorID']
                         .setValue(FundComponent.getListItem(newUmbrella.fundAdministratorID, this.fundAdministratorItems));
-                    this.fundForm.controls['custodianBank']
+                    this.fundForm.controls['custodianBankID']
                         .setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
-                    this.fundForm.controls['investmentAdvisor']
+                    this.fundForm.controls['investmentAdvisorID']
                         .setValue(this.getListItems(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
-                    this.fundForm.controls['payingAgent']
+                    this.fundForm.controls['payingAgentID']
                         .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
                     this.fundForm.controls['delegatedManagementCompany']
                         .setValue(FundComponent.getListItem(newUmbrella.delegatedManagementCompanyID, this.managementCompanyItems));
-                    this.fundForm.controls['auditor']
+                    this.fundForm.controls['auditorID']
                         .setValue(FundComponent.getListItem(newUmbrella.auditorID, this.auditorItems));
-                    this.fundForm.controls['taxAuditor']
+                    this.fundForm.controls['taxAuditorID']
                         .setValue(FundComponent.getListItem(newUmbrella.taxAuditorID, this.taxAuditorItems));
-                    this.fundForm.controls['principalPromoter']
+                    this.fundForm.controls['principlePromoterID']
                         .setValue(this.getListItems(newUmbrella.principlePromoterID, this.principalPromoterItems));
-                    this.fundForm.controls['legalAdvisor']
+                    this.fundForm.controls['legalAdvisorID']
                         .setValue(FundComponent.getListItem(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
                     this.fundForm.controls['directors'].setValue(newUmbrella.directors);
                 }
@@ -429,8 +429,8 @@ export class FundComponent implements OnInit, OnDestroy {
                 takeUntil(this.unSubscribe),
         )
             .subscribe((d) => {
-                this.fundForm.controls['transferAgent'].setValue([]);
-                this.fundForm.controls['centralizingAgent'].setValue([]);
+                this.fundForm.controls['transferAgentID'].setValue([]);
+                this.fundForm.controls['centralizingAgentID'].setValue([]);
                 this.fundForm.controls['homeCountryLegalType'].setValue([]);
 
                 if (d && this.isHomeCountryLegalTypeVisible()) {
@@ -592,6 +592,85 @@ export class FundComponent implements OnInit, OnDestroy {
             });
     }
 
+    fundFormValue() {
+        return {
+            ...this.fundForm.getRawValue(),
+            isFundStructure: Number(this.fundForm.controls.isFundStructure.value),
+            isEuDirective: Number(this.fundForm.controls.isEuDirective.value),
+            openOrCloseEnded: Number(this.fundForm.controls.openOrCloseEnded.value),
+            isFundOfFund: Number(this.fundForm.controls.isFundOfFund.value),
+            isDedicatedFund: Number(this.fundForm.controls.isDedicatedFund.value),
+            useDefaultHolidayMgmt: Number(this.fundForm.controls.useDefaultHolidayMgmt.value),
+            hasEmbeddedDirective: !_.isNull(this.fundForm.controls.hasEmbeddedDirective.value)
+                ? Number(this.fundForm.controls.hasEmbeddedDirective.value)
+                : null,
+            hasCapitalPreservation: !_.isNull(this.fundForm.controls.hasCapitalPreservation.value)
+                ? Number(this.fundForm.controls.hasCapitalPreservation.value)
+                : null,
+            hasCppi: !_.isNull(this.fundForm.controls.hasCppi.value)
+                ? Number(this.fundForm.controls.hasCppi.value)
+                : null,
+            hasHedgeFundStrategy: !_.isNull(this.fundForm.controls.hasHedgeFundStrategy.value)
+                ? Number(this.fundForm.controls.hasHedgeFundStrategy.value)
+                : null,
+            isLeveraged: !_.isNull(this.fundForm.controls.isLeveraged.value)
+                ? Number(this.fundForm.controls.isLeveraged.value)
+                : null,
+            has130Or30Strategy: !_.isNull(this.fundForm.controls.has130Or30Strategy.value)
+                ? Number(this.fundForm.controls.has130Or30Strategy.value)
+                : null,
+            isFundTargetingEos: !_.isNull(this.fundForm.controls.isFundTargetingEos.value)
+                ? Number(this.fundForm.controls.isFundTargetingEos.value)
+                : null,
+            isFundTargetingSri: !_.isNull(this.fundForm.controls.isFundTargetingSri.value)
+                ? Number(this.fundForm.controls.isFundTargetingSri.value)
+                : null,
+            isPassiveFund: !_.isNull(this.fundForm.controls.isPassiveFund.value)
+                ? Number(this.fundForm.controls.isPassiveFund.value)
+                : null,
+            hasSecurityiesLending: !_.isNull(this.fundForm.controls.hasSecurityiesLending.value)
+                ? Number(this.fundForm.controls.hasSecurityiesLending.value)
+                : null,
+            hasSwap: !_.isNull(this.fundForm.controls.hasSwap.value)
+                ? Number(this.fundForm.controls.hasSwap.value)
+                : null,
+            hasDurationHedge: !_.isNull(this.fundForm.controls.hasDurationHedge.value)
+                ? Number(this.fundForm.controls.hasDurationHedge.value)
+                : null,
+
+            domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
+            typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
+            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
+            legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
+            nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
+            homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
+            fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
+            portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
+            investmentAdvisorID: this.getIdsFromList(this.fundForm.controls['investmentAdvisorID'].value),
+            auditorID: _.get(this.fundForm.controls['auditorID'].value, ['0', 'id'], null),
+            taxAuditorID: _.get(this.fundForm.controls['taxAuditorID'].value, ['0', 'id'], null),
+            legalAdvisorID: _.get(this.fundForm.controls['legalAdvisorID'].value, ['0', 'id'], null),
+            fiscalYearEnd: this.fundForm.controls['fiscalYearEnd'].value + '-01',
+            fundAdministratorID: _.get(this.fundForm.controls['fundAdministratorID'].value, ['0', 'id'], null),
+            custodianBankID: _.get(this.fundForm.controls['custodianBankID'].value, ['0', 'id'], null),
+            investmentManagerID: _.get(this.fundForm.controls['investmentManagerID'].value, ['0', 'id'], null),
+            principlePromoterID: this.getIdsFromList(this.fundForm.controls['principlePromoterID'].value),
+            payingAgentID: this.getIdsFromList(this.fundForm.controls['payingAgentID'].value),
+            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
+            delegatedManagementCompany: !_.isNull(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
+                ? Number(_.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null))
+                : null,
+            umbrellaFundID: !_.isNull(_.get(this.umbrellaControl.value, ['0', 'id'], null))
+                ? Number(_.get(this.umbrellaControl.value, ['0', 'id'], null))
+                : null,
+            transferAgentID: _.get(this.fundForm.controls['transferAgentID'].value, ['0', 'id'], null),
+            centralizingAgentID: _.get(this.fundForm.controls['centralizingAgentID'].value, ['0', 'id'], null),
+            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
+            holidayMgmtConfig: this.getHolidayMgmtConfig(),
+            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+        };
+    }
+
     private requestConfig(requested: boolean): void {
         if (requested) return;
 
@@ -621,11 +700,7 @@ export class FundComponent implements OnInit, OnDestroy {
     }
 
     getListItems(val: any[], list: { id: string, text: string }[]): { id: string, text: string }[] {
-        try {
-            if (!val.length) {
-                return [];
-            }
-        } catch (e) {
+        if (!val || !val.length) {
             return [];
         }
 
@@ -760,32 +835,32 @@ export class FundComponent implements OnInit, OnDestroy {
                     fund.managementCompanyID,
                     this.managementCompanyItems,
                 ),
-                fundAdministrator: FundComponent.getListItem(
-                    fund.fundAdministrator,
+                fundAdministratorID: FundComponent.getListItem(
+                    fund.fundAdministratorID,
                     this.fundAdministratorItems,
                 ),
-                custodianBank: FundComponent.getListItem(fund.custodianBank, this.custodianBankItems),
-                investmentManager: FundComponent.getListItem(
-                    fund.investmentManager,
+                custodianBankID: FundComponent.getListItem(fund.custodianBankID, this.custodianBankItems),
+                investmentManagerID: FundComponent.getListItem(
+                    fund.investmentManagerID,
                     this.investmentManagerItems,
                 ),
-                principalPromoter: this.getListItems(fund.principalPromoter, this.principalPromoterItems),
-                payingAgent: this.getListItems(fund.payingAgent, this.payingAgentItems),
+                principlePromoterID: this.getListItems(fund.principlePromoterID, this.principalPromoterItems),
+                payingAgentID: this.getListItems(fund.payingAgentID, this.payingAgentItems),
                 portfolioCurrencyHedge: FundComponent.getListItem(
                     fund.portfolioCurrencyHedge,
                     this.portfolioCurrencyHedgeItems,
                 ),
-                investmentAdvisor: this.getListItems(fund.investmentAdvisor, this.investmentAdvisorItems),
-                auditor: FundComponent.getListItem(fund.auditor, this.auditorItems),
-                taxAuditor: FundComponent.getListItem(fund.taxAuditor, this.taxAuditorItems),
-                legalAdvisor: FundComponent.getListItem(fund.legalAdvisor, this.legalAdvisorItems),
+                investmentAdvisorID: this.getListItems(fund.investmentAdvisorID, this.investmentAdvisorItems),
+                auditorID: FundComponent.getListItem(fund.auditorID, this.auditorItems),
+                taxAuditorID: FundComponent.getListItem(fund.taxAuditorID, this.taxAuditorItems),
+                legalAdvisorID: FundComponent.getListItem(fund.legalAdvisorID, this.legalAdvisorItems),
                 capitalPreservationPeriod: FundComponent.getListItem(
                     fund.capitalPreservationPeriod,
                     this.capitalPreservationPeriodItems,
                 ),
-                transferAgent: FundComponent.getListItem(fund.transferAgent, this.transferAgentItems),
-                centralizingAgent: FundComponent.getListItem(
-                    fund.centralizingAgent,
+                transferAgentID: FundComponent.getListItem(fund.transferAgentID, this.transferAgentItems),
+                centralizingAgentID: FundComponent.getListItem(
+                    fund.centralizingAgentID,
                     this.centralizingAgentItems,
                 ),
                 delegatedManagementCompany: FundComponent.getListItem(
@@ -801,7 +876,7 @@ export class FundComponent implements OnInit, OnDestroy {
         const fund = _.find(this.fundList, { fundID: Number(fundID) });
         if (fund.umbrellaFundID) {
             this.umbrellaControl.setValue(
-                FundComponent.getListItem(fund.umbrellaFundID.toString(), this.umbrellaItems),
+                FundComponent.getListItem(fund.umbrellaFundID, this.umbrellaItems),
             );
         } else {
             this.umbrellaControl.setValue([
@@ -825,6 +900,26 @@ export class FundComponent implements OnInit, OnDestroy {
                 'draftDate',
             ]),
             fundName: this.param ? fund.fundName : '',
+
+            // formatting for radio inputs
+            isFundStructure: fund.isFundStructure.toString(),
+            isEuDirective: fund.isEuDirective.toString(),
+            openOrCloseEnded: fund.openOrCloseEnded.toString(),
+            isFundOfFund: fund.isFundOfFund.toString(),
+            isDedicatedFund: fund.isDedicatedFund.toString(),
+            useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt.toString(),
+            hasEmbeddedDirective: !_.isNull(fund.hasEmbeddedDirective) ? fund.hasEmbeddedDirective.toString() : null,
+            hasCapitalPreservation: !_.isNull(fund.hasCapitalPreservation) ? fund.hasCapitalPreservation.toString() : null,
+            hasCppi: !_.isNull(fund.hasCppi) ? fund.hasCppi.toString() : null,
+            hasHedgeFundStrategy: !_.isNull(fund.hasHedgeFundStrategy) ? fund.hasHedgeFundStrategy.toString() : null,
+            isLeveraged: !_.isNull(fund.isLeveraged) ? fund.isLeveraged.toString() : null,
+            has130Or30Strategy: !_.isNull(fund.has130Or30Strategy) ? fund.has130Or30Strategy.toString() : null,
+            isFundTargetingEos: !_.isNull(fund.isFundTargetingEos) ? fund.isFundTargetingEos.toString() : null,
+            isFundTargetingSri: !_.isNull(fund.isFundTargetingSri) ? fund.isFundTargetingSri.toString() : null,
+            isPassiveFund: !_.isNull(fund.isPassiveFund) ? fund.isPassiveFund.toString() : null,
+            hasSecurityiesLending: !_.isNull(fund.hasSecurityiesLending) ? fund.hasSecurityiesLending.toString() : null,
+            hasSwap: !_.isNull(fund.hasSwap) ? fund.hasSwap.toString() : null,
+            hasDurationHedge: !_.isNull(fund.hasDurationHedge) ? fund.hasDurationHedge.toString() : null,
         });
         this.toggleLeiSwitch(!!fund.legalEntityIdentifier);
 
@@ -864,33 +959,7 @@ export class FundComponent implements OnInit, OnDestroy {
     submitFundForm() {
         const payload: Fund = {
             draft: 0,
-            ...this.fundForm.getRawValue(),
-            domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
-            typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
-            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
-            legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
-            nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
-            homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
-            fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
-            portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
-            investmentAdvisor: this.getIdsFromList(this.fundForm.controls['investmentAdvisor'].value),
-            auditor: _.get(this.fundForm.controls['auditor'].value, ['0', 'id'], null),
-            taxAuditor: _.get(this.fundForm.controls['taxAuditor'].value, ['0', 'id'], null),
-            legalAdvisor: _.get(this.fundForm.controls['legalAdvisor'].value, ['0', 'id'], null),
-            fiscalYearEnd: this.fundForm.controls['fiscalYearEnd'].value + '-01',
-            fundAdministrator: _.get(this.fundForm.controls['fundAdministrator'].value, ['0', 'id'], null),
-            custodianBank: _.get(this.fundForm.controls['custodianBank'].value, ['0', 'id'], null),
-            investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
-            principalPromoter: this.getIdsFromList(this.fundForm.controls['principalPromoter'].value),
-            payingAgent: this.getIdsFromList(this.fundForm.controls['payingAgent'].value),
-            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
-            delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
-            umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
-            transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
-            centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
-            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-            holidayMgmtConfig: this.getHolidayMgmtConfig(),
-            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+            ...this.fundFormValue(),
         };
 
         if (!this.param) {
@@ -939,33 +1008,7 @@ export class FundComponent implements OnInit, OnDestroy {
     saveDraft() {
         const payload: Fund = {
             draft: 1,
-            ...this.fundForm.getRawValue(),
-            domicile: _.get(this.fundForm.controls['domicile'].value, ['0', 'id'], null),
-            typeOfEuDirective: _.get(this.fundForm.controls['typeOfEuDirective'].value, ['0', 'id'], null),
-            UcitsVersion: _.get(this.fundForm.controls['UcitsVersion'].value, ['0', 'id'], null),
-            legalForm: _.get(this.fundForm.controls['legalForm'].value, ['0', 'id'], null),
-            nationalNomenclatureOfLegalForm: _.get(this.fundForm.controls['nationalNomenclatureOfLegalForm'].value, ['0', 'id'], null),
-            homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
-            fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
-            portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
-            investmentAdvisor: this.getIdsFromList(this.fundForm.controls['investmentAdvisor'].value),
-            auditor: _.get(this.fundForm.controls['auditor'].value, ['0', 'id'], null),
-            taxAuditor: _.get(this.fundForm.controls['taxAuditor'].value, ['0', 'id'], null),
-            legalAdvisor: _.get(this.fundForm.controls['legalAdvisor'].value, ['0', 'id'], null),
-            fiscalYearEnd: (this.fundForm.controls['fiscalYearEnd'].value != null ? this.fundForm.controls['fiscalYearEnd'].value + '-01' : null),
-            fundAdministrator: _.get(this.fundForm.controls['fundAdministrator'].value, ['0', 'id'], null),
-            custodianBank: _.get(this.fundForm.controls['custodianBank'].value, ['0', 'id'], null),
-            investmentManager: _.get(this.fundForm.controls['investmentManager'].value, ['0', 'id'], null),
-            principalPromoter: this.getIdsFromList(this.fundForm.controls['principalPromoter'].value),
-            payingAgent: this.getIdsFromList(this.fundForm.controls['payingAgent'].value),
-            managementCompanyID: _.get(this.fundForm.controls['managementCompanyID'].value, ['0', 'id'], null),
-            delegatedManagementCompany: _.get(this.fundForm.controls['delegatedManagementCompany'].value, ['0', 'id'], null),
-            umbrellaFundID: _.get(this.umbrellaControl.value, ['0', 'id'], null),
-            transferAgent: _.get(this.fundForm.controls['transferAgent'].value, ['0', 'id'], null),
-            centralizingAgent: _.get(this.fundForm.controls['centralizingAgent'].value, ['0', 'id'], null),
-            capitalPreservationPeriod: _.get(this.fundForm.controls['capitalPreservationPeriod'].value, ['0', 'id'], null),
-            holidayMgmtConfig: this.getHolidayMgmtConfig(),
-            legalEntityIdentifier: this.isLeiVisible ? this.fundForm.controls['legalEntityIdentifier'].value : null,
+            ...this.fundFormValue(),
         };
 
         if (!this.param) {
