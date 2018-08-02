@@ -63,14 +63,12 @@
                         </button>                       
                     </clr-dg-cell>
                 </clr-dg-row>
-
+         
                 <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
-                </clr-dg-footer>         
-
-            </clr-datagrid>
+                </clr-dg-footer>
         </div>
     </ng-template>
 
@@ -160,7 +158,6 @@
                     </div>
                 </div>
             </form>              
-
         </div>
     </ng-template>
 </div>
