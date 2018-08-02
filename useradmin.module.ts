@@ -1,33 +1,33 @@
 /* Core imports. */
-import {NgModule} from "@angular/core";
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 /* Clarity module. */
-import {ClarityModule} from '@clr/angular';
+import { ClarityModule } from '@clr/angular';
 
-import {AdminUsersService} from '@setl/core-req-services';
+import { AdminUsersService } from '@setl/core-req-services';
 /* 3rd party modules. */
-import {SelectModule} from '@setl/utils';
+import { SelectModule } from '@setl/utils';
 /* Import core components. */
-import {AdminWizardComponent} from './wizard/wizard.component';
+import { AdminWizardComponent } from './wizard/wizard.component';
 /* Users components. */
-import {AdminUsersComponent} from './users/users.component';
+import { AdminUsersComponent } from './users/users.component';
 /* Wallets components. */
-import {AdminWalletsComponent} from './wallets/wallets.component';
+import { AdminWalletsComponent } from './wallets/wallets.component';
 /* Permissions components. */
-import {AdminPermissionsComponent} from './permissions/permissions.component';
+import { AdminPermissionsComponent } from './permissions/permissions.component';
 
-import {PermissionGridModule} from '@setl/permission-grid';
+import { PermissionGridModule } from '@setl/permission-grid';
 /* Manage sub-portfolio */
-import {ManageSubPortfolioComponent} from './sub-portfolio/component';
+import { ManageSubPortfolioComponent } from './sub-portfolio/component';
 /* Multilingual coolness. */
-import {MultilingualModule} from '@setl/multilingual';
+import { MultilingualModule } from '@setl/multilingual';
 /* Persist Module. */
-import {PersistModule} from '@setl/core-persist';
+import { PersistModule } from '@setl/core-persist';
 /* directive Module. */
-import {SetlDirectivesModule} from '@setl/utils';
-import {UserAdminService} from '@setl/core-useradmin/useradmin.service';
+import { SetlDirectivesModule } from '@setl/utils';
+import { UserAdminService } from '@setl/core-useradmin/useradmin.service';
 
 /* User admin service. */
 @NgModule({
@@ -45,7 +45,7 @@ import {UserAdminService} from '@setl/core-useradmin/useradmin.service';
         AdminWizardComponent,
 
         /* Manage sub portfolio */
-        ManageSubPortfolioComponent
+        ManageSubPortfolioComponent,
     ],
     exports: [
         /* Users components. */
@@ -61,7 +61,7 @@ import {UserAdminService} from '@setl/core-useradmin/useradmin.service';
         AdminWizardComponent,
 
         /* Manage sub-portfolio */
-        ManageSubPortfolioComponent
+        ManageSubPortfolioComponent,
     ],
     imports: [
         CommonModule,
@@ -73,9 +73,9 @@ import {UserAdminService} from '@setl/core-useradmin/useradmin.service';
         MultilingualModule,
         PersistModule,
         RouterModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
     ],
-    providers: [AdminUsersService, UserAdminService]
+    providers: [AdminUsersService, UserAdminService],
 })
 
 export class UserAdminModule {
