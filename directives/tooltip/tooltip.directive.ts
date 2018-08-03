@@ -21,6 +21,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     clonedConfig: any = [];
     divTooltip: any;
     divTooltipTitle: any;
+    divTooltipTimer: any;
     divTooltipText: any;
     divTooltipCloseBtn: any;
     divBackgroundTour: any;
@@ -37,7 +38,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     tourConfig = [];
     step = 0;
     autoNextTimeout: any;
-    tourDuration = 10000; // default
+    tourDuration = 8000; // default 8s
     isAutoNext = true;
     isTour = false;
 
@@ -66,27 +67,55 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         private injector: Injector,
         private _changeDetectorRef: ChangeDetectorRef,
     ) {
-        console.log('HKDEBUG constructor');
         this.el = this._el.nativeElement;
         this.OfiUserTourService = this.injector.get(OfiUserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
+    }
 
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
-            this.connectedWalletId = connected;
-        }));
+    ngOnInit() {
+        this.cloneConfig();
 
-        this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => { this.userTourInProgress = inProgress; }));
+        // force overflow hidden to prevent scroll outside website
+        document.body.style.overflow = 'hidden';
+
+        if (this.clonedConfig.length > 1) {
+            this.isTour = true;
+            this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+                this.connectedWalletId = connected;
+            }));
+            this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => { this.userTourInProgress = inProgress; }));
+            if (this.clonedConfig[0]) {
+                if (this.clonedConfig[0].usertourName) {
+                    this.userTourName = this.clonedConfig[0].usertourName;
+                }
+            }
+            if (this.userTourName !== '') {
+                this.subscriptionsArray.push(this.userToursRequestedOb.subscribe(userToursRequested => this.requestUserTours(userToursRequested)));
+                this.subscriptionsArray.push(this.userToursOb.subscribe(userTours => this.getUserTours(userTours)));
+            }
+        } else {
+            this.renderer.setStyle(this.el, 'cursor', 'pointer');
+        }
+        this.autoshowTooltip();
+    }
+
+    ngAfterViewInit() {
+        if (this.clonedConfig.autoshow !== undefined && this.clonedConfig.autoshow === true) {
+            this.moveTooltip();
+        }
     }
 
     @HostListener('click') onClick(): void {
-        if (this.divTooltip !== null && this.divTooltip !== undefined) {
-            this.hideTooltip();
+        if (this.clonedConfig.transform === undefined) {
+            if (this.divTooltip !== null && this.divTooltip !== undefined) {
+                this.hideTooltip();
+            }
+            this.clonedConfig.autoshow = !this.clonedConfig.autoshow;
+            setTimeout(() => {
+                this.autoshowTooltip();
+            }, 350);
         }
-        this.clonedConfig.autoshow = !this.clonedConfig.autoshow;
-        setTimeout(() => {
-            this.autoshowTooltip();
-        },         350);
     }
 
     @HostListener('mouseenter') onMouseEnter(): void {
@@ -129,37 +158,6 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         this.moveTooltip();
     }
 
-    ngOnInit() {
-        console.log('HKDEBUG ngOnInit config', this.config);
-        this.cloneConfig();
-        console.log('HKDEBUG ngOnInit clonedConfig', this.clonedConfig);
-
-        // force overflow hidden to prevent scroll outside website
-        document.body.style.overflow = 'hidden';
-
-        if (this.clonedConfig.length > 1) {
-            this.isTour = true;
-            if (this.clonedConfig[0]) {
-                if (this.clonedConfig[0].context) {
-                    this.userTourName = this.clonedConfig[0].context;
-                    console.log('HKDEBUG userTourName', this.userTourName);
-                }
-            }
-            this.subscriptionsArray.push(this.userToursRequestedOb.subscribe(userToursRequested => this.requestUserTours(userToursRequested)));
-            this.subscriptionsArray.push(this.userToursOb.subscribe(userTours => this.getUserTours(userTours)));
-        } else {
-            this.renderer.setStyle(this.el, 'cursor', 'pointer');
-        }
-        this.autoshowTooltip();
-    }
-
-    ngAfterViewInit() {
-        console.log('HKDEBUG ngAfterViewInit clonedConfig', this.clonedConfig);
-        if (this.clonedConfig.autoshow !== undefined && this.clonedConfig.autoshow === true) {
-            this.moveTooltip();
-        }
-    }
-
     cloneConfig() {
         // reset
         this.clonedConfig = [];
@@ -170,17 +168,13 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.clonedConfig.push(_.clone(conf));
             }
         } else {
-            this.clonedConfig.push(_.clone(this.config));
+            this.clonedConfig = _.clone(this.config);
         }
     }
 
     requestUserTours(req) {
-        this.cloneConfig();
-        console.log('HKDEBUG requestUserTours clonedConfig', this.clonedConfig);
-        console.log('requestUserTours', req);
+        // this.cloneConfig();
         if (!req) {
-            console.log('userTourName', this.userTourName);
-            console.log('connectedWalletId', this.connectedWalletId);
             if (this.userTourName !== '') {
                 const payload = {
                     walletid: this.connectedWalletId,
@@ -192,8 +186,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getUserTours(userTours) {
-        console.log('HKDEBUG getUserTours clonedConfig', this.clonedConfig);
-        console.log('getUserTours userTours', userTours);
+        // this.cloneConfig();
         if (userTours) {
             const listImu = fromJS(userTours);
             this.userTourDatas = listImu.reduce((result, item) => {
@@ -205,13 +198,15 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 return result;
             }, []);
 
-            if (this.isTour && this.userTourDatas.length === 0 && !this.userTourInProgress) {
-                this.initTour();
-            } else {
-                if (this.userTourDatas[0]) {
-                    if (this.userTourDatas[0].value !== '') {
-                        if (this.isTour && this.userTourDatas[0].value === '0' && !this.userTourInProgress) {
-                            this.initTour();
+            if (this.userTourName !== '') {
+                if (this.userTourDatas.length === 0 && !this.userTourInProgress) {
+                    this.initTour();
+                } else {
+                    if (this.userTourDatas[0]) {
+                        if (this.userTourDatas[0].value !== '') {
+                            if (this.userTourDatas[0].value === '0' && !this.userTourInProgress) {
+                                this.initTour();
+                            }
                         }
                     }
                 }
@@ -239,14 +234,13 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     OfiUserTourService.setRequestedUserTours(false, this._ngRedux);
                 },
                 failureCallback: (response) => {
-                    console.log('Error save userTour failed: ', response);
+                    console.log('UserTour save error: ', response);
                 },
             });
         }
     }
 
     initTour() {
-        console.log('HKDEBUG initTour step', this.step);
         this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
 
         // add black bglayer
@@ -306,8 +300,14 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.divTooltip.innerHTML = '<div id="tooltipTitle_' + randomID + '" class="title">' + addCloseButton + '</div>';
                 }
             }
+            let tmpInnerHTML = '';
+            // add timer bar
+            if (this.isTour) {
+                // add timer div
+                tmpInnerHTML += '<div id="tooltipTimer_' + randomID + '" class="tooltipTimer"></div>';
+            }
             // add default text
-            let tmpInnerHTML = '<div id="tooltipText_' + randomID + '" class="text"></div>';
+            tmpInnerHTML += '<div id="tooltipText_' + randomID + '" class="text"></div>';
             if (this.clonedConfig.autoshow !== undefined && this.clonedConfig.autoshow === true) {
                 // if title
                 if (!isTitle) {
@@ -323,6 +323,12 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.divTooltipTitle = document.getElementById('tooltipTitle_' + randomID);
             }
             this.divTooltipText = document.getElementById('tooltipText_' + randomID);
+
+            this.divTooltipTimer = document.getElementById('tooltipTimer_' + randomID);
+            if (this.divTooltipTimer && this.isTour) {
+                this.divTooltipTimer.style.transition = 'width ' + (this.clonedConfig.duration / 1000) + 's linear';
+            }
+
             this.divTooltipCloseBtn = document.getElementById('tooltipCloseBtn_' + randomID);
             // add click function
             if (this.divTooltip && !this.isTour) {
@@ -497,6 +503,9 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 if (this.divTooltip !== null && this.divTooltip !== undefined) {
                     this.renderer.setStyle(this.divTooltip, 'transform', 'translate3d(0, 0, 0)');
                     this.renderer.setStyle(this.divTooltip, 'opacity', '1');
+                    if (this.isTour) {
+                        this.renderer.setStyle(this.divTooltipTimer, 'width', '100%');
+                    }
                 }
             },         50);
         }
@@ -877,7 +886,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     setConfig(index) {
         // this.clonedConfig
         this.clonedConfig = {
-            context: (this.tourConfig[index].context) ? this.tourConfig[index].context : '',
+            usertourName: (this.tourConfig[index].usertourName) ? this.tourConfig[index].usertourName : '',
             title: this.tourConfig[index].title,
             text: this.tourConfig[index].text,
             target: this.tourConfig[index].target,
@@ -918,6 +927,10 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnDestroy(): void {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
+
         this.cleanAll(true);
     }
 }
