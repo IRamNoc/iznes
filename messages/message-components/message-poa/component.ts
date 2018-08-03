@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {SagaHelper} from '@setl/utils/index';
-import {WalletNodeSocketService} from '@setl/websocket-service';
-import {createWalletNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
+import { Component, Input, OnInit } from '@angular/core';
+import { SagaHelper } from '@setl/utils/index';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { createWalletNodeSagaRequest } from '@setl/utils/common';
+import { NgRedux } from '@angular-redux/store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 /**
  * SETL Message Body Component
  *
@@ -12,7 +12,7 @@ import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
 @Component({
     selector: 'setl-message-poa',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.css'],
 })
 export class SetlMessagePOAComponent implements OnInit {
 
@@ -23,9 +23,8 @@ export class SetlMessagePOAComponent implements OnInit {
     knownPOAs = null;
 
     constructor (private walletNodeSocketService: WalletNodeSocketService,
-                 private _ngRedux: NgRedux<any>,
-                 private alertsService: AlertsService,) {
-
+                 private ngRedux: NgRedux<any>,
+                 private alertsService: AlertsService) {
     }
 
     ngOnInit() {
@@ -38,8 +37,8 @@ export class SetlMessagePOAComponent implements OnInit {
             this.canAct = false;
             return;
         }
-        try {
-            this.knownPOAs = JSON.parse(window.localStorage.getItem('activatedPOAs')); // TODO: ask the wallet node about the POA
+        try { // TODO: ask the wallet node about the POA
+            this.knownPOAs = JSON.parse(window.localStorage.getItem('activatedPOAs'));
         } catch (e) {
 
         }
@@ -79,7 +78,7 @@ export class SetlMessagePOAComponent implements OnInit {
         woffch: 'WFL off-chain transaction',
         wmsgs: 'WFL external communication',
         wmeadv: 'WFL outgoing notifications',
-        wmetx: 'WFL outgoing transactional messages'
+        wmetx: 'WFL outgoing transactional messages',
     };
 
     prettyTime (unixTime) {
@@ -94,19 +93,18 @@ export class SetlMessagePOAComponent implements OnInit {
     }
 
     acceptPoa () {
-
         this.inProgress = true;
-console.log(JSON.stringify(this.data));
+
         const asyncTaskPipe = createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', this.data);
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             (d) => {
-                console.log("NON ERROR RESPONSE", d);
+                console.log('WalletNode response to PoA', d);
                 this.showSuccessResponse('POA has been signed on the blockchain');
                 this.canAct = false;
                 this.inProgress = false;
                 this.knownPOAs.push(this.data['poareference']);
-                window.localStorage.setItem('activatedPOAs', JSON.stringify(this.knownPOAs));
+                window.localStorage.setItem('activatedPOAs', JSON.stringify(this.knownPOAs)); // use new user storage?
             },
             (e) => {
                 console.error(e);
@@ -117,7 +115,7 @@ console.log(JSON.stringify(this.data));
                 }
                 this.showErrorResponse(base + extra);
                 this.inProgress = false;
-            }
+            },
         ));
     }
 
