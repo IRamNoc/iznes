@@ -113,8 +113,8 @@ form, .form {
                 margin-bottom: 0px;
             }
         }
-        .large-select{
-            .ui-select-container{
+        .large-select {
+            .ui-select-container {
                 width: 100% !important;
             }
         }
@@ -218,19 +218,19 @@ form, .form {
 
     }
 
-  .has-error{
+    .has-error {
 
-    .drop-file-zone{
-      border-color : red !important;
+        .drop-file-zone {
+            border-color: red !important;
+        }
+
+        .field-error {
+            display: block;
+            margin-right: 0 !important;
+            width: 100%;
+        }
+
     }
-
-    .field-error{
-      display: block;
-      margin-right: 0 !important;
-      width: 100%;
-    }
-
-  }
 
     ng-select, various-address-select {
         input {
@@ -252,8 +252,8 @@ form, .form {
         }
     }
 
-    ng-select.multiple + .field-error{
-        width : 100% !important;
+    ng-select.multiple + .field-error {
+        width: 100% !important;
     }
 
     various-address-select {
@@ -649,6 +649,7 @@ input:checked + .slider:before {
     background: white;
     padding: 0 15px;
     height: 40px;
+    margin-right: 0;
     // then input-group css
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
