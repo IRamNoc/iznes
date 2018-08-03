@@ -18,7 +18,6 @@
                 <!-- User list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container *ngTemplateOutlet="staticGroupList">
-
                     </ng-container>
                 </ng-container>
 
@@ -26,7 +25,6 @@
                 <ng-container *ngIf="id === 1">
                     <ng-container
                             *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
-
                     </ng-container>
                 </ng-container>
 
@@ -34,7 +32,6 @@
                 <ng-container *ngIf="id >= 2">
                     <ng-container
                             *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
-
                     </ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -116,8 +113,8 @@
                                        [allowClear]="true"
                                        placeholder="Choose Group Tag"
                                        [formControl]="formControl.controls['type']"
-                                       mltag="txt_choosegrouptag"
-                            ></ng-select>
+                                       mltag="txt_choosegrouptag">
+                            </ng-select>
                             <div *ngIf="formControl.controls.type.hasError('required') && formControl.controls.type.touched"
                                  class="field-error" mltag="txt_thisfieldisrequired">This field is required
                             </div>
@@ -137,22 +134,22 @@
                                 *ngSwitchCase="'0'"
                                 [permissionAreas]="filteredAdminAreaList"
                                 [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
 
                         <setl-permission-grid
                                 *ngSwitchCase="'1'"
                                 [permissionAreas]="filteredTxAreaList"
                                 [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
 
                         <setl-menu-permission-grid
                                 *ngSwitchCase="'2'"
                                 [permissionAreas]="filteredMenuAreaList"
                                 [permissionLevels]="menuPermissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-menu-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-menu-permission-grid>
 
                     </div>
 
@@ -165,9 +162,7 @@
                             <button id="group-clear-btn"
                                     (click)="clearNewGroup(tabid, $event)"
                                     class="btn btn-secondary"
-                                    mltag="txt_clear"
-                            >
-                                Clear
+                                    mltag="txt_clear">Clear
                             </button>
                         </div>
                     </div>
@@ -219,8 +214,8 @@
                                        [allowClear]="true"
                                        placeholder="Choose Group Tag..."
                                        [disabled]="true" [formControl]="formControl.controls['type']"
-                                       mltag="txt_choosegrouptag"
-                            ></ng-select>
+                                       mltag="txt_choosegrouptag">
+                            </ng-select>
                         </div>
                     </div>
 
@@ -238,24 +233,24 @@
                                 [initData]="permissionsEmitter"
                                 [permissionAreas]="filteredAdminAreaList"
                                 [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
 
                         <setl-permission-grid
                                 *ngSwitchCase="'1'"
                                 [initData]="permissionsEmitter"
                                 [permissionAreas]="filteredTxAreaList"
                                 [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-permission-grid>
 
                         <setl-menu-permission-grid
                                 *ngSwitchCase="'2'"
                                 [initData]="permissionsEmitter"
                                 [permissionAreas]="filteredMenuAreaList"
                                 [permissionLevels]="menuPermissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)"
-                        ></setl-menu-permission-grid>
+                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                        </setl-menu-permission-grid>
 
                     </div>
 
