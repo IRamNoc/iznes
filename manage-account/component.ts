@@ -1,55 +1,52 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {fromJS} from 'immutable';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { fromJS } from 'immutable';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 // Internal
-import {AccountsService, MemberService} from '@setl/core-req-services';
-import {
-    SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList,
-    setRequestedManageMemberList
-} from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper, LogService} from '@setl/utils';
+import { AccountsService, MemberService } from '@setl/core-req-services';
+import { SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList, setRequestedManageMemberList }
+    from '@setl/core-store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { SagaHelper, LogService } from '@setl/utils';
 import * as _ from 'lodash';
-import {PersistService} from '@setl/core-persist';
+import { PersistService } from '@setl/core-persist';
+import { ConfirmationService } from '../../utils';
 
 export function getManageMember(state) {
-
     const myMemberId = state.user.myDetail.memberId;
     const isAdmin = state.user.myDetail.admin;
     let managedMemberListImu;
 
     if (isAdmin) {
         return state.member.manageMemberList.memberList;
-    } else {
-        managedMemberListImu = fromJS(state.member.manageMemberList.memberList);
-        return managedMemberListImu.filter((thisMember) => {
-            return thisMember.get('memberId') === myMemberId;
-        }).toJS();
     }
+    managedMemberListImu = fromJS(state.member.manageMemberList.memberList);
+    return managedMemberListImu.filter((thisMember) => {
+        return thisMember.get('memberId') === myMemberId;
+    }).toJS();
 }
 
 @Component({
     selector: 'app-manage-account',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ManageAccountComponent implements OnInit, OnDestroy {
-    tabsControl: Array<any>;
-    accountList: Array<any>;
-    managedMemberList: Array<any>;
+    tabsControl: any[];
+    accountList: any[];
+    managedMemberList: any[];
     managedMemberListObject: object;
-    managedWalletList: Array<any>;
+    managedWalletList: any[];
     isSymAdmin: boolean;
 
     /* Rows Per Page datagrid size */
     public pageSize: number;
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     // List of Redux observable.
     @select(['account', 'accountList', 'accountList']) accountListOb;
@@ -61,71 +58,86 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private accountService: AccountsService,
                 private memberService: MemberService,
                 private changeDetectorRef: ChangeDetectorRef,
                 private logService: LogService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
         /* Default tabs. */
         this.tabsControl = [
             {
                 title: '<i class="fa fa-search"></i> Search',
                 accountId: -1,
-                active: true
+                active: true,
             },
             {
                 title: '<i class="fa fa-plus"></i> Add New Account',
                 accountId: -1,
-                formControl: this._persistService.watchForm('manageMember/manageAccount', new FormGroup(
+                formControl: this.persistService.watchForm('manageMember/manageAccount', new FormGroup(
                     {
                         accountName: new FormControl('', Validators.required),
                         accountDescription: new FormControl('', Validators.required),
-                        member: new FormControl([])
-                    }
+                        member: new FormControl([]),
+                    },
                 )),
-                active: false
-            }
+                active: false,
+            },
         ];
 
-        this.subscriptionsArray.push(this.accountListOb.subscribe((accountList) => this.updateAccountList(accountList)));
-        this.subscriptionsArray.push(this.requestedAccountListOb.subscribe((requestedState) => this.requestAccountList(requestedState)));
-        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
+        /* Get Account and Managed Member Lists */
+        this.subscriptionsArray.push(this.accountListOb.subscribe(accountList =>
+            this.updateAccountList(accountList)));
+        this.subscriptionsArray.push(this.requestedAccountListOb.subscribe(requestedState =>
+            this.requestAccountList(requestedState)));
+        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe(requestedState =>
             this.requestManagedMemberList(requestedState)));
-        this.subscriptionsArray.push(this.managedMemberOb.subscribe((memberList) => this.updateManageMemberList(memberList)));
+        this.subscriptionsArray.push(this.managedMemberOb.subscribe(memberList =>
+            this.updateManageMemberList(memberList)));
         this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
-        this.subscriptionsArray.push(this.walletListOb.subscribe(walletList => this.updateManagedWalletList(walletList)));
-
+        this.subscriptionsArray.push(this.walletListOb.subscribe(walletList =>
+            this.updateManagedWalletList(walletList)));
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-    }
-
+    /**
+     * Update Account List
+     *
+     * @param accountList
+     */
     updateAccountList(accountList) {
         this.accountList = accountList;
 
         const accountListImu = fromJS(accountList);
-        this.accountList = accountListImu.reduce(function (result, thisAccount) {
-            const index = result.length;
-            const newThisAccount = thisAccount.set('index', index);
-            result.push(newThisAccount.toJS());
-            return result;
-        }, []);
+        this.accountList = accountListImu.reduce(
+            (result, thisAccount) => {
+                const index = result.length;
+                const newThisAccount = thisAccount.set('index', index);
+                result.push(newThisAccount.toJS());
+                return result;
+            },
+            [],
+        );
     }
 
+    /**
+     * Update Manage Member List
+     *
+     * @param memberList
+     */
     updateManageMemberList(memberList) {
         this.managedMemberListObject = memberList;
 
         const managedMemberListImu = fromJS(memberList);
-        this.managedMemberList = managedMemberListImu.reduce(function (resultList, thisMember) {
-            resultList.push({
-                id: thisMember.get('memberId'),
-                text: thisMember.get('memberName')
-            });
-            return resultList;
-        }, []);
+        this.managedMemberList = managedMemberListImu.reduce(
+            (resultList, thisMember) => {
+                resultList.push({
+                    id: thisMember.get('memberId'),
+                    text: thisMember.get('memberName'),
+                });
+                return resultList;
+            },
+            [],
+        );
 
         // Add account form.
         const addAccountForm = this.tabsControl[1].formControl;
@@ -136,22 +148,33 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Update Managed Wallet List
+     *
+     * @param walletList
+     */
     updateManagedWalletList(walletList) {
         const walletListImu = fromJS(walletList);
         const walletListArr = walletListImu.reduce(
             (resultArr, thisWallet) => {
                 resultArr.push({
                     id: thisWallet.get('walletId'),
-                    text: thisWallet.get('walletName')
+                    text: thisWallet.get('walletName'),
                 });
 
                 return resultArr;
-            }, []
+            },
+            [],
         );
 
         this.managedWalletList = walletListArr;
     }
 
+    /**
+     * Request Managed Member List
+     *
+     * @param {boolean} requestedState - Redux requested flag
+     */
     requestManagedMemberList(requestedState: boolean): void {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
@@ -165,12 +188,17 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 [SET_MANAGE_MEMBER_LIST],
                 [],
                 asyncTaskPipe,
-                {}
+                {},
             ));
 
         }
     }
 
+    /**
+     * Request Account List
+     *
+     * @param requestedState - Redux requested flag
+     */
     requestAccountList(requestedState) {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
@@ -184,7 +212,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 [SET_ACCOUNT_LIST],
                 [],
                 asyncTaskPipe,
-                {}
+                {},
             ));
         }
     }
@@ -208,24 +236,23 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             const accountDescription = formValue.accountDescription;
             const memberId = formValue.member[0].id;
 
-
             // Create a saga pipe.
             const asyncTaskPipe = this.accountService.addAccount(
                 {
                     accountName,
                     accountDescription,
-                    memberId
-                }
+                    memberId,
+                },
             );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
-                (data) => {
-                    this.showSuccessResponse('Account is created');
+                () => {
+                    this.showAlert('success', 'Account is created');
                 },
                 (data) => {
-                    this.showErrorResponse(data);
-                }
+                    this.showAlert('error', data);
+                },
             ));
         }
     }
@@ -241,7 +268,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         if (this.tabsControl[tabId].formControl.valid) {
             this.logService.log(this.tabsControl[tabId].formControl.value);
 
-
             const formValue = this.tabsControl[tabId].formControl.value;
             const accountId = formValue.accountId;
             const accountName = formValue.accountName;
@@ -254,32 +280,33 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                     accountId,
                     accountName,
                     description,
-                    walletId
-                }
+                    walletId,
+                },
             );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    this.showSuccessResponse('Account is updated');
+                    this.showAlert('success', 'Account is updated');
                     this.logService.log(data);
                 },
                 (data) => {
-                    this.showErrorResponse(data);
+                    this.showAlert('error', data);
                     this.logService.log(data);
-                }
+                },
             ));
         }
     }
 
     /**
      * Handle edit button is clicked.
+     *
      * @param index
      */
     handleEdit(index: number): void {
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i].accountId === this.accountList[index].accountId) {
                 this.setTabActive(i);
 
@@ -300,10 +327,10 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                     accountId: new FormControl(account.accountId),
                     accountDescription: new FormControl(account.description),
                     memberName: new FormControl(accountMemberName),
-                    wallet: new FormControl()
-                }
+                    wallet: new FormControl(),
+                },
             ),
-            active: false
+            active: false,
         });
 
         // Activate the new tab.
@@ -318,34 +345,42 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleDelete(index: number): void {
-        // Check if the tab is already open.
-        // If yes, close the tab.
-        let i;
-        const accountId = this.accountList[index].accountId;
-        for (i = 0; i < this.tabsControl.length; i++) {
-            if (this.tabsControl[i].accountId === accountId) {
-                this.tabsControl.splice(i, 1);
-            }
-        }
+        /* Let's now ask the user if they're sure... */
+        this.confirmationService.create(
+            '<span>Deleting an Account</span>',
+            '<span class="text-warning">Are you sure you want to delete this account?</span>')
+        .subscribe((ans) => {
+            if (ans.resolved) {
+                // ... they are so send the delete request
+                // Check if the tab is already open. If yes, close the tab.
+                let i;
+                const accountId = this.accountList[index].accountId;
+                for (i = 0; i < this.tabsControl.length; i += 1) {
+                    if (this.tabsControl[i].accountId === accountId) {
+                        this.tabsControl.splice(i, 1);
+                    }
+                }
 
-        // Send request to delete member.
-        const asyncTaskPipe = this.accountService.deleteAccount(
-            {
-                accountId
-            }
-        );
+                // Send request to delete member.
+                const asyncTaskPipe = this.accountService.deleteAccount(
+                    {
+                        accountId,
+                    },
+                );
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                this.showSuccessResponse('Account is deleted');
-                this.logService.log(data);
-            },
-            (data) => {
-                this.showErrorResponse(data);
-                this.logService.log(data);
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    (data) => {
+                        this.showAlert('success', 'Account is deleted');
+                        this.logService.log(data);
+                    },
+                    (data) => {
+                        this.showAlert('error', data);
+                        this.logService.log(data);
+                    },
+                ));
             }
-        ));
+        });
     }
 
     /**
@@ -362,7 +397,7 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
 
         this.tabsControl = [
             ...this.tabsControl.slice(0, index),
-            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
         // Reset Tabs.
@@ -371,6 +406,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         return;
     }
 
+    /**
+     * Sets a Tab to Active
+     *
+     * @param {number} index
+     */
     setTabActive(index: number): void {
         /* Lets loop over all current tabs and switch them to not active. */
         this.tabsControl.map((i) => {
@@ -387,30 +427,30 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.detectChanges();
     }
 
-    showErrorResponse(response) {
-        const message = _.get(response, '[1].Data[0].Message', '');
+    /**
+     * Show a success, warning or error alert message
+     *
+     * @param  {type} string - the type of alert to show.
+     * @param  {message} string - the message to display in the alert.
+     * @return {void}
+     */
+    showAlert(type: any, message: string) {
+        const alertClass = (type === 'error') ? 'danger' : type;
 
-        this.alertsService.create('error', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        this.alertsService.create(type, `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-${alertClass}">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
-    showSuccessResponse(message) {
-
-        this.alertsService.create('success', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 }

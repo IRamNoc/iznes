@@ -11,27 +11,21 @@ import { ConfirmationService } from '@setl/utils';
 
 // Internal
 import { Subscription } from 'rxjs/Subscription';
+
 // Services
 import { AdminUsersService } from '@setl/core-req-services/useradmin/useradmin.service';
 import { ChainService } from '@setl/core-req-services/chain/service';
 import { MultilingualService } from '@setl/multilingual';
 
-// Set default Node Address and Port
-let defaultNodeAddress = null;
-if (location.protocol !== 'https:') {
-    defaultNodeAddress = 'localhost';
-}
-const defaultNodePort = 13535;
-
 @Component({
     selector: 'app-wallet-nodes',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ManageWalletNodesComponent implements OnInit, OnDestroy {
-    tabsControl: Array<object>;
+    tabsControl: {}[];
     // Debug for dev
     isDebug = false;
 
@@ -39,7 +33,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     language = 'en';
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     // Services
     walletNodesList = [];
@@ -48,6 +42,10 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     // Rows Per Page datagrid size
     public pageSize: number;
 
+    // Default Node Address and Port
+    private defaultNodeAddress = location.protocol !== 'https:' ? null : 'localhost';
+    private defaultNodePort = 13535;
+
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['userAdmin', 'walletNode', 'requestedWalletNodeList']) requestedWalletNodesOb;
@@ -55,17 +53,18 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
     @select(['chain', 'chainList', 'requested']) requestedChainOb;
     @select(['chain', 'chainList', 'chainList']) chainListOb;
 
-    constructor(private _fb: FormBuilder,
+    constructor(private fb: FormBuilder,
                 private ngRedux: NgRedux<any>,
-                private _adminUsersService: AdminUsersService,
-                private _chainService: ChainService,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private _alertsService: AlertsService,
-                private _confirmationService: ConfirmationService,
+                private adminUsersService: AdminUsersService,
+                private chainService: ChainService,
+                private changeDetectorRef: ChangeDetectorRef,
+                private alertsService: AlertsService,
+                private confirmationService: ConfirmationService,
                 private multilingualService: MultilingualService,
                 private logService: LogService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
 
+        // Build initial tabs
         this.tabsControl = [
             {
                 title: '<i class="fa fa-search"></i> Search',
@@ -75,46 +74,52 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             {
                 title: '<i class="fa fa-plus"></i> Add New Wallet Node',
                 chainId: -1,
-                formControl: this._persistService.watchForm('manageMember/walletNodes', new FormGroup(
+                formControl: this.persistService.watchForm('manageMember/walletNodes', new FormGroup(
                     {
                         walletNodeName: new FormControl('', Validators.required),
-                        nodeAddress: new FormControl(defaultNodeAddress, Validators.required),
+                        nodeAddress: new FormControl(this.defaultNodeAddress, Validators.required),
                         nodePath: new FormControl(),
-                        nodePort: new FormControl(defaultNodePort, Validators.compose([Validators.required, this.isInteger])),
-                        chainId: new FormControl('', Validators.required)
+                        nodePort: new FormControl(this.defaultNodePort, Validators.compose(
+                            [Validators.required, this.isInteger])),
+                        chainId: new FormControl('', Validators.required),
                     },
                 )),
                 active: false,
             },
         ];
 
-        // language
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        // Subscribe to language
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe(requested => this.getLanguage(requested)));
+
+        // Get Wallet Node and Chain List and save to Redux
         this.subscriptionsArray.push(this.requestedWalletNodesOb.subscribe((requestedWalletNodeList) => {
             this.getWalletNodesRequested(requestedWalletNodeList);
         }));
         this.subscriptionsArray.push(this.walletNodesListOb.subscribe((walletNodesList) => {
             this.getWalletNodesListFromRedux(walletNodesList);
         }));
-        this.subscriptionsArray.push(this.requestedChainOb.subscribe((requested) => this.getChainsListRequested(requested)));
-        this.subscriptionsArray.push(this.chainListOb.subscribe((chainsList) => this.getChainsListFromRedux(chainsList)));
+        this.subscriptionsArray.push(this.requestedChainOb.subscribe(requested =>
+            this.getChainsListRequested(requested)));
+        this.subscriptionsArray.push(this.chainListOb.subscribe(chainsList => this.getChainsListFromRedux(chainsList)));
     }
 
     ngOnInit() {
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-    }
-
+    /** Gets Wallet Nodes Requested
+     *
+     * @param requestedWalletNodeList - Redux requested flag
+     */
     getWalletNodesRequested(requestedWalletNodeList): void {
         if (!requestedWalletNodeList) {
-            AdminUsersService.defaultRequestWalletNodeList(this._adminUsersService, this.ngRedux);
+            AdminUsersService.defaultRequestWalletNodeList(this.adminUsersService, this.ngRedux);
         }
     }
 
+    /** Gets Wallet Nodes List From Redux
+     *
+     * @param walletNodesList
+     */
     getWalletNodesListFromRedux(walletNodesList) {
         const listImu = fromJS(walletNodesList);
 
@@ -135,59 +140,72 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             },
             []);
 
-        this.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
+    /** Gets Chain List Requested
+     *
+     * @param requested - Redux requested flag
+     */
     getChainsListRequested(requested): void {
         if (!requested) {
-            ChainService.defaultRequestChainsList(this._chainService, this.ngRedux);
+            ChainService.defaultRequestChainsList(this.chainService, this.ngRedux);
         }
     }
 
+    /** Gets Chain List From Redux
+     * ---------------------------
+     * @param chainsList
+     */
     getChainsListFromRedux(chainsList) {
         const listImu = fromJS(chainsList);
 
-        this.chainsListOptions = listImu.reduce((result, item) => {
+        this.chainsListOptions = listImu.reduce(
+            (result, item) => {
+                result.push({
+                    id: item.get('chainId', 0),
+                    text: item.get('chainName', ''),
+                });
+                return result;
+            },
+            [],
+        );
 
-            result.push({
-                id: item.get('chainId', 0),
-                text: item.get('chainName', ''),
-            });
-
-            return result;
-        }, []);
-
-        this.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
-
-    /*CHECK PORT AND HTTPS*/
+    /** Handles Port and Address Checks Before Adding or Editing
+     * ---------------------------------------------------------
+     * Displays an alert if Node Port is not 13535 and if address is not 'localhost' when not on HTTPS
+     *
+     * @param {number} tabId
+     * @param type
+     */
     handleChecks(tabId: number, type): void {
         let check = 1; // pass check flag
         let message = '';
         const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
         const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
 
-        // CHECK NODE PORT IS 13535
+        // Check node port is 13535
         if (nodePort !== 13535) {
             check = 0; // failed check
-            message = message + '<li>In most cases Node Port should be set to 13535</li>';
+            message = message + '<li class="text-warning">In most cases Node Port should be set to 13535</li>';
         }
 
-        // IF NOT HTTPS CHECK ADDRESS IS LOCALHOST
-        if (location.protocol !== 'https:') {
-            if (nodeAddress !== 'localhost') {
-                check = 0; // failed check
-                message = message + '<li>As you are on a local server, Node Address should be set to localhost</li>';
-            }
+        // If not HTTPS check address is 'localhost'
+        if (location.protocol !== 'https:' && nodeAddress !== 'localhost') {
+            check = 0; // failed check
+            message = message + '<li class="text-warning">' +
+                'As you are on a local server, Node Address should be set to localhost</li>';
         }
 
         if (!check) {
-            // TRIGGER WARNING
-            this._confirmationService.create(
+            // Trigger warning alert
+            this.confirmationService.create(
                 '<span>Are you sure?</span>',
-                `<strong>Please check the below:</strong><ol>${message}</ol>`,
-                {confirmText: 'Continue', declineText: 'Amend'}
+                `<strong class="text-warning">Please check the below:</strong><ol>${message}</ol>`,
+                { confirmText: 'Continue', declineText: 'Amend' },
             ).subscribe((ans) => {
                 if (ans.resolved) {
                     if (type === 'add') {
@@ -198,7 +216,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            // PROCEED IF PASSES CHECKS
+            // Proceed if passes checks
             if (type === 'add') {
                 this.handleAddWalletNodes(tabId);
             } else if (type === 'edit') {
@@ -207,7 +225,11 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         }
     }
 
-    /*HANDLE ADD WALLET NODE*/
+    /**
+     * Handles Adding a Wallet Node
+     * -----------------------------
+     * @param {number} tabId
+     */
     handleAddWalletNodes(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
             const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
@@ -218,7 +240,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
 
             // Create a saga pipe
-            const asyncTaskPipe = this._adminUsersService.saveWalletNode(
+            const asyncTaskPipe = this.adminUsersService.saveWalletNode(
                 {
                     walletNodeId,
                     walletNodeName,
@@ -227,27 +249,31 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     nodePath,
                     nodePort,
                 },
-                this.ngRedux
+                this.ngRedux,
             );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
-                (data) => {
+                () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.showSuccess('Wallet Node has successfully been saved');
+                    this.showAlert('success', 'Wallet Node has successfully been saved');
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    // this.showError(JSON.stringify(data));
-                    this.showError('Error saving new Wallet Node. Please check that a Wallet Node with this name does not already exist.');
-                    this.markForCheck();
-                }
+                    this.showAlert('error', 'Error saving new Wallet Node. ' +
+                        'Please check that a Wallet Node with this name does not already exist.');
+                    this.changeDetectorRef.markForCheck();
+                },
             ));
         }
     }
 
-    /*HANDLE EDIT WALLET NODE*/
+    /**
+     * Handles Editing a Wallet Node
+     * ------------------------------
+     * @param {number} tabId
+     */
     handleEditWalletNodes(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
             const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
@@ -257,7 +283,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
             const nodePort = this.tabsControl[tabId]['formControl'].value.nodePort;
 
             // Create a saga pipe
-            const asyncTaskPipe = this._adminUsersService.updateWalletNode(
+            const asyncTaskPipe = this.adminUsersService.updateWalletNode(
                 {
                     walletNodeId,
                     walletNodeName,
@@ -265,52 +291,70 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     nodePath,
                     nodePort,
                 },
-                this.ngRedux
+                this.ngRedux,
             );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
-                (data) => {
+                () => {
                     AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                    this.showSuccess('Wallet Node has successfully been updated');
+                    this.showAlert('success', 'Wallet Node has successfully been updated');
                     this.setTabActive(0);
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.showError(JSON.stringify(data));
-                    this.markForCheck();
-                }
+                    this.showAlert('error', JSON.stringify(data));
+                    this.changeDetectorRef.markForCheck();
+                },
             ));
         }
     }
 
-    /*HANDLE DELETE*/
+    /**
+     * Handles Deleting a Wallet Node
+     * -------------------------------
+     * @param walletNode
+     */
     handleDelete(walletNode: any): void {
-        const asyncTaskPipe = this._adminUsersService.deleteWalletNode(
-            {
-                walletNodeId: walletNode.walletNodeId
-            },
-            this.ngRedux
-        );
+        /* Ask the user if they're sure... */
+        this.confirmationService.create(
+            '<span>Deleting a Wallet Node</span>',
+            '<span class="text-warning">Are you sure you want to delete \'' +
+            walletNode.walletNodeName + '\'?</span>',
+        ).subscribe((ans) => {
+            /* ...if they are... */
+            if (ans.resolved) {
+                const asyncTaskPipe = this.adminUsersService.deleteWalletNode(
+                    {
+                        walletNodeId: walletNode.walletNodeId,
+                    },
+                    this.ngRedux,
+                );
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
-                this.showSuccess('Wallet Node has been deleted');
-            },
-            (data) => {
-                this.logService.log('error: ', data);
-                this.showError(JSON.stringify(data));
+                this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                    asyncTaskPipe,
+                    () => {
+                        AdminUsersService.setRequestedWalletNodes(false, this.ngRedux);
+                        this.showAlert('success', 'Wallet Node has been deleted');
+                    },
+                    (data) => {
+                        this.logService.log('error: ', data);
+                        this.showAlert('error', JSON.stringify(data));
+                    },
+                ));
             }
-        ));
+        });
     }
 
-    /*HANDLE EDIT CLICK*/
+    /**
+     * Handles Edit Btn Click
+     * -----------------------
+     * @param {number} index
+     */
     handleEdit(index: number): void {
         /* Check if the tab is already open */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i]['walletNodeId'] === this.walletNodesList[index].walletNodeId) {
                 this.setTabActive(i);
                 return;
@@ -329,18 +373,22 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     walletNodeName: new FormControl(walletNode.walletNodeName, Validators.required),
                     nodeAddress: new FormControl(walletNode.nodeAddress, Validators.required),
                     nodePath: new FormControl(walletNode.nodePath),
-                    nodePort: new FormControl(walletNode.nodePort, Validators.compose([Validators.required, this.isInteger])),
+                    nodePort: new FormControl(walletNode.nodePort, Validators.compose(
+                        [Validators.required, this.isInteger])),
                     chainId: new FormControl(walletNode.chainId, Validators.required),
-                }
+                },
             ),
-            active: false
+            active: false,
         });
 
         // Activate the new tab
         this.setTabActive(this.tabsControl.length - 1);
     }
 
-    /*CLOSE TAB*/
+    /** Closes a Tab
+     * -------------
+     * @param {number} index
+     */
     closeTab(index: number): void {
         if (!index && index !== 0) {
             return;
@@ -348,7 +396,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
 
         this.tabsControl = [
             ...this.tabsControl.slice(0, index),
-            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
         // Reset tabs
@@ -357,18 +405,24 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         return;
     }
 
-    /*CHECK IF INTEGER*/
+    /** Checks if Integer
+     * ------------------
+     * @param {FormControl} control
+     * @returns {any}
+     */
     isInteger(control: FormControl) {
         const nodePort = control.value;
         const portLength = ('' + nodePort).length;
         if (Number.isInteger(nodePort) && portLength <= 11) {
             return null;
-        } else {
-            return {invalid: true};
         }
+        return { invalid: true };
     }
 
-    /*SET ACTIVE TAB*/
+    /** Sets Active Tab
+     * ----------------
+     * @param {number} index
+     */
     setTabActive(index: number): void {
         const tabControlImu = fromJS(this.tabsControl);
         const newTabControlImu = tabControlImu.map((item, thisIndex) => {
@@ -378,7 +432,10 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         this.tabsControl = newTabControlImu.toJS();
     }
 
-    /* SERVICES */
+    /** Sets Language
+     * --------------
+     * @param requested
+     */
     getLanguage(requested): void {
         // this.logService.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
@@ -396,59 +453,32 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         }
     }
 
-    // Modals
-    showError(message) {
-        /* Show the error. */
-        this._alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
+    /**
+     * Show An Alert Message
+     * ------------------
+     * Shows a success, warning or error popup.
+     *
+     * @param  {type} string - the type of alert to show.
+     * @param  {message} string - the message to display in the alert.
+     * @return {void}
+     */
+    showAlert(type: any, message: string) {
+        const alertClass = (type === 'error') ? 'danger' : type;
+
+        this.alertsService.create(type, `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-${alertClass}">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
     }
 
-    showWarning(message) {
-        /* Show the error. */
-        this._alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    showCheckAlert(message) {
-        this._confirmationService.create(
-            '<span>Are you sure?</span>',
-            `<span>${message}</span>`,
-            {confirmText: 'Confirm', declineText: 'Cancel'}
-        ).subscribe((ans) => {
-            if (ans.resolved) {
-                this.logService.log('button confirmation has been pressed (check alert)');
-            }
-        });
-    }
-
-    showSuccess(message) {
-        /* Show the message. */
-        this._alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    markForCheck() {
-        this._changeDetectorRef.markForCheck();
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 }
