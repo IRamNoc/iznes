@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
+//import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
 import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
@@ -21,7 +21,7 @@ import {
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// } from '../../../../utils/services/blockchain-contract/model';
+//} from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
 
 import { Base64 } from './base64';
@@ -411,7 +411,7 @@ export class OrderHelper {
                     reference: orderReference,
                     clientReference: order.clientReference,
                     date: todayStr,
-                    numberOfShares: toNormalScale(Number(holding), decimalPlaces)
+                    numberOfShares: toNormalScale(Number(holding), 5)
                 },
             },
         };
