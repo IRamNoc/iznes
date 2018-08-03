@@ -1,9 +1,7 @@
 <div class="header-breadcrumbs">
+    <i class="userTourBtn fa fa-question-circle" (click)="restartUserTour()" [tooltip]="{text: _translate.translate('Launch User Tour'), size: 'small', transform: false}"></i>
     <h1 id="sub-portfolio"><i class="fa fa-id-badge"></i> {{'Sub-portfolio' | translate }}</h1>
 </div>
-
-<button type="button" class="m-2 btn btn-success" (click)="resetUserTour()">Restart UserTour</button>
-<button type="button" class="m-2 btn btn-success" [routerLink]="['/ui-layouts/tooltips']">/ui-layouts/tooltips</button>
 
 <div class="wrapper wrapper-content">
 

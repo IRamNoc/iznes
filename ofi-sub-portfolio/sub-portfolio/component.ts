@@ -170,8 +170,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }
     }
 
-    resetUserTour() {
-        this.showUsertour = false;
+    restartUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(()=>{
                 const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
@@ -198,11 +197,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     launchTour() {
-        this.showUsertour = false;
         this.tourObject = [];
         this.tourObject.push(
             {
-                context: this.userTourEnums.names.utmysubportfolios,
+                usertourName: this.userTourEnums.names.utmysubportfolios,
                 title: this._translate.translate('My Sub-portfolios'),
                 text: this._translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
                 target: 'menu-sub-portfolio',
