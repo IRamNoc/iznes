@@ -2,7 +2,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {fromJS} from 'immutable';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {select, NgRedux} from '@angular-redux/store';
 import {FileService} from '@setl/core-req-services';
 
@@ -43,7 +43,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-nav',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

@@ -6,12 +6,16 @@ import {NgRedux} from '@angular-redux/store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
 import {SagaHelper, Common} from '@setl/utils';
+import * as _ from 'lodash';
 
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
     OfiRequestWalletIdsByAddresses,
+    GetFundWithHoldersRequestData,
 } from './model';
+
+import { OFI_SET_FUNDS_BY_USER_REQUESTED, OFI_SET_FUNDS_BY_USER_LIST, OFI_SET_FUNDS_WITH_HOLDERS_REQUESTED, OFI_SET_FUNDS_WITH_HOLDERS_LIST } from '../../ofi-store/ofi-am-dashboard/share-holders/actions';
 
 @Injectable()
 export class OfiAmDashboardService {
@@ -20,6 +24,36 @@ export class OfiAmDashboardService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>,) {
         /* Stub. */
+    }
+
+    static defaultRequestGetUserManagementCompanyFunds(ofiAmDashboardService: OfiAmDashboardService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch({type: OFI_SET_FUNDS_BY_USER_REQUESTED});
+
+        // Request the list.
+        const asyncTaskPipe = ofiAmDashboardService.getUserManagementCompanyFunds();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_FUNDS_BY_USER_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
+    }
+
+    static defaultRequestGetFundWithHolders(ofiAmDashboardService: OfiAmDashboardService, ngRedux: NgRedux<any>, getFundWithHoldersRequestData: GetFundWithHoldersRequestData) {
+        // Set the state flag to true. so we do not request it again.
+        // ngRedux.dispatch({type: OFI_SET_FUNDS_WITH_HOLDERS_REQUESTED});
+
+        // Request the list.
+        const asyncTaskPipe = ofiAmDashboardService.getFundWithHolders(getFundWithHoldersRequestData);
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_FUNDS_WITH_HOLDERS_LIST],
+            [],
+            asyncTaskPipe,
+            {}
+        ));
     }
 
     /**
@@ -61,6 +95,26 @@ export class OfiAmDashboardService {
         return this.buildRequest({
             'taskPipe': createMemberNodeSagaRequest(this.memberSocketService, messageBody),
         });
+    }
+
+    getUserManagementCompanyFunds(): any {
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimplefunds',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    getFundWithHolders(requestData: GetFundWithHoldersRequestData): any {
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'iznrecordkeepinggetfund',
+            token: this.memberSocketService.token,
+            fundId: _.get(requestData, 'fundId', 0),
+            selectedFilter: _.get(requestData, 'selectedFilter', 0),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
     /**

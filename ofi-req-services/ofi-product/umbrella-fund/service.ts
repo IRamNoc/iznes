@@ -1,12 +1,23 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
-import {UmbrellaFundRequestMessageBody, SaveUmbrellaFundRequestBody, UpdateUmbrellaFundRequestBody} from './service.model';
-import {setRequestedUmbrellaFund, clearRequestedUmbrellaFund, SET_UMBRELLA_FUND_LIST} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-import {UmbrellaFundDetail} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
+import {
+    UmbrellaFundRequestMessageBody,
+    SaveUmbrellaFundRequestBody,
+    UpdateUmbrellaFundRequestBody,
+    IznDeleteUmbrellaDraftRequestBody,
+    fetchUmbrellaAuditRequestBody,
+} from './service.model';
+import {
+    setRequestedUmbrellaFund,
+    clearRequestedUmbrellaFund,
+    SET_UMBRELLA_FUND_LIST,
+    SET_UMBRELLA_AUDIT,
+} from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
+import { UmbrellaFundDetail } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/model';
 
 @Injectable()
 export class OfiUmbrellaFundService {
@@ -14,7 +25,10 @@ export class OfiUmbrellaFundService {
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
     walletID = 0;
 
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
         this.getConnectedWallet.subscribe((getConnectedWallet) => this.myWalletID(getConnectedWallet));
     }
 
@@ -42,6 +56,22 @@ export class OfiUmbrellaFundService {
         ));
     }
 
+    // clean version of defaultRequestUmbrellaFundList
+    // TODO: migrate app from defaultRequestUmbrellaFundList to fetchUmbrellaList
+    fetchUmbrellaList() {
+        const asyncTaskPipe = this.requestUmbrellaFundList();
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_UMBRELLA_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(setRequestedUmbrellaFund());
+            },
+        ));
+    }
+
     myWalletID(walletID) {
         this.walletID = walletID;
     }
@@ -62,6 +92,7 @@ export class OfiUmbrellaFundService {
             RequestName: 'izncreateumbrellafund',
             token: this.memberSocketService.token,
             walletID: this.walletID,
+            draft: ufData.draft,
             umbrellaFundName: ufData.umbrellaFundName,
             registerOffice: ufData.registerOffice,
             registerOfficeAddress: ufData.registerOfficeAddress,
@@ -96,6 +127,7 @@ export class OfiUmbrellaFundService {
             token: this.memberSocketService.token,
             walletID: this.walletID,
             umbrellaFundID: ufData.umbrellaFundID,
+            draft: ufData.draft,
             umbrellaFundName: ufData.umbrellaFundName,
             registerOffice: ufData.registerOffice,
             registerOfficeAddress: ufData.registerOfficeAddress,
@@ -121,5 +153,38 @@ export class OfiUmbrellaFundService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    iznDeleteUmbrellaDraft(ofiUmbrellaFundService: OfiUmbrellaFundService, ngRedux: NgRedux<any>, id: string) {
+        // Request the list.
+        const asyncTaskPipe = ofiUmbrellaFundService.deleteUmbrellaDraft(id);
+        ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe));
+    }
+
+    deleteUmbrellaDraft(id: string): any {
+        const messageBody: IznDeleteUmbrellaDraftRequestBody = {
+            RequestName: 'izndeleteumbrelladraft',
+            token: this.memberSocketService.token,
+            id: id,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    fetchUmbrellaAuditByUmbrellaID(umbrellaFundID: number) {
+        const messageBody: fetchUmbrellaAuditRequestBody = {
+            RequestName: 'izngetumbrellaaudit',
+            token: this.memberSocketService.token,
+            umbrellaFundID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_UMBRELLA_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
     }
 }

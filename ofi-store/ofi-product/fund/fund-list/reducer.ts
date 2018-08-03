@@ -9,6 +9,7 @@ const initialState: FundListState = {
     requested: false,
     iznFundList: {},
     requestedIznesFund: false,
+    audit: {},
 };
 
 export const FundListReducer = function (state: FundListState = initialState, action: Action) {
@@ -46,6 +47,9 @@ export const FundListReducer = function (state: FundListState = initialState, ac
     case FundActions.GET_IZN_FUND_LIST:
         return handleGetIznesFunds(state, action);
 
+    case FundActions.SET_FUND_AUDIT:
+        return handleSetFundAudit(state, action);
+
     default:
         return state;
     }
@@ -59,6 +63,7 @@ function formatFundDataResponse(rawFundData: Array<any>): Array<FundDetail> {
         function (result, item) {
             result[item.get('fundID')] = {
                 fundID: item.get('fundID'),
+                draft: item.get('draft'),
                 fundName: item.get('fundName'),
                 fundProspectus: item.get('fundProspectus'),
                 fundReport: item.get('fundReport'),
@@ -138,47 +143,36 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
     const iznFundList = data.reduce((sum, fund) => {
         const fundData: IznesFundDetail = {
             ..._.omit(fund, ['Status']),
-            isFundStructure: fund.isFundStructure !== null ? fund.isFundStructure.toString() : null,
-            homeCountryLegalType: fund.homeCountryLegalType !== null ? fund.homeCountryLegalType.toString() : null,
-            isEuDirective: fund.isEuDirective.toString(),
-            typeOfEuDirective: fund.typeOfEuDirective !== null ? fund.typeOfEuDirective.toString() : null,
-            UcitsVersion: fund.UcitsVersion !== null ? fund.UcitsVersion.toString() : null,
-            legalForm: fund.legalForm.toString(),
-            nationalNomenclatureOfLegalForm: fund.nationalNomenclatureOfLegalForm !== null ? fund.nationalNomenclatureOfLegalForm.toString() : null,
             fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
             fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
-            openOrCloseEnded: fund.openOrCloseEnded.toString(),
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
-            isFundOfFund: fund.isFundOfFund.toString(),
-            managementCompanyID: fund.managementCompanyID,
-            principalPromoter: JSON.parse(fund.principalPromoter),
-            payingAgent: JSON.parse(fund.payingAgent),
-            isDedicatedFund: fund.isDedicatedFund.toString(),
-
-            investmentAdvisor: JSON.parse(fund.investmentAdvisor),
-            hasEmbeddedDirective: fund.hasEmbeddedDirective !== null ? fund.hasEmbeddedDirective.toString() : null,
-            hasCapitalPreservation: fund.hasCapitalPreservation !== null ? fund.hasCapitalPreservation.toString() : null,
-            hasCppi: fund.hasCppi !== null ? fund.hasCppi.toString() : null,
-            hasHedgeFundStrategy: fund.hasHedgeFundStrategy !== null ? fund.hasHedgeFundStrategy.toString() : null,
-            isLeveraged: fund.isLeveraged !== null ? fund.isLeveraged.toString() : null,
-            has130Or30Strategy: fund.has130Or30Strategy !== null ? fund.has130Or30Strategy.toString() : null,
-            isFundTargetingEos: fund.isFundTargetingEos !== null ? fund.isFundTargetingEos.toString() : null,
-            isFundTargetingSri: fund.isFundTargetingSri !== null ? fund.isFundTargetingSri.toString() : null,
-            isPassiveFund: fund.isPassiveFund !== null ? fund.isPassiveFund.toString() : null,
-            hasSecurityiesLending: fund.hasSecurityiesLending !== null ? fund.hasSecurityiesLending.toString() : null,
-            hasSwap: fund.hasSwap !== null ? fund.hasSwap.toString() : null,
-            hasDurationHedge: fund.hasDurationHedge !== null ? fund.hasDurationHedge.toString() : null,
-            useDefaultHolidayMgmt: fund.useDefaultHolidayMgmt !== null ? fund.useDefaultHolidayMgmt.toString() : null,
-            holidayMgmtConfig: fund.holidayMgmtConfig !== null ? fund.holidayMgmtConfig : null,
+            principlePromoterID: JSON.parse(fund.principlePromoterID),
+            payingAgentID: JSON.parse(fund.payingAgentID),
+            investmentAdvisorID: JSON.parse(fund.investmentAdvisorID),
         };
+
         return {
             ...sum,
             [fund.fundID]: fundData,
         };
-    },                              {});
+    }, {});
 
     return {
         ...state,
         iznFundList,
+    };
+}
+
+function handleSetFundAudit(state: FundListState, action): FundListState {
+    const data = _.get(action.payload, [1, 'Data']);
+    if (!data.length) {
+        return state;
+    }
+    return {
+        ...state,
+        audit: {
+            ...state.audit,
+            [data[0].fundID]: data,
+        },
     };
 }

@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DebugElement, Directive, Input, Pipe, PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs/observable/of';
+import { of, Subject } from 'rxjs';
 
 import { ProductHomeComponent } from '@ofi/ofi-main';
 import { FundComponent } from './component';
@@ -26,7 +26,6 @@ import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currenc
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService, SetlComponentsModule } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
-import { Subject } from 'rxjs';
 import { MemberSocketServiceMock } from "@setl/core-test-util/mock/member-socket-service/index";
 import { NumberConverterService, LogService, APP_CONFIG } from '@setl/utils';
 
@@ -43,64 +42,78 @@ const LocationSpy = {
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
     .and.returnValue(
         new Promise((resolve, reject) => {
-            const payload = {
-                isFundStructure: '1',
-                fundName: 'test',
-                legalEntityIdentifier: null,
-                registerOffice: null,
-                registerOfficeAddress: null,
-                domicile: 'AF',
-                isEuDirective: '0',
-                typeOfEuDirective: null,
-                UcitsVersion: null,
-                legalForm: '0',
-                nationalNomenclatureOfLegalForm: '2',
-                homeCountryLegalType: null,
-                fundCreationDate: null,
-                fundLaunchate: null,
-                fundCurrency: '124',
-                openOrCloseEnded: '0',
-                fiscalYearEnd: '2017-02-01',
-                isFundOfFund: '0',
-                managementCompanyID: 0,
-                fundAdministrator: 1,
-                custodianBank: 1,
-                investmentManager: null,
-                principalPromoter: [],
-                payingAgent: [],
-                fundManagers: null,
-                transferAgent: null,
-                centralizingAgent: null,
-                isDedicatedFund: '0',
-                portfolioCurrencyHedge: '1',
-                globalItermediaryIdentification: null,
-                delegatedManagementCompany: null,
-                investmentAdvisor: [],
-                auditor: null,
-                taxAuditor: null,
-                legalAdvisor: null,
-                directors: null,
-                hasEmbeddedDirective: null,
-                hasCapitalPreservation: null,
-                capitalPreservationLevel: null,
-                capitalPreservationPeriod: null,
-                hasCppi: null,
-                cppiMultiplier: null,
-                hasHedgeFundStrategy: null,
-                isLeveraged: null,
-                has130Or30Strategy: null,
-                isFundTargetingEos: null,
-                isFundTargetingSri: null,
-                isPassiveFund: null,
-                hasSecurityiesLending: null,
-                hasSwap: null,
-                hasDurationHedge: null,
-                investmentObjective: null,
-                internalReference: '',
-                additionnalNotes: '',
-                useDefaultHolidayMgmt: [],
-                holidayMgmtConfig: [],
-            };
+            const payload =
+            {
+                "draft": 0,
+                "isFundStructure": 0,
+                "fundName": "FUND BRANCION",
+                "legalEntityIdentifier": null,
+                "registerOffice": "lolilol",
+                "registerOfficeAddress": null,
+                "domicile": "FR",
+                "isEuDirective": 0,
+                "typeOfEuDirective": null,
+                "UcitsVersion": 4,
+                "legalForm": 3,
+                "nationalNomenclatureOfLegalForm": 4,
+                "homeCountryLegalType": null,
+                "fundCreationDate": null,
+                "fundLaunchate": null,
+                "fundCurrency": 0,
+                "openOrCloseEnded": 0,
+                "fiscalYearEnd": "2018-01-01",
+                "isFundOfFund": 0,
+                "managementCompanyID": 1,
+                "fundAdministratorID": 1,
+                "custodianBankID": 1,
+                "investmentManagerID": null,
+                "principlePromoterID": [
+                    2,
+                    5
+                ],
+                "payingAgentID": [
+                    2,
+                    3
+                ],
+                "fundManagers": "",
+                "transferAgentID": null,
+                "centralizingAgentID": null,
+                "isDedicatedFund": 0,
+                "portfolioCurrencyHedge": 1,
+                "globalItermediaryIdentification": null,
+                "delegatedManagementCompany": null,
+                "investmentAdvisorID": [
+                    2,
+                    3
+                ],
+                "auditorID": 2,
+                "taxAuditorID": 1,
+                "legalAdvisorID": 2,
+                "directors": null,
+                "hasEmbeddedDirective": 0,
+                "hasCapitalPreservation": 0,
+                "capitalPreservationLevel": null,
+                "capitalPreservationPeriod": null,
+                "hasCppi": 1,
+                "cppiMultiplier": "6",
+                "hasHedgeFundStrategy": 0,
+                "isLeveraged": 1,
+                "has130Or30Strategy": 1,
+                "isFundTargetingEos": 1,
+                "isFundTargetingSri": 1,
+                "isPassiveFund": 0,
+                "hasSecurityiesLending": 0,
+                "hasSwap": 1,
+                "hasDurationHedge": 0,
+                "useDefaultHolidayMgmt": 1,
+                "holidayMgmtConfig": "[]",
+                "investmentObjective": null,
+                "internalReference": "",
+                "additionnalNotes": "",
+                "umbrellaFundID": "0"
+            }
+
+                ;
             resolve([null, { Data: [{ ...payload }] }]);
         }),
 );
@@ -132,7 +145,7 @@ const fundServiceSpy = {
 
 const ActivatedRouteStub = {
     params: of({
-        id: 'new',
+        id: null,
     }),
     setParams: (id: string) => {
         this.params = of({
@@ -221,6 +234,10 @@ describe('FundComponent', () => {
                                 component: ProductHomeComponent,
                             },
                             {
+                                path: 'product/fund/new',
+                                component: FundComponent,
+                            },
+                            {
                                 path: 'product/fund/:id',
                                 component: FundComponent,
                             },
@@ -258,7 +275,6 @@ describe('FundComponent', () => {
         fixture = TestBed.createComponent(FundComponent);
 
         comp = fixture.componentInstance;
-        comp.param = 'new';
         comp.managementCompanyItems = [{ id: '0', text: 'test management company' }];
         comp.umbrellaList = {
             7: {
@@ -285,6 +301,7 @@ describe('FundComponent', () => {
                 directors: '0',
                 internalReference: '',
                 additionnalNotes: '',
+                draft: null,
             },
         };
         comp.umbrellaItems = [
@@ -337,10 +354,10 @@ describe('FundComponent', () => {
     });
 
     describe('structure', () => {
-        it('should display a form with 1 select and 3 buttons', () => {
+        it('should display a form with 2 select and 3 buttons', () => {
 
             const selectEls = fixture.debugElement.queryAllNodes(By.css('ng-select'));
-            expect(selectEls.length).toEqual(1);
+            expect(selectEls.length).toEqual(2);
 
             const anchorEl = fixture.debugElement.queryAllNodes(By.css('a.btn'))[0];
             expect(anchorEl.nativeNode.innerText).toEqual('Add a new Umbrella Fund');
@@ -375,7 +392,7 @@ describe('FundComponent', () => {
         }));
 
         it('should navigate to the umbrella creation page', fakeAsync(() => {
-            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/0');
+            expect(routerLinks[0].linkParams[0]).toEqual('/product-module/product/umbrella-fund/new');
         }));
 
         it('should enable the next button', fakeAsync(() => {
@@ -591,15 +608,15 @@ describe('FundComponent', () => {
 
                 it('should clear the transferAgent value', fakeAsync(() => {
                     const testValue = 'test test test';
-                    comp.fundForm.controls['transferAgent'].setValue(testValue);
+                    comp.fundForm.controls['transferAgentID'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['transferAgent'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['transferAgentID'].value).toEqual(testValue);
 
                     comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['transferAgent'].value).toEqual([]);
+                    expect(comp.fundForm.controls['transferAgentID'].value).toEqual([]);
                 }));
             });
 
@@ -626,15 +643,15 @@ describe('FundComponent', () => {
 
                 it('should clear the centralizingAgent value', fakeAsync(() => {
                     const testValue = 'test test test';
-                    comp.fundForm.controls['centralizingAgent'].setValue(testValue);
+                    comp.fundForm.controls['centralizingAgentID'].setValue(testValue);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['centralizingAgent'].value).toEqual(testValue);
+                    expect(comp.fundForm.controls['centralizingAgentID'].value).toEqual(testValue);
 
                     comp.fundForm.controls['domicile'].setValue([{ id: 'AF', text: 'Afghanistan' }]);
                     tick();
                     fixture.detectChanges();
-                    expect(comp.fundForm.controls['centralizingAgent'].value).toEqual([]);
+                    expect(comp.fundForm.controls['centralizingAgentID'].value).toEqual([]);
                 }));
             });
 
@@ -746,62 +763,157 @@ describe('FundComponent', () => {
 
         describe('network calls', () => {
             const testPayload = {
-                isFundStructure: '1',
-                fundName: 'test',
+                fundName: 'FUND BRANCION',
                 legalEntityIdentifier: null,
-                registerOffice: null,
+                registerOffice: 'lolilol',
                 registerOfficeAddress: null,
-                domicile: [{ id: 'AF', text: 'Afghanistan' }],
+                domicile: [
+                    {
+                        id: 'FR',
+                        text: 'France',
+                    },
+                ],
                 isEuDirective: '0',
-                typeOfEuDirective: null,
-                UcitsVersion: null,
-                legalForm: [{ id: '0', text: 'Contractual Fund' }],
-                nationalNomenclatureOfLegalForm: [{ id: '2', text: 'BE Fonds commun de placement (FCP)' }],
-                homeCountryLegalType: null,
+                isFundStructure: '0',
+                typeOfEuDirective: [
+                ],
+                UcitsVersion: [
+                    {
+                        id: 4,
+                        text: 'UCITS IV',
+                    },
+                ],
+                legalForm: [
+                    {
+                        id: 3,
+                        text: 'Open-ended Investment Company (OEIC)'
+                    },
+                ],
+                nationalNomenclatureOfLegalForm: [
+                    {
+                        id: 4,
+                        text: 'ID Open-ended investment company (OEIC)'
+                    },
+                ],
+                homeCountryLegalType: [
+                ],
                 fundCreationDate: null,
                 fundLaunchate: null,
-                fundCurrency: [{ text: 'Rwanda Franc RWF', id: '124' }],
+                fundCurrency: [
+                    {
+                        id: 0,
+                        text: 'EUR',
+                    },
+                ],
                 openOrCloseEnded: '0',
-                fiscalYearEnd: '2017-02',
+                fiscalYearEnd: '2018-01',
                 isFundOfFund: '0',
-                managementCompanyID: [{ id: '0', text: 'test management company' }],
-                fundAdministrator: [{ id: '1', text: 'Fund Admin 1' }],
-                custodianBank: [{ id: '1', text: 'Custodian Bank 1' }],
-                investmentManager: null,
-                principalPromoter: [],
-                payingAgent: [],
-                fundManagers: null,
-                transferAgent: null,
-                centralizingAgent: null,
+                managementCompanyID: [
+                    {
+                        id: 1,
+                        text: 'Management Company',
+                    },
+                ],
+                fundAdministratorID: [
+                    {
+                        id: 1,
+                        text: 'Fund Admin 1',
+                    },
+                ],
+                custodianBankID: [
+                    {
+                        id: 1,
+                        text: 'Custodian Bank 1',
+                    },
+                ],
+                investmentManagerID: [
+                ],
+                principlePromoterID: [
+                    {
+                        id: 2,
+                        text: 'Principal Promoter 2',
+                    },
+                    {
+                        id: 5,
+                        text: 'Principal Promoter 5',
+                    },
+                ],
+                payingAgentID: [
+                    {
+                        id: 2,
+                        text: 'Paying Agent 2',
+                    },
+                    {
+                        id: 3,
+                        text: 'Paying Agent 3',
+                    },
+                ],
+                fundManagers: '',
+                transferAgentID: [
+                ],
+                centralizingAgentID: [
+                ],
                 isDedicatedFund: '0',
-                portfolioCurrencyHedge: [{ id: '1', text: 'No Hedge' }],
+                portfolioCurrencyHedge: [
+                    {
+                        id: 1,
+                        text: 'No Hedge',
+                    },
+                ],
                 globalItermediaryIdentification: null,
-                delegatedManagementCompany: null,
-                investmentAdvisor: [],
-                auditor: null,
-                taxAuditor: null,
-                legalAdvisor: null,
+                delegatedManagementCompany: [
+                ],
+                investmentAdvisorID: [
+                    {
+                        id: 2,
+                        text: 'Investment Advisor 2',
+                    },
+                    {
+                        id: 3,
+                        text: 'Investment Advisor 3',
+                    },
+                ],
+                auditorID: [
+                    {
+                        id: 2,
+                        text: 'Auditor 2',
+                    },
+                ],
+                taxAuditorID: [
+                    {
+                        id: 1,
+                        text: 'Tax Auditor 1',
+                    },
+                ],
+                legalAdvisorID: [
+                    {
+                        id: 2,
+                        text: 'Legal Advisor 2',
+                    },
+                ],
                 directors: null,
-                hasEmbeddedDirective: null,
-                hasCapitalPreservation: null,
+                hasEmbeddedDirective: '0',
+                hasCapitalPreservation: '0',
                 capitalPreservationLevel: null,
-                capitalPreservationPeriod: null,
-                hasCppi: null,
-                cppiMultiplier: null,
-                hasHedgeFundStrategy: null,
-                isLeveraged: null,
-                has130Or30Strategy: null,
-                isFundTargetingEos: null,
-                isFundTargetingSri: null,
-                isPassiveFund: null,
-                hasSecurityiesLending: null,
-                hasSwap: null,
-                hasDurationHedge: null,
+                capitalPreservationPeriod: [
+                ],
+                hasCppi: '1',
+                cppiMultiplier: '6',
+                hasHedgeFundStrategy: '0',
+                isLeveraged: '1',
+                has130Or30Strategy: '1',
+                isFundTargetingEos: '1',
+                isFundTargetingSri: '1',
+                isPassiveFund: '0',
+                hasSecurityiesLending: '0',
+                hasSwap: '1',
+                hasDurationHedge: '0',
+                useDefaultHolidayMgmt: '1',
+                holidayMgmtConfig: [
+                ],
                 investmentObjective: null,
                 internalReference: '',
                 additionnalNotes: '',
-                useDefaultHolidayMgmt: JSON.stringify([]),
-                holidayMgmtConfig: JSON.stringify([]),
             };
             describe('create mode', () => {
                 beforeEach(fakeAsync(() => {
@@ -823,20 +935,11 @@ describe('FundComponent', () => {
                 it('should call fundService.createFund', fakeAsync(() => {
 
                     const expectedResult: Fund = Object({
-                        ...testPayload,
-                        domicile: testPayload.domicile[0].id,
-                        legalForm: testPayload.legalForm[0].id,
-                        nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                        fundCurrency: testPayload.fundCurrency[0].id,
-                        portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                        fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                        fundAdministrator: testPayload.fundAdministrator[0].id,
-                        custodianBank: testPayload.custodianBank[0].id,
-                        managementCompanyID: testPayload.managementCompanyID[0].id,
-                        umbrellaFundID: comp.umbrellaControl.value[0].id,
+                        ...comp.fundFormValue(),
+                        draft: 0,
                     });
-                    comp.submitFundForm();
 
+                    comp.submitFundForm();
                     tick();
 
                     expect(iznCreateFund).toHaveBeenCalledTimes(1);
@@ -878,17 +981,8 @@ describe('FundComponent', () => {
                 it('should call fundService.updateFund', fakeAsync(() => {
 
                     const expectedResult: Fund = Object({
-                        ...testPayload,
-                        domicile: testPayload.domicile[0].id,
-                        legalForm: testPayload.legalForm[0].id,
-                        nationalNomenclatureOfLegalForm: testPayload.nationalNomenclatureOfLegalForm[0].id,
-                        fundCurrency: testPayload.fundCurrency[0].id,
-                        portfolioCurrencyHedge: testPayload.portfolioCurrencyHedge[0].id,
-                        fiscalYearEnd: testPayload.fiscalYearEnd + '-01',
-                        fundAdministrator: testPayload.fundAdministrator[0].id,
-                        custodianBank: testPayload.custodianBank[0].id,
-                        managementCompanyID: testPayload.managementCompanyID[0].id,
-                        umbrellaFundID: comp.umbrellaControl.value[0].id,
+                        ...comp.fundFormValue(),
+                        draft: 0,
                     });
                     comp.submitFundForm();
 

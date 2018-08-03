@@ -60,9 +60,22 @@
         width: 100%;
     }
 
-    .btn-audit-trail {
-        float: right;
-        margin-top: -42px;
+    .tab-header-container {
+        margin: 0;
+        padding: .5rem;
+    }
+
+    .tab-header-container .btn-container {
+        width: 100%;
+        margin: 0;
+        padding: .5rem;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+        ng-select {
+            display: inline-block;
+            width: auto;
+        }
     }
 
     app-dynamic-form.share-status { width: auto; }
@@ -73,5 +86,9 @@
         font-size: 12px;
         margin-left: -120px;
         padding-top: 40px;
+    }
+
+    form.selectFund {
+        width: 100%;
     }
 }

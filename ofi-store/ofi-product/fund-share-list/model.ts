@@ -1,26 +1,30 @@
 export enum FundShareStatus {
-   active = 1,
-   locked = -1,
-   disabled = -2
+    active = 1,
+    locked = -1,
+    disabled = -2
 }
 
 export interface AllFundShareDetail {
-   shareId: number;
-   shareName: string;
-   fundId: number;
-   fundName: string;
-   fundShareIsin: string;
-   fundShareStatus: FundShareStatus;
+    shareId: number;
+    shareName: string;
+    fundId: number;
+    fundName: string;
+    fundShareIsin: string;
+    fundShareStatus: FundShareStatus;
 }
 
 export interface IznesShareDetail {
     fundShareID: number;
+    draft: string;
+    draftUser?: string;
+    draftDate?: string;
     fundShareName: string;
     fundID: number;
     isin: string;
     shareClassCode: string;
     shareClassInvestmentStatus: string;
     shareClassCurrency: string;
+    iban: string;
     valuationFrequency: string;
     historicOrForwardPricing: string;
     hasCoupon: string;

@@ -1,0 +1,69 @@
+/* Core/Redux imports. */
+import { Action } from 'redux';
+
+/* Local types. */
+import { OfiClientReferentialState, ClientReferentialDetails } from './model';
+import * as ofiClientReferentialActions from './actions';
+import { immutableHelper } from '@setl/utils';
+import { fromJS, Map } from 'immutable';
+import * as _ from 'lodash';
+
+/* Initial state. */
+const initialState: OfiClientReferentialState = {
+    clientReferential: [],
+    requested: false,
+};
+
+/* Reducer. */
+export const OfiClientReferentialReducer = function (state: OfiClientReferentialState = initialState, action: Action) {
+
+    switch (action.type) {
+        /* Set Coupon List. */
+    case ofiClientReferentialActions.OFI_SET_CLIENT_REFERENTIAL:
+        return ofiSetList(state, action);
+
+    case ofiClientReferentialActions.OFI_SET_REQUESTED_CLIENT_REFERENTIAL:
+        return toggleRequestState(state, true);
+
+    case ofiClientReferentialActions.OFI_CLEAR_REQUESTED_CLIENT_REFERENTIAL:
+        return toggleRequestState(state, false);
+
+        /* Default. */
+    default:
+        return state;
+    }
+};
+
+function ofiSetList(state: OfiClientReferentialState, action: Action) {
+
+    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+
+    let clientReferential: OfiClientReferentialState[] = [];
+    try {
+        clientReferential = immutableHelper.reduce(data, (result, item) => {
+            result.push({
+                kycID: item.get('kycID'),
+                clientReference: item.get('clientReference'),
+                walletName: item.get('walletName'),
+                registeredCompanyName: item.get('registeredCompanyName'),
+                leiCode: item.get('leiCode'),
+                legalForm: item.get('legalForm'),
+                sectorActivity: item.get('sectorActivity'),
+                email: item.get('email'),
+            });
+
+            return result;
+        }, []);
+    } catch (e) {
+        clientReferential = [];
+    }
+
+    return Object.assign({}, state, {
+        clientReferential
+    });
+}
+
+function toggleRequestState(state: OfiClientReferentialState, requested: boolean): OfiClientReferentialState {
+
+    return Object.assign({}, state, { requested });
+}

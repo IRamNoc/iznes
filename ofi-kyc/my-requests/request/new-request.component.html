@@ -1,0 +1,39 @@
+<div class="header-breadcrumbs">
+    <h1 class="text-overflow">
+
+        <i class="fa fa-plus"></i>
+
+        <span id="new-request-title">{{'Make a new request' | translate}}</span>
+    </h1>
+</div>
+
+<div class="p-1">
+    <p class="text-danger">
+        {{ 'Please note that the information provided will remain stictly confidential and will only be shared with the Asset Management Companies you selected.' | translate }}
+    </p>
+</div>
+
+<div [formsteps]="stepsConfig">
+    <section order="1">
+        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep"></kyc-step-select-amc>
+    </section>
+    <section order="2" *ngIf="fullForm">
+        <kyc-step-introduction></kyc-step-introduction>
+    </section>
+    <section order="3" *ngIf="fullForm">
+        <kyc-step-identification [form]="forms.get('identification')"></kyc-step-identification>
+    </section>
+    <section order="4" *ngIf="fullForm">
+        <kyc-step-risk-profile [form]="forms.get('riskProfile')"></kyc-step-risk-profile>
+    </section>
+    <section order="5" *ngIf="fullForm">
+        <kyc-step-documents [form]="forms.get('documents')" [isListedCompany]="isListedCompany"></kyc-step-documents>
+    </section>
+    <section [attr.order]="fullForm ? 6 : 2">
+        <kyc-step-validation [form]="forms.get('validation')"></kyc-step-validation>
+    </section>
+</div>
+
+<p class="info" *ngIf="formSteps.currentStep === 0">
+    {{'Be aware that once you click on "Next" this KYC request will be saved as a Draft in the module "My Requests". You will then be able to come back later on your KYC request to finalize and send it to the asset management company.' | translate}}
+</p>

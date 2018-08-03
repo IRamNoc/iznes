@@ -13,37 +13,86 @@ import {
     OFI_SET_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
     ofiClearRequestedAmHolders,
-    ofiClearRequestedCentralizationReports,
+    ofiClearRequestedCentralisationHistoryReports,
     ofiSetRequestedAmHolders,
     ofiSetRequestedInvHoldings,
     ofiClearRequestedInvHoldings,
-    ofiSetRequestedCentralizationReports,
+    ofiSetRequestedCentralisationHistoryReports,
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
     OFI_GET_SHARE_HOLDER_DETAIL,
+    SET_PRECENTRA_SHARES_DETAILS_LIST,
+    SET_PRECENTRA_SHARES_LIST,
+    setRequestedPrecentraSharesList,
+    clearRequestedPrecentraSharesList,
+    SET_PRECENTRA_FUNDS_DETAILS_LIST,
+    SET_PRECENTRA_FUNDS_LIST,
+    setRequestedPrecentraFundsList,
+    clearRequestedPrecentraFundsList,
+    SET_CENTRA_SHARES_DETAILS_LIST,
+    SET_CENTRA_SHARES_LIST,
+    setRequestedCentraSharesList,
+    clearRequestedCentraSharesList,
+    SET_CENTRA_FUNDS_DETAILS_LIST,
+    SET_CENTRA_FUNDS_LIST,
+    setRequestedCentraFundsList,
+    clearRequestedCentraFundsList,
 } from '../../ofi-store/ofi-reports';
 
 /* Import interfaces for message bodies. */
 import {
+    OfiMemberNodeBody,
     OfiAmHoldersRequestBody,
-    OfiBaseCentralizationHistoryRequestBody,
-    OfiCentralizationHistoryRequestBody,
-    OfiCentralizationReportsRequestBody,
+    OfiBaseCentralisationHistoryRequestBody,
+    OfiCentralisationHistoryRequestBody,
+    OfiCentralisationReportsRequestBody,
     OfiHolderDetailRequestBody,
     OfiHolderDetailRequestData,
     OfiInvHoldingsDetailRequestData,
     OfiInvHoldingsDetailRequestBody,
+    CentralisationRequestSharesBody,
+    CentralisationRequestFundsBody,
+    PrecentralisationRequestSharesBody,
+    PrecentralisationRequestFundsBody,
 } from './model';
 
-interface CentralizationReportsData {
+interface CentralisationReportsData {
     search: string;
 }
 
-interface CentralizationHistoryData {
+interface CentralisationHistoryData {
     fundShareID: any;
     dateFrom: any;
     dateTo: any;
     dateRange: any;
+}
+
+interface CentralisationSharesData {
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+interface CentralisationFundsData {
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+interface PrecentralisationSharesData {
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+interface PrecentralisationFundsData {
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
 }
 
 interface InvHoldingsData {
@@ -59,21 +108,21 @@ export class OfiReportsService {
                 private ngRedux: NgRedux<any>) {
     }
 
-    static setRequestedCentralizationReportsList(boolValue: boolean, ngRedux: NgRedux<any>) {
+    static setRequestedCentralisationReportsList(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
         if (!boolValue) {
-            ngRedux.dispatch(ofiClearRequestedCentralizationReports());
+            ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
         } else {
-            ngRedux.dispatch(ofiSetRequestedCentralizationReports());
+            ngRedux.dispatch(ofiSetRequestedCentralisationHistoryReports());
         }
     }
 
-    static defaultRequestCentralizationReportsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+    static defaultRequestCentralisationReportsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedCentralizationReports());
+        ngRedux.dispatch(ofiSetRequestedCentralisationHistoryReports());
 
         // Request the list.
-        const asyncTaskPipe = ofiReportsService.requestCentralizationReportsList({
+        const asyncTaskPipe = ofiReportsService.requestCentralisationReportsList({
             search: '',
         });
 
@@ -155,9 +204,231 @@ export class OfiReportsService {
         ));
     }
 
-    requestCentralizationReportsList(data: CentralizationReportsData): any {
+    /* CENTRALIZATION FUNDS */
 
-        const messageBody: OfiCentralizationReportsRequestBody = {
+    static setRequestedCentralisationFundsList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(setRequestedCentraFundsList());
+        } else {
+            ngRedux.dispatch(clearRequestedCentraFundsList());
+        }
+    }
+
+    static defaultRequestCentralisationReportsFundsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCentraFundsList());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestCentralisationReportsFundsList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CENTRA_FUNDS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    /* PRECENTRALIZATION FUNDS */
+
+    static setRequestedPrecentralisationFundsList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(setRequestedPrecentraFundsList());
+        } else {
+            ngRedux.dispatch(clearRequestedPrecentraFundsList());
+        }
+    }
+
+    static defaultRequestPrecentralisationReportsFundsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedPrecentraFundsList());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestPrecentralisationReportsFundsList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_FUNDS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    /* CENTRALIZATION SHARES */
+
+    static setRequestedCentralisationSharesList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(setRequestedCentraSharesList());
+        } else {
+            ngRedux.dispatch(clearRequestedCentraSharesList());
+        }
+    }
+
+    static defaultRequestCentralisationReportsSharesList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedCentraSharesList());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestCentralisationReportsSharesList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CENTRA_SHARES_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    /* PRECENTRALISATION SHARES */
+
+    static setRequestedPrecentralisationSharesList(boolValue: boolean, ngRedux: NgRedux<any>) {
+        if (!boolValue) {
+            ngRedux.dispatch(setRequestedPrecentraSharesList());
+        } else {
+            ngRedux.dispatch(clearRequestedPrecentraSharesList());
+        }
+    }
+
+    static defaultRequestPrecentralisationReportsSharesList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
+        // Set the state flag to true. so we do not request it again.
+        ngRedux.dispatch(setRequestedPrecentraSharesList());
+
+        // Request the list.
+        const asyncTaskPipe = ofiReportsService.requestPrecentralisationReportsSharesList();
+
+        ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_SHARES_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    /* CENTRALISATION FUNDS */
+
+    requestCentralisationReportsFundsList(): any {
+
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimplefunds',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestCentralisationReportsFundsDetailsList(data: CentralisationFundsData): any {
+        const messageBody: CentralisationRequestFundsBody = {
+            RequestName: 'izncentralisationgetfunds',
+            token: this.memberSocketService.token,
+            fundId: data.fundId,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+            mode: data.mode,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CENTRA_FUNDS_DETAILS_LIST],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    /* CENTRALISATION SHARES */
+
+    requestCentralisationReportsSharesList(): any {
+
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimpleshares',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestCentralisationReportsSharesDetailsList(data: CentralisationSharesData): any {
+        const messageBody: CentralisationRequestSharesBody = {
+            RequestName: 'izncentralisationgetshares',
+            token: this.memberSocketService.token,
+            shareId: data.shareId,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+            mode: data.mode,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_CENTRA_SHARES_DETAILS_LIST],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    /* PRECENTRALISATION FUNDS */
+
+    requestPrecentralisationReportsFundsList(): any {
+
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimplefunds',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestPrecentralisationReportsFundsDetailsList(data: PrecentralisationFundsData): any {
+        const messageBody: PrecentralisationRequestFundsBody = {
+            RequestName: 'iznprecentralisationgetfunds',
+            token: this.memberSocketService.token,
+            fundId: data.fundId,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+            mode: data.mode,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_FUNDS_DETAILS_LIST],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    /* PRECENTRALISATION SHARES */
+
+    requestPrecentralisationReportsSharesList(): any {
+
+        const messageBody: OfiMemberNodeBody = {
+            RequestName: 'izngetsimpleshares',
+            token: this.memberSocketService.token,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestPrecentralisationReportsSharesDetailsList(data: PrecentralisationSharesData): any {
+        const messageBody: PrecentralisationRequestSharesBody = {
+            RequestName: 'iznprecentralisationgetshares',
+            token: this.memberSocketService.token,
+            shareId: data.shareId,
+            dateFrom: data.dateFrom,
+            dateTo: data.dateTo,
+            mode: data.mode,
+        };
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_PRECENTRA_SHARES_DETAILS_LIST],
+            [],
+            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
+            {},
+        ));
+    }
+
+    /* END CENTRA + PRECENTRA */
+
+    requestCentralisationReportsList(data: CentralisationReportsData): any {
+
+        const messageBody: OfiCentralisationReportsRequestBody = {
             RequestName: 'getallshareinfo',
             token: this.memberSocketService.token,
             search: data.search,
@@ -166,9 +437,9 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestBaseCentralizationHistory(fundShareID: any): any {
+    requestBaseCentralisationHistory(fundShareID: any): any {
 
-        const messageBody: OfiBaseCentralizationHistoryRequestBody = {
+        const messageBody: OfiBaseCentralisationHistoryRequestBody = {
             RequestName: 'getSingleShareBaseInfo',
             token: this.memberSocketService.token,
             fundShareID: fundShareID,
@@ -182,9 +453,9 @@ export class OfiReportsService {
         ));
     }
 
-    requestCentralizationHistory(data: CentralizationHistoryData): any {
+    requestCentralisationHistory(data: CentralisationHistoryData): any {
 
-        const messageBody: OfiCentralizationHistoryRequestBody = {
+        const messageBody: OfiCentralisationHistoryRequestBody = {
             RequestName: 'getSingleShareInfo',
             token: this.memberSocketService.token,
             fundShareID: data.fundShareID,

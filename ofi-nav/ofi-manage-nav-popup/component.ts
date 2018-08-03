@@ -1,8 +1,7 @@
 import {Component, OnInit, Input, ChangeDetectorRef} from '@angular/core';
 import {FormGroup, FormControl, Validators} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import * as moment from 'moment';
@@ -24,7 +23,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-nav-add',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.scss']
 })
 export class OfiManageNavPopup implements OnInit {
 

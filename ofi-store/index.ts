@@ -4,6 +4,10 @@ import { combineReducers, Reducer } from 'redux';
  */
 import { OfiFundInvestReducer, OfiFundInvestState } from './ofi-fund-invest';
 /*
+ Ofi AM Dashboard
+ */
+import { OfiAmDashboardsReducer, OfiAmDashboardsState } from './ofi-am-dashboard';
+/*
  Ofi client tx
  */
 import {
@@ -59,6 +63,15 @@ export {
 } from './ofi-client-txs';
 
 export {
+    OFI_SET_FUNDS_BY_USER_LIST,
+    ofiSetFundsByUserRequested,
+    ofiClearFundsByUserRequested,
+    OFI_SET_FUNDS_WITH_HOLDERS_LIST,
+    ofiSetFundsWithHoldersRequested,
+    ofiClearFundsWithHoldersRequested,
+} from './ofi-am-dashboard';
+
+export {
     /* Coupons */
     getOfiCouponList,
     OFI_SET_COUPON_LIST,
@@ -110,9 +123,9 @@ export {
     OFI_SET_CENTRALIZATION_REPORTS_LIST,
     OFI_SET_BASE_CENTRALIZATION_HISTORY,
     OFI_SET_CENTRALIZATION_HISTORY,
-    ofiClearRequestedCentralizationReports,
-    ofiSetRequestedCentralizationReports,
-    ofiCentralizationReportsActions,
+    ofiClearRequestedCentralisationHistoryReports,
+    ofiSetRequestedCentralisationHistoryReports,
+    ofiCentralisationHistoryReportsActions,
     OFI_SET_AM_HOLDERS_LIST,
     ofiClearRequestedAmHolders,
     ofiSetRequestedAmHolders,
@@ -196,6 +209,9 @@ export {
     setrequested,
     setamkyclist,
     clearrequested,
+    OFI_SET_MY_DOCUMENTS_LIST,
+    OFI_SET_REQUESTED_MY_DOCUMENTS,
+    OFI_CLEAR_REQUESTED_MY_DOCUMENTS,
 } from './ofi-kyc';
 
 /* Currencies */
@@ -213,6 +229,7 @@ export interface OfiState {
     ofiClientTx: OfiClientTxState;
     ofiKyc: KycState;
     ofiReports: OfiReportsState;
+    ofiAmDashboard: OfiAmDashboardsState;
 }
 
 export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
@@ -224,4 +241,5 @@ export const OfiReducer: Reducer<OfiState> = combineReducers<OfiState>({
     ofiClientTx: OfiClientTxReducer,
     ofiKyc: KycReducer,
     ofiReports: OfiReportsReducer,
+    ofiAmDashboard: OfiAmDashboardsReducer,
 });

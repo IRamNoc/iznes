@@ -2,7 +2,7 @@ import {
     Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef
 } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {NgRedux, select} from '@angular-redux/store';
 import {OfiClientTxService} from '../../ofi-req-services/ofi-client-tx/service';
 import {setRequestedClientTxList} from '../../ofi-store/ofi-client-txs/ofi-client-tx-list/actions';
@@ -32,7 +32,7 @@ interface ActiveBalanceListItem {
 @Component({
     selector: 'app-ofi-pnl-report',
     templateUrl: 'component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 

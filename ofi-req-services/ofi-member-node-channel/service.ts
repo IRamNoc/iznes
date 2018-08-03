@@ -7,7 +7,7 @@ import {
     clearRequestedFundAccessMy,
     clearRequestedNavFundsList,
     OFI_SET_COUPON_LIST,
-    ofiClearRequestedCentralizationReports,
+    ofiClearRequestedCentralisationHistoryReports,
     ofiClearRequestedIssuedAssets,
     ofiClearRequestedManageOrder,
     ofiClearRequestedMyOrder,
@@ -17,6 +17,7 @@ import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-f
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
 import {setInvestorInvitationListReset} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import { setStatusAuditTrailReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
 
 
 import {resetHomepage} from '@setl/core-store';
@@ -92,7 +93,7 @@ export class OfiMemberNodeChannelService {
                 this.logService.log('got the broadcast order');
                 this.ngRedux.dispatch(ofiClearRequestedMyOrder());
                 this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(ofiClearRequestedCentralizationReports());
+                this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
                 this.ngRedux.dispatch(ofiClearRequestedAmHolders());
                 this.ngRedux.dispatch(ofiClearHolderDetailRequested());
                 
@@ -102,6 +103,7 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(clearrequested());
                 this.ngRedux.dispatch(setamkyclist());
                 this.ngRedux.dispatch(setInvestorInvitationListReset());
+                this.ngRedux.dispatch(setStatusAuditTrailReset());
                 break;
 
             case 'kycaccepted':

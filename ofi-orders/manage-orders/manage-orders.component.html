@@ -154,92 +154,92 @@
                 </div>
 
                 <clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" clrDgSortIcon #ordersDataGrid>
-                    <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'orderRef'" clrDgSortIcon clrDgSortNoSearch id="Order-REF">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Ref' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'orderType'" clrDgSortIcon clrDgSortNoSearch id="Order-Type">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Type' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'investor'" clrDgSortIcon clrDgSortNoSearch id="Order-Investor">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Investor' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon clrDgSortNoSearch id="Order-ISIN">
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             {{'ISIN' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'shareName'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Name">
 
                         <ng-container *clrDgHideableColumn="{hidden: false}">
                             {{'Share Name' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'assetManagementCompany'" clrDgSortIcon clrDgSortNoSearch id="Order-Asset-Manager-Company">
                         <ng-container *clrDgHideableColumn="{hidden: true}">{{'Asset Management Company' | translate}}
 
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon clrDgSortNoSearch id="Order-Share-Currency">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Share Currency' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'quantity'" clrDgSortIcon clrDgSortNoSearch id="Order-Quantity">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Quantity' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV">
                         <ng-container *clrDgHideableColumn="{hidden: true}">{{'Latest NAV' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'grossAmount'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'grossAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Trade-Amount">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Trade Amount' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'feesAmount'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'feesAmount'" clrDgSortIcon clrDgSortNoSearch id="Order-Fee-Amount">
                         <ng-container *clrDgHideableColumn="{hidden: true}">{{'Fees Amount' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'orderDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'orderDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Order-Date">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Order Date' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'cutOffDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'cutOffDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Cut-Off-Date">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Cut-off Date' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'navDate'" clrDgSortIcon clrDgSortNoSearch id="Order-NAV-Date">
                         <ng-container *clrDgHideableColumn="{hidden: true}">{{'NAV Date' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'settlementDate'" clrDgSortIcon clrDgSortNoSearch id="Order-Settlement-Date">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Settlement Date' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'orderStatus'" clrDgSortIcon clrDgSortNoSearch>
+                    <clr-dg-column [clrDgField]="'orderStatus'" clrDgSortIcon clrDgSortNoSearch id="Order-Status">
                         <ng-container *clrDgHideableColumn="{hidden: false}">{{'Status' | translate}}
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
                     <!-- ACTIONS -->
-                    <clr-dg-column>
+                    <clr-dg-column id="Order-Action">
                         <span class="text-center">{{'Actions' | translate}}</span>
                     </clr-dg-column>
 
@@ -267,7 +267,7 @@
                                 {{order.isin}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                        <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, i, $event)">
                             <!-- isin -->
                             {{order.isin}}
                         </clr-dg-cell>
@@ -280,7 +280,7 @@
                                 {{order.fundShareName}}
                             </button>
                         </clr-dg-cell>
-                        <clr-dg-cell *ngIf="!isInvestorUser"  (click)="buildLink(order, i, $event)">
+                        <clr-dg-cell *ngIf="!isInvestorUser" (click)="buildLink(order, i, $event)">
                             <!-- shareName -->
                             {{order.fundShareName}}
                         </clr-dg-cell>
@@ -450,7 +450,7 @@
             <!--<div class="m-1">{{orderData | json}}</div>-->
             <!--<div class="m-1">{{fundShare | json}}</div>-->
 
-            <div class="well mb-1">
+            <div *ngIf="userType != 46" class="well mb-1">
                 <!-- Panel header -->
                 <div class="row panel-header">
                     <div class="col-xs-6">

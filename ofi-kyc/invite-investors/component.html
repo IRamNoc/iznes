@@ -39,8 +39,6 @@
                             </label>
                             <div>
                                 <ng-select id="kyc_language_{{i}}" class="form-control" [items]="languages" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="language" [ngStyle]="{'padding':'6px 0'}" [containerWidth]="'95%'">
-
-
                                 </ng-select>
                                 <div *ngIf="investor.controls['language'].hasError('required') && investor.controls['language'].touched" class="text-danger">{{'This field is required' | translate}}</div>
                             </div>
@@ -54,6 +52,16 @@
                             </label>
                             <div>
                                 <input type="text" id="kyc_clientReference_{{i}}" class="form-control" formControlName="clientReference">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="kyc_investorType_{{i}}">{{'Investor Type:' | translate}}
+
+                            </label>
+                            <div>
+                                <ng-select id="kyc_investorType_{{i}}" class="form-control" [items]="investorTypes" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="investorType" [ngStyle]="{'padding':'6px 0'}" [containerWidth]="'95%'">
+                                </ng-select>
+                                <div *ngIf="isRetailInvestor(investor.controls['investorType']) && investor.controls['investorType'].touched" class="text-danger">{{'IZNES is not supporting retail investors for now.' | translate}}</div>
                             </div>
                         </div>
                     </div>

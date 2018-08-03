@@ -1,7 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
 import {FormGroup, FormControl, FormArray} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
-import {Subscription} from 'rxjs/Subscription';
+import {Observable, Subscription} from 'rxjs';
 
 import {FundShareTradeCycleModel, TradeCycleModelDropdowns} from './model';
 
@@ -38,6 +37,11 @@ export class FundShareTradeCycleComponent implements OnInit, OnDestroy {
         this.model.addYearlyDealingDays();
 
         this.modelEmitter.emit(this.model);
+    }
+
+    // this is to enforce proper re-render for fund holidays management in the share form component
+    markForCheck() {
+        this.changeDetectorRef.markForCheck();
     }
 
     getControls(controlName: string) {

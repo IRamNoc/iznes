@@ -1,28 +1,31 @@
-import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
-import {DebugElement, Directive, Input, Pipe, PipeTransform} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {of} from 'rxjs/observable/of';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DebugElement, Directive, Input, Pipe, PipeTransform } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
+import { NgRedux } from '@angular-redux/store';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ClarityModule } from '@clr/angular';
+import { Location } from '@angular/common';
+import { SelectModule } from '@setl/utils/index';
 
-import {NgRedux} from '@angular-redux/store';
-import {ReactiveFormsModule} from '@angular/forms';
-import {ClarityModule} from '@clr/angular';
-import {Location} from '@angular/common';
-import {SelectModule} from '@setl/utils/index';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import {ToasterService} from 'angular2-toaster';
+import { ToasterService } from 'angular2-toaster';
 
-import {OfiInviteInvestorsComponent} from './component';
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
-import {MultilingualService} from '@setl/multilingual';
+import { OfiInviteInvestorsComponent } from './component';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { MultilingualService } from '@setl/multilingual';
+import { kycEnums } from '../config';
 
 const locationSpy = jasmine.createSpyObj('Location', ['back']);
-const OfiKycServiceSpy = jasmine.createSpyObj('OfiKycService', ['getInvitationsByUserAmCompany', 'sendInvestInvitations']);
+const ofiKycServiceSpy = jasmine.createSpyObj(
+    'OfiKycService',
+    ['getInvitationsByUserAmCompany', 'sendInvestInvitations'],
+);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
-const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
+const multilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 // Stub for translate
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
     transform(value: any): any {
         return value;
@@ -31,17 +34,14 @@ export class TranslatePipe implements PipeTransform {
 
 describe('OfiInviteInvestorsComponent', () => {
 
-    let comp:    OfiInviteInvestorsComponent;
+    let comp: OfiInviteInvestorsComponent;
     let fixture: ComponentFixture<OfiInviteInvestorsComponent>;
-    let de:      DebugElement;
-    let el:      HTMLElement;
-
-    let linkDes;
-    let routerLinks;
+    let de: DebugElement;
+    let el: HTMLElement;
 
     const resetTestingModule = TestBed.resetTestingModule;
 
-    beforeAll((done) => (async () => {
+    beforeAll(done => (async () => {
         TestBed.resetTestingModule();
         TestBed.configureTestingModule({
             declarations: [
@@ -57,10 +57,11 @@ describe('OfiInviteInvestorsComponent', () => {
                 AlertsService,
                 ToasterService,
                 { provide: Location, useValue: locationSpy },
-                { provide: OfiKycService, useValue: OfiKycServiceSpy },
+                { provide: OfiKycService, useValue: ofiKycServiceSpy },
                 { provide: NgRedux, useValue: ngReduxSpy },
-                { provide: MultilingualService, useValue: MultilingualServiceSpy },
-            ]
+                { provide: MultilingualService, useValue: multilingualServiceSpy },
+                { provide: 'kycEnums', useValue: kycEnums },
+            ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
     })().then(done).catch(done.fail));
@@ -75,18 +76,18 @@ describe('OfiInviteInvestorsComponent', () => {
         comp = fixture.componentInstance;
         comp.inviteItems = [
             {
-                inviteSent: "2018-05-22",
-                tokenUsedAt: "2018-05-22",
-                email: "albert.oudompheng@setl.io",
-                companyName: "toto",
-                lastName: "ding dong",
-                firstName: "albert",
-                invitedBy: "am erica",
-                kycStarted: "2018-05-22",
+                inviteSent: '2018-05-22',
+                tokenUsedAt: '2018-05-22',
+                email: 'albert.oudompheng@setl.io',
+                companyName: 'toto',
+                lastName: 'ding dong',
+                firstName: 'albert',
+                invitedBy: 'am erica',
+                kycStarted: '2018-05-22',
                 invitationLink: 'link',
                 status: 2,
             },
-        ]
+        ];
 
         tick();
         fixture.detectChanges();
@@ -95,10 +96,6 @@ describe('OfiInviteInvestorsComponent', () => {
         el = de.nativeElement;
 
     }));
-
-    afterEach(() => {
-        OfiKycServiceSpy.getInvitationsByUserAmCompany.calls.reset();
-    });
 
     describe('structure', () => {
         describe('invites recap', () => {
@@ -134,15 +131,11 @@ describe('OfiInviteInvestorsComponent', () => {
                 expect(datagridColumnEls[8].nativeNode.innerText).toContain('Invitation Link');
                 expect(datagridColumnEls[9].nativeNode.innerText).toContain('KYC Status');
             });
-        })
+        });
     });
 
     describe('interface', () => {
         describe('invites recap', () => {
-            it('should call the method getInvitationsByUserAmCompany of OfiKycService', () => {
-                expect(OfiKycServiceSpy.getInvitationsByUserAmCompany).toHaveBeenCalledTimes(1);
-            });
-
             it('should display the correct formatted data', () => {
                 const datagridRowEls = fixture.debugElement.queryAll(By.css('clr-dg-cell'));
                 expect(datagridRowEls.length).toBe(10);

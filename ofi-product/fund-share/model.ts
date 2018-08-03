@@ -13,8 +13,8 @@ import { ShareProfileMandatory, ShareProfileOptional } from './models/profile';
 import { ShareRepresentationOptional } from './models/representation';
 import { ShareSolvencyOptional } from './models/solvency';
 import { ShareTaxationOptional } from './models/taxation';
-import { ShareFund } from './models/fund';
-import { ShareUmbrellaFund } from './models/umbrella';
+import { ShareFund, ShareFundHolidayManagement, ShareFundOptionnal } from './models/fund';
+import { ShareUmbrellaFund, ShareUmbrellaFundOptionnal } from './models/umbrella';
 import { ShareDocumentsMandatory, ShareDocumentsOptional } from './models/documents';
 import { FundShareTradeCycleModel } from './form/trade-cycle/model';
 import * as PC from '../productConfig';
@@ -29,7 +29,10 @@ export class FundShare {
     isProduction: boolean;
 
     fund = new ShareFund();
+    fundHoliday = new ShareFundHolidayManagement();
+    fundOptionnal = new ShareFundOptionnal();
     umbrella = new ShareUmbrellaFund();
+    umbrellaOptionnal = new ShareUmbrellaFundOptionnal();
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,
@@ -71,7 +74,8 @@ export class FundShare {
         optional: new ShareDocumentsOptional(),
     };
 
-    constructor() {}
+    constructor() {
+    }
 
     isValid(): boolean {
         return this.characteristic.mandatory.isValid() && this.calendar.mandatory.isValid() &&
@@ -80,9 +84,10 @@ export class FundShare {
             this.documents.mandatory.isValid();
     }
 
-    getRequest(): OfiFundShare {
+    getRequest(draft): OfiFundShare {
         return {
             accountId: this.accountId,
+            draft: draft,
             fundShareName: this.keyFacts.mandatory.fundShareName.value(),
             fundShareID: this.fundShareId,
             fundID: this.fundID,
@@ -92,6 +97,7 @@ export class FundShare {
             subscriptionStartDate: this.keyFacts.mandatory.subscriptionStartDate.value(),
             launchDate: this.keyFacts.mandatory.shareLaunchDate.value(),
             shareClassCurrency: this.getSelectValue(this.keyFacts.mandatory.shareClassCurrency),
+            iban: this.keyFacts.mandatory.iban.value(),
             valuationFrequency: this.getSelectValue(this.keyFacts.mandatory.valuationFrequency),
             historicOrForwardPricing: this.getSelectValue(this.keyFacts.mandatory.historicOrForwardPricing),
             hasCoupon: this.keyFacts.mandatory.hasCoupon.value(),
@@ -166,15 +172,63 @@ export class FundShare {
         };
     }
 
-    setFundShare(fundShare: OfiFundShare): void {
+    resetFundShare() {
+
+        this.calendar = {
+            ...this.calendar,
+            mandatory: new ShareCalendarMandatory(),
+        };
+
+        this.calendar.subscriptionTradeCycle.reset();
+        this.calendar.redemptionTradeCycle.reset();
+
+        this.characteristic = {
+            mandatory: new ShareCharacteristicMandatory(),
+        };
+        this.fees = {
+            mandatory: new ShareFeesMandatory(),
+            optional: new ShareFeesOptional(),
+        };
+        this.keyFacts = {
+            status: new ShareKeyFactsStatus(),
+            mandatory: new ShareKeyFactsMandatory(),
+            optional: new ShareKeyFactsOptional(),
+        };
+        this.listing = {
+            optional: new ShareListingOptional(),
+        };
+        this.priip = {
+            optional: new SharePRIIPOptional(),
+        };
+        this.profile = {
+            mandatory: new ShareProfileMandatory(),
+            optional: new ShareProfileOptional(),
+        };
+        this.representation = {
+            optional: new ShareRepresentationOptional(),
+        };
+        this.solvency = {
+            optional: new ShareSolvencyOptional(),
+        };
+        this.taxation = {
+            optional: new ShareTaxationOptional(),
+        };
+        this.documents = {
+            mandatory: new ShareDocumentsMandatory(),
+            optional: new ShareDocumentsOptional(),
+        };
+    }
+
+    setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
         this.fundID = fundShare.fundID;
-        this.keyFacts.mandatory.fundShareName.preset = fundShare.fundShareName;
-        this.keyFacts.mandatory.isin.preset = fundShare.isin;
+        this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
+        this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
         this.keyFacts.mandatory.shareClassCode.preset = fundShare.shareClassCode;
         this.setListItemPreset(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
         this.keyFacts.mandatory.subscriptionStartDate.preset = fundShare.subscriptionStartDate;
         this.keyFacts.mandatory.shareLaunchDate.preset = fundShare.launchDate;
         this.setListItemPreset(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.keyFacts.mandatory.iban.preset = fundShare.iban;
         this.setListItemPreset(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
         this.setListItemPreset(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
         this.keyFacts.mandatory.hasCoupon.preset = fundShare.hasCoupon;
@@ -200,6 +254,7 @@ export class FundShare {
         this.characteristic.mandatory.minSubsequentRedemptionInAmount.preset =
             fundShare.minSubsequentRedemptionInAmount;
         this.setListItemPreset(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+
         this.calendar.mandatory.subscriptionCutOffTime.preset = fundShare.subscriptionCutOffTime;
         this.setListItemPreset(
             this.calendar.mandatory.subscriptionCutOffTimeZone,
@@ -214,6 +269,14 @@ export class FundShare {
         this.setListItemPreset(
             this.calendar.mandatory.redemptionSettlementPeriod,
             fundShare.redemptionSettlementPeriod,
+        );
+        this.setListItemPreset(
+            this.calendar.mandatory.navPeriodForRedemption,
+            fundShare.navPeriodForRedemption,
+        );
+        this.setListItemPreset(
+            this.calendar.mandatory.navPeriodForSubscription,
+            fundShare.navPeriodForSubscription,
         );
         // removed by PZ 28/06/2018
         // this.calendar.mandatory.subscriptionRedemptionCalendar.preset = fundShare.subscriptionRedemptionCalendar;
@@ -238,6 +301,87 @@ export class FundShare {
         this.fundID = fundShare.fundID;
     }
 
+    updateFundShare(fundShare: OfiFundShare, isPrefill = false): void {
+        this.fundID = fundShare.fundID;
+        this.keyFacts.mandatory.fundShareName.control.setValue(isPrefill ? null : fundShare.fundShareName);
+        this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
+        this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
+        this.setListItemValue(this.keyFacts.status.shareClassInvestmentStatus, fundShare.shareClassInvestmentStatus);
+        this.keyFacts.mandatory.subscriptionStartDate.control.setValue(fundShare.subscriptionStartDate);
+        this.keyFacts.mandatory.shareLaunchDate.control.setValue(fundShare.launchDate);
+        this.setListItemValue(this.keyFacts.mandatory.shareClassCurrency, fundShare.shareClassCurrency);
+        this.keyFacts.mandatory.iban.control.setValue(fundShare.iban);
+        this.setListItemValue(this.keyFacts.mandatory.valuationFrequency, fundShare.valuationFrequency);
+        this.setListItemValue(this.keyFacts.mandatory.historicOrForwardPricing, fundShare.historicOrForwardPricing);
+        this.keyFacts.mandatory.hasCoupon.control.setValue(fundShare.hasCoupon);
+        this.setListItemValue(this.keyFacts.mandatory.couponType, fundShare.couponType);
+        this.setListItemValue(
+            this.keyFacts.mandatory.freqOfDistributionDeclaration,
+            fundShare.freqOfDistributionDeclaration,
+        );
+        this.setListItemValue(this.keyFacts.mandatory.status, fundShare.status);
+        this.setFeederValue(fundShare.feeder);
+        this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
+        this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
+        this.characteristic.mandatory.minInitialSubscriptionInShare.control.setValue(fundShare.minInitialSubscriptionInShare);
+        this.characteristic.mandatory.minInitialSubscriptionInAmount.control.setValue(fundShare.minInitialSubscriptionInAmount);
+        this.characteristic.mandatory.minSubsequentSubscriptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
+        this.characteristic.mandatory.minSubsequentSubscriptionInAmount.control.setValue(fundShare.minSubsequentSubscriptionInAmount);
+        this.setListItemValue(this.characteristic.mandatory.redemptionCategory, fundShare.redemptionCategory);
+        this.setListItemValue(this.characteristic.mandatory.redemptionCurrency, fundShare.redemptionCurrency);
+        this.characteristic.mandatory.minSubsequentRedemptionInShare.control.setValue(fundShare.minSubsequentRedemptionInShare);
+        this.characteristic.mandatory.minSubsequentRedemptionInAmount.control.setValue(fundShare.minSubsequentRedemptionInAmount);
+        this.setListItemValue(this.keyFacts.mandatory.sharePortfolioCurrencyHedge, fundShare.portfolioCurrencyHedge);
+
+        this.calendar.mandatory.subscriptionCutOffTime.control.setValue(fundShare.subscriptionCutOffTime);
+        this.setListItemValue(
+            this.calendar.mandatory.subscriptionCutOffTimeZone,
+            fundShare.subscriptionCutOffTimeZone,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.subscriptionSettlementPeriod,
+            fundShare.subscriptionSettlementPeriod,
+        );
+        this.calendar.mandatory.redemptionCutOffTime.control.setValue(fundShare.redemptionCutOffTime);
+        this.setListItemValue(this.calendar.mandatory.redemptionCutOffTimeZone, fundShare.redemptionCutOffTimeZone);
+        this.setListItemValue(
+            this.calendar.mandatory.redemptionSettlementPeriod,
+            fundShare.redemptionSettlementPeriod,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.navPeriodForRedemption,
+            fundShare.navPeriodForRedemption,
+        );
+        this.setListItemValue(
+            this.calendar.mandatory.navPeriodForSubscription,
+            fundShare.navPeriodForSubscription,
+        );
+        // removed by PZ 28/06/2018
+        // this.calendar.mandatory.subscriptionRedemptionCalendar.control.setValue(fundShare.subscriptionRedemptionCalendar);
+        this.fees.mandatory.maxManagementFee.control.setValue(fundShare.maxManagementFee);
+        this.fees.mandatory.maxSubscriptionFee.control.setValue(fundShare.maxSubscriptionFee);
+        this.fees.mandatory.maxRedemptionFee.control.setValue(fundShare.maxRedemptionFee);
+        this.setListItemValue(this.profile.mandatory.investorProfile, fundShare.investorProfile);
+        this.fees.mandatory.mifiidChargesOngoing.control.setValue(fundShare.mifiidChargesOngoing);
+        this.fees.mandatory.mifiidChargesOneOff.control.setValue(fundShare.mifiidChargesOneOff);
+        this.fees.mandatory.mifiidTransactionCosts.control.setValue(fundShare.mifiidTransactionCosts);
+        this.fees.mandatory.mifiidServicesCosts.control.setValue(fundShare.mifiidServicesCosts);
+        this.fees.mandatory.mifiidIncidentalCosts.control.setValue(fundShare.mifiidIncidentalCosts);
+
+        this.applyOptionalData((this.keyFacts.optional as any), JSON.parse(fundShare.keyFactOptionalData));
+        this.applyOptionalData((this.profile.optional as any), JSON.parse(fundShare.profileOptionalData));
+        this.applyOptionalData((this.priip.optional as any), JSON.parse(fundShare.priipOptionalData));
+        this.applyOptionalData((this.listing.optional as any), JSON.parse(fundShare.listingOptionalData));
+        this.applyOptionalData((this.taxation.optional as any), JSON.parse(fundShare.taxationOptionalData));
+        this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
+        this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
+
+        this.setRedemptionTradeCycleData(fundShare);
+        this.setSubscriptionTradeCycleData(fundShare);
+        this.fundID = fundShare.fundID;
+    }
+
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays =
             JSON.parse(fundShare.weeklySubscriptionDealingDays);
@@ -248,6 +392,7 @@ export class FundShare {
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod =
             fundShare.subscriptionTradeCyclePeriod;
+
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
@@ -319,8 +464,42 @@ export class FundShare {
         this.setDocumentItem(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
     }
 
+    setFundShareDocsValue(fundShareDocs: OfiFundShareDocuments): void {
+        this.setDocumentItemValue(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
+        this.setDocumentItemValue(this.documents.mandatory.kiid, fundShareDocs.kiid);
+
+        this.setDocumentItemValue(this.documents.optional.annualActivityReport, fundShareDocs.annualActivityReport);
+        this.setDocumentItemValue(this.documents.optional.businessLetter, fundShareDocs.businessLetter);
+        this.setDocumentItemValue(this.documents.optional.emt, fundShareDocs.emt);
+        this.setDocumentItemValue(this.documents.optional.ept, fundShareDocs.ept);
+        this.setDocumentItemValue(this.documents.optional.kid, fundShareDocs.kid);
+        this.setDocumentItemValue(this.documents.optional.letterToShareholders, fundShareDocs.letterToShareholders);
+        this.setDocumentItemValue(
+            this.documents.optional.monthlyExtraFinancialReport,
+            fundShareDocs.monthlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.monthlyFinancialReport, fundShareDocs.monthlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.productSheet, fundShareDocs.productSheet);
+        this.setDocumentItemValue(
+            this.documents.optional.quarterlyExtraFinancialReport,
+            fundShareDocs.quarterlyExtraFinancialReport,
+        );
+        this.setDocumentItemValue(this.documents.optional.quarterlyFinancialReport, fundShareDocs.quarterlyFinancialReport);
+        this.setDocumentItemValue(this.documents.optional.semiAnnualSummary, fundShareDocs.semiAnnualSummary);
+        this.setDocumentItemValue(this.documents.optional.sharesAllocation, fundShareDocs.sharesAllocation);
+        this.setDocumentItemValue(this.documents.optional.sriPolicy, fundShareDocs.sriPolicy);
+        this.setDocumentItemValue(
+            this.documents.optional.statutoryAuditorsCertification,
+            fundShareDocs.statutoryAuditorsCertification,
+        );
+        this.setDocumentItemValue(this.documents.optional.tpts2, fundShareDocs.tpts2);
+        this.setDocumentItemValue(this.documents.optional.transparencyCode, fundShareDocs.transparencyCode);
+    }
+
     setFund(fund: any): void {
         this.umbrellaFundID = fund.umbrellaFundID;
+        this.fundID = fund.fundID;
+
         this.fund.name.preset = fund.fundName;
         this.fund.aumFund.preset = fund.fundName;
         this.fund.aumFundDate.preset = fund.fundName;
@@ -347,13 +526,106 @@ export class FundShare {
         this.setListItemPreset(this.fund.fundManagers, fund.fundManagers);
         this.fund.isDedicatedFund.preset = fund.isDedicatedFund;
         this.setListItemPreset(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
+
+        this.fundHoliday.useDefaultHolidayMgmt.preset = fund.useDefaultHolidayMgmt;
+        this.fundHoliday.holidayMgmtConfig.preset = JSON.parse(fund.holidayMgmtConfig);
+
+        this.fundOptionnal.globalItermediaryIdentification.preset = fund.globalItermediaryIdentification;
+        this.setListItemPreset(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
+        this.setListItemPresetMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
+        this.setListItemPreset(this.fundOptionnal.auditor, fund.auditor);
+        this.setListItemPreset(this.fundOptionnal.taxAuditor, fund.taxAuditor);
+        this.setListItemPreset(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
+        this.fundOptionnal.directors.preset = fund.directors;
+        this.fundOptionnal.hasEmbeddedDirective.preset = fund.hasEmbeddedDirective;
+        this.fundOptionnal.hasCapitalPreservation.preset = fund.hasCapitalPreservation;
+        this.fundOptionnal.capitalPreservationLevel.preset = fund.capitalPreservationLevel;
+        this.setListItemPreset(this.fundOptionnal.capitalPreservationPeriod, fund.capitalPreservationPeriod);
+        this.fundOptionnal.hasCppi.preset = fund.hasCppi;
+        this.fundOptionnal.cppiMultiplier.preset = fund.cppiMultiplier;
+        this.fundOptionnal.hasHedgeFundStrategy.preset = fund.hasHedgeFundStrategy;
+        this.fundOptionnal.isLeveraged.preset = fund.isLeveraged;
+        this.fundOptionnal.has130Or30Strategy.preset = fund.has130Or30Strategy;
+        this.fundOptionnal.isFundTargetingEos.preset = fund.isFundTargetingEos;
+        this.fundOptionnal.isFundTargetingSri.preset = fund.isFundTargetingSri;
+        this.fundOptionnal.isPassiveFund.preset = fund.isPassiveFund;
+        this.fundOptionnal.hasSecurityiesLending.preset = fund.hasSecurityiesLending;
+        this.fundOptionnal.hasSwap.preset = fund.hasSwap;
+        this.fundOptionnal.hasDurationHedge.preset = fund.hasDurationHedge;
+        this.fundOptionnal.internalReference.preset = fund.internalReference;
+        this.fundOptionnal.additionnalNotes.preset = fund.additionnalNotes;
+
+    }
+
+    updateFund(fund: any, umbrella: any): void {
+        this.umbrellaFundID = fund.umbrellaFundID;
+        this.fundID = fund.fundID;
+        this.fund.name.control.setValue(fund.fundName);
+        this.fund.aumFund.control.setValue(fund.fundName);
+        this.fund.aumFundDate.control.setValue(fund.fundName);
+        this.fund.LEI.control.setValue(fund.legalEntityIdentifier);
+        this.fund.fundRegisteredOfficeName.control.setValue(fund.registerOffice);
+        this.fund.fundRegisteredOfficeAddress.control.setValue(fund.registerOfficeAddress);
+        this.setListItemValue(this.fund.domicile, fund.domicile);
+        this.fund.isEUDirectiveRelevant.control.setValue(fund.isEuDirective);
+        this.setListItemValue(this.fund.legalForm, fund.legalForm);
+        this.fund.nationalNomenclature.listItems = PC.fundItems.nationalNomenclatureOfLegalFormItems[fund.legalForm];
+        this.setListItemValue(this.fund.nationalNomenclature, fund.nationalNomenclatureOfLegalForm);
+        this.fund.creationDate.control.setValue(fund.fundCreationDate);
+        this.fund.launchDate.control.setValue(fund.fundLaunchate);
+        this.setListItemValue(this.fund.currency, fund.fundCurrency);
+        this.fund.openOrCloseEnded.control.setValue(fund.openOrCloseEnded);
+        this.fund.fiscalYearEnd.control.setValue(fund.fiscalYearEnd);
+        this.fund.isFundOfFunds.control.setValue(fund.isFundOfFund);
+        this.setListItemValue(this.fund.managementCompany, fund.managementCompanyID);
+        this.setListItemValue(this.fund.fundAdministrator, fund.fundAdministrator);
+        this.setListItemValue(this.fund.custodianBank, fund.custodianBank);
+        this.setListItemValue(this.fund.investmentManager, fund.investmentManager);
+        this.setListItemValueMultiple(this.fund.principalPromoter, fund.principalPromoter);
+        this.setListItemValueMultiple(this.fund.payingAgent, fund.payingAgent);
+        this.setListItemValue(this.fund.fundManagers, fund.fundManagers);
+        this.fund.isDedicatedFund.control.setValue(fund.isDedicatedFund);
+        this.setListItemValue(this.fund.portfolioCurrencyHedge, fund.portfolioCurrencyHedge);
+
+        this.fundHoliday.useDefaultHolidayMgmt.control.setValue(fund.useDefaultHolidayMgmt === '1');
+        this.fundHoliday.holidayMgmtConfig.control.setValue(JSON.parse(fund.holidayMgmtConfig));
+
+        this.fundOptionnal.globalItermediaryIdentification.control.setValue(fund.globalItermediaryIdentification);
+        this.setListItemValue(this.fundOptionnal.delegatedManagementCompany, fund.delegatedManagementCompany);
+        this.setListItemValueMultiple(this.fundOptionnal.investmentAdvisor, fund.investmentAdvisor);
+        this.setListItemValue(this.fundOptionnal.auditor, fund.auditor);
+        this.setListItemValue(this.fundOptionnal.taxAuditor, fund.taxAuditor);
+        this.setListItemValue(this.fundOptionnal.legalAdvisor, fund.legalAdvisor);
+        this.fundOptionnal.directors.control.setValue(fund.directors);
+        this.fundOptionnal.hasEmbeddedDirective.control.setValue(fund.hasEmbeddedDirective);
+        this.fundOptionnal.hasCapitalPreservation.control.setValue(fund.hasCapitalPreservation);
+        this.fundOptionnal.capitalPreservationLevel.control.setValue(fund.capitalPreservationLevel);
+        this.setListItemValue(this.fundOptionnal.capitalPreservationPeriod, fund.capitalPreservationPeriod);
+        this.fundOptionnal.hasCppi.control.setValue(fund.hasCppi);
+        this.fundOptionnal.cppiMultiplier.control.setValue(fund.cppiMultiplier);
+        this.fundOptionnal.hasHedgeFundStrategy.control.setValue(fund.hasHedgeFundStrategy);
+        this.fundOptionnal.isLeveraged.control.setValue(fund.isLeveraged);
+        this.fundOptionnal.has130Or30Strategy.control.setValue(fund.has130Or30Strategy);
+        this.fundOptionnal.isFundTargetingEos.control.setValue(fund.isFundTargetingEos);
+        this.fundOptionnal.isFundTargetingSri.control.setValue(fund.isFundTargetingSri);
+        this.fundOptionnal.isPassiveFund.control.setValue(fund.isPassiveFund);
+        this.fundOptionnal.hasSecurityiesLending.control.setValue(fund.hasSecurityiesLending);
+        this.fundOptionnal.hasSwap.control.setValue(fund.hasSwap);
+        this.fundOptionnal.hasDurationHedge.control.setValue(fund.hasDurationHedge);
+        this.fundOptionnal.internalReference.control.setValue(fund.internalReference);
+        this.fundOptionnal.additionnalNotes.control.setValue(fund.additionnalNotes);
+
+        if (umbrella) {
+            this.updateUmbrella(umbrella);
+        }
+
     }
 
     setUmbrellaFund(umbrellaFund: any): void {
         this.umbrella.umbrellaFundName.preset = umbrellaFund.umbrellaFundName;
+        this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
         this.umbrella.registerOffice.preset = umbrellaFund.registerOffice;
         this.umbrella.registerOfficeAddress.preset = umbrellaFund.registerOfficeAddress;
-        this.umbrella.legalEntityIdentifier.preset = umbrellaFund.legalEntityIdentifier;
         this.setListItemPreset(this.umbrella.domicile, umbrellaFund.domicile);
         this.umbrella.umbrellaFundCreationDate.preset = umbrellaFund.umbrellaFundCreationDate;
         this.setListItemPreset(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
@@ -361,6 +633,56 @@ export class FundShare {
         this.setListItemPreset(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
         this.setListItemPresetMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
         this.setListItemPresetMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+
+        this.umbrellaOptionnal.giin.preset = umbrellaFund.giin;
+        this.setListItemPreset(
+            this.umbrellaOptionnal.delegatedManagementCompanyID,
+            umbrellaFund.delegatedManagementCompanyID,
+        );
+        this.setListItemPreset(this.umbrellaOptionnal.auditorID, umbrellaFund.auditorID);
+        this.setListItemPreset(this.umbrellaOptionnal.taxAuditorID, umbrellaFund.taxAuditorID);
+        this.setListItemPresetMultiple(this.umbrellaOptionnal.principlePromoterID, umbrellaFund.principlePromoterID);
+        this.setListItemPreset(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
+        this.umbrellaOptionnal.directors.preset = umbrellaFund.directors;
+        this.umbrellaOptionnal.internalReference.preset = umbrellaFund.internalReference;
+        this.umbrellaOptionnal.additionnalNotes.preset = umbrellaFund.additionnalNotes;
+    }
+
+    updateUmbrella(umbrellaFund?: any) {
+        if (!umbrellaFund) {
+            this.umbrellaFundID = null;
+            Object.keys(this.umbrella).forEach((key) => {
+                this.umbrella[key].control.reset();
+            });
+            Object.keys(this.umbrellaOptionnal).forEach((key) => {
+                this.umbrellaOptionnal[key].control.reset();
+            });
+            return;
+        }
+        this.umbrella.umbrellaFundName.control.setValue(umbrellaFund.umbrellaFundName);
+        this.umbrella.legalEntityIdentifier.control.setValue(umbrellaFund.legalEntityIdentifier);
+        this.umbrella.registerOffice.control.setValue(umbrellaFund.registerOffice);
+        this.umbrella.registerOfficeAddress.control.setValue(umbrellaFund.registerOfficeAddress);
+        this.setListItemValue(this.umbrella.domicile, umbrellaFund.domicile);
+        this.umbrella.umbrellaFundCreationDate.control.setValue(umbrellaFund.umbrellaFundCreationDate);
+        this.setListItemValue(this.umbrella.managementCompanyID, umbrellaFund.managementCompanyID);
+        this.setListItemValue(this.umbrella.fundAdministratorID, umbrellaFund.fundAdministratorID);
+        this.setListItemValue(this.umbrella.custodianBankID, umbrellaFund.custodianBankID);
+        this.setListItemValueMultiple(this.umbrella.investmentAdvisorID, umbrellaFund.investmentAdvisorID);
+        this.setListItemValueMultiple(this.umbrella.payingAgentID, umbrellaFund.payingAgentID);
+
+        this.umbrellaOptionnal.giin.control.setValue(umbrellaFund.giin);
+        this.setListItemValue(
+            this.umbrellaOptionnal.delegatedManagementCompanyID,
+            umbrellaFund.delegatedManagementCompanyID,
+        );
+        this.setListItemValue(this.umbrellaOptionnal.auditorID, umbrellaFund.auditorID);
+        this.setListItemValue(this.umbrellaOptionnal.taxAuditorID, umbrellaFund.taxAuditorID);
+        this.setListItemValueMultiple(this.umbrellaOptionnal.principlePromoterID, umbrellaFund.principlePromoterID);
+        this.setListItemValue(this.umbrellaOptionnal.legalAdvisorID, umbrellaFund.legalAdvisorID);
+        this.umbrellaOptionnal.directors.control.setValue(umbrellaFund.directors);
+        this.umbrellaOptionnal.internalReference.control.setValue(umbrellaFund.internalReference);
+        this.umbrellaOptionnal.additionnalNotes.control.setValue(umbrellaFund.additionnalNotes);
     }
 
     private setDocumentItem(formItem: FormItem, str: any): void {
@@ -369,6 +691,21 @@ export class FundShare {
         const arr = str.split('|');
 
         formItem.preset = arr[0];
+        formItem.fileData = {
+            fileID: arr[0],
+            hash: arr[1],
+            name: arr[2],
+        };
+
+        if (!this.isProduction) formItem.required = false;
+    }
+
+    private setDocumentItemValue(formItem: FormItem, str: any): void {
+        if (!str) return null;
+
+        const arr = str.split('|');
+
+        formItem.control.setValue(arr[0]);
         formItem.fileData = {
             fileID: arr[0],
             hash: arr[1],
@@ -427,14 +764,49 @@ export class FundShare {
         }).filter(d => d !== null);
     }
 
+    private setListItemValue(field: FormItem, value: any): void {
+        if (!value && value !== 0) {
+            field.control.setValue([]);
+            return;
+        }
+        field.control.setValue([_.find(field.listItems, (item) => {
+            return item.id === value;
+        })]);
+    }
+
+    private setListItemValueMultiple(field: FormItem, value: number[]): void {
+        if (!value || !value.length) {
+            field.control.setValue([]);
+            return;
+        }
+        const newValue = value
+            .map((id: number) => {
+                const newItem = _.find(field.listItems, { id });
+                if (!newItem) {
+                    return null;
+                }
+                return newItem;
+            })
+            .filter(d => d !== null);
+        field.control.setValue(newValue);
+    }
+
     private setFeederPreset(value: any): void {
         const preset = (!value || value === 0) ?
             [this.keyFacts.mandatory.feeder.listItems[0]] :
-        [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
-            return item.id == value;
-        })];
+            [_.find(this.keyFacts.mandatory.feeder.listItems, (item) => {
+                return item.id == value;
+            })];
 
         (this.keyFacts.mandatory.feeder.preset as any) = preset;
+    }
+
+    private setFeederValue(value: any): void {
+        const preset = (!value || value === 0)
+            ? [this.keyFacts.mandatory.feeder.listItems[0]]
+            : [_.find(this.keyFacts.mandatory.feeder.listItems, item => item.id === value)];
+
+        this.keyFacts.mandatory.feeder.control.setValue(preset);
     }
 
     private convertArrayToJSON(arr: any[]): string {
@@ -444,11 +816,13 @@ export class FundShare {
     }
 
     private isStatusMaster(): boolean {
+        if (!this.keyFacts.mandatory.status.value()) return null;
+
         return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
-        if (parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (!!this.keyFacts.mandatory.status.value() && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;
@@ -457,7 +831,6 @@ export class FundShare {
 
     private getSelectValue(formItem: FormItem): any {
         const rawValue = formItem.value();
-
         return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
 }

@@ -1,5 +1,8 @@
 export interface UmbrellaFundDetail {
     umbrellaFundID?: number;
+    draft: number;
+    draftUser?: string;
+    draftDate?: string;
     umbrellaFundName: string;
     registerOffice: string;
     registerOfficeAddress: string;
@@ -29,4 +32,7 @@ export interface UmbrellaFundListState {
         [key: string]: UmbrellaFundDetail,
     };
     requested: boolean;
+    audit: {
+        [key: number]: any[],
+    };
 }

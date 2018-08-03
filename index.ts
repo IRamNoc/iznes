@@ -1,3 +1,5 @@
+import { OfiSubPortfolioComponent } from "./ofi-sub-portfolio/sub-portfolio/component";
+
 export { OfiFundInvestModule } from './ofi-fund-invest/module';
 export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-list/component';
 
@@ -5,6 +7,10 @@ export { OfiInvestorFundListComponent } from './ofi-fund-invest/investor-fund-li
  * Home
  */
 export { OfiHomeComponent } from './ofi-home/home/component';
+/**
+ * My Asset Managers - My Documents
+ */
+export { OfiInvMyDocumentsComponent } from './ofi-kyc/inv-my-documents/component';
 /**
  * Invite Investors
  */
@@ -15,6 +21,12 @@ export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';
 export { OfiKycHomeComponent } from './ofi-kyc/home/component';
 export { OfiFundAccessComponent } from './ofi-kyc/fund-access/component';
 export { OfiKycAlreadyDoneComponent } from './ofi-kyc/already-done/component';
+export { OfiRedirectTokenComponent } from './ofi-kyc/invitation-token/redirect-token.component';
+export { OfiConsumeTokenComponent } from './ofi-kyc/invitation-token/consume-token.component';
+export { MyRequestsComponent } from './ofi-kyc/my-requests/list/my-requests.component';
+export { NewKycRequestComponent } from './ofi-kyc/my-requests/request/new-request.component';
+export { MyRequestsContainerComponent } from './ofi-kyc/my-requests/my-requests-container.component';
+export { OfiClientReferentialComponent } from './ofi-kyc/client-referential/component';
 /**
  * My informations
  */
@@ -30,6 +42,8 @@ export { AddNewFundShareComponent } from './ofi-product/fund-share/add-new/compo
 export { FundShareAuditComponent } from './ofi-product/fund-share/audit/component';
 export { FundComponent } from './ofi-product/fund/component';
 export { ProductCharacteristicComponent } from './ofi-product/characteristic/product-characteristic.component';
+export { UmbrellaAuditComponent } from './ofi-product/umbrella-audit/umbrella-audit.component';
+export { FundAuditComponent } from './ofi-product/fund-audit/fund-audit.component';
 /**
  * Nav
  */
@@ -40,9 +54,10 @@ export { OfiNavAuditComponent } from './ofi-nav/ofi-nav-audit/component';
 export { OfiManageNavPopup } from './ofi-nav/ofi-manage-nav-popup/component';
 
 /**
- * Waiting for approval
+ * Kyc
  */
 export { OfiWaitingApprovalComponent } from './ofi-kyc/waiting-approval/component';
+export { KycAuditTrailComponent } from './ofi-kyc/audit-trail/kyc-audit-trail.component';
 
 /**
  * Services
@@ -76,7 +91,6 @@ export { CouponPaymentComponent } from './ofi-corp-actions/coupon-payment/coupon
 export { OfiOrdersModule } from './ofi-orders/ofi-orders.module';
 export { OfiOrdersService } from './ofi-req-services/ofi-orders/service';
 export { ManageOrdersComponent } from './ofi-orders/manage-orders/manage-orders.component';
-export { MyOrdersComponent } from './ofi-orders/my-orders/my-orders.component';
 export { PlaceOrdersComponent } from './ofi-orders/place-orders/place-orders.component';
 
 /**
@@ -95,11 +109,12 @@ export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
     OfiCollectiveArchiveComponent,
-    OfiCentralizationHistoryComponent,
+    OfiCentralisationHistoryComponent,
     OfiReportModule,
     OfiManageCsvComponent,
-    CentralizationReportComponent,
-    CentralizationSelectComponent,
+    CentralisationReportComponent,
+    PrecentralisationReportComponent,
+    CentralisationSelectComponent,
     MyHoldingsComponent,
 } from './ofi-report-module';
 
@@ -114,3 +129,8 @@ export {
  * Ofi main module
  */
 export { OfiMainModule } from './module';
+
+/**
+ * Sub portfolio
+ */
+export { OfiSubPortfolioComponent } from './ofi-sub-portfolio/sub-portfolio/component';

@@ -1,0 +1,104 @@
+<!-- Breadcrumbs. -->
+<div class="header-breadcrumbs">
+    <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
+        {{'Client Referential: ' | translate}}
+        <span *ngIf="kycId == 'list'">{{'All Clients' | translate}}</span>
+        <span *ngIf="kycId != 'list'">{{clients[kycId].registeredCompanyName}} - {{clients[kycId].clientReference}}</span>
+    </h1>
+</div>
+
+<clr-tabs *ngIf="kycId == 'list'">
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-users"></i> {{'All Clients' | translate}}
+        </button>
+        <clr-tab-content>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{'Please find below the list of your clients.' | translate}}<br>
+                    {{'From here you will also be able to invite more investors to join IZNES.' | translate}}
+                    <button id="invite-investors-btn" class="btn btn-success" style="margin-left: 10px;" (click)="gotoInvite();">{{'Invite Investors' | translate}}</button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 15px;">
+                <div class="col-sm-6">
+                    <p>{{'Investor Type' | translate}}</p>
+                    <form [formGroup]="investorTypeForm">
+                        <ng-select
+                            id="investor-type-select"
+                            class="form-control"
+                            [items]="investorTypes"
+                            [allowClear]="true"
+                            [placeholder]="_translate.translate('All Investors')"
+                            formControlName="investorType">
+                        </ng-select>
+                    </form>
+                </div>
+                <div class="col-sm-6" align="right">
+                    <button class="btn btn-primary">
+                        {{'View Shares Authorisation Audit Trail' | translate}}
+                    </button>
+                    <br>
+                    <button class="btn btn-success">
+                        {{'Export Clients Holdings' | translate}}
+                    </button>
+                    <br>
+                    <button class="btn btn-success">
+                        {{'Export Clients Referential' | translate}}
+                    </button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+
+                    <clr-datagrid #dataGrid>
+                        <clr-dg-column [clrDgField]="'clientReference'">{{'Client Reference' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'walletName'">{{'Iznes Reference' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'registeredCompanyName'">{{'Company' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'leiCode'">{{'LEI' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'legalForm'">{{'Legal Form' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'sectorActivity'">{{'Sector of Activity' | translate}}</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
+
+                        <clr-dg-row *clrDgItems="let item of clientReferential" (click)="kycId = item.kycID;">
+                            <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.registeredCompanyName}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.leiCode}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.legalForm}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.sectorActivity}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                        </clr-dg-row>
+
+                        <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                            <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                        </clr-dg-footer>
+                    </clr-datagrid>
+
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+
+<clr-tabs *ngIf="kycId != 'list'">
+    <clr-tab>
+        <button clrTabLink>{{'KYC Information' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+    <clr-tab>
+        <button clrTabLink>{{'Holdings' | translate}}</button>
+        <clr-tab-content>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

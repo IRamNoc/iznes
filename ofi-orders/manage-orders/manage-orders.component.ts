@@ -1,3 +1,5 @@
+import { debounceTime, take, switchMap, filter } from 'rxjs/operators';
+import { combineLatest as observableCombineLatest } from 'rxjs';
 /* Core/Angular imports. */
 import {
     AfterViewInit,
@@ -12,7 +14,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 
 import { MemberSocketService } from '@setl/websocket-service';
 
@@ -28,9 +30,7 @@ import {
     LogService,
     SagaHelper,
 } from '@setl/utils';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/combineLatest';
-import 'rxjs/add/operator/take';
+
 import * as _ from 'lodash';
 import * as moment from 'moment';
 import { ToasterService } from 'angular2-toaster';
@@ -64,7 +64,7 @@ interface SelectedItem {
 /* Decorator. */
 @Component({
     selector: 'app-manage-orders',
-    styleUrls: ['./manage-orders.component.css'],
+    styleUrls: ['./manage-orders.component.scss'],
     templateUrl: './manage-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -83,7 +83,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         isin: null,
         status: null,
         orderType: null,
-        orderID : null,
+        orderID: null,
         pageSize: this.itemPerPage,
         rowOffSet: 0,
         sortByField: 'orderId', // orderId, orderType, isin, shareName, currency, quantity, amountWithCost, orderDate, cutoffDate, settlementDate, orderStatus
@@ -95,6 +95,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     filtersFromRedux: any;
     lastPage: number;
     loading = true;
+    userType: number;
 
     // Locale
     language = 'en';
@@ -172,6 +173,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     amConfirmModal: any = {};
     cancelModalMessage: string;
     /* Observables. */
+    @select(['user', 'myDetail', 'userType']) userTypeOb;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['wallet', 'myWallets', 'walletList']) myWalletsOb: any;
     @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryOb: any;
@@ -270,6 +272,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit() {
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
+        this.subscriptions.push(this.userTypeOb.subscribe((requested) => this.getUserType(requested)));
 
         /* Subscribe for this user's details. */
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => {
@@ -322,8 +325,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.createForm();
         this.setInitialTabs();
 
-        const filterStream$ = this.OfiAmOrdersFiltersOb.take(1);
-        const combined$ = orderStream$.combineLatest(filterStream$);
+        const filterStream$ = this.OfiAmOrdersFiltersOb.pipe(take(1))
+        const combined$ = observableCombineLatest(orderStream$, filterStream$);
 
         const combinedSubscription = combined$.subscribe(([requested, filters]) => {
             if (_.isEmpty(filters)) {
@@ -339,17 +342,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let routeParams$ = this.route.params;
         let routeCombinedSubscription = orderListStream$
-            .filter(orders => !_.isEmpty(orders))
-            .take(1)
-            .switchMap(() => routeParams$)
-            .subscribe(params => {
-                this.routeUpdate(params);
-            });
+        .pipe(
+            filter(orders => !_.isEmpty(orders)),
+            take(1),
+            switchMap(() => routeParams$),
+        )
+        .subscribe(params => {
+            this.routeUpdate(params);
+        });
 
         this.route.queryParams.subscribe(queryParams => {
-            if(queryParams.orderID){
+            if (queryParams.orderID) {
                 this.getAmOrdersFiltersFromRedux({
-                    orderID : queryParams.orderID
+                    orderID: queryParams.orderID
                 });
 
                 let newUrl = this.router.createUrlTree([], {
@@ -363,13 +368,13 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions.push(routeCombinedSubscription);
 
         this.subscriptions.push(combinedSubscription);
-        this.subscriptions.push(this.searchForm.valueChanges.debounceTime(500).subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => this.requestSearch()));
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
 
         this.detectChanges();
     }
 
-    routeUpdate(params){
+    routeUpdate(params) {
         this.orderID = params['tabid'];
         if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
             const order = this.ordersList.find(elmt => {
@@ -411,6 +416,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+
+        this.searchForm.reset();
+
         /* Detach the change detector on destroy. */
         // this.changeDetectorRef.detach();
         //
@@ -441,7 +449,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     clearForm() {
         this.searchForm.patchValue({
-            orderID : '',
+            orderID: '',
             sharename: '',
             isin: '',
             status: [this.orderStatuses[0]],
@@ -460,6 +468,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 ...this.configDate,
                 locale: this.language.substr(0, 2),
             };
+        }
+    }
+
+    getUserType(type): void {
+        if (type) {
+            this.userType = type;
         }
     }
 
@@ -560,16 +574,16 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 } else {
                     this.tabsControl[0].searchForm.get('dateType').patchValue([]);
                 }
-                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== '') {
+                if (typeof this.filtersFromRedux.fromDate !== 'undefined' && this.filtersFromRedux.fromDate !== null) {
                     this.tabsControl[0].searchForm.get('fromDate').patchValue(this.filtersFromRedux.fromDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
-                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== '') {
+                if (typeof this.filtersFromRedux.toDate !== 'undefined' && this.filtersFromRedux.toDate !== null) {
                     this.tabsControl[0].searchForm.get('toDate').patchValue(this.filtersFromRedux.toDate); // emitEvent = true cause infinite loop (make a valueChange)
                     this.isOptionalFilters = true;
                 }
 
-                if(orderID){
+                if (orderID) {
                     this.tabsControl[0].searchForm.get('orderID').patchValue(orderID);
                     this.isOptionalFilters = true;
                 }
@@ -651,7 +665,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             );
 
             return result;
-        },                              []);
+        }, []);
     }
 
     getAmOrdersNewOrder(requested): void {
@@ -776,7 +790,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     showConfirmationSettleAlert(confMessage, index): void {
         this._confirmationService.create(
             '<span>Are you sure?</span>',
-            '<span>Are you sure you want settle the ' + confMessage + '?</span>',
+            '<span>Are you sure you want to settle the ' + confMessage + '?</span>',
             { confirmText: 'Confirm', declineText: 'Back', btnClass: 'info' },
         ).subscribe((ans) => {
             if (ans.resolved) {

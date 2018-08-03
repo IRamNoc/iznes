@@ -14,7 +14,6 @@ import {ClarityModule} from '@clr/angular';
 
 /* Components. */
 import {ManageOrdersComponent} from './manage-orders/manage-orders.component';
-import {MyOrdersComponent} from './my-orders/my-orders.component';
 import {PlaceOrdersComponent} from './place-orders/place-orders.component';
 
 /* Services. */
@@ -27,12 +26,10 @@ import {MultilingualModule} from '@setl/multilingual';
 @NgModule({
     declarations: [
         ManageOrdersComponent,
-        MyOrdersComponent,
         PlaceOrdersComponent
     ],
     exports: [
         ManageOrdersComponent,
-        MyOrdersComponent,
         PlaceOrdersComponent
     ],
     imports: [

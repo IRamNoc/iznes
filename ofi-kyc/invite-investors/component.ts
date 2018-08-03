@@ -1,27 +1,30 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Location } from '@angular/common';
 import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-observable';
 import { immutableHelper } from '@setl/utils';
-import { select, NgRedux } from '@angular-redux/store';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { NgRedux } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 
 import { investorInvitation } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { MultilingualService } from '@setl/multilingual';
+import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 
 const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-
+@AppObservableHandler
 @Component({
     selector: 'app-invite-investors',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [OfiKycObservablesService],
 })
 export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     invitationForm: FormGroup;
@@ -33,38 +36,20 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         // {id: 'sch', text: '中文'}
     ];
 
+    investorTypes = [
+        { id: 45, text: 'Institutional Investor' },
+        { id: 55, text: 'Retail Investor' },
+    ];
+
     enums = {
-        status: {
-            [-2]: {
-                label: 'Rejected',
-                type: 'danger',
-            },
-            [-1]: {
-                label: 'Accepted',
-                type: 'success',
-            },
-            [0]: {
-                label: 'Draft',
-                type: 'info',
-            },
-            [1]: {
-                label: 'Waiting For Approval',
-                type: 'warning',
-            },
-            [2]: {
-                label: 'Awaiting Informations',
-                type: 'warning',
-            },
-        }
-    }
+        status: {},
+    };
 
     panel: any;
 
     inviteItems: investorInvitation[];
 
     unSubscribe: Subject<any> = new Subject();
-
-    @select(['ofi', 'ofiKyc', 'investorInvitations', 'data']) investorInvitations$;
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -74,7 +59,11 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 private _ofiKycService: OfiKycService,
                 private _toasterService: ToasterService,
                 public _translate: MultilingualService,
+                private _ofiKycObservablesService: OfiKycObservablesService,
+                @Inject('kycEnums') kycEnums,
                 private redux: NgRedux<any>) {
+
+        this.enums.status = kycEnums.status;
 
         this.invitationForm = this._fb.group({
             investors: this._fb.array([
@@ -93,6 +82,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                         ])
                     ],
                     clientReference: [
+                        '',
+                    ],
+                    investorType: [
                         '',
                     ],
                     firstName: [
@@ -123,11 +115,8 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this._ofiKycService.getInvitationsByUserAmCompany();
 
-        this.investorInvitations$
-        .takeUntil(this.unSubscribe)
-        .subscribe((d: investorInvitation[]) => {
+        (<any>this).appSubscribe(this._ofiKycObservablesService.investorInvitationsSub(), (d: investorInvitation[]) => {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
@@ -135,22 +124,15 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
                     return {
                         ...invite,
-                        invitationLink: `${window.location.origin}/#/signup/${invite.lang}/${invite.invitationToken}`,
+                        invitationLink: `${window.location.origin}/#/redirect/${invite.lang}/${invite.invitationToken}`,
                         inviteSent: moment(invite.inviteSent).local().format('YYYY-MM-DD HH:mm:ss'),
                         tokenUsedAt,
                         kycStarted,
                     };
-                })
+                });
             }
             this.markForCheck();
         });
-    }
-
-    ngOnDestroy(): void {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
-        /* Detach the change detector on destroy. */
-        this._changeDetectorRef.detach();
     }
 
     getControls(frmGrp: FormGroup, key: string) {
@@ -216,11 +198,12 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         this._ofiKycService.sendInvestInvitations(requestData).then((response) => {
 
             const emailAddressList = response[1].Data[0].existingEmailAddresses;
+            const alreadyInitiatedList = response[1].Data[0].alreadyInitiatedEmailAddresses;
             const validEmailList = [];
             const invalidEmailList = [];
 
             formValues.investors.map(investor => {
-                if (emailAddressList.indexOf(investor.email) === -1) {
+                if ((emailAddressList.indexOf(investor.email) === -1) && alreadyInitiatedList.indexOf(investor.email) === -1) {
                     validEmailList.push(investor.email);
                 } else {
                     invalidEmailList.push(investor.email);
@@ -292,6 +275,21 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         selBox.select();
         document.execCommand('copy');
         document.body.removeChild(selBox);
+    }
+
+    isRetailInvestor(investorType: FormControl): boolean {
+        const val = investorType.value;
+        const userType = _.get(val, '[0].id');
+        if (userType === 55) {
+            investorType.setErrors({ investorType: true });
+            return true;
+        }
+
+        investorType.setErrors(null);
+        return false;
+    }
+
+    ngOnDestroy(){
     }
 }
 

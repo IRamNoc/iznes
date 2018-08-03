@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 import {
     isFundStructure,
@@ -92,6 +92,7 @@ export interface SaveFundHistoryRequestBody extends MemberNodeMessageBody {
 }
 
 export interface Fund {
+    draft: string;
     fundName: string;
     isFundStructure: isFundStructure;
     umbrellaFundID: number;
@@ -113,21 +114,21 @@ export interface Fund {
     isFundOfFund: isFundOfFund;
     managementCompanyID: number;
     fundAdministrator: number;
-    custodianBank: number;
-    investmentManager: number;
-    principalPromoter: string|string[];
-    payingAgent: string|string[];
+    custodianBankID: number;
+    investmentManagerID: number;
+    principlePromoterID: string | string[];
+    payingAgentID: string | string[];
     fundManagers: string;
-    transferAgent: number;
-    centralizingAgent: number;
+    transferAgentID: number;
+    centralizingAgentID: number;
     isDedicatedFund: isDedicatedFund;
     portfolioCurrencyHedge: number; // number enum
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
-    investmentAdvisor: string|string[];
-    auditor: number;
-    taxAuditor: number;
-    legalAdvisor: number;
+    investmentAdvisorID: string | string[];
+    auditorID: number;
+    taxAuditorID: number;
+    legalAdvisorID: number;
     directors: string;
     hasEmbeddedDirective: hasEmbeddedDirective;
     hasCapitalPreservation: hasCapitalPreservation;
@@ -151,9 +152,9 @@ export interface Fund {
 
 export interface IznesCreateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
-    principalPromoter: string;
-    payingAgent: string;
-    investmentAdvisor: string;
+    principlePromoterID: string;
+    payingAgentID: string;
+    investmentAdvisorID: string;
 }
 
 export interface IznesFundRequestMessageBody extends MemberNodeMessageBody {
@@ -163,7 +164,17 @@ export interface IznesFundRequestMessageBody extends MemberNodeMessageBody {
 export interface IznesUpdateFundRequestBody extends MemberNodeMessageBody, Fund {
     token: any;
     fundID: string;
-    principalPromoter: string;
-    payingAgent: string;
-    investmentAdvisor: string;
+    principlePromoterID: string;
+    payingAgentID: string;
+    investmentAdvisorID: string;
+}
+
+export interface IznDeleteFundDraftRequestBody extends MemberNodeMessageBody {
+    token: any;
+    id: string;
+}
+
+export interface fetchFundAuditRequestBody extends MemberNodeMessageBody {
+    token: any;
+    fundID: number;
 }

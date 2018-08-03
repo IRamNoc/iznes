@@ -30,7 +30,7 @@ import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {ConfirmationService} from '@setl/utils';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
 import {setLanguage} from '@setl/core-store';
 import {MultilingualService} from '@setl/multilingual';
@@ -39,7 +39,7 @@ import {MultilingualService} from '@setl/multilingual';
 @Component({
     selector: 'app-signup',
     templateUrl: 'component.html',
-    styleUrls: ['component.css'],
+    styleUrls: ['component.scss'],
 })
 
 /* Class. */
@@ -190,29 +190,35 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.isLogin = false;
 
-        this.subscriptionsArray.push(this._activatedRoute.params.subscribe(params => {
-            this.invitationToken = params['invitationToken'];
-            if (typeof this.invitationToken !== 'undefined' && this.invitationToken !== '') {
+        this.getQueryParams();
 
-                //go get the email linked to the token here.
-                this._ofiKycService.verifyInvitationToken(this.invitationToken).then((data)=>{
-                    this.signupForm.controls['username'].patchValue(data[1].Data[0].email);
-                }).catch((e)=>{
-                    //handle error.
-                    this._ofiKycService.isInvitationTokenUsed(this.invitationToken)
-                        .then((d) => {
-                            this.toasterService.pop('warning', 'This link is no longer valid. Please try to login again.');
-                            this.router.navigate(['login', { email: _.get(d, [1, 'Data', 0, 'email'])}]);
-                        })
-                        .catch(() => {
-                            this.signupForm.controls['username'].patchValue('');
-                        });
-                });
+        // Reduce observable subscription
+        this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
+            this.updateState(authentication);
+        }));
+
+        window.onbeforeunload = null;
+
+    }
+
+    getQueryParams() {
+        this.subscriptionsArray.push(this._activatedRoute.queryParams.subscribe(params => {
+            let invitationToken = params.invitationToken;
+
+            if (invitationToken) {
+                this.invitationToken = invitationToken;
             }
 
-            let lang = params['lang'];
-            if (typeof lang !== 'undefined' && lang !== '') {
 
+            let email = params.email;
+            if(email){
+                this.signupForm.get('username').patchValue(email);
+            }
+
+
+            let lang = params.lang;
+
+            if (lang) {
                 let languages = {
                     'en': 'en-Latn',
                     'fr': 'fr-Latn',
@@ -226,14 +232,8 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
                     this.language = languages[lang];
                 }
             }
-        }));
 
-        // Reduce observable subscription
-        this.subscriptionsArray.push(this.authenticationOb.subscribe(authentication => {
-            this.updateState(authentication);
         }));
-
-        window.onbeforeunload = null;
 
     }
 
@@ -302,7 +302,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             email: this.signupForm.controls.username.value,
             password: this.signupForm.controls.password.value,
             lang: this.language
-        }).then(()=>{
+        }).then(() => {
             this.confirmationService.create(
                 '<span>Success</span>',
                 '<p><b>Your account was created</b></p><p>A confirmation email was sent to you.</p>',
@@ -313,7 +313,7 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
 
             // this.isSignUp = true;
             // this.showModal = true;
-        }).catch((e)=>{
+        }).catch((e) => {
             //handle error.
             this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
         });
@@ -362,8 +362,19 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
     updateState(myAuthenData) {
         // When first Login, Perform initial actions.
         if (!this.isLogin && myAuthenData.isLogin) {
+
             const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
-            this.router.navigateByUrl(redirect);
+            if (this.invitationToken) {
+                let extras = {
+                    queryParams: {
+                        invitationToken: this.invitationToken,
+                        redirect: redirect
+                    }
+                };
+                this.router.navigate(['consume'], extras);
+            } else {
+                this.router.navigateByUrl(redirect);
+            }
 
             // this.isLogin = true;
 

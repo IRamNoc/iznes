@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface UmbrellaFundRequestMessageBody extends MemberNodeMessageBody {
     token: any;
@@ -8,6 +8,7 @@ export interface UmbrellaFundRequestMessageBody extends MemberNodeMessageBody {
 export interface SaveUmbrellaFundRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: any;
+    draft: number;
     umbrellaFundName: string;
     registerOffice: string;
     registerOfficeAddress: string;
@@ -36,6 +37,7 @@ export interface UpdateUmbrellaFundRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: any;
     umbrellaFundID: number;
+    draft: number;
     umbrellaFundName: string;
     registerOffice: string;
     registerOfficeAddress: string;
@@ -58,4 +60,14 @@ export interface UpdateUmbrellaFundRequestBody extends MemberNodeMessageBody {
     directors: string;
     internalReference: string;
     additionnalNotes: string;
+}
+
+export interface IznDeleteUmbrellaDraftRequestBody extends MemberNodeMessageBody {
+    token: string;
+    id: string;
+}
+
+export interface fetchUmbrellaAuditRequestBody extends MemberNodeMessageBody {
+    token: string;
+    umbrellaFundID: number;
 }

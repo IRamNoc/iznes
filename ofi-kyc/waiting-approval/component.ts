@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, SecurityContext} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, SecurityContext, ViewChild} from '@angular/core';
 import {Location} from '@angular/common';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -25,7 +25,7 @@ enum Statuses {
 @Component({
     selector: 'app-waiting-approval',
     templateUrl: './component.html',
-    styleUrls: ['./component.css'],
+    styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
@@ -42,6 +42,11 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     amKycList: Array<any>;
     amCompanyName: string;
     invitedID: number;
+    completeKycModal;
+    alreadyCompleted;
+    investorID;
+    isProOpen = true;
+    message;
 
     /* Public statuses */
     APPROVED_STATUS = Statuses.approved;
@@ -200,6 +205,8 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
             this.initStatuses();
             this.statusId = (kyc.status === Statuses.waitingApproval) ? Statuses.approved : kyc.status;
             this.amCompanyName = kyc.companyName;
+            this.alreadyCompleted = kyc.alreadyCompleted;
+            this.investorID = kyc.investorUserID;
 
             this.initWaitingApprovalForm();
             this.cdr.markForCheck();
@@ -357,6 +364,23 @@ Here is the message that will be sent to the investor:<br />
             if (data.Status === 'Fail') {
                 this.showErrorAlert('The KYC request has already been updated. The request requires the investor\'s attention now');
             }
+        });
+    }
+
+    openCompleteKycModal(){
+        this.completeKycModal = true;
+    }
+
+    saveCompleteKycModal(message){
+        this.kycService.notifyKycCompletion(this.investorID, message, this.kycId).then(() => {
+            let message = this._translate.translate('The investor has been notified.');
+            this.toast.pop('success', message);
+            this.completeKycModal = false;
+            this.cdr.markForCheck();
+            this.redux.dispatch({
+                type: CLEAR_REQUESTED
+            });
+            this._router.navigateByUrl('kyc-am-documents');
         });
     }
 

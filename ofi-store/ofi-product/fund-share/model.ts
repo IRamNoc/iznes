@@ -1,5 +1,6 @@
 export interface OfiFundShare {
     accountId?: number;
+    draft: string;
     fundShareID?: number;
     fundShareName: string;
     fundID: number;
@@ -9,6 +10,7 @@ export interface OfiFundShare {
     subscriptionStartDate: string;
     launchDate: string;
     shareClassCurrency: number;
+    iban: string;
     valuationFrequency: number;
     historicOrForwardPricing: number;
     status: number;
@@ -99,4 +101,3 @@ export interface OfiFundShareDocuments {
     emt: number;
     tpts2: number;
 }
- 

@@ -157,6 +157,7 @@ interface UpdateOrderResponse {
     amAccountID: number;
     investorAccountID: number;
     clientReference: string;
+    subportfolioName: string;
 }
 
 type TX = 'tx';
@@ -168,18 +169,18 @@ interface ContractRequestBody {
         txtype: NewContractType,
         walletid: any,
         address: String,
-        contractdata: ContractData
+        contractdata: ContractData,
     };
 }
 
 const OrderTypeNumber = {
     s: 3,
-    r: 4
+    r: 4,
 };
 
 const OrderByNumber = {
     q: 1,
-    a: 2
+    a: 2,
 };
 
 const NumberMultiplier = 100000;
@@ -214,7 +215,6 @@ export class OrderHelper {
     fakeValuation: any;
     fakeSettlement: any;
 
-
     get feePercentage() {
         return Number({
             [OrderType.Subscription]: this.fundShare.entryFee || 0,
@@ -234,7 +234,7 @@ export class OrderHelper {
             [OrderType.Subscription]: {
                 [OrderByType.Amount]: (this.fundShare.minInitialSubscriptionInAmount || 0),
                 [OrderByType.Quantity]: (this.fundShare.minInitialSubscriptionInShare || 0),
-            }
+            },
         }[this.orderType] || {})[this.orderBy] || 0;
     }
 
@@ -276,7 +276,7 @@ export class OrderHelper {
         // this.fakeSettlement = moment().add(20, 'seconds');
 
         this.fakeCuoff = moment().add(5, 'minutes');
-        this.fakeValuation = this.fakeCuoff.clone().utc().set({hour: 0, minute: 0, second: 1});
+        this.fakeValuation = this.fakeCuoff.clone().utc().set({ hour: 0, minute: 0, second: 1 });
         this.fakeSettlement = moment().add(15, 'minutes');
 
     }
@@ -284,7 +284,7 @@ export class OrderHelper {
     static getChildErrorMessage(response) {
         return {
             orderValid: false,
-            errorMessage: response.errorMessage
+            errorMessage: response.errorMessage,
         };
     }
 
@@ -318,8 +318,8 @@ export class OrderHelper {
                 instrument,
                 amount,
                 protocol,
-                metadata
-            }
+                metadata,
+            },
         };
     }
 
@@ -337,13 +337,13 @@ export class OrderHelper {
         return {
             messageType: 'tx',
             messageBody: {
-                'topic': 'cocom',
-                'walletid': walletId,
-                'address': commitAddress,
-                'function': 'dvp_uk_commit',
-                'contractdata': contractData,
-                'contractaddress': contractAddress
-            }
+                topic: 'cocom',
+                walletid: walletId,
+                address: commitAddress,
+                function: 'dvp_uk_commit',
+                contractdata: contractData,
+                contractaddress: contractAddress,
+            },
         };
     }
 
@@ -381,13 +381,13 @@ export class OrderHelper {
     }
 
     static buildOrderSendSharePdfRequestBody(order: UpdateOrderResponse, holding: number) {
-        const decimalPlaces = 2;
+        const decimalPlaces = 5;
         const orderReference = pad(order.orderID, 11, '0');
         const orderType = Number(order.orderType);
         let subject;
 
         if (orderType === OrderType.Subscription) {
-            subject = 'Certification of Book Entry - SOUSCRIPTION ' + orderReference;
+            subject = 'Certification of Book Entry - SUBSCRIPTION ' + orderReference;
         } else {
             subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
         }
@@ -406,20 +406,21 @@ export class OrderHelper {
                     fundsForm: 'Fonds commun de placement',
                     nationality: 'Français',
                     clientName: order.investorWalletName, // Customer Wallet Name
+                    subportfolioName: order.subportfolioName,
                     listDate: todayStr,
                     reference: orderReference,
                     clientReference: order.clientReference,
                     date: todayStr,
                     numberOfShares: toNormalScale(Number(holding), decimalPlaces)
-                }
-            }
+                },
+            },
         };
 
         const hasAction = true;
 
         return OrderHelper.buildSendMessage(
             subject, generalBody, actionJson, order.amWalletID,
-            order.amComPub, [order.investorAddress, order.amAddress], hasAction
+            order.amComPub, [order.investorAddress, order.amAddress], hasAction,
         );
     }
 
@@ -428,27 +429,27 @@ export class OrderHelper {
 
         const mailBody = JSON.stringify({
             general: Base64.encode(mailGeneralContent),
-            action: mailActionJson
+            action: mailActionJson,
         });
 
         const recipients = OrderHelper.buildAddressRecipients(recipientWalletAddresses);
 
         return {
             mailSubject: Base64.encode(subject),
-            mailBody: mailBody,
+            mailBody,
             senderId: senderWalletId,
-            senderPub: senderPub,
-            recipients: recipients,
+            senderPub,
+            recipients,
             parentId: 0,
             arrangementId: 0,
             arrangementStatus: 0,
             attachment: 0,
             hasAction,
-            isDraft: 0
+            isDraft: 0,
         };
     }
 
-    static buildAddressRecipients(addresses: Array<string>): {[address: string]: 0} {
+    static buildAddressRecipients(addresses: Array<string>): { [address: string]: 0 } {
         return addresses.reduce((result, item, index) => {
             result[item] = 0;
             return result;
@@ -591,7 +592,7 @@ export class OrderHelper {
             settlementDate,
             orderNote,
             contractExpiryTs,
-            contractStartTs
+            contractStartTs,
         };
     }
 
@@ -608,8 +609,8 @@ export class OrderHelper {
                 txtype: 'conew',
                 walletid,
                 address,
-                contractdata: contractData as any
-            }
+                contractdata: contractData as any,
+            },
         };
     }
 
@@ -624,22 +625,21 @@ export class OrderHelper {
             if (validFakeCutoffStr && validFakeValuationStr && validFakeSettelmentStr) {
                 return {
                     cutoff: moment.utc(fakeCutoffStr, 'YYYY-MM-DD HH:mm'),
-                    valuation: moment.utc(fakeValuationStr, 'YYYY-MM-DD').set({hour: 0, minute: 0, second: 1}),
-                    settlement: moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm')
-                };
-            } else {
-                return {
-                    cutoff: this.fakeCuoff,
-                    valuation: this.fakeValuation,
-                    settlement: this.fakeSettlement
+                    valuation: moment.utc(fakeValuationStr, 'YYYY-MM-DD').set({ hour: 0, minute: 0, second: 1 }),
+                    settlement: moment.utc(fakeSettelmentStr, 'YYYY-MM-DD HH:mm'),
                 };
             }
+            return {
+                cutoff: this.fakeCuoff,
+                valuation: this.fakeValuation,
+                settlement: this.fakeSettlement,
+            };
 
         } catch (e) {
             return {
                 cutoff: this.fakeCuoff,
                 valuation: this.fakeValuation,
-                settlement: this.fakeSettlement
+                settlement: this.fakeSettlement,
             };
         }
     }
@@ -660,7 +660,7 @@ export class OrderHelper {
             if (!dateValid) {
                 return {
                     orderValid: false,
-                    errorMessage: 'Invalid date'
+                    errorMessage: 'Invalid date',
                 };
             }
 
@@ -675,7 +675,7 @@ export class OrderHelper {
             if (!dateValid) {
                 return {
                     orderValid: false,
-                    errorMessage: 'Invalid date'
+                    errorMessage: 'Invalid date',
                 };
             }
 
@@ -692,7 +692,7 @@ export class OrderHelper {
             if (!dateValid) {
                 return {
                     orderValid: false,
-                    errorMessage: 'Invalid date'
+                    errorMessage: 'Invalid date',
                 };
             }
 
@@ -732,7 +732,7 @@ export class OrderHelper {
 
         return {
             price,
-            estimatedPrice
+            estimatedPrice,
         };
     }
 
@@ -748,7 +748,7 @@ export class OrderHelper {
         }
 
         return {
-            orderValid: true
+            orderValid: true,
         };
     }
 
@@ -865,7 +865,7 @@ export class OrderHelper {
             amount,
             estimatedAmount,
             amountWithCost,
-            estimatedAmountWithCost
+            estimatedAmountWithCost,
         };
     }
 
@@ -887,7 +887,7 @@ export class OrderHelper {
         const expiryTimeStamp = settleTimeStamp + ExpirySecond;
         return {
             settleTimeStamp,
-            expiryTimeStamp
+            expiryTimeStamp,
         };
     }
 
@@ -1051,7 +1051,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
             creatorAddress: 'not being used'  // not being used
         };
     }
@@ -1167,7 +1167,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            mustSigns: {[this.investorAddress]: false, [this.amIssuingAddress]: true},
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
             creatorAddress: 'not being used' // not being used
         };
     }
@@ -1314,7 +1314,7 @@ export function pad(num: number, width: number, fill: string): string {
 }
 
 export function toNormalScale(num: number, numDecimal: number): number {
-    return math.format(math.chain(num).divide(NumberMultiplier).done(), {notation: 'fixed', precision: numDecimal});
+    return math.format(math.chain(num).divide(NumberMultiplier).done(), { notation: 'fixed', precision: numDecimal });
 }
 
 /**
