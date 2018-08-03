@@ -239,20 +239,21 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         }
                     ];
                 } else {
+                    console.log('empty');
                     // this.fundsDetails = [];
-                    // this.fundsTotalNetAmount = 0;
-                    // this.fundsTotalSubscriptionAmount = 0;
-                    // this.fundsTotalRedemptionAmount = 0;
-                    // this.pieChartDatas = [
-                    //     {
-                    //         name: 'Subscription (%)',
-                    //         value: 0,
-                    //     },
-                    //     {
-                    //         name: 'Redemption (%)',
-                    //         value: 0,
-                    //     }
-                    // ];
+                    this.fundsTotalNetAmount = 0;
+                    this.fundsTotalSubscriptionAmount = 0;
+                    this.fundsTotalRedemptionAmount = 0;
+                    this.pieChartDatas = [
+                        {
+                            name: 'Subscription (%)',
+                            value: 0,
+                        },
+                        {
+                            name: 'Redemption (%)',
+                            value: 0,
+                        }
+                    ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
@@ -288,19 +289,19 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                     ];
                 } else {
                     // this.sharesDetails = [];
-                    // this.sharesTotalNetAmount = 0;
-                    // this.sharesTotalSubscriptionAmount = 0;
-                    // this.sharesTotalRedemptionAmount = 0;
-                    // this.pieChartDatas = [
-                    //     {
-                    //         name: 'Subscription (%)',
-                    //         value: 0,
-                    //     },
-                    //     {
-                    //         name: 'Redemption (%)',
-                    //         value: 0,
-                    //     }
-                    // ];
+                    this.sharesTotalNetAmount = 0;
+                    this.sharesTotalSubscriptionAmount = 0;
+                    this.sharesTotalRedemptionAmount = 0;
+                    this.pieChartDatas = [
+                        {
+                            name: 'Subscription (%)',
+                            value: 0,
+                        },
+                        {
+                            name: 'Redemption (%)',
+                            value: 0,
+                        }
+                    ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
