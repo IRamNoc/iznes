@@ -1,16 +1,16 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 // Internal
-import {MemberService} from '@setl/core-req-services';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList} from '@setl/core-store';
-import {ConfirmationService, SagaHelper} from '@setl/utils';
-import {PersistService} from '@setl/core-persist';
+import { MemberService } from '@setl/core-req-services';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { clearRequestedManageMemberList, SET_MANAGE_MEMBER_LIST, setRequestedManageMemberList } from '@setl/core-store';
+import { ConfirmationService, SagaHelper } from '@setl/utils';
+import { PersistService } from '@setl/core-persist';
 
 interface NewMemberUserDetail {
     memberName: string;
@@ -23,20 +23,20 @@ interface NewMemberUserDetail {
     selector: 'app-manage-member',
     templateUrl: './component.html',
     styleUrls: ['./component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class ManageMemberComponent implements OnInit, OnDestroy {
-    tabsControl: Array<any>;
-    manageMembersList: Array<any>;
+    tabsControl: any[];
+    manageMembersList: any[];
     isSymAdmin: boolean;
-    allowedToSave: Array<boolean>;
+    allowedToSave: boolean[];
 
     // Rows Per Page datagrid size
     public pageSize: number;
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     createdNewMemberUser: NewMemberUserDetail;
 
@@ -50,43 +50,46 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 private memberService: MemberService,
                 private confirmationService: ConfirmationService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
         this.allowedToSave = [];
         /* Default tabs. */
         this.tabsControl = [
             {
                 title: '<i class="fa fa-search"></i> Search',
                 memberId: -1,
-                active: true
+                active: true,
             },
             {
                 title: '<i class="fa fa-plus"></i> Add New Member',
                 memberId: -1,
-                formControl: this._persistService.watchForm('manageMember/manageMember', new FormGroup(
+                formControl: this.persistService.watchForm('manageMember/manageMember', new FormGroup(
                     {
                         memberName: new FormControl('', Validators.required),
-                        email: new FormControl('', Validators.required)
-                    }
+                        email: new FormControl('', Validators.required),
+                    },
                 )),
-                active: false
-            }
+                active: false,
+            },
         ];
 
-        this.subscriptionsArray.push(this.manageMemberListOb.subscribe((memberList) => this.updateMemberList(memberList)));
-        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe((requestedState) =>
+        // Request Member List
+        this.subscriptionsArray.push(this.manageMemberListOb.subscribe(memberList =>
+            this.updateMemberList(memberList)));
+        this.subscriptionsArray.push(this.requestedManagedMemberListOb.subscribe(requestedState =>
             this.requestManagedMemberList(requestedState)));
+
+        // Subscribe to set System Admin flag
         this.subscriptionsArray.push(this.isSymAdminOb.subscribe(isSymAdmin => this.isSymAdmin = isSymAdmin));
     }
 
     ngOnInit() {
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
-            subscription.unsubscribe();
-        }
-    }
-
+    /** Checks if user is system admin
+     *
+     * @param {number} tabId
+     * @returns {boolean}
+     */
     canSave(tabId: number): boolean {
         if (typeof this.allowedToSave[tabId] === 'undefined') {
             this.allowedToSave[tabId] = false;
@@ -94,18 +97,31 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         return this.allowedToSave[tabId];
     }
 
+    /**
+     * Update Member List
+     *
+     * @param {object} memberList
+     */
     updateMemberList(memberList: object): void {
         const memberListImu = fromJS(memberList);
-        this.manageMembersList = memberListImu.reduce(function (result, thisMember) {
-            const index = result.length;
-            const newThisMember = thisMember.set('index', index);
-            result.push(newThisMember.toJS());
-            return result;
-        }, []);
+        this.manageMembersList = memberListImu.reduce(
+            (result, thisMember) => {
+                const index = result.length;
+                const newThisMember = thisMember.set('index', index);
+                result.push(newThisMember.toJS());
+                return result;
+            },
+            [],
+        );
 
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Request Managed Member List
+     *
+     * @param {boolean} requestedState - Redux requested flag
+     */
     requestManagedMemberList(requestedState: boolean): void {
         // If the state is false, that means we need to request the list.
         if (!requestedState) {
@@ -119,7 +135,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 [SET_MANAGE_MEMBER_LIST],
                 [],
                 asyncTaskPipe,
-                {}
+                {},
             ));
         }
     }
@@ -140,7 +156,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
 
             /* ...prepare the task pipe... */
             const asyncTaskPipe = this.memberService.addMember(
-                this.tabsControl[tabId].formControl.value
+                this.tabsControl[tabId].formControl.value,
             );
 
             /* ...and run the async callback, then dispatch. */
@@ -163,8 +179,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     /* Handle error message. */
-                    this.showErrorResponse(data);
-                }
+                    const message = _.get(data, '[1].Data[0].Message', '');
+                    this.showAlert('error', message);
+                },
             ));
         }
     }
@@ -190,30 +207,32 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             const asyncTaskPipe = this.memberService.editMember(
                 {
                     memberName,
-                    memberId
-                }
+                    memberId,
+                },
             );
 
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
-                (data) => {
-                    this.showSuccessResponse('Member is updated');
+                () => {
+                    this.showAlert('success', 'Member is updated');
                 },
                 (data) => {
-                    this.showErrorResponse(data);
-                }
+                    const message = _.get(data, '[1].Data[0].Message', '');
+                    this.showAlert('error', message);
+                },
             ));
         }
     }
 
     /**
      * Handle edit button is clicked.
-     * @param index
+     *
+     * @param index - index of member to edit
      */
     handleEdit(index: number): void {
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i].memberId === this.manageMembersList[index].memberId) {
                 this.setTabActive(i);
                 return;
@@ -228,16 +247,16 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
             memberId: member.memberId,
             formControl: new FormGroup(
                 {
-                    memberName: new FormControl(member.memberName)
-                }
+                    memberName: new FormControl(member.memberName),
+                },
             ),
-            active: false
+            active: false,
         });
         this.allowedToSave[this.tabsControl.length - 1] = false;
         this.tabsControl[this.tabsControl.length - 1].formControl.controls.memberName.valueChanges.subscribe(
             () => {
                 this.allowedToSave[this.tabsControl.length - 1] = true;
-            }
+            },
         );
 
         // Activate the new tab.
@@ -252,16 +271,18 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     handleDelete(index: number): void {
+        /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a Member</span>',
-            '<span>Are you sure you want to delete this member?</span>'
+            '<span class="text-warning">Are you sure you want to delete this member?</span>',
         ).subscribe((ans) => {
+            /* ... they are so now send the delete request */
             if (ans.resolved) {
                 // Check if the tab is already open.
                 // If yes, close the tab.
                 let i;
                 const memberId = this.manageMembersList[index].memberId;
-                for (i = 0; i < this.tabsControl.length; i++) {
+                for (i = 0; i < this.tabsControl.length; i += 1) {
                     if (this.tabsControl[i].memberId === memberId) {
                         this.tabsControl.splice(i, 1);
                     }
@@ -270,18 +291,19 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 // Send request to delete member.
                 const asyncTaskPipe = this.memberService.deleteMember(
                     {
-                        memberId
-                    }
+                        memberId,
+                    },
                 );
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
-                    (data) => {
-                        this.showSuccessResponse('Member is deleted');
+                    () => {
+                        this.showAlert('success', 'Member is deleted');
                     },
                     (data) => {
-                        this.showErrorResponse(data);
-                    }
+                        const message = _.get(data, '[1].Data[0].Message', '');
+                        this.showAlert('error', message);
+                    },
                 ));
             }
         });
@@ -301,7 +323,7 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
 
         this.tabsControl = [
             ...this.tabsControl.slice(0, index),
-            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
         // Reset Tabs.
@@ -310,6 +332,11 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         return;
     }
 
+    /**
+     * Sets Active Tab
+     *
+     * @param {number} index - the tab index to set active
+     */
     setTabActive(index: number): void {
         const tabControlImu = fromJS(this.tabsControl);
 
@@ -320,34 +347,28 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         this.tabsControl = newTabControlImu.toJS();
     }
 
-    showErrorResponse(response) {
-        const message = _.get(response, '[1].Data[0].Message', '');
+    /**
+     * Accepted Characters, displays alert if regex check fails
+     *
+     * @param str - string to check
+     * @returns {boolean}
+     */
+    acceptedCharacters(str) {
+        const patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżź' +
+            'ñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
+        if (!patt.test(str)) {
+            this.showAlert('error', 'Invalid characters in Member name.');
+            return false;
+        }
 
-        this.alertsService.create('error', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        return true;
     }
 
-    showSuccessResponse(message) {
-        this.alertsService.create('success', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
+    /**
+     * Success alert after creating new Member User
+     */
     showNewMemberUser() {
-        this.alertsService.create('success', `
+        this.showAlert('success', `
         <table class="table grid large">
             <tr>
                 <td class="left">Member Name</td>
@@ -365,27 +386,34 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
                 <td class="left">Password</td>
                 <td class="left" id="newMemberPassword">${this.createdNewMemberUser.password}</td>
             </tr>
-
         </table>
-                    `);
+       `);
     }
 
-    acceptedCharacters(str) {
-        let patt = new RegExp('^[a-zA-Z0-9àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.\'-]+$');
-        if (!patt.test(str)) {
-            this.alertsService.create('error', `<table class="table grid">
-                        <tbody>
-                            <tr class="fadeIn">
-                                <td class="text-center" width="500px">
-                                <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                                &nbsp;Invalid characters in Member name.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                `);
-            return false;
-        }
+    /**
+     * Show a success, warning or error alert message
+     *
+     * @param  {type} string - the type of alert to show.
+     * @param  {message} string - the message to display in the alert.
+     * @return {void}
+     */
+    showAlert(type: any, message: string) {
+        const alertClass = (type === 'error') ? 'danger' : type;
 
-        return true;
+        this.alertsService.create(type, `
+            <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-${alertClass}">${message}</td>
+                    </tr>
+                </tbody>
+            </table>
+        `);
+    }
+
+    ngOnDestroy() {
+        for (const subscription of this.subscriptionsArray) {
+            subscription.unsubscribe();
+        }
     }
 }
