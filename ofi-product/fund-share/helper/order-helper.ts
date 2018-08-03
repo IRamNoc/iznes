@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
+//import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
 import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
@@ -21,7 +21,7 @@ import {
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-// } from '../../../../utils/services/blockchain-contract/model';
+//} from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
 
 import { Base64 } from './base64';
@@ -411,7 +411,7 @@ export class OrderHelper {
                     reference: orderReference,
                     clientReference: order.clientReference,
                     date: todayStr,
-                    numberOfShares: toNormalScale(Number(holding), decimalPlaces)
+                    numberOfShares: toNormalScale(Number(holding), 5)
                 },
             },
         };
@@ -777,11 +777,18 @@ export class OrderHelper {
             amount = 0;
             estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
 
+            // change to 2 decimal place
+            estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
+
             // calculate fee
             fee = calFee(estimatedAmount, this.feePercentage);
 
+            // net amount change to 2 decimal place
+            fee = this.getAmountTwoDecimal(fee);
+
             // net amount
             estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+
             amountWithCost = 0;
 
             break;
@@ -809,10 +816,14 @@ export class OrderHelper {
 
                 // if we are using known nav, we use the quantity to work out the new amount
                 // if we are using unknow nav, we put the specified amount back.
-                if(this.isKnownNav()){
+                if (this.isKnownNav()) {
                     estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+
+                    // change to 2 decimal place
+                    estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
+
                     amount = estimatedAmount;
-                }else {
+                } else {
                     estimatedAmount = this.orderValue;
                     amount = this.orderValue;
                 }
@@ -822,14 +833,21 @@ export class OrderHelper {
                 // and use the new quantity to work out amount.
                 amount = 0;
                 estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+
+                // change to 2 decimal place
+                estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
             }
 
 
             // calculate fee
             fee = calFee(estimatedAmount, this.feePercentage);
 
+            // change to 2 decimal place
+            fee = this.getAmountTwoDecimal(fee);
+
             // net amount
             estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+
             amountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
 
             break;
@@ -849,6 +867,18 @@ export class OrderHelper {
             amountWithCost,
             estimatedAmountWithCost,
         };
+    }
+
+
+    /**
+     * Get Amount to Two Decimal Places and converts to blockchain number
+     *
+     * @param amount
+     * @returns {number}
+     */
+    getAmountTwoDecimal(amount) {
+        amount = Math.round((amount / NumberMultiplier) * 100) / 100;
+        return (amount * NumberMultiplier);
     }
 
     getOrderTimeStamp(): OrderTimeStamps {
@@ -955,11 +985,11 @@ export class OrderHelper {
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
-            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
-                // the formula before apply maximum number decimal.
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal));
+            // the formula before apply maximum number decimal.
             let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
             // apply maximum number decimal.
-            amountStr = 'floor(' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ') / ' + decimalDivider + ' * ' + NumberMultiplier;
+            amountStr = 'floor((' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ')) / ' + decimalDivider + ' * ' + NumberMultiplier;
 
             actionData = [
                 {

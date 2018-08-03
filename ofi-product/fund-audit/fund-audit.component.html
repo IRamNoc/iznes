@@ -1,0 +1,20 @@
+<div class="header-breadcrumbs">
+    <h1>
+        <i class="fa fa-home"></i> {{'Fund Audit Trail:' | translate}} {{fundName}}
+    </h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink>
+            <i class="fa fa-th-list"></i> {{'Fund Audit Trail' | translate}}
+        </button>
+        <clr-tab-content *clrIfActive>
+
+            <div *ngIf="fundID">
+                <fund-audit-datagrid [fundID]="fundID"></fund-audit-datagrid>
+            </div>
+
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>

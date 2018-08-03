@@ -7,6 +7,7 @@ import { fromJS, Map } from 'immutable';
 const initialState: UmbrellaFundListState = {
     umbrellaFundList: {},
     requested: false,
+    audit: {},
 };
 
 export const umbrellaFundListReducer = function (state: UmbrellaFundListState = initialState, action: Action) {
@@ -27,6 +28,9 @@ export const umbrellaFundListReducer = function (state: UmbrellaFundListState = 
     case UmbrellaFundActions.CLEAR_REQUESTED_UMBRELLA_FUND:
         return handleClearRequested(state, action);
 
+    case UmbrellaFundActions.SET_UMBRELLA_AUDIT:
+        return handleSetUmbrellaAudit(state, action);
+
     default:
         return state;
     }
@@ -39,7 +43,7 @@ function formatUmbrellaFundDataResponse(rawUmbrellaFundData: Array<any>): Array<
     const umbrellaFundDetailList = Map(rawUmbrellaFundDataList.reduce(
         (result, item) => {
             result[item.get('umbrellaFundID')] = {
-                umbrellaFundID: item.get('umbrellaFundID').toString(),
+                umbrellaFundID: item.get('umbrellaFundID'),
                 draft: item.get('draft'),
                 draftUser: item.get('draftUser'),
                 draftDate: item.get('draftDate'),
@@ -104,4 +108,18 @@ function handleClearRequested(state: UmbrellaFundListState, action: Action): Umb
     return Object.assign({}, state, {
         requested,
     });
+}
+
+function handleSetUmbrellaAudit(state: UmbrellaFundListState, action): UmbrellaFundListState {
+    const data = _.get(action.payload, [1, 'Data']);
+    if (!data.length) {
+        return state;
+    }
+    return {
+        ...state,
+        audit: {
+            ...state.audit,
+            [data[0].umbrellaID]: data,
+        },
+    };
 }

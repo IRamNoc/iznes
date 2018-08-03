@@ -91,6 +91,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     // form config
     metadata: any;
 
+    trueAmount: number;
+
     // Date picker configuration
     configDateCutoff = {
         firstDayOfWeek: 'mo',
@@ -278,7 +280,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this._moneyValuePipe.parse(this.form.controls.quantity.value, 4)
             ),
             a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.form.controls.amount.value, 4)
+                this._moneyValuePipe.parse(this.trueAmount, 2)
             )
         }[this.actionBy];
     }
@@ -817,9 +819,9 @@ The IZNES Team.</p>`;
                  */
                 const val = Number(value.toString().replace(/\s+/g, ''));
 
-                const amount = math.format(math.chain(val).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
-                const amountStr = this._moneyValuePipe.transform(amount, 4);
-                beTriggered.patchValue(amountStr, {onlySelf: true, emitEvent: false});
+                const amount = math.format(math.chain(val).multiply(this.nav).done(), 14);
+                const amountStr = this._moneyValuePipe.transform(amount, 2);
+                beTriggered.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
 
@@ -831,12 +833,14 @@ The IZNES Team.</p>`;
                  * quantity = amount / nav
                  * Warning: Before changing this logic check with team lead
                  */
-                const newValue = this._moneyValuePipe.parse(value, 4);
+                const newValue = this._moneyValuePipe.parse(value, 2);
 
-                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), {notation: 'fixed', precision: 5}) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
+                this.trueAmount = newValue;
+
+                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
                 const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
                 const newQuantityStr = this._moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
-                beTriggered.patchValue(newQuantityStr, {onlySelf: true, emitEvent: false});
+                beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
 
@@ -854,7 +858,7 @@ The IZNES Team.</p>`;
     calcFeeNetAmount() {
 
         // get amount
-        const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
+        const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
 
         // we have two scenario to handle in there.
         // 1. if we working on known nav, as we always round the the amount down according to the quantity.
@@ -862,20 +866,20 @@ The IZNES Team.</p>`;
         // 2. if we working on unknown nav, as the nav is not known, we want to keep the amount as it is.
         let amount = 0;
 
-        if(this.isKnownNav()){
-            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
-        }else {
-            amount = this._moneyValuePipe.parse(this.amount.value);
+        if (this.isKnownNav()) {
+            amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
+        } else {
+            amount = this._moneyValuePipe.parse(this.amount.value, 2);
         }
 
         // calculate fee
         const fee = calFee(amount, this.feePercentage);
-        const feeStr = this._moneyValuePipe.transform(fee.toString(), 4).toString();
+        const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
         this.feeAmount.setValue(feeStr);
 
         // net amount
         const netAmount = calNetAmount(amount, fee, this.orderType);
-        const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 4).toString();
+        const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
         this.netAmount.setValue(netAmountStr);
     }
 
@@ -885,10 +889,10 @@ The IZNES Team.</p>`;
      */
     roundAmount() {
         if (this.isKnownNav() || this.orderType === 'r') {
-            const quantityParsed = this._moneyValuePipe.parse(this.quantity.value);
-            const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), {notation: 'fixed', precision: 4});
-            const amountStr = this._moneyValuePipe.transform(amount.toString(), 4).toString();
-            this.amount.patchValue(amountStr, {onlySelf: true, emitEvent: false});
+            const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
+            const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
+            const amountStr = this._moneyValuePipe.transform(amount.toString(), 2).toString();
+            this.amount.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
             this.unSubscribeForChange();
 
@@ -907,7 +911,7 @@ The IZNES Team.</p>`;
      */
     roundDown(number: any, decimals: any) {
         decimals = decimals || 0;
-        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), {notation: 'fixed', precision: 4});
+        return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
     }
 
 
@@ -995,12 +999,12 @@ The IZNES Team.</p>`;
         // enter it again.
         if (this.actionBy === 'a') {
             // clear amount
-           this.amount.patchValue(0);
-           this.amount.markAsUntouched();
+            this.amount.patchValue(0);
+            this.amount.markAsUntouched();
 
-           // clear quantity
-           this.quantity.patchValue(0);
-           this.quantity.markAsUntouched();
+            // clear quantity
+            this.quantity.patchValue(0);
+            this.quantity.markAsUntouched();
         }
 
         return false;
@@ -1170,7 +1174,7 @@ The IZNES Team.</p>`;
      * @return {string}
      */
     latestNavDateFormated(): string {
-      return this.getDate(this.shareData.priceDate);
+        return this.getDate(this.shareData.priceDate);
     }
 
     /**
@@ -1192,7 +1196,7 @@ The IZNES Team.</p>`;
         // check if latest nav's status is  validated
         // check if latest nav's date is same as the order's
         if (Number(latestNavStatus) !== -1) {
-           return false;
+            return false;
         }
 
         if (orderNavDate !== latestNavDate) {
@@ -1264,7 +1268,7 @@ function closestDay(dayToFind: number): string {
 function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent);
-    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), {notation: 'fixed', precision: 4}));
+    return Number(math.format(math.chain(amount).multiply((feePercent)).done(), 14));
 }
 
 /**
@@ -1279,7 +1283,7 @@ function calNetAmount(amount: number | string, fee: number | string, orderType: 
     amount = Number(amount);
     fee = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), {notation: 'fixed', precision: 4})),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), {notation: 'fixed', precision: 4}))
+        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
+        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
     }[orderType];
 }

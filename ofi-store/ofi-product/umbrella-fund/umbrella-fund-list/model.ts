@@ -32,4 +32,7 @@ export interface UmbrellaFundListState {
         [key: string]: UmbrellaFundDetail,
     };
     requested: boolean;
+    audit: {
+        [key: number]: any[],
+    };
 }

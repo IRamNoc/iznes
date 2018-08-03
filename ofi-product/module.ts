@@ -29,6 +29,14 @@ import { FundShareAuditComponent } from './fund-share/audit/component';
 import { FundShareAuditService } from './fund-share/audit/service';
 import { FundComponent } from './fund/component';
 import { ProductCharacteristicComponent } from './characteristic/product-characteristic.component';
+import { UmbrellaAuditComponent } from './umbrella-audit/umbrella-audit.component';
+import {
+    UmbrellaAuditDatagridComponent,
+} from './umbrella-audit/umbrella-audit-datagrid/umbrella-audit-datagrid.component';
+import { FundAuditComponent } from './fund-audit/fund-audit.component';
+import {
+    FundAuditDatagridComponent,
+} from './fund-audit/fund-audit-datagrid/fund-audit-datagrid.component';
 
 /* Graphs. */
 import { ChartsModule } from 'ng2-charts';
@@ -55,6 +63,10 @@ import productConfig from './productConfig';
         FundShareAuditComponent,
         FundComponent,
         ProductCharacteristicComponent,
+        UmbrellaAuditComponent,
+        UmbrellaAuditDatagridComponent,
+        FundAuditComponent,
+        FundAuditDatagridComponent,
     ],
     exports: [
         ProductHomeComponent,
@@ -66,6 +78,10 @@ import productConfig from './productConfig';
         FundShareAuditComponent,
         FundComponent,
         ProductCharacteristicComponent,
+        UmbrellaAuditComponent,
+        UmbrellaAuditDatagridComponent,
+        FundAuditComponent,
+        FundAuditDatagridComponent,
     ],
     imports: [
         CommonModule,

@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {FormArray} from '@angular/forms';
 import {MemberSocketService} from '@setl/websocket-service';
 
 import {mapValues, isArray, isObject, reduce, pickBy, get as getValue, merge, omit, flatten, pick, isNil} from 'lodash';
@@ -56,10 +57,17 @@ export class IdentificationService {
 
             let formGroupBanking = form.get('bankingInformation');
             formGroupBanking.get('kycID').setValue(kycID);
-            let formGroupBankingCustomValue = formGroupBanking.get('custodianHolderCustom').value;
+
+            let formGroupBankingCustom = formGroupBanking.get('custodianHolderCustom');
+            let formGroupBankingCustomValue = formGroupBankingCustom.value;
             let formGroupBankingValue = omit(formGroupBanking.value, 'custodianHolderCustom');
-            formGroupBankingCustomValue.forEach(singleCustomValue => {
-                let bankingPromise = this.sendRequestBanking(merge(formGroupBankingValue, singleCustomValue));
+            formGroupBankingCustomValue.forEach((singleCustomValue, key) => {
+                let data = merge({}, singleCustomValue, formGroupBankingValue);
+                data = pickBy(data);
+
+                let bankingPromise = this.sendRequestBanking(data).then(data => {
+                    (formGroupBankingCustom as FormArray).at(key).get('custodianID').patchValue(data.custodianID);
+                });
                 promises.push(bankingPromise);
             });
 
@@ -127,7 +135,8 @@ export class IdentificationService {
             RequestName: 'updatekycbanking',
             ...extracted
         };
-        return this.requestsService.sendRequest(messageBody);
+
+        return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));
     }
 
     sendRequestClassification(formGroupClassification) {

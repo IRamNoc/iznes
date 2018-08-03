@@ -135,7 +135,6 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     populateForm(kycs){
         let formValue = kycs.map(kyc => {
-            console.log('looking for', kyc.amcID);
             return {
                 id : kyc.amcID,
                 text : this.managementCompanies[kyc.amcID].companyName
@@ -202,7 +201,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         this.newRequestService.storeCurrentKycs(ids);
 
         this.ngRedux.dispatch(ClearMyKycListRequested());
-
+        this.preselectedManagementCompany = {};
         this.submitted = true;
         this.changeDetectorRef.markForCheck();
     }
