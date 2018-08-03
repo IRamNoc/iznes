@@ -310,7 +310,6 @@ export class UiTooltipsComponent implements OnInit {
     }
 
     resetUserTour() {
-        this.showTour = false;
         if (this.connectedWalletId > 0) {
             setTimeout(()=>{
                 const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
@@ -329,7 +328,7 @@ export class UiTooltipsComponent implements OnInit {
                         OfiUserTourService.setRequestedUserTours(false, this.ngRedux);
                     },
                     failureCallback: (response) => {
-                        console.log('Error save userTour failed: ', response);
+                        console.log('UserTour save error: ', response);
                     },
                 });
             }, 200);
@@ -337,12 +336,11 @@ export class UiTooltipsComponent implements OnInit {
     }
 
     launchTour() {
-        this.showTour = false;
         this.tourObject = [];
         setTimeout(() => {
             this.tourObject.push(
                 {
-                    context: this.userTourEnums.names.utdemousertour,
+                    usertourName: this.userTourEnums.names.utdemousertour,
                     title: this._translate.translate('Auto-scroll to element'),
                     text: this._translate.translate('Duration forced to 3s (default 5s).'),
                     target: 'tooltip-label-directives',

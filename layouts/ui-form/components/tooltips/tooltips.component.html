@@ -19,6 +19,7 @@
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
                     <li><b>size:</b> {{'\'small\'' | translate}} | {{'\'medium\'' | translate}} | {{'\'large\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>autoshow:</b> true | false ({{'optional' | translate}})</li>
+                    <li><b>transform:</b> false ({{'optional - default: true' | translate}})</li>
                 </ol>
                 <br>
                 <h2>{{'Sizes' | translate}}</h2>
@@ -68,7 +69,7 @@
                         {{'Example' | translate}} 2
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title + some texts.'), size: 'small'}"></div>
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title + some texts. Not transformable!'), size: 'small', transform: false}"></div>
                         {{'Example' | translate}} 3
                     </div>
                     <div class="d-inline-block text-center mr-3">
@@ -141,6 +142,7 @@
                 <b>{{'TourObject details' | translate}}:</b>
                 <br>
                 <ol>
+                    <li><b>usertourName:</b> {{'\'your user tour name here (from enums)\'' | translate}} ({{'Only on the first step!' | translate}})</li>
                     <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
                     <li><b>target:</b> {{'\'the ID of the targeted element\'' | translate}}</li>
@@ -155,8 +157,9 @@
     {{'setTimeout(() => {'}}
         {{'this.tourObject.push('}}
             {{'{'}}
+                {{'usertourName: this.userTourEnums.names.myUserTourName,'}}
                 {{'title: this._translate.translate(\'Auto-scroll to element\'),'}}
-                {{'text: this._translate.translate(\'Duration forced to 3s (default 5s).\'),'}}
+                {{'text: this._translate.translate(\'Duration forced to 3s (default 8s).\'),'}}
                 {{'target: \'tooltip-label-directives\', // id of the element'}}
                 {{'duration: 3000, // optionnal'}}
             {{'},'}}
