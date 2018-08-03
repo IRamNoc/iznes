@@ -6,7 +6,7 @@ import { FormsModule, NgModel } from '@angular/forms';
 @Component({
     selector: 'setl-admin-wizard',
     templateUrl: 'wizard.component.html',
-    styleUrls: [ 'wizard.component.css' ]
+    styleUrls: ['wizard.component.css'],
 })
 
 /* Class. */
@@ -16,5 +16,4 @@ export class AdminWizardComponent {
     constructor () {
         /* Stub */
     }
-
 }
