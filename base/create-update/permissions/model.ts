@@ -5,8 +5,10 @@ export interface AccountAdminPermission {
     parentID: number;
     name: string;
     description: string;
+    _state?: boolean;
     state?: boolean;
     hidden?: boolean;
+    touched?: boolean;
 }
 
 export interface ReadTeamPermissionAreasRequest extends MemberNodeMessageBody {

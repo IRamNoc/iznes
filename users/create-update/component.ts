@@ -55,7 +55,7 @@ export class UsersCreateUpdateComponent
                 protected router: Router,
                 alerts: AlertsService,
                 protected toaster: ToasterService,
-                confirmations: ConfirmationService,
+                protected confirmations: ConfirmationService,
                 private translate: MultilingualService,
                 private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations);
@@ -216,10 +216,36 @@ export class UsersCreateUpdateComponent
 
     save(invite: boolean = false): void {
         if (this.isCreateMode()) {
-            this.createUsers(invite);
+            this.onSaveCheckInvites(invite);
         } else if (this.isUpdateMode()) {
             this.updateUser(invite);
         }
+    }
+
+    private onSaveCheckInvites(invite: boolean): void {
+        if (invite) {
+            this.confirmations.create(
+                'Invite Users',
+                `Are you sure you want to invite the following users;<br /><br />${this.generateInviteList()}`,
+            ).subscribe((value) => {
+                if (value.resolved) {
+                    this.createUsers(invite);
+                    return;
+                }
+            });
+        } else {
+            this.createUsers(invite);
+        }
+    }
+
+    private generateInviteList(): string {
+        let invites: string = '';
+
+        _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
+            invites += `${form.emailAddress.value()}<br />`;
+        });
+
+        return invites;
     }
 
     private createUsers(invite: boolean): void {
@@ -238,11 +264,6 @@ export class UsersCreateUpdateComponent
                         data[1].Data[0].userID,
                     );
 
-                    this.addUserToTeams(
-                        data[1].Data[0].userID,
-                        `${form.firstName.value()} ${form.lastName.value()}`,
-                    );
-
                     if (this.forms.length === index + 1) {
                         _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
                             if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
@@ -253,21 +274,6 @@ export class UsersCreateUpdateComponent
                 },
                 (e: AccountAdminErrorResponse) => this.onSaveError(
                     `${form.firstName.value()} ${form.lastName.value()}`,
-                    e,
-                ),
-            );
-        });
-    }
-
-    private addUserToTeams(userId: number, username: string): void {
-        _.forEach(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
-            this.userMgmtService.updateTeamUserMap(
-                team.isActivated ? true : false,
-                userId,
-                team.userTeamID,
-                () => {},
-                (e: AccountAdminErrorResponse) => this.onSaveError(
-                    username,
                     e,
                 ),
             );

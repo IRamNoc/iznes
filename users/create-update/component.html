@@ -49,6 +49,49 @@
 
                 <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
             </ng-container>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>
+                        {{ 'Team Memberships' | translate }}
+                        <i class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
+                    </h3>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-users-team-mgmt
+                        [entityId]="entityId"
+                        [noun]="nouns.Team"
+                        [doUpdateOb]="doUserManagementUpdateOb">
+                    </app-core-admin-users-team-mgmt>
+                </div>
+            </div>
+            
+            <ng-container *ngIf="isUpdateMode()">
+                <div class="row actions bottom">
+                    <div class="col-sm-12">
+                        <h3>{{
+                            (isTeamsPage()) ?
+                            'Team Permissions':
+                            'User Permissions'
+                            | translate }}
+                            <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <app-core-admin-permissions
+                            [isUser]="true"
+                            [entityId]="entityId"
+                            [doUpdateOb]="doPermissionsUpdateOb">
+                        </app-core-admin-permissions>
+                    </div>
+                </div>
+            </ng-container>
 
             <div class="row actions bottom">
                 <div class="col">
@@ -75,48 +118,6 @@
                     <button class="btn btn-danger" (click)="delete()">{{ 'Delete user' | translate }}</button>
                 </div>
             </div>
-            
-            <div class="row actions bottom">
-                <div class="col-sm-12">
-                    <h3>
-                        {{ 'Team Memberships' | translate }}
-                        <i class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
-                    </h3>
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-sm-12">
-                    <app-core-admin-users-team-mgmt
-                        [entityId]="entityId"
-                        [noun]="nouns.Team"
-                        [doUpdate]="isUpdateMode()"
-                        (entitiesFn)="getUserTeams($event)">
-                    </app-core-admin-users-team-mgmt>
-                </div>
-            </div>
-            
-            <ng-container *ngIf="isUpdateMode()">
-                <div class="row actions bottom">
-                    <div class="col-sm-12">
-                        <h3>{{
-                            (isTeamsPage()) ?
-                            'Team Permissions':
-                            'User Permissions'
-                            | translate }}
-                            <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
-                        </h3>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <app-core-admin-permissions
-                            [isUser]="true"
-                            [entityId]="entityId"></app-core-admin-permissions>
-                    </div>
-                </div>
-            </ng-container>
         </clr-tab-content>
     </clr-tab>
 </clr-tabs>

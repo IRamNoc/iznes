@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
-import { Subscription } from 'rxjs/Subscription';
+import { Subject, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
 
 import { immutableHelper } from '@setl/utils';
@@ -12,7 +12,7 @@ import {
 
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
-import { AccountAdminErrorResponse, DataGridConfig, AccountAdminNouns } from '../../../base/model';
+import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -22,8 +22,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
     @Input() entityId: number;
     @Input() noun: string;
-    @Input() doUpdate: boolean = true;
-    @Output() entitiesFn: EventEmitter<Type[]> = new EventEmitter();
+    @Input() doUpdateOb: Subject<void>;
 
     datagridConfig: DataGridConfig;
 
@@ -51,7 +50,6 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
     }
     set entities(entities: Type[]) {
         this.entitiesArray = entities;
-        this.entitiesFn.emit(entities);
     }
 
     ngOnInit() {
@@ -59,14 +57,22 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
             this.accountId = accountId;
         }));
 
+        if (this.doUpdateOb) {
+            this.subscriptions.push(this.doUpdateOb.subscribe(() => {
+                _.forEach(this.entities, (entity: Type) => {
+                    this.updateState(entity);
+                });
+            }));
+        }
+
         this.initDataGridConfig();
     }
 
-    initDataGridConfig(): void {
+    protected initDataGridConfig(): void {
         console.error('method not implemented');
     }
 
-    updateState(value: boolean, entity: Type): void {
+    protected updateState(entity: Type): void {
         console.error('method not implemented');
     }
 
@@ -79,13 +85,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
     }
 
     getCreateNewLink(): string {
-        if (this.noun === AccountAdminNouns.Team) {
-            return '/account-admin/teams/new';
-        } else if (this.noun === AccountAdminNouns.User) {
-            return '/account-admin/users/new';
-        } else {
-            return '/';
-        }
+        return `/account-admin/${this.noun.toLowerCase()}s/new`;
     }
 
     protected processEntities(entities: any[]): any[] {
@@ -103,15 +103,9 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
         if ((!this.entities) || this.entities.length === 0) this.state = UserMgmtModel.UserMgmtState.Empty;
     }
 
-    protected onUpdateStateSuccess(state: boolean): void {
+    protected onUpdateStateSuccess(state: boolean, entityName: string): void {
         this.redux.dispatch(clearRequestedAccountAdminPermissionAreas());
         this.redux.dispatch(clearRequestedAccountAdminUserPermissionAreas());
-
-        this.toaster.clear();
-
-        (state) ?
-            this.toaster.pop('success', 'User added to team') :
-            this.toaster.pop('info', 'User removed from team');
     }
 
     protected onRequestError(e: AccountAdminErrorResponse, entity?: any): void {

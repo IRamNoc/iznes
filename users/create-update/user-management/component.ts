@@ -118,19 +118,17 @@ export class UserTeamsUsersMgmtUsersComponent
                     res.userID === this.entityId;
             });
 
-            if (result) {
-                team.isActivated = true;
-            }
+            team.isActivated = (result) ? true : false;
         });
     }
 
-    updateState(value: boolean, entity: TeamModel.AccountAdminTeam): void {
+    updateState(entity: TeamModel.AccountAdminTeam): void {
         if (this.doUpdate) {
             this.service.updateTeamUserMap(
-                value,
+                entity.isActivated,
                 this.entityId,
                 entity.userTeamID,
-                () => this.onUpdateStateSuccess(value),
+                () => this.onUpdateStateSuccess(entity.isActivated, entity.name),
                 (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
             );
         }

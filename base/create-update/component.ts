@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { select } from '@angular-redux/store';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription, Subject } from 'rxjs';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
@@ -17,6 +17,8 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 })
 export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
+    doPermissionsUpdateOb: Subject<any> = new Subject();
+    doUserManagementUpdateOb: Subject<any> = new Subject();
     entityId: number;
     form;
     mode: 0 | 1; // 0 - create, 1 - update
@@ -45,7 +47,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
                 protected router: Router,
                 private alerts: AlertsService,
                 protected toaster: ToasterService,
-                private confirmations: ConfirmationService) {}
+                protected confirmations: ConfirmationService) {}
 
     ngOnInit() {
         this.processParams();
@@ -96,10 +98,6 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     getBackUrl(): string {
         return `/account-admin/${this.noun.toLowerCase()}s`;
-    }
-
-    private getUpdateUrl(id): string {
-        return `/account-admin/${this.noun.toLowerCase()}s/${id}`;
     }
 
     save(): void {
@@ -178,5 +176,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
                 sub.unsubscribe();
             });
         }
+
+        this.toaster.clear();
     }
 }

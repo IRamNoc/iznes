@@ -1,16 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 import { ToasterService } from 'angular2-toaster';
+import * as _ from 'lodash';
 
 import * as Model from '../model';
 import * as UsersModel from '../../users/model';
 import { AccountAdminPermission } from '../../base/create-update/permissions/model';
-import { UserManagementServiceBase } from '../../base/create-update/user-management/service';
-import { AccountAdminPermissionsServiceBase } from '../../base/create-update/permissions/service';
 import { UserTeamsService } from '../service';
 import { AccountAdminCreateUpdateBase } from '../../base/create-update/component';
 import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNouns } from '../../base/model';
@@ -28,13 +27,12 @@ export class UserTeamsCreateUpdateComponent
     private permissionsSelected: AccountAdminPermission[];
 
     constructor(private service: UserTeamsService,
-                private userMgmtService: UserManagementServiceBase,
-                private permissionsService: AccountAdminPermissionsServiceBase,
                 route: ActivatedRoute,
                 protected router: Router,
                 alerts: AlertsService,
                 toaster: ToasterService,
-                confirmations: ConfirmationService) {
+                confirmations: ConfirmationService,
+                private translate: MultilingualService) {
         super(route, router, alerts, toaster, confirmations);
         this.noun = AccountAdminNouns.Team;
     }
@@ -70,9 +68,9 @@ export class UserTeamsCreateUpdateComponent
 
     save(): void {
         if (this.isCreateMode()) {
-            this.createTeam();
+            this.checkUserForNoPermissions(() => this.createTeam());
         } else if (this.isUpdateMode()) {
-            this.updateTeam();
+            this.checkUserForNoPermissions(() => this.updateTeam());
         }
     }
 
@@ -87,19 +85,12 @@ export class UserTeamsCreateUpdateComponent
             this.form.reference.value(),
             this.form.description.value(),
             (data: AccountAdminSuccessResponse) => {
+                this.doUserManagementUpdateOb.next();
+                this.doPermissionsUpdateOb.next();
+
                 this.onSaveSuccess(
                     this.form.name.value(),
                     data[1].Data[0].userTeamID,
-                );
-
-                this.addUsersToTeam(
-                    data[1].Data[0].userTeamID,
-                    `${this.form.name}`,
-                );
-
-                this.addPermissionsToTeam(
-                    data[1].Data[0].userTeamID,
-                    `${this.form.name}`,
                 );
 
                 this.router.navigateByUrl(this.getBackUrl());
@@ -108,46 +99,18 @@ export class UserTeamsCreateUpdateComponent
         );
     }
 
-    private addUsersToTeam(userTeamId: number, teamName: string): void {
-        _.forEach(this.usersSelected, (user: UsersModel.AccountAdminUser) => {
-            this.userMgmtService.updateTeamUserMap(
-                user.isActivated ? true : false,
-                user.userID,
-                userTeamId,
-                () => {},
-                (e: AccountAdminErrorResponse) => this.onSaveError(
-                    teamName,
-                    e,
-                ),
-            );
-        });
-    }
-
-    private addPermissionsToTeam(userTeamId: number, teamName: string): void {
-        _.forEach(this.permissionsSelected, (permission: AccountAdminPermission) => {
-            // only update child permissions && permissions that are ticked as true
-            if (permission.parentID !== null && permission.state) {
-                this.permissionsService.updateTeamPermission(
-                    permission.state,
-                    userTeamId,
-                    permission.permissionAreaID,
-                    () => {},
-                    (e: AccountAdminErrorResponse) => this.onSaveError(
-                        teamName,
-                        e,
-                    ),
-                );
-            }
-        });
-    }
-
     private updateTeam(): void {
         this.service.updateUserTeam(
             this.entityId,
             this.form.name.value(),
             this.form.reference.value(),
             this.form.description.value(),
-            () => this.onSaveSuccess(this.form.name.value(), this.entityId),
+            () => {
+                this.doUserManagementUpdateOb.next();
+                this.doPermissionsUpdateOb.next();
+
+                this.onSaveSuccess(this.form.name.value(), this.entityId);
+            },
             (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
         );
     }
@@ -158,6 +121,26 @@ export class UserTeamsCreateUpdateComponent
             () => this.onDeleteSuccess(this.form.name.value()),
             (e: AccountAdminErrorResponse) => this.onDeleteError(this.form.name.value(), e),
         );
+    }
+
+    private checkUserForNoPermissions(callback: () => void): void {
+        const assignedPermissions = _.find(this.permissionsSelected, (permission: AccountAdminPermission) => {
+            return permission.state === true || (permission.state as any) === 1;
+        });
+
+        if (!assignedPermissions) {
+            this.confirmations.create(
+                this.translate.translate('Are you sure?'),
+                this.translate.translate(`You have selected no permissions for this team.
+                    Any users, soley assigned to this team, will no longer hold any permissions on the system.`),
+            ).subscribe((answer) => {
+                if (answer.resolved) {
+                    callback();
+                }
+            });
+        } else {
+            callback();
+        }
     }
 
     ngOnDestroy() {

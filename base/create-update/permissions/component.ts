@@ -1,10 +1,9 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ToasterService } from 'angular2-toaster';
 
 import {
     clearRequestedAccountAdminPermissionAreas,
@@ -20,14 +19,14 @@ import * as PermissionsModel from './model';
 })
 export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
+    @Input() doUpdateOb: Subject<void> = new Subject();
     @Input() entityId: number;
-    @Input() doUpdate: boolean = true;
-    @Input() isUser: boolean = false;
     @Output() entitiesFn: EventEmitter<PermissionsModel.AccountAdminPermission[]> = new EventEmitter();
+    @Input() isUser: boolean = false;
 
     permissions: PermissionsModel.AccountAdminPermission[];
-    private subscriptions: Subscription[] = [];
     private leavePermissionsOpen: boolean = false;
+    private subscriptions: Subscription[] = [];
 
     @select(['accountAdmin', 'permissionAreas', 'permissionAreas']) permissionsOb;
     @select(['accountAdmin', 'permissionAreas', 'requested']) permissionsReqOb;
@@ -36,17 +35,16 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
     constructor(private service: AccountAdminPermissionsServiceBase,
                 private redux: NgRedux<any>,
-                private toaster: ToasterService,
                 private alerts: AlertsService) { }
 
     ngOnInit() {
-        this.initTeamsSubscriptions();
+        this.initSubscriptions();
 
         this.redux.dispatch(clearRequestedAccountAdminPermissionAreas());
         this.redux.dispatch(clearRequestedAccountAdminUserPermissionAreas());
     }
 
-    private initTeamsSubscriptions(): void {
+    private initSubscriptions(): void {
         let permissionsSub;
         let permissionsReqSub;
 
@@ -70,7 +68,19 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             });
         }
 
-        this.subscriptions.push(permissionsSub, permissionsReqSub);
+        const doUpdateSub = this.doUpdateOb.subscribe(() => {
+            this.doUpdatePermissions();
+        });
+
+        this.subscriptions.push(permissionsSub, permissionsReqSub, doUpdateSub);
+    }
+
+    private doUpdatePermissions(): void {
+        _.forEach(this.permissions, (permission: PermissionsModel.AccountAdminPermission) => {
+            if (!!permission.parentID && permission.touched) {
+                this.updateState(permission);
+            }
+        });
     }
 
     private requestUserPermissions(requested: boolean): void {
@@ -93,17 +103,21 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             });
 
             this.leavePermissionsOpen = true;
-        } else {
-            // everytime after
-            _.forEach(permissions, (permission: PermissionsModel.AccountAdminPermission) => {
-                permission.hidden = _.find(this.permissions, (p: PermissionsModel.AccountAdminPermission) => {
-                    return p.permissionAreaID = permission.permissionAreaID;
-                }).hidden;
-            });
         }
+
+        // we do the following loop to add a getter and setter to state, so that we can update
+        // the touched property on a permission. This is so that when an update is triggered,
+        // we only update touched permissions.
+        _.forEach(permissions, (permission: PermissionsModel.AccountAdminPermission) => {
+            permission.touched = false;
+        });
 
         this.permissions = permissions;
         this.entitiesFn.emit(this.permissions);
+    }
+
+    updatePermission(permission: PermissionsModel.AccountAdminPermission): void {
+        permission.touched = true;
     }
 
     isProcessing(): boolean {
@@ -128,26 +142,14 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         }
     }
 
-    updateState(value: boolean, permission: PermissionsModel.AccountAdminPermission): void {
-        if (this.doUpdate) {
-            this.service.updateTeamPermission(
-                value,
-                this.entityId,
-                permission.permissionAreaID,
-                () => this.onUpdateStateSuccess(value, permission),
-                () => this.onUpdateStateError(permission),
-            );
-        }
-    }
-
-    private onUpdateStateSuccess(value: boolean, permission: PermissionsModel.AccountAdminPermission): void {
-        if (value) {
-            this.toaster.clear();
-            this.toaster.pop('success', `${permission.name} permission added`);
-        } else {
-            this.toaster.clear();
-            this.toaster.pop('info', `${permission.name} permission removed`);
-        }
+    updateState(permission: PermissionsModel.AccountAdminPermission): void {
+        this.service.updateTeamPermission(
+            permission.state,
+            this.entityId,
+            permission.permissionAreaID,
+            () => {},
+            () => this.onUpdateStateError(permission),
+        );
     }
 
     private onUpdateStateError(permission: PermissionsModel.AccountAdminPermission): void {
