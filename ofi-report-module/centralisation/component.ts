@@ -82,8 +82,8 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     ];
 
     fundSpecificDates = [];
-    isPeriod = false;
-    isSettlementSelected = false;
+    isPeriod = true;
+    isSettlementSelected = true;
 
     private myDetails: any = {};
     private appConfig: any = {};
@@ -106,7 +106,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
 
     dateFrom = '';
     dateTo = '';
-    mode = 0;   // 1 = NAV ; 2 = Settlement
+    mode = 2;   // 1 = NAV ; 2 = Settlement
 
     colorScheme = {domain: ['#51AD5B', '#AF2418']};
     pieChartDatas = [
@@ -238,6 +238,21 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         }
                     ];
+                } else {
+                    // this.fundsDetails = [];
+                    // this.fundsTotalNetAmount = 0;
+                    // this.fundsTotalSubscriptionAmount = 0;
+                    // this.fundsTotalRedemptionAmount = 0;
+                    // this.pieChartDatas = [
+                    //     {
+                    //         name: 'Subscription (%)',
+                    //         value: 0,
+                    //     },
+                    //     {
+                    //         name: 'Redemption (%)',
+                    //         value: 0,
+                    //     }
+                    // ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
@@ -271,6 +286,21 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         }
                     ];
+                } else {
+                    // this.sharesDetails = [];
+                    // this.sharesTotalNetAmount = 0;
+                    // this.sharesTotalSubscriptionAmount = 0;
+                    // this.sharesTotalRedemptionAmount = 0;
+                    // this.pieChartDatas = [
+                    //     {
+                    //         name: 'Subscription (%)',
+                    //         value: 0,
+                    //     },
+                    //     {
+                    //         name: 'Redemption (%)',
+                    //         value: 0,
+                    //     }
+                    // ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
@@ -304,6 +334,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.resetDatas();
+        this.updateFiltersForm();
     }
 
     getLanguage(requested): void {
@@ -370,6 +401,18 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     buildLink(id) {
         const dest = 'am-reports-section/centralisation/' + id;
         this.router.navigateByUrl(dest);
+    }
+
+    updateFiltersForm() {
+        const today = new Date().toISOString().slice(0,10);
+        const lastMonth = new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().slice(0,10);
+        this.filtersForm.get('specificDate').patchValue([{id: 3, text: this._translate.translate('Specific Settlement Period')}], { emitEvent: false });
+        this.filtersForm.get('dateFrom').patchValue(lastMonth, { emitEvent: false });
+        this.filtersForm.get('dateTo').patchValue(today, { emitEvent: false });
+        this.filtersForm.get('specificDate').updateValueAndValidity();
+        this.filtersForm.get('dateFrom').updateValueAndValidity();
+        this.filtersForm.get('dateTo').updateValueAndValidity();
+        this.changeDetectorRef.markForCheck();
     }
 
     createFiltersForm() {

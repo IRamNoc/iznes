@@ -81,8 +81,8 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     ];
 
     fundSpecificDates = [];
-    isPeriod = false;
-    isSettlementSelected = false;
+    isPeriod = true;
+    isSettlementSelected = true;
 
     private myDetails: any = {};
     private appConfig: any = {};
@@ -105,7 +105,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
     dateFrom = '';
     dateTo = '';
-    mode = 0;   // 1 = NAV ; 2 = Settlement
+    mode = 2;   // 1 = NAV ; 2 = Settlement
 
     colorScheme = {domain: ['#51AD5B', '#AF2418']};
     pieChartDatas = [
@@ -138,8 +138,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     /* Observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
-    // @select(['ofi', 'ofiReports', 'centralisationReports', 'requested']) requestedOfiCentralisationReportsObj;
-    // @select(['ofi', 'ofiReports', 'centralisationReports', 'centralisationReportsList']) OfiCentralisationReportsListObj;
 
     // share list for ng-select
     @select(['ofi', 'ofiReports', 'precentralisationReports', 'requestedFundsList']) requestedFundsListOb;
@@ -240,6 +238,21 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                             value: (this.fundsTotalRedemptionAmount * 100 / (this.fundsTotalSubscriptionAmount + this.fundsTotalRedemptionAmount)),
                         }
                     ];
+                } else {
+                    // this.fundsDetails = [];
+                    // this.fundsTotalNetAmount = 0;
+                    // this.fundsTotalSubscriptionAmount = 0;
+                    // this.fundsTotalRedemptionAmount = 0;
+                    // this.pieChartDatas = [
+                    //     {
+                    //         name: 'Subscription (%)',
+                    //         value: 0,
+                    //     },
+                    //     {
+                    //         name: 'Redemption (%)',
+                    //         value: 0,
+                    //     }
+                    // ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
@@ -273,6 +286,21 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                             value: (this.sharesTotalRedemptionAmount * 100 / (this.sharesTotalSubscriptionAmount + this.sharesTotalRedemptionAmount)),
                         }
                     ];
+                } else {
+                    // this.sharesDetails = [];
+                    // this.sharesTotalNetAmount = 0;
+                    // this.sharesTotalSubscriptionAmount = 0;
+                    // this.sharesTotalRedemptionAmount = 0;
+                    // this.pieChartDatas = [
+                    //     {
+                    //         name: 'Subscription (%)',
+                    //         value: 0,
+                    //     },
+                    //     {
+                    //         name: 'Redemption (%)',
+                    //         value: 0,
+                    //     }
+                    // ];
                 }
                 this.changeDetectorRef.markForCheck();
             }));
@@ -306,6 +334,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.resetDatas();
+        this.updateFiltersForm();
     }
 
     getLanguage(requested): void {
@@ -374,7 +403,23 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl(dest);
     }
 
+    updateFiltersForm() {
+        const today = new Date();
+        const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().slice(0,10);
+        const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().slice(0,10);
+        this.filtersForm.get('specificDate').patchValue([{id: 3, text: this._translate.translate('Specific Settlement Period')}], { emitEvent: false });
+        this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
+        this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
+        this.filtersForm.get('specificDate').updateValueAndValidity();
+        this.filtersForm.get('dateFrom').updateValueAndValidity();
+        this.filtersForm.get('dateTo').updateValueAndValidity();
+        this.changeDetectorRef.markForCheck();
+    }
+
     createFiltersForm() {
+        const today = new Date();
+        const yesterday = new Date(today.setDate(today.getDate() - 1)).toISOString().slice(0,10);
+        const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().slice(0,10);
         this.filtersForm = this._fb.group({
             selectList: [
                 '',
@@ -389,7 +434,16 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                 '',
             ],
         });
+        this.dateFrom = yesterday;
+        this.dateTo = nextWeek;
+        this.filtersForm.get('specificDate').patchValue([{id: 2, text: this._translate.translate('Specific NAV Period')}], { emitEvent: false });
+        this.filtersForm.get('dateFrom').patchValue(yesterday, { emitEvent: false });
+        this.filtersForm.get('dateTo').patchValue(nextWeek, { emitEvent: false });
+        this.filtersForm.get('specificDate').updateValueAndValidity();
+        this.filtersForm.get('dateFrom').updateValueAndValidity();
+        this.filtersForm.get('dateTo').updateValueAndValidity();
         this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.changeDetectorRef.markForCheck();
     }
 
     requestSearch(form) {
