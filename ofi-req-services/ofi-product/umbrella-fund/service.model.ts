@@ -66,3 +66,8 @@ export interface IznDeleteUmbrellaDraftRequestBody extends MemberNodeMessageBody
     token: string;
     id: string;
 }
+
+export interface fetchUmbrellaAuditRequestBody extends MemberNodeMessageBody {
+    token: string;
+    umbrellaFundID: number;
+}

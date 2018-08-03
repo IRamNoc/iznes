@@ -17,6 +17,7 @@
                 {{'Statutory constraints/special rules concerning eligible assets (specify)' | translate}}:
             </label>
             <textarea class="form-control" id="statutoryConstraints-{{index}}" formControlName="statutoryConstraints"></textarea>
+            <span class="field-error" *ngIf="hasError('statutoryConstraints', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 
@@ -26,6 +27,7 @@
                 {{'Tax constraints (specify tax obligations in terms of investment)' | translate}}:
             </label>
             <textarea class="form-control" id="taxConstraints-{{index}}" formControlName="taxConstraints"></textarea>
+            <span class="field-error" *ngIf="hasError('taxConstraints', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 
@@ -35,6 +37,7 @@
                 {{'Others (including SRI, ESG, ...) (specify)' | translate}}:
             </label>
             <textarea class="form-control" id="otherConstraints-{{index}}" formControlName="otherConstraints"></textarea>
+            <span class="field-error" *ngIf="hasError('otherConstraints', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 
@@ -57,6 +60,7 @@
                       *ngIf="!isDisabled('investmentDecisionsAdHocCommitteeSpecification')"
                       id="investmentDecisionsAdHocCommitteeSpecification"
                       formControlName="investmentDecisionsAdHocCommitteeSpecification"></textarea>
+            <span class="field-error" *ngIf="hasError('investmentDecisionsAdHocCommitteeSpecification', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 
@@ -67,6 +71,7 @@
             </p>
 
             <textarea class="form-control" id="otherPersonsAuthorised-{{index}}" formControlName="otherPersonsAuthorised"></textarea>
+            <span class="field-error" *ngIf="hasError('otherPersonsAuthorised', ['maxlength'])">{{'Field is too long' | translate}}</span>
         </div>
     </div>
 

@@ -75,28 +75,25 @@ export class NewKycRequestComponent implements OnInit {
             extraSteps = [
                 {
                     title: 'Introduction',
-                    startHere: completedStep === 'amcSelection'
+                    startHere: completedStep === 'amcSelection',
                 },
                 {
                     title: 'Identification',
                     id: 'step-identification',
                     form: this.forms.get('identification'),
-                    startHere: completedStep === 'introduction',
-                    submitted: steps[completedStep] >= steps.identification
+                    startHere: completedStep === 'introduction'
                 },
                 {
                     title: 'Risk profile',
                     id: 'step-risk-profile',
                     form: this.forms.get('riskProfile'),
-                    startHere: completedStep === 'identification',
-                    submitted: steps[completedStep] >= steps.riskProfile
+                    startHere: completedStep === 'identification'
                 },
                 {
                     title: 'Documents',
                     id: 'step-documents',
                     form: this.forms.get('documents'),
-                    startHere: completedStep === 'riskProfile',
-                    submitted: steps[completedStep] >= steps.documents
+                    startHere: completedStep === 'riskProfile'
                 }
             ];
         }
@@ -105,16 +102,14 @@ export class NewKycRequestComponent implements OnInit {
             {
                 title: 'Selection',
                 form: this.forms.get('selection'),
-                id: 'step-selection',
-                submitted: steps[completedStep] >= steps.amcSelection
+                id: 'step-selection'
             },
             ...extraSteps,
             {
                 title: 'Validation',
                 id: 'step-validation',
                 form: this.forms.get('validation'),
-                startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection',
-                submitted: steps[completedStep] >= steps.validation
+                startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
             }
         ];
     }

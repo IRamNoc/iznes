@@ -523,7 +523,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fillFormByUmbrellaID(umbrellaID: string) {
         const requestedUmbrella = this.umbrellaFundList
-        .filter(item => item.umbrellaFundID === umbrellaID);
+        .filter(item => item.umbrellaFundID.toString() === umbrellaID);
 
         const u = requestedUmbrella[0];
 
@@ -541,6 +541,10 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     duplicate(umbrellaID: string) {
         this._router.navigateByUrl(`/product-module/product/umbrella-fund/new?prefill=${umbrellaID}`);
+    }
+
+    auditTrail(umbrellaID: string) {
+        this._router.navigateByUrl(`/product-module/product/umbrella-fund/${umbrellaID}/audit`);
     }
 
     cancel() {
