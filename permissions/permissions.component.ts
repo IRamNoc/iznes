@@ -1,23 +1,27 @@
-/* Core imports. */
+/* Core. */
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy,
-    OnInit
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit,
 } from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {ToasterService} from 'angular2-toaster';
-import {ClrDatagridStringFilterInterface} from '@clr/angular';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {ConfirmationService, immutableHelper, LogService} from '@setl/utils';
+
+import { NgRedux } from '@angular-redux/store';
+import { FormControl, FormGroup, Validators} from '@angular/forms';
+import { ToasterService } from 'angular2-toaster';
+import { ClrDatagridStringFilterInterface } from '@clr/angular';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ConfirmationService, immutableHelper, LogService } from '@setl/utils';
 import * as _ from 'lodash';
-import {permissionGroupActions} from '@setl/core-store';
+
+/* Internal. */
+import { permissionGroupActions } from '@setl/core-store';
+
 /* User Admin Service. */
-import {UserAdminService} from '../useradmin.service';
-/* Use the permissions grid. */
+import { UserAdminService } from '../useradmin.service';
+
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+
 /* Persist service. */
-import {PersistService} from '@setl/core-persist';
+import { PersistService } from '@setl/core-persist';
 
 class TypeFilter implements ClrDatagridStringFilterInterface<any> {
     accepts(group: any, search: string): boolean {
@@ -31,7 +35,7 @@ class TypeFilter implements ClrDatagridStringFilterInterface<any> {
     templateUrl: 'permissions.component.html',
     styleUrls: ['permissions.component.css'],
     providers: [UserAdminService, ToasterService],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 /* Class. */
@@ -59,39 +63,39 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     /* The permission levels list. */
     public permissionLevelsList = [
         {
-            'id': 'canDelegate',
-            'text': 'Delegate'
+            id: 'canDelegate',
+            text: 'Delegate',
         },
         {
-            'id': 'canRead',
-            'text': 'Read'
+            id: 'canRead',
+            text: 'Read',
         },
         {
-            'id': 'canInsert',
-            'text': 'Insert'
+            id: 'canInsert',
+            text: 'Insert',
         },
         {
-            'id': 'canUpdate',
-            'text': 'Update'
+            id: 'canUpdate',
+            text: 'Update',
         },
         {
-            'id': 'canDelete',
-            'text': 'Delete'
+            id: 'canDelete',
+            text: 'Delete',
         },
     ];
 
     public menuPermissionLevelsList = [
         {
-            'id': 'topProfileAccess',
-            'text': 'Top - Profile Access'
+            id: 'topProfileAccess',
+            text: 'Top - Profile Access',
         },
         {
-            'id': 'sideAccess',
-            'text': 'Side Access'
+            id: 'sideAccess',
+            text: 'Side Access',
         },
         {
-            'id': 'disabledAccess',
-            'text': 'Disable Access'
+            id: 'disabledAccess',
+            text: 'Disable Access',
         },
     ];
 
@@ -116,9 +120,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 private route: ActivatedRoute,
                 private router: Router,
                 private ngRedux: NgRedux<any>,
-                private _confirmationService: ConfirmationService,
+                private confirmationService: ConfirmationService,
                 private logService: LogService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
         /* Stub. */
     }
 
@@ -138,16 +142,17 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         });
 
         /* Subscribe to the admin group list observable. */
-        this.subscriptions['adminPermAreaList'] = this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
-            /* Set the list. */
-            this.adminPermAreasList = list;
+        this.subscriptions['adminPermAreaList'] =
+            this.userAdminService.getAdminPermAreaListSubject().subscribe((list) => {
+                /* Set the list. */
+                this.adminPermAreasList = list;
 
-            /* Call to filter lists for UI. */
-            this.filterAreaLists();
+                /* Call to filter lists for UI. */
+                this.filterAreaLists();
 
-            /* Override the changes. */
-            this.changeDetectorRef.detectChanges();
-        });
+                /* Override the changes. */
+                this.changeDetectorRef.detectChanges();
+            });
 
         this.subscriptions['txPermAreaList'] = this.userAdminService.getTxPermAreaListSubject().subscribe((list) => {
             /* Set the list. */
@@ -160,16 +165,17 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.changeDetectorRef.detectChanges();
         });
 
-        this.subscriptions['menuPermAreaList'] = this.userAdminService.getMenuPermAreaListSubject().subscribe((list) => {
-            /* Set the list. */
-            this.menuPermAreasList = list;
+        this.subscriptions['menuPermAreaList'] =
+            this.userAdminService.getMenuPermAreaListSubject().subscribe((list) => {
+                /* Set the list. */
+                this.menuPermAreasList = list;
 
-            /* Call to filter lists for UI. */
-            this.filterAreaLists();
+                /* Call to filter lists for UI. */
+                this.filterAreaLists();
 
-            /* Override the changes. */
-            this.changeDetectorRef.detectChanges();
-        });
+                /* Override the changes. */
+                this.changeDetectorRef.detectChanges();
+            });
 
         this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
             /* Set the list. */
@@ -194,28 +200,30 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Default tabs. */
             this.tabsControl = [
                 {
-                    'title': {
-                        'icon': 'fa-search',
-                        'text': 'Search'
+                    title: {
+                        icon: 'fa-search',
+                        text: 'Search',
                     },
-                    'groupId': -1,
-                    'active': true
+                    groupId: -1,
+                    active: true,
                 },
                 {
-                    'title': {
-                        'icon': 'fa-plus',
-                        'text': 'Add New Group'
+                    title: {
+                        icon: 'fa-plus',
+                        text: 'Add New Group',
                     },
-                    'groupId': -1,
-                    'formControl': this.newAddGroupFormgroup(),
-                    'active': false
-                }
+                    groupId: -1,
+                    formControl: this.newAddGroupFormgroup(),
+                    active: false,
+                },
             ];
+
             return true;
         }
 
         this.tabsControl = openedTabs;
-        this.tabsControl[1].formControl = this._persistService.watchForm('useradmin/newGroup', this.tabsControl[1].formControl);
+        this.tabsControl[1].formControl =
+            this.persistService.watchForm('useradmin/newGroup', this.tabsControl[1].formControl);
     }
 
     ngAfterViewInit(): void {
@@ -230,24 +238,22 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Create the group. */
         const group = new FormGroup(
             {
-                'name': new FormControl('', [Validators.required]),
-                'description': new FormControl('', [Validators.required]),
-                'type': new FormControl([], [Validators.required]),
-                'permissions': new FormControl([])
-            }
+                name: new FormControl('', [Validators.required]),
+                description: new FormControl('', [Validators.required]),
+                type: new FormControl([], [Validators.required]),
+                permissions: new FormControl([]),
+            },
         );
 
         /* Return the form group and watch it using the persistService. */
         if (type === 'new') {
-            return this._persistService.watchForm('useradmin/newGroup', group);
-        } else {
-            return group;
+            return this.persistService.watchForm('useradmin/newGroup', group);
         }
+
+        return group;
     }
 
     /**
-     * Filter Area Lists
-     * -----------------
      * Updates the filtered areas lists used by UI elements.
      *
      * @return {void}
@@ -264,14 +270,12 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }
 
         /* And finally the menu areas. */
-        if (Array.isArray(this.menuPermAreasList) && this.filteredMenuAreaList.length == 0) {
+        if (Array.isArray(this.menuPermAreasList) && this.filteredMenuAreaList.length === 0) {
             this.filteredMenuAreaList = this.menuPermAreasList.map(this.extractAreaMenu);
         }
     }
 
     /**
-     * Extract area
-     * ------------
      * Extracts an area from a more complex object.
      *
      * @param {area} - the complex area object.
@@ -281,66 +285,68 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     private extractArea(area): { id: string, text: string } {
         /* Return a new object. */
         return {
-            'id': area.permissionID,
-            'text': area.permissionName
+            id: area.permissionID,
+            text: area.permissionName,
         };
     }
 
     private extractAreaMenu(area): { id: string, text: string, parentID: string } {
         /* Return a new object. */
         return {
-            'id': area.permissionID,
-            'text': area.permissionName,
-            'parentID': area.parentID
+            id: area.permissionID,
+            text: area.permissionName,
+            parentID: area.parentID,
         };
     }
 
     /**
-     * Convert Groups To Array
-     * ---------------
-     * Converts an object that holds objects in keys into an array of those same
-     * objects.
+     * Converts an object that holds objects in keys into an array of those same objects.
      *
      * @param {obj} object - the object to be converted.
      *
      * @return {void}
      */
-    public convertGroupsToArray(obj): Array<any> {
-        let i = 0, key, newArray = [];
+    public convertGroupsToArray(obj): any[] {
+        let i = 0;
+        let key;
+        const newArray = [];
+
         for (key in obj) {
             /* Push the new object. */
             newArray.push(obj[key]);
 
             /* Index for tab control. */
-            newArray[newArray.length - 1].index = i++;
+            newArray[newArray.length - 1].index = i += 1 ;
 
             /* Make these all admin type groups. */
-            newArray[newArray.length - 1].category = this.userAdminService.resolveGroupType({id: obj[key].groupIsTx});
+            newArray[newArray.length - 1].category = this.userAdminService.resolveGroupType({ id: obj[key].groupIsTx });
             if (!newArray[newArray.length - 1].category.length) {
-                newArray[newArray.length - 1].category = [{text: 'No group.'}];
+                newArray[newArray.length - 1].category = [{ text: 'No group.' }];
             }
         }
+
         return newArray;
     }
 
     /**
-     * Handle Delete
      * Deletes a group.
      *
-     * @param {index}
+     * @param {number} index - The index of the group to delete.
+     *
      * @return {void}
      */
     public handleDelete(index): void {
         /* Find the group Id o that's to be deleted. */
         if (this.allGroupList[index]) {
             /* Build the request. */
-            let tab, request = {};
+            let tab;
+            const request = {};
             request['groupId'] = this.allGroupList[index].groupId;
 
             /* Let's now ask the user if they're sure... */
-            this._confirmationService.create(
+            this.confirmationService.create(
                 '<span>Deleting a permission group</span>',
-                '<span>Are you sure you want to delete \'' + this.allGroupList[index].groupName + '\'?</span>'
+                '<span>Are you sure you want to delete \'' + this.allGroupList[index].groupName + '\'?</span>',
             ).subscribe((ans) => {
                 /* ...if they are... */
                 if (ans.resolved) {
@@ -362,50 +368,49 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             });
         }
 
-        /* Return. */
         return;
     }
 
     /**
-     * Handle Edit
-     * -----------
-     * Handles the creation of a new tab with a new group form for a dynamic
-     * edit form tab.
+     * Handles the creation of a new tab with a new group form for a dynamic edit form tab.
      *
-     * @param {index} - The index of which group we're editting.
+     * @param {number} index - The index of the group to edit.
      *
      * @return {void}
      */
     public handleEdit(index): void {
         /* Check if the tab is already open. */
-        let i, foundTabId = 0, newTabId;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        let i;
+        let foundTabId = 0;
+        let newTabId;
+
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i].groupId === this.allGroupList[index].groupId) {
                 foundTabId = i;
             }
         }
 
-        let group = this.allGroupList[index];
+        const group = this.allGroupList[index];
 
         if (!foundTabId) {
             /* And also prefill the form... let's sort some of the data out. */
             this.tabsControl.push({
-                'title': {
-                    'icon': 'fa-pencil',
-                    'text': this.allGroupList[index].groupName,
+                title: {
+                    icon: 'fa-pencil',
+                    text: this.allGroupList[index].groupName,
                 },
-                'groupIndex': index,
-                'groupId': group.groupId,
-                'formControl': new FormGroup(
+                groupIndex: index,
+                groupId: group.groupId,
+                formControl: new FormGroup(
                     {
-                        'name': new FormControl(group.groupName, [Validators.required]),
-                        'description': new FormControl(group.groupDescription, [Validators.required]),
-                        'type': new FormControl({value: group.category, disabled: false}),
-                        'permissions': new FormControl([])
-                    }
+                        name: new FormControl(group.groupName, [Validators.required]),
+                        description: new FormControl(group.groupDescription, [Validators.required]),
+                        type: new FormControl({ value: group.category, disabled: false }),
+                        permissions: new FormControl([]),
+                    },
                 ),
-                'permissionsEmitter': new EventEmitter(), // This will be used to pass permissions in.
-                'active': false // this.editFormControls
+                permissionsEmitter: new EventEmitter(), // This will be used to pass permissions in.
+                active: false, // this.editFormControls
             });
             newTabId = this.tabsControl.length - 1;
         } else {
@@ -421,14 +426,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             isTx: group.groupIsTx,
             chainId: 0,
         }).then(() => {
-            /* Then let's find the tab and emit the data to the
-             permission component using that event emitter. */
-            let
-                i,
-                location = (group.groupIsTx === 1 ? 'transPermissions' : (group.groupIsTx === 2 ? 'menuPermissions' : 'adminPermissions'));
+            /* Then let's find the tab and emit the data to the permission component using that event emitter. */
+            let i;
+            const location = (group.groupIsTx === 1 ?
+                'transPermissions' : (group.groupIsTx === 2 ? 'menuPermissions' : 'adminPermissions'));
 
             /* Loop over tabs and find this group tab. */
-            for (i = 0; i < this.tabsControl.length; i++) {
+            for (i = 0; i < this.tabsControl.length; i += 1) {
                 if (this.tabsControl[i].groupId === group.groupId) {
                     /* Get permissions or default to emtpy. */
                     let permissions = {};
@@ -443,7 +447,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                     /* Then show the changes. */
                     this.changeDetectorRef.detectChanges();
 
-                    /* Break. */
                     break;
                 }
             }
@@ -452,16 +455,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Activate the new tab. */
         this.router.navigateByUrl('/user-administration/permissions/' + newTabId);
 
-        /* Return. */
         return;
     }
 
     /**
-     * Handle New Group
-     * ---------------
      * Handles saving a new group.
      *
      * @param {tabid}
+     *
      * @return {void}
      */
     public handleNewGroup(tabid: number): void {
@@ -469,11 +470,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
          1. Create Group
          Let's sort the data structure for creating a new group.
          */
-        let
-            formData = this.tabsControl[tabid].formControl.value,
-            dataToSend = {};
+        const formData = this.tabsControl[tabid].formControl.value;
+        const dataToSend = {};
 
-        let acceptedTypes = ['0', '1', '2'];
+        const acceptedTypes = ['0', '1', '2'];
 
         /* Assign the data to send. */
         dataToSend['name'] = formData.name;
@@ -487,9 +487,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
              2. Update permissions for this group.
              Let's build the data structure again.
              */
-            let permissionsData = {},
-                //  Tidy up the permissions to be acceptable for the update call.
-                permissionsReformed = formData['permissions'];
+            const permissionsData = {};
+            // Tidy up the permissions to be acceptable for the update call.
+            const permissionsReformed = formData['permissions'];
 
             /* Assign all the data. */
             permissionsData['entityId'] = response[1].Data[0].groupID;
@@ -499,14 +499,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
             /* Figure out which function to call. */
-            let functionCall = (dataToSend['type'] == 1 ? 'updateTxPermissions' : (dataToSend['type'] == 2 ? 'updateMenuPermissions' : 'updateAdminPermissions'));
+            const functionCall = (dataToSend['type'] === 1 ?
+                'updateTxPermissions' : (dataToSend['type'] === 2 ?
+                    'updateMenuPermissions' : 'updateAdminPermissions'));
 
             /* Then send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
-
                 this.logService.log('Set new group permissions.', response);
             }).catch((error) => {
-
                 this.logService.log('Failed to set new group permissions.', error);
             });
 
@@ -521,16 +521,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.logService.log('Failed to create new group.', error);
         });
 
-        /* Return. */
         return;
     }
 
     /**
-     * Handle Edit Group
-     * ---------------
      * Handles updating a group.
      *
      * @param {tabid}
+     *
      * @return {void}
      */
     public handleEditGroup(tabid: number): void {
@@ -538,9 +536,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
          1. Update Group
          Let's sort the data structure for the edit group call.
          */
-        let
-            formData = this.tabsControl[tabid].formControl.value,
-            dataToSend = {};
+        const formData = this.tabsControl[tabid].formControl.value;
+        const dataToSend = {};
 
         /* Assign the data to send. */
         dataToSend['groupId'] = this.tabsControl[tabid].groupId;
@@ -554,18 +551,16 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
              2. Update permissions for this group.
              Let's build the data structure again.
              */
-            let
-                permissionsData = {},
-                oldPermissions = this.tabsControl[tabid].oldPermissions,
-                newPermissions = formData.permissions;
+            const permissionsData = {};
+            const oldPermissions = this.tabsControl[tabid].oldPermissions;
+            const newPermissions = formData.permissions;
 
             /* Tidy up the permissions to be acceptable for the update call. */
-            let
-                differences = this.userAdminService.getPermissionsDiff(
-                    oldPermissions,
-                    newPermissions,
-                    dataToSend['type']
-                );
+            const differences = this.userAdminService.getPermissionsDiff(
+                oldPermissions,
+                newPermissions,
+                dataToSend['type'],
+            );
 
             /* Assign all the data. */
             permissionsData['entityId'] = dataToSend['groupId'];
@@ -576,14 +571,16 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = differences['toDelete'];
 
             /* Figure out which call to make. */
-            let functionCall = (dataToSend['type'] == 1 ? 'updateTxPermissions' : (dataToSend['type'] == 2 ? 'updateMenuPermissions' : 'updateAdminPermissions'));
+            const functionCall = (dataToSend['type'] === 1 ?
+                'updateTxPermissions' : (dataToSend['type'] === 2 ?
+                    'updateMenuPermissions' : 'updateAdminPermissions'));
 
             /* Send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
                 /* Re-emit the permissions. */
                 this.tabsControl[tabid].permissionsEmitter.emit(newPermissions);
 
-                /* Lastly, make the old permissions the new ones so the user can revert them and have differences to send. */
+                /* Make the old permissions the new ones so the user can revert them and have differences to send. */
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
                 console.warn('Failed to update the group permissions.', error);
@@ -597,66 +594,56 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.showSuccess('Failed to update this permission group');
         });
 
-
         /* Clear the form. */
-        //  this.clearNewGroup(1, false); // send false in to disable the preventDefault.
-
-        /* Return. */
+        // this.clearNewGroup(1, false); // send false in to disable the preventDefault.
         return;
     }
 
     /**
-     * Clear New Group
-     * --------------
-     * Clears the new group form, i.e, sets all inputs to not filled.
+     * Clears the new group form, i.e., sets all inputs to not filled.
      *
-     * @param {tabid} number - the tab to clear (will always be 1).
+     * @param {number} tabId - The tab to clear (will always be 1).
      *
      * @return {void}
      */
-    public clearNewGroup(tabid, event): void {
+    public clearNewGroup(tabId, event): void {
         /* Prevent submit. */
         if (event) event.preventDefault();
 
         /* Let's set all the values in the form controls. */
-        this.tabsControl[tabid].formControl = this._persistService.refreshState('useradmin/newGroup', this.newAddGroupFormgroup('clear'));
+        this.tabsControl[tabId].formControl =
+            this.persistService.refreshState('useradmin/newGroup', this.newAddGroupFormgroup('clear'));
 
         /* Override the changes. */
         this.changeDetectorRef.detectChanges();
 
-        /* Return. */
         return;
     }
 
     /**
-     * Extract Permissions to Update
-     * -----------------------------
-     * Converts the object of updated permissions into grouped levels then by
-     * IDs and their value.
+     * Converts the object of updated permissions into grouped levels then by IDs and their value.
      *
-     * @param {permissions} - the permissions object from the form.
+     * @param {object} permissions - The permissions object from the form.
      *
-     * @return {levels} - and object detailing permissions by level then key
-     * pairs of ID and value.
+     * @return {object} - An object detailing permissions by level then key pairs of ID and value.
      */
     public extractPermissionsToUpdate(permissions): any {
-        let
-            i, permissionLevel, permissionID,
-            newStructure = {};
+        let i;
+        let permissionLevel;
+        let permissionID;
+        const newStructure = {};
 
-        /* Firstly, lets loop over the permission levels and create an array
-         for each. */
-        for (i = 0; i < this.permissionLevelsList.length; i++) {
+        /* Firstly, lets loop over the permission levels and create an array for each. */
+        for (i = 0; i < this.permissionLevelsList.length; i += 1) {
             permissionLevel = this.permissionLevelsList[i].id;
 
             /* Set the empty object. */
             newStructure[permissionLevel] = {};
         }
 
-        /* Now let's loop over each permission and assign it's ID to any
-         object it should be in.  */
+        /* Now let's loop over each permission and assign it's ID to any object it should be in.  */
         for (permissionID in permissions) {
-            for (i = 0; i < this.permissionLevelsList.length; i++) {
+            for (i = 0; i < this.permissionLevelsList.length; i += 1) {
                 permissionLevel = this.permissionLevelsList[i].id;
 
                 /* Assign the permission ID with the level's value. */
@@ -664,16 +651,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             }
         }
 
-        /* Return. */
         return newStructure;
     }
 
     /**
-     * Close Tab
-     * ---------
      * Removes a tab from the tabs control array, in effect, closing it.
      *
-     * @param {index} number - the tab inded to close.
+     * @param {number} index - the tab inded to close.
      *
      * @return {void}
      */
@@ -692,17 +676,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Reset tabs. */
         this.router.navigateByUrl('/user-administration/permissions/0');
 
-        /* Return */
         return;
     }
 
     /**
-     * Set Tab Active
-     * --------------
-     * Sets all tabs to inactive other than the given index, this means the
-     * view is switched to the wanted tab.
+     * Sets all tabs to inactive other than the given index, this means the view is switched to the wanted tab.
      *
-     * @param {index} number - the tab inded to close.
+     * @param {number} index - The tab inded to close.
      *
      * @return {void}
      */
@@ -713,11 +693,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     /**
-     * Show Error Message
-     * ------------------
      * Shows an error popup.
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param  {string} message - the string to be shown in the message.
+     *
      * @return {void}
      */
     showError(message) {
@@ -734,11 +713,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     /**
-     * Show Warning Message
-     * ------------------
      * Shows a warning popup.
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param  {string} message - The string to be shown in the message.
+     *
      * @return {void}
      */
     showWarning(message) {
@@ -755,11 +733,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     }
 
     /**
-     * Show Success Message
-     * ------------------
      * Shows an success popup.
      *
-     * @param  {message} string - the string to be shown in the message.
+     * @param  {string} message - The string to be shown in the message.
+     *
      * @return {void}
      */
     showSuccess(message) {
@@ -775,13 +752,11 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
           `);
     }
 
-    ngOnDestroy()
-        :
-        void {
+    ngOnDestroy(): void {
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
 
-        /* Unsunscribe all Observables. */
+        /* Unsubscribe all Observables. */
         let key;
         for (key in this.subscriptions) {
             if (this.subscriptions[key].unsubscribe) {
