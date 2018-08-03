@@ -653,10 +653,10 @@ export class UserAdminService {
         let action;
         let asynTaskPipe;
 
-        if (entity.isTx == 1) {
+        if (entity.isTx === 1) {
             asynTaskPipe = this.adminUsersService.requestTxPermissions(entity);
             action = SET_TX_PERMISSIONS;
-        } else if (entity.isTx == 2) {
+        } else if (entity.isTx === 2) {
             asynTaskPipe = this.adminUsersService.requestMenuPermissions(entity);
             action = SET_MENU_PERMISSIONS;
         } else {
@@ -776,7 +776,7 @@ export class UserAdminService {
      */
     public getAccountTypeById(id): any {
         for (const i in this.accountList) {
-            if (this.accountList[i].id === id) {
+            if (Number(this.accountList[i].id) === id) {
                 return [this.accountList[i]];
             }
         }
@@ -801,7 +801,7 @@ export class UserAdminService {
      */
     public getWalletTypeById(id): any {
         for (const i in this.walletTypes) {
-            if (this.walletTypes[i].id === id) {
+            if (Number(this.walletTypes[i].id) === id) {
                 return [this.walletTypes[i]];
             }
         }
