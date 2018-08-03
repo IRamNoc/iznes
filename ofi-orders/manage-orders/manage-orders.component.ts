@@ -1001,8 +1001,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getOrdersList() {
-        console.log('----------------------------------');
-        console.log(this.dataGridParams);
         if (!this.isInvestorUser) {  // AM side
             const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
 
