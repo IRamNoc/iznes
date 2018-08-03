@@ -55,7 +55,7 @@ import {
     OfiConsumeTokenComponent,
     MyHoldingsComponent,
     OfiSubPortfolioComponent,
-    OfiClientReferentialComponent
+    OfiClientReferentialComponent,
     UmbrellaAuditComponent,
     FundAuditComponent,
 } from '@ofi/ofi-main';
