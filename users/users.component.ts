@@ -382,42 +382,44 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const controls = thisTab.formControl.controls;
 
         /* So let's figure out if they've added duplicate wallets... */
-        setTimeout(() => {
-            for (const i in controls['walletsFull'].value) {
-                for (const j in controls['walletsRead'].value) {
-                    /* If we have a duplicate wallet... */
-                    if (controls['walletsRead'].value[j] !==
-                        undefined && controls['walletsFull'].value[i] !== undefined) {
-                        if (controls['walletsRead'].value[j].id === controls['walletsFull'].value[i].id) {
-                            /* ...then we should remove it from the other select and tell the user. */
-                            if (fullAccess) {
-                                delete controls['walletsRead'].value[j];
-                                controls['walletsRead'].patchValue(
-                                    controls['walletsRead'].value.filter(thing => !!thing),
-                                );
-                                this.showAlert(
-                                    'warning',
-                                    'You changed access to \'' + controls['walletsFull'].value[i].text +
-                                    '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                    '<b>Full access</b>.');
-                            } else {
-                                delete controls['walletsFull'].value[i];
-                                controls['walletsFull'].patchValue(
-                                    controls['walletsFull'].value.filter(thing => !!thing),
-                                );
+        setTimeout(
+            () => {
+                for (const i in controls['walletsFull'].value) {
+                    for (const j in controls['walletsRead'].value) {
+                        /* If we have a duplicate wallet... */
+                        if (controls['walletsRead'].value[j] !==
+                            undefined && controls['walletsFull'].value[i] !== undefined) {
+                            if (controls['walletsRead'].value[j].id === controls['walletsFull'].value[i].id) {
+                                /* ...then we should remove it from the other select and tell the user. */
+                                if (fullAccess) {
+                                    delete controls['walletsRead'].value[j];
+                                    controls['walletsRead'].patchValue(
+                                        controls['walletsRead'].value.filter(thing => !!thing),
+                                    );
+                                    this.showAlert(
+                                        'warning',
+                                        'You changed access to \'' + controls['walletsFull'].value[i].text +
+                                        '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
+                                        '<b>Full access</b>.');
+                                } else {
+                                    delete controls['walletsFull'].value[i];
+                                    controls['walletsFull'].patchValue(
+                                        controls['walletsFull'].value.filter(thing => !!thing),
+                                    );
 
-                                this.showAlert(
-                                    'warning',
-                                    'You changed access to \'' + controls['walletsRead'].value[j].text +
-                                    '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                    '<b>Read access</b>.');
+                                    this.showAlert(
+                                        'warning',
+                                        'You changed access to \'' + controls['walletsRead'].value[j].text +
+                                        '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
+                                        '<b>Read access</b>.');
+                                }
                             }
                         }
                     }
                 }
-            }
-        },         50);
-
+            },
+            50,
+        );
     }
 
     /**
@@ -437,41 +439,44 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const controls = thisTab.formControl.controls;
 
         /* So let's figure out if they've added duplicate wallets... */
-        setTimeout(() => {
-            for (const i in controls['groupWalletsFull'].value) {
-                for (const j in controls['groupWalletsRead'].value) {
-                    /* If we have a duplicate wallet... */
-                    if (controls['groupWalletsRead'].value[j] !== undefined && controls['groupWalletsFull'].value[i]
-                        !== undefined) {
-                        if (controls['groupWalletsRead'].value[j].id === controls['groupWalletsFull'].value[i].id) {
-                            /* ...then we should remove it from the other select and tell the user. */
-                            if (fullAccess) {
-                                delete controls['groupWalletsRead'].value[j];
-                                controls['groupWalletsRead'].patchValue(
-                                    controls['groupWalletsRead'].value.filter(thing => !!thing),
-                                );
-                                this.showAlert(
-                                    'warning',
-                                    'You changed access to \'' + controls['groupWalletsFull'].value[i].text
-                                    + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                    '<b>Full access</b>.');
-                            } else {
-                                delete controls['groupWalletsFull'].value[i];
-                                controls['groupWalletsFull'].patchValue(
-                                    controls['groupWalletsFull'].value.filter(thing => !!thing),
-                                );
+        setTimeout(
+            () => {
+                for (const i in controls['groupWalletsFull'].value) {
+                    for (const j in controls['groupWalletsRead'].value) {
+                        /* If we have a duplicate wallet... */
+                        if (controls['groupWalletsRead'].value[j] !== undefined && controls['groupWalletsFull'].value[i]
+                            !== undefined) {
+                            if (controls['groupWalletsRead'].value[j].id === controls['groupWalletsFull'].value[i].id) {
+                                /* ...then we should remove it from the other select and tell the user. */
+                                if (fullAccess) {
+                                    delete controls['groupWalletsRead'].value[j];
+                                    controls['groupWalletsRead'].patchValue(
+                                        controls['groupWalletsRead'].value.filter(thing => !!thing),
+                                    );
+                                    this.showAlert(
+                                        'warning',
+                                        'You changed access to \'' + controls['groupWalletsFull'].value[i].text
+                                        + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
+                                        '<b>Full access</b>.');
+                                } else {
+                                    delete controls['groupWalletsFull'].value[i];
+                                    controls['groupWalletsFull'].patchValue(
+                                        controls['groupWalletsFull'].value.filter(thing => !!thing),
+                                    );
 
-                                this.showAlert(
-                                    'warning',
-                                    'You changed access to \'' + controls['groupWalletsRead'].value[j].text
-                                    + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                    '<b>Read access</b>.');
+                                    this.showAlert(
+                                        'warning',
+                                        'You changed access to \'' + controls['groupWalletsRead'].value[j].text
+                                        + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
+                                        '<b>Read access</b>.');
+                                }
                             }
                         }
                     }
                 }
-            }
-        },         50);
+            },
+            50,
+        );
 
     }
 
@@ -1026,7 +1031,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a User</span>',
-            '<span>Are you sure you want to delete \'' + this.usersList[userIndex].userName + '\'?</span>',
+            '<span class="text-warning">Are you sure you want to delete \'' +
+            this.usersList[userIndex].userName + '\'?</span>',
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
