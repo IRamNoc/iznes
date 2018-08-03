@@ -402,7 +402,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a Wallet</span>',
-            '<span>Are you sure you want to delete \'' + this.walletList[index].walletName + '\'?</span>',
+            '<span class="text-warning">Are you sure you want to delete \'' +
+            this.walletList[index].walletName + '\'?</span>',
+
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
