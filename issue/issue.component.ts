@@ -1,14 +1,15 @@
 import { Component, OnInit, OnDestroy, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { WalletNodeRequestService } from '@setl/core-req-services';
 import { ReportingService } from '../reporting.service';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '../tabs';
 import { select } from '@angular-redux/store';
 
 @Component({
     selector: 'setl-issue',
     templateUrl: './issue.component.html',
-    styleUrls: ['./issue.component.css']
+    styleUrls: ['./issue.component.css'],
 })
 export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -17,20 +18,22 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     private issuers$: Observable<any>;
     private tabControl: TabControl;
-    private subscriptions: Array<Subscription> = [];
+    private subscriptions: Subscription[] = [];
     public tabs: Tab[] = [];
     public connectedWalletId;
-    /* Rows Per Page datagrid size */
+    /* Datagrid properties */
     public pageSize: number;
+    public pageCurrent: number;
+    private editTab: boolean = false;
 
     constructor(private walletNodeRequestService: WalletNodeRequestService,
                 private changeDetector: ChangeDetectorRef,
                 private reportingService: ReportingService) {
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-                this.connectedWalletId = connectedWalletId;
-                this.closeTabs();
-            }
+            this.connectedWalletId = connectedWalletId;
+            this.closeTabs();
+        },
         ));
     }
 
@@ -42,15 +45,15 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
             icon: 'money',
             active: true,
             data: {
-                asset: -1
-            }
+                asset: -1,
+            },
         });
 
         this.subscriptions.push(
             this.tabControl.getTabs().subscribe((tabs) => {
                 this.tabs = tabs;
                 this.changeDetector.markForCheck();
-            })
+            }),
         );
     }
 
@@ -59,6 +62,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public handleViewBreakdown(asset): void {
+        this.editTab = true;
         if (this.tabControl.activate(tab => tab.data.asset === asset.asset)) {
             return;
         }
@@ -73,7 +77,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                     assetObject: asset,
                     hash: asset.hash,
                     holdings: holdings,
-                }
+                },
             });
         });
     }
@@ -90,9 +94,21 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
             while (tabIndex) {
                 this.tabControl.close(tabIndex);
                 this.changeDetector.markForCheck();
-                tabIndex--;
+                tabIndex = tabIndex - 1;
             }
         }
+    }
+
+    /**
+     * Sets Currently Viewed Page of Datagrid
+     *
+     * Note: When the datagrid is destroyed, the emitted value (1) is ignored when the View/Edit btn is clicked
+     *
+     * @param page - page number value emitted from datagrid
+     */
+    public setCurrentPage(page) {
+        if (!this.editTab) this.pageCurrent = page;
+        this.editTab = false;
     }
 
     ngOnDestroy() {
