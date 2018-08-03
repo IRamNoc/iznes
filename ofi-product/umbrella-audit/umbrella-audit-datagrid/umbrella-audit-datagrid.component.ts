@@ -60,17 +60,17 @@ export class UmbrellaAuditDatagridComponent implements OnInit, OnDestroy, OnChan
         }
 
         this.umbrellaAuditList$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                this.umbrellaAuditList = d;
-                this.updateUmbrellaAuditItems();
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((d) => {
+            this.umbrellaAuditList = d;
+            this.updateUmbrellaAuditItems();
+        });
 
         this.searchForm.valueChanges
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                this.filterInformationAuditItems(d);
-            });
+        .takeUntil(this.unSubscribe)
+        .subscribe((d) => {
+            this.filterAuditItems(d);
+        });
     }
 
     ngOnChanges(changes) {
