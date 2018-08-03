@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 
 import { NgRedux } from '@angular-redux/store';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToasterService } from 'angular2-toaster';
 import { ClrDatagridStringFilterInterface } from '@clr/angular';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -316,7 +316,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             newArray.push(obj[key]);
 
             /* Index for tab control. */
-            newArray[newArray.length - 1].index = i += 1 ;
+            newArray[newArray.length - 1].index = i += 1;
 
             /* Make these all admin type groups. */
             newArray[newArray.length - 1].category = this.userAdminService.resolveGroupType({ id: obj[key].groupIsTx });
@@ -346,7 +346,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Let's now ask the user if they're sure... */
             this.confirmationService.create(
                 '<span>Deleting a permission group</span>',
-                '<span>Are you sure you want to delete \'' + this.allGroupList[index].groupName + '\'?</span>',
+                '<span class="text-warning">Are you sure you want to delete \'' +
+                this.allGroupList[index].groupName + '\'?</span>',
             ).subscribe((ans) => {
                 /* ...if they are... */
                 if (ans.resolved) {
