@@ -32,8 +32,10 @@ export interface FundListState {
     iznFundList: {
         [key: string]: IznesFundDetail,
     };
-
     requestedIznesFund: boolean;
+    audit: {
+        [key: number]: any[],
+    };
 }
 
 export interface FundSharesToProcess {
@@ -71,19 +73,19 @@ export interface IznesFundDetail {
     fundAdministrator: string;
     custodianBank: string;
     investmentManager: string;
-    principalPromoter: string[];
-    payingAgent: string[];
+    principlePromoterID: string[];
+    payingAgentID: string[];
     fundManagers: string;
-    transferAgent: string;
-    centralizingAgent: string;
+    transferAgentID: string;
+    centralizingAgentID: string;
     isDedicatedFund: string;
     portfolioCurrencyHedge: string;
     globalItermediaryIdentification: string;
     delegatedManagementCompany: string;
-    investmentAdvisor: string[];
-    auditor: string;
-    taxAuditor: string;
-    legalAdvisor: string;
+    investmentAdvisorID: string[];
+    auditorID: string;
+    taxAuditorID: string;
+    legalAdvisorID: string;
     directors: string;
     hasEmbeddedDirective: string;
     hasCapitalPreservation: string;

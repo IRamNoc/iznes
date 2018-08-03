@@ -23,4 +23,4 @@ export const setRequestedUmbrellaFund = kAction(SET_REQUESTED_UMBRELLA_FUND);
 export const CLEAR_REQUESTED_UMBRELLA_FUND = `${name}/CLEAR_REQUESTED_UMBRELLA_FUND`;
 export const clearRequestedUmbrellaFund = kAction(CLEAR_REQUESTED_UMBRELLA_FUND);
 
-
+export const SET_UMBRELLA_AUDIT = `${name}/SET_UMBRELLA_AUDIT`;

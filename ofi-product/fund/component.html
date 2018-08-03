@@ -21,6 +21,9 @@
             <!-- Button container -->
             <div *ngIf="viewMode === 'FUND'" class="row tab-header-container">
                 <div class="form-group">
+                    <button *ngIf="param" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(param)">
+                        {{'Audit Trail' | translate}}
+                    </button>
                     <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
                         {{'Duplicate Fund' | translate}}
                     </button>
@@ -645,11 +648,11 @@
                                                 <div>
                                                     <label class="control-label" for="fundAdministrator">{{'Fund Administrator' | translate}}</label>
                                                     <ng-select id="fundAdministrator" [items]="fundAdministratorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['fundAdministrator']">
+                                                        [formControl]="fundForm.controls['fundAdministratorID']">
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministrator'].hasError('required') && fundForm.controls['fundAdministrator'].touched">{{'Field is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['fundAdministratorID'].hasError('required') && fundForm.controls['fundAdministratorID'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
@@ -657,18 +660,18 @@
                                                 <div>
                                                     <label class="control-label" for="custodianBank">{{'Custodian Bank' | translate}}</label>
                                                     <ng-select id="custodianBank" [items]="custodianBankItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['custodianBank']">
+                                                        [formControl]="fundForm.controls['custodianBankID']">
 
 
                                                     </ng-select>
-                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBank'].hasError('required') && fundForm.controls['custodianBank'].touched">{{'Field is required' | translate}}</span>
+                                                    <span class="field-error" *ngIf="fundForm.controls['custodianBankID'].hasError('required') && fundForm.controls['custodianBankID'].touched">{{'Field is required' | translate}}</span>
                                                 </div>
                                             </div>
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentManager">{{'Investment Manager' | translate}}</label>
                                                 <ng-select id="investmentManager" [items]="investmentManagerItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['investmentManager']">
+                                                    [formControl]="fundForm.controls['investmentManagerID']">
 
 
                                                 </ng-select>
@@ -677,7 +680,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="principalPromoter">{{'Principal Promoter' | translate}}</label>
                                                 <ng-select id="principalPromoter" [items]="principalPromoterItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['principalPromoter']">
+                                                    [formControl]="fundForm.controls['principlePromoterID']">
 
 
                                                 </ng-select>
@@ -686,7 +689,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="payingAgent">{{'Paying Agent' | translate}}</label>
                                                 <ng-select id="payingAgent" [items]="payingAgentItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['payingAgent']">
+                                                    [formControl]="fundForm.controls['payingAgentID']">
 
 
                                                 </ng-select>
@@ -702,7 +705,7 @@
                                                 <div>
                                                     <label class="control-label" for="transferAgent">{{'Transfer Agent' | translate}}</label>
                                                     <ng-select id="transferAgent" [items]="transferAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['transferAgent']">
+                                                        [formControl]="fundForm.controls['transferAgentID']">
 
 
                                                     </ng-select>
@@ -713,7 +716,7 @@
                                                 <div>
                                                     <label class="control-label" for="centralizingAgent">{{'Centralizing Agent' | translate}}</label>
                                                     <ng-select id="centralizingAgent" [items]="centralizingAgentItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                        [formControl]="fundForm.controls['centralizingAgent']">
+                                                        [formControl]="fundForm.controls['centralizingAgentID']">
 
 
                                                     </ng-select>
@@ -822,7 +825,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentAdvisor">{{'Investment Advisor' | translate}}</label>
                                                 <ng-select id="investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['investmentAdvisor']">
+                                                    [formControl]="fundForm.controls['investmentAdvisorID']">
 
 
                                                 </ng-select>
@@ -830,7 +833,7 @@
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="auditor">{{'Auditor' | translate}}</label>
-                                                <ng-select id="auditor" [items]="auditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['auditor']">
+                                                <ng-select id="auditor" [items]="auditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['auditorID']">
 
 
                                                 </ng-select>
@@ -838,7 +841,7 @@
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="taxAuditor">{{'Tax Auditor' | translate}}</label>
-                                                <ng-select id="taxAuditor" [items]="taxAuditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['taxAuditor']">
+                                                <ng-select id="taxAuditor" [items]="taxAuditorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')" [formControl]="fundForm.controls['taxAuditorID']">
 
 
                                                 </ng-select>
@@ -847,7 +850,7 @@
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="legalAdvisor">{{'Legal Advisor' | translate}}</label>
                                                 <ng-select id="legalAdvisor" [items]="legalAdvisorItems" [allowClear]="true" [placeholder]="_translate.translate('Select')"
-                                                    [formControl]="fundForm.controls['legalAdvisor']">
+                                                    [formControl]="fundForm.controls['legalAdvisorID']">
 
 
                                                 </ng-select>

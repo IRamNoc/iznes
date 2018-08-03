@@ -28,6 +28,7 @@ export class KycAuditTrailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
     }
 }

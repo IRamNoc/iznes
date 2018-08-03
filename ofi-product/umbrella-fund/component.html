@@ -25,6 +25,9 @@
 
                 </p>
                 <div class="form-group">
+                        <button *ngIf="isEditMode" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
+                                {{'Audit Trail' | translate}}
+                            </button>
                     <button *ngIf="isEditMode" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
                         {{'Duplicate Umbrella' | translate}}
                     </button>
