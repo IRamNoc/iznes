@@ -17,6 +17,7 @@ export interface OfiRequestArrangements extends OfiMemberNodeBody {
 
 export interface OfiAmOrdersRequestBody extends OfiMemberNodeBody {
     token: string;
+    fundName?: any;
     shareName?: any;
     status?: any;
     orderType?: any;
