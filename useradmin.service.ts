@@ -1,13 +1,11 @@
-import {Injectable, Output, EventEmitter} from '@angular/core';
-
-import {Observable, Subject} from 'rxjs'
-
-import {SagaHelper} from '@setl/utils';
-
-import {select, NgRedux} from '@angular-redux/store';
+import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { SagaHelper } from '@setl/utils';
+import { select, NgRedux } from '@angular-redux/store';
 
 import {
-    AdminUsersService
+    AdminUsersService,
 } from '@setl/core-req-services';
 
 import {
@@ -65,101 +63,101 @@ export class UserAdminService {
     /* Wallet Types. */
     public walletTypes: any = [
         {
-            'id': '1',
-            'text': 'Legal Entity',
+            id: '1',
+            text: 'Legal Entity',
         },
         {
-            'id': '2',
-            'text': 'Individual',
+            id: '2',
+            text: 'Individual',
         },
         {
-            'id': '3',
-            'text': 'Other',
+            id: '3',
+            text: 'Other',
         },
     ];
 
     /* User Types. */
     public userTypes: any = [
         {
-            'id': '15',
-            'text': 'System admin'
+            id: '15',
+            text: 'System admin',
         },
         {
-            'id': '25',
-            'text': 'Chain admin'
+            id: '25',
+            text: 'Chain admin',
         },
         {
-            'id': '26',
-            'text': 'SGP Admin',
+            id: '26',
+            text: 'SGP Admin',
         },
         {
-            'id': '27',
-            'text': 'Bank',
+            id: '27',
+            text: 'Bank',
         },
         {
-            'id': '35',
-            'text': 'Member'
+            id: '35',
+            text: 'Member',
         },
         {
-            'id': '36',
-            'text': 'Asset manager'
+            id: '36',
+            text: 'Asset manager',
         },
         {
-            'id': '45',
-            'text': 'Standard user'
+            id: '45',
+            text: 'Standard user',
         },
         {
-            'id': '46',
-            'text': 'Investor'
+            id: '46',
+            text: 'Investor',
         },
         {
-            'id': '47',
-            'text': 'Valuer'
+            id: '47',
+            text: 'Valuer',
         },
         {
-            'id': '48',
-            'text': 'Custodian'
+            id: '48',
+            text: 'Custodian',
         },
         {
-            'id': '49',
-            'text': 'CAC'
+            id: '49',
+            text: 'CAC',
         },
         {
-            'id': '50',
-            'text': 'Registrar'
+            id: '50',
+            text: 'Registrar',
         },
         {
-            'id': '60',
-            'text': 'T2S Admin'
+            id: '60',
+            text: 'T2S Admin',
         },
         {
-            'id': '65',
-            'text': 'Rooster Operator'
+            id: '65',
+            text: 'Rooster Operator',
         },
         {
-            'id': '66',
-            'text': 'Rooster IPA'
+            id: '66',
+            text: 'Rooster IPA',
         },
         {
-            'id': '67',
-            'text': 'Rooster Final Custodian'
+            id: '67',
+            text: 'Rooster Final Custodian',
         },
     ];
 
     /* Group Types. */
     public groupTypes: any = [
         {
-            'id': '0',
-            'text': 'Administrative',
+            id: '0',
+            text: 'Administrative',
         },
         {
-            'id': '1',
-            'text': 'Transactional',
+            id: '1',
+            text: 'Transactional',
         },
         {
-            'id': '2',
-            'text': 'Menu',
-        }
+            id: '2',
+            text: 'Menu',
+        },
     ];
 
     public usersList: {};
@@ -252,8 +250,7 @@ export class UserAdminService {
 
     /* Constructor. */
     constructor(private adminUsersService: AdminUsersService,
-                private ngRedux: NgRedux<any>,) {
-        let asyncTaskPipe;
+                private ngRedux: NgRedux<any>) {
         const state = this.ngRedux.getState();
 
         /* Let's request the user's list, this is the saga pipe function. */
@@ -261,7 +258,7 @@ export class UserAdminService {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.requestMyUsersList(),
-                successActions: [SET_ADMIN_USERLIST]
+                successActions: [SET_ADMIN_USERLIST],
             });
         }
 
@@ -270,7 +267,7 @@ export class UserAdminService {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getAdminPermAreaList(),
-                successActions: [SET_ADMIN_PERM_AREAS_LIST]
+                successActions: [SET_ADMIN_PERM_AREAS_LIST],
             });
         }
 
@@ -279,7 +276,7 @@ export class UserAdminService {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getTxPermAreaList(),
-                successActions: [SET_TX_PERM_AREAS_LIST]
+                successActions: [SET_TX_PERM_AREAS_LIST],
             });
         }
 
@@ -288,17 +285,17 @@ export class UserAdminService {
             this.adminUsersService.buildRequest({
                 ngRedux: this.ngRedux,
                 taskPipe: this.adminUsersService.getMenuPermAreaList(),
-                successActions: [SET_MENU_PERM_AREAS_LIST]
+                successActions: [SET_MENU_PERM_AREAS_LIST],
             });
         }
 
         /* Let's subscribe to the accounts list. */
         this.subscriptions['account-list'] = this.accountListOb.subscribe((accountList) => {
             /* Variables. */
-            let newAccountList = [], key;
+            const newAccountList = [];
 
             /* Ok, let's loop over each account... */
-            for (key of Object.keys(accountList)) {
+            for (const key of Object.keys(accountList)) {
                 /* ...and push a nice select object into the new array. */
                 if (accountList[key]) {
                     newAccountList.push({
@@ -310,10 +307,9 @@ export class UserAdminService {
 
             /* Now set the current array. */
             this.accountList = newAccountList;
-        })
+        });
 
-        /* Assign a update handler to watch changes in redux, then trigger once
-         manually. */
+        /* Assign a update handler to watch changes in redux, then trigger once manually. */
         ngRedux.subscribe(() => this.updateState());
         this.updateState();
     }
@@ -323,17 +319,13 @@ export class UserAdminService {
     }
 
     /**
-     * Update State
-     * ------------
-     * Handles the updating of objects on this service when redux has data
-     * updated.
+     * Updates objects on this service when redux is updated.
      *
      * @return {void}
      */
     public updateState() {
         /* Retrieve the redux store. */
         const state = this.ngRedux.getState();
-        let key;
 
         /* Get user list, and send a message to the users observable. */
         this.usersList = getUsersList(state);
@@ -386,9 +378,7 @@ export class UserAdminService {
      */
 
     /**
-     * Update Users Store
-     * ----------------
-     * Triggers an update of the users list in redux
+     * Triggers an update of the user's list in redux.
      *
      * @return {void}
      */
@@ -396,177 +386,150 @@ export class UserAdminService {
         this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestMyUsersList(),
-            successActions: [SET_ADMIN_USERLIST]
+            successActions: [SET_ADMIN_USERLIST],
         });
     }
 
     /**
-     * Create New User
-     * ----------------
-     * Creates a new User.
+     * Creates a new user.
      *
-     * @param {data} - the new user data.
+     * @param {Object} data - The new user data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public createNewUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.createNewUser(data)
+            taskPipe: this.adminUsersService.createNewUser(data),
         });
     }
 
     /**
-     * Edit User
-     * ----------------
-     * Creates a new User.
+     * Edits a user.
      *
-     * @param {data} - the new user data.
+     * @param {Object} data - The new user data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public editUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.editUser(data)
+            taskPipe: this.adminUsersService.editUser(data),
         });
     }
 
     /**
-     * Delete User
-     * ----------------
-     * Creates a new User.
+     * Deletes a user.
      *
-     * @param {data} - the new user data.
+     * @param {Object} data - The new user data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public deleteUser(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.deleteUser(data)
+            taskPipe: this.adminUsersService.deleteUser(data),
         });
     }
 
     /**
-     * Request Permissions
-     * ----------------
-     * Request user wallet permissions.
+     * Requests user wallet permissions.
      *
-     * @param {entity} - the entity data.
+     * @param {Object} data - The entity data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     requestUserWalletPermissions(data): Promise<any> {
-        /* Return the request. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserWalletPermissions(data),
-            successActions: [SET_USERS_WALLET_PERMISSIONS]
+            successActions: [SET_USERS_WALLET_PERMISSIONS],
         });
     }
 
     /**
-     * New User Wallet Permissions
-     * ----------------
      * New user wallet permissions.
      *
-     * @param {entity} - the permissions data.
+     * @param {Object} data - The permissions data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     newUserWalletPermissions(data): Promise<any> {
-        /* Return the request. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.newUserWalletPermissions(data)
+            taskPipe: this.adminUsersService.newUserWalletPermissions(data),
         });
     }
 
     /**
-     * Update User Wallet Permissions
-     * ----------------
-     * Update user wallet permissions.
+     * Updates a user's wallet permissions.
      *
-     * @param {entity} - the permissions data.
+     * @param {Object} data - The permissions data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     updateUserWalletPermissions(data): Promise<any> {
-        /* Return the request. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateUserWalletPermissions(data)
+            taskPipe: this.adminUsersService.updateUserWalletPermissions(data),
         });
     }
 
     /**
-     * Request Permissions
-     * ----------------
-     * Request user group wallet permissions.
+     * Requests a user's group wallet permissions.
      *
-     * @param {entity} - the entity data.
+     * @param {Object} data - The entity data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     requestUserGroupWalletPermissions(data): Promise<any> {
-        /* Return the request. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserAccountWalletPermissions(data),
-            successActions: []
+            successActions: [],
         });
     }
 
     /**
-     * Update User group Wallet Permissions
-     * ----------------
-     * Update user group wallet permissions.
+     * Updates a user's group wallet permissions.
      *
-     * @param {entity} - the permissions data.
+     * @param {Object} data - The permissions data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     updateUserGroupWalletPermissions(data): Promise<any> {
-        /* Return the request. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateUserAccountWalletPermissions(data)
+            taskPipe: this.adminUsersService.updateUserAccountWalletPermissions(data),
         });
     }
 
     /**
-     * Update User Chain Access
-     * ----------------
      * Updates a user's chain access.
      *
-     * @param {data} - the update data.
+     * @param {Object} data - The update data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     updateUserChainAccess(data): Promise<any> {
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateUserChainAccess(data)
+            taskPipe: this.adminUsersService.updateUserChainAccess(data),
         });
     }
 
     /**
-     * Request User Chain Access
-     * ----------------
      * Request a user's chain access.
      *
-     * @param {data} - the request data.
+     * @param {Object} data - The request data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     requestUserChainAccess(data): Promise<any> {
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserChainAccess(data),
-            successActions: [SET_USERS_CHAIN_ACCESS]
+            successActions: [SET_USERS_CHAIN_ACCESS],
         });
     }
 
@@ -577,140 +540,118 @@ export class UserAdminService {
      */
 
     /**
-     * Create New Group
-     * ----------------
      * Creates a new Group.
      *
-     * @param {data} - the new group data.
+     * @param {Object} data - The new group data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public createNewGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.createNewGroup(data)
+            taskPipe: this.adminUsersService.createNewGroup(data),
         });
     }
 
     /**
-     * Update Group
-     * ----------------
      * Updates a Group.
      *
-     * @param {data} - the group's new data.
+     * @param {Object} data - The group's new data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public updateGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateGroup(data)
+            taskPipe: this.adminUsersService.updateGroup(data),
         });
     }
 
     /**
-     * Delete Group
-     * ----------------
      * Deletes a Group.
      *
-     * @param {data} - the group data, only requires a groupId key.
+     * @param {Object} data - The group data, only requires a groupId key.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public deleteGroup(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.deleteGroup(data)
+            taskPipe: this.adminUsersService.deleteGroup(data),
         });
     }
 
     /**
-     * Update AdminPermissions
-     * ----------------
      * Updates an entity's permissions.
      *
-     * @param {data} - the permission data.
+     * @param {Object} data - The permission data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     updateAdminPermissions(data): Promise<any> {
         /* Add isAdmin to data. */
-        const
-            state = this.ngRedux.getState(),
-            myDetail = getMyDetail(state);
-        data.isAdmin = myDetail.admin ? "1" : "0";
+        const state = this.ngRedux.getState();
+        const myDetail = getMyDetail(state);
+        data.isAdmin = myDetail.admin ? '1' : '0';
 
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateAdminPermissions(data)
+            taskPipe: this.adminUsersService.updateAdminPermissions(data),
         });
     }
 
     /**
-     * Update Tx Permissions
-     * ----------------
      * Updates an entity's permissions.
      *
-     * @param {data} - the permission data.
+     * @param {Object} data - The permission data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     updateTxPermissions(data): Promise<any> {
         /* Get my detail to add is admin to the request. */
-        const
-            state = this.ngRedux.getState(),
-            myDetail = getMyDetail(state);
+        const state = this.ngRedux.getState();
+        const myDetail = getMyDetail(state);
 
         /* Figure the admin bit out. */
-        data.isAdmin = myDetail.admin ? "1" : "0";
+        data.isAdmin = myDetail.admin ? '1' : '0';
 
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateTxPermissions(data)
+            taskPipe: this.adminUsersService.updateTxPermissions(data),
         });
     }
 
     /**
-     * Update Menu Permissions
-     * ----------------
-     * Updates an entity's permissions.
+     * Updates an entity's menu permissions.
      *
-     * @param {data} - the permission data.
+     * @param {Object} data - The permission data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     updateMenuPermissions(data): Promise<any> {
         /* Get my detail to add is admin to the request. */
-        const
-            state = this.ngRedux.getState(),
-            myDetail = getMyDetail(state);
+        const state = this.ngRedux.getState();
+        const myDetail = getMyDetail(state);
 
         /* Figure the admin bit out. */
-        data.isAdmin = myDetail.admin ? "1" : "0";
+        data.isAdmin = myDetail.admin ? '1' : '0';
 
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateMenuPermissions(data)
+            taskPipe: this.adminUsersService.updateMenuPermissions(data),
         });
     }
 
     /**
-     * Request Permissions
-     * ----------------
      * Requests an entity's permissions or all, used on click for editing a group.
      *
-     * @param {entity} - the entity data.
+     * @param {Object} entity - The entity data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     requestPermissions(entity): Promise<any> {
-        /* Return. */
-        let
-            action,
-            asynTaskPipe;
+        let action;
+        let asynTaskPipe;
 
         if (entity.isTx == 1) {
             asynTaskPipe = this.adminUsersService.requestTxPermissions(entity);
@@ -726,43 +667,40 @@ export class UserAdminService {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: asynTaskPipe,
-            successActions: [action]
+            successActions: [action],
         });
     }
 
     /**
-     * Request User Permissions
-     * ----------------
      * Requests a user's permissions or all, used on click for editing a user.
      *
-     * @param {entity} - the entity data.
+     * @param {Object} entity - The entity data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     requestUserPermissions(entity): Promise<any> {
-        let action = (entity.isTx == 1 ? SET_USERS_TX_PERMISSIONS : (entity.isTx == 2 ? SET_USERS_MENU_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS));
-        /* Return. */
+        const action = (entity.isTx === 1 ?
+            SET_USERS_TX_PERMISSIONS : (entity.isTx === 2 ?
+                SET_USERS_MENU_PERMISSIONS : SET_USERS_ADMIN_PERMISSIONS));
+
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestUserPermissions(entity),
-            successActions: [action]
+            successActions: [action],
         });
     }
 
     /**
-     * Update User Permissions
-     * -----------------------
-     * Update a user's groups or all, used on click for editing a user.
+     * Updates a user's groups or all, used on click for editing a user.
      *
-     * @param {entity} - the entity data.
+     * @param {Object} entity - The entity data.
      *
-     * @return {any} - returns
+     * @return {Promise}
      */
     updateUserGroups(entity): Promise<any> {
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateUserGroups(entity)
+            taskPipe: this.adminUsersService.updateUserGroups(entity),
         });
     }
 
@@ -773,52 +711,44 @@ export class UserAdminService {
      */
 
     /**
-     * Create New Wallet
-     * -----------------
      * Creates a new wallet.
      *
-     * @param {data} object - the new wallet information.
+     * @param {Object} data - The new wallet information.
      *
-     * @return {any} [description]
+     * @return {Promise}
      */
     createNewWallet(data): Promise<any> {
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.createNewWallet(data)
+            taskPipe: this.adminUsersService.createNewWallet(data),
         });
     }
 
     /**
-     * Update Wallet
-     * -----------------
      * Updates a wallet.
      *
-     * @param {data} object - the updated wallet information.
+     * @param {Object} data - The updated wallet information.
      *
-     * @return {any} [description]
+     * @return {Promise}
      */
     updateWallet(data): Promise<any> {
-        /* Return. */
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.updateWallet(data)
+            taskPipe: this.adminUsersService.updateWallet(data),
         });
     }
 
     /**
-     * Delete Wallet
-     * ----------------
      * Deletes a Wallet.
      *
-     * @param {data} - the group's new data.
+     * @param {Object} data - The group's new data.
      *
-     * @return {void}
+     * @return {Promise}
      */
     public deleteWallet(data): Promise<any> {
         return this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
-            taskPipe: this.adminUsersService.deleteWallet(data)
+            taskPipe: this.adminUsersService.deleteWallet(data),
         });
     }
 
@@ -829,92 +759,71 @@ export class UserAdminService {
      */
 
     /**
-     * Get Account Types
-     * -----------------
-     * Returns the account types array.
+     * Gets the account types array.
      *
-     * @return {accountList} - array.
+     * @return {Array} accountList
      */
     public getAccountTypes(): any {
-        /* Return the array. */
         return this.accountList;
     }
 
     /**
-     * Get Account Type by Id
-     * -----------------
-     * Returns the account type by Id.
+     * Gets the account type by Id.
      *
-     * @param {id} number - the ID of a type.
-     * @return {accountList} - array.
+     * @param {number} id - The ID of a type.
+     *
+     * @return {Array} accountList.
      */
     public getAccountTypeById(id): any {
-        /* Return the match. */
-        let i;
-        for (i in this.accountList) {
-            if (this.accountList[i].id == id) {
+        for (const i in this.accountList) {
+            if (this.accountList[i].id === id) {
                 return [this.accountList[i]];
             }
         }
-
-        /* ...else empty. */
         return [];
     }
 
     /**
-     * Get Wallet Types
-     * ----------------
-     * Returns the wallet types array.
+     * Gets the wallet types array.
      *
-     * @return {walletTypes} - array.
+     * @return {Array} walletTypes.
      */
     public getWalletTypes(): any {
-        /* Return the array. */
         return this.walletTypes;
     }
 
     /**
-     * Get Wallet Type By Id
-     * ----------------
-     * Returns the wallet type by an Id.
+     * Gets the wallet type by an ID.
      *
-     * @param {id} number - the ID of a type.
-     * @return {walletType} - array.
+     * @param {number} id - The ID of a type.
+     *
+     * @return {Array} walletType.
      */
     public getWalletTypeById(id): any {
-        /* Return the match. */
-        let i;
-        for (i in this.walletTypes) {
-            if (this.walletTypes[i].id == id) {
+        for (const i in this.walletTypes) {
+            if (this.walletTypes[i].id === id) {
                 return [this.walletTypes[i]];
             }
         }
 
-        /* ...else empty. */
         return [];
     }
 
     /**
-     * Get User Types
-     * --------------
-     * Returns the user types array.
+     * Gets the user types array.
      *
-     * @return {userTypes} - array.
+     * @return {Array} userTypes.
      */
     public getUserTypes(): any {
-        /* Return the array. */
         return this.userTypes;
     }
 
     /**
-     * Get Group Types
-     * ---------------
-     * Returns the group types array.
+     * Gets the group types array.
      *
-     * @return {groupTypes} - array.
+     * @return {Array} groupTypes.
      */
     public getGroupTypes(): any {
-        /* Return the array. */
         return this.groupTypes;
     }
 
@@ -931,24 +840,23 @@ export class UserAdminService {
      * a full object of it, this is useful for when you need to set the value of
      * an ng2-select but only have the id or the text of what was selected.
      *
-     * @param {query} - the incomplete object of the account type.
+     * @param {Object} query - The incomplete object of the account type.
      *
-     * @return {accountType} - the complete object of the account type.
+     * @return {Array} accountType - The complete object of the account type.
      */
     public resolveAccountType(query): any {
         /* Let's first check which we have. */
-        let identifier = "";
-        if (query.id) identifier = "id";
-        if (query.text) identifier = "text";
+        let identifier = '';
+        if (query.id) identifier = 'id';
+        if (query.text) identifier = 'text';
 
         /* If there was nothing, return. */
-        if (identifier === "") {
+        if (identifier === '') {
             return [];
         }
 
-        /* Ok, lets check if we have the account type. */
-        let i;
-        for (i = 0; i < this.accountList.length; i++) {
+        /* Check if we have the account type. */
+        for (let i = 0; i < this.accountList.length; i += 1) {
             /* Loop over each and check if they have the same id. */
             if (query[identifier] === this.accountList[i][identifier]) {
                 return [this.accountList[i]];
@@ -966,24 +874,24 @@ export class UserAdminService {
      * a full object of it, this is useful for when you need to set the value of
      * an ng2-select but only have the id or the text of what was selected.
      *
-     * @param {query} - the incomplete object of the user type.
+     * @param {Object} query - The incomplete object of the user type.
      *
-     * @return {userType} - the complete object of the user type.
+     * @return {Array} userType - The complete object of the user type.
      */
     public resolveUserType(query): any {
         /* Let's first check which we have. */
-        let identifier = "";
-        if (query.id) identifier = "id";
-        if (query.text) identifier = "text";
+        let identifier = '';
+        if (query.id) identifier = 'id';
+        if (query.text) identifier = 'text';
 
         /* If there was nothing, return. */
-        if (identifier === "") {
+        if (identifier === '') {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for (i = 0; i < this.userTypes.length; i++) {
+        for (i = 0; i < this.userTypes.length; i += 1) {
             /* Loop over each and check if they have the same id. */
             if (query[identifier].toString() === this.userTypes[i][identifier]) {
                 return [this.userTypes[i]];
@@ -996,24 +904,24 @@ export class UserAdminService {
 
     /**
      * Resolve Group
-     * -----------------
+     * -------------
      * Accepts an object that then is used to lookup the group and
      * return a full object of it, this is useful for when you need to set the
      * value of an ng2-select but only have the id or the text of what was
      * selected.
      *
-     * @param {query} - the incomplete object of the group.
+     * @param {Object} query - The incomplete object of the group.
      *
-     * @return {groupType} - the complete object of the group.
+     * @return {Array} groupType - The complete object of the group.
      */
     public resolveGroup(query): any {
         /* Let's first check which we have. */
-        let identifier = "";
-        if (query.groupId) identifier = "groupId";
-        if (query.groupName) identifier = "groupName";
+        let identifier = '';
+        if (query.groupId) identifier = 'groupId';
+        if (query.groupName) identifier = 'groupName';
 
         /* If there was nothing, return. */
-        if (identifier === "") {
+        if (identifier === '') {
             return [];
         }
 
@@ -1032,30 +940,30 @@ export class UserAdminService {
 
     /**
      * Resolve Admin Group Type
-     * -----------------
+     * ------------------------
      * Accepts an object that then is used to lookup the admin group type and
      * return a full object of it, this is useful for when you need to set the
      * value of an ng2-select but only have the id or the text of what was
      * selected.
      *
-     * @param {query} - the incomplete object of the group type.
+     * @param {Object} query - The incomplete object of the group type.
      *
-     * @return {groupType} - the complete object of the group type.
+     * @return {Array} groupType - The complete object of the group type.
      */
     public resolveGroupType(query): any {
         /* Let's first check which we have. */
-        let identifier = "";
-        if (query.id || query.id === 0) identifier = "id";
-        if (query.text) identifier = "text";
+        let identifier = '';
+        if (query.id || query.id === 0) identifier = 'id';
+        if (query.text) identifier = 'text';
 
         /* If there was nothing, return. */
-        if (identifier === "") {
+        if (identifier === '') {
             return [];
         }
 
         /* Ok, lets check if we have the account type. */
         let i;
-        for (i = 0; i < this.groupTypes.length; i++) {
+        for (i = 0; i < this.groupTypes.length; i += 1) {
             /* Loop over each one and check the identifier. */
             if (this.groupTypes[i][identifier] === query[identifier].toString()) {
                 return [this.groupTypes[i]];
@@ -1069,33 +977,30 @@ export class UserAdminService {
     /**
      * Get Permissions Difference.
      * ---------------------------
-     * Figures out what to send to update permissions, i.e which to add,
-     * delete or update.
+     * Figures out what to send to update permissions, i.e., which to add, delete or update.
      *
-     * @param {oldPermissions} - the old permissions object.
-     * @param {newPermissions} - the new permissions object.
+     * @param {Object} oldPermissions - The old permissions object.
+     * @param {Object} newPermissions - The new permissions object.
      *
-     * @return {diff}
+     * @return {Object} diff
      */
     public getPermissionsDiff(oldPermissions, newPermissions, type) {
-        var toAdd = {};
-        var toUpdate = {};
-        var toDelete = [];
+        const toAdd = {};
+        const toUpdate = {};
+        const toDelete = [];
 
-
-        for (var i in newPermissions) {
+        for (const i in newPermissions) {
             /* Add it if it didn't exist. */
-            if (typeof oldPermissions[i] == 'undefined') {
+            if (typeof oldPermissions[i] === 'undefined') {
                 toAdd[i] = newPermissions[i];
-            }
             /* Else, if there's differences, add it to update. */
-            else {
-                if (oldPermissions[i]['canDelegate'] != newPermissions[i]['canDelegate'] ||
-                    oldPermissions[i]['canDelete'] != newPermissions[i]['canDelete'] ||
-                    oldPermissions[i]['canInsert'] != newPermissions[i]['canInsert'] ||
-                    oldPermissions[i]['canRead'] != newPermissions[i]['canRead'] ||
-                    oldPermissions[i]['canUpdate'] != newPermissions[i]['canUpdate'] ||
-                    type == 2
+            } else {
+                if (oldPermissions[i]['canDelegate'] !== newPermissions[i]['canDelegate'] ||
+                    oldPermissions[i]['canDelete'] !== newPermissions[i]['canDelete'] ||
+                    oldPermissions[i]['canInsert'] !== newPermissions[i]['canInsert'] ||
+                    oldPermissions[i]['canRead'] !== newPermissions[i]['canRead'] ||
+                    oldPermissions[i]['canUpdate'] !== newPermissions[i]['canUpdate'] ||
+                    type === 2
                 ) {
                     toUpdate[i] = newPermissions[i];
                 }
@@ -1103,16 +1008,16 @@ export class UserAdminService {
         }
 
         /* Figure out which are needed to be removed. */
-        for (var i in oldPermissions) {
-            if (typeof newPermissions[i] == 'undefined') {
+        for (const i in oldPermissions) {
+            if (typeof newPermissions[i] === 'undefined') {
                 toDelete.push(i);
             }
         }
 
         return {
-            'toAdd': toAdd,
-            'toUpdate': toUpdate,
-            'toDelete': toDelete
+            toAdd,
+            toUpdate,
+            toDelete,
         };
     }
 
@@ -1121,20 +1026,21 @@ export class UserAdminService {
      * ------------------------------
      * Returns a neat object of differences, toAdd, toUpdate and toDelete.
      *
-     * @param {oldAccess} object - an object of permissions.
-     * @param {newAccess} object - an object of permissions.
+     * @param {Object} oldAccess - An object of permissions.
+     * @param {Object} newAccess - An object of permissions.
      *
-     * @return {differences} object - an object of differences.
+     * @return {Object} differences - An object of differences.
      */
     public getWalletAccessDiff(oldAccess, newAccess): any {
         /* Variables. */
-        let
-            i, j, k,
-            differences = {
-                'toAdd': {},
-                'toUpdate': {},
-                'toDelete': {}
-            };
+        let i;
+        let j;
+        let k;
+        const differences = {
+            toAdd: {},
+            toUpdate: {},
+            toDelete: {},
+        };
 
         /* First, let's see what's new. */
         for (i in newAccess) {
@@ -1145,7 +1051,7 @@ export class UserAdminService {
         /* Next, let's figure out what has been changed. */
         for (j in newAccess) {
             /* If it is in the old one and it is not the same value, it's different. */
-            if (oldAccess[j] && oldAccess[j] != newAccess[j]) differences.toUpdate[j] = newAccess[j];
+            if (oldAccess[j] && oldAccess[j] !== newAccess[j]) differences.toUpdate[j] = newAccess[j];
         }
 
         /* Lastly, let's check if any were deleted. */
@@ -1160,28 +1066,32 @@ export class UserAdminService {
 
     ngOnDestroy() {
         /* Unsubscribe Observables. */
-        for (var key in this.subscriptions) {
+        for (const key in this.subscriptions) {
             this.subscriptions[key].unsubscribe();
         }
     }
 
     /**
      * Resolve Countries
-     * ---------------
+     * -----------------
      * Incomplete array of objects in, complete array of objects out.
      *
-     * @param {incompleteArray} array - Array of incomplete objects.
-     * @return {completeArray} array - Array of complete objects.
+     * @param {Array} incompleteArray - Array of incomplete objects.
+     *
+     * @return {Array} completeArray - Array of complete objects.
      */
-    public resolveCountries(incompleteArray): Array<{
-        id: string;
-        text: string;
-    }> {
+    // public resolveCountries(incompleteArray): Array<{
+    //     id: string;
+    //     text: string;
+    // }> {
+    public resolveCountries(incompleteArray): { id: string; text: string; }[] {
         /* Variables. */
-        let
-            i, j, toResolve, country,
-            identifier = '',
-            completeArray = [];
+        let i;
+        let j;
+        let toResolve;
+        let country;
+        let identifier = '';
+        const completeArray = [];
 
         /* Ok, let's loop over each of the objects to resolve. */
         for (i in incompleteArray) {
@@ -1217,985 +1127,984 @@ export class UserAdminService {
     /* List of countries, down here because it's fucking massive. */
     public countries = [
         {
-            id: "AD",
-            text: "Andorra",
+            id: 'AD',
+            text: 'Andorra',
         },
         {
-            id: "AE",
-            text: "United Arab Emirates",
+            id: 'AE',
+            text: 'United Arab Emirates',
         },
         {
-            id: "AF",
-            text: "Afghanistan",
+            id: 'AF',
+            text: 'Afghanistan',
         },
         {
-            id: "AG",
-            text: "Antigua And Barbuda",
+            id: 'AG',
+            text: 'Antigua And Barbuda',
         },
         {
-            id: "AI",
-            text: "Anguilla",
+            id: 'AI',
+            text: 'Anguilla',
         },
         {
-            id: "AL",
-            text: "Albania",
+            id: 'AL',
+            text: 'Albania',
         },
         {
-            id: "AM",
-            text: "Armenia",
+            id: 'AM',
+            text: 'Armenia',
         },
         {
-            id: "AN",
-            text: "Netherlands Antilles",
+            id: 'AN',
+            text: 'Netherlands Antilles',
         },
         {
-            id: "AO",
-            text: "Angola",
+            id: 'AO',
+            text: 'Angola',
         },
         {
-            id: "AQ",
-            text: "Antarctica",
+            id: 'AQ',
+            text: 'Antarctica',
         },
         {
-            id: "AR",
-            text: "Argentina",
+            id: 'AR',
+            text: 'Argentina',
         },
         {
-            id: "AS",
-            text: "American Samoa",
+            id: 'AS',
+            text: 'American Samoa',
         },
         {
-            id: "AT",
-            text: "Austria",
+            id: 'AT',
+            text: 'Austria',
         },
         {
-            id: "AU",
-            text: "Australia",
+            id: 'AU',
+            text: 'Australia',
         },
         {
-            id: "AW",
-            text: "Aruba",
+            id: 'AW',
+            text: 'Aruba',
         },
         {
-            id: "AX",
-            text: "Aland Islands",
+            id: 'AX',
+            text: 'Aland Islands',
         },
         {
-            id: "AZ",
-            text: "Azerbaijan",
+            id: 'AZ',
+            text: 'Azerbaijan',
         },
         {
-            id: "BA",
-            text: "Bosnia And Herzegovina",
+            id: 'BA',
+            text: 'Bosnia And Herzegovina',
         },
         {
-            id: "BB",
-            text: "Barbados",
+            id: 'BB',
+            text: 'Barbados',
         },
         {
-            id: "BD",
-            text: "Bangladesh",
+            id: 'BD',
+            text: 'Bangladesh',
         },
         {
-            id: "BE",
-            text: "Belgium",
+            id: 'BE',
+            text: 'Belgium',
         },
         {
-            id: "BF",
-            text: "Burkina Faso",
+            id: 'BF',
+            text: 'Burkina Faso',
         },
         {
-            id: "BG",
-            text: "Bulgaria",
+            id: 'BG',
+            text: 'Bulgaria',
         },
         {
-            id: "BH",
-            text: "Bahrain",
+            id: 'BH',
+            text: 'Bahrain',
         },
         {
-            id: "BI",
-            text: "Burundi",
+            id: 'BI',
+            text: 'Burundi',
         },
         {
-            id: "BJ",
-            text: "Benin",
+            id: 'BJ',
+            text: 'Benin',
         },
         {
-            id: "BL",
-            text: "Saint Barthelemy",
+            id: 'BL',
+            text: 'Saint Barthelemy',
         },
         {
-            id: "BM",
-            text: "Bermuda",
+            id: 'BM',
+            text: 'Bermuda',
         },
         {
-            id: "BN",
-            text: "Brunei Darussalam",
+            id: 'BN',
+            text: 'Brunei Darussalam',
         },
         {
-            id: "BO",
-            text: "Bolivia",
+            id: 'BO',
+            text: 'Bolivia',
         },
         {
-            id: "BR",
-            text: "Brazil",
+            id: 'BR',
+            text: 'Brazil',
         },
         {
-            id: "BS",
-            text: "Bahamas",
+            id: 'BS',
+            text: 'Bahamas',
         },
         {
-            id: "BT",
-            text: "Bhutan",
+            id: 'BT',
+            text: 'Bhutan',
         },
         {
-            id: "BV",
-            text: "Bouvet Island",
+            id: 'BV',
+            text: 'Bouvet Island',
         },
         {
-            id: "BW",
-            text: "Botswana",
+            id: 'BW',
+            text: 'Botswana',
         },
         {
-            id: "BY",
-            text: "Belarus",
+            id: 'BY',
+            text: 'Belarus',
         },
         {
-            id: "BZ",
-            text: "Belize",
+            id: 'BZ',
+            text: 'Belize',
         },
         {
-            id: "CA",
-            text: "Canada",
+            id: 'CA',
+            text: 'Canada',
         },
         {
-            id: "CC",
-            text: "Cocos (Keeling) Islands",
+            id: 'CC',
+            text: 'Cocos (Keeling) Islands',
         },
         {
-            id: "CD",
-            text: "Congo, Democratic Republic",
+            id: 'CD',
+            text: 'Congo, Democratic Republic',
         },
         {
-            id: "CF",
-            text: "Central African Republic",
+            id: 'CF',
+            text: 'Central African Republic',
         },
         {
-            id: "CG",
-            text: "Congo",
+            id: 'CG',
+            text: 'Congo',
         },
         {
-            id: "CH",
-            text: "Switzerland",
+            id: 'CH',
+            text: 'Switzerland',
         },
         {
-            id: "CI",
-            text: "Cote D'Ivoire",
+            id: 'CI',
+            text: 'Cote D\'Ivoire',
         },
         {
-            id: "CK",
-            text: "Cook Islands",
+            id: 'CK',
+            text: 'Cook Islands',
         },
         {
-            id: "CL",
-            text: "Chile",
+            id: 'CL',
+            text: 'Chile',
         },
         {
-            id: "CM",
-            text: "Cameroon",
+            id: 'CM',
+            text: 'Cameroon',
         },
         {
-            id: "CN",
-            text: "China",
+            id: 'CN',
+            text: 'China',
         },
         {
-            id: "CO",
-            text: "Colombia",
+            id: 'CO',
+            text: 'Colombia',
         },
         {
-            id: "CR",
-            text: "Costa Rica",
+            id: 'CR',
+            text: 'Costa Rica',
         },
         {
-            id: "CU",
-            text: "Cuba",
+            id: 'CU',
+            text: 'Cuba',
         },
         {
-            id: "CV",
-            text: "Cape Verde",
+            id: 'CV',
+            text: 'Cape Verde',
         },
         {
-            id: "CX",
-            text: "Christmas Island",
+            id: 'CX',
+            text: 'Christmas Island',
         },
         {
-            id: "CY",
-            text: "Cyprus",
+            id: 'CY',
+            text: 'Cyprus',
         },
         {
-            id: "CZ",
-            text: "Czech Republic",
+            id: 'CZ',
+            text: 'Czech Republic',
         },
         {
-            id: "DE",
-            text: "Germany",
+            id: 'DE',
+            text: 'Germany',
         },
         {
-            id: "DJ",
-            text: "Djibouti",
+            id: 'DJ',
+            text: 'Djibouti',
         },
         {
-            id: "DK",
-            text: "Denmark",
+            id: 'DK',
+            text: 'Denmark',
         },
         {
-            id: "DM",
-            text: "Dominica",
+            id: 'DM',
+            text: 'Dominica',
         },
         {
-            id: "DO",
-            text: "Dominican Republic",
+            id: 'DO',
+            text: 'Dominican Republic',
         },
         {
-            id: "DZ",
-            text: "Algeria",
+            id: 'DZ',
+            text: 'Algeria',
         },
         {
-            id: "EC",
-            text: "Ecuador",
+            id: 'EC',
+            text: 'Ecuador',
         },
         {
-            id: "EE",
-            text: "Estonia",
+            id: 'EE',
+            text: 'Estonia',
         },
         {
-            id: "EG",
-            text: "Egypt",
+            id: 'EG',
+            text: 'Egypt',
         },
         {
-            id: "EH",
-            text: "Western Sahara",
+            id: 'EH',
+            text: 'Western Sahara',
         },
         {
-            id: "ER",
-            text: "Eritrea",
+            id: 'ER',
+            text: 'Eritrea',
         },
         {
-            id: "ES",
-            text: "Spain",
+            id: 'ES',
+            text: 'Spain',
         },
         {
-            id: "ET",
-            text: "Ethiopia",
+            id: 'ET',
+            text: 'Ethiopia',
         },
         {
-            id: "FI",
-            text: "Finland",
+            id: 'FI',
+            text: 'Finland',
         },
         {
-            id: "FJ",
-            text: "Fiji",
+            id: 'FJ',
+            text: 'Fiji',
         },
         {
-            id: "FK",
-            text: "Falkland Islands (Malvinas)",
+            id: 'FK',
+            text: 'Falkland Islands (Malvinas)',
         },
         {
-            id: "FM",
-            text: "Micronesia, Federated States Of",
+            id: 'FM',
+            text: 'Micronesia, Federated States Of',
         },
         {
-            id: "FO",
-            text: "Faroe Islands",
+            id: 'FO',
+            text: 'Faroe Islands',
         },
         {
-            id: "FR",
-            text: "France",
+            id: 'FR',
+            text: 'France',
         },
         {
-            id: "GA",
-            text: "Gabon",
+            id: 'GA',
+            text: 'Gabon',
         },
         {
-            id: "GB",
-            text: "United Kingdom",
+            id: 'GB',
+            text: 'United Kingdom',
         },
         {
-            id: "GD",
-            text: "Grenada",
+            id: 'GD',
+            text: 'Grenada',
         },
         {
-            id: "GE",
-            text: "Georgia",
+            id: 'GE',
+            text: 'Georgia',
         },
         {
-            id: "GF",
-            text: "French Guiana",
+            id: 'GF',
+            text: 'French Guiana',
         },
         {
-            id: "GG",
-            text: "Guernsey",
+            id: 'GG',
+            text: 'Guernsey',
         },
         {
-            id: "GH",
-            text: "Ghana",
+            id: 'GH',
+            text: 'Ghana',
         },
         {
-            id: "GI",
-            text: "Gibraltar",
+            id: 'GI',
+            text: 'Gibraltar',
         },
         {
-            id: "GL",
-            text: "Greenland",
+            id: 'GL',
+            text: 'Greenland',
         },
         {
-            id: "GM",
-            text: "Gambia",
+            id: 'GM',
+            text: 'Gambia',
         },
         {
-            id: "GN",
-            text: "Guinea",
+            id: 'GN',
+            text: 'Guinea',
         },
         {
-            id: "GP",
-            text: "Guadeloupe",
+            id: 'GP',
+            text: 'Guadeloupe',
         },
         {
-            id: "GQ",
-            text: "Equatorial Guinea",
+            id: 'GQ',
+            text: 'Equatorial Guinea',
         },
         {
-            id: "GR",
-            text: "Greece",
+            id: 'GR',
+            text: 'Greece',
         },
         {
-            id: "GS",
-            text: "South Georgia And Sandwich Isl.",
+            id: 'GS',
+            text: 'South Georgia And Sandwich Isl.',
         },
         {
-            id: "GT",
-            text: "Guatemala",
+            id: 'GT',
+            text: 'Guatemala',
         },
         {
-            id: "GU",
-            text: "Guam",
+            id: 'GU',
+            text: 'Guam',
         },
         {
-            id: "GW",
-            text: "Guinea-Bissau",
+            id: 'GW',
+            text: 'Guinea-Bissau',
         },
         {
-            id: "GY",
-            text: "Guyana",
+            id: 'GY',
+            text: 'Guyana',
         },
         {
-            id: "HK",
-            text: "Hong Kong",
+            id: 'HK',
+            text: 'Hong Kong',
         },
         {
-            id: "HM",
-            text: "Heard Island & Mcdonald Islands",
+            id: 'HM',
+            text: 'Heard Island & Mcdonald Islands',
         },
         {
-            id: "HN",
-            text: "Honduras",
+            id: 'HN',
+            text: 'Honduras',
         },
         {
-            id: "HR",
-            text: "Croatia",
+            id: 'HR',
+            text: 'Croatia',
         },
         {
-            id: "HT",
-            text: "Haiti",
+            id: 'HT',
+            text: 'Haiti',
         },
         {
-            id: "HU",
-            text: "Hungary",
+            id: 'HU',
+            text: 'Hungary',
         },
         {
-            id: "ID",
-            text: "Indonesia",
+            id: 'ID',
+            text: 'Indonesia',
         },
         {
-            id: "IE",
-            text: "Ireland",
+            id: 'IE',
+            text: 'Ireland',
         },
         {
-            id: "IL",
-            text: "Israel",
+            id: 'IL',
+            text: 'Israel',
         },
         {
-            id: "IM",
-            text: "Isle Of Man",
+            id: 'IM',
+            text: 'Isle Of Man',
         },
         {
-            id: "IN",
-            text: "India",
+            id: 'IN',
+            text: 'India',
         },
         {
-            id: "IO",
-            text: "British Indian Ocean Territory",
+            id: 'IO',
+            text: 'British Indian Ocean Territory',
         },
         {
-            id: "IQ",
-            text: "Iraq",
+            id: 'IQ',
+            text: 'Iraq',
         },
         {
-            id: "IR",
-            text: "Iran, Islamic Republic Of",
+            id: 'IR',
+            text: 'Iran, Islamic Republic Of',
         },
         {
-            id: "IS",
-            text: "Iceland",
+            id: 'IS',
+            text: 'Iceland',
         },
         {
-            id: "IT",
-            text: "Italy",
+            id: 'IT',
+            text: 'Italy',
         },
         {
-            id: "JE",
-            text: "Jersey",
+            id: 'JE',
+            text: 'Jersey',
         },
         {
-            id: "JM",
-            text: "Jamaica",
+            id: 'JM',
+            text: 'Jamaica',
         },
         {
-            id: "JO",
-            text: "Jordan",
+            id: 'JO',
+            text: 'Jordan',
         },
         {
-            id: "JP",
-            text: "Japan",
+            id: 'JP',
+            text: 'Japan',
         },
         {
-            id: "KE",
-            text: "Kenya",
+            id: 'KE',
+            text: 'Kenya',
         },
         {
-            id: "KG",
-            text: "Kyrgyzstan",
+            id: 'KG',
+            text: 'Kyrgyzstan',
         },
         {
-            id: "KH",
-            text: "Cambodia",
+            id: 'KH',
+            text: 'Cambodia',
         },
         {
-            id: "KI",
-            text: "Kiribati",
+            id: 'KI',
+            text: 'Kiribati',
         },
         {
-            id: "KM",
-            text: "Comoros",
+            id: 'KM',
+            text: 'Comoros',
         },
         {
-            id: "KN",
-            text: "Saint Kitts And Nevis",
+            id: 'KN',
+            text: 'Saint Kitts And Nevis',
         },
         {
-            id: "KR",
-            text: "Korea",
+            id: 'KR',
+            text: 'Korea',
         },
         {
-            id: "KW",
-            text: "Kuwait",
+            id: 'KW',
+            text: 'Kuwait',
         },
         {
-            id: "KY",
-            text: "Cayman Islands",
+            id: 'KY',
+            text: 'Cayman Islands',
         },
         {
-            id: "KZ",
-            text: "Kazakhstan",
+            id: 'KZ',
+            text: 'Kazakhstan',
         },
         {
-            id: "LA",
-            text: "Lao People's Democratic Republic",
+            id: 'LA',
+            text: 'Lao People\'s Democratic Republic',
         },
         {
-            id: "LB",
-            text: "Lebanon",
+            id: 'LB',
+            text: 'Lebanon',
         },
         {
-            id: "LC",
-            text: "Saint Lucia",
+            id: 'LC',
+            text: 'Saint Lucia',
         },
         {
-            id: "LI",
-            text: "Liechtenstein",
+            id: 'LI',
+            text: 'Liechtenstein',
         },
         {
-            id: "LK",
-            text: "Sri Lanka",
+            id: 'LK',
+            text: 'Sri Lanka',
         },
         {
-            id: "LR",
-            text: "Liberia",
+            id: 'LR',
+            text: 'Liberia',
         },
         {
-            id: "LS",
-            text: "Lesotho",
+            id: 'LS',
+            text: 'Lesotho',
         },
         {
-            id: "LT",
-            text: "Lithuania",
+            id: 'LT',
+            text: 'Lithuania',
         },
         {
-            id: "LU",
-            text: "Luxembourg",
+            id: 'LU',
+            text: 'Luxembourg',
         },
         {
-            id: "LV",
-            text: "Latvia",
+            id: 'LV',
+            text: 'Latvia',
         },
         {
-            id: "LY",
-            text: "Libyan Arab Jamahiriya",
+            id: 'LY',
+            text: 'Libyan Arab Jamahiriya',
         },
         {
-            id: "MA",
-            text: "Morocco",
+            id: 'MA',
+            text: 'Morocco',
         },
         {
-            id: "MC",
-            text: "Monaco",
+            id: 'MC',
+            text: 'Monaco',
         },
         {
-            id: "MD",
-            text: "Moldova",
+            id: 'MD',
+            text: 'Moldova',
         },
         {
-            id: "ME",
-            text: "Montenegro",
+            id: 'ME',
+            text: 'Montenegro',
         },
         {
-            id: "MF",
-            text: "Saint Martin",
+            id: 'MF',
+            text: 'Saint Martin',
         },
         {
-            id: "MG",
-            text: "Madagascar",
+            id: 'MG',
+            text: 'Madagascar',
         },
         {
-            id: "MH",
-            text: "Marshall Islands",
+            id: 'MH',
+            text: 'Marshall Islands',
         },
         {
-            id: "MK",
-            text: "Macedonia",
+            id: 'MK',
+            text: 'Macedonia',
         },
         {
-            id: "ML",
-            text: "Mali",
+            id: 'ML',
+            text: 'Mali',
         },
         {
-            id: "MM",
-            text: "Myanmar",
+            id: 'MM',
+            text: 'Myanmar',
         },
         {
-            id: "MN",
-            text: "Mongolia",
+            id: 'MN',
+            text: 'Mongolia',
         },
         {
-            id: "MO",
-            text: "Macao",
+            id: 'MO',
+            text: 'Macao',
         },
         {
-            id: "MP",
-            text: "Northern Mariana Islands",
+            id: 'MP',
+            text: 'Northern Mariana Islands',
         },
         {
-            id: "MQ",
-            text: "Martinique",
+            id: 'MQ',
+            text: 'Martinique',
         },
         {
-            id: "MR",
-            text: "Mauritania",
+            id: 'MR',
+            text: 'Mauritania',
         },
         {
-            id: "MS",
-            text: "Montserrat",
+            id: 'MS',
+            text: 'Montserrat',
         },
         {
-            id: "MT",
-            text: "Malta",
+            id: 'MT',
+            text: 'Malta',
         },
         {
-            id: "MU",
-            text: "Mauritius",
+            id: 'MU',
+            text: 'Mauritius',
         },
         {
-            id: "MV",
-            text: "Maldives",
+            id: 'MV',
+            text: 'Maldives',
         },
         {
-            id: "MW",
-            text: "Malawi",
+            id: 'MW',
+            text: 'Malawi',
         },
         {
-            id: "MX",
-            text: "Mexico",
+            id: 'MX',
+            text: 'Mexico',
         },
         {
-            id: "MY",
-            text: "Malaysia",
+            id: 'MY',
+            text: 'Malaysia',
         },
         {
-            id: "MZ",
-            text: "Mozambique",
+            id: 'MZ',
+            text: 'Mozambique',
         },
         {
-            id: "NA",
-            text: "Namibia",
+            id: 'NA',
+            text: 'Namibia',
         },
         {
-            id: "NC",
-            text: "New Caledonia",
+            id: 'NC',
+            text: 'New Caledonia',
         },
         {
-            id: "NE",
-            text: "Niger",
+            id: 'NE',
+            text: 'Niger',
         },
         {
-            id: "NF",
-            text: "Norfolk Island",
+            id: 'NF',
+            text: 'Norfolk Island',
         },
         {
-            id: "NG",
-            text: "Nigeria",
+            id: 'NG',
+            text: 'Nigeria',
         },
         {
-            id: "NI",
-            text: "Nicaragua",
+            id: 'NI',
+            text: 'Nicaragua',
         },
         {
-            id: "NL",
-            text: "Netherlands",
+            id: 'NL',
+            text: 'Netherlands',
         },
         {
-            id: "NO",
-            text: "Norway",
+            id: 'NO',
+            text: 'Norway',
         },
         {
-            id: "NP",
-            text: "Nepal",
+            id: 'NP',
+            text: 'Nepal',
         },
         {
-            id: "NR",
-            text: "Nauru",
+            id: 'NR',
+            text: 'Nauru',
         },
         {
-            id: "NU",
-            text: "Niue",
+            id: 'NU',
+            text: 'Niue',
         },
         {
-            id: "NZ",
-            text: "New Zealand",
+            id: 'NZ',
+            text: 'New Zealand',
         },
         {
-            id: "OM",
-            text: "Oman",
+            id: 'OM',
+            text: 'Oman',
         },
         {
-            id: "PA",
-            text: "Panama",
+            id: 'PA',
+            text: 'Panama',
         },
         {
-            id: "PE",
-            text: "Peru",
+            id: 'PE',
+            text: 'Peru',
         },
         {
-            id: "PF",
-            text: "French Polynesia",
+            id: 'PF',
+            text: 'French Polynesia',
         },
         {
-            id: "PG",
-            text: "Papua New Guinea",
+            id: 'PG',
+            text: 'Papua New Guinea',
         },
         {
-            id: "PH",
-            text: "Philippines",
+            id: 'PH',
+            text: 'Philippines',
         },
         {
-            id: "PK",
-            text: "Pakistan",
+            id: 'PK',
+            text: 'Pakistan',
         },
         {
-            id: "PL",
-            text: "Poland",
+            id: 'PL',
+            text: 'Poland',
         },
         {
-            id: "PM",
-            text: "Saint Pierre And Miquelon",
+            id: 'PM',
+            text: 'Saint Pierre And Miquelon',
         },
         {
-            id: "PN",
-            text: "Pitcairn",
+            id: 'PN',
+            text: 'Pitcairn',
         },
         {
-            id: "PR",
-            text: "Puerto Rico",
+            id: 'PR',
+            text: 'Puerto Rico',
         },
         {
-            id: "PS",
-            text: "Palestinian Territory, Occupied",
+            id: 'PS',
+            text: 'Palestinian Territory, Occupied',
         },
         {
-            id: "PT",
-            text: "Portugal",
+            id: 'PT',
+            text: 'Portugal',
         },
         {
-            id: "PW",
-            text: "Palau",
+            id: 'PW',
+            text: 'Palau',
         },
         {
-            id: "PY",
-            text: "Paraguay",
+            id: 'PY',
+            text: 'Paraguay',
         },
         {
-            id: "QA",
-            text: "Qatar",
+            id: 'QA',
+            text: 'Qatar',
         },
         {
-            id: "RE",
-            text: "Reunion",
+            id: 'RE',
+            text: 'Reunion',
         },
         {
-            id: "RO",
-            text: "Romania",
+            id: 'RO',
+            text: 'Romania',
         },
         {
-            id: "RS",
-            text: "Serbia",
+            id: 'RS',
+            text: 'Serbia',
         },
         {
-            id: "RU",
-            text: "Russian Federation",
+            id: 'RU',
+            text: 'Russian Federation',
         },
         {
-            id: "RW",
-            text: "Rwanda",
+            id: 'RW',
+            text: 'Rwanda',
         },
         {
-            id: "SA",
-            text: "Saudi Arabia",
+            id: 'SA',
+            text: 'Saudi Arabia',
         },
         {
-            id: "SB",
-            text: "Solomon Islands",
+            id: 'SB',
+            text: 'Solomon Islands',
         },
         {
-            id: "SC",
-            text: "Seychelles",
+            id: 'SC',
+            text: 'Seychelles',
         },
         {
-            id: "SD",
-            text: "Sudan",
+            id: 'SD',
+            text: 'Sudan',
         },
         {
-            id: "SE",
-            text: "Sweden",
+            id: 'SE',
+            text: 'Sweden',
         },
         {
-            id: "SG",
-            text: "Singapore",
+            id: 'SG',
+            text: 'Singapore',
         },
         {
-            id: "SH",
-            text: "Saint Helena",
+            id: 'SH',
+            text: 'Saint Helena',
         },
         {
-            id: "SI",
-            text: "Slovenia",
+            id: 'SI',
+            text: 'Slovenia',
         },
         {
-            id: "SJ",
-            text: "Svalbard And Jan Mayen",
+            id: 'SJ',
+            text: 'Svalbard And Jan Mayen',
         },
         {
-            id: "SK",
-            text: "Slovakia",
+            id: 'SK',
+            text: 'Slovakia',
         },
         {
-            id: "SL",
-            text: "Sierra Leone",
+            id: 'SL',
+            text: 'Sierra Leone',
         },
         {
-            id: "SM",
-            text: "San Marino",
+            id: 'SM',
+            text: 'San Marino',
         },
         {
-            id: "SN",
-            text: "Senegal",
+            id: 'SN',
+            text: 'Senegal',
         },
         {
-            id: "SO",
-            text: "Somalia",
+            id: 'SO',
+            text: 'Somalia',
         },
         {
-            id: "SR",
-            text: "Suriname",
+            id: 'SR',
+            text: 'Suriname',
         },
         {
-            id: "ST",
-            text: "Sao Tome And Principe",
+            id: 'ST',
+            text: 'Sao Tome And Principe',
         },
         {
-            id: "SV",
-            text: "El Salvador",
+            id: 'SV',
+            text: 'El Salvador',
         },
         {
-            id: "SY",
-            text: "Syrian Arab Republic",
+            id: 'SY',
+            text: 'Syrian Arab Republic',
         },
         {
-            id: "SZ",
-            text: "Swaziland",
+            id: 'SZ',
+            text: 'Swaziland',
         },
         {
-            id: "TC",
-            text: "Turks And Caicos Islands",
+            id: 'TC',
+            text: 'Turks And Caicos Islands',
         },
         {
-            id: "TD",
-            text: "Chad",
+            id: 'TD',
+            text: 'Chad',
         },
         {
-            id: "TF",
-            text: "French Southern Territories",
+            id: 'TF',
+            text: 'French Southern Territories',
         },
         {
-            id: "TG",
-            text: "Togo",
+            id: 'TG',
+            text: 'Togo',
         },
         {
-            id: "TH",
-            text: "Thailand",
+            id: 'TH',
+            text: 'Thailand',
         },
         {
-            id: "TJ",
-            text: "Tajikistan",
+            id: 'TJ',
+            text: 'Tajikistan',
         },
         {
-            id: "TK",
-            text: "Tokelau",
+            id: 'TK',
+            text: 'Tokelau',
         },
         {
-            id: "TL",
-            text: "Timor-Leste",
+            id: 'TL',
+            text: 'Timor-Leste',
         },
         {
-            id: "TM",
-            text: "Turkmenistan",
+            id: 'TM',
+            text: 'Turkmenistan',
         },
         {
-            id: "TN",
-            text: "Tunisia",
+            id: 'TN',
+            text: 'Tunisia',
         },
         {
-            id: "TO",
-            text: "Tonga",
+            id: 'TO',
+            text: 'Tonga',
         },
         {
-            id: "TR",
-            text: "Turkey",
+            id: 'TR',
+            text: 'Turkey',
         },
         {
-            id: "TT",
-            text: "Trinidad And Tobago",
+            id: 'TT',
+            text: 'Trinidad And Tobago',
         },
         {
-            id: "TV",
-            text: "Tuvalu",
+            id: 'TV',
+            text: 'Tuvalu',
         },
         {
-            id: "TW",
-            text: "Taiwan",
+            id: 'TW',
+            text: 'Taiwan',
         },
         {
-            id: "TZ",
-            text: "Tanzania",
+            id: 'TZ',
+            text: 'Tanzania',
         },
         {
-            id: "UA",
-            text: "Ukraine",
+            id: 'UA',
+            text: 'Ukraine',
         },
         {
-            id: "UG",
-            text: "Uganda",
+            id: 'UG',
+            text: 'Uganda',
         },
         {
-            id: "UM",
-            text: "United States Outlying Islands",
+            id: 'UM',
+            text: 'United States Outlying Islands',
         },
         {
-            id: "US",
-            text: "United States",
+            id: 'US',
+            text: 'United States',
         },
         {
-            id: "UY",
-            text: "Uruguay",
+            id: 'UY',
+            text: 'Uruguay',
         },
         {
-            id: "UZ",
-            text: "Uzbekistan",
+            id: 'UZ',
+            text: 'Uzbekistan',
         },
         {
-            id: "VA",
-            text: "Holy See (Vatican City State)",
+            id: 'VA',
+            text: 'Holy See (Vatican City State)',
         },
         {
-            id: "VC",
-            text: "Saint Vincent And Grenadines",
+            id: 'VC',
+            text: 'Saint Vincent And Grenadines',
         },
         {
-            id: "VE",
-            text: "Venezuela",
+            id: 'VE',
+            text: 'Venezuela',
         },
         {
-            id: "VG",
-            text: "Virgin Islands, British",
+            id: 'VG',
+            text: 'Virgin Islands, British',
         },
         {
-            id: "VI",
-            text: "Virgin Islands, U.S.",
+            id: 'VI',
+            text: 'Virgin Islands, U.S.',
         },
         {
-            id: "VN",
-            text: "Viet Nam",
+            id: 'VN',
+            text: 'Viet Nam',
         },
         {
-            id: "VU",
-            text: "Vanuatu",
+            id: 'VU',
+            text: 'Vanuatu',
         },
         {
-            id: "WF",
-            text: "Wallis And Futuna",
+            id: 'WF',
+            text: 'Wallis And Futuna',
         },
         {
-            id: "WS",
-            text: "Samoa",
+            id: 'WS',
+            text: 'Samoa',
         },
         {
-            id: "YE",
-            text: "Yemen",
+            id: 'YE',
+            text: 'Yemen',
         },
         {
-            id: "YT",
-            text: "Mayotte",
+            id: 'YT',
+            text: 'Mayotte',
         },
         {
-            id: "ZA",
-            text: "South Africa",
+            id: 'ZA',
+            text: 'South Africa',
         },
         {
-            id: "ZM",
-            text: "Zambia",
+            id: 'ZM',
+            text: 'Zambia',
         },
         {
-            id: "ZW",
-            text: "Zimbabwe",
+            id: 'ZW',
+            text: 'Zimbabwe',
         },
     ];
-
 }
