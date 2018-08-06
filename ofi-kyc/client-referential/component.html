@@ -43,7 +43,7 @@
                         {{'Export Clients Holdings' | translate}}
                     </button>
                     <br>
-                    <button class="btn btn-success">
+                    <button class="btn btn-success" (click)="downloadReferentialCSVFile()">
                         {{'Export Clients Referential' | translate}}
                     </button>
                 </div>
@@ -86,7 +86,7 @@
     <clr-tab>
         <button clrTabLink>{{'KYC Information' | translate}}</button>
         <clr-tab-content *clrIfActive="true">
-            
+
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
