@@ -87,6 +87,11 @@
                         </clr-dg-cell>
 
                     </clr-dg-row>
+                    <clr-dg-footer>
+                        <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
+                        {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                        <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                    </clr-dg-footer>
                 </clr-datagrid>
             </div>
         </clr-tab-content>

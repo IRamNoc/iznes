@@ -1,4 +1,3 @@
-
 import { tap, map, filter } from 'rxjs/operators';
 /*
  * Copyright (c) 2016 VMware, Inc. All Rights Reserved.
@@ -27,10 +26,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     unreadCount: number;
     username: string;
     lastLogin: string;
-    connectedWalletId: number;
     holdingByAsset: any;
     transactions$: Observable<any[]>;
-    myChainAccess: any;
+
+    // Rows Per Page datagrid size
+    pageSize: any;
 
     // List of observable subscription
     subscriptions: Subscription[] = [];
