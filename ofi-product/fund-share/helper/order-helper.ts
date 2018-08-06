@@ -185,7 +185,7 @@ const OrderByNumber = {
 
 const NumberMultiplier = 100000;
 
-const AuthoriseRef = 'Confirm receipt of payment';
+const AuthoriseRef = 'Confirm payment sent';
 
 const ExpirySecond = 2592000;
 
@@ -481,6 +481,41 @@ export class OrderHelper {
             },
         };
     }
+
+    /**
+     * Build redemption's authorisation commit request body
+     *
+     * @param {UpdateOrderResponse} order
+     * @return {{messagetype: string; messagebody: {txtype: string; walletid: number; address: string; function: string; contractdata: {contractfunction: string; issuingaddress: string; contractaddress: string; party: any[]; commitment: any[]; receive: any[]; authorise: string[][]}; contractaddress: string}}}
+     */
+    static buildRedeemAuthorisationCommitReqeustBody(order: UpdateOrderResponse) {
+        const contractData = {
+            contractfunction: 'dvp_uk_commit',
+            issuingaddress: order.amAddress,
+            contractaddress: order.contractAddr,
+            party: [],
+            commitment: [],
+            receive: [],
+            authorise: [
+                [order.amAddress, AuthoriseRef, '', ''],
+            ],
+        };
+
+        const messageBody = {
+            txtype: 'cocom',
+            walletid: order.amWalletID,
+            address: order.amAddress,
+            function: 'dvp_uk_commit',
+            contractdata: contractData,
+            contractaddress: order.contractAddr,
+        };
+
+        return {
+            messagetype: 'tx',
+            messagebody: messageBody,
+        };
+    }
+
 
     buildContractData(): VerifyResponse | ContractData {
 
@@ -805,39 +840,23 @@ export class OrderHelper {
             // 1. convert back to normal number scale
             // 2. meeting the maximumNumberDecimal, and always round down.
             // 3. convert back to blockchain number scale
-            estimatedQuantity = estimatedQuantity / NumberMultiplier;
             estimatedQuantity = roundDown(estimatedQuantity, this.fundShare.maximumNumDecimal);
-            estimatedQuantity = estimatedQuantity * NumberMultiplier;
 
-            quantity = this.orderType === OrderType.Subscription ? 0 : estimatedQuantity;
+            quantity = 0;
 
-            // if subscription
-            if (this.orderType === OrderType.Subscription) {
-
-                // if we are using known nav, we use the quantity to work out the new amount
-                // if we are using unknow nav, we put the specified amount back.
-                if (this.isKnownNav()) {
-                    estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
-
-                    // change to 2 decimal place
-                    estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
-
-                    amount = estimatedAmount;
-                } else {
-                    estimatedAmount = this.orderValue;
-                    amount = this.orderValue;
-                }
-
-            } else {
-                // if redemption amount will always be estimated.
-                // and use the new quantity to work out amount.
-                amount = 0;
+            // if we are using known nav, we use the quantity to work out the new amount
+            // if we are using unknow nav, we put the specified amount back.
+            if (this.isKnownNav()) {
                 estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
 
                 // change to 2 decimal place
                 estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
-            }
 
+                amount = estimatedAmount;
+            }else {
+                estimatedAmount = this.orderValue;
+                amount = this.orderValue;
+            }
 
             // calculate fee
             fee = calFee(estimatedAmount, this.feePercentage);
@@ -1027,7 +1046,6 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            // on the groupama mvp, we don't need authorisation
             // {
             //     conditionData: {
             //         authoriseRef: AuthoriseRef,
@@ -1108,10 +1126,16 @@ export class OrderHelper {
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
+            const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
+            // the formula before apply maximum number decimal.
+            let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
+            // apply maximum number decimal.
+            amountStr = 'floor(' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ') / ' + decimalDivider + ' * ' + NumberMultiplier;
+
             actionData = [
                 {
                     actionData: {
-                        amount: `${orderFigures.quantity} + nav * 0`,
+                        amount: amountStr,
                         amountType: 'amount',
                         asset: this.orderAsset,
                         dataItem: [],
@@ -1143,14 +1167,13 @@ export class OrderHelper {
                 },
                 conditionType: ConditionType.TIME
             },
-            // on the groupama mvp, we don't need authorisation
-            // {
-            //     conditionData: {
-            //         authoriseRef: AuthoriseRef,
-            //         address: this.amIssuingAddress
-            //     },
-            //     conditionType: ConditionType.AUTHORISE
-            // }
+            {
+                conditionData: {
+                    authoriseRef: AuthoriseRef,
+                    address: this.amIssuingAddress,
+                },
+                conditionType: ConditionType.AUTHORISE
+            }
         ];
 
         return {
@@ -1166,7 +1189,7 @@ export class OrderHelper {
             useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
-            stepTitle: 'Subscription order for ' + this.orderAsset,
+            stepTitle: 'Redemption order for ' + this.orderAsset,
             mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
             creatorAddress: 'not being used' // not being used
         };
@@ -1194,13 +1217,29 @@ export class OrderHelper {
                 orderValid: true
             };
         }
-
     }
 
+    /**
+     * Get encumber reference
+     * @return {string}
+     */
     getEncumberReference() {
         return this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
     }
 
+    /**
+     * Get poa reference
+     * @return {string}
+     */
+    getPoaReference() {
+        return 'poa-' + this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
+    }
+
+    /**
+     * Create Encumber request body for redemption order
+     *
+     * @return {any}
+     */
     buildRedeemEncumberRequestBody() {
         let figures = this.getOrderFigures();
 
@@ -1210,7 +1249,7 @@ export class OrderHelper {
             figures = figures as OrderFigures;
         }
 
-        const quantity = figures.quantity;
+        const quantity = figures.estimatedQuantity;
 
         const messageBody = {
             txtype: 'encum',
@@ -1226,6 +1265,46 @@ export class OrderHelper {
             administrators: [[this.amIssuingAddress, 0, 0]],
             protocol: '',
             metadata: ''
+        };
+
+        return {
+            messagetype: 'tx',
+            messagebody: messageBody
+        };
+    }
+
+    /***
+     * Create redemption order's poa transaction. Give am's permission to refresh the encumber amount for investor
+     *
+     * @return {any}
+     */
+    buildRedeemEncumberPoaRequestBody() {
+        let figures = this.getOrderFigures();
+
+        if (!OrderHelper.isResponseGood(figures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(figures);
+        } else {
+            figures = figures as OrderFigures;
+        }
+
+        const quantity = figures.estimatedQuantity;
+
+        const messageBody = {
+            txtype: 'poaad',
+            walletid: this.investorWalletId,
+            address: this.investorAddress,
+            attorneyaddress: this.amIssuingAddress,
+            permissions: [
+                {
+                    txtype: 'encum',
+                    amount: quantity * 10,
+                    assets: [
+                        `${this.fundShare.isin}|${this.fundShare.fundShareName}`
+                    ]
+                }
+            ],
+            poareference: this.getPoaReference(),
+            enddate: this.getOrderTimeStamp().expiryTimeStamp
         };
 
         return {
@@ -1262,6 +1341,7 @@ export class OrderHelper {
 
         return true;
     }
+
 
 }
 
@@ -1327,5 +1407,10 @@ export function toNormalScale(num: number, numDecimal: number): number {
  * @returns {number}
  */
 export function roundDown(number: any, decimals: any = 0) {
-    return (Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals));
+    // convert to normal number scale.
+    const normalNum = math.format(math.chain(number).divide(NumberMultiplier).done(), 14);
+    const roundedNum = (Math.floor(normalNum * Math.pow(10, decimals)) / Math.pow(10, decimals));
+
+    // convert back to blockchainScale
+    return math.format(math.chain(roundedNum).multiply(NumberMultiplier).done(), 14);
 }
