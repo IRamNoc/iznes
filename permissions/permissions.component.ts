@@ -307,7 +307,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
      * @return {void}
      */
     public convertGroupsToArray(obj): any[] {
-        let i = 0;
         let key;
         const newArray = [];
 
@@ -316,12 +315,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             newArray.push(obj[key]);
 
             /* Index for tab control. */
-            newArray[newArray.length - 1].index = i += 1;
+            const index = newArray.length - 1;
+            newArray[index].index = index;
 
             /* Make these all admin type groups. */
-            newArray[newArray.length - 1].category = this.userAdminService.resolveGroupType({ id: obj[key].groupIsTx });
-            if (!newArray[newArray.length - 1].category.length) {
-                newArray[newArray.length - 1].category = [{ text: 'No group.' }];
+            newArray[index].category = this.userAdminService.resolveGroupType({ id: obj[key].groupIsTx });
+            if (!newArray[index].category.length) {
+                newArray[index].category = [{ text: 'No group.' }];
             }
         }
 
