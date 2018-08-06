@@ -141,21 +141,25 @@ function handleGetIznesFunds(state: FundListState, action: Action): any {
     const data = _.get(action, 'payload[1].Data', []);
 
     const iznFundList = data.reduce((sum, fund) => {
+        const principlePromoterID = (fund.principlePromoterID) ? JSON.parse(fund.principlePromoterID) : null;
+        const payingAgentID = (fund.payingAgentID) ? JSON.parse(fund.payingAgentID) : null;
+        const investmentAdvisorID = (fund.investmentAdvisorID) ? JSON.parse(fund.investmentAdvisorID) : null;
+
         const fundData: IznesFundDetail = {
             ..._.omit(fund, ['Status']),
             fundCreationDate: fund.fundCreationDate !== null ? fund.fundCreationDate.substr(0, 10) : null,
             fundLaunchate: fund.fundLaunchate !== null ? fund.fundLaunchate.substr(0, 10) : null,
             fiscalYearEnd: fund.fiscalYearEnd !== null ? fund.fiscalYearEnd.substr(0, 7) : null,
-            principlePromoterID: JSON.parse(fund.principlePromoterID),
-            payingAgentID: JSON.parse(fund.payingAgentID),
-            investmentAdvisorID: JSON.parse(fund.investmentAdvisorID),
+            principlePromoterID,
+            payingAgentID,
+            investmentAdvisorID,
         };
 
         return {
             ...sum,
             [fund.fundID]: fundData,
         };
-    }, {});
+    },                              {});
 
     return {
         ...state,
