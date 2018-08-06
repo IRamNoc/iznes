@@ -18,42 +18,42 @@ import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-sha
 import { MemberSocketService } from '@setl/websocket-service';
 import { APP_CONFIG } from '@setl/utils/index';
 import { MultilingualService } from '@setl/multilingual';
+import { OfiFundAccessTable } from "./access-table/component";
+
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
 const updateInvestor = jasmine.createSpy('updateInvestor')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
-    );
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
+);
 
 const OfiKycServiceStub = {
     updateInvestor,
 };
 
-const MessagesServiceStub = {
-
-};
+const MessagesServiceStub = {};
 
 const requestInvestorFundAccess = jasmine.createSpy('requestInvestorFundAccess')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
-    );
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
+);
 
 const OfiFundShareServiceStub = {
     requestInvestorFundAccess,
 };
 
 const pop = jasmine.createSpy('pop')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
-    );
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
+);
 const toasterServiceStub = {
     pop,
 };
@@ -74,10 +74,10 @@ export class TranslatePipe implements PipeTransform {
 
 describe('OfiFundAccessComponent', () => {
 
-    let comp:    OfiFundAccessComponent;
+    let comp: OfiFundAccessComponent;
     let fixture: ComponentFixture<OfiFundAccessComponent>;
-    let de:      DebugElement;
-    let el:      HTMLElement;
+    let de: DebugElement;
+    let el: HTMLElement;
 
     const resetTestingModule = TestBed.resetTestingModule;
 
@@ -87,6 +87,7 @@ describe('OfiFundAccessComponent', () => {
             declarations: [
                 OfiFundAccessComponent,
                 TranslatePipe,
+                OfiFundAccessTable
             ],
             imports: [
                 FormsModule,
