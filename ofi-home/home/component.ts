@@ -1,28 +1,37 @@
 /* Core/Angular imports. */
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, OnDestroy} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {Router} from '@angular/router';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Inject,
+    OnInit,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 /* Redux */
-import {NgRedux, select} from '@angular-redux/store';
-import {MultilingualService} from '@setl/multilingual';
-import {APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterService} from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { MultilingualService } from '@setl/multilingual';
+import { APP_CONFIG, AppConfig, immutableHelper, MoneyValuePipe, NumberConverterService } from '@setl/utils';
 /* Ofi orders request service. */
-import {OfiOrdersService} from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
-import {ofiSetRequestedHomeOrder} from '@ofi/ofi-main/ofi-store';
+import { OfiOrdersService } from '@ofi/ofi-main/ofi-req-services/ofi-orders/service';
+import { ofiSetRequestedHomeOrder } from '@ofi/ofi-main/ofi-store';
 import * as math from 'mathjs';
-import {LogService} from "@setl/utils";
+import { LogService } from "@setl/utils";
 
 // product
-import {OfiUmbrellaFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-import {OfiFundService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
-import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
+import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 
 // recordkeeping
-import {MemberSocketService} from '@setl/websocket-service';
-import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+import { MemberSocketService } from '@setl/websocket-service';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 
 import * as _ from 'lodash';
-import {fromJS} from 'immutable';
+import { fromJS } from 'immutable';
 
 // Internal
 import {
@@ -39,7 +48,7 @@ import {
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
@@ -88,7 +97,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'orderList']) homeOrdersListOb: any;
     @select(['ofi', 'ofiOrders', 'homeOrders', 'requested']) homeOrdersRequestedOb: any;
-    @select(['message', 'myMessages', 'counts',  'inboxUnread']) nbMessagesObj: any;
+    @select(['message', 'myMessages', 'counts', 'inboxUnread']) nbMessagesObj: any;
 
     // products
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedFundListObs;
@@ -254,7 +263,7 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     getInvHoldingsRequested(requested): void {
         // this.logService.log('requested', requested);
         if (!requested) {
-            const payload = {amCompanyID: 0, walletID: this.connectedWalletId};
+            const payload = { amCompanyID: 0, walletID: this.connectedWalletId };
             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this._ngRedux, payload);
         }
     }
@@ -530,14 +539,14 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
 
         /* Return the formatted string. */
         return formatString
-            .replace('YYYY', dateObj.getFullYear().toString())
-            .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
-            .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
-            .replace('DD', this.numPad(dateObj.getDate().toString()))
-            .replace('hh', this.numPad(dateObj.getHours()))
-            .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
-            .replace('mm', this.numPad(dateObj.getMinutes()))
-            .replace('ss', this.numPad(dateObj.getSeconds()))
+        .replace('YYYY', dateObj.getFullYear().toString())
+        .replace('YY', dateObj.getFullYear().toString().slice(2, 3))
+        .replace('MM', this.numPad((dateObj.getMonth() + 1).toString()))
+        .replace('DD', this.numPad(dateObj.getDate().toString()))
+        .replace('hh', this.numPad(dateObj.getHours()))
+        .replace('hH', this.numPad(dateObj.getHours() > 12 ? dateObj.getHours() - 12 : dateObj.getHours()))
+        .replace('mm', this.numPad(dateObj.getMinutes()))
+        .replace('ss', this.numPad(dateObj.getSeconds()))
     }
 
     private numPad(num) {
