@@ -14,6 +14,7 @@ import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
+import { FileDownloader } from '@setl/utils';
 
 @AppObservableHandler
 @Component({
@@ -42,6 +43,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     companyName: string;
 
+    socketToken: string;
+    userId: string;
+
     investorTypes = [
         { id: 45, text: 'Institutional Investor' },
         { id: 55, text: 'Retail Investor' },
@@ -52,7 +56,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
-
+    @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
 
     /* Constructor. */
     constructor(private _fb: FormBuilder,
@@ -65,6 +70,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private _ofiFundShareService: OfiFundShareService,
                 private _ofiKycObservablesService: OfiKycObservablesService,
                 private _ngRedux: NgRedux<any>,
+                private _fileDownloader: FileDownloader,
                 private router: Router) {
 
         this.investorTypeForm = new FormGroup({
@@ -105,6 +111,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.requestedOfiKycListOb.subscribe(
             (requested) => this.requestKycList(requested)));
+
+        this.subscriptions.push(this.tokenOb.subscribe(token => {
+            this.socketToken = token;
+        }));
+
+        this.subscriptions.push(this.userIdOb.subscribe(userId => {
+            this.userId = userId;
+        }));
     }
 
     requestSearch() {
@@ -199,6 +213,16 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         if (!requested) {
             OfiKycService.defaultRequestAmKycList(this._ofiKycService, this._ngRedux);
         }
+    }
+
+    downloadReferentialCSVFile() {
+        let investorType = (this.investorTypeForm.controls['investorType'].value.length > 0) ? this.investorTypeForm.controls['investorType'].value[0].id : -1;
+        this._fileDownloader.downLoaderFile({
+            method: 'getIznesReferentialCSVFile',
+            token: this.socketToken,
+            userId: this.userId,
+            type: investorType
+        });
     }
 
     ngOnDestroy() {
