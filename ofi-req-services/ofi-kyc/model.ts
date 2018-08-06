@@ -153,8 +153,6 @@ interface Shares {
 export interface SaveFundAccessRequestBody extends MemberNodeMessageBody {
     token: string;
     access: object;
-    kycID: number;
-    investorWalletID: number;
 }
 
 export interface fetchInvitationsByUserAmCompanyRequestBody extends MemberNodeMessageBody {
@@ -184,8 +182,6 @@ export interface createKYCDraftMessageBody extends MemberNodeMessageBody {
 
 export interface SaveFundAccessRequestData {
     access: object;
-    kycID: number;
-    investorWalletID: number;
 }
 
 export interface SaveKycDocumentRequestBody extends MemberNodeMessageBody {

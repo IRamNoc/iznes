@@ -576,8 +576,6 @@ export class OfiKycService {
             RequestName: 'iznesfundaccessadd',
             token: this.memberSocketService.token,
             access: _.get(requestData, 'access', ''),
-            kycID: _.get(requestData, 'kycID', ''),
-            investorWalletID: _.get(requestData, 'investorWalletID', ''),
         };
 
         return createMemberNodeRequest(this.memberSocketService, messageBody);
