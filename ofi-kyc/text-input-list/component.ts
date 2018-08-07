@@ -1,5 +1,5 @@
-import {Component, OnInit, Input, OnChanges} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 interface ContentType {
     [key: string]: {
@@ -38,7 +38,7 @@ export class TextInputListComponent implements OnInit, OnChanges {
         if (this.getContentKeys().length) {
             this.contentForm = this.fb.group({
                 ...this.getContentKeys().reduce((acc, cur) => {
-                    acc[cur] = {value: this.content[cur].value, disabled: true};
+                    acc[cur] = { value: this.content[cur].value, disabled: true };
                     return acc;
                 }, {})
             });

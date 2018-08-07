@@ -43,7 +43,7 @@
                         {{'Export Clients Holdings' | translate}}
                     </button>
                     <br>
-                    <button class="btn btn-success">
+                    <button class="btn btn-success" (click)="downloadReferentialCSVFile()">
                         {{'Export Clients Referential' | translate}}
                     </button>
                 </div>
@@ -60,7 +60,7 @@
                         <clr-dg-column [clrDgField]="'sectorActivity'">{{'Sector of Activity' | translate}}</clr-dg-column>
                         <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
 
-                        <clr-dg-row *clrDgItems="let item of clientReferential" (click)="kycId = item.kycID;">
+                        <clr-dg-row *clrDgItems="let item of clientReferential" (click)="viewClient(item.kycID);">
                             <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
                             <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
                             <clr-dg-cell>{{item.registeredCompanyName}}</clr-dg-cell>
@@ -85,14 +85,15 @@
 <clr-tabs *ngIf="kycId != 'list'">
     <clr-tab>
         <button clrTabLink>{{'KYC Information' | translate}}</button>
-        <clr-tab-content>
+        <clr-tab-content *clrIfActive="true">
 
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
         <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
-        <clr-tab-content>
-
+        <clr-tab-content *clrIfActive="false">
+            {{'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}
+            <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="kycId = 'list'" style="width: 100%"></access-table>
         </clr-tab-content>
     </clr-tab>
     <clr-tab>
