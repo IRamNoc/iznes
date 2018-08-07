@@ -5,8 +5,8 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subject, Subscription } from 'rxjs';
 import { MultilingualService } from '@setl/multilingual';
 
-/* import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
- import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';*/
+import {userToursEnums} from '@setl/core-req-services/usertour/config';
+import {UserTourService} from '@setl/core-req-services/usertour/service';
 
 @Component({
     selector: 'app-ui-layouts-tooltips',
@@ -254,9 +254,9 @@ export class UiTooltipsComponent implements OnInit {
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         public _translate: MultilingualService,
-        // private _ofiUserTourService: OfiUserTourService,
+        private _userTourService: UserTourService,
     ) {
-        // this.userTourEnums = userToursEnums;
+        this.userTourEnums = userToursEnums;
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
 
@@ -336,7 +336,7 @@ export class UiTooltipsComponent implements OnInit {
     resetUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
-                /*const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
+                const asyncTaskPipe = this._userTourService.saveUserTour({
                     type: this.userTourEnums.names.utdemousertour,
                     value: 0,
                     walletid: this.connectedWalletId,
@@ -351,12 +351,12 @@ export class UiTooltipsComponent implements OnInit {
                     descriptor: asyncTaskPipe,
                     args: {},
                     successCallback: (response) => {
-                        OfiUserTourService.setRequestedUserTours(false, this.ngRedux);
+                        UserTourService.setRequestedUserTours(false, this.ngRedux);
                     },
                     failureCallback: (response) => {
                         console.log('UserTour save error: ', response);
                     },
-                });*/
+                });
             }, 200);
         }
     }
@@ -366,7 +366,7 @@ export class UiTooltipsComponent implements OnInit {
         setTimeout(() => {
             this.tourObject.push(
                 {
-                    // usertourName: this.userTourEnums.names.utdemousertour,
+                    usertourName: this.userTourEnums.names.utdemousertour,
                     title: this._translate.translate('Auto-scroll to element'),
                     text: this._translate.translate('Duration forced to 3s (default 5s).'),
                     target: 'tooltip-label-directives',
