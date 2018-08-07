@@ -1,15 +1,27 @@
-import { ChangeDetectionStrategy, Injector, ChangeDetectorRef, Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Injector,
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    HostListener,
+    Input,
+    OnInit,
+    OnDestroy,
+    Renderer2,
+    AfterViewInit
+} from '@angular/core';
 import { fromJS } from 'immutable';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { NgRedux, select } from '@angular-redux/store';
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/highlight/actions';
-import { OFI_SET_USERTOUR_INPROGRESS } from '@ofi/ofi-main/ofi-store/ofi-usertour/inprogress/actions';
-import { OFI_SET_USER_TOURS } from '@ofi/ofi-main/ofi-store/ofi-usertour/usertour/actions';
+// import { OFI_SET_USERTOUR_INPROGRESS } from '@ofi/ofi-main/ofi-store/ofi-usertour/inprogress/actions';
+// import { OFI_SET_USER_TOURS } from '@ofi/ofi-main/ofi-store/ofi-usertour/usertour/actions';
 import { Router } from '@angular/router';
 
-import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
+// import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
 
 @Directive({
     selector: '[tooltip]',
@@ -51,7 +63,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     userTourInProgress = false;
     userTourName = '';
 
-    OfiUserTourService: any;
+    // OfiUserTourService: any;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiUserTour', 'inProgress', 'inProgress']) inProgressOb;
@@ -68,7 +80,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         private _changeDetectorRef: ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
-        this.OfiUserTourService = this.injector.get(OfiUserTourService);
+        // this.OfiUserTourService = this.injector.get(OfiUserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
     }
@@ -84,7 +96,9 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
                 this.connectedWalletId = connected;
             }));
-            this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => { this.userTourInProgress = inProgress; }));
+            this.subscriptionsArray.push(this.inProgressOb.subscribe(inProgress => {
+                this.userTourInProgress = inProgress;
+            }));
             if (this.clonedConfig[0]) {
                 if (this.clonedConfig[0].usertourName) {
                     this.userTourName = this.clonedConfig[0].usertourName;
@@ -180,7 +194,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     walletid: this.connectedWalletId,
                     type: this.userTourName,
                 };
-                OfiUserTourService.defaultRequestUserTours(this.OfiUserTourService, this._ngRedux, payload);
+                // OfiUserTourService.defaultRequestUserTours(this.OfiUserTourService, this._ngRedux, payload);
             }
         }
     }
@@ -217,7 +231,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     saveUserTour() {
-        if (this.userTourName !== '') {
+        /*if (this.userTourName !== '') {
             const asyncTaskPipe = this.OfiUserTourService.saveUserTour({
                 type: this.userTourName,
                 value: 1,
@@ -237,11 +251,11 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     console.log('UserTour save error: ', response);
                 },
             });
-        }
+        }*/
     }
 
     initTour() {
-        this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
+        // this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
 
         // add black bglayer
         this.divBackgroundTour = document.createElement('div');
@@ -269,7 +283,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             if (this.parentDiv) {
                 this.parentDiv.addEventListener('scroll', (event) => {
                     this.getScroll(event);
-                },                              false);
+                }, false);
                 this.scrollTop = this.parentDiv.scrollTop;
             }
             this.showTooltip();
@@ -507,7 +521,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                         this.renderer.setStyle(this.divTooltipTimer, 'width', '100%');
                     }
                 }
-            },         50);
+            }, 50);
         }
     }
 
@@ -559,93 +573,93 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 const strPCases = this.pCases.join();
                 // console.log(strPCases);
                 switch (strPCases) {
-                    case '0,0,0,1': // middle left
-                        // tooltip position
-                        newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
-                        newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                        if (Number(newTop + this.divTooltip.offsetHeight) >= pageSize.height) {
-                            newTop = Number(pageSize.height - this.arrowSize - this.divTooltip.offsetHeight);
-                            const posYTooltip = newTop;
-                            const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                            const tooltipSize = this.divTooltip.offsetHeight;
-                            const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                            // change arrow direction
-                            this.applyArrowClass('tooltips-left');
-                            // move arrow position
-                            let roundPercent = (5 * Math.round(percent / 5));
-                            roundPercent = (roundPercent > 95) ? 95 : roundPercent;
-                            roundPercent = (roundPercent < 5) ? 5 : roundPercent;
-                            this.divTooltip.classList.add('tooltips-left' + roundPercent);
-                        } else {
-                            // change arrow direction
-                            this.applyArrowClass('tooltips-left');
-                        }
-                        break;
-                    case '0,1,0,0': // middle right
-                        // tooltip position
-                        newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
-                        newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                        this.applyArrowClass('tooltips-right');
-                        break;
-                    case '1,0,0,1': // corner top-left
-                        newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
-                        newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                        this.applyArrowClass('tooltips-left');
-                        // if (Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
-                        //     newTop = this.arrowSize;
-                        //     const posYTooltip = newTop;
-                        //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                        //     const tooltipSize = this.divTooltip.offsetHeight;
-                        //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                        //     // change arrow direction
-                        //     this.applyArrowClass('tooltips-left');
-                        //     // move arrow position
-                        //     let roundPercent = (5 * Math.round(percent / 5));
-                        //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
-                        //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
-                        //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
-                        // } else {
-                        //     // change arrow direction
-                        //     this.applyArrowClass('tooltips-left');
-                        // }
-                        break;
-                    case '1,1,0,0': // corner top-right
-                        newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
-                        newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2) - this.scrollTop);
-                        this.applyArrowClass('tooltips-right');
-                        // if (Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
-                        //     newTop = this.arrowSize;
-                        //     const posYTooltip = newTop;
-                        //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
-                        //     const tooltipSize = this.divTooltip.offsetHeight;
-                        //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
-                        //     // change arrow direction
-                        //     this.applyArrowClass('tooltips-right');
-                        //     // move arrow position
-                        //     let roundPercent = (5 * Math.round(percent / 5));
-                        //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
-                        //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
-                        //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
-                        //     this.divTooltip.classList.add('tooltips-right' + roundPercent);
-                        // } else {
-                        //     // change arrow direction
-                        //     this.applyArrowClass('tooltips-right');
-                        // }
-                        break;
-                    case '1,0,0,0': // middle top
-                        newTop = Number(this.getOffset(this.el).top + this.el.offsetHeight + this.arrowSize - this.scrollTop);
+                case '0,0,0,1': // middle left
+                    // tooltip position
+                    newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    if (Number(newTop + this.divTooltip.offsetHeight) >= pageSize.height) {
+                        newTop = Number(pageSize.height - this.arrowSize - this.divTooltip.offsetHeight);
+                        const posYTooltip = newTop;
+                        const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
+                        const tooltipSize = this.divTooltip.offsetHeight;
+                        const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
                         // change arrow direction
-                        this.applyArrowClass('tooltips-top');
-                        if (this.clonedConfig.title === undefined || this.clonedConfig.title === '') {
-                            this.divTooltip.classList.add('tooltips-top-text');
-                        }
-                        break;
-                    case '0,1,1,0': // corner bottom right
-                        newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
-                        newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
-                    case '0,0,1,1': // corner bottom left
-                        newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
-                        newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                        this.applyArrowClass('tooltips-left');
+                        // move arrow position
+                        let roundPercent = (5 * Math.round(percent / 5));
+                        roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                        roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                        this.divTooltip.classList.add('tooltips-left' + roundPercent);
+                    } else {
+                        // change arrow direction
+                        this.applyArrowClass('tooltips-left');
+                    }
+                    break;
+                case '0,1,0,0': // middle right
+                    // tooltip position
+                    newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    this.applyArrowClass('tooltips-right');
+                    break;
+                case '1,0,0,1': // corner top-left
+                    newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                    this.applyArrowClass('tooltips-left');
+                    // if (Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
+                    //     newTop = this.arrowSize;
+                    //     const posYTooltip = newTop;
+                    //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
+                    //     const tooltipSize = this.divTooltip.offsetHeight;
+                    //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-left');
+                    //     // move arrow position
+                    //     let roundPercent = (5 * Math.round(percent / 5));
+                    //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                    //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                    //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
+                    // } else {
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-left');
+                    // }
+                    break;
+                case '1,1,0,0': // corner top-right
+                    newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
+                    newTop = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2) - this.scrollTop);
+                    this.applyArrowClass('tooltips-right');
+                    // if (Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2)) <= 0) {
+                    //     newTop = this.arrowSize;
+                    //     const posYTooltip = newTop;
+                    //     const posYMiddleEl = Number(this.getOffset(this.el).top + (this.el.offsetHeight / 2));
+                    //     const tooltipSize = this.divTooltip.offsetHeight;
+                    //     const percent = (posYMiddleEl - posYTooltip) / tooltipSize * 100;
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-right');
+                    //     // move arrow position
+                    //     let roundPercent = (5 * Math.round(percent / 5));
+                    //     roundPercent = (roundPercent > 95) ? 95 : roundPercent;
+                    //     roundPercent = (roundPercent < 5) ? 5 : roundPercent;
+                    //     this.divTooltip.classList.add('tooltips-left' + roundPercent);
+                    //     this.divTooltip.classList.add('tooltips-right' + roundPercent);
+                    // } else {
+                    //     // change arrow direction
+                    //     this.applyArrowClass('tooltips-right');
+                    // }
+                    break;
+                case '1,0,0,0': // middle top
+                    newTop = Number(this.getOffset(this.el).top + this.el.offsetHeight + this.arrowSize - this.scrollTop);
+                    // change arrow direction
+                    this.applyArrowClass('tooltips-top');
+                    if (this.clonedConfig.title === undefined || this.clonedConfig.title === '') {
+                        this.divTooltip.classList.add('tooltips-top-text');
+                    }
+                    break;
+                case '0,1,1,0': // corner bottom right
+                    newLeft = Number(this.getOffset(this.el).left - this.arrowSize - this.divTooltip.offsetWidth);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
+                case '0,0,1,1': // corner bottom left
+                    newLeft = Number(this.getOffset(this.el).left + this.el.offsetWidth + this.arrowSize);
+                    newTop = Number((this.getOffset(this.el).top - this.scrollTop) + (this.el.offsetHeight / 2) - (this.divTooltip.offsetHeight / 2));
                 }
 
                 // calcul decal from previous position - first time decal = new
@@ -770,7 +784,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             if ((this.getOffset(this.el).top - this.scrollTop - topBarSizeHeight) > pageSize.height) {
                 here = newTop;
             } else {
-                here =  newTop > 0 ? newTop : 0;
+                here = newTop > 0 ? newTop : 0;
             }
             const ids = this.parentDiv.querySelectorAll('*[id]');
             let found = false;
@@ -791,7 +805,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             d = document,
             e = d.documentElement,
             g = d.getElementsByTagName('body')[0],
-            x = w.innerWidth  || e.clientWidth  || g.clientWidth,
+            x = w.innerWidth || e.clientWidth || g.clientWidth,
             y = w.innerHeight || e.clientHeight || g.clientHeight;
         return { width: x, height: y };
     }
@@ -836,7 +850,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             if (this.clonedConfig.autoshow === undefined || this.clonedConfig.autoshow === false || this.tourConfig.length > 0) {
                 setTimeout(() => {
                     this.cleanAll(false);
-                },         300);
+                }, 300);
             }
         }
     }
@@ -844,7 +858,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     generateID(length) {
         let text = '';
         const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < length; i++)  {
+        for (let i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
         return text;
@@ -868,8 +882,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.isAutoNext = false;
                 this.hideTooltip();
                 if (this.divBackgroundTour) this.divBackgroundTour.remove();
-                this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
-                this._ngRedux.dispatch({type: OFI_SET_USER_TOURS, data: null}); // reset usertour datas
+                // this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
+                // this._ngRedux.dispatch({type: OFI_SET_USER_TOURS, data: null}); // reset usertour datas
                 // this.isTour = false;
                 // this.userTourName = '';
                 // this.clonedConfig = [];
