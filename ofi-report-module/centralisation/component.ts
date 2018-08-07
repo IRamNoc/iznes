@@ -565,7 +565,23 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             }
         }
         if (this.isFundLevel) {
-            alert('Coming soon...');
+            const obj = this.fundsDetails.funds.find(o => o.fundName === id);
+            if (obj !== undefined) {
+                const orderFilters = {
+                    filters: {
+                        isin: obj.isin,
+                        fundname: obj.fundName,
+                        status: {id : -3},
+                        type: {id : 0},
+                        dateType: {id : 'navDate'},
+                        fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
+                        toDate: moment(obj.navDate).format('YYYY-MM-DD')
+                    }
+                };
+
+                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+                this.router.navigateByUrl('manage-orders/list');
+            }
         }
     }
 
