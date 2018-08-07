@@ -416,31 +416,31 @@ public class LoginAndNavigationHelper {
         assertTrue(driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a")).getText().contains("All your KYC and Client Folders"));
     }
     public static void validateHeadersOnHomePageTableTG1376(){
-        String orderRef = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[1]/div/button")).getText();
+        String orderRef = driver.findElement(By.xpath("//*[@id=\"Order-REF\"]/div/button")).getText();
         assertTrue(orderRef.equals("Order REF"));
-        String orderType = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/button")).getText();
+        String orderType = driver.findElement(By.xpath("//*[@id=\"Order-Type\"]/div/button")).getText();
         assertTrue(orderType.equals("Order type"));
-        String investor = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[3]/div/button")).getText();
+        String investor = driver.findElement(By.xpath("//*[@id=\"Order-Investor\"]/div/button")).getText();
         assertTrue(investor.equals("Investor"));
-        String iSIN = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[4]/div/button")).getText();
+        String iSIN = driver.findElement(By.xpath("//*[@id=\"Order-ISIN\"]/div/button")).getText();
         assertTrue(iSIN.equals("ISIN"));
-        String shareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[5]/div/button")).getText();
+        String shareName = driver.findElement(By.xpath("//*[@id=\"Order-Share-Name\"]/div/button")).getText();
         assertTrue(shareName.equals("Share Name"));
-        String shareCurrency = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[7]/div/button")).getText();
+        String shareCurrency = driver.findElement(By.xpath("//*[@id=\"Order-Share-Currency\"]/div/button")).getText();
         assertTrue(shareCurrency.equals("Share Currency"));
-        String quantity = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[8]/div/button")).getText();
+        String quantity = driver.findElement(By.xpath("//*[@id=\"Order-Quantity\"]/div/button")).getText();
         assertTrue(quantity.equals("Quantity"));
-        String tradeAmount = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[10]/div/button")).getText();
+        String tradeAmount = driver.findElement(By.xpath("//*[@id=\"Order-Trade-Amount\"]/div/button")).getText();
         assertTrue(tradeAmount.equals("Trade Amount"));
-        String orderDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[12]/div/button")).getText();
+        String orderDate = driver.findElement(By.xpath("//*[@id=\"Order-Order-Date\"]/div/button")).getText();
         assertTrue(orderDate.equals("Order Date"));
-        String cutOffDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[13]/div/button")).getText();
+        String cutOffDate = driver.findElement(By.xpath("//*[@id=\"Order-Cut-Off-Date\"]/div/button")).getText();
         assertTrue(cutOffDate.equals("Cut-off date"));
-        String settlementDate = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[15]/div/button")).getText();
+        String settlementDate = driver.findElement(By.xpath("//*[@id=\"Order-Settlement-Date\"]/div/button")).getText();
         assertTrue(settlementDate.equals("Settlement Date"));
-        String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[16]/div/button")).getText();
+        String status = driver.findElement(By.xpath("//*[@id=\"Order-Status\"]/div/button")).getText();
         assertTrue(status.equals("Status"));
-        String actions = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-manage-orders/div[2]/clr-tabs/clr-tab/clr-tab-content/div/form/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[17]/div/span/span")).getText();
+        String actions = driver.findElement(By.xpath("//*[@id=\"Order-Action\"]/div/span/span")).getText();
         assertTrue(actions.equals("Actions"));
     }
 
