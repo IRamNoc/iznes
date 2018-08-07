@@ -204,3 +204,18 @@ export interface GetClientReferentialMessageBody extends MemberNodeMessageBody {
     token: string;
     type: number;
 }
+
+export interface AuditSearchRequestBody extends MemberNodeMessageBody {
+    token: string;
+    id: string;
+    search: string;
+    from: string;
+    to: string;
+}
+
+export interface AuditSearchRequestData {
+    id: string;
+    search: string;
+    from: string;
+    to: string;
+}

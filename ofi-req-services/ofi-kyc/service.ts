@@ -27,7 +27,9 @@ import {
     GetMyKycListRequestBody,
     createKYCDraftMessageBody,
     createKYCDraftRequestData,
-    GetClientReferentialMessageBody
+    GetClientReferentialMessageBody,
+    AuditSearchRequestBody,
+    AuditSearchRequestData
 } from './model';
 
 import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
@@ -830,6 +832,20 @@ export class OfiKycService {
         } else {
             this.ngRedux.dispatch(ofiSetRequestedClientReferential());
         }
+    }
+
+    requestAuditSearch(requestData: AuditSearchRequestData): any {
+
+        const messageBody: AuditSearchRequestBody = {
+            RequestName: 'iznesreferentialauditsearch',
+            token: this.memberSocketService.token,
+            id: _.get(requestData, 'id', ''),
+            search: _.get(requestData, 'search', ''),
+            from: _.get(requestData, 'from', ''),
+            to: _.get(requestData, 'to', ''),
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
 }

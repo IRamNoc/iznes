@@ -212,6 +212,8 @@ export {
     OFI_SET_MY_DOCUMENTS_LIST,
     OFI_SET_REQUESTED_MY_DOCUMENTS,
     OFI_CLEAR_REQUESTED_MY_DOCUMENTS,
+    OFI_SET_REQUESTED_CLIENT_REFERENTIAL,
+    OFI_SET_CLIENT_REFERENTIAL_AUDIT
 } from './ofi-kyc';
 
 /* Currencies */
@@ -219,6 +221,7 @@ export { CurrencyActions } from './ofi-currencies';
 
 /*--------------------------------------------------*/
 /*--------------- OFI GLOBAL REDUCER ---------------*/
+
 /*--------------------------------------------------*/
 export interface OfiState {
     ofiCurrencies: CurrencyState;

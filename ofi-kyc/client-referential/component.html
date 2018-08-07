@@ -1,105 +1,195 @@
-<!-- Breadcrumbs. -->
-<div class="header-breadcrumbs">
-    <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
-        {{'Client Referential: ' | translate}}
-        <span *ngIf="kycId == 'list'">{{'All Clients' | translate}}</span>
-        <span *ngIf="kycId != 'list'">{{clients[kycId].registeredCompanyName}} - {{clients[kycId].clientReference}}</span>
-    </h1>
-</div>
+<ng-container *ngIf="pageType != 'audit'">
+    <!-- Breadcrumbs. -->
+    <div class="header-breadcrumbs">
+        <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
+            {{'Client Referential: ' | translate}}
+            <span *ngIf="kycId == ''">{{'All Clients' | translate}}</span>
+            <span *ngIf="kycId != ''">{{clients[kycId].registeredCompanyName}} - {{clients[kycId].clientReference}}</span>
+        </h1>
+    </div>
 
-<clr-tabs *ngIf="kycId == 'list'">
-    <clr-tab>
-        <button clrTabLink>
-            <i class="fa fa-users"></i> {{'All Clients' | translate}}
-        </button>
-        <clr-tab-content>
-            <div class="row">
-                <div class="col-sm-12">
-                    {{'Please find below the list of your clients.' | translate}}<br>
-                    {{'From here you will also be able to invite more investors to join IZNES.' | translate}}
-                    <button id="invite-investors-btn" class="btn btn-success" style="margin-left: 10px;" (click)="gotoInvite();">{{'Invite Investors' | translate}}</button>
+    <clr-tabs *ngIf="kycId == ''">
+        <clr-tab>
+            <button clrTabLink>
+                <i class="fa fa-users"></i> {{'All Clients' | translate}}
+            </button>
+            <clr-tab-content>
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{'Please find below the list of your clients.' | translate}}<br>
+                        {{'From here you will also be able to invite more investors to join IZNES.' | translate}}
+                        <button id="invite-investors-btn" class="btn btn-success" style="margin-left: 10px;" (click)="gotoInvite();">{{'Invite Investors' | translate}}</button>
+                    </div>
                 </div>
-            </div>
-            <div class="row" style="margin-top: 15px;">
-                <div class="col-sm-6">
-                    <p>{{'Investor Type' | translate}}</p>
-                    <form [formGroup]="investorTypeForm">
-                        <ng-select
-                            id="investor-type-select"
-                            class="form-control"
-                            [items]="investorTypes"
-                            [allowClear]="true"
-                            [placeholder]="_translate.translate('All Investors')"
-                            formControlName="investorType">
-                        </ng-select>
-                    </form>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-sm-6">
+                        <p>{{'Investor Type' | translate}}</p>
+                        <form [formGroup]="investorTypeForm">
+                            <ng-select
+                                id="investor-type-select"
+                                class="form-control"
+                                [items]="investorTypes"
+                                [allowClear]="true"
+                                [placeholder]="_translate.translate('All Investors')"
+                                formControlName="investorType">
+                            </ng-select>
+                        </form>
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <button class="btn btn-primary" (click)="changePage('audit')">
+                            {{'View Shares Authorisation Audit Trail' | translate}}
+                        </button>
+                        <br>
+                        <button class="btn btn-success">
+                            {{'Export Clients Holdings' | translate}}
+                        </button>
+                        <br>
+                        <button class="btn btn-success" (click)="downloadReferentialCSVFile()">
+                            {{'Export Clients Referential' | translate}}
+                        </button>
+                    </div>
                 </div>
-                <div class="col-sm-6" align="right">
-                    <button class="btn btn-primary">
-                        {{'View Shares Authorisation Audit Trail' | translate}}
-                    </button>
-                    <br>
-                    <button class="btn btn-success">
-                        {{'Export Clients Holdings' | translate}}
-                    </button>
-                    <br>
-                    <button class="btn btn-success" (click)="downloadReferentialCSVFile()">
-                        {{'Export Clients Referential' | translate}}
-                    </button>
+                <div class="row">
+                    <div class="col-sm-12">
+
+                        <clr-datagrid #dataGrid>
+                            <clr-dg-column [clrDgField]="'clientReference'">{{'Client Reference' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'walletName'">{{'Iznes Reference' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'registeredCompanyName'">{{'Company' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'leiCode'">{{'LEI' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'legalForm'">{{'Legal Form' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'sectorActivity'">{{'Sector of Activity' | translate}}</clr-dg-column>
+                            <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
+
+                            <clr-dg-row *clrDgItems="let item of clientReferential" (click)="viewClient(item.kycID);">
+                                <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.registeredCompanyName}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.leiCode}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.legalForm}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.sectorActivity}}</clr-dg-cell>
+                                <clr-dg-cell>{{item.email}}</clr-dg-cell>
+                            </clr-dg-row>
+
+                            <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+
+                                <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+                            </clr-dg-footer>
+                        </clr-datagrid>
+
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
 
-                    <clr-datagrid #dataGrid>
-                        <clr-dg-column [clrDgField]="'clientReference'">{{'Client Reference' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'walletName'">{{'Iznes Reference' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'registeredCompanyName'">{{'Company' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'leiCode'">{{'LEI' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'legalForm'">{{'Legal Form' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'sectorActivity'">{{'Sector of Activity' | translate}}</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'email'">{{'Email' | translate}}</clr-dg-column>
+    <clr-tabs *ngIf="kycId != ''">
+        <clr-tab>
+            <button clrTabLink>{{'KYC Information' | translate}}</button>
+            <clr-tab-content *clrIfActive="true">
 
-                        <clr-dg-row *clrDgItems="let item of clientReferential" (click)="viewClient(item.kycID);">
-                            <clr-dg-cell>{{item.clientReference}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.walletName}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.registeredCompanyName}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.leiCode}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.legalForm}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.sectorActivity}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.email}}</clr-dg-cell>
-                        </clr-dg-row>
-
-                        <clr-dg-footer>{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-
-                            <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
-                        </clr-dg-footer>
-                    </clr-datagrid>
-
+            </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
+            <clr-tab-content *clrIfActive="false">
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <button class="btn btn-primary" (click)="changePage('audit')">{{'View Previous Updates' | translate}}</button>
+                    </div>
                 </div>
-            </div>
-        </clr-tab-content>
-    </clr-tab>
-</clr-tabs>
+                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="kycId = ''" style="width: 100%"></access-table>
+            </clr-tab-content>
+        </clr-tab>
+        <clr-tab>
+            <button clrTabLink>{{'Holdings' | translate}}</button>
+            <clr-tab-content>
 
-<clr-tabs *ngIf="kycId != 'list'">
-    <clr-tab>
-        <button clrTabLink>{{'KYC Information' | translate}}</button>
-        <clr-tab-content *clrIfActive="true">
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
 
-        </clr-tab-content>
-    </clr-tab>
-    <clr-tab>
-        <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
-        <clr-tab-content *clrIfActive="false">
-            {{'Please find below the authorisation of @companyName@ regarding your shares.' | translate: {'companyName': companyName} }}
-            <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="kycId = 'list'" style="width: 100%"></access-table>
-        </clr-tab-content>
-    </clr-tab>
-    <clr-tab>
-        <button clrTabLink>{{'Holdings' | translate}}</button>
-        <clr-tab-content>
+</ng-container>
 
-        </clr-tab-content>
-    </clr-tab>
-</clr-tabs>
+<ng-container *ngIf="pageType == 'audit'">
+    <div class="header-breadcrumbs">
+        <h1 id="ofi-client-referential-audit"><i class="fa fa-clock-o"></i>
+            {{'Client Authorisation Audit Trail: ' | translate}}
+            {{(kycId != '' ? clients[kycId].registeredCompanyName + ' - ' + clients[kycId].clientReference: '')}}
+        </h1>
+    </div>
+
+    <clr-tabs *ngIf="pageType == 'audit'">
+        <clr-tab>
+            <button clrTabLink>
+                <i class="fa fa-clock-o"></i> {{'All Clients' | translate}}
+            </button>
+            <clr-tab-content>
+                <form [formGroup]="searchForm" id="search-audit-form" (keydown.enter)="$event.preventDefault()">
+                    <div class="row bordered">
+                        <div class="form-group col-sm-3">
+                            <label>{{'Search an investor' | translate}}</label>
+                            <div class="input-button-group">
+                                <input id="audit-search-investor" [formControl]="searchForm.controls['searchInvestor']" name="search-sharename" type="text"
+                                       [placeholder]="_translate.translate('Investor name or reference')" style="width: 100% !important">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="orders-search-from-date">{{'From date' | translate}}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input id="orders-search-from-date" [formControl]="searchForm.controls['searchFrom']" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="orders-search-to-date">{{'To date' | translate}}</label>
+                            <div class="input-group date-pick-wrapper">
+                                <span class="fa fa-calendar" aria-hidden="true"></span>
+                                <input id="orders-search-to-date" [formControl]="searchForm.controls['searchTo']" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material">
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <button class="btn btn-primary" align="right" style="margin-top: 20px;" (click)="downloadReferentialAuditCSVFile()">{{'Export Audit Trail' | translate}}</button>
+                        </div>
+                    </div>
+                </form>
+
+                <clr-datagrid #auditDataGrid>
+                    <clr-dg-column [clrDgField]="'company'">{{'Investor' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'isin'">{{'ISIN' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'">{{'Share Name' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'info'">{{'Information' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'oldValue'">{{'Old Value' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'newValue'">{{'New Value' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'modifiedBy'">{{'Modify By' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'date'">{{'Date' | translate}}</clr-dg-column>
+
+                    <clr-dg-row *clrDgItems="let item of clientReferentialAudit">
+                        <clr-dg-cell>{{item.company}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.isin}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.shareName}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.info}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.oldValue}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.newValue}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.modifiedBy}}</clr-dg-cell>
+                        <clr-dg-cell>{{item.date}}</clr-dg-cell>
+                    </clr-dg-row>
+
+                    <clr-dg-footer>{{auditPagination.firstItem + 1}} - {{auditPagination.lastItem + 1}}
+
+                        <clr-dg-pagination #auditPagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+                <div align="middle" style="margin-top: 20px;">
+                    <button class="btn btn-info" (click)="changePage('list')">{{'Back' | translate}}</button>
+                </div>
+            </clr-tab-content>
+        </clr-tab>
+    </clr-tabs>
+</ng-container>
