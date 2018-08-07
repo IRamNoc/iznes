@@ -44,7 +44,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (75000);
+    public Timeout globalTimeout = new Timeout (85000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -240,6 +240,7 @@ public class OpenCSDSprint7AcceptanceTest {
     }
 
     @Test
+    @Ignore("centralisation being changed")
     public void AssertPageDataForCentralisationHistoryTG1080() throws InterruptedException, SQLException {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
@@ -263,15 +264,15 @@ public class OpenCSDSprint7AcceptanceTest {
         assertPopupNextFundNo("Share");
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         navigateToDropdown("menu-am-report-section");
-        navigateToPageByID("menu-report-centralization-select");
+        navigateToPageByID("menu-report-centralisation-select");
 
-        driver.findElement(By.id("menu-report-centralization-select")).click();
+        driver.findElement(By.id("menu-report-centralisation-select")).click();
         String CentralHeader = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/h1")).getText();
-        assertTrue(CentralHeader.equals("Centralisation History"));
+        assertTrue(CentralHeader.equals("Centralisation"));
         wait.until(elementToBeClickable(By.cssSelector("i.special:nth-child(3)")));
         driver.findElement(By.cssSelector("i.special:nth-child(3)")).click();
         wait.until(elementToBeClickable(By.cssSelector("input.form-control")));
-        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uShareDetails[0]);
+        driver.findElement(By.cssSelector("input.form-control")).sendKeys(uFundDetails[0]);
 
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"clr-tab-content-15\"]/ng-select/div/div[3]/ul/li[2]")));
 
