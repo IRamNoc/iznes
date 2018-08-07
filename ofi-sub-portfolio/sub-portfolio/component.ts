@@ -31,9 +31,9 @@ import { OfiUmbrellaFundService } from "../../ofi-req-services/ofi-product/umbre
 import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-share/service";
 import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
 import { ToasterService } from 'angular2-toaster';
-import {MultilingualService} from '@setl/multilingual';
-import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
-import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
+import { MultilingualService } from '@setl/multilingual';
+import { userToursEnums } from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
+import { OfiUserTourService } from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -56,7 +56,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddModal: boolean = false;
 
-    private showUsertour = false;
+    showUsertour = false;
     private tourObject = [];
     userTourEnums: any;
 
@@ -74,7 +74,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private _ofiSubPortfolioService: OfiSubPortfolioService,
                 private _confirmationService: ConfirmationService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
                 private _ofiUserTourService: OfiUserTourService,
@@ -172,7 +172,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     restartUserTour() {
         if (this.connectedWalletId > 0) {
-            setTimeout(()=>{
+            setTimeout(() => {
                 const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
                     type: this.userTourEnums.names.utmysubportfolios,
                     value: 0,
@@ -181,8 +181,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
                 this.ngRedux.dispatch({
                     type: 'RUN_ASYNC_TASK',
-                    successTypes: (data) => {},
-                    failureTypes: (data) => {},
+                    successTypes: (data) => {
+                    },
+                    failureTypes: (data) => {
+                    },
                     descriptor: asyncTaskPipe,
                     args: {},
                     successCallback: (response) => {
