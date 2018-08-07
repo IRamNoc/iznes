@@ -106,6 +106,8 @@ export class FundShare {
             status: this.getSelectValue(this.keyFacts.mandatory.status),
             master: this.isStatusMaster(),
             feeder: this.getStatusFeederValue(),
+            allowSellBuy: this.keyFacts.mandatory.allowSellBuy.value(),
+            sellBuyCalendar: this.getSelectValue(this.keyFacts.mandatory.sellBuyCalendar),
             maximumNumDecimal: this.characteristic.mandatory.maximumNumDecimal.value(),
             subscriptionCategory: this.getSelectValue(this.characteristic.mandatory.subscriptionCategory),
             subscriptionCurrency: this.getSelectValue(this.characteristic.mandatory.subscriptionCurrency),
@@ -239,6 +241,8 @@ export class FundShare {
         );
         this.setListItemPreset(this.keyFacts.mandatory.status, fundShare.status);
         this.setFeederPreset(fundShare.feeder);
+        this.keyFacts.mandatory.allowSellBuy.preset = fundShare.allowSellBuy;
+        this.setListItemPreset(this.keyFacts.mandatory.sellBuyCalendar, fundShare.sellBuyCalendar);
         this.characteristic.mandatory.maximumNumDecimal.preset = fundShare.maximumNumDecimal;
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemPreset(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);
@@ -321,6 +325,8 @@ export class FundShare {
         );
         this.setListItemValue(this.keyFacts.mandatory.status, fundShare.status);
         this.setFeederValue(fundShare.feeder);
+        this.keyFacts.mandatory.allowSellBuy.control.setValue(fundShare.allowSellBuy);
+        this.setListItemValue(this.keyFacts.mandatory.sellBuyCalendar, fundShare.sellBuyCalendar);
         this.characteristic.mandatory.maximumNumDecimal.control.setValue(fundShare.maximumNumDecimal);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCategory, fundShare.subscriptionCategory);
         this.setListItemValue(this.characteristic.mandatory.subscriptionCurrency, fundShare.subscriptionCurrency);

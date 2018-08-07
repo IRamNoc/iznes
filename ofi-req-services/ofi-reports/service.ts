@@ -56,6 +56,8 @@ import {
     PrecentralisationRequestFundsBody,
 } from './model';
 
+import {LogService} from '@setl/utils';
+
 interface CentralisationReportsData {
     search: string;
 }
@@ -105,6 +107,7 @@ export class OfiReportsService {
 
     /* Constructor. */
     constructor(private memberSocketService: MemberSocketService,
+                private logService: LogService,
                 private ngRedux: NgRedux<any>) {
     }
 

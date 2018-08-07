@@ -38,7 +38,7 @@ import { OfiSubPortfolioService } from "./ofi-sub-portfolio/service";
         OfiAmDashboardService,
         OfiKycService,
         OfiReportsService,
-        OfiSubPortfolioService
+        OfiSubPortfolioService,
     ],
 })
 

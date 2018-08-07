@@ -79,6 +79,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     total: number;
     itemPerPage = 10;
     dataGridParams = {
+        fundName: null,
         shareName: null,
         isin: null,
         status: null,
@@ -202,6 +203,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         orderID: [
             ''
         ],
+        fundname: [
+            '',
+        ],
         sharename: [
             '',
         ],
@@ -226,6 +230,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     };
     private defaultEmptyForm = {
         orderID: '',
+        fundname: '',
         sharename: '',
         isin: '',
         status: [this.orderStatuses[0]],
@@ -450,6 +455,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     clearForm() {
         this.searchForm.patchValue({
             orderID: '',
+            fundname: '',
             sharename: '',
             isin: '',
             status: [this.orderStatuses[0]],
@@ -525,9 +531,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             let orderID = _.get(this, ['filtersFromRedux', 'orderID']);
 
             if (typeof this.filtersFromRedux.isin !== 'undefined' || typeof this.filtersFromRedux.sharename !== 'undefined' ||
+                typeof this.filtersFromRedux.fundname !== 'undefined' ||
                 typeof this.filtersFromRedux.status !== 'undefined' || typeof this.filtersFromRedux.orderType !== 'undefined' ||
                 typeof this.filtersFromRedux.dateType !== 'undefined' || typeof this.filtersFromRedux.fromDate !== 'undefined' ||
-                typeof  this.filtersFromRedux.toDate !== 'undefined' || orderID) {
+                typeof this.filtersFromRedux.toDate !== 'undefined' || orderID) {
 
                 if (typeof this.filtersFromRedux.isin !== 'undefined' && this.filtersFromRedux.isin !== '') {
                     this.tabsControl[0].searchForm.get('isin').patchValue(this.filtersFromRedux.isin); // , {emitEvent: false}
@@ -535,6 +542,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
                 if (typeof this.filtersFromRedux.sharename !== 'undefined' && this.filtersFromRedux.sharename !== '') {
                     this.tabsControl[0].searchForm.get('sharename').patchValue(this.filtersFromRedux.sharename); // emitEvent = true cause infinite loop (make a valueChange)
+                }
+                if (typeof this.filtersFromRedux.fundname !== 'undefined' && this.filtersFromRedux.fundname !== '') {
+                    this.tabsControl[0].searchForm.get('fundname').patchValue(this.filtersFromRedux.fundname); // emitEvent = true cause infinite loop (make a valueChange)
                 }
                 if (typeof this.filtersFromRedux.status !== 'undefined' && this.filtersFromRedux.status !== '') {
                     const statusId = _.get(this.filtersFromRedux, ['status', '0', 'id']);
@@ -864,6 +874,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const tmpDataGridParams = {
             orderID: this.dataGridParams.orderID,
+            fundName: this.dataGridParams.fundName,
             shareName: this.dataGridParams.shareName,
             isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
@@ -882,6 +893,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         let orderID = _.get(searchValues, 'orderID');
         this.dataGridParams.orderID = orderID ? orderID : null;
 
+        this.dataGridParams.fundName = _.get(searchValues, 'fundname', null);
         this.dataGridParams.shareName = _.get(searchValues, 'sharename', null);
         this.dataGridParams.isin = _.get(searchValues, 'isin', null);
         this.dataGridParams.status = _.get(searchValues, ['status', '0', 'id'], null);
@@ -916,6 +928,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const tmpDataGridParams = {
             orderID: this.dataGridParams.orderID,
+            fundName: this.dataGridParams.fundName,
             shareName: this.dataGridParams.shareName,
             isin: this.dataGridParams.isin,
             status: this.dataGridParams.status,
@@ -942,6 +955,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 break;
             case 'isin':
                 this.dataGridParams.sortByField = 'isin';
+                break;
+            case 'fundName':
+                this.dataGridParams.sortByField = 'fundName';
                 break;
             case 'shareName':
                 this.dataGridParams.sortByField = 'shareName';

@@ -336,3 +336,8 @@ export enum FatcaStatusV2Enum {
     SponsoredDirectReportingNFFE,
     NotAFinancialAccount
 }
+
+export enum SellBuyCalendar {
+    SubscriptionCalendar,
+    RedemptionCalendar,
+}
