@@ -239,7 +239,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         }
                     ];
                 } else {
-                    console.log('empty');
                     // this.fundsDetails = [];
                     this.fundsTotalNetAmount = 0;
                     this.fundsTotalSubscriptionAmount = 0;

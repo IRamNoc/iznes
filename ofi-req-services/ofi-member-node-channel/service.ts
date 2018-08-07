@@ -16,6 +16,7 @@ import {
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
+import {clearRequestedPrecentraFundsList, clearRequestedPrecentraSharesList} from '../../ofi-store/ofi-reports/precentralisation-reports/actions';
 import {setInvestorInvitationListReset} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { setStatusAuditTrailReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
 
@@ -96,7 +97,8 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
                 this.ngRedux.dispatch(ofiClearRequestedAmHolders());
                 this.ngRedux.dispatch(ofiClearHolderDetailRequested());
-                
+                this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
+                this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
                 break;
 
             case 'updatekyc':
