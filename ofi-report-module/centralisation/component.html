@@ -148,7 +148,7 @@
                         <clr-dg-cell>{{data.redemptionAmount | moneyValue:5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmount | moneyValue:5}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
+                        <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.fundName)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
