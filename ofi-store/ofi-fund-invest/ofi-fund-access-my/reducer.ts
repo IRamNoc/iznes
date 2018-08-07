@@ -88,6 +88,8 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             hasCoupon: item.get('hasCoupon', 0),
             couponType: item.get('couponType', 0),
             freqOfDistributionDeclaration: item.get('freqOfDistributionDeclaration', 0),
+            allowSellBuy: item.get('allowSellBuy', 0),
+            sellBuyCalendar: item.get('sellBuyCalendar', 0),
             maximumNumDecimal: item.get('maximumNumDecimal', 0),
             subscriptionCategory: item.get('subscriptionCategory', 0),
             subscriptionCurrency: item.get('subscriptionCurrency', 0),

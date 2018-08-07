@@ -103,8 +103,8 @@
                                     <i class="fa fa-sign-in"></i> {{'Subscribe' | translate}}</button>
                                 <button class="btn btn-danger btn-sm" (click)="handleRedeem(fund.id)" [attr.disabled]="disableRedeem((fund.isin + '|' + fund.shareName))">
                                     <i class="fa fa-sign-out"></i> {{'Redeem' | translate}}</button>
-                                <!--<button class="btn text-yellow" (click)="handleBuySell(i)">-->
-                                <!--<i class="fa fa-sign-out"></i> <span mltag="">Sell / Buy</span></button>-->
+                                <button class="btn btn-orange btn-sm" (click)="handleBuySell(i)" [disabled]="allowSellBuy(fund)">
+                                    <i class="fa fa-circle-o-notch"></i> <span mltag=""> {{'Sell/Buy' | translate}}</span></button>
                             </div>
                         </clr-dg-cell>
                     </clr-dg-row>
