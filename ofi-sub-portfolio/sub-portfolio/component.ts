@@ -32,8 +32,8 @@ import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-sha
 import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
 import { ToasterService } from 'angular2-toaster';
 import {MultilingualService} from '@setl/multilingual';
-import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
-import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
+import {userToursEnums} from '@setl/core-req-services/usertour/config';
+import {UserTourService} from '@setl/core-req-services/usertour/service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -77,7 +77,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
-                private _ofiUserTourService: OfiUserTourService,
+                private _userTourService: UserTourService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
         this.userTourEnums = userToursEnums;
@@ -173,7 +173,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     restartUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(()=>{
-                const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
+                const asyncTaskPipe = this._userTourService.saveUserTour({
                     type: this.userTourEnums.names.utmysubportfolios,
                     value: 0,
                     walletid: this.connectedWalletId,
@@ -186,7 +186,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                     descriptor: asyncTaskPipe,
                     args: {},
                     successCallback: (response) => {
-                        OfiUserTourService.setRequestedUserTours(false, this.ngRedux);
+                        UserTourService.setRequestedUserTours(false, this.ngRedux);
                     },
                     failureCallback: (response) => {
                         console.log('Error save userTour failed: ', response);
