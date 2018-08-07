@@ -17,11 +17,11 @@ import * as _ from 'lodash';
 import { MultilingualService } from '@setl/multilingual';
 import { NgRedux, select } from '@angular-redux/store';
 import { clearAppliedHighlight, SET_HIGHLIGHT_LIST, setAppliedHighlight } from '@setl/core-store/highlight/actions';
-// import { OFI_SET_USERTOUR_INPROGRESS } from '@ofi/ofi-main/ofi-store/ofi-usertour/inprogress/actions';
-// import { OFI_SET_USER_TOURS } from '@ofi/ofi-main/ofi-store/ofi-usertour/usertour/actions';
+import { SET_USERTOUR_INPROGRESS } from '@setl/core-store/usertour/inprogress/actions';
+import { SET_USER_TOURS } from '@setl/core-store/usertour/usertour/actions';
 import { Router } from '@angular/router';
 
-// import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
+import {UserTourService} from '@setl/core-req-services/usertour/service';
 
 @Directive({
     selector: '[tooltip]',
@@ -63,12 +63,12 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     userTourInProgress = false;
     userTourName = '';
 
-    // OfiUserTourService: any;
+    UserTourService: any;
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-    @select(['ofi', 'ofiUserTour', 'inProgress', 'inProgress']) inProgressOb;
-    @select(['ofi', 'ofiUserTour', 'userTours', 'userToursRequested']) userToursRequestedOb;
-    @select(['ofi', 'ofiUserTour', 'userTours', 'userTours']) userToursOb;
+    @select(['usertour', 'inProgress', 'inProgress']) inProgressOb;
+    @select(['usertour', 'userTours', 'userToursRequested']) userToursRequestedOb;
+    @select(['usertour', 'userTours', 'userTours']) userToursOb;
 
     constructor(
         private _el: ElementRef,
@@ -80,7 +80,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         private _changeDetectorRef: ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
-        // this.OfiUserTourService = this.injector.get(OfiUserTourService);
+        this.UserTourService = this.injector.get(UserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
     }
@@ -194,7 +194,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     walletid: this.connectedWalletId,
                     type: this.userTourName,
                 };
-                // OfiUserTourService.defaultRequestUserTours(this.OfiUserTourService, this._ngRedux, payload);
+                UserTourService.defaultRequestUserTours(this.UserTourService, this._ngRedux, payload);
             }
         }
     }
@@ -231,8 +231,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     saveUserTour() {
-        /*if (this.userTourName !== '') {
-            const asyncTaskPipe = this.OfiUserTourService.saveUserTour({
+        if (this.userTourName !== '') {
+            const asyncTaskPipe = this.UserTourService.saveUserTour({
                 type: this.userTourName,
                 value: 1,
                 walletid: this.connectedWalletId,
@@ -245,17 +245,17 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 descriptor: asyncTaskPipe,
                 args: {},
                 successCallback: (response) => {
-                    OfiUserTourService.setRequestedUserTours(false, this._ngRedux);
+                    UserTourService.setRequestedUserTours(false, this._ngRedux);
                 },
                 failureCallback: (response) => {
                     console.log('UserTour save error: ', response);
                 },
             });
-        }*/
+        }
     }
 
     initTour() {
-        // this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: true});
+        this._ngRedux.dispatch({type: SET_USERTOUR_INPROGRESS, data: true});
 
         // add black bglayer
         this.divBackgroundTour = document.createElement('div');
@@ -882,8 +882,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.isAutoNext = false;
                 this.hideTooltip();
                 if (this.divBackgroundTour) this.divBackgroundTour.remove();
-                // this._ngRedux.dispatch({type: OFI_SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
-                // this._ngRedux.dispatch({type: OFI_SET_USER_TOURS, data: null}); // reset usertour datas
+                this._ngRedux.dispatch({type: SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
+                this._ngRedux.dispatch({type: SET_USER_TOURS, data: null}); // reset usertour datas
                 // this.isTour = false;
                 // this.userTourName = '';
                 // this.clonedConfig = [];
