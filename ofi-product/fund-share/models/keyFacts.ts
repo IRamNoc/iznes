@@ -172,6 +172,30 @@ export class ShareKeyFactsMandatory extends DynamicFormsValidator {
         },
         mltag: 'txt_fundshare_freqdistdeclare',
     };
+
+    // allow for sell/buy
+    allowSellBuy: FormItem = {
+        type: FormItemType.boolean,
+        label: 'Sell/Buy Order Permitted',
+        required: true,
+        style: [FormItemStyle.BreakOnBefore],
+        mltag: 'txt_sell_buy_order_permitted',
+    };
+
+    // sell/buy
+    sellBuyCalendar: FormItem = {
+        type: FormItemType.list,
+        label: 'Sell/Buy Calendar',
+        required: true,
+        listItems: [
+            { id: E.SellBuyCalendar.SubscriptionCalendar, text: 'Subscription Calendar' },
+            { id: E.SellBuyCalendar.RedemptionCalendar, text: 'Redemption Calendar' },
+        ],
+        hidden: () => {
+            return this.allowSellBuy.value() === false || this.allowSellBuy.value() === 0;
+        },
+        mltag: 'txt_sell_buy_calendar',
+    };
 }
 
 export class ShareKeyFactsOptional {

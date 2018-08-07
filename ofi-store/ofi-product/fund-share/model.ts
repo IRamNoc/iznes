@@ -19,6 +19,8 @@ export interface OfiFundShare {
     hasCoupon: number;
     couponType: number;
     freqOfDistributionDeclaration: number;
+    allowSellBuy: boolean;
+    sellBuyCalendar: number;
     maximumNumDecimal: number;
     subscriptionCategory: number;
     subscriptionCurrency: number;
