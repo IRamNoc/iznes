@@ -23,5 +23,11 @@ export const nonMenuLink = {
         '\/reports\/holders-list\/funds\/[^\\/]*',
         '\/reports\/holders-list\/shares\/[^\\/]*',
         '\/invite-investors',
+        '\/reports\/precentralisation\/funds',
+        '\/reports\/precentralisation\/shares',
+        '\/reports\/centralisation\/funds',
+        '\/reports\/centralisation\/shares',
+        '\/product-module\/product\/umbrella-fund\/\d+\/audit',
+        '\/product-module\/product\/fund\/\d+\/audit',
     ],
 };
