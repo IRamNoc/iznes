@@ -1,12 +1,12 @@
-import {Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-import {FormBuilder, FormGroup, FormControl, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
+import { Component, Inject, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
 
-import {Subject, Subscription} from 'rxjs';
-import {MultilingualService} from '@setl/multilingual';
+import { Subject, Subscription } from 'rxjs';
+import { MultilingualService } from '@setl/multilingual';
 
-import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
-import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
+/* import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
+ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';*/
 
 @Component({
     selector: 'app-ui-layouts-tooltips',
@@ -15,19 +15,29 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
         .slider {
             left: 0;
         }
+
         .slider.round {
             min-height: 24px;
             margin-top: -6px;
         }
+
         .padding {
             padding: 0 20px 20px;
         }
+
         .toggle-info-panes {
             display: block;
             padding-bottom: 10px;
             text-decoration: none;
 
-            &:before, &:after { text-decoration: none; }
+        &
+        :before,
+
+        &
+        :after {
+            text-decoration: none;
+        }
+
         }
         .infoBulle {
             display: block;
@@ -39,46 +49,53 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-family: sans-serif;
             text-align: center;
         }
+
         .infoBulle:after {
             content: '?';
         }
+
         .randomTooltips {
             background-color: rgba(255, 200, 0, .4);
         }
+
         .ib-small {
             width: 50px;
             height: 50px;
             line-height: 50px;
         }
+
         .ib-medium {
             width: 80px;
             height: 80px;
             line-height: 80px;
             font-size: 3em;
         }
+
         .ib-large {
             width: 120px;
             height: 120px;
             line-height: 120px;
             font-size: 4em;
         }
-        .explain{
+
+        .explain {
             display: inline-block;
-            background: rgba(200,200,0,0.8);
+            background: rgba(200, 200, 0, 0.8);
             padding: 0px 8px 2px 8px;
             margin: -10px 0;
             font-weight: 900;
             color: #286F8A;
             border-radius: 4px;
         }
-        .topLeft{
+
+        .topLeft {
             position: absolute;
             top: 0;
             left: 0;
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -86,14 +103,15 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .topRight{
+
+        .topRight {
             position: absolute;
             top: 0;
             right: 0;
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -101,7 +119,8 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .middleLeft{
+
+        .middleLeft {
             position: absolute;
             top: 50%;
             margin-top: -50px;
@@ -109,7 +128,7 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -117,7 +136,8 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .middleTop{
+
+        .middleTop {
             position: absolute;
             top: 0;
             left: 50%;
@@ -125,7 +145,7 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -133,7 +153,8 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .middleBottom{
+
+        .middleBottom {
             position: absolute;
             bottom: 0;
             left: 50%;
@@ -141,7 +162,7 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -149,7 +170,8 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .middleRight{
+
+        .middleRight {
             position: absolute;
             top: 50%;
             margin-top: -50px;
@@ -157,7 +179,7 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -165,14 +187,15 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .bottomLeft{
+
+        .bottomLeft {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -180,14 +203,15 @@ import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/se
             font-weight: bold;
             font-family: sans-serif;
         }
-        .bottomRight{
+
+        .bottomRight {
             position: absolute;
             bottom: 0;
             right: 0;
             width: 100px;
             height: 100px;
             line-height: 100px;
-            background-color: rgba(0, 0, 0 , 0.6);
+            background-color: rgba(0, 0, 0, 0.6);
             border-radius: 100px;
             text-align: center;
             color: white;
@@ -230,9 +254,9 @@ export class UiTooltipsComponent implements OnInit {
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         public _translate: MultilingualService,
-        private _ofiUserTourService: OfiUserTourService,
+        // private _ofiUserTourService: OfiUserTourService,
     ) {
-        this.userTourEnums = userToursEnums;
+        // this.userTourEnums = userToursEnums;
 
         this.language$.takeUntil(this.unsubscribe).subscribe((language) => this.lang = language);
 
@@ -274,9 +298,9 @@ export class UiTooltipsComponent implements OnInit {
             d = document,
             e = d.documentElement,
             g = d.getElementsByTagName('body')[0],
-            x = w.innerWidth  || e.clientWidth  || g.clientWidth,
+            x = w.innerWidth || e.clientWidth || g.clientWidth,
             y = w.innerHeight || e.clientHeight || g.clientHeight;
-        return {width: x, height: y};
+        return { width: x, height: y };
     }
 
     generateRandomTooltips(opened?): void {
@@ -311,8 +335,8 @@ export class UiTooltipsComponent implements OnInit {
 
     resetUserTour() {
         if (this.connectedWalletId > 0) {
-            setTimeout(()=>{
-                const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
+            setTimeout(() => {
+                /*const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
                     type: this.userTourEnums.names.utdemousertour,
                     value: 0,
                     walletid: this.connectedWalletId,
@@ -320,8 +344,10 @@ export class UiTooltipsComponent implements OnInit {
 
                 this.ngRedux.dispatch({
                     type: 'RUN_ASYNC_TASK',
-                    successTypes: (data) => {},
-                    failureTypes: (data) => {},
+                    successTypes: (data) => {
+                    },
+                    failureTypes: (data) => {
+                    },
                     descriptor: asyncTaskPipe,
                     args: {},
                     successCallback: (response) => {
@@ -330,7 +356,7 @@ export class UiTooltipsComponent implements OnInit {
                     failureCallback: (response) => {
                         console.log('UserTour save error: ', response);
                     },
-                });
+                });*/
             }, 200);
         }
     }
@@ -340,7 +366,7 @@ export class UiTooltipsComponent implements OnInit {
         setTimeout(() => {
             this.tourObject.push(
                 {
-                    usertourName: this.userTourEnums.names.utdemousertour,
+                    // usertourName: this.userTourEnums.names.utdemousertour,
                     title: this._translate.translate('Auto-scroll to element'),
                     text: this._translate.translate('Duration forced to 3s (default 5s).'),
                     target: 'tooltip-label-directives',
