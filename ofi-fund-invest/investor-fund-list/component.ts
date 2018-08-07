@@ -21,6 +21,7 @@ import { OrderType } from '../../ofi-orders/order.model';
 
 import { HoldingByAsset } from '@setl/core-store/wallet/my-wallet-holding';
 import { ReportingService } from '@setl/core-balances/reporting.service';
+import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 
 
 @Component({
@@ -430,5 +431,16 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     disableRedeem(assetName): string {
         const hasShare = this.hasShareBalanceInAnyAddress(assetName);
         return hasShare ? null : '';
+    }
+
+
+    /**
+     * Check if a is allow to place sell buy order.
+     *
+     * @param {{allowSellBuy: boolean}} share
+     * @return {boolean}
+     */
+    allowSellBuy(share: {allowSellBuy: number}): boolean {
+        return (share.allowSellBuy === 1);
     }
 }

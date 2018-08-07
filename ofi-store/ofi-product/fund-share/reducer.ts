@@ -77,6 +77,8 @@ function handleSetOfiFundShare(state: OfiFundShareState, action: Action): OfiFun
                 status: item.get('status', ''),
                 master: item.get('master', ''),
                 feeder: item.get('feeder', ''),
+                allowSellBuy: item.get('allowSellBuy', ''),
+                sellBuyCalendar: item.get('sellBuyCalendar', ''),
                 maximumNumDecimal: item.get('maximumNumDecimal', ''),
                 subscriptionCategory: item.get('subscriptionCategory', ''),
                 subscriptionCurrency: item.get('subscriptionCurrency', ''),

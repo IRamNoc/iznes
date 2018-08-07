@@ -33,6 +33,8 @@ export interface IznesShareDetail {
     status: number;
     master: boolean;
     feeder: number;
+    allowSellBuy: number;
+    sellBuyCalendar: number;
     maximumNumDecimal: string;
     subscriptionCategory: string;
     subscriptionCurrency: string;
