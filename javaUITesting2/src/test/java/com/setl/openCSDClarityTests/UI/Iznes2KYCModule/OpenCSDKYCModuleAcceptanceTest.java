@@ -144,19 +144,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         enterAllUserDetails(newUserName, password);
         logout();
         loginAndVerifySuccessAdmin(newUserName, password);
-
-//        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("JordanCompany");
-//        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
-//        try {
-//            driver.findElement(By.id("btnKycSubmit")).click();
-//        }catch (Exception e){
-//            fail("FAILED : " +e.getMessage());
-//        }
-//        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-//        WebElement KYCPopups = wait.until(elementToBeClickable(By.id("addInfo-ok-button")));
-//        WebElement KYCPopup = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div/app-my-informations/clr-modal/div/div[1]/div/div[1]/div/div[1]/h3"));
-//        assertTrue(KYCPopup.getText().equals("MY INFORMATION"));
-//        KYCPopups.click();
     }
 
     @Test
@@ -265,7 +252,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String userNo = "012";
+        String userNo = "001";
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
@@ -311,8 +298,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
             assertTrue(selectionStepKYC.equals("fs-active"));
         }catch (Exception e){
             fail(e.getMessage());}
-
-        //js.executeScript("document.getElementById('registered_1').click();");
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[2]")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[2]/kyc-step-introduction")));

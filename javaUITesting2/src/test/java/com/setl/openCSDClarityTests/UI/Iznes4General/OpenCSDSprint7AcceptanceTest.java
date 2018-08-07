@@ -44,7 +44,7 @@ public class OpenCSDSprint7AcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout (65000);
+    public Timeout globalTimeout = new Timeout (75000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -204,8 +204,8 @@ public class OpenCSDSprint7AcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
         navigateToDropdown("menu-am-report-section");
-        navigateToPageByID("menu-report-centralization-select");
-        verifyCorrectPage("Centralisation History");
+        navigateToPageByID("menu-report-centralisation-select");
+        verifyCorrectPage("Centralisation");
 
     }
 
@@ -314,9 +314,6 @@ public class OpenCSDSprint7AcceptanceTest {
         wait.until(invisibilityOfElementLocated(By.id("product-dashboard-fundShareID-1-shareName")));
         wait.until(elementToBeClickable(By.id("product-dashboard-fundShareID-0-shareName")));
         driver.findElement(By.id("product-dashboard-fundShareID-0-shareName")).click();
-        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-am-product-fund-share/clr-tabs/clr-tab/clr-tab-content/div[1]/div/button")).click();
-        String HeaderShareName = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-ofi-product-fund-share-audit/div/h1")).getText();
-        assertTrue(HeaderShareName.equals("Share Audit Trail - " + uShareDetails[0]));
     }
 
     @Test

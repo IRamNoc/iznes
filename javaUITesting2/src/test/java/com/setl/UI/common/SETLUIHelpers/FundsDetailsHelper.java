@@ -173,10 +173,14 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         }
     }
 
-    public static void selectTopDropdown(String dropdownID) {
-        driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
+    public static void selectTopDropdown(String dropdownID) throws InterruptedException {
+        try {
+            driver.findElement(By.xpath("//*[@id='" + dropdownID + "']/div")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+        Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\'" + dropdownID + "\']/div/div[3]/ul/li/div/a")).click();
-
     }
 
     public static void searchAndSelectTopDropdown(String dropdownID, String search) throws InterruptedException {
