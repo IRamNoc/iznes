@@ -20,3 +20,4 @@ export {T2sService} from './t2s/t2s.service';
 export {CoreWorkflowEngineService} from './workflow-engine/service';
 export {PersistRequestService} from './persist/persist.service';
 export {NodeAlertsService} from './node-alerts/node-alerts.service';
+export {UserTourService} from './usertour/service';
