@@ -239,7 +239,6 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
                         }
                     ];
                 } else {
-                    console.log('empty');
                     // this.fundsDetails = [];
                     this.fundsTotalNetAmount = 0;
                     this.fundsTotalSubscriptionAmount = 0;
@@ -374,6 +373,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             return result;
         }, []);
 
+        if (this.fundsList.length > 0 && this.fundsPayload) {
+            // console.log('fundsPayload', this.fundsPayload);
+            this.ofiReportsService.requestPrecentralisationReportsFundsDetailsList(this.fundsPayload);
+        }
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -395,6 +399,11 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
             return result;
         }, []);
+
+        if (this.sharesList.length > 0 && this.sharesPayload) {
+            // console.log('sharesPayload', this.sharesPayload);
+            this.ofiReportsService.requestPrecentralisationReportsSharesDetailsList(this.sharesPayload);
+        }
 
         this.changeDetectorRef.markForCheck();
     }
@@ -561,6 +570,7 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
 
     onClickViewCorrespondingOrders(id) {
         if (this.isShareLevel) {
+            // console.log(this.sharesDetails);
             const obj = this.sharesDetails.shares.find(o => o.shareId === id);
             if (obj !== undefined) {
                 const orderFilters = {
@@ -580,7 +590,24 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
             }
         }
         if (this.isFundLevel) {
-            alert('Coming soon...');
+            // console.log(this.fundsDetails);
+            const obj = this.fundsDetails.funds.find(o => o.fundName === id);
+            if (obj !== undefined) {
+                const orderFilters = {
+                    filters: {
+                        isin: obj.isin,
+                        fundname: obj.fundName,
+                        status: {id : -3},
+                        type: {id : 0},
+                        dateType: {id : 'navDate'},
+                        fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
+                        toDate: moment(obj.navDate).format('YYYY-MM-DD')
+                    }
+                };
+
+                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+                this.router.navigateByUrl('manage-orders/list');
+            }
         }
     }
 
