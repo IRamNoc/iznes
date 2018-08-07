@@ -56,7 +56,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddModal: boolean = false;
 
-    private showUsertour = false;
+    showUsertour = false;
     private tourObject = [];
     userTourEnums: any;
 
@@ -74,7 +74,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private _ofiSubPortfolioService: OfiSubPortfolioService,
                 private _confirmationService: ConfirmationService,
-                private _translate: MultilingualService,
+                public _translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
                 private _userTourService: UserTourService,
@@ -181,8 +181,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
                 this.ngRedux.dispatch({
                     type: 'RUN_ASYNC_TASK',
-                    successTypes: (data) => {},
-                    failureTypes: (data) => {},
+                    successTypes: (data) => {
+                    },
+                    failureTypes: (data) => {
+                    },
                     descriptor: asyncTaskPipe,
                     args: {},
                     successCallback: (response) => {
