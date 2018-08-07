@@ -1,4 +1,5 @@
-import {Inject, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
+import {select} from '@angular-redux/store';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
 import {MultilingualService} from '@setl/multilingual';
 import {NgRedux} from '@angular-redux/store';
@@ -8,7 +9,6 @@ import {CustomValidators} from '@setl/utils/helper';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {MyKycSetRequestedKycs} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {RequestsService} from '../requests.service';
-import { APP_CONFIG, AppConfig } from '@setl/utils';
 
 import {
     legalFormList,
@@ -37,7 +37,7 @@ import {
 
 @Injectable()
 export class NewRequestService {
-    appConfig: AppConfig;
+    isProduction = false;
 
     legalFormList;
     sectorActivityList;
@@ -63,15 +63,21 @@ export class NewRequestService {
     riskAcceptanceList;
     saveContext = '';
 
+    /* Private Properties. */
+    private subscriptions: Array<any> = [];
+
+    @select(['user', 'siteSettings', 'production']) productionOb;
+
     constructor(
         private multilingualService: MultilingualService,
         private formBuilder: FormBuilder,
         private requestsService: RequestsService,
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
-        @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
-        this.appConfig = appConfig;
+        this.subscriptions.push(this.productionOb.subscribe((production) => {
+            this.isProduction = production;
+        }));
 
         this.legalFormList = legalFormList;
         this.sectorActivityList = sectorActivityList;
@@ -372,22 +378,22 @@ export class NewRequestService {
         return fb.group({
             common: fb.group({
                 kyclistshareholdersdoc: this.createDocumentFormGroup('kyclistshareholdersdoc', true),
-                kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc', this.appConfig.production),
-                kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc', this.appConfig.production),
-                kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc', this.appConfig.production),
-                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', this.appConfig.production),
+                kyclistdirectorsdoc: this.createDocumentFormGroup('kyclistdirectorsdoc', this.isProduction),
+                kycbeneficialownersdoc: this.createDocumentFormGroup('kycbeneficialownersdoc', this.isProduction),
+                kyclistauthoriseddoc: this.createDocumentFormGroup('kyclistauthoriseddoc', this.isProduction),
+                kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
             }),
             listedCompany: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
                 kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
-                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', this.appConfig.production),
+                kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', this.isProduction),
             }),
             other: fb.group({
-                kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', this.appConfig.production),
-                kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', this.appConfig.production),
-                kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', this.appConfig.production),
-                kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', this.appConfig.production),
+                kycstatuscertifieddoc: this.createDocumentFormGroup('kycstatuscertifieddoc', this.isProduction),
+                kyckbisdoc: this.createDocumentFormGroup('kyckbisdoc', this.isProduction),
+                kycannualreportdoc: this.createDocumentFormGroup('kycannualreportdoc', this.isProduction),
+                kycidorpassportdoc: this.createDocumentFormGroup('kycidorpassportdoc', this.isProduction),
             })
 
         });
