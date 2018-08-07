@@ -19,7 +19,7 @@ import * as PermissionsModel from './model';
 })
 export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
-    @Input() doUpdateOb: Subject<void> = new Subject();
+    @Input() doUpdateOb: Subject<number>;
     @Input() entityId: number;
     @Output() entitiesFn: EventEmitter<PermissionsModel.AccountAdminPermission[]> = new EventEmitter();
     @Input() isUser: boolean = false;
@@ -68,7 +68,9 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             });
         }
 
-        const doUpdateSub = this.doUpdateOb.subscribe(() => {
+        const doUpdateSub = this.doUpdateOb.subscribe((entityId: number) => {
+            if (entityId !== undefined) this.entityId = entityId;
+
             this.doUpdatePermissions();
         });
 
@@ -96,19 +98,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     }
 
     private processPermissions(permissions: PermissionsModel.AccountAdminPermission[]): void {
-        if (!this.leavePermissionsOpen && permissions.length > 0) {
-            // first time receiving permissions
-            _.forEach(permissions, (permission: PermissionsModel.AccountAdminPermission) => {
-                permission.hidden = true;
-            });
-
-            this.leavePermissionsOpen = true;
-        }
-
-        // we do the following loop to add a getter and setter to state, so that we can update
-        // the touched property on a permission. This is so that when an update is triggered,
-        // we only update touched permissions.
         _.forEach(permissions, (permission: PermissionsModel.AccountAdminPermission) => {
+            permission.hidden = true;
             permission.touched = false;
         });
 

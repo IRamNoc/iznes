@@ -13,7 +13,6 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 @Component({
     selector: 'app-account-admin-crud-base',
     template: 'component.html',
-    styles: ['.row.actions .btn { margin-right: 0; }'],
 })
 export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
@@ -114,6 +113,8 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         }
 
         this.toaster.pop('success', message);
+
+        this.router.navigateByUrl(this.getBackUrl());
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {

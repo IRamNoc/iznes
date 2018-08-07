@@ -35,19 +35,30 @@ export class AccountAdminBaseService {
         ));
     }
 
+    /**
+     * Get a CSV export
+     *
+     * @param service FileDownloader
+     * @param request
+     * @param method
+     * @param token
+     * @param userId needed by the file downloader
+     * @param userName needed by the file downloader
+     * @param type needed by the file downloader
+     */
     getCSVExport(service: FileDownloader,
                  request: any,
                  method: string,
                  token: string,
                  userId: number,
-                 username: string,
+                 userName: string,
                  type: string): void {
         service.downLoaderFile({
             ...request,
             method,
             token,
             userId,
-            userName: username,
+            userName,
             type,
         });
     }

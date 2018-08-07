@@ -14,10 +14,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
 
     noun: string;
 
-    private token: string;
-    private userId: number;
-    private username: string;
-    protected csvRequest;
+    protected token: string; // this is only needed for CSV exports
+    protected userId: number; // this is only needed for CSV exports
+    protected username: string; // this is only needed for CSV exports
+    protected csvRequest; // this is only needed for CSV exports
     protected subscriptions: Subscription[] = [];
 
     @select(['user', 'authentication', 'token']) tokenOb;
@@ -32,8 +32,8 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
      */
     constructor(private router: Router,
                 protected redux: NgRedux<any>,
-                private fileDownloader: FileDownloader,
-                private baseService: AccountAdminBaseService) {}
+                protected fileDownloader: FileDownloader,
+                protected baseService: AccountAdminBaseService) {}
 
     ngOnInit() {
         this.initSubscriptions();
@@ -57,16 +57,8 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/account-admin/${this.noun.toLowerCase()}s/${entityId}`);
     }
 
-    exportEntitiesAsCSV(): void {
-        this.baseService.getCSVExport(
-            this.fileDownloader,
-            this.csvRequest,
-            `export${this.noun}sCSV`,
-            this.token,
-            this.userId,
-            this.username,
-            this.noun,
-        );
+    protected exportEntitiesAsCSV(): void {
+        console.error('method not implemented');
     }
 
     ngOnDestroy() {

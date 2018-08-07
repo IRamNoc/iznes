@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import { Subject, Subscription } from 'rxjs';
@@ -22,11 +22,13 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
     @Input() entityId: number;
     @Input() noun: string;
-    @Input() doUpdateOb: Subject<void>;
+    @Input() doUpdateOb: Subject<number>;
+    @Input() doUpdate: boolean = true;
+    @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
 
     datagridConfig: DataGridConfig;
 
-    private entitiesArray: Type[];
+    protected entitiesArray: Type[];
     nameSearch: string = '';
     showOnlyActivated: boolean = false;
 
@@ -48,9 +50,6 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
             return entity.isActivated === true;
         });
     }
-    set entities(entities: Type[]) {
-        this.entitiesArray = entities;
-    }
 
     ngOnInit() {
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
@@ -58,7 +57,9 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
         }));
 
         if (this.doUpdateOb) {
-            this.subscriptions.push(this.doUpdateOb.subscribe(() => {
+            this.subscriptions.push(this.doUpdateOb.subscribe((entityId: number) => {
+                if (entityId !== undefined) this.entityId = entityId;
+
                 _.forEach(this.entities, (entity: Type) => {
                     this.updateState(entity);
                 });
@@ -123,6 +124,6 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
         }
 
         this.subscriptions = [];
-        this.entities = undefined;
+        this.entitiesArray = undefined;
     }
 }

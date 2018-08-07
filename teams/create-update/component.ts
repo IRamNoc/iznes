@@ -17,6 +17,7 @@ import { AccountAdminErrorResponse, AccountAdminSuccessResponse, AccountAdminNou
 @Component({
     selector: 'app-core-admin-teams-crud',
     templateUrl: 'component.html',
+    styleUrls: ['component.scss'],
 })
 export class UserTeamsCreateUpdateComponent
     extends AccountAdminCreateUpdateBase<Model.AccountAdminTeamForm> implements OnInit, OnDestroy {
@@ -74,8 +75,24 @@ export class UserTeamsCreateUpdateComponent
         }
     }
 
-    protected onDeleteConfirm(): void {
-        if (this.isUpdateMode()) this.deleteTeam();
+    private checkUserForNoPermissions(callback: () => void): void {
+        const assignedPermissions = _.find(this.permissionsSelected, (permission: AccountAdminPermission) => {
+            return permission.state === true || (permission.state as any) === 1;
+        });
+
+        if (!assignedPermissions) {
+            this.confirmations.create(
+                this.translate.translate('Are you sure?'),
+                this.translate.translate(`You have selected no permissions for this team.
+                    Any users, soley assigned to this team, will no longer hold any permissions on the system.`),
+            ).subscribe((answer) => {
+                if (answer.resolved) {
+                    callback();
+                }
+            });
+        } else {
+            callback();
+        }
     }
 
     private createTeam(): void {
@@ -85,8 +102,10 @@ export class UserTeamsCreateUpdateComponent
             this.form.reference.value(),
             this.form.description.value(),
             (data: AccountAdminSuccessResponse) => {
-                this.doUserManagementUpdateOb.next();
-                this.doPermissionsUpdateOb.next();
+                const teamId: number = data[1].Data[0].userTeamID;
+
+                this.doUserManagementUpdateOb.next(teamId);
+                this.doPermissionsUpdateOb.next(teamId);
 
                 this.onSaveSuccess(
                     this.form.name.value(),
@@ -123,24 +142,8 @@ export class UserTeamsCreateUpdateComponent
         );
     }
 
-    private checkUserForNoPermissions(callback: () => void): void {
-        const assignedPermissions = _.find(this.permissionsSelected, (permission: AccountAdminPermission) => {
-            return permission.state === true || (permission.state as any) === 1;
-        });
-
-        if (!assignedPermissions) {
-            this.confirmations.create(
-                this.translate.translate('Are you sure?'),
-                this.translate.translate(`You have selected no permissions for this team.
-                    Any users, soley assigned to this team, will no longer hold any permissions on the system.`),
-            ).subscribe((answer) => {
-                if (answer.resolved) {
-                    callback();
-                }
-            });
-        } else {
-            callback();
-        }
+    protected onDeleteConfirm(): void {
+        if (this.isUpdateMode()) this.deleteTeam();
     }
 
     ngOnDestroy() {

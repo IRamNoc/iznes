@@ -216,9 +216,29 @@ export class UsersCreateUpdateComponent
 
     save(invite: boolean = false): void {
         if (this.isCreateMode()) {
-            this.onSaveCheckInvites(invite);
+            this.checkUserForNoTeams(() => this.onSaveCheckInvites(invite));
         } else if (this.isUpdateMode()) {
-            this.updateUser(invite);
+            this.checkUserForNoTeams(() => this.updateUser(invite));
+        }
+    }
+
+    private checkUserForNoTeams(callback: () => void): void {
+        const assignedTeams = _.find(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
+            return team.isActivated === true || (team.isActivated as any) === 1;
+        });
+
+        if (!assignedTeams) {
+            this.confirmations.create(
+                this.translate.translate('Are you sure?'),
+                this.translate.translate(`You have assigned no teams to this user.
+                    This user, will no longer hold any permissions on the system.`),
+            ).subscribe((answer) => {
+                if (answer.resolved) {
+                    callback();
+                }
+            });
+        } else {
+            callback();
         }
     }
 
@@ -259,6 +279,8 @@ export class UsersCreateUpdateComponent
                 form.userType.value()[0].id,
                 form.reference.value(),
                 (data: AccountAdminSuccessResponse) => {
+                    this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
+
                     this.onSaveSuccess(
                         `${form.firstName.value()} ${form.lastName.value()}`,
                         data[1].Data[0].userID,
@@ -291,6 +313,8 @@ export class UsersCreateUpdateComponent
             this.form.userType.value()[0].id,
             this.form.reference.value(),
             () => {
+                this.doUserManagementUpdateOb.next();
+
                 this.onSaveSuccess(
                     `${this.form.firstName.value()} ${this.form.lastName.value()}`,
                     this.entityId,

@@ -42,8 +42,8 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
             this.accountId = accountId;
 
             this.csvRequest = {
-                userID: null,
                 accountID: this.accountId,
+                textSearch: null,
             };
         }));
 
@@ -62,6 +62,18 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
         if (requested) return;
 
         this.service.readUsers(null, this.accountId, '', () => {}, () => {});
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportUsersCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
     }
 
     ngOnDestroy() {

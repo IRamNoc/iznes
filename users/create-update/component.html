@@ -64,7 +64,8 @@
                     <app-core-admin-users-team-mgmt
                         [entityId]="entityId"
                         [noun]="nouns.Team"
-                        [doUpdateOb]="doUserManagementUpdateOb">
+                        [doUpdateOb]="doUserManagementUpdateOb"
+                        (entitiesFn)="getUserTeams($event)">
                     </app-core-admin-users-team-mgmt>
                 </div>
             </div>
