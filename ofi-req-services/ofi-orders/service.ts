@@ -38,6 +38,7 @@ import {
 } from './model';
 
 interface ManageOrdersData {
+    fundName?: string;
     shareName?: string;
     status?: number;
     orderType?: number;
@@ -198,6 +199,7 @@ export class OfiOrdersService {
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetamorders',
             token: this.memberSocketService.token,
+            fundName: data.fundName,
             shareName: data.shareName,
             status: data.status,
             orderType: data.orderType,
@@ -223,6 +225,7 @@ export class OfiOrdersService {
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetinvestororders',
             token: this.memberSocketService.token,
+            fundName: data.fundName,
             shareName: data.shareName,
             status: data.status,
             orderType: data.orderType,

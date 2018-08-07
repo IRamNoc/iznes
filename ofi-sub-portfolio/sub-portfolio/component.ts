@@ -1,9 +1,9 @@
 // Vendor
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { select, NgRedux } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import { Subscription } from 'rxjs';
-import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 // Internal
@@ -12,8 +12,9 @@ import {
     MemberService,
     WalletnodeTxService,
     WalletNodeRequestService,
-    InitialisationService
+    InitialisationService,
 } from '@setl/core-req-services';
+
 import {
     SET_WALLET_ADDRESSES,
     SET_WALLET_LABEL,
@@ -22,6 +23,7 @@ import {
     setRequestedWalletAddresses,
     clearRequestedWalletAddresses
 } from '@setl/core-store';
+
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService, ConfirmationService } from '@setl/utils';
 import { OfiSubPortfolioService } from '../../ofi-req-services/ofi-sub-portfolio/service';
@@ -29,6 +31,9 @@ import { OfiUmbrellaFundService } from "../../ofi-req-services/ofi-product/umbre
 import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-share/service";
 import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
 import { ToasterService } from 'angular2-toaster';
+import {MultilingualService} from '@setl/multilingual';
+import {userToursEnums} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/config';
+import {OfiUserTourService} from '@ofi/ofi-main/ofi-req-services/ofi-usertour/service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -51,6 +56,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddModal: boolean = false;
 
+    private showUsertour = false;
+    private tourObject = [];
+    userTourEnums: any;
+
     // List of Redux observable.
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
@@ -65,9 +74,13 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _walletNodeRequestService: WalletNodeRequestService,
                 private _ofiSubPortfolioService: OfiSubPortfolioService,
                 private _confirmationService: ConfirmationService,
+                private _translate: MultilingualService,
                 private toaster: ToasterService,
                 private logService: LogService,
+                private _ofiUserTourService: OfiUserTourService,
                 private changeDetectorRef: ChangeDetectorRef) {
+
+        this.userTourEnums = userToursEnums;
 
         /* tab meta */
         this.tabDetail = [{
@@ -85,6 +98,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
             this.connectedWalletId = connected;
         }));
+
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => this.updateAddressList(addressList)));
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
             this.requestAddressList(requested);
@@ -156,7 +170,57 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }
     }
 
+    restartUserTour() {
+        if (this.connectedWalletId > 0) {
+            setTimeout(()=>{
+                const asyncTaskPipe = this._ofiUserTourService.saveUserTour({
+                    type: this.userTourEnums.names.utmysubportfolios,
+                    value: 0,
+                    walletid: this.connectedWalletId,
+                });
+
+                this.ngRedux.dispatch({
+                    type: 'RUN_ASYNC_TASK',
+                    successTypes: (data) => {},
+                    failureTypes: (data) => {},
+                    descriptor: asyncTaskPipe,
+                    args: {},
+                    successCallback: (response) => {
+                        OfiUserTourService.setRequestedUserTours(false, this.ngRedux);
+                    },
+                    failureCallback: (response) => {
+                        console.log('Error save userTour failed: ', response);
+                    },
+                });
+            }, 200);
+        }
+    }
+
+    launchTour() {
+        this.tourObject = [];
+        this.tourObject.push(
+            {
+                usertourName: this.userTourEnums.names.utmysubportfolios,
+                title: this._translate.translate('My Sub-portfolios'),
+                text: this._translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
+                target: 'menu-sub-portfolio',
+            },
+            {
+                title: this._translate.translate('Add a new sub-portfolio'),
+                text: this._translate.translate('You can add a new sub-portfolio by clicking on this button. You will need to provide a name and an IBAN for the sub-portfolio you want to create.'),
+                target: 'btn-add-new-subportfolio',
+            },
+            {
+                title: this._translate.translate('Manage your sub-portfolios'),
+                text: this._translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
+                target: 'subportfolios-col-actions',
+            },
+        );
+        this.showUsertour = true;
+    }
+
     ngOnInit() {
+        this.launchTour();
     }
 
     /**
