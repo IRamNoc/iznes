@@ -19,6 +19,7 @@
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
                     <li><b>size:</b> {{'\'small\'' | translate}} | {{'\'medium\'' | translate}} | {{'\'large\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>autoshow:</b> true | false ({{'optional' | translate}})</li>
+                    <li><b>transform:</b> false ({{'optional - default: true' | translate}})</li>
                 </ol>
                 <br>
                 <h2>{{'Sizes' | translate}}</h2>
@@ -54,7 +55,7 @@
                 <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{text: _translate.translate(\'Your text here\')}&quot;&gt;&lt;/i&gt;'}}</code></pre>
                 <br>
                 <b>{{'Full implementation' | translate}}:</b>
-                <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{title: _translate.translate(\'Your title here\'), text: _translate.translate(\'Your text here\'), size: \'large\', autoshow: false}&quot;&gt;&lt;/i&gt;'}}</code></pre>
+                <pre><code>{{'&lt;i class=&quot;fa fa-question-circle [tooltip]=&quot;{title: _translate.translate(\'Your title here\'), text: _translate.translate(\'Your text here\'), size: \'large\', autoshow: true}&quot;&gt;&lt;/i&gt;'}}</code></pre>
                 <br>
                 <h2>{{'Examples' | translate}}</h2>
                 <hr>
@@ -64,11 +65,11 @@
                         {{'Example' | translate}} 1
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title - autoshow'), size: 'small', autoshow: false}"></div>
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title - autoshow'), size: 'small', autoshow: true}"></div>
                         {{'Example' | translate}} 2
                     </div>
                     <div class="d-inline-block text-center mr-3">
-                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title + some texts.'), size: 'small'}"></div>
+                        <div class="infoBulle ib-small" [tooltip]="{text: _translate.translate('Small - No title + some texts. Not transformable!'), size: 'small', transform: false}"></div>
                         {{'Example' | translate}} 3
                     </div>
                     <div class="d-inline-block text-center mr-3">
@@ -128,7 +129,7 @@
                 <hr>
                 <p>{{'Based on the standard tooltip behavior, the tooltip directives check if the inputs passed in config is a single or a multiple object. A multiple object is detected automatically as a User Tour.' | translate}}</p>
                 <div class="mt-2">
-                    <button type="button" class="btn btn-success" id="tooltip-tour-btn" appHighlight (click)="launchTour()">{{'Launch your tutorial Tour' | translate}}</button>
+                    <button type="button" class="btn btn-success" id="tooltip-tour-btn" appHighlight (click)="resetUserTour()">{{'Launch your tutorial Tour' | translate}}</button>
                     <div *ngIf="showTour">
                         <i [tooltip]="tourObject"></i>
                     </div>
@@ -141,6 +142,7 @@
                 <b>{{'TourObject details' | translate}}:</b>
                 <br>
                 <ol>
+                    <li><b>usertourName:</b> {{'\'your user tour name here (from enums)\'' | translate}} ({{'Only on the first step!' | translate}})</li>
                     <li><b>title:</b> {{'\'your title here\'' | translate}} ({{'optional' | translate}})</li>
                     <li><b>text:</b> {{'\'your text here\'' | translate}}</li>
                     <li><b>target:</b> {{'\'the ID of the targeted element\'' | translate}}</li>
@@ -155,8 +157,9 @@
     {{'setTimeout(() => {'}}
         {{'this.tourObject.push('}}
             {{'{'}}
+                {{'usertourName: this.userTourEnums.names.myUserTourName,'}}
                 {{'title: this._translate.translate(\'Auto-scroll to element\'),'}}
-                {{'text: this._translate.translate(\'Duration forced to 3s (default 5s).\'),'}}
+                {{'text: this._translate.translate(\'Duration forced to 3s (default 8s).\'),'}}
                 {{'target: \'tooltip-label-directives\', // id of the element'}}
                 {{'duration: 3000, // optionnal'}}
             {{'},'}}

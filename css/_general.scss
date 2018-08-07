@@ -914,7 +914,7 @@ dp-date-picker div {
 }
 
 .messages-icon span {
-    z-index: 2000;
+    z-index: 1001;
     background: #e43212;
     position: absolute;
     font-size: 10px;
@@ -1505,6 +1505,12 @@ dp-date-picker div {
     background-color: #286F8A;
 }
 
+.tooltipTimer {
+  width: 0;
+  height: 4px;
+  background-color: yellowgreen;
+}
+
 .tooltips .title {
     box-sizing: border-box;
     display: block;
@@ -1526,7 +1532,7 @@ dp-date-picker div {
 .tooltips .text {
     box-sizing: border-box;
     display: block;
-    padding: 13px 17px;
+    padding: 9px 13px;
     font-size: 100%;
     color: white;
     position: relative;
@@ -1587,6 +1593,17 @@ dp-date-picker div {
 
 .btnTourContainer .btn:last-child {
     margin-right: 0 !important;
+}
+
+.userTourBtn {
+  float: right;
+  color: green;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.userTourBtn:after {
+  clear: both;
 }
 
 /* UI - FORM STEPS */
