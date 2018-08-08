@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
-import {get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt} from 'lodash';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt } from 'lodash';
 
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 
 @Injectable({
@@ -33,22 +33,22 @@ export class KycDetailsService {
 
     toArray(data) {
         return chain(data)
-            .omit([
-                'kycID',
-                'objectivesSameInvestmentCrossAm',
-                'assetManagementCompanyID',
-                'constraintsSameInvestmentCrossAm',
-                'companyBeneficiariesID'
-            ])
-            .pickBy()
-            .toPairs()
-            .map(([controlName, controlValue]) => ({
-                originalId : controlName,
-                id: this.getNameFromControl(controlName),
-                value: this.getValueFromControl(controlName, controlValue)
-            }))
-            .filter()
-            .value()
+        .omit([
+            'kycID',
+            'objectivesSameInvestmentCrossAm',
+            'assetManagementCompanyID',
+            'constraintsSameInvestmentCrossAm',
+            'companyBeneficiariesID'
+        ])
+        .pickBy()
+        .toPairs()
+        .map(([controlName, controlValue]) => ({
+            originalId: controlName,
+            id: this.getNameFromControl(controlName),
+            value: this.getValueFromControl(controlName, controlValue)
+        }))
+        .filter()
+        .value()
             ;
     }
 
@@ -66,8 +66,7 @@ export class KycDetailsService {
     async getHashes(rows) {
         for (let row of rows) {
             if (requestsConfig.fileControls.indexOf(row.id) !== -1) {
-                await this.getFileByID(row.value).then(response =>
-                    {
+                await this.getFileByID(row.value).then(response => {
                         let document = getValue(response, [1, 'Data', 0]);
 
                         row.hash = document.hash;
@@ -91,17 +90,21 @@ export class KycDetailsService {
         let listName = requestsConfig.controlToList[controlName];
         let list = requestsConfig[listName];
 
-        if(requestsConfig.booleanControls.indexOf(controlName) !== -1){
+        if (requestsConfig.booleanControls.indexOf(controlName) !== -1) {
             controlValue = parseInt(controlValue);
 
-            if(controlValue === 0){
+            if (controlValue === 0) {
                 controlValue = 'No';
-            } else{
+            } else {
                 controlValue = 'Yes';
             }
         }
         if (list) {
-            return find(list, ['id', controlValue]).text;
+            try {
+                return find(list, ['id', controlValue]).text;
+            } catch (e) {
+
+            }
         }
 
         return controlValue;

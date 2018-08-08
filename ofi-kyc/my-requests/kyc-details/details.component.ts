@@ -1,11 +1,11 @@
-import {Component, OnDestroy, Input, OnInit, ChangeDetectorRef} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {takeUntil, filter as rxFilter, map, tap} from 'rxjs/operators';
-import {isEmpty} from 'lodash';
+import { Component, OnDestroy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { takeUntil, filter as rxFilter, map, tap } from 'rxjs/operators';
+import { isEmpty } from 'lodash';
 
-import {KycDetailsService} from './details.service';
+import { KycDetailsService } from './details.service';
 
 @Component({
     selector: 'kyc-details',
@@ -49,6 +49,8 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.getBeneficiaries();
     }
 
+    statutoryConstraints
+
     getData(kycID) {
         this.kycDetailsService.getData(kycID);
     }
@@ -86,15 +88,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         };
 
         this.kycGeneral$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                general.data = data;
-                this.changeDetectorRef.markForCheck();
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            general.data = data;
+            this.changeDetectorRef.markForCheck();
+        })
         ;
 
         return general;
@@ -108,15 +110,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         };
 
         this.kycCompany$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                company.data = data;
-                this.changeDetectorRef.markForCheck();
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            company.data = data;
+            this.changeDetectorRef.markForCheck();
+        })
         ;
 
         return company;
@@ -129,15 +131,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         };
 
         this.kycBanking$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                banking.data = data;
-                this.changeDetectorRef.markForCheck();
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            banking.data = data;
+            this.changeDetectorRef.markForCheck();
+        })
         ;
 
         return banking;
@@ -150,15 +152,15 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         };
 
         this.kycClassification$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                classification.data = data;
-                this.changeDetectorRef.markForCheck();
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            classification.data = data;
+            this.changeDetectorRef.markForCheck();
+        })
         ;
 
         return classification;
@@ -166,19 +168,19 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getBeneficiaries() {
         this.kycCompanyBeneficiaries$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map((data : Array<any>) => {
-                    return data.map(value => this.kycDetailsService.toArray(value));
-                }),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(beneficiaries => {
-                let promises = beneficiaries.map(beneficiary => this.kycDetailsService.getHashes(beneficiary));
-                Promise.all(promises).then((beneficiaries) => {
-                    this.beneficiaries = beneficiaries;
-                });
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map((data: Array<any>) => {
+                return data.map(value => this.kycDetailsService.toArray(value));
+            }),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(beneficiaries => {
+            let promises = beneficiaries.map(beneficiary => this.kycDetailsService.getHashes(beneficiary));
+            Promise.all(promises).then((beneficiaries) => {
+                this.beneficiaries = beneficiaries;
+            });
+        })
         ;
     }
 
@@ -189,26 +191,27 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
             open: true,
             children: [
                 this.getRiskNature(),
-                this.getRiskObjective()
+                this.getRiskObjective(),
+                this.getRiskConstraint()
             ]
         };
     }
 
     getRiskNature() {
         let riskNature = {
-            title : 'Risk nature',
-            data : ''
+            title: 'Risk nature',
+            data: ''
         };
 
         this.kycRiskNature$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                riskNature.data = data;
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            riskNature.data = data;
+        })
         ;
 
         return riskNature;
@@ -216,39 +219,84 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         let riskObjectives = {
-            title : 'Risk objectives',
-            data : ''
+            title: 'Risk objectives',
+            data: ''
         };
 
+        let ids = [
+            "performanceProfile",
+            "clientNeeds",
+            "investmentHorizonWanted",
+            "riskProfile",
+            "riskProfileCapital",
+            "riskAcceptanceLevel1",
+            "riskAcceptanceLevel2",
+            "riskAcceptanceLevel3",
+            "riskAcceptanceLevel4"
+        ];
+
         this.kycRiskObjective$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(data => this.kycDetailsService.toArray(data)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                riskObjectives.data = data;
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            riskObjectives.data = data.filter((row) => {
+                return ids.indexOf(row.originalId) > -1;
+            });
+        })
         ;
 
         return riskObjectives;
     }
 
+    getRiskConstraint() {
+        let riskContraints = {
+            title: 'Risk constraints',
+            data: ''
+        };
+
+        let ids = [
+            "statutoryConstraints",
+            "taxConstraints",
+            "otherConstraints",
+            "investmentDecisionsAdHocCommittee",
+            "otherPersonsAuthorised"
+        ];
+
+        this.kycRiskObjective$
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(data => this.kycDetailsService.toArray(data)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            riskContraints.data = data.filter((row) => {
+                return ids.indexOf(row.originalId) > -1;
+            });
+        })
+        ;
+
+        return riskContraints;
+    }
+
+
     getDocuments() {
         let documents = {
-            title : 'Documents',
-            data : ''
+            title: 'Documents',
+            data: ''
         };
 
         this.kycDocuments$
-            .pipe(
-                rxFilter(value => !isEmpty(value)),
-                map(documents => this.kycDetailsService.extractDocuments(documents)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                documents.data = data;
-            })
+        .pipe(
+            rxFilter(value => !isEmpty(value)),
+            map(documents => this.kycDetailsService.extractDocuments(documents)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            documents.data = data;
+        })
         ;
 
         return documents;
