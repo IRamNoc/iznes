@@ -11,22 +11,20 @@ export class TimelineComponent implements OnInit, OnDestroy {
     @Input() currentStatus: string = '';
 
     private matchedKey: Number;
+    private timeOut: any[] = [];
 
     objectKeys = Object.keys;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
     ) {
-
     }
 
     ngOnInit() {
         // Get the key of the currentStatus in the statusList
-        if (!this.matchedKey) {
-            for (let i = 0; i < this.statusList.length; i += 1) {
-                if (this.currentStatus === Object.keys(this.statusList[i])[0]) {
-                    this.matchedKey = i;
-                }
+        for (let i = 0; i < this.statusList.length; i += 1) {
+            if (this.currentStatus === Object.keys(this.statusList[i])[0]) {
+                this.matchedKey = i;
             }
         }
 
@@ -35,14 +33,16 @@ export class TimelineComponent implements OnInit, OnDestroy {
             this.statusList[i].active = false;
 
             if (this.matchedKey >= i) {
-                setTimeout(
-                    () => {
-                        this.statusList[i].active = true;
-                        if (!this.changeDetectorRef['destroyed']) {
-                            this.changeDetectorRef.detectChanges();
-                        }
-                    },
-                    400 * i,
+                this.timeOut.push(
+                    setTimeout(
+                        () => {
+                            this.statusList[i].active = true;
+                            if (!this.changeDetectorRef['destroyed']) {
+                                this.changeDetectorRef.detectChanges();
+                            }
+                        },
+                        400 * i,
+                    ),
                 );
             }
         }
@@ -51,5 +51,11 @@ export class TimelineComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         /* Detach the change detector on destroy. */
         this.changeDetectorRef.detach();
+
+        /* Clear setTimeouts */
+        this.timeOut.forEach((timer) => {
+            clearTimeout(timer);
+        });
+
     }
 }
