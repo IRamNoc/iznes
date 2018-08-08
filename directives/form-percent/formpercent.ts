@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit } from '@angular/core';
+import {Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit} from '@angular/core';
 import {FormArray} from '@angular/forms';
 import * as _ from 'lodash';
 import {MultilingualService} from '@setl/multilingual';
@@ -54,6 +54,7 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
     iterateForm(controls, action, groupname) {
         Object.keys(controls).forEach((key) => {
             if (!controls[key].disabled) { // not check or push disabled fields
+
                 if (controls[key].controls) {
                     if (controls[key].validator) {
                         if (action === 'push') {
@@ -67,15 +68,20 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
                     } else {
                         this.iterateForm(controls[key].controls, action, key);
                     }
-                } else if(controls[key].validator){
-                    if (action === 'push') {
-                        this.allFields[groupname + key] = {field: groupname + key, valid: false};
-                    }
-                    if (action === 'check' && this.allFields[groupname + key] !== undefined) {
-                        if (this.allFields[groupname + key].hasOwnProperty('valid')) {
-                            this.allFields[groupname + key].valid = controls[key].valid;
+                } else {
+                    let hasRequired = _.isFunction(controls[key].validator) && _.get(controls[key].validator({}), 'required');
+
+                    if(hasRequired){
+                        if (action === 'push') {
+                            this.allFields[groupname + key] = {field: groupname + key, valid: false};
+                        }
+                        if (action === 'check' && this.allFields[groupname + key] !== undefined) {
+                            if (this.allFields[groupname + key].hasOwnProperty('valid')) {
+                                this.allFields[groupname + key].valid = controls[key].valid;
+                            }
                         }
                     }
+
                 }
             }
         });
@@ -140,9 +146,9 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
         });
 
         let percent;
-        if(!total){
+        if (!total) {
             percent = 100;
-        } else{
+        } else {
             percent = Math.round(valid * 100 / total);
         }
         this.divProgressBarColor.style.width = percent + '%';
@@ -167,7 +173,7 @@ export class FormPercentDirective implements OnInit, OnDestroy, AfterViewInit {
 
     refreshFormPercent() {
         this.allFields = []; // reset
-        if(this.config){
+        if (this.config) {
             this.iterateForm(this.config.form.controls, 'push', ''); // re-parse
             this.iterateForm(this.config.form.controls, 'check', ''); // re-check
         }
