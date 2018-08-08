@@ -45,11 +45,12 @@ function ofiSetList(state: OfiClientReferentialState, action: Action) {
                 kycID: item.get('kycID'),
                 clientReference: item.get('clientReference'),
                 walletName: item.get('walletName'),
-                registeredCompanyName: item.get('registeredCompanyName'),
+                companyName: item.get('companyName'),
                 leiCode: item.get('leiCode'),
                 legalForm: item.get('legalForm'),
                 sectorActivity: item.get('sectorActivity'),
-                email: item.get('email'),
+                email: item.get('emailAddress'),
+                alreadyCompleted: item.get('alreadyCompleted'),
             });
 
             return result;

@@ -2,11 +2,12 @@ export interface ClientReferentialDetails {
     kycID: any;
     clientReference: any;
     walletName: any;
-    registeredCompanyName: any;
+    companyName: any;
     leiCode: any;
     legalForm: any;
     sectorActivity: any;
     email: any;
+    alreadyCompleted: any;
 }
 
 export interface OfiClientReferentialState {
