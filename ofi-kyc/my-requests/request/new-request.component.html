@@ -8,9 +8,13 @@
 </div>
 
 <div class="p-1">
-    <p class="text-danger">
-        {{ 'Please note that the information provided will remain stictly confidential and will only be shared with the Asset Management Companies you selected.' | translate }}
-    </p>
+    <clr-alert [clrAlertSizeSmall]="true" [clrAlertType]="'alert-danger'" [clrAlertClosable]="false">
+        <div class="alert-item">
+            <span class="alert-text">
+                {{ 'Please note that the information provided will remain stictly confidential and will only be shared with the Asset Management Companies you selected.' | translate }}
+            </span>
+        </div>
+    </clr-alert>
 </div>
 
 <div [formsteps]="stepsConfig">
@@ -34,6 +38,9 @@
     </section>
 </div>
 
-<p class="info" *ngIf="formSteps.currentStep === 0">
-    {{'Be aware that once you click on "Next" this KYC request will be saved as a Draft in the module "My Requests". You will then be able to come back later on your KYC request to finalize and send it to the asset management company.' | translate}}
-</p>
+<div class="info" *ngIf="formSteps.currentStep === 0">
+    <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
+    <span>
+        {{'Be aware that once you click on "Next" this KYC request will be saved as a Draft in the module "My Requests". You will then be able to come back later on your KYC request to finalize and send it to the asset management company.' | translate}}
+    </span>
+</div>
