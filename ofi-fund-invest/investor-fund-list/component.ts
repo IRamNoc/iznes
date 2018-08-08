@@ -171,10 +171,16 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const shareName = item.get('fundShareName', '');
 
             let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
+            let totalPosition = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'total'], 'N/A');
+
             if (!isNaN(position)) {
                 position = this._numberConverterService.toFrontEnd(position);
             }
-            
+
+            if (!isNaN(totalPosition)) {
+                totalPosition = this._numberConverterService.toFrontEnd(totalPosition);
+            }
+
             result.push({
                 id: item.get('fundShareID', 0),
                 isin: isin,
@@ -188,7 +194,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
                 nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
                 hasNoNav: Boolean(nav <= 0),
-                position: position
+                position,
+                totalPosition,
             });
 
             return result;

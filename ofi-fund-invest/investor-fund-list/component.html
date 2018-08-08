@@ -74,9 +74,9 @@
                     <clr-dg-column [clrDgField]="'redemptionDate'" clrDgSortIcon>{{'Redemption Cut-off Date' | translate}}
                         <span class="column-label"></span>
                     </clr-dg-column>
-                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>{{'Position' | translate}}
-
-
+                    <clr-dg-column [clrDgField]="'position'" clrDgSortIcon>{{'Available Position' | translate}}
+                    </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'totalPosition'" clrDgSortIcon>{{'Total Position' | translate}}
                     </clr-dg-column>
                     <clr-dg-column style="min-width: 190px;">{{'Actions' | translate}}</clr-dg-column>
 
@@ -100,6 +100,7 @@
                         <clr-dg-cell>{{fund['nextSubCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['nextRedCutOff']}}</clr-dg-cell>
                         <clr-dg-cell>{{fund['position']}}</clr-dg-cell>
+                        <clr-dg-cell>{{fund['totalPosition']}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="fund['hasNoNav']">{{'No NAV Exist' | translate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!fund['hasNoNav']" class="actions">
                             <div class="btn-group btn-sm">
