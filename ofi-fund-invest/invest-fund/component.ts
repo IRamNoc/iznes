@@ -200,8 +200,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return (this.type === 'subscribe' ? this._numberConverterService.toFrontEnd(this.shareData['entryFee']) :
-            this._numberConverterService.toFrontEnd(this.shareData['exitFee']));
+        return this._numberConverterService.toFrontEnd(this.orderHelper.feePercentage);
     }
 
     get cutoffTime(): string {
@@ -436,16 +435,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.metadata = {
             subscribe: {
                 actionLabel: 'subscribe',
-                feeLabel: 'Entry',
+                feeLabel: this._translate.getTranslationByString('Entry fee'),
 
             },
             redeem: {
                 actionLabel: 'redeem',
-                feeLabel: 'Exit',
+                feeLabel: this._translate.getTranslationByString('Exit fee'),
             },
             sellbuy: {
                 actionLabel: 'sellbuy',
-                feeLabel: 'Exit',
+                feeLabel: this._translate.getTranslationByString('Entry / Exit fee'),
             },
         }[this.type];
 
@@ -737,7 +736,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subportfolio: '',
             dateby: this.dateBy, // (cutoff, valuation, settlement)
             datevalue: this.dateValue, // (date value relate to dateby)
-            ordertype: this.orderType, // ('s', 'r')
+            ordertype: this.orderType, // ('s', 'r', 'sb')
             orderby: this.actionBy, // ('q', 'a' )
             ordervalue: this.orderValue, // (order value relate to orderby)
             comment: ''

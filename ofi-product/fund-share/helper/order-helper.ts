@@ -39,10 +39,15 @@ export interface OrderRequest {
     subportfolio: string;
     dateby: string; // (cutoff, valuation, settlement)
     datevalue: string; // (date value relate to dateby)
-    ordertype: string; // ('s', 'r')
+    ordertype: string; // ('s', 'r', 'sb')
     orderby: string; // ('q', 'a' )
     ordervalue: string; // (order value relate to orderby)
     comment: string;
+    // The reason we need 'sb'(sell buy) in ordertype, and we want to keep the existing two order type: sub and redeem.
+    // So when we got ordertype of 'sb' in the backend, we want to split the request into two orders (subscription and
+    // redemption), but we also need a way to identify whether a order is sell buy order.
+    // the flag isellbuy does not allow to pass in buy the frontend, the backend will append it to the request accordingly.
+    issellbuy?: boolean;
 }
 
 export interface IznShareDetailWithNav extends IznesShareDetail {
@@ -216,7 +221,9 @@ export class OrderHelper {
     fakeSettlement: any;
 
     get feePercentage() {
-        return Number({
+        return this.isSellBuy ?
+            0 :
+            Number({
             [OrderType.Subscription]: this.fundShare.entryFee || 0,
             [OrderType.Redemption]: this.fundShare.exitFee || 0,
         }[this.orderType]);
@@ -252,6 +259,10 @@ export class OrderHelper {
             [OrderType.Subscription]: this.fundShare.subscriptionCategory || 0,
             [OrderType.Redemption]: this.fundShare.redemptionCategory || 0,
         }[this.orderType]);
+    }
+
+    get isSellBuy(): boolean {
+       return this.orderRequest.ordervalue === 'sb' || this.orderRequest.issellbuy;
     }
 
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {

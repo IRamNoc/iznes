@@ -121,7 +121,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label">
-                                            <span class="ml_translated">{{'@metadata.feeLabel@ fee' | translate: {'metadata.feeLabel': metadata.feeLabel} }}</span>
+                                            <span class="ml_translated">{{metadata.feeLabel}}</span>
                                         </label>
                                         <div>
                                             <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' " [readonly]="true">
