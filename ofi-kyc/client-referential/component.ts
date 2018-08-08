@@ -6,6 +6,7 @@ import { OfiKycObservablesService } from '../../ofi-req-services/ofi-kyc/kyc-obs
 import { immutableHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
@@ -14,7 +15,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
 import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
 import * as math from 'mathjs';
-import { FileDownloader } from '@setl/utils';
+import { FileDownloader, SagaHelper } from '@setl/utils';
+import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from "@ofi/ofi-main/ofi-store";
 
 @AppObservableHandler
 @Component({
@@ -25,12 +27,13 @@ import { FileDownloader } from '@setl/utils';
     providers: [OfiKycObservablesService],
 })
 export class OfiClientReferentialComponent implements OnInit, OnDestroy {
-
+    searchForm: FormGroup;
     investorTypeForm: FormGroup;
 
     unSubscribe: Subject<any> = new Subject();
 
-    kycId: string = 'list';
+    pageType: string = 'list';
+    kycId: string = '';
     tableData = [];
     otherData = {};
 
@@ -51,8 +54,23 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         { id: 55, text: 'Retail Investor' },
     ];
 
+    // Locale
+    language = 'en';
+
+    // Datepicker config
+    configDate = {
+        firstDayOfWeek: 'mo',
+        format: 'YYYY-MM-DD',
+        closeOnSelect: true,
+        disableKeypress: true,
+        locale: this.language,
+    };
+
+    clientReferentialAudit = [];
+
     @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
     @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) clientReferentialOb;
+    @select(['ofi', 'ofiKyc', 'clientReferentialAudit', 'clientReferentialAudit']) clientReferentialAuditOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) amAllFundShareListOb;
@@ -76,6 +94,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.investorTypeForm = new FormGroup({
             investorType: new FormControl(''),
         });
+
+        this.searchForm = new FormGroup({
+            searchInvestor: new FormControl(''),
+            searchTo: new FormControl(''),
+            searchFrom: new FormControl(''),
+        });
     }
 
     ngOnInit(): void {
@@ -94,6 +118,11 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this.clients[client.kycID] = client;
             });
 
+            this._changeDetectorRef.markForCheck();
+        }));
+
+        this.subscriptions.push(this.clientReferentialAuditOb.subscribe((clientReferentialAudit) => {
+            this.clientReferentialAudit = clientReferentialAudit;
             this._changeDetectorRef.markForCheck();
         }));
 
@@ -118,6 +147,10 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.userIdOb.subscribe(userId => {
             this.userId = userId;
+        }));
+
+        this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => {
+            if (this.pageType == 'audit') this.requestAuditSearch();
         }));
     }
 
@@ -223,6 +256,41 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             userId: this.userId,
             type: investorType
         });
+    }
+
+    requestAuditSearch() {
+        let params = {
+            id: this.kycId,
+            search: this.searchForm.controls['searchInvestor'].value,
+            from: this.searchForm.controls['searchFrom'].value,
+            to: this.searchForm.controls['searchTo'].value,
+        };
+
+        const asyncTaskPipe = this._ofiKycService.requestAuditSearch(params);
+
+        this._ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_CLIENT_REFERENTIAL_AUDIT],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
+
+    downloadReferentialAuditCSVFile() {
+        this._fileDownloader.downLoaderFile({
+            method: 'getIznesReferentialAuditCSVFile',
+            token: this.socketToken,
+            userId: this.userId,
+            id: this.kycId,
+            search: this.searchForm.controls['searchInvestor'].value,
+            from: this.searchForm.controls['searchFrom'].value,
+            to: this.searchForm.controls['searchTo'].value,
+        });
+    }
+
+    changePage(page) {
+        this.pageType = page;
+        this.requestAuditSearch();
     }
 
     ngOnDestroy() {
