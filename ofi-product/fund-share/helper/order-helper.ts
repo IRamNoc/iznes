@@ -262,7 +262,12 @@ export class OrderHelper {
     }
 
     get isSellBuy(): boolean {
-       return this.orderRequest.ordervalue === 'sb' || this.orderRequest.issellbuy;
+       return this.orderRequest.ordertype === 'sb' || this.orderRequest.issellbuy;
+    }
+
+    get isAllowSellBuy(): boolean {
+        const isAllowSellBuy = this.fundShare.allowSellBuy;
+        return Number(isAllowSellBuy) === 1;
     }
 
     constructor(fundShare: IznShareDetailWithNav, orderRequest: OrderRequest) {
@@ -1208,6 +1213,23 @@ export class OrderHelper {
 
 
     checkOrderByIsAllow(orderType = this.orderRequest.orderby): VerifyResponse {
+
+        // if the order type is sell buy, we don't care about the 'allow by amount' and 'allow by quantity' in the characteristics.
+        if (this.isSellBuy) {
+            // if order type of sell buy is allow in the share.
+           if (this.isAllowSellBuy) {
+               return {
+                   orderValid: true,
+               };
+           }
+
+           // if not allow sell buy, we reject it.
+            return {
+                orderValid: false,
+                errorMessage: 'Sell buy is not allow for the share.',
+            };
+        }
+
         const tryingToOrderBy = OrderByNumber[orderType] - 1;
         // check if order type is allow
         const typesAllow = this.orderAllowCategory;
@@ -1352,8 +1374,6 @@ export class OrderHelper {
 
         return true;
     }
-
-
 }
 
 /**

@@ -34,12 +34,14 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
-import { OrderByType } from '../../ofi-orders/order.model';
+import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
+import { SellBuyCalendar } from "../../ofi-product/fund-share/FundShareEnum";
+import { Moment } from "moment";
 
 @Component({
     selector: 'app-invest-fund',
@@ -58,6 +60,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     quantityDecimalSize = 5;
 
     @Input() shareId: number;
+    // order type string: subscribe, redeem, sellbuy
     @Input() type: string;
     @Input() doValidate: boolean;
     @Input() initialFormData: { [p: string]: any };
@@ -218,21 +221,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get orderType(): string {
         return {
             subscribe: 's',
-            redeem: 'r'
+            redeem: 'r',
+            sellbuy: 'sb',
         }[this.type];
     }
 
     get orderTypeNumber(): number {
-        return {
-            subscribe: 3,
-            redeem: 4
-        }[this.type];
+         return {
+             subscribe: 3,
+             redeem: 4,
+         }[this.type];
     }
 
     get orderTypeLabel(): string {
         return {
-            subscribe: 'Subscription',
-            redeem: 'Redemption'
+            subscribe: this._translate.getTranslationByString('Subscription'),
+            redeem: this._translate.getTranslationByString('Redemption'),
+            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
         }[this.type];
     }
 
@@ -510,8 +515,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutOffValue = new Date(
                 this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
-                .format('YYYY-MM-DD HH:mm'),
+                    .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -537,8 +542,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
-                .format('YYYY-MM-DD HH:mm'),
+                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -627,17 +632,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     isCutoffDay(thisDate: moment): boolean {
-        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.orderTypeNumber);
+        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidCutOff || !this.doValidate;
     }
 
     isValuationDay(thisDate: moment): boolean {
-        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.orderTypeNumber);
+        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidValuation || !this.doValidate;
     }
 
     isSettlementDay(thisDate: moment): boolean {
-        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.orderTypeNumber);
+        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidSettlement || !this.doValidate;
     }
 
@@ -954,13 +959,13 @@ The IZNES Team.</p>`;
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(momentDateValue)
             .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
+            const mValuationDate = this.getValuationDateFromCutoff(momentDateValue);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
 
-            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, this.orderTypeNumber);
+            const mSettlementDate = this.getSettlementDateFromCutoff(momentDateValue);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
 
@@ -971,12 +976,12 @@ The IZNES Team.</p>`;
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
 
-            const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
 
 
-            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
+            const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -984,11 +989,11 @@ The IZNES Team.</p>`;
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
-            const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            const mCutoffDate = this.getCutoffDateFromSettlement(momentDateValue);
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
+            const mValuationDate = this.getValuationDateFromCutoff(mCutoffDate);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -1221,12 +1226,100 @@ The IZNES Team.</p>`;
        }[this.type];
     }
 
+    /**
+     * Get order page subtitle
+     * @return {string}
+     */
     getOrderTypeSubTitle(): string {
         return {
             subscribe: this._translate.getTranslationByString('Please fill up the following information to subscribe to this share'),
             redeem: this._translate.getTranslationByString('Please fill up the following information to redeem this share'),
             sellbuy: this._translate.getTranslationByString('Please fill up the following information to **simultaneously** redeem and subscribe to this share:'),
         }[this.type];
+    }
+
+    /**
+     * In order to get the specific date when using Calendar helper, we need to get the order type number, either
+     * 3(Subscription) or 4 (Redemption). So for sell buy order, we need to work out order type base on the sell buy
+     * calendar.
+     * @return {OrderType}
+     */
+    getCalendarHelperOrderNumber(): OrderType {
+        let orderNumberType;
+
+        // If this is a sell buy order, we pick the calender of subscription / redemption depends on the characteristics.
+        if (this.orderType === 'sb') {
+            const sellBuyCalendar = Number(this.shareData.sellBuyCalendar);
+            if (sellBuyCalendar === SellBuyCalendar.RedemptionCalendar) {
+                orderNumberType = OrderType.Redemption;
+            }else {
+                orderNumberType = OrderType.Subscription;
+            }
+        } else {
+            orderNumberType = this.orderTypeNumber;
+        }
+
+        return orderNumberType;
+    }
+
+    /**
+     * Get cutoff date time string for a specific date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffTimeForSpecificDate(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get valuation date time for a cutoff date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getValuationDateFromCutoff(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getValuationDateFromCutoff(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get settlement date time string for a cutoff date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getSettlementDateFromCutoff(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get cutoff date time string for a valuation date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffDateFromValuation(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffDateFromValuation(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get cutoff date time string for a settlement date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffDateFromSettlement(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
     }
 }
 
