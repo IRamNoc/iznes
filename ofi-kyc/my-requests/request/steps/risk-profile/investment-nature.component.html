@@ -72,7 +72,7 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-12" formGroupName="investmentvehiclesAlreadyUsed">
+                <div class="col-sm-12">
 
                     <div>
                         <label class="required-field">{{'Investment vehicles already used' | translate}}</label>
@@ -80,11 +80,13 @@
 
                     <div class="mt-1">
                         <span class="checkbox-inline pr-1 pb-1" *ngFor="let vehicle of investmentVehicleList" [class.inline]="vehicle.id === 'other'">
-                            <input type="checkbox" id="{{vehicle.id}}" formControlName="{{vehicle.id}}">
-                            <label class="required-field" for="{{vehicle.id}}">
-                                {{vehicle.text | translate}}
-                            </label>
-                            <input class="pl-1" type="text" *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
+                            <span formGroupName="investmentvehiclesAlreadyUsed">
+                                <input type="checkbox" id="{{vehicle.id}}" formControlName="{{vehicle.id}}">
+                                <label class="required-field" for="{{vehicle.id}}">
+                                    {{vehicle.text | translate}}
+                                </label>
+                            </span>
+                            <input formControlName ="investmentvehiclesAlreadyUsedSpecification" class="pl-1" type="text" *ngIf="vehicle.id === 'other' && !isDisabled('investmentvehiclesAlreadyUsedSpecification')" placeholder="{{'Please specify' | translate}}">
                         </span>
 
                         <p class="txtRed" *ngIf="hasError('investmentvehiclesAlreadyUsed')">{{'Select at least one' | translate}}</p>
