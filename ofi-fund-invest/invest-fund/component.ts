@@ -442,7 +442,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             redeem: {
                 actionLabel: 'redeem',
                 feeLabel: 'Exit',
-            }
+            },
+            sellbuy: {
+                actionLabel: 'sellbuy',
+                feeLabel: 'Exit',
+            },
         }[this.type];
 
         this.actionBy = 'q';
@@ -1204,6 +1208,26 @@ The IZNES Team.</p>`;
         }
 
         return true;
+    }
+
+    /**
+     * Get Order type title rendered in the order form.
+     * @return {string}
+     */
+    getOrderTypeTitle(): string {
+       return {
+           subscribe: this._translate.getTranslationByString('Subscription'),
+           redeem: this._translate.getTranslationByString('Redemption'),
+           sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+       }[this.type];
+    }
+
+    getOrderTypeSubTitle(): string {
+        return {
+            subscribe: this._translate.getTranslationByString('Please fill up the following information to subscribe to this share'),
+            redeem: this._translate.getTranslationByString('Please fill up the following information to redeem this share'),
+            sellbuy: this._translate.getTranslationByString('Please fill up the following information to **simultaneously** redeem and subscribe to this share:'),
+        }[this.type];
     }
 }
 

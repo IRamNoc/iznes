@@ -1,7 +1,8 @@
 <form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched">
     <div class="form-horizontal">
 
-        <h2>{{(type=='subscribe'?'Subscription':'Redemption')}}</h2>{{'Please fill up the following information to @(type==\'subscribe\'?\'subscribe to\':\'redeem\')@ a new share:' | translate: {'(type==\'subscribe\'?\'subscribe to\':\'redeem\')': (type=='subscribe'?'subscribe to':'redeem')} }}
+        <h2>{{getOrderTypeTitle()}}</h2>
+        {{getOrderTypeSubTitle()}}
 
         <br><br>
 
