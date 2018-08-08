@@ -197,7 +197,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldShowKYCLandingPageOnFirstLoginAsInvestor() throws IOException, InterruptedException, SQLException {
-        String userNo = "012";
+        String userNo = "003";
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -252,7 +252,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String userNo = "001";
+        String userNo = "004";
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
@@ -343,6 +343,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
+    @Ignore
     public void shouldDisplayPopupMyInformationWhenKYCSaved() throws IOException, InterruptedException {
         loginAndVerifySuccessKYC("testops002@setl.io", "asdasd", "additionnal");
     }
