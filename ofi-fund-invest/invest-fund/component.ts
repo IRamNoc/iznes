@@ -57,7 +57,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
-    quantityDecimalSize = 5;
 
     @Input() shareId: number;
     // order type string: subscribe, redeem, sellbuy
@@ -144,7 +143,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     quantity: FormControl;
     amount: FormControl;
     feeAmount: FormControl;
-    netAmount: FormControl;
+    // net amount form control for subscription order.
+    netAmountSub: FormControl;
+    // new amount form control for redemption order.
+    netAmountRedeem: FormControl;
     address: FormControl;
     disclaimer: FormControl;
     feeControl: FormControl;
@@ -339,9 +341,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get isRedeemTooMuch(): boolean {
-        if (this.orderType === 's') {
-            return false;
-        }
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
@@ -414,7 +413,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.quantity = new FormControl(0, [Validators.required, numberValidator]);
         this.amount = new FormControl(0, [Validators.required, numberValidator]);
         this.feeAmount = new FormControl(0);
-        this.netAmount = new FormControl(0, [Validators.required, numberValidator]);
+        this.netAmountSub = new FormControl(0, [Validators.required, numberValidator]);
+        this.netAmountRedeem = new FormControl(0, [Validators.required, numberValidator]);
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
@@ -425,7 +425,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             quantity: this.quantity,
             amount: this.amount,
             feeAmount: this.feeAmount,
-            netAmount: this.netAmount,
+            netAmountSub: this.netAmountSub,
+            netAmountRedeem: this.netAmountRedeem,
             comment: new FormControl('', Validators.maxLength(100)),
             address: this.address,
             cutoffDate: this.cutoffDate,
@@ -885,10 +886,16 @@ The IZNES Team.</p>`;
         const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
         this.feeAmount.setValue(feeStr);
 
-        // net amount
-        const netAmount = calNetAmount(amount, fee, this.orderType);
-        const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
-        this.netAmount.setValue(netAmountStr);
+        // net amount for subscription order
+        const netAmountSub = calNetAmount(amount, fee, 's');
+        const netAmountSubStr = this._moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+        this.netAmountSub.setValue(netAmountSubStr);
+
+        // net amount for redemption order
+        const netAmountRedeem = calNetAmount(amount, fee, 'r');
+        const netAmountRedeemStr = this._moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+        this.netAmountRedeem.setValue(netAmountRedeemStr);
+
     }
 
     /**
@@ -896,7 +903,7 @@ The IZNES Team.</p>`;
      * Updating it to be Round Down eg 0.15151 becomes 0.151
      */
     roundAmount() {
-        if (this.isKnownNav() || this.orderType === 'r') {
+        if (this.isKnownNav()) {
             const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
             const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
             const amountStr = this._moneyValuePipe.transform(amount.toString(), 2).toString();
@@ -924,6 +931,11 @@ The IZNES Team.</p>`;
 
 
     isValidOrderValue() {
+        // if the order type is sell buy we dont care the minimum order value.
+        if (this.type === 'sellbuy') {
+            return true;
+        }
+
         const minValue = OrderHelper.getSubsequentMinFig(this.shareData, this.orderTypeNumber, this.actionByNumber);
 
         return Boolean(minValue <= this.orderValue);
@@ -1321,6 +1333,7 @@ The IZNES Team.</p>`;
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
     }
+
 }
 
 /**

@@ -262,6 +262,10 @@ export class OrderHelper {
     }
 
     get isSellBuy(): boolean {
+        // if the share is not allow to play a sell buy order, we don't bother to check.
+        if (!this.isAllowSellBuy) {
+           return false;
+        }
        return this.orderRequest.ordertype === 'sb' || this.orderRequest.issellbuy;
     }
 
@@ -788,6 +792,13 @@ export class OrderHelper {
     }
 
     checkOrderValueValid(orderValueToCheck) {
+        // we the order type is sell buy, we don't bother to check it.
+        if (this.isSellBuy) {
+            return {
+                orderValid: true,
+            };
+        }
+
         // Check order value (quantity / amount) is meet requirements:
         // - [] greater than initial min order value ;
         // - [x] greater than subsequent min order value ;
