@@ -32,6 +32,16 @@ const orderSettlementThreshold = 30;
 // todo
 // need to check the user balance. when redeeming
 
+const MathJsBlockchainNumberFormat = {
+    notation: 'fixed',
+    precision: 1,
+};
+
+const MathJsNormalNumberFormat = {
+    notation: 'fixed',
+    precision: 6,
+};
+
 export interface OrderRequest {
     token: string;
     shareisin: string;
@@ -837,7 +847,7 @@ export class OrderHelper {
              * amount = unit * nav
              */
             amount = 0;
-            estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+            estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
 
             // change to 2 decimal place
             estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
@@ -861,7 +871,7 @@ export class OrderHelper {
              */
 
             // if redemption amount will always be estimated.
-            estimatedQuantity = Number(math.format(math.chain(this.orderValue).divide(this.nav).multiply(NumberMultiplier).done(), 14));
+            estimatedQuantity = Number(math.format(math.chain(this.orderValue).divide(this.nav).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
 
             // make sure the quantity meet the share maximumNumberDecimal
             // 1. convert back to normal number scale
@@ -874,7 +884,7 @@ export class OrderHelper {
             // if we are using known nav, we use the quantity to work out the new amount
             // if we are using unknow nav, we put the specified amount back.
             if (this.isKnownNav()) {
-                estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), 14));
+                estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
 
                 // change to 2 decimal place
                 estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
@@ -1397,11 +1407,11 @@ export class OrderHelper {
 export function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent) / NumberMultiplier;
-    return Number(math.format(math.chain(amount).multiply(feePercent).done(), 14));
+    return Number(math.format(math.chain(amount).multiply(feePercent).done(), MathJsBlockchainNumberFormat));
 }
 
 export function convertToBlockChainNumber(num) {
-    return Number(math.format(math.chain(num).multiply(NumberMultiplier).done(), 14));
+    return Number(math.format(math.chain(num).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
 }
 
 /**
@@ -1416,8 +1426,8 @@ export function calNetAmount(amount: number | string, fee: number | string, orde
     amount = Number(amount);
     fee = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
+        s: Number(math.format(math.chain(amount).add(fee).done(), MathJsBlockchainNumberFormat)),
+        r: Number(math.format(math.chain(amount).subtract(fee).done(), MathJsBlockchainNumberFormat))
     }[orderType];
 }
 
@@ -1450,9 +1460,9 @@ export function toNormalScale(num: number, numDecimal: number): number {
  */
 export function roundDown(number: any, decimals: any = 0) {
     // convert to normal number scale.
-    const normalNum = math.format(math.chain(number).divide(NumberMultiplier).done(), 14);
+    const normalNum = math.format(math.chain(number).divide(NumberMultiplier).done(), MathJsNormalNumberFormat);
     const roundedNum = (Math.floor(normalNum * Math.pow(10, decimals)) / Math.pow(10, decimals));
 
     // convert back to blockchainScale
-    return math.format(math.chain(roundedNum).multiply(NumberMultiplier).done(), 14);
+    return math.format(math.chain(roundedNum).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat);
 }
