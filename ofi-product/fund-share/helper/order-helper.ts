@@ -389,7 +389,7 @@ export class OrderHelper {
         if (orderType === OrderType.Subscription) {
             subject = 'Certification of Book Entry - SUBSCRIPTION ' + orderReference;
         } else {
-            subject = 'REDEMPTION ' + orderReference + ' <span class="ml" mltag="txt_redemption">Redemption</span>';
+            subject = 'Certification of Book Entry - REDEMPTION ' + orderReference;
         }
 
         const generalBody = subject;
