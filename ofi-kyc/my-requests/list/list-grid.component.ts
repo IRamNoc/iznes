@@ -4,6 +4,7 @@ import {groupBy, find} from 'lodash';
 
 import {KycStatus as statusList} from '../requests.service';
 import {NewRequestService} from '../request/new-request.service';
+import {convertUtcStrToLocalStr} from '@setl/utils/helper/m-date-wrapper/index';
 
 @Component({
     selector: 'my-requests-list',
@@ -37,6 +38,10 @@ export class MyRequestsGridComponent {
         }
 
         return "draft";
+    }
+
+    convertDate(date){
+        return convertUtcStrToLocalStr(date, 'YYYY-MM-DD HH:mm:SS');
     }
 
     redirectToRelatedKycs(kycID) {
