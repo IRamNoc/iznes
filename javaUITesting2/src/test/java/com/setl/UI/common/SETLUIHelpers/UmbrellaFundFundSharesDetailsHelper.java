@@ -106,6 +106,8 @@ public class UmbrellaFundFundSharesDetailsHelper {
 
         driver.findElement(By.id("fundShareName")).clear();
         driver.findElement(By.id("fundShareName")).sendKeys(shareName);
+        scrollElementIntoViewById("shareLaunchDate");
+        Thread.sleep(1000);
         driver.findElement(By.id("shareLaunchDate")).click();
         driver.findElement(By.cssSelector("form.ng-invalid > section:nth-child(1) > div:nth-child(1) > div:nth-child(7) > div:nth-child(2) > dp-date-picker:nth-child(3) > div:nth-child(2) > div:nth-child(1) > dp-day-calendar:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(4) > button:nth-child(2)")).click();
         driver.findElement(By.id("subscriptionStartDate")).click();
@@ -118,7 +120,11 @@ public class UmbrellaFundFundSharesDetailsHelper {
         driver.findElement(By.id("shareClassCode")).sendKeys("share class");
         openDropdownAndSelectOption("shareClassCurrency", 1);
         openDropdownAndSelectOption("shareClassInvestmentStatus", 1);
-        openDropdownAndSelectOption("status", 1);
+        scrollElementIntoViewById("hasCoupon");
+        driver.findElement(By.xpath("//*[@id=\"status\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"status\"]/div/div[3]/ul/li[1]/div/a")).click();
+
+        //openDropdownAndSelectOption("status", 1);
         scrollElementIntoViewById("cancelFundShareBottom");
         Thread.sleep(500);
         wait.until(refreshed(visibilityOfElementLocated(By.id("cancelFundShareBottom"))));

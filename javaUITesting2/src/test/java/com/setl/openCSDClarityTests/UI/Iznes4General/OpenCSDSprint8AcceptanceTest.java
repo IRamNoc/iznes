@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes4General;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -103,7 +104,8 @@ public class OpenCSDSprint8AcceptanceTest {
         driver.findElement(By.xpath("//*[@id=\"subscriptionCutOffTimeZone\"]/div/div[3]/ul/li/div/a/div")).click();
         scrollElementIntoViewById("saveFundShareBottom");
         wait.until(visibilityOfElementLocated(By.id("saveFundShareBottom")));
-        wait.until(elementToBeClickable(driver.findElement(By.id("saveFundShareBottom"))));
+        wait.until(elementToBeClickable(By.id("saveFundShareBottom")));
+        Thread.sleep(750);
         driver.findElement(By.id("saveFundShareBottom")).click();
         searchSharesTable(uShareDetails[0]);
         driver.findElement(By.id("product-dashboard-link-fundShareID-0")).click();

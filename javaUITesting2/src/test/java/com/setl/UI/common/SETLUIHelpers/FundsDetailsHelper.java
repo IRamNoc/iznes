@@ -310,9 +310,13 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         js.executeScript("document.getElementById('isEuDirective2').click();");
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
+        scrollElementIntoViewById("fund-cancelfund-btn");
+        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
+        driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
         scrollElementIntoViewById("fund-cancelfund-btn");
         Thread.sleep(500);
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
@@ -642,6 +646,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
 
         scrollElementIntoViewById("new-fund-btn");
+        wait.until(elementToBeClickable(By.id("new-fund-btn")));
         wait.until(visibilityOfElementLocated(By.id("new-fund-btn")));
         driver.findElement(By.id("new-fund-btn")).click();
 
