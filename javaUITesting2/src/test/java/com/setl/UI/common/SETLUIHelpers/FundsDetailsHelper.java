@@ -312,8 +312,8 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("//*[@id=\"legalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"nationalNomenclatureOfLegalForm\"]/div/div[3]/ul/li[1]/div/a")).click();
-        scrollElementIntoViewById("fund-cancelfund-btn");
-        wait.until(visibilityOfElementLocated(By.id("fund-cancelfund-btn")));
+        scrollElementIntoViewById("fiscalYearEnd");
+        wait.until(visibilityOfElementLocated(By.id("fiscalYearEnd")));
         Thread.sleep(750);
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div")).click();
         driver.findElement(By.xpath("//*[@id=\"fundCurrency\"]/div/div[3]/ul/li[1]/div/a")).click();
