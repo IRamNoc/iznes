@@ -76,7 +76,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                     asset: asset.asset,
                     assetObject: asset,
                     hash: asset.hash,
-                    holdings: holdings,
+                    holdings,
                 },
             });
         });
