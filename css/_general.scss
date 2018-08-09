@@ -1506,9 +1506,9 @@ dp-date-picker div {
 }
 
 .tooltipTimer {
-  width: 0;
-  height: 4px;
-  background-color: yellowgreen;
+    width: 0;
+    height: 4px;
+    background-color: yellowgreen;
 }
 
 .tooltips .title {
@@ -1596,14 +1596,14 @@ dp-date-picker div {
 }
 
 .userTourBtn {
-  float: right;
-  color: green;
-  font-size: 2em;
-  cursor: pointer;
+    float: right;
+    color: green;
+    font-size: 2em;
+    cursor: pointer;
 }
 
 .userTourBtn:after {
-  clear: both;
+    clear: both;
 }
 
 /* UI - FORM STEPS */
@@ -1944,3 +1944,6 @@ dp-date-picker div {
     }
 }
 
+.backToTop {
+    z-index: 9999;
+}
