@@ -65,10 +65,10 @@ export class KycDetailsService {
 
     async getHashes(rows) {
         for (let row of rows) {
-            if (requestsConfig.fileControls.indexOf(row.id) !== -1) {
-                await this.getFileByID(row.value).then(response => {
+            if (requestsConfig.fileControls.indexOf(row.originalId) !== -1) {
+                await this.getFileByID(row.value).then(response =>
+                    {
                         let document = getValue(response, [1, 'Data', 0]);
-
                         row.hash = document.hash;
                         row.name = document.name;
                     },
