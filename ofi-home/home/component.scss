@@ -61,7 +61,7 @@
 }
 
 .home-button.blue {
-    background-color: #64bae4;
+    background-color: #000000; /*64bae4*/
 }
 
 .home-button.blue:hover, .home-button.blue:active, .home-button.blue:focus {
@@ -76,6 +76,17 @@
         .grid {
             height: 160px;
         }
+    }
+}
+
+:host ::ng-deep {
+    .nav {
+        background: blue;
+        display: none !important;
+    }
+
+    clr-tab-content {
+        border-top-left-radius: 4px !important;
     }
 }
 

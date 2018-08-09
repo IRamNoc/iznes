@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // redux
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 
@@ -100,7 +100,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     ];
 
     /* datas */
-
     fundsNbHolders = 0;
     fundsAUM = 0;
     fundsCCY = 'EUR';
@@ -123,6 +122,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     holdersShareData: any = [];
 
     gotDataToExport = false;
+
+    loadingDatagrid: boolean = false;
+    setLoadingDatagrid: boolean = false;
 
     /* Private Properties. */
     private myDetails: any = {};
@@ -159,9 +161,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private ofiAmDashboardService: OfiAmDashboardService,
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
+                private activatedRoute: ActivatedRoute,
                 @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
         this.appConfig = appConfig;
+        this.loadingDatagrid = false;
 
         this.isListLevel = (this.router.url.indexOf('/holders-list/list') !== -1) ? true : false;
         this.isFundLevel = (this.router.url.indexOf('/funds/') !== -1) ? true : false;
@@ -251,6 +255,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 if (this.isShareLevel) {
                     this.selectedShareId = tabId;
 
+                    this.loadingDatagrid = true;
+
                     OfiReportsService.defaultRequestHolderDetail(this.ofiReportsService, this.ngRedux, {
                         shareId: this.selectedShareId,
                         selectedFilter: this.holderFilters[0].id,
@@ -259,15 +265,15 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     this.subscriptions.push(this.shareHolderDetailObs.subscribe((data) => this.getHolderDetail(data)));
 
                     this.tabsControl.push({
-                            'title': {
-                                'icon': 'fa fa-th-list',
-                                'text': 'Shares Level'
-                            },
-                            'link': '/reports/holders-list/shares/',
-                            'type': 'shares',
-                            'id': this.selectedShareId,
-                            'active': this.isShareLevel,
-                        });
+                        'title': {
+                            'icon': 'fa fa-th-list',
+                            'text': 'Shares Level'
+                        },
+                        'link': '/reports/holders-list/shares/',
+                        'type': 'shares',
+                        'id': this.selectedShareId,
+                        'active': this.isShareLevel,
+                    });
 
                     let obj = this.sharesList.find(o => o.id === this.selectedShareId);
                     if (obj && obj !== undefined) {
@@ -282,23 +288,40 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 }
             }
         }));
+
+        // handle showing data grid loading
+        this.activatedRoute.url.subscribe((url) => {
+            console.log(url);
+
+            if (url && url[0].path == 'list') {
+                this.setLoadingDatagrid = false;
+            } else {
+                this.setLoadingDatagrid = true;
+            }
+
+        });
     }
 
     ngOnInit() {
+        if (this.setLoadingDatagrid) {
+            this.loadingDatagrid = true;
+            return;
+        }
+        this.loadingDatagrid = false;
     }
 
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
@@ -386,6 +409,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
 
         this.changeDetectorRef.markForCheck();
+        this.loadingDatagrid = false;
     }
 
     /**
@@ -395,6 +419,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
      */
     getAmHoldersRequested(requested): void {
         if (!requested) {
+            this.loadingDatagrid = true;
             OfiReportsService.defaultRequestAmHoldersList(this.ofiReportsService, this.ngRedux);
         }
     }
@@ -414,9 +439,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
                 };
             });
-
-            this.changeDetectorRef.markForCheck();
         }
+        this.changeDetectorRef.markForCheck();
+        this.loadingDatagrid = false;
     }
 
     /**
@@ -435,6 +460,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.shareSettlementDate = data.lastSettlementDate;
         }
         this.changeDetectorRef.markForCheck();
+        this.loadingDatagrid = false;
     }
 
     setInitialTabs() {
@@ -475,6 +501,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     requestSearch(form) {
+
+        this.loadingDatagrid = true;
+
         if (this.isListLevel) {
             this.selectedFundId = (this.listSearchForm.controls['searchFunds'].value.length > 0) ? this.listSearchForm.controls['searchFunds'].value[0].id : 0;
             this.selectedShareId = (this.listSearchForm.controls['searchShares'].value.length > 0) ? this.listSearchForm.controls['searchShares'].value[0].id : 0;

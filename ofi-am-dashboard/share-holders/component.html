@@ -6,7 +6,8 @@
     <clr-tabs *ngIf="tabsControl.length">
         <clr-tab *ngFor="let tabdata of tabsControl">
             <button clrTabLink id="{{tabdata.id}}" [routerLink]="[tabdata.link, (tabdata.id === 0) ? 'list' :  tabdata.id]">
-                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}} <span *ngIf="tabTitle !== '' && tabdata.type !== 'list'"> - {{tabTitle}}</span>
+                <i class="fa {{tabdata.title.icon}}"></i> {{tabdata.title.text}}
+                <span *ngIf="tabTitle !== '' && tabdata.type !== 'list'"> - {{tabTitle}}</span>
             </button>
 
             <clr-tab-content *clrIfActive="tabdata.active">
@@ -122,7 +123,7 @@
             </div>
             <br>
 
-            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+            <clr-datagrid clrDgSortIcon #ordersDataGrid [clrDgLoading]="loadingDatagrid">
                 <clr-dg-column>{{'Fund name' | translate}}
 
                 </clr-dg-column>
@@ -294,7 +295,7 @@
 
             <br>
 
-            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+            <clr-datagrid clrDgSortIcon #ordersDataGrid [clrDgLoading]="loadingDatagrid">
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
@@ -323,27 +324,28 @@
             <form [formGroup]="filtersForm" id="filters-shares-orders-form">
                 <div class="form-horizontal">
                     <div class="row ">
-                        <div class="col-lg-8">
-                            <div class="row">
-                                <div class="form-group col-lg-6">
-                                    <label>
-                                        <b>{{'Top holders of this share:' | translate}}</b>
-                                    </label>
-                                    <div class="input-button-group">
-                                        <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
-                                        </ng-select>
-                                    </div>
-                                </div>
-                                <div class="form-group col-lg-6">
-                                    <label>
-                                        <b>{{'Last Settlement Date:' | translate}}</b>
-                                    </label>
-                                    <div>
-                                        <span class="readonly-field">{{shareSettlementDate}}</span>
-                                    </div>
-                                </div>
+                        <!--<div class="col-lg-8">-->
+                        <!--<div class="row">-->
+                        <!---->
+                        <!--</div>-->
+                        <div class="form-group col-lg-4">
+                            <label>
+                                <b>{{'Top holders of this share:' | translate}}</b>
+                            </label>
+                            <div class="input-button-group">
+                                <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
+                                </ng-select>
                             </div>
                         </div>
+                        <div class="form-group col-lg-4">
+                            <label>
+                                <b>{{'Last Settlement Date:' | translate}}</b>
+                            </label>
+                            <div>
+                                <span class="readonly-field">{{shareSettlementDate}}</span>
+                            </div>
+                        </div>
+                        <!--</div>-->
                         <div class="col-lg-4 text-right">
                             <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('shares', 1)">{{'Export @tabTitle@ Recordkeeping' | translate: {'tabTitle': tabTitle} }}</button>
                         </div>
@@ -395,7 +397,7 @@
 
             <br>
 
-            <clr-datagrid clrDgSortIcon #ordersDataGrid>
+            <clr-datagrid clrDgSortIcon #ordersDataGrid [clrDgLoading]="loadingDatagrid">
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
