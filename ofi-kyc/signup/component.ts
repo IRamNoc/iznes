@@ -24,7 +24,7 @@ import {
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    SET_PRODUCTION
+    SET_PRODUCTION, SET_SITE_MENU
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
 import {ToasterService} from 'angular2-toaster';
@@ -349,6 +349,12 @@ export class OfiSignUpComponent implements OnDestroy, OnInit {
             asyncTaskPipe,
             {},
             () => {
+                const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
+                this.ngRedux.dispatch(SagaHelper.runAsync(
+                    [SET_SITE_MENU],
+                    [],
+                    asyncTaskPipes, {}
+                ));
             },
             // Fail to login
             (data) => {
