@@ -29,6 +29,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     preselectedManagementCompany: any = {};
     submitted = false;
+    alreadyRegistered = false;
 
     @Input() form: FormGroup;
     @Input() set disabled(isDisabled){
@@ -71,10 +72,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     get selectedManagementCompanies() {
         const selected = this.form.get('managementCompanies').value;
 
-        if (isEmpty(selected)) {
-            return [{}];
-        }
         return selected;
+    }
+
+    get isTableDisplayed(){
+        return this.preselectedManagementCompany.id || this.selectedManagementCompanies.length
     }
 
     ngOnInit() {
@@ -180,6 +182,8 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         let result = reduce(selectedManagementCompanies, (result, value) => {
             return result && value.registered;
         }, accumulator);
+
+        this.alreadyRegistered = result;
 
         this.registered.emit(result);
     }

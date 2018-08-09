@@ -1,8 +1,10 @@
 <form [formGroup]="form" id="step-selection" (ngSubmit)="handleFormSubmit($event)" class="well p-1">
 
-    <div class="row">
+    <div class="row" [class.mb-1]="isTableDisplayed">
         <div class="col-sm-6">
-            {{'Please select the Asset Management Companies you would like to work with on IZNES.' | translate}}
+            <span class="pb-1">
+                {{'Please select the Asset Management Companies you would like to work with on IZNES.' | translate}}
+            </span>
 
             <ng-select [items]="filteredManagementCompanies"
                        [multiple]="true"
@@ -14,10 +16,10 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="alreadyRegistered && isTableDisplayed">
         <div class="col-sm-12">
 
-            <div class="text-center p-1">
+            <div class="text-center mb-1">
                 <span class="alert-icon-wrapper text-warning">
                     <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
                 </span>
@@ -28,7 +30,8 @@
 
         </div>
     </div>
-    <div class="row">
+
+    <div class="row" *ngIf="isTableDisplayed">
         <div class="col-sm-12">
             <table class="table">
                 <thead>
