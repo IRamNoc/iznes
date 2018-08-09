@@ -1,7 +1,7 @@
 import { first } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { WalletTxHelperModel } from '@setl/utils';
 import { ActivatedRoute } from '@angular/router';
 import { ReportingService } from '../reporting.service';
@@ -17,7 +17,7 @@ import { TabControl, Tab } from '../tabs';
 })
 export class SetlTransactionsComponent implements OnInit, OnDestroy {
 
-    subscriptions: Array<Subscription> = [];
+    subscriptions: Subscription[] = [];
     tabs: Tab[];
     tabControl: TabControl;
     transactions$: Observable<Transaction[]>;
@@ -36,7 +36,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
             title: 'Transactions',
             icon: 'key',
             active: true,
-            data: {}
+            data: {},
         });
 
         this.subscriptions.push(
@@ -74,7 +74,7 @@ export class SetlTransactionsComponent implements OnInit, OnDestroy {
                 data: {
                     hash: tx.hash,
                     transaction: tx,
-                }
+                },
             });
         });
     }

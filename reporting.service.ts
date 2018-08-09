@@ -1,5 +1,7 @@
 
-import { combineLatest as observableCombineLatest, BehaviorSubject, Observable } from 'rxjs';
+import { combineLatest as observableCombineLatest } from 'rxjs/observable/combineLatest';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { first, filter, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
@@ -304,7 +306,7 @@ export class ReportingService {
             },
             (data) => {
                 this.logService.log('get transaction history error:', data);
-            }
+            },
         ));
     }
 
@@ -316,29 +318,37 @@ export class ReportingService {
                 msgsig,
                 this.connectedChainId,
                 this.myChainAccess.nodeAddress,
-            ).subscribe((res) => {
-                const transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
-                if (payload.asset) {
-                    const action: any = {
-                        type: SET_ASSET_TRANSACTIONS,
-                        payload: {asset: payload.asset, items: transactions}
-                    };
-                    this.ngRedux.dispatch(action);
-                } else {
-                    const action: any = {type: SET_ALL_TRANSACTIONS, payload: {items: transactions}};
-                    this.ngRedux.dispatch(action);
-                }
-            },(e) => {
-                this.logService.log('reporting node error', e);
-            });
+            ).subscribe(
+                (res) => {
+                    const transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
+                    if (payload.asset) {
+                        const action: any = {
+                            type: SET_ASSET_TRANSACTIONS,
+                            payload: {asset: payload.asset, items: transactions}
+                        };
+                        this.ngRedux.dispatch(action);
+                    } else {
+                        const action: any = {type: SET_ALL_TRANSACTIONS, payload: {items: transactions}};
+                        this.ngRedux.dispatch(action);
+                    }
+                },
+                (e) => {
+                    this.logService.log('reporting node error', e);
+                });
         } else {
             this.logService.log('invalid signature request');
         }
     }
 
     private requestWalletHolding() {
-        this.ngRedux.dispatch(setRequestedWalletHolding());
-        InitialisationService.requestWalletHolding(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        setTimeout(
+            () => {
+                this.ngRedux.dispatch(setRequestedWalletHolding());
+                InitialisationService.requestWalletHolding(
+                    this.ngRedux, this.walletNodeRequestService, this.connectedWalletId,
+                );
+            },
+            1000);
     }
 
     private requestWalletData() {
@@ -364,7 +374,7 @@ export class ReportingService {
             [SET_WALLET_ISSUER_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 

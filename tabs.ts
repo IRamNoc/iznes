@@ -1,4 +1,5 @@
-import { BehaviorSubject ,  Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 export interface Tab {
     title: string;
@@ -8,7 +9,6 @@ export interface Tab {
 }
 
 export class TabControl {
-
     tabs: Tab[];
     defaultTabs: Tab[];
     subject: BehaviorSubject<Tab[]>;
@@ -55,7 +55,7 @@ export class TabControl {
 
         let tabs = [...this.tabs];
         tabs = tabs.map((tab, i) => {
-             return { ...tab, active: (i === index) };
+            return { ...tab, active: (i === index) };
         });
         this.tabs = tabs;
         this.subject.next(this.tabs);
