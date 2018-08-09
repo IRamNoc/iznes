@@ -13,6 +13,14 @@
     float: left;
 }
 
+.ui-select-multiple{
+    cursor : pointer;
+
+    .ui-select-placeholder {
+        padding : 0 15px;
+    }
+}
+
 /* Fix Bootstrap dropdown position when inside a input-group */
 .input-group > .dropdown {
     /* Instead of relative */
