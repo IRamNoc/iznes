@@ -31,9 +31,9 @@ import { OfiUmbrellaFundService } from "../../ofi-req-services/ofi-product/umbre
 import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-share/service";
 import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
 import { ToasterService } from 'angular2-toaster';
-import {MultilingualService} from '@setl/multilingual';
-import {userToursEnums} from '@setl/core-req-services/usertour/config';
-import {UserTourService} from '@setl/core-req-services/usertour/service';
+import { MultilingualService } from '@setl/multilingual';
+import { userToursEnums } from '@setl/core-req-services/usertour/config';
+import { UserTourService } from '@setl/core-req-services/usertour/service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -59,6 +59,8 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     showUsertour = false;
     private tourObject = [];
     userTourEnums: any;
+
+    showAddress = {};
 
     // List of Redux observable.
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -172,7 +174,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     restartUserTour() {
         if (this.connectedWalletId > 0) {
-            setTimeout(()=>{
+            setTimeout(() => {
                 const asyncTaskPipe = this._userTourService.saveUserTour({
                     type: this.userTourEnums.names.utmysubportfolios,
                     value: 0,
