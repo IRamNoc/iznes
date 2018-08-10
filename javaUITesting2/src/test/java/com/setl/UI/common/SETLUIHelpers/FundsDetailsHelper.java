@@ -74,6 +74,7 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div/div[2]/span/span")).click();
         driver.findElement(By.xpath("//*[@id=\"uf_delegatedManagementCompany\"]/div/div[3]/ul/li/div")).click();
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[3]/ng-select/div/div[2]/span/span")).click();
+        wait.until(elementToBeClickable(By.xpath("//*[@id=\"uf_auditor\"]/div/div[3]/ul/li[1]/div")));
         driver.findElement(By.xpath("//*[@id=\"uf_auditor\"]/div/div[3]/ul/li[1]/div")).click();
         driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[4]/ng-select/div/div[2]/span/span")).click();
         driver.findElement(By.xpath("//*[@id=\"uf_taxAuditor\"]/div/div[3]/ul/li[1]/div")).click();
