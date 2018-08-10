@@ -2,9 +2,9 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Subscription, Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {NgRedux, select} from '@angular-redux/store';
-import {find} from 'lodash';
+import {findIndex} from 'lodash';
 import {ClearMyKycRequestedIds} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-request/actions';
-import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
+import {ClearMyKycListRequested, SetMyKycOpenTab, ClearMyKycOpenTab, SetMyKycOpenTabActive} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/actions';
 
 @Component({
     styleUrls: ['./my-requests.component.scss'],
@@ -13,6 +13,7 @@ import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-list/
 export class MyRequestsComponent implements OnInit, OnDestroy {
 
     @select(['ofi', 'ofiKyc', 'myKycList', 'kycList']) myKycList$;
+    @select(['ofi', 'ofiKyc', 'myKycList', 'tabs']) openTabs$;
 
     isListDisplayed;
     kycList: Array<any>;
@@ -21,7 +22,7 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
 
     private unsubscribe: Subject<any> = new Subject();
 
-    constructor(private ngRedux : NgRedux<any>) {
+    constructor(private ngRedux: NgRedux<any>) {
     }
 
     ngOnInit() {
@@ -39,28 +40,40 @@ export class MyRequestsComponent implements OnInit, OnDestroy {
                 this.kycList = kycList;
             })
         ;
+
+        this.openTabs$
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(openTabs => {
+                this.tabs = openTabs;
+            })
+        ;
     }
 
-    selectedKyc(kyc){
-        // [routerLink]="['/my-requests/list', {id : kyc.kycID}]"
+    selectedKyc(kyc) {
         let kycID = kyc.kycID;
-        let foundTab = find(this.tabs, ['kycID', kycID]);
+        let index = findIndex(this.tabs, ['kycID', kycID]);
+        let action;
 
-        if(foundTab){
-            foundTab.displayed = true;
-        } else{
-            this.tabs.push({
-                kycID : kycID,
-                companyName : kyc.companyName,
-                displayed : true
-            });
+        if (index !== -1) {
+            action = SetMyKycOpenTabActive(index);
+            this.ngRedux.dispatch(action);
+        } else {
+            action = SetMyKycOpenTab(
+                {
+                    kycID: kycID,
+                    companyName: kyc.companyName,
+                    displayed: true
+                }
+            );
+            this.ngRedux.dispatch(action);
         }
     }
 
-    closeTab(index){
-        this.tabs = this.tabs.filter((el, i) => {
-            return index !== i;
-        });
+    closeTab(index) {
+        let action = ClearMyKycOpenTab(index);
+        this.ngRedux.dispatch(action);
 
         this.isListDisplayed = true;
     }
