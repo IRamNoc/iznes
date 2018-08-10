@@ -197,15 +197,15 @@
                         <span *ngIf="data.isFund; else col6">
                             <!--empty-->
                         </span>
-                        <ng-template #col6>{{data.shareUnitNumber | moneyValue:4}}
+                        <ng-template #col6>{{data.shareUnitNumber | moneyValue:5}}
 
                         </ng-template>
                     </clr-dg-cell>
                     <clr-dg-cell>
-                        <span *ngIf="data.isFund; else col7">{{data.fundAum | moneyValue:5}}
+                        <span *ngIf="data.isFund; else col7">{{data.fundAum | moneyValue:2}}
 
                         </span>
-                        <ng-template #col7>{{data.shareAum | moneyValue:5}}
+                        <ng-template #col7>{{data.shareAum | moneyValue:2}}
 
                         </ng-template>
                     </clr-dg-cell>
@@ -274,7 +274,7 @@
                                     <b>{{'Fund AUM' | translate}}</b>
                                 </label>
                                 <div>
-                                    <span class="readonly-field">{{fundsAUM | moneyValue:5}}</span>
+                                    <span class="readonly-field">{{fundsAUM | moneyValue:2}}</span>
                                 </div>
                             </div>
                             <div class="form-group col-lg-4">
@@ -299,6 +299,7 @@
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
 
@@ -306,7 +307,8 @@
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.portfolio}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.amount | moneyValue:5}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.quantity | moneyValue:5}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.amount | moneyValue:2}}</clr-dg-cell>
                     <clr-dg-cell>{{item.fundRatio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>
 
@@ -364,7 +366,7 @@
                                 <b>{{'Share AUM' | translate}}</b>
                             </label>
                             <div>
-                                <span class="readonly-field">{{sharesAUM | moneyValue:5}}</span>
+                                <span class="readonly-field">{{sharesAUM | moneyValue:2}}</span>
                             </div>
                         </div>
                         <div class="form-group col-lg-2">
@@ -409,8 +411,8 @@
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.quantity | moneyValue:4}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.amount | moneyValue:5}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.quantity | moneyValue:5}}</clr-dg-cell>
+                    <clr-dg-cell>{{item.amount | moneyValue:2}}</clr-dg-cell>
                     <clr-dg-cell>{{item.ratio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>
 
