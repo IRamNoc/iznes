@@ -91,27 +91,7 @@ export {
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
     ofiManageOrderActions,
-
-    /* Home orders */
-    getOfiHomeOrderList,
-    OFI_SET_HOME_ORDER_LIST,
-    ofiSetRequestedHomeOrder,
-    ofiClearRequestedHomeOrder,
-
-    /* Home orders buffer */
-    OFI_SET_HOME_ORDER_BUFFER,
-    OFI_RESET_HOME_ORDER_BUFFER,
-    OFI_SET_HOME_ORDER_FILTER,
-    OFI_RESET_HOME_ORDER_FILTER,
-    getOfiHomeOrderViewBuffer,
-    getOfiHomeOrderViewFilter,
-
-    /* My orders */
-    // getOfiMyOrderList,
-    OFI_SET_MY_ORDER_LIST,
-    ofiClearRequestedMyOrder,
-    ofiSetRequestedMyOrder,
-    ofiMyOrderActions,
+    ofiUpdateOrder,
 
     // Collective report
     setRequestedCollectiveArchive,

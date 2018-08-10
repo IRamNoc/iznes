@@ -1,13 +1,13 @@
 /* Core/Redux imports. */
-import {Action} from 'redux';
+import { Action } from 'redux';
 
 /* Local types. */
-import {ManageOrders, ManageOrderDetails} from './model';
+import { ManageOrders, ManageOrderDetails } from './model';
 import * as ofiManageOrdersActions from './actions';
-import {SET_ALL_TABS} from './actions';
-import {immutableHelper} from '@setl/utils';
-import {fromJS, Map} from 'immutable';
-import * as _ from 'lodash';
+import { SET_ALL_TABS } from './actions';
+import { immutableHelper } from '@setl/utils';
+import { fromJS, Map } from 'immutable';
+import { get, merge } from 'lodash';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -17,8 +17,29 @@ const initialState: ManageOrders = {
     filters: {},
 };
 
+const patchOrder = (state, orderId, patch) => {
+    const existingOrder = get(state.orderList, orderId, null);
+    if (!existingOrder) {
+        return state;
+    }
+
+    const update = {
+        orderList: {
+            [existingOrder.orderID]: { ...existingOrder, ...patch }
+        }
+    }
+    return merge({}, state, update);
+}
+
+interface PayloadAction extends Action {
+    payload: any;
+}
+
 /* Reducer. */
-export const OfiManageOrderListReducer = function (state: ManageOrders = initialState, action: Action) {
+export const OfiManageOrderListReducer = function (
+    state: ManageOrders = initialState,
+    action: PayloadAction,
+) {
     switch (action.type) {
         /* Set Coupon List. */
         case ofiManageOrdersActions.OFI_SET_MANAGE_ORDER_LIST:
@@ -34,8 +55,62 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
             return handleSetAllTabs(action, state);
 
         case ofiManageOrdersActions.OFI_SET_ORDERS_FILTERS:
-            const filters = _.get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
+            const filters = get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
             return Object.assign({}, state, filters);
+
+        case ofiManageOrdersActions.OFI_UPDATE_ORDER:
+            console.log('MANAGE ORDERS REDUCER', action);
+            switch (action.payload.event) {
+                case 'create':
+                    state = merge({}, state, { orderList: formatManageOrderDataResponse([action.payload.order]) });
+                    break;
+                case 'cutoff':
+                    state = patchOrder(state, action.payload.order.orderId, { orderStatus: 2 });
+                    break;
+                case 'cancel':
+                    state = patchOrder(state, action.payload.orderID, { orderStatus: 0 });
+                    break;
+                case 'commit':
+                    state = patchOrder(state, action.payload.orderID, { orderStatus: 3 });
+                    break;
+                case 'complete':
+                    state = patchOrder(state, action.payload.orderID, { orderStatus: 4 });
+                    break;
+                case 'settled':
+                    state = patchOrder(state, action.payload.order.orderID, { orderStatus: -1 });
+                    break;
+                case 'updatenav':
+                    const nav = action.payload.nav;
+                    const navDate = nav.valuationDate.substring(0, 10);
+
+                    if (nav.status !== -1) {
+                        // This is until we sort out updating for estimates (need to add figure recalculation).
+                        return state;
+                    }
+
+                    let patch = { latestNav: nav.price };
+                    const baseFilter = o => o.orderStatus === 2 && o.valuationDate.substring(0, 10) === navDate;
+                    let filter = o => baseFilter(o) && o.isin === nav.isin);
+                    if (nav.status === -1) {
+                        patch = {
+                            amount: nav.amount,
+                            amountWithCost: nav.amountWithCost,
+                            price: nav.price,
+                            quantity: nav.quantity,
+                            orderStatus: 3,
+                        }
+                        filter = o => baseFilter(o) && o.fundShareID === nav.fundShareID);
+                    }
+
+                    Object.keys(state.orderList)
+                        .map(k => state.orderList[k])
+                        .filter(filter)
+                        .forEach(o => state = patchOrder(state, o.orderID, patch));
+                    break;
+            }
+
+            return state;
+
 
         /* Default. */
         default:
@@ -46,9 +121,9 @@ export const OfiManageOrderListReducer = function (state: ManageOrders = initial
 function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDetails> {
     const rawDataList = fromJS(rawData);
 
-    const manageOrdersList = Map(rawDataList.reduce(
+    const manageOrdersList = rawDataList.reduce(
         function (result, item, idx) {
-            result[idx] = {
+            result[item.get('orderID')] = {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amCompanyName: item.get('amCompanyName'),
@@ -93,9 +168,9 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
             };
             return result;
         },
-        {}));
+        {});
 
-    return manageOrdersList.toJS();
+    return manageOrdersList;
 }
 
 /**
@@ -109,7 +184,7 @@ function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDe
  */
 function ofiSetOrderList(state: ManageOrders, action: Action) {
 
-    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+    const data = get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
     const orderList = formatManageOrderDataResponse(data);
     return Object.assign({}, state, {

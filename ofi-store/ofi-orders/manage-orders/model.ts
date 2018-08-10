@@ -53,9 +53,7 @@ export interface ManageOrderDetails {
 }
 
 export interface ManageOrders {
-    orderList: {
-        [key: string]: ManageOrderDetails
-    };
+    orderList: ManageOrderDetails[],
     requested: boolean;
     openedTabs: Array<OrderTab>;
     filters: any;
