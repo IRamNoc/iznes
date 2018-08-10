@@ -11,7 +11,8 @@ import {
     FundShareRequestBody,
     CreateFundShareRequestData,
     IznesShareListRequestMessageBody,
-    IznDeleteShareDraftRequestBody
+    IznDeleteShareDraftRequestBody,
+    InvestorHoldingsRequestBody
 } from './model';
 import {
     SET_FUND_SHARE,
@@ -115,14 +116,28 @@ export class OfiFundShareService {
     }
 
     /**
+     * Asset manager Request holdings for particular kycId.
+     * @return {any}
+     */
+    requestInvestorHoldings(kycId: string): any {
+        const messageBody: InvestorHoldingsRequestBody = {
+            RequestName: 'iznclientreferentialgetclientholdings',
+            token: this.memberSocketService.token,
+            kycId: kycId
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
+
+    /**
      * Create a new Fund Share
      * @return {any}
      */
     static defaultCreateFundShare(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                  ngRedux: NgRedux<any>,
+                                  requestData,
+                                  successCallback: (data) => void,
+                                  errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.createFundShare(requestData);
 
@@ -182,10 +197,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultUpdateFundShare(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                  ngRedux: NgRedux<any>,
+                                  requestData,
+                                  successCallback: (data) => void,
+                                  errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.updateFundShare(requestData);
 
@@ -207,7 +222,7 @@ export class OfiFundShareService {
 
         this.convertNumbersForBlockchain(requestData);
         messageBody = Object.assign(requestData, messageBody);
-        
+
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
@@ -216,10 +231,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultCreateFundShareDocuments(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                           ngRedux: NgRedux<any>,
+                                           requestData,
+                                           successCallback: (data) => void,
+                                           errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.createFundShareDocuments(requestData);
 
@@ -283,17 +298,17 @@ export class OfiFundShareService {
 
         return new Promise((resolve, reject) => {
             createMemberNodeRequest(this.memberSocketService, messageBody)
-                .then((d) => {
-                    resolve(
-                        _.omit(
-                            _.get(d, [1, 'Data', 0], {}),
-                            ['Status', 'fundShareID'],
-                        ),
-                    );
-                })
-                .catch((err) => {
-                    reject(new Error(err));
-                });
+            .then((d) => {
+                resolve(
+                    _.omit(
+                        _.get(d, [1, 'Data', 0], {}),
+                        ['Status', 'fundShareID'],
+                    ),
+                );
+            })
+            .catch((err) => {
+                reject(new Error(err));
+            });
         });
 
     }
@@ -303,10 +318,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultUpdateFundShareDocuments(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                           ngRedux: NgRedux<any>,
+                                           requestData,
+                                           successCallback: (data) => void,
+                                           errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.updateFundShareDocuments(requestData);
 
@@ -336,10 +351,10 @@ export class OfiFundShareService {
      * @return {any}
      */
     static defaultFundShareAudit(ofiFundService: OfiFundShareService,
-        ngRedux: NgRedux<any>,
-        requestData,
-        successCallback: (data) => void,
-        errorCallback: (e) => void) {
+                                 ngRedux: NgRedux<any>,
+                                 requestData,
+                                 successCallback: (data) => void,
+                                 errorCallback: (e) => void) {
 
         const asyncTaskPipe = ofiFundService.getFundShareAudit(requestData);
 
@@ -398,5 +413,6 @@ export class OfiFundShareService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
+
 
 }

@@ -78,6 +78,12 @@ export class OfiFundAccessTable {
         this.tableData[index]['access'] = !this.tableData[index]['access'];
         this.tableData[index]['accessChanged'] = !this.tableData[index]['accessChanged'];
 
+        if (!this.tableData[index]['access']) {
+            this.tableData[index]['entry'] = this.oldTableData[index]['entry'];
+            this.tableData[index]['exit'] = this.oldTableData[index]['exit'];
+            this.tableData[index]['newOverride'] = this.oldTableData[index]['newOverride'];
+        }
+
         this.updateChanges('access');
     }
 
