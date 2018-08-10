@@ -113,7 +113,7 @@ public class SetUp {
 
     public static final String SweetAlert = ".sweet-alert.showSweetAlert.visible p";
     public static final String SweetAlertHeader = ".sweet-alert.showSweetAlert.visible>h2";
-    public static final Dimension Screen =  new Dimension(1920, 1200);
+    public static final Dimension Screen =  new Dimension(1920, 1080);
 
 
 
@@ -172,7 +172,7 @@ public class SetUp {
             options.setExperimentalOption("prefs", prefs);
             options.addArguments("chrome.switches","--disable-extensions");
             options.addArguments("--test-type" );
-            options.addArguments("window-size=1920,1200");
+            options.addArguments("window-size=1920,1080");
             options.addArguments("--no-sandbox");
             options.addArguments("enable-automation");
             options.addArguments("test-type=browser");
