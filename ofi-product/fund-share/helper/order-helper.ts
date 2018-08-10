@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-//import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
+// import {BlockchainContractService} from '../../../../utils/services/blockchain-contract/service';
 import { BlockchainContractService } from '@setl/utils/services/blockchain-contract/service';
 import {
     Contract,
@@ -21,8 +21,11 @@ import {
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
-//} from '../../../../utils/services/blockchain-contract/model';
+// } from '../../../../utils/services/blockchain-contract/model';
 } from '@setl/utils/services/blockchain-contract/model';
+
+// import { fixToDecimal } from '../../../../utils/helper/common/math-helper';
+import { fixToDecimal } from '@setl/utils/helper/common/math-helper';
 
 import { Base64 } from './base64';
 
@@ -32,15 +35,9 @@ const orderSettlementThreshold = 30;
 // todo
 // need to check the user balance. when redeeming
 
-const MathJsBlockchainNumberFormat = {
-    notation: 'fixed',
-    precision: 1,
-};
+const BlockchainNumberDecimal = 0;
 
-const MathJsNormalNumberFormat = {
-    notation: 'fixed',
-    precision: 6,
-};
+const NormalNumberDecimal = 5;
 
 export interface OrderRequest {
     token: string;
@@ -231,7 +228,7 @@ export class OrderHelper {
     fakeSettlement: any;
 
     get feePercentage() {
-        return this.isSellBuy ?
+        return (this.isSellBuy && this.isAllowSellBuy) ?
             0 :
             Number({
             [OrderType.Subscription]: this.fundShare.entryFee || 0,
@@ -272,10 +269,6 @@ export class OrderHelper {
     }
 
     get isSellBuy(): boolean {
-        // if the share is not allow to play a sell buy order, we don't bother to check.
-        if (!this.isAllowSellBuy) {
-           return false;
-        }
        return this.orderRequest.ordertype === 'sb' || this.orderRequest.issellbuy;
     }
 
@@ -365,8 +358,8 @@ export class OrderHelper {
         const contractData = BlockchainContractService.buildCancelContractMessageBody(contractAddress, commitAddress).contractdata;
 
         return {
-            messageType: 'tx',
-            messageBody: {
+            messagetype: 'tx',
+            messagebody: {
                 topic: 'cocom',
                 walletid: walletId,
                 address: commitAddress,
@@ -847,7 +840,7 @@ export class OrderHelper {
              * amount = unit * nav
              */
             amount = 0;
-            estimatedAmount = Number(math.format(math.chain(quantity).multiply(this.nav).divide(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
+            estimatedAmount = fixToDecimal((quantity * this.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
             // change to 2 decimal place
             estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
@@ -871,20 +864,20 @@ export class OrderHelper {
              */
 
             // if redemption amount will always be estimated.
-            estimatedQuantity = Number(math.format(math.chain(this.orderValue).divide(this.nav).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
+            estimatedQuantity = fixToDecimal((this.orderValue / this.nav * NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
             // make sure the quantity meet the share maximumNumberDecimal
             // 1. convert back to normal number scale
             // 2. meeting the maximumNumberDecimal, and always round down.
             // 3. convert back to blockchain number scale
-            estimatedQuantity = roundDown(estimatedQuantity, this.fundShare.maximumNumDecimal);
+            estimatedQuantity = fixToDecimal(estimatedQuantity, Number(this.fundShare.maximumNumDecimal), 'floor');
 
             quantity = 0;
 
             // if we are using known nav, we use the quantity to work out the new amount
             // if we are using unknow nav, we put the specified amount back.
             if (this.isKnownNav()) {
-                estimatedAmount = Number(math.format(math.chain(estimatedQuantity).multiply(this.nav).divide(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
+                estimatedAmount = fixToDecimal((estimatedQuantity * this.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
                 // change to 2 decimal place
                 estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
@@ -911,7 +904,7 @@ export class OrderHelper {
         default:
             return {
                 orderValid: false,
-                errorMessage: 'Invalid orderBy type'
+                errorMessage: 'Invalid orderBy type',
             };
         }
 
@@ -1407,11 +1400,11 @@ export class OrderHelper {
 export function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent) / NumberMultiplier;
-    return Number(math.format(math.chain(amount).multiply(feePercent).done(), MathJsBlockchainNumberFormat));
+    return fixToDecimal((amount * feePercent), BlockchainNumberDecimal, 'floor');
 }
 
 export function convertToBlockChainNumber(num) {
-    return Number(math.format(math.chain(num).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat));
+    return fixToDecimal((num * NumberMultiplier), BlockchainNumberDecimal, 'floor');
 }
 
 /**
@@ -1426,8 +1419,8 @@ export function calNetAmount(amount: number | string, fee: number | string, orde
     amount = Number(amount);
     fee = Number(fee);
     return {
-        s: Number(math.format(math.chain(amount).add(fee).done(), MathJsBlockchainNumberFormat)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), MathJsBlockchainNumberFormat))
+        s: fixToDecimal((amount + fee), BlockchainNumberDecimal, 'floor'),
+        r: fixToDecimal((amount - fee), BlockchainNumberDecimal, 'floor'),
     }[orderType];
 }
 
@@ -1446,23 +1439,5 @@ export function pad(num: number, width: number, fill: string): string {
 }
 
 export function toNormalScale(num: number, numDecimal: number): number {
-    return math.format(math.chain(num).divide(NumberMultiplier).done(), { notation: 'fixed', precision: numDecimal });
-}
-
-/**
- * Round Down Numbers
- * eg 0.15151 becomes 0.151
- * eg 0.15250 becomes 0.152
- *
- * @param number
- * @param decimals
- * @returns {number}
- */
-export function roundDown(number: any, decimals: any = 0) {
-    // convert to normal number scale.
-    const normalNum = math.format(math.chain(number).divide(NumberMultiplier).done(), MathJsNormalNumberFormat);
-    const roundedNum = (Math.floor(normalNum * Math.pow(10, decimals)) / Math.pow(10, decimals));
-
-    // convert back to blockchainScale
-    return math.format(math.chain(roundedNum).multiply(NumberMultiplier).done(), MathJsBlockchainNumberFormat);
+    return fixToDecimal((num * NumberMultiplier), numDecimal, 'floor');
 }
