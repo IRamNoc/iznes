@@ -1050,6 +1050,42 @@ The IZNES Team.</p>`;
             conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
         }
 
+        let orderValueHtml = '';
+
+        if (this.type === 'sellbuy') {
+           orderValueHtml = `
+                    <tr>
+                        <td class="left"><b>Redemption Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Subscription Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Redemption Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Subscription Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+
+           `;
+        } else {
+            orderValueHtml = `
+                    <tr>
+                        <td class="left"><b>Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+
+           `;
+        }
+
         let message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
             ${conditionalMessage ? conditionalMessage : ''}
@@ -1076,14 +1112,7 @@ The IZNES Team.</p>`;
                         <td class="left"><b>Currency:</b></td>
                         <td>${this.currency}</td>
                     </tr>
-                    <tr>
-                        <td class="left"><b>Quantity:</b></td>
-                        <td>${quantityStr}</td>
-                    </tr>
-                    <tr>
-                        <td class="left"><b>Amount:</b></td>
-                        <td>${amountStr}</td>
-                    </tr>
+                    ${orderValueHtml}
                     <tr>
                         <td class="left"><b>NAV Date:</b></td>
                         <td>${this.valuationDate.value}</td>
