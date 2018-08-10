@@ -43,7 +43,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(40000);
+    public Timeout globalTimeout = new Timeout(400000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -375,7 +375,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         driver.findElement(By.id("mcBtnSubmitFormDraft")).getAttribute("enabled");
         driver.findElement(By.id("mcBtnSubmitFormDraft")).click();
         scrollElementIntoViewByXpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-footer/div");
-
+        wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > button")).click();
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-home/div[5]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[1]/div/clr-dg-column[2]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uFundDetails);
         driver.findElement(By.cssSelector("#iznes > app-root > app-basic-layout > div > ng-sidebar-container > div > div > div > main > div.router-container > div > app-ofi-am-product-home > div:nth-child(6) > div.row.panel-body > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-head.ng-star-inserted > div > clr-dg-column:nth-child(2) > div > clr-dg-string-filter > clr-dg-filter > div > div > button > clr-icon")).click();
@@ -389,6 +390,8 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         submitUmbrellaFund();
         assertPopupNextFundNo("Fund");
         searchUmbrellaTable(uFundDetails[0]);
+        wait.until(refreshed(visibilityOfElementLocated(By.className("toast-title"))));
+        wait.until(invisibilityOfElementLocated(By.className("toast-title")));
         getUmbrellaTableRow(0, uFundDetails[0], "16616758475934857432", "Management Company", "Jordan");
         validateDatabaseUmbrellaFundExists(1, uFundDetails[0]);
     }
