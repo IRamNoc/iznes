@@ -4,7 +4,7 @@
         <span *ngIf="!isEditMode; else editTitle" id="add-fund-title">{{'Add a New Umbrella Fund' | translate}}</span>
 
         <ng-template #editTitle>
-            <span *ngIf="umbrellaFund" id="edit-fund-title">{{'Umbrella fund: @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFund[0].umbrellaFundName} }}</span>
+            <span id="edit-fund-title">{{'Umbrella fund: @umbrellaFund[0].umbrellaFundName@' | translate: {'umbrellaFund[0].umbrellaFundName': umbrellaFundForm.controls.umbrellaFundName.value} }}</span>
         </ng-template>
     </h1>
 </div>
@@ -25,9 +25,9 @@
 
                 </p>
                 <div class="form-group">
-                        <button *ngIf="isEditMode" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
-                                {{'Audit Trail' | translate}}
-                            </button>
+                    <button *ngIf="isEditMode" class="btn btn-default" id="auditTrailButton" (click)="auditTrail(umbrellaFundID)">
+                        {{'Audit Trail' | translate}}
+                    </button>
                     <button *ngIf="isEditMode" class="btn btn-primary" id="uploadNavFileButton" (click)="duplicate(umbrellaFundID)">
                         {{'Duplicate Umbrella' | translate}}
                     </button>
