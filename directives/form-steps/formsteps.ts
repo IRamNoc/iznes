@@ -1,9 +1,19 @@
-import { Directive, ElementRef, HostListener, Input, OnInit, OnDestroy, Renderer2, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import {ControlContainer, FormControl, FormControlDirective, FormControlName} from '@angular/forms';
+import {
+    Directive,
+    ElementRef,
+    HostListener,
+    Input,
+    OnInit,
+    OnDestroy,
+    Renderer2,
+    AfterViewInit,
+    ChangeDetectorRef
+} from '@angular/core';
+import { ControlContainer, FormControl, FormControlDirective, FormControlName } from '@angular/forms';
 import * as _ from 'lodash';
-import {MultilingualService} from '@setl/multilingual';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs/Rx';
+import { MultilingualService } from '@setl/multilingual';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs/Rx';
 
 @Directive({
     selector: '[formsteps]'
@@ -56,6 +66,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     divButtons: any;
     btPrev: any;
+    btClose: any;
     btNext: any;
     btReset: any;
     btSubmit: any;
@@ -70,7 +81,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         private _translate: MultilingualService,
         private router: Router,
         private _activatedRoute: ActivatedRoute,
-        private changeDetectorRef : ChangeDetectorRef,
+        private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.el = this._el.nativeElement;
         this.renderer.setStyle(this.el, 'transition', 'opacity ease-out .2s');
@@ -182,7 +193,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
             // move sections into slider container + assign step size on each section
             let sections = this.el.getElementsByTagName('section');
             for (let i = sections.length; i > 0; i--) {
-                let mySection = this.el.querySelector('[order="' + i  + '"]');
+                let mySection = this.el.querySelector('[order="' + i + '"]');
                 if (mySection === null) {
                     this.divSliderContainer.prepend(sections[i - 1]);
                     sections[i - 1].style.width = this.divSliderSize + 'px';
@@ -274,6 +285,16 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                     this.currentStep--;
                 }
                 this.move();
+            };
+
+            // Close
+            this.btClose = document.createElement('button');
+            this.btClose.className = 'btn btn-warning btPrev';
+            this.btClose.innerHTML = 'Close';
+            this.btClose.setAttribute('type', 'button');
+            this.divButtons.appendChild(this.btClose);
+            this.btClose.onclick = (event) => {
+                this.router.navigateByUrl('/my-requests/list');
             };
 
             // NEXT
@@ -521,7 +542,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
 
     dirty(controls) {
         Object.keys(controls).forEach((key) => {
-            let formControl : FormControl = controls[key];
+            let formControl: FormControl = controls[key];
             if (controls[key].controls) {
                 this.dirty(controls[key].controls);
             } else {
@@ -559,7 +580,7 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    scrollIntoView(element: Element){
+    scrollIntoView(element: Element) {
         const el = (element.parentNode as Element);
         const parent = document.getElementsByClassName('content-area')[0];
         if (parent) {
@@ -599,13 +620,13 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
         if (!this.isNewFormSteps) {
             const steps = this.el.getElementsByTagName('section');
             let marginsTop;
-            if (steps[this.currentStep] && window.getComputedStyle(steps[this.currentStep],null)) {
+            if (steps[this.currentStep] && window.getComputedStyle(steps[this.currentStep], null)) {
                 // calculate screens/sections height
-                marginsTop = parseInt(window.getComputedStyle(steps[this.currentStep],null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
+                marginsTop = parseInt(window.getComputedStyle(steps[this.currentStep], null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
                 this.divSlider.style.height = 10 + marginsTop + steps[this.currentStep].offsetHeight + (steps[this.currentStep].scrollHeight - steps[this.currentStep].offsetHeight) + 'px';
             } else {
                 // calculate finished screen height
-                marginsTop = parseInt(window.getComputedStyle(this.divFinished,null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
+                marginsTop = parseInt(window.getComputedStyle(this.divFinished, null).getPropertyValue('margin').split(' ')[0].slice(0, -2)) * 2;
                 this.divSlider.style.height = marginsTop + this.divFinished.offsetHeight + 'px';
             }
         } else {
