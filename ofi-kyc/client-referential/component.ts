@@ -67,6 +67,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     };
 
     clientReferentialAudit = [];
+    holdingsTable = [];
+    investorKycIds = {};
+    allKycIds = [];
 
     @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
     @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) clientReferentialOb;
@@ -132,6 +135,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(this.amKycListObs.subscribe((amKycList) => {
             this.amKycList = amKycList;
+            amKycList.forEach((row) => {
+                if (!this.investorKycIds[row.investorUserID]) {
+                    this.investorKycIds[row.investorUserID] = [];
+                }
+                this.investorKycIds[row.investorUserID].push(row.kycID);
+                this.allKycIds.push(row.kycID);
+            });
         }));
 
         this.subscriptions.push(this.amAllFundShareListOb.subscribe((fundShareList) => {
@@ -165,47 +175,97 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     viewClient(id) {
         this.kycId = id;
+        if (this.clients[id].alreadyCompleted == 0) this.loadTab(2);
+    }
 
-        let tempOtherData = {};
-        if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
-            const kyc = this.amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
+    loadTab(tab) {
+        if (tab == 2) {
+            let tempOtherData = {};
+            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
+                const kyc = this.amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
 
-            this.companyName = kyc.investorCompanyName;
+                this.companyName = kyc.investorCompanyName;
 
-            tempOtherData['amCompany'] = kyc.companyName;
-            tempOtherData['investorData'] = kyc.investorWalletID;
-            this.otherData = tempOtherData;
-            let investorWalletData = [];
+                tempOtherData['amCompany'] = kyc.companyName;
+                tempOtherData['investorData'] = kyc.investorWalletID;
+                this.otherData = tempOtherData;
+                let investorWalletData = [];
 
-            // Get the fund access for investor walletID and render it.
-            this._ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
-                _.get(data, '[1].Data', []).forEach((row) => {
-                    investorWalletData[row['shareID']] = row;
-                });
-
-                this.tableData = [];
-                Object.keys(this.shareData).forEach((key) => {
-                    this.tableData.push({
-                        id: this.shareData[key]['fundShareID'],
-                        kycId: this.kycId,
-                        investorWalletID: kyc.investorWalletID,
-                        accessChanged: false,
-                        fundName: this.shareData[key]['fundName'],
-                        shareName: this.shareData[key]['fundShareName'],
-                        isin: this.shareData[key]['isin'],
-                        max: ((1 + Math.min(this.shareData[key]['maxRedemptionFee'], this.shareData[key]['maxSubscriptionFee'])) * 100 - 100).toFixed(5),
-                        minInvestment: this.shareData[key]['minSubsequentSubscriptionInAmount'],
-                        access: !!investorWalletData[this.shareData[key]['fundShareID']],
-                        entry: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['entryFee'] : 0)),
-                        exit: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['exitFee'] : 0)),
-                        override: (!!investorWalletData[this.shareData[key]['fundShareID']] ? (investorWalletData[this.shareData[key]['fundShareID']]['minInvestOverride'] == 1 ? 1 : 0) : false),
-                        overrideAmount: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestVal'] : 0) / 100000,
-                        overrideDocument: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestDocument'] : ''),
-                        overrideDocumentTitle: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['fileTitle'] : ''),
-                        newOverride: false,
+                // Get the fund access for investor walletID and render it.
+                this._ofiFundShareService.requestInvestorFundAccess({ investorWalletId: kyc.investorWalletID }).then((data) => {
+                    _.get(data, '[1].Data', []).forEach((row) => {
+                        investorWalletData[row['shareID']] = row;
                     });
-                });
 
+                    this.tableData = [];
+                    Object.keys(this.shareData).forEach((key) => {
+                        this.tableData.push({
+                            id: this.shareData[key]['fundShareID'],
+                            kycId: this.kycId,
+                            investorWalletID: kyc.investorWalletID,
+                            accessChanged: false,
+                            fundName: this.shareData[key]['fundName'],
+                            shareName: this.shareData[key]['fundShareName'],
+                            isin: this.shareData[key]['isin'],
+                            max: ((1 + Math.min(this.shareData[key]['maxRedemptionFee'], this.shareData[key]['maxSubscriptionFee'])) * 100 - 100).toFixed(5),
+                            minInvestment: this.shareData[key]['minSubsequentSubscriptionInAmount'],
+                            access: !!investorWalletData[this.shareData[key]['fundShareID']],
+                            entry: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['entryFee'] : 0)),
+                            exit: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['exitFee'] : 0)),
+                            override: (!!investorWalletData[this.shareData[key]['fundShareID']] ? (investorWalletData[this.shareData[key]['fundShareID']]['minInvestOverride'] == 1 ? 1 : 0) : false),
+                            overrideAmount: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestVal'] : 0) / 100000,
+                            overrideDocument: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestDocument'] : ''),
+                            overrideDocumentTitle: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['fileTitle'] : ''),
+                            newOverride: false,
+                        });
+                    });
+
+                    this._changeDetectorRef.markForCheck();
+                }).catch((e) => {
+
+                });
+            }
+        } else if (tab == 3) {
+            this._ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
+                this.holdingsTable = [];
+                if (data[1].Data.length > 0) {
+                    let tempArr = [];
+                    let fundStats = {
+                        fundName: '',
+                        amount: 0,
+                        ratio: 0
+                    };
+                    data[1].Data.forEach((row, index) => {
+                        if (tempArr.length > 0 && fundStats['fundName'] != row.fundName) {
+                            this.holdingsTable.push({
+                                fundName: fundStats['fundName'],
+                                fundCurrency: fundStats['fundCurrency'],
+                                amount: fundStats['amount'],
+                                ratio: fundStats['ratio']
+                            });
+                            fundStats = {
+                                fundName: '',
+                                amount: 0,
+                                ratio: 0
+                            };
+                            this.holdingsTable = this.holdingsTable.concat(...tempArr);
+                            tempArr = [];
+                        }
+                        fundStats['fundName'] = row.fundName;
+                        fundStats['fundCurrency'] = row.fundCurrency;
+                        fundStats['amount'] += row.amount;
+                        fundStats['ratio'] += row.ratio;
+
+                        tempArr.push(row);
+                    });
+                    this.holdingsTable.push({
+                        fundName: fundStats['fundName'],
+                        fundCurrency: fundStats['fundCurrency'],
+                        amount: fundStats['amount'],
+                        ratio: fundStats['ratio']
+                    });
+                    this.holdingsTable = this.holdingsTable.concat(...tempArr);
+                }
                 this._changeDetectorRef.markForCheck();
             }).catch((e) => {
 
@@ -285,6 +345,24 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             search: this.searchForm.controls['searchInvestor'].value,
             from: this.searchForm.controls['searchFrom'].value,
             to: this.searchForm.controls['searchTo'].value,
+        });
+    }
+
+    downloadAllHoldingsCSVFile() {
+        this._fileDownloader.downLoaderFile({
+            method: 'exportClientReferentialClientsHoldings',
+            token: this.socketToken,
+            userId: this.userId,
+            kycIds: this.allKycIds,
+        });
+    }
+
+    downloadSingleHoldingsCSVFile() {
+        this._fileDownloader.downLoaderFile({
+            method: 'exportClientReferentialClientHoldings',
+            token: this.socketToken,
+            userId: this.userId,
+            kycId: this.kycId,
         });
     }
 
