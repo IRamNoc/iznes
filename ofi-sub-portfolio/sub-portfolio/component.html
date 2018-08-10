@@ -46,7 +46,7 @@
 
                 <clr-dg-row *clrDgItems="let address of addressList;">
                     <clr-dg-cell>
-                        <span *ngIf="!address.editing">
+                        <span *ngIf="!address.editing" style="cursor: pointer;" (click)="showAddress = address">
                             {{address.label}}
                         </span>
                         <div *ngIf="address.editing">
@@ -158,3 +158,22 @@
 <div *ngIf="showUsertour">
     <i [tooltip]="tourObject"></i>
 </div>
+
+<clr-modal [(clrModalOpen)]="!!showAddress['address']">
+    <h3 id="override_header" class="modal-title">{{'Sub-Portfolio Address' | translate}}</h3>
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-4">
+                {{'Blockchain Address' | translate}}:
+            </div>
+            <div class="col-sm-8">
+                {{showAddress.address}}
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="override_cancel" type="button" class="btn btn-primary" (click)="showAddress = {}">
+            {{'Close' | translate}}
+        </button>
+    </div>
+</clr-modal>
