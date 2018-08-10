@@ -57,7 +57,7 @@ export class OfiConsumeTokenComponent implements OnInit {
             // If it was the first signup, we also have granted chain access to the user
             InitialisationService.requestMyOwnWallets(this.ngRedux, this.myWalletsService);
             InitialisationService.requestMyChainAccess(this.ngRedux, this.chainService);
-        });
+        }, () => {});
     }
 
     removeTokenFromURL() {
