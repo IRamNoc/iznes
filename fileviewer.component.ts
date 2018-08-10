@@ -159,6 +159,7 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     method: 'retrieve',
                     walletId: this.walletId,
                     downloadId: data.downloadId,
+                    download: true
                 });
             }
         });
