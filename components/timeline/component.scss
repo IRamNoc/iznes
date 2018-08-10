@@ -14,7 +14,6 @@
             transition-delay: 0.3s;
             color: rgba(255, 255, 255, 0.5);
             &.active {
-                color: rgba(255, 255, 255, 0.5);
                 background-color: #49A45F;
                 animation: pulse 1s forwards;
                 animation-delay: 1.5s;
@@ -52,9 +51,6 @@
 }
 
 @keyframes pulse {
-    0% {
-        color: rgba(255, 255, 255, 0.5);
-    }
     100% {
         color: rgba(255, 255, 255, 1);
     }
