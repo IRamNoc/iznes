@@ -770,19 +770,51 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         `, { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
-            const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-            const orderRef = commonHelper.pad(orderId, 8, '0');
-            this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
-            this.handleClose();
 
-            if (this.amountTooBig) {
-                this.sendMessageToAM({
-                    walletID: this.shareData.amDefaultWalletId,
-                    orderTypeLabel: this.orderTypeLabel,
-                    orderID: orderId,
-                    orderRef: orderRef
-                });
+            let orderSuccessMsg = '';
+
+            if (this.type === 'sellbuy') {
+               const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+               const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+
+               const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+               const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+
+               orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
+
+               if (this.amountTooBig) {
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderSubId,
+                       orderRef: orderSubRef,
+                   });
+
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderRedeemId,
+                       orderRef: orderRedemRef,
+                   });
+               }
+            } else {
+               const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+               const orderRef = commonHelper.pad(orderId, 8, '0');
+
+               orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
+
+               if (this.amountTooBig) {
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderId,
+                       orderRef,
+                   });
+               }
             }
+
+            this._toaster.pop('success', orderSuccessMsg);
+            this.handleClose();
 
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
