@@ -79,3 +79,14 @@
     }
 }
 
+:host ::ng-deep {
+    .nav {
+        background: blue;
+        display: none !important;
+    }
+
+    clr-tab-content {
+        border-top-left-radius: 4px !important;
+    }
+}
+

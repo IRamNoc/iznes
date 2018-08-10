@@ -81,7 +81,7 @@
 
 <clr-modal [(clrModalOpen)]="showOverrideModal">
     <h3 id="override_header" class="modal-title">{{'Override Minimum Investment Amount' | translate}}</h3>
-    <div class="modal-body" *ngIf="currentOverride != 0">
+    <div class="modal-body" *ngIf="!!tableData[currentOverride]">
         <form>
             <div class="row">
                 <div class="form-group col-sm-12">
@@ -122,7 +122,7 @@
             </div>
         </form>
     </div>
-    <div class="modal-footer" *ngIf="currentOverride != 0">
+    <div class="modal-footer" *ngIf="!!tableData[currentOverride]">
         <button id="override_remove_override" *ngIf="tableData[currentOverride]['override']" type="button" class="btn btn-warning" (click)="closeOverrideModal(2);">
             {{'Remove Override' | translate}}
         </button>

@@ -40,7 +40,7 @@
                             {{'View Shares Authorisation Audit Trail' | translate}}
                         </button>
                         <br>
-                        <button class="btn btn-success">
+                        <button class="btn btn-success" (click)="downloadAllHoldingsCSVFile()">
                             {{'Export Clients Holdings' | translate}}
                         </button>
                         <br>
@@ -98,7 +98,7 @@
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink>{{'Shares Authorisation' | translate}}</button>
+            <button clrTabLink (click)="loadTab(2);">{{'Shares Authorisation' | translate}}</button>
             <clr-tab-content *clrIfActive="false">
                 <div class="row">
                     <div class="col-sm-6">
@@ -112,9 +112,59 @@
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
-            <button clrTabLink>{{'Holdings' | translate}}</button>
+            <button clrTabLink (click)="loadTab(3);">{{'Holdings' | translate}}</button>
             <clr-tab-content>
+                <div class="row">
+                    <div class="col-sm-6">
+                        {{'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}
+                    </div>
+                    <div class="col-sm-6" align="right">
+                        <button class="btn btn-success" (click)="downloadSingleHoldingsCSVFile()">{{'Export Holdings' | translate}}</button>
+                    </div>
+                </div>
+                <clr-datagrid #holdingDataGrid>
+                    <clr-dg-column [clrDgField]="'fundName'">{{'Fund Name' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'shareName'">{{'Share Name' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'fundCurrency'">{{'Currency' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'isin'">{{'ISIN' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'quantity'">{{'Quantity' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'latestNav'">{{'Latest NAV' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'amount'">{{'Amount' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'ratio'">{{'Ratio' | translate}}</clr-dg-column>
 
+                    <clr-dg-row *clrDgItems="let item of holdingsTable">
+                        <ng-container *ngIf="!item.shareName">
+                            <clr-dg-cell>{{item.fundName}}</clr-dg-cell>
+                            <clr-dg-cell></clr-dg-cell>
+                            <clr-dg-cell>{{item.fundCurrency}}</clr-dg-cell>
+                            <clr-dg-cell></clr-dg-cell>
+                            <clr-dg-cell></clr-dg-cell>
+                            <clr-dg-cell></clr-dg-cell>
+                            <clr-dg-cell>{{item.amount}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.ratio}}</clr-dg-cell>
+                        </ng-container>
+                        <ng-container *ngIf="!!item.shareName">
+                            <clr-dg-cell></clr-dg-cell>
+                            <clr-dg-cell>{{item.shareName}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.fundCurrency}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.isin}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.quantity}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.latestNav}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.amount}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.ratio}}</clr-dg-cell>
+                        </ng-container>
+
+                    </clr-dg-row>
+
+                    <clr-dg-footer>{{holdingPagination.firstItem + 1}} - {{holdingPagination.lastItem + 1}}
+
+                        <clr-dg-pagination #holdingPagination [clrDgPageSize]="20"></clr-dg-pagination>
+                    </clr-dg-footer>
+                </clr-datagrid>
+
+                <div align="middle" style="margin-top: 20px;">
+                    <button class="btn btn-info" (click)="kycId = ''">{{'Back' | translate}}</button>
+                </div>
             </clr-tab-content>
         </clr-tab>
     </clr-tabs>
