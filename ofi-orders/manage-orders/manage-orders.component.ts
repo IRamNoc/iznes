@@ -745,7 +745,11 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ];
 
         if (openedTabs.length !== 0) {
-            this.tabsControl[0].active = openedTabs[0].active;
+            openedTabs.forEach((tab, index) => {
+                if (tab.orderId > -1) {
+                    openedTabs[index].active = false;
+                }
+            });
             this.tabsControl = this.tabsControl.concat(openedTabs.slice(1));
         }
     }
