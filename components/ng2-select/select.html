@@ -12,9 +12,14 @@
               style="outline: 0;"
         >
             <span *ngIf="inlineLabel !== ''" class="pull-left">
-                {{this._translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
+                {{this.translate.getTranslation(inlineLabelMlTag) || inlineLabel}}:
             </span>
-            <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">{{placeholder}}</span>
+            <span *ngIf="active.length <= 0" class="ui-select-placeholder text-muted">
+                <ng-template [ngIf]="itemObjects.length >= 1000">
+                    <span _ngcontent-c10="" class="fa fa-search"></span>
+                </ng-template>
+                {{ placeholder }}
+            </span>
             <span *ngIf="active.length > 0" class="ui-select-match-text pull-left"
                   [ngClass]="{'ui-select-allow-clear': allowClear && active.length > 0}"
                   [innerHTML]="sanitize(active[0].text)" style="padding: 2px; margin:-2px 2px !important"></span>
