@@ -339,6 +339,22 @@ export {
     UserTeamsAuditState,
     getAccountAdminTeamsAudit,
     userTeamsAuditReducer,
+    // permissions
+    SET_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    setRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_PERMISSION_AREAS,
+    PermissionAreasState,
+    getAccountAdminPermissions,
+    permissionAreasReducer,
+    // user permissions
+    SET_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    setRequestedAccountAdminUserPermissionAreas,
+    clearRequestedAccountAdminUserPermissionAreas,
+    CLEAR_REQUESTED_ACCOUNT_ADMIN_USER_PERMISSION_AREAS,
+    UserPermissionAreasState,
+    getAccountAdminUserPermissions,
+    userPermissionAreasReducer,
 } from './account-admin/';
 
 /*
