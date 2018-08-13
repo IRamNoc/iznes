@@ -277,7 +277,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get orderValue() {
         return {
             q: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.form.controls.quantity.value, 4)
+                this._moneyValuePipe.parse(this.form.controls.quantity.value, 5)
             ),
             a: this._numberConverterService.toBlockchain(
                 this._moneyValuePipe.parse(this.trueAmount, 2)
