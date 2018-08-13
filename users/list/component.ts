@@ -1,11 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 
-import { FileDownloader } from '@setl/utils'
-;
+import {
+    clearRequestedAccountAdminUsers,
+} from '@setl/core-store';
+import { FileDownloader } from '@setl/utils';
 import * as Model from '../model';
+import { UsersService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
+import { AccountAdminBaseService } from '../../base/service';
 
 @Component({
     selector: 'app-core-admin-users-list',
@@ -15,39 +19,66 @@ import { AccountAdminListBase } from '../../base/list/component';
 export class UsersListComponent extends AccountAdminListBase implements OnInit, OnDestroy {
 
     users: Model.AccountAdminUser[];
+    accountId: number;
 
-    constructor(router: Router, redux: NgRedux<any>, fileDownloader: FileDownloader) {
-        super('User', router, redux, fileDownloader);
+    @select(['user', 'myDetail', 'accountId']) accountIdOb;
+    @select(['accountAdmin', 'users', 'requested']) usersRequestedOb;
+    @select(['accountAdmin', 'users', 'users']) usersOb;
 
-        this.users = [
-            {
-                firstName: 'User',
-                lastName: 'One',
-                email: 'user_one@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERONE1',
-            },
-            {
-                firstName: 'User',
-                lastName: 'Two',
-                email: 'user_two@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERTWO2',
-            },
-            {
-                firstName: 'User',
-                lastName: 'Three',
-                email: 'user_three@email.com',
-                phone: '01234 567890',
-                type: 'Type',
-                reference: 'USERTHREE3',
-            },
-        ];
+    constructor(private service: UsersService,
+                router: Router,
+                redux: NgRedux<any>,
+                fileDownloader: FileDownloader,
+                baseService: AccountAdminBaseService) {
+
+        super(router, redux, fileDownloader, baseService);
+        this.noun = 'User';
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        super.ngOnInit();
 
-    ngOnDestroy() {}
+        this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
+            this.accountId = accountId;
+
+            this.csvRequest = {
+                accountID: this.accountId,
+                textSearch: null,
+            };
+        }));
+
+        this.subscriptions.push(this.usersRequestedOb.subscribe((requested: boolean) => {
+            this.requestUsers(requested);
+        }));
+
+        this.subscriptions.push(this.usersOb.subscribe((users: Model.AccountAdminUser[]) => {
+            this.users = users;
+        }));
+
+        this.redux.dispatch(clearRequestedAccountAdminUsers());
+    }
+
+    private requestUsers(requested: boolean): void {
+        if (requested) return;
+
+        this.service.readUsers(null, this.accountId, '', () => {}, () => {});
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportUsersCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
+    }
+
+    ngOnDestroy() {
+        super.ngOnDestroy();
+
+        this.users = undefined;
+    }
 }

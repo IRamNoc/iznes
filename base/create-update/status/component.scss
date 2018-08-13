@@ -1,0 +1,7 @@
+.status {
+    font-weight: bold;
+    text-transform: uppercase;
+
+    &.enabled { color: green; }
+    &.disabled { color: red; }
+}

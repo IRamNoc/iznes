@@ -4,18 +4,25 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 
 import { FileDownloader } from '@setl/utils';
+import { AccountAdminBaseService } from '../service';
 
 @Component({
     selector: 'app-account-admin-list-base',
+    template: '',
 })
 export class AccountAdminListBase implements OnInit, OnDestroy {
 
     noun: string;
 
-    private token: string;
-    private subscriptions: Subscription[];
+    protected token: string; // this is only needed for CSV exports
+    protected userId: number; // this is only needed for CSV exports
+    protected username: string; // this is only needed for CSV exports
+    protected csvRequest; // this is only needed for CSV exports
+    protected subscriptions: Subscription[] = [];
 
     @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
+    @select(['user', 'myDetail', 'username']) userNameOb;
 
     /**
      *
@@ -24,8 +31,9 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      */
     constructor(private router: Router,
-                private redux: NgRedux<any>,
-                private fileDownloader: FileDownloader) {}
+                protected redux: NgRedux<any>,
+                protected fileDownloader: FileDownloader,
+                protected baseService: AccountAdminBaseService) {}
 
     ngOnInit() {
         this.initSubscriptions();
@@ -34,6 +42,14 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     private initSubscriptions(): void {
         this.subscriptions.push(this.tokenOb.subscribe((token: string) => {
             this.token = token;
+        }));
+
+        this.subscriptions.push(this.userIdOb.subscribe((userId: number) => {
+            this.userId = userId;
+        }));
+
+        this.subscriptions.push(this.userNameOb.subscribe((username: string) => {
+            this.username = username;
         }));
     }
 
@@ -50,8 +66,12 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscriptions.forEach((sub: Subscription) => {
-            sub.unsubscribe();
-        });
+        if (this.subscriptions.length > 0) {
+            this.subscriptions.forEach((sub: Subscription) => {
+                sub.unsubscribe();
+            });
+        }
+
+        this.subscriptions = [];
     }
 }

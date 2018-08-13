@@ -1,11 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 
 import { FileDownloader } from '@setl/utils';
 
+import {
+    clearRequestedAccountAdminTeams,
+} from '@setl/core-store';
 import * as Model from '../model';
+import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
+import { AccountAdminBaseService } from '../../base/service';
 
 @Component({
     selector: 'app-core-admin-teams-list',
@@ -16,40 +21,57 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
 
     teams: Model.AccountAdminTeam[];
 
-    constructor(router: Router,
-                redux: NgRedux<any>,
-                fileDownloader: FileDownloader) {
-        super('Team', router, redux, fileDownloader);
+    @select(['accountAdmin', 'teams', 'requested']) teamsRequestedOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
-        this.teams = [
-            {
-                userTeamID: 1,
-                name: 'Team 1',
-                accountId: 1,
-                status: false,
-                reference: 'TEAM1REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 2,
-                name: 'Team 2',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM2REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-            {
-                userTeamID: 3,
-                name: 'Team 3',
-                accountId: 1,
-                status: true,
-                reference: 'TEAM3REF',
-                description: 'Lorem ipsum dolor sit amet',
-            },
-        ];
+    constructor(private service: UserTeamsService,
+                router: Router,
+                redux: NgRedux<any>,
+                protected fileDownloader: FileDownloader,
+                protected baseService: AccountAdminBaseService) {
+        super(router, redux, fileDownloader, baseService);
+        this.noun = 'Team';
+        this.csvRequest = {
+            userTeamID: null,
+            textSearch: null,
+        };
     }
 
-    ngOnInit() {}
+    ngOnInit() {
+        super.ngOnInit();
 
-    ngOnDestroy() {}
+        this.subscriptions.push(this.teamsRequestedOb.subscribe((requested: boolean) => {
+            this.requestTeams(requested);
+        }));
+
+        this.subscriptions.push(this.teamsOb.subscribe((teams: Model.AccountAdminTeam[]) => {
+            this.teams = teams;
+        }));
+
+        this.redux.dispatch(clearRequestedAccountAdminTeams());
+    }
+
+    private requestTeams(requested: boolean): void {
+        if (requested) return;
+
+        this.service.readUserTeams(null, null, () => {}, () => {});
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportTeamsCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
+    }
+
+    ngOnDestroy() {
+        super.ngOnDestroy();
+
+        this.teams = undefined;
+    }
 }

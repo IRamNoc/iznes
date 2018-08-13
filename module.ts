@@ -8,20 +8,40 @@ import {
     SetlDirectivesModule,
     SetlPipesModule,
     DynamicFormsModule,
+    DpDatePickerModule,
 } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
+import { PermissionGridModule } from '@setl/permission-grid';
+
+import {
+    AccountAdminCreateUpdateBase,
+    AccountAdminAuditBase,
+    AccountAdminListBase,
+    AccountAdminBaseService,
+    UserManagementServiceBase,
+    AccountAdminUsersMgmtComponentBase,
+    AccountAdminPermissionsComponentBase,
+    AccountAdminPermissionsServiceBase,
+    AccountAdminStatusComponentBase,
+} from './base';
 
 import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
+    UserTeamsService,
+    UserTeamsUsersMgmtTeamsComponent,
+    UserTeamsStatusComponent,
 } from './teams';
 
 import {
     UsersAuditComponent,
     UsersCreateUpdateComponent,
     UsersListComponent,
+    UsersService,
+    UserTeamsUsersMgmtUsersComponent,
+    UsersStatusComponent,
 } from './users';
 
 @NgModule({
@@ -29,6 +49,7 @@ import {
         RouterModule,
         CommonModule,
         FormsModule,
+        DpDatePickerModule,
         ReactiveFormsModule,
         SelectModule,
         ClarityModule,
@@ -37,16 +58,33 @@ import {
         DynamicFormsModule,
         SetlDirectivesModule,
         MultilingualModule,
+        PermissionGridModule,
     ],
     declarations: [
+        AccountAdminCreateUpdateBase,
+        AccountAdminAuditBase,
+        AccountAdminListBase,
         UserTeamsAuditComponent,
         UserTeamsCreateUpdateComponent,
         UserTeamsListComponent,
         UsersAuditComponent,
-        UsersCreateUpdateComponent,
         UsersListComponent,
+        UserTeamsUsersMgmtTeamsComponent,
+        UserTeamsUsersMgmtUsersComponent,
+        AccountAdminUsersMgmtComponentBase,
+        UsersCreateUpdateComponent,
+        AccountAdminPermissionsComponentBase,
+        AccountAdminStatusComponentBase,
+        UserTeamsStatusComponent,
+        UsersStatusComponent,
     ],
-    providers: [],
+    providers: [
+        UserTeamsService,
+        UsersService,
+        UserManagementServiceBase,
+        AccountAdminPermissionsServiceBase,
+        AccountAdminBaseService,
+    ],
     exports: [],
 })
 export class CoreAccountAdminModule {

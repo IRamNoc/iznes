@@ -1,0 +1,78 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{
+        (isCreateMode()) ?
+        'Create a New ' + noun :
+        'Update ' + noun
+        | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
+        <clr-tab-content class="outer">
+            <app-core-admin-user-teams-status *ngIf="isUpdateMode()"
+                [noun]="noun"
+                [status]="status"
+                [entityId]="entityId">
+            </app-core-admin-user-teams-status>
+
+            <h3>{{ noun + ' Details' | translate }}</h3>
+
+            <app-dynamic-form [model]="form"></app-dynamic-form>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{ 'User Memberships' | translate }}</h3>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-teams-user-mgmt
+                        [entityId]="entityId"
+                        [noun]="nouns.User"
+                        [doUpdateOb]="doUserManagementUpdateOb">
+                    </app-core-admin-teams-user-mgmt>
+                </div>
+            </div>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>{{
+                        (isTeamsPage()) ?
+                        'Team Permissions':
+                        'User Permissions'
+                        | translate }}</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-permissions
+                        [entityId]="entityId"
+                        [doUpdateOb]="doPermissionsUpdateOb"
+                        (entitiesFn)="getTeamPermissions($event)"></app-core-admin-permissions>
+                </div>
+            </div>
+
+            <div class="row actions bottom">
+                <div class="col">
+                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
+                </div>
+                
+                <div class="col">
+                    <button class="btn btn-primary" (click)="save()">{{
+                        (isCreateMode()) ?
+                        'Create ' + noun :
+                        'Update ' + noun
+                        | translate }}</button>
+                </div>
+
+                <div class="col justify-end" *ngIf="isUpdateMode()">
+                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete ' + noun | translate }}</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+    

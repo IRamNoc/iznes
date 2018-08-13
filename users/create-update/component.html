@@ -1,0 +1,125 @@
+<div class="header-breadcrumbs">
+    <h1><i class="fa fa-address-book-o"></i> {{
+        (isCreateMode()) ?
+        'Create New User(s)' :
+        'Update User'
+        | translate }}</h1>
+</div>
+
+<clr-tabs>
+    <clr-tab>
+        <button clrTabLink id="tabAccountAdmin{{noun}}sButton">{{ noun | translate }}</button>
+        <clr-tab-content class="outer">
+            <ng-container *ngIf="isCreateMode()">
+                <div class="well">
+                    <div class="row panel-header">
+                        <div class="col-sm-12">
+                            <a href="#" (click)="usersPanelOpen = !usersPanelOpen; $event.preventDefault();">
+                                <i class="fa fa-chevron-right" [class.rotate]="usersPanelOpen"></i>
+                                <h2>{{ 'User(s)' | translate }}</h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row panel-body" [class.hidden]="!usersPanelOpen">
+                    <div class="col-sm-12">
+                        <div class="repeatable-users" *ngFor="let user of forms; let idx = index;">
+                            <app-dynamic-form [model]="user"></app-dynamic-form>
+                            <span class="remove-user" (click)="removeUser(idx)">Remove user</span>
+                        </div>
+
+                        <div class="row buttons">
+                            <div class="col-sm-12">
+                                <button class="btn btn-primary btn-right" (click)="addAdditionalUser()">
+                                    <i class="fa fa-plus"></i>
+                                    {{ 'Add another user' | translate }}
+                                </button>
+                                <i class="tooltip tooltip-right fa fa-question-circle" [tooltip]="addAdditionalUserTooltip"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="isUpdateMode()">
+                <app-core-admin-users-status [noun]="noun" [status]="status" [entityId]="entityId"></app-core-admin-users-status>
+
+                <h3>{{ 'User Details' | translate }}</h3>
+
+                <app-dynamic-form *ngIf="isUpdateMode()" [model]="form"></app-dynamic-form>
+            </ng-container>
+            
+            <div class="row actions bottom">
+                <div class="col-sm-12">
+                    <h3>
+                        {{ 'Team Memberships' | translate }}
+                        <i class="tooltip fa fa-question-circle" [tooltip]="teamMembershipsTooltip"></i>
+                    </h3>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-sm-12">
+                    <app-core-admin-users-team-mgmt
+                        [entityId]="entityId"
+                        [noun]="nouns.Team"
+                        [doUpdateOb]="doUserManagementUpdateOb"
+                        (entitiesFn)="getUserTeams($event)">
+                    </app-core-admin-users-team-mgmt>
+                </div>
+            </div>
+            
+            <ng-container *ngIf="isUpdateMode()">
+                <div class="row actions bottom">
+                    <div class="col-sm-12">
+                        <h3>{{
+                            (isTeamsPage()) ?
+                            'Team Permissions':
+                            'User Permissions'
+                            | translate }}
+                            <i class="tooltip fa fa-question-circle" [tooltip]="userPermissionsTooltip"></i>
+                        </h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <app-core-admin-permissions
+                            [isUser]="true"
+                            [entityId]="entityId"
+                            [doUpdateOb]="doPermissionsUpdateOb">
+                        </app-core-admin-permissions>
+                    </div>
+                </div>
+            </ng-container>
+
+            <div class="row actions bottom">
+                <div class="col">
+                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
+                </div>
+                
+                <div class="col">
+                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
+                        (isCreateMode()) ?
+                        'Create User(s)' :
+                        'Update User Details'
+                        | translate }}
+                    </button>
+                    <button class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
+                        (isCreateMode()) ?
+                        'Create &amp; Send Invitation(s)' :
+                        'Update &amp; Send Invitation'
+                        | translate }}
+                    </button>
+                    <i class="tooltip fa fa-question-circle" [tooltip]="createUserTooltip"></i>
+                </div>
+
+                <div class="col justify-end" *ngIf="isUpdateMode()">
+                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete user' | translate }}</button>
+                </div>
+            </div>
+        </clr-tab-content>
+    </clr-tab>
+</clr-tabs>
+    
