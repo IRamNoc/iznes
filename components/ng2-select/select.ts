@@ -1,6 +1,6 @@
 import {
     Component, Input, Output, EventEmitter, ElementRef, OnInit, forwardRef,
-    ChangeDetectionStrategy, ChangeDetectorRef, ViewChild
+    ChangeDetectionStrategy, ChangeDetectorRef,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from './select-item';
@@ -11,10 +11,8 @@ import { MultilingualService } from '@setl/multilingual';
 import * as xss from 'xss';
 import { find, castArray } from 'lodash';
 
-const changeDetection = ChangeDetectionStrategy.OnPush;
-
 @Component({
-    selector: "ng-select",
+    selector: 'ng-select',
     styleUrls: ['./select.scss'],
     providers: [
         {
@@ -22,11 +20,11 @@ const changeDetection = ChangeDetectionStrategy.OnPush;
             /* tslint:disable */
             useExisting: forwardRef(() => SelectComponent),
             /* tslint:enable */
-            multi: true
-        }
+            multi: true,
+        },
     ],
     templateUrl: './select.html',
-    changeDetection: changeDetection,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectComponent implements OnInit, ControlValueAccessor {
 
@@ -42,20 +40,28 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Input() public containerWidth = '360px';
 
     @Input()
-    public set items(value: Array<any>) {
+    public set items(value: any[]) {
         if (!value) {
-            this._items = this.itemObjects = [];
+            this.itemsList = this.itemObjects = [];
         } else {
-            this._items = value.filter((item: any) => {
-                if ((typeof item === 'string') || (typeof item === 'object' && item && item[this.textField] != undefined && item[this.idField] != undefined)) {
+            this.itemsList = value.filter((item: any) => {
+                if ((typeof item === 'string') || (typeof item === 'object' && item &&
+                    item[this.textField] !== undefined && item[this.idField] !== undefined)) {
                     return item;
                 }
             });
-            this.itemObjects = this._items.map((item: any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({
-                id: item[this.idField],
-                text: item[this.textField],
-                children: item[this.childrenField]
-            })));
+            this.itemObjects = this.itemsList.map(
+                (item: any) => (typeof item === 'string' ? new SelectItem(item) : new SelectItem({
+                    id: item[this.idField],
+                    text: item[this.textField],
+                    children: item[this.childrenField],
+                })),
+            );
+
+            // Override placeholder if items over 1,000
+            if (this.itemObjects.length >= 1000) {
+                this.placeholder = 'Type to search';
+            }
         }
 
         // this.changeDetectorRef.markForCheck();
@@ -63,14 +69,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
 
     @Input()
     public set disabled(value: boolean) {
-        this._disabled = value;
-        if (this._disabled === true) {
+        this.disabledFlag = value;
+        if (this.disabledFlag === true) {
             this.hideOptions();
         }
     }
 
     public get disabled(): boolean {
-        return this._disabled;
+        return this.disabledFlag;
     }
 
     @Input()
@@ -78,7 +84,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
         try {
             this.handleNonExistOptions(selectedItems);
             if (!selectedItems || selectedItems.length === 0) {
-                this._active = [];
+                this.activeFlag = [];
             } else {
                 if (typeof selectedItems === 'string') {
                     selectedItems = selectedItems.split(' ');
@@ -86,15 +92,14 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
                 }
                 const areItemsStrings = typeof selectedItems[0] === 'string';
 
-                this._active = selectedItems.map((item: any) => {
+                this.activeFlag = selectedItems.map((item: any) => {
                     const id = areItemsStrings ? item : item.id;
                     const foundObject = find(this.itemObjects, ['id', id]);
                     let data;
 
                     if (foundObject) {
                         data = foundObject;
-                    }
-                    else {
+                    } else {
                         data = areItemsStrings
                             ? item
                             : { id: item[this.idField], text: item[this.textField] }
@@ -106,7 +111,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             }
             this.changeDetectorRef.markForCheck();
         } catch (e) {
-            this._active = [];
+            this.activeFlag = [];
         }
     }
 
@@ -116,37 +121,37 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     @Output() public typed: EventEmitter<any> = new EventEmitter();
     @Output() public opened: EventEmitter<any> = new EventEmitter();
 
-    public options: Array<SelectItem> = [];
-    public itemObjects: Array<SelectItem> = [];
+    public options: SelectItem[] = [];
+    public itemObjects: SelectItem[] = [];
     public activeOption: SelectItem;
     public element: ElementRef;
+    public inputMode = false;
+    public inputValue = '';
 
     public get active(): any {
-        return this._active;
+        return this.activeFlag;
     }
 
-    private set optionsOpened(value: boolean) {
-        this._optionsOpened = value;
+    set optionsOpened(value: boolean) {
+        this.optionsOpenedFlag = value;
         this.opened.emit(value);
     }
 
-    private get optionsOpened(): boolean {
-        return this._optionsOpened;
+    get optionsOpened(): boolean {
+        return this.optionsOpenedFlag;
     }
 
     protected onChange: any = Function.prototype;
     protected onTouched: any = Function.prototype;
 
-    private inputMode = false;
-    private _optionsOpened = false;
+    private optionsOpenedFlag = false;
     private behavior: OptionsBehavior;
-    private inputValue = '';
-    private _items: Array<any> = [];
-    private _disabled = false;
-    private _active: Array<SelectItem> = [];
+    private itemsList: any[] = [];
+    private disabledFlag = false;
+    private activeFlag: SelectItem[] = [];
 
     public constructor(element: ElementRef,
-                       private changeDetectorRef: ChangeDetectorRef, private _translate: MultilingualService) {
+                       private changeDetectorRef: ChangeDetectorRef, public translate: MultilingualService) {
         this.element = element;
         this.clickedOutside = this.clickedOutside.bind(this);
 
@@ -196,13 +201,13 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
             e.preventDefault();
         }
         // left
-        if (!isUpMode && e.keyCode === 37 && this._items.length > 0) {
+        if (!isUpMode && e.keyCode === 37 && this.itemsList.length > 0) {
             this.behavior.first();
             e.preventDefault();
             return;
         }
         // right
-        if (!isUpMode && e.keyCode === 39 && this._items.length > 0) {
+        if (!isUpMode && e.keyCode === 39 && this.itemsList.length > 0) {
             this.behavior.last();
             e.preventDefault();
             return;
@@ -247,7 +252,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     public remove(item: SelectItem): void {
-        if (this._disabled === true) {
+        if (this.disabledFlag === true) {
             return;
         }
         if (this.multiple === true && this.active) {
@@ -296,7 +301,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     protected matchClick(e: any): void {
-        if (this._disabled === true) {
+        if (this.disabledFlag === true) {
             return;
         }
         this.inputMode = !this.inputMode;
@@ -307,7 +312,7 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     protected mainClick(event: any): void {
-        if (this.inputMode === true || this._disabled === true) {
+        if (this.inputMode === true || this.disabledFlag === true) {
             return;
         }
         if (event.keyCode === 46) {
@@ -350,24 +355,23 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
     }
 
     private focusToInput(value: string = ''): void {
-        setTimeout(() => {
-            const el = this.element.nativeElement.querySelector('div.ui-select-container .option-wrapper > .select-search > input');
-            if (el) {
-                el.focus();
-                el.value = value;
-            }
-        }, 0);
+        setTimeout(
+            () => {
+                const el = this.element.nativeElement.querySelector(
+                    'div.ui-select-container .option-wrapper > .select-search > input');
+                if (el) {
+                    el.focus();
+                    el.value = value;
+                }
+            },
+            0,
+        );
     }
 
     private open(): void {
         this.options = this.itemObjects
         .filter((option: SelectItem) => (this.multiple === false ||
             this.multiple === true && !this.active.find((o: SelectItem) => option.text === o.text)));
-
-        // Override placeholder if items over 1,000
-        if (this.options.length >= 1000) {
-            this.placeholder = 'Type to search';
-        }
 
         if (this.options.length > 0) {
             this.behavior.first();
@@ -422,10 +426,13 @@ export class SelectComponent implements OnInit, ControlValueAccessor {
      */
     private handleNonExistOptions(selected: SelectItem[]): SelectItem[] {
         try {
-            const optionIds = this.itemObjects.reduce((result, item) => {
-                result.push(item.id);
-                return result;
-            }, []);
+            const optionIds = this.itemObjects.reduce(
+                (result, item) => {
+                    result.push(item.id);
+                    return result;
+                },
+                [],
+            );
 
             this.itemObjects.map((item) => {
                 if (optionIds.indexOf(item.id) === -1) {
@@ -527,7 +534,8 @@ export class GenericBehavior extends Behavior implements OptionsBehavior {
         .filter((option: SelectItem) => {
             return stripTags(option.text).match(query) &&
                 (this.actor.multiple === false ||
-                    (this.actor.multiple === true && this.actor.active.map((item: SelectItem) => item.id).indexOf(option.id) < 0));
+                    (this.actor.multiple === true && this.actor.active.map(
+                        (item: SelectItem) => item.id).indexOf(option.id) < 0));
         });
         this.actor.options = options;
         if (this.actor.options.length > 0) {
@@ -559,7 +567,8 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
 
     public prev(): void {
         const indexParent = this.actor.options
-        .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
+        .findIndex(
+            (option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
         const index = this.actor.options[indexParent].children
         .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
         this.actor.activeOption = this.actor.options[indexParent].children[index - 1];
@@ -579,7 +588,8 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
 
     public next(): void {
         const indexParent = this.actor.options
-        .findIndex((option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
+        .findIndex(
+            (option: SelectItem) => this.actor.activeOption.parent && this.actor.activeOption.parent.id === option.id);
         const index = this.actor.options[indexParent].children
         .findIndex((option: SelectItem) => this.actor.activeOption && this.actor.activeOption.id === option.id);
         this.actor.activeOption = this.actor.options[indexParent].children[index + 1];
@@ -596,11 +606,11 @@ export class ChildrenBehavior extends Behavior implements OptionsBehavior {
     }
 
     public filter(query: RegExp): void {
-        const options: Array<SelectItem> = [];
+        const options: SelectItem[] = [];
         const optionsMap: Map<string, number> = new Map<string, number>();
         let startPos = 0;
         for (const si of this.actor.itemObjects) {
-            const children: Array<SelectItem> = si.children.filter((option: SelectItem) => query.test(option.text));
+            const children: SelectItem[] = si.children.filter((option: SelectItem) => query.test(option.text));
             startPos = si.fillChildrenHash(optionsMap, startPos);
             if (children.length > 0) {
                 const newSi = si.getSimilar();
