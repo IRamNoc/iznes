@@ -34,12 +34,14 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
 import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
-import { OrderByType } from '../../ofi-orders/order.model';
+import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
+import { SellBuyCalendar } from "../../ofi-product/fund-share/FundShareEnum";
+import { Moment } from "moment";
 
 @Component({
     selector: 'app-invest-fund',
@@ -55,9 +57,9 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
     static DateTimeFormat = 'YYYY-MM-DD HH:mm';
     static DateFormat = 'YYYY-MM-DD';
-    quantityDecimalSize = 5;
 
     @Input() shareId: number;
+    // order type string: subscribe, redeem, sellbuy
     @Input() type: string;
     @Input() doValidate: boolean;
     @Input() initialFormData: { [p: string]: any };
@@ -141,7 +143,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     quantity: FormControl;
     amount: FormControl;
     feeAmount: FormControl;
-    netAmount: FormControl;
+    // net amount form control for subscription order.
+    netAmountSub: FormControl;
+    // new amount form control for redemption order.
+    netAmountRedeem: FormControl;
     address: FormControl;
     disclaimer: FormControl;
     feeControl: FormControl;
@@ -200,8 +205,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get feePercentage(): number {
-        return (this.type === 'subscribe' ? this._numberConverterService.toFrontEnd(this.shareData['entryFee']) :
-            this._numberConverterService.toFrontEnd(this.shareData['exitFee']));
+        return this._numberConverterService.toFrontEnd(this.orderHelper.feePercentage);
     }
 
     get cutoffTime(): string {
@@ -219,21 +223,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get orderType(): string {
         return {
             subscribe: 's',
-            redeem: 'r'
+            redeem: 'r',
+            sellbuy: 'sb',
         }[this.type];
     }
 
     get orderTypeNumber(): number {
-        return {
-            subscribe: 3,
-            redeem: 4
-        }[this.type];
+         return {
+             subscribe: 3,
+             redeem: 4,
+         }[this.type];
     }
 
     get orderTypeLabel(): string {
         return {
-            subscribe: 'Subscription',
-            redeem: 'Redemption'
+            subscribe: this._translate.getTranslationByString('Subscription'),
+            redeem: this._translate.getTranslationByString('Redemption'),
+            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
         }[this.type];
     }
 
@@ -335,9 +341,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get isRedeemTooMuch(): boolean {
-        if (this.orderType === 's') {
-            return false;
-        }
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
@@ -410,7 +413,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.quantity = new FormControl(0, [Validators.required, numberValidator]);
         this.amount = new FormControl(0, [Validators.required, numberValidator]);
         this.feeAmount = new FormControl(0);
-        this.netAmount = new FormControl(0, [Validators.required, numberValidator]);
+        this.netAmountSub = new FormControl(0, [Validators.required, numberValidator]);
+        this.netAmountRedeem = new FormControl(0, [Validators.required, numberValidator]);
         this.address = new FormControl('', [Validators.required, emptyArrayValidator]);
         this.disclaimer = new FormControl('');
 
@@ -421,7 +425,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             quantity: this.quantity,
             amount: this.amount,
             feeAmount: this.feeAmount,
-            netAmount: this.netAmount,
+            netAmountSub: this.netAmountSub,
+            netAmountRedeem: this.netAmountRedeem,
             comment: new FormControl('', Validators.maxLength(100)),
             address: this.address,
             cutoffDate: this.cutoffDate,
@@ -436,13 +441,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         this.metadata = {
             subscribe: {
                 actionLabel: 'subscribe',
-                feeLabel: 'Entry',
+                feeLabel: this._translate.getTranslationByString('Entry fee'),
 
             },
             redeem: {
                 actionLabel: 'redeem',
-                feeLabel: 'Exit',
-            }
+                feeLabel: this._translate.getTranslationByString('Exit fee'),
+            },
+            sellbuy: {
+                actionLabel: 'sellbuy',
+                feeLabel: this._translate.getTranslationByString('Entry / Exit fee'),
+            },
         }[this.type];
 
         this.actionBy = 'q';
@@ -507,8 +516,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutOffValue = new Date(
                 this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
-                .format('YYYY-MM-DD HH:mm'),
+                    .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -534,8 +543,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
-                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
-                .format('YYYY-MM-DD HH:mm'),
+                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                    .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -624,17 +633,17 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     isCutoffDay(thisDate: moment): boolean {
-        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.orderTypeNumber);
+        const isValidCutOff = (new CalendarHelper(this.shareData)).isValidCutoffDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidCutOff || !this.doValidate;
     }
 
     isValuationDay(thisDate: moment): boolean {
-        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.orderTypeNumber);
+        const isValidValuation = (new CalendarHelper(this.shareData)).isValidValuationDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidValuation || !this.doValidate;
     }
 
     isSettlementDay(thisDate: moment): boolean {
-        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.orderTypeNumber);
+        const isValidSettlement = (new CalendarHelper(this.shareData)).isValidSettlementDateTime(thisDate, this.getCalendarHelperOrderNumber());
         return isValidSettlement || !this.doValidate;
     }
 
@@ -733,7 +742,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             subportfolio: '',
             dateby: this.dateBy, // (cutoff, valuation, settlement)
             datevalue: this.dateValue, // (date value relate to dateby)
-            ordertype: this.orderType, // ('s', 'r')
+            ordertype: this.orderType, // ('s', 'r', 'sb')
             orderby: this.actionBy, // ('q', 'a' )
             ordervalue: this.orderValue, // (order value relate to orderby)
             comment: ''
@@ -761,19 +770,51 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         `, { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
-            const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-            const orderRef = commonHelper.pad(orderId, 8, '0');
-            this._toaster.pop('success', `Your order ${orderRef} has been successfully placed and is now initiated.`);
-            this.handleClose();
 
-            if (this.amountTooBig) {
-                this.sendMessageToAM({
-                    walletID: this.shareData.amDefaultWalletId,
-                    orderTypeLabel: this.orderTypeLabel,
-                    orderID: orderId,
-                    orderRef: orderRef
-                });
+            let orderSuccessMsg = '';
+
+            if (this.type === 'sellbuy') {
+               const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+               const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+
+               const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+               const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+
+               orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
+
+               if (this.amountTooBig) {
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderSubId,
+                       orderRef: orderSubRef,
+                   });
+
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderRedeemId,
+                       orderRef: orderRedemRef,
+                   });
+               }
+            } else {
+               const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+               const orderRef = commonHelper.pad(orderId, 8, '0');
+
+               orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
+
+               if (this.amountTooBig) {
+                   this.sendMessageToAM({
+                       walletID: this.shareData.amDefaultWalletId,
+                       orderTypeLabel: this.orderTypeLabel,
+                       orderID: orderId,
+                       orderRef,
+                   });
+               }
             }
+
+            this._toaster.pop('success', orderSuccessMsg);
+            this.handleClose();
 
             this._router.navigateByUrl('/order-book/my-orders/list');
         }).catch((data) => {
@@ -877,10 +918,16 @@ The IZNES Team.</p>`;
         const feeStr = this._moneyValuePipe.transform(fee.toString(), 2).toString();
         this.feeAmount.setValue(feeStr);
 
-        // net amount
-        const netAmount = calNetAmount(amount, fee, this.orderType);
-        const netAmountStr = this._moneyValuePipe.transform(netAmount.toString(), 2).toString();
-        this.netAmount.setValue(netAmountStr);
+        // net amount for subscription order
+        const netAmountSub = calNetAmount(amount, fee, 's');
+        const netAmountSubStr = this._moneyValuePipe.transform(netAmountSub.toString(), 2).toString();
+        this.netAmountSub.setValue(netAmountSubStr);
+
+        // net amount for redemption order
+        const netAmountRedeem = calNetAmount(amount, fee, 'r');
+        const netAmountRedeemStr = this._moneyValuePipe.transform(netAmountRedeem.toString(), 2).toString();
+        this.netAmountRedeem.setValue(netAmountRedeemStr);
+
     }
 
     /**
@@ -888,7 +935,7 @@ The IZNES Team.</p>`;
      * Updating it to be Round Down eg 0.15151 becomes 0.151
      */
     roundAmount() {
-        if (this.isKnownNav() || this.orderType === 'r') {
+        if (this.isKnownNav()) {
             const quantityParsed = this._moneyValuePipe.parse(this.quantity.value, 5);
             const amount = math.format(math.chain(quantityParsed).multiply(this.nav).done(), 14);
             const amountStr = this._moneyValuePipe.transform(amount.toString(), 2).toString();
@@ -916,6 +963,11 @@ The IZNES Team.</p>`;
 
 
     isValidOrderValue() {
+        // if the order type is sell buy we dont care the minimum order value.
+        if (this.type === 'sellbuy') {
+            return true;
+        }
+
         const minValue = OrderHelper.getSubsequentMinFig(this.shareData, this.orderTypeNumber, this.actionByNumber);
 
         return Boolean(minValue <= this.orderValue);
@@ -951,13 +1003,13 @@ The IZNES Team.</p>`;
 
         if (type === 'cutoff') {
 
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, this.orderTypeNumber)
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(momentDateValue)
             .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(momentDateValue, this.orderTypeNumber);
+            const mValuationDate = this.getValuationDateFromCutoff(momentDateValue);
             const valuationDateStr = mValuationDate.clone().format('YYYY-MM-DD');
 
-            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, this.orderTypeNumber);
+            const mSettlementDate = this.getSettlementDateFromCutoff(momentDateValue);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
 
@@ -968,12 +1020,12 @@ The IZNES Team.</p>`;
             this.dateBy = 'cutoff';
         } else if (type === 'valuation') {
 
-            const mCutoffDate = this.calenderHelper.getCutoffDateFromValuation(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
 
 
-            const mSettlementDate = this.calenderHelper.getSettlementDateFromCutoff(mCutoffDate, this.orderTypeNumber);
+            const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -981,11 +1033,11 @@ The IZNES Team.</p>`;
 
             this.dateBy = 'valuation';
         } else if (type === 'settlement') {
-            const mCutoffDate = this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, this.orderTypeNumber);
-            const cutoffDateStr = this.calenderHelper.getCutoffTimeForSpecificDate(mCutoffDate, this.orderTypeNumber)
+            const mCutoffDate = this.getCutoffDateFromSettlement(momentDateValue);
+            const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
 
-            const mValuationDate = this.calenderHelper.getValuationDateFromCutoff(mCutoffDate, this.orderTypeNumber);
+            const mValuationDate = this.getValuationDateFromCutoff(mCutoffDate);
             const valuationStr = mValuationDate.format('YYYY-MM-DD');
 
             beTriggered[0].setValue(cutoffDateStr);
@@ -1030,6 +1082,42 @@ The IZNES Team.</p>`;
             conditionalMessage = (quantityBlockchain === this.subPortfolioBalance) ? '<p class="mb-1"><span class="text-danger blink_me">All your position for this portfolio will be redeemed</span></p>' : '';
         }
 
+        let orderValueHtml = '';
+
+        if (this.type === 'sellbuy') {
+           orderValueHtml = `
+                    <tr>
+                        <td class="left"><b>Redemption Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Subscription Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Redemption Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Subscription Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+
+           `;
+        } else {
+            orderValueHtml = `
+                    <tr>
+                        <td class="left"><b>Quantity:</b></td>
+                        <td>${quantityStr}</td>
+                    </tr>
+                    <tr>
+                        <td class="left"><b>Amount:</b></td>
+                        <td>${amountStr}</td>
+                    </tr>
+
+           `;
+        }
+
         let message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
             ${conditionalMessage ? conditionalMessage : ''}
@@ -1056,14 +1144,7 @@ The IZNES Team.</p>`;
                         <td class="left"><b>Currency:</b></td>
                         <td>${this.currency}</td>
                     </tr>
-                    <tr>
-                        <td class="left"><b>Quantity:</b></td>
-                        <td>${quantityStr}</td>
-                    </tr>
-                    <tr>
-                        <td class="left"><b>Amount:</b></td>
-                        <td>${amountStr}</td>
-                    </tr>
+                    ${orderValueHtml}
                     <tr>
                         <td class="left"><b>NAV Date:</b></td>
                         <td>${this.valuationDate.value}</td>
@@ -1205,6 +1286,115 @@ The IZNES Team.</p>`;
 
         return true;
     }
+
+    /**
+     * Get Order type title rendered in the order form.
+     * @return {string}
+     */
+    getOrderTypeTitle(): string {
+       return {
+           subscribe: this._translate.getTranslationByString('Subscription'),
+           redeem: this._translate.getTranslationByString('Redemption'),
+           sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+       }[this.type];
+    }
+
+    /**
+     * Get order page subtitle
+     * @return {string}
+     */
+    getOrderTypeSubTitle(): string {
+        return {
+            subscribe: this._translate.getTranslationByString('Please fill up the following information to subscribe to this share'),
+            redeem: this._translate.getTranslationByString('Please fill up the following information to redeem this share'),
+            sellbuy: this._translate.getTranslationByString('Please fill up the following information to **simultaneously** redeem and subscribe to this share:'),
+        }[this.type];
+    }
+
+    /**
+     * In order to get the specific date when using Calendar helper, we need to get the order type number, either
+     * 3(Subscription) or 4 (Redemption). So for sell buy order, we need to work out order type base on the sell buy
+     * calendar.
+     * @return {OrderType}
+     */
+    getCalendarHelperOrderNumber(): OrderType {
+        let orderNumberType;
+
+        // If this is a sell buy order, we pick the calender of subscription / redemption depends on the characteristics.
+        if (this.orderType === 'sb') {
+            const sellBuyCalendar = Number(this.shareData.sellBuyCalendar);
+            if (sellBuyCalendar === SellBuyCalendar.RedemptionCalendar) {
+                orderNumberType = OrderType.Redemption;
+            }else {
+                orderNumberType = OrderType.Subscription;
+            }
+        } else {
+            orderNumberType = this.orderTypeNumber;
+        }
+
+        return orderNumberType;
+    }
+
+    /**
+     * Get cutoff date time string for a specific date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffTimeForSpecificDate(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffTimeForSpecificDate(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get valuation date time for a cutoff date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getValuationDateFromCutoff(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getValuationDateFromCutoff(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get settlement date time string for a cutoff date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getSettlementDateFromCutoff(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getSettlementDateFromCutoff(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get cutoff date time string for a valuation date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffDateFromValuation(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffDateFromValuation(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Get cutoff date time string for a settlement date, depend or the order type.
+     *
+     * @param momentDateValue
+     * @return {Moment}
+     */
+    getCutoffDateFromSettlement(momentDateValue): Moment {
+        const orderNumberType = this.getCalendarHelperOrderNumber();
+
+        return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
+    }
+
 }
 
 /**

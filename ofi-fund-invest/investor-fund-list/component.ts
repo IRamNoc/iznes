@@ -171,10 +171,16 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             const shareName = item.get('fundShareName', '');
 
             let position = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'free'], 'N/A');
+            let totalPosition = _.get(balances, [this.connectedWalletId, `${isin}|${shareName}`, 'total'], 'N/A');
+
             if (!isNaN(position)) {
                 position = this._numberConverterService.toFrontEnd(position);
             }
-            
+
+            if (!isNaN(totalPosition)) {
+                totalPosition = this._numberConverterService.toFrontEnd(totalPosition);
+            }
+
             result.push({
                 id: item.get('fundShareID', 0),
                 isin: isin,
@@ -188,7 +194,8 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
                 nextRedCutOff: nextRedCutOff.format('YYYY-MM-DD HH:mm'),
                 hasNoNav: Boolean(nav <= 0),
-                position: position
+                position,
+                totalPosition,
             });
 
             return result;
@@ -314,11 +321,11 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      * Handle buy/sell button is click in the list of funds.
      * @param index
      */
-    handleBuySell(index: number): void {
+    handleBuySell(shareId: number): void {
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
-            if ((this.tabsControl[i].fundShareId === this.fundList[index].id) && (this.tabsControl[i]['actionType'] === 'buysell')) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
+            if ((this.tabsControl[i].fundShareId === shareId) && (this.tabsControl[i]['actionType'] === 'sellbuy')) {
                 this._router.navigateByUrl(`/list-of-funds/${i}`);
 
                 return;
@@ -326,19 +333,18 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
         }
 
         /* Push the edit tab into the array. */
-        const fundShareId = _.get(this.fundList, [index, 'id'], 0);
-        const fundShareData = _.get(this.fundListObj, [fundShareId], {});
-        const fundShareName = _.get(fundShareData, ['shareName'], '');
+        const fundShareData = _.get(this.fundListObj, [shareId], {});
+        const fundShareName = _.get(fundShareData, ['fundShareName'], '');
 
         this.tabsControl.push({
             title: {
-                icon: 'fa-sign-out',
+                icon: 'fa-circle-o-notch',
                 text: fundShareName,
-                colorClass: 'text-yellow-title'
+                colorClass: 'text-orange-title',
             },
-            fundShareId: fundShareId,
-            fundShareData: fundShareData,
-            actionType: 'buysell',
+            fundShareId: shareId,
+            fundShareData,
+            actionType: 'sellbuy',
             active: false,
             formData: {}
         })

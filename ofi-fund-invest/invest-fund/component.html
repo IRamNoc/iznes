@@ -1,7 +1,8 @@
 <form (ngSubmit)="handleOrderConfirmation()" [formGroup]="form" [class.error]="!form.valid && form.touched">
     <div class="form-horizontal">
 
-        <h2>{{(type=='subscribe'?'Subscription':'Redemption')}}</h2>{{'Please fill up the following information to @(type==\'subscribe\'?\'subscribe to\':\'redeem\')@ a new share:' | translate: {'(type==\'subscribe\'?\'subscribe to\':\'redeem\')': (type=='subscribe'?'subscribe to':'redeem')} }}
+        <h2>{{getOrderTypeTitle()}}</h2>
+        {{getOrderTypeSubTitle()}}
 
         <br><br>
 
@@ -120,7 +121,7 @@
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label class="control-label">
-                                            <span class="ml_translated">{{'@metadata.feeLabel@ fee' | translate: {'metadata.feeLabel': metadata.feeLabel} }}</span>
+                                            <span class="ml_translated">{{metadata.feeLabel}}</span>
                                         </label>
                                         <div>
                                             <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' " [readonly]="true">
@@ -373,72 +374,16 @@
                     </div>
                 </div>
 
-                <div class="row">{{'Please type below a quantity or an amount' | translate}}
-                    <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
-                </div>
+                <ng-container *ngIf=" type !== 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: type}"></ng-container>
+                </ng-container>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label required-field" for="quantity">
-                                <span class="">{{'Quantity' | translate}}</span>
-                            </label>
-                            <div [class]="type === 'redeem' ? 'quantity-group' : ''">
-                                <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity"
-                                       class="form-control" formControlName="quantity"
-                                       (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()"
-                                       appNumberFormatter="{{shareData.maximumNumDecimal}}" [fractionSize]="shareData.maximumNumDecimal" autocomplete="off">
-                                <button *ngIf="type === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
-                                    Redeem all
-                                </button>
-                            </div>
-                            <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is required' | translate}}</span>
-                            <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
-                            <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
-                            <span *ngIf="isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger">{{'Insufficient balance to redeem' | translate}}</span>
-                            <span *ngIf="redeemedAll && !addressSelected" class="text-danger">{{'Please select an Investment Portfolio' | translate}}</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label required-field" for="amount">
-                                <span class="">{{'Amount' | translate}}</span>
-                            </label>
-                            <div>
-                                <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control"
-                                       formControlName="amount" (focus)="subscribeForChange('amount')"
-                                       (blur)="roundAmount();" appNumberFormatter="2" [fractionSize]="2" autocomplete="off">
-                            </div>
-                            <span *ngIf="amountTooBig" class="text-danger">{{'Warning: be aware the order amount exceeds 15 million' | translate}}</span>
-                            <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
-                            <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
-                            <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
-                        </div>
-                    </div>
-                </div>
+                <ng-container *ngIf=" type === 'sellbuy' ">
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'redeem'}"></ng-container>
+                    <ng-container *ngTemplateOutlet="orderValueInputs; context: {orderType: 'subscribe'}"></ng-container>
+                </ng-container>
 
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="">{{'Fee Amount' | translate}}</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control" formControlName="feeAmount" readonly>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span class="">{{'Net Amount' | translate}}</span>
-                            </label>
-                            <div>
-                                <input type="text" class="form-control" formControlName="netAmount" readonly>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <div class="row">{{'Comment:' | translate}}</div>
                 <div class="row">
                     <div class="col-sm-6">
@@ -498,10 +443,96 @@
                         <i class="fa fa-sign-out"></i>
                         <span class="ml_translated">{{'Place Order' | translate}}</span>
                     </button>
+
+                    <button type="submit" class="btn btn-primary" *ngIf="type === 'sellbuy'" [attr.disabled]="allowToPlaceOrder">
+                        <i class="fa fa-circle-o-notch"></i>
+                        <span class="ml_translated">{{'Place Order' | translate}}</span>
+                    </button>
                 </div>
             </div>
         </div>
 
     </div>
 
+    <ng-template #orderValueInputs let-orderType="orderType">
+
+        <div class="row">
+            <ng-container *ngIf=" orderType === 'subscribe' "><p>{{'Please type below a quantity or an amount to subscribe' | translate}}</p></ng-container>
+            <ng-container *ngIf=" orderType === 'redeem' "><p>{{'Please type below a quantity or an amount to redeem' | translate}}</p></ng-container>
+
+            <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label required-field" for="quantity">
+                        <span class="">{{'Quantity' | translate}}</span>
+                    </label>
+                    <div [class]="orderType === 'redeem' ? 'quantity-group' : ''">
+                        <input #quantityInput [attr.disabled]="allowQuantity" type="text" id="quantity"
+                               class="form-control" formControlName="quantity"
+                               (focus)="subscribeForChange('quantity')" (blur)="unSubscribeForChange()"
+                               appNumberFormatter="{{shareData.maximumNumDecimal}}" [fractionSize]="shareData.maximumNumDecimal" autocomplete="off">
+                        <button *ngIf="orderType === 'redeem'" class="btn btn-primary" (click)="redeemAll($event)">
+                            Redeem all
+                        </button>
+                    </div>
+                    <span *ngIf="quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is required' | translate}}</span>
+                    <span *ngIf="quantity.hasError('invalidNumber') && !quantity.hasError('required') && quantity.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
+                    <span *ngIf="!isValidOrderValue() && quantity.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
+                    <span *ngIf="orderType === 'redeem' && isRedeemTooMuch && (quantity.touched || amount.touched)" class="text-danger">{{'Insufficient balance to redeem' | translate}}</span>
+                    <span *ngIf="redeemedAll && !addressSelected" class="text-danger">{{'Please select an Investment Portfolio' | translate}}</span>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label required-field" for="amount">
+                        <span class="">{{'Amount' | translate}}</span>
+                    </label>
+                    <div>
+                        <input [attr.disabled]="allowAmount" id="amount" type="text" class="form-control"
+                               formControlName="amount" (focus)="subscribeForChange('amount')"
+                               (blur)="roundAmount();" appNumberFormatter="2" [fractionSize]="2" autocomplete="off">
+                    </div>
+                    <span *ngIf="amountTooBig" class="text-danger">{{'Warning: be aware the order amount exceeds 15 million' | translate}}</span>
+                    <span *ngIf="amount.hasError('required') && amount.touched" class="text-danger">{{'Field is required' | translate}}</span>
+                    <span *ngIf="amount.hasError('invalidNumber') && !amount.hasError('required') && amount.touched" class="text-danger">{{'Field is invalid' | translate}}</span>
+                    <span *ngIf="!isValidOrderValue() && amount.touched" class="text-danger">{{'Less than minimum order value' | translate}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        <span class="">{{'Fee Amount' | translate}}</span>
+                    </label>
+                    <div>
+                        <input type="text" class="form-control" formControlName="feeAmount" readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label class="control-label">
+                        <span class="">{{'Net Amount' | translate}}</span>
+                    </label>
+                    <div>
+                        <ng-container *ngIf=" orderType === 'subscribe' ">
+                            <input type="text" class="form-control" formControlName="netAmountSub" readonly>
+                        </ng-container>
+
+                        <ng-container *ngIf=" orderType === 'redeem' ">
+                            <input type="text" class="form-control" formControlName="netAmountRedeem" readonly>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
 </form>
+
+
