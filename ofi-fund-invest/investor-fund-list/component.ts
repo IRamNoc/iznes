@@ -174,15 +174,15 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
             if (!isNaN(position)) {
                 position = this._numberConverterService.toFrontEnd(position);
             }
-
+            
             result.push({
                 id: item.get('fundShareID', 0),
                 isin: isin,
                 shareName: shareName,
                 assetClass: item.get('shareClassCode', ''),
                 assetManager: item.get('companyName', ''),
-                srri: item.getIn(['keyFactOptionalData', 'srri'], ''),
-                sri: item.getIn(['keyFactOptionalData', 'sri'], ''),
+                srri: item.getIn(['keyFactOptionalData', 'srri', 0, 'text'], ''),
+                sri: item.getIn(['keyFactOptionalData', 'sri', 0, 'text'], ''),
                 currency: FundShareValue.CurrencyValue[item.get('shareClassCurrency', '')],
                 nav,
                 nextSubCutOff: nextSubCutOff.format('YYYY-MM-DD HH:mm'),
@@ -440,7 +440,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
      * @param {{allowSellBuy: boolean}} share
      * @return {boolean}
      */
-    allowSellBuy(share: {allowSellBuy: number}): boolean {
+    allowSellBuy(share: { allowSellBuy: number }): boolean {
         return (share.allowSellBuy === 1);
     }
 }
