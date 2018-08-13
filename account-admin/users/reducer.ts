@@ -20,6 +20,10 @@ export const usersReducer = function (state: UsersState = initialState,
     case SET_ACCOUNT_ADMIN_USERS:
         const users = _.get(action, 'payload[1].Data', []);
 
+        _.forEach(users, (user) => {
+            user.status = user.userStatus;
+        });
+
         newState = Object.assign({}, state, {
             users,
         });
