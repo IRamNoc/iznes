@@ -18,6 +18,7 @@ import {
     AccountAdminCreateUpdateBase,
     AccountAdminAuditBase,
     AccountAdminListBase,
+    AccountAdminBaseService,
     UserManagementServiceBase,
     AccountAdminUsersMgmtComponentBase,
     AccountAdminPermissionsComponentBase,
@@ -82,6 +83,7 @@ import {
         UsersService,
         UserManagementServiceBase,
         AccountAdminPermissionsServiceBase,
+        AccountAdminBaseService,
     ],
     exports: [],
 })

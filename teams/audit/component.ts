@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 
 import {
     clearRequestedAccountAdminTeamsAudit,
 } from '@setl/core-store';
+import { FileDownloader } from '@setl/utils';
+
+import { AccountAdminBaseService } from '../../base/service';
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminAuditBase } from '../../base/audit/component';
@@ -24,9 +26,10 @@ export class UserTeamsAuditComponent
 
     constructor(private service: UserTeamsService,
                 redux: NgRedux<any>,
-                router: Router,
-                translate: MultilingualService) {
-        super(redux, router, translate);
+                translate: MultilingualService,
+                fileDownloader: FileDownloader,
+                baseService: AccountAdminBaseService) {
+        super(redux, translate, fileDownloader, baseService);
         this.noun = 'Team';
     }
 
@@ -116,6 +119,18 @@ export class UserTeamsAuditComponent
                 },
             ],
         };
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportTeamsAuditCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            `${this.noun}Audit`,
+        );
     }
 
     ngOnDestroy() {

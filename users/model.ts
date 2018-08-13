@@ -131,3 +131,8 @@ export interface ReadUsersAuditRequest extends MemberNodeMessageBody {
     dateFrom: string;
     dateTo: string;
 }
+
+export interface ReadUserPermissionsRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+}

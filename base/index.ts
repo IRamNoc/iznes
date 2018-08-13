@@ -6,3 +6,4 @@ export { UserManagementServiceBase } from './create-update/user-management/servi
 export { AccountAdminPermissionsComponentBase } from './create-update/permissions/component';
 export { AccountAdminPermissionsServiceBase } from './create-update/permissions/service';
 export { AccountAdminStatusComponentBase } from './create-update/status/component';
+export { AccountAdminBaseService } from './service';

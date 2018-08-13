@@ -55,7 +55,7 @@ export class UsersCreateUpdateComponent
                 protected router: Router,
                 alerts: AlertsService,
                 protected toaster: ToasterService,
-                confirmations: ConfirmationService,
+                protected confirmations: ConfirmationService,
                 private translate: MultilingualService,
                 private userMgmtService: UserManagementServiceBase) {
         super(route, router, alerts, toaster, confirmations);
@@ -137,7 +137,12 @@ export class UsersCreateUpdateComponent
             this.siteSettings = settings;
         });
 
-        this.subscriptions.push(userTypesSub, userTypesReqSub, myDetailsSub, siteSettingsSub);
+        this.subscriptions.push(
+            userTypesSub,
+            userTypesReqSub,
+            myDetailsSub,
+            siteSettingsSub,
+        );
     }
 
     private requestUserTypes(requested: boolean): void {
@@ -211,10 +216,56 @@ export class UsersCreateUpdateComponent
 
     save(invite: boolean = false): void {
         if (this.isCreateMode()) {
-            this.createUsers(invite);
+            this.checkUserForNoTeams(() => this.onSaveCheckInvites(invite));
         } else if (this.isUpdateMode()) {
-            this.updateUser(invite);
+            this.checkUserForNoTeams(() => this.updateUser(invite));
         }
+    }
+
+    private checkUserForNoTeams(callback: () => void): void {
+        const assignedTeams = _.find(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
+            return team.isActivated === true || (team.isActivated as any) === 1;
+        });
+
+        if (!assignedTeams) {
+            this.confirmations.create(
+                this.translate.translate('Are you sure?'),
+                this.translate.translate(`You have assigned no teams to this user.
+                    This user, will no longer hold any permissions on the system.`),
+            ).subscribe((answer) => {
+                if (answer.resolved) {
+                    callback();
+                }
+            });
+        } else {
+            callback();
+        }
+    }
+
+    private onSaveCheckInvites(invite: boolean): void {
+        if (invite) {
+            this.confirmations.create(
+                'Invite Users',
+                `Are you sure you want to invite the following users;<br /><br />${this.generateInviteList()}`,
+            ).subscribe((value) => {
+                if (value.resolved) {
+                    this.createUsers(invite);
+                    return;
+                }
+            });
+        } else {
+            this.createUsers(invite);
+        }
+    }
+
+    private generateInviteList(): string {
+        let invites: string = '';
+
+        _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
+            invites += `${form.emailAddress.value()}<br />`;
+        });
+
+        return invites;
     }
 
     private createUsers(invite: boolean): void {
@@ -228,14 +279,11 @@ export class UsersCreateUpdateComponent
                 form.userType.value()[0].id,
                 form.reference.value(),
                 (data: AccountAdminSuccessResponse) => {
+                    this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
+
                     this.onSaveSuccess(
                         `${form.firstName.value()} ${form.lastName.value()}`,
                         data[1].Data[0].userID,
-                    );
-
-                    this.addUserToTeams(
-                        data[1].Data[0].userID,
-                        `${form.firstName.value()} ${form.lastName.value()}`,
                     );
 
                     if (this.forms.length === index + 1) {
@@ -254,21 +302,6 @@ export class UsersCreateUpdateComponent
         });
     }
 
-    private addUserToTeams(userId: number, username: string): void {
-        _.forEach(this.userTeamsSelected, (team: TeamModel.AccountAdminTeam) => {
-            this.userMgmtService.updateTeamUserMap(
-                team.isActivated ? true : false,
-                userId,
-                team.userTeamID,
-                () => {},
-                (e: AccountAdminErrorResponse) => this.onSaveError(
-                    username,
-                    e,
-                ),
-            );
-        });
-    }
-
     private updateUser(invite: boolean): void {
         this.service.updateUser(
             this.entityId,
@@ -280,6 +313,8 @@ export class UsersCreateUpdateComponent
             this.form.userType.value()[0].id,
             this.form.reference.value(),
             () => {
+                this.doUserManagementUpdateOb.next();
+
                 this.onSaveSuccess(
                     `${this.form.firstName.value()} ${this.form.lastName.value()}`,
                     this.entityId,

@@ -10,6 +10,7 @@ import {
 import * as Model from '../model';
 import { UserTeamsService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
+import { AccountAdminBaseService } from '../../base/service';
 
 @Component({
     selector: 'app-core-admin-teams-list',
@@ -26,11 +27,13 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
     constructor(private service: UserTeamsService,
                 router: Router,
                 redux: NgRedux<any>,
-                fileDownloader: FileDownloader) {
-        super(router, redux, fileDownloader);
+                protected fileDownloader: FileDownloader,
+                protected baseService: AccountAdminBaseService) {
+        super(router, redux, fileDownloader, baseService);
         this.noun = 'Team';
         this.csvRequest = {
             userTeamID: null,
+            textSearch: null,
         };
     }
 
@@ -52,6 +55,18 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         if (requested) return;
 
         this.service.readUserTeams(null, null, () => {}, () => {});
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportTeamsCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
     }
 
     ngOnDestroy() {

@@ -9,6 +9,7 @@ import { FileDownloader } from '@setl/utils';
 import * as Model from '../model';
 import { UsersService } from '../service';
 import { AccountAdminListBase } from '../../base/list/component';
+import { AccountAdminBaseService } from '../../base/service';
 
 @Component({
     selector: 'app-core-admin-users-list',
@@ -27,9 +28,10 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
     constructor(private service: UsersService,
                 router: Router,
                 redux: NgRedux<any>,
-                fileDownloader: FileDownloader) {
+                fileDownloader: FileDownloader,
+                baseService: AccountAdminBaseService) {
 
-        super(router, redux, fileDownloader);
+        super(router, redux, fileDownloader, baseService);
         this.noun = 'User';
     }
 
@@ -40,8 +42,8 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
             this.accountId = accountId;
 
             this.csvRequest = {
-                userID: null,
                 accountID: this.accountId,
+                textSearch: null,
             };
         }));
 
@@ -60,6 +62,18 @@ export class UsersListComponent extends AccountAdminListBase implements OnInit, 
         if (requested) return;
 
         this.service.readUsers(null, this.accountId, '', () => {}, () => {});
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        this.baseService.getCSVExport(
+            this.fileDownloader,
+            this.csvRequest,
+            `exportUsersCSV`,
+            this.token,
+            this.userId,
+            this.username,
+            this.noun,
+        );
     }
 
     ngOnDestroy() {

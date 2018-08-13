@@ -19,24 +19,6 @@
             <h3>{{ noun + ' Details' | translate }}</h3>
 
             <app-dynamic-form [model]="form"></app-dynamic-form>
-
-            <div class="row actions bottom">
-                <div class="col">
-                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
-                </div>
-                
-                <div class="col">
-                    <button class="btn btn-primary" (click)="save()">{{
-                        (isCreateMode()) ?
-                        'Create ' + noun :
-                        'Update ' + noun + ' Details'
-                        | translate }}</button>
-                </div>
-
-                <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete ' + noun | translate }}</button>
-                </div>
-            </div>
             
             <div class="row actions bottom">
                 <div class="col-sm-12">
@@ -48,8 +30,8 @@
                 <div class="col-sm-12">
                     <app-core-admin-teams-user-mgmt
                         [entityId]="entityId"
-                        [doUpdate]="isUpdateMode()"
-                        (entitiesFn)="getTeamUsers($event)">
+                        [noun]="nouns.User"
+                        [doUpdateOb]="doUserManagementUpdateOb">
                     </app-core-admin-teams-user-mgmt>
                 </div>
             </div>
@@ -66,7 +48,28 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <app-core-admin-permissions></app-core-admin-permissions>
+                    <app-core-admin-permissions
+                        [entityId]="entityId"
+                        [doUpdateOb]="doPermissionsUpdateOb"
+                        (entitiesFn)="getTeamPermissions($event)"></app-core-admin-permissions>
+                </div>
+            </div>
+
+            <div class="row actions bottom">
+                <div class="col">
+                    <a [routerLink]="getBackUrl()" class="btn">{{ 'Cancel' | translate }}</a>
+                </div>
+                
+                <div class="col">
+                    <button class="btn btn-primary" (click)="save()">{{
+                        (isCreateMode()) ?
+                        'Create ' + noun :
+                        'Update ' + noun
+                        | translate }}</button>
+                </div>
+
+                <div class="col justify-end" *ngIf="isUpdateMode()">
+                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete ' + noun | translate }}</button>
                 </div>
             </div>
         </clr-tab-content>

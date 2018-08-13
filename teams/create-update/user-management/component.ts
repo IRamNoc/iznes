@@ -41,7 +41,7 @@ export class UserTeamsUsersMgmtTeamsComponent
         }));
 
         this.subscriptions.push(this.usersOb.subscribe((users: UserModel.AccountAdminUser[]) => {
-            this.entities = this.processEntities(users);
+            this.entitiesArray = this.processEntities(users);
 
             if (users.length) {
                 this.requestUserTeamMap();
@@ -56,10 +56,10 @@ export class UserTeamsUsersMgmtTeamsComponent
             idIndex: 'userID',
             columns: [
                 {
-                    id: 'Ref',
+                    id: 'Reference',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Ref',
+                    title: 'Reference',
                 },
                 {
                     id: 'FirstName',
@@ -91,6 +91,12 @@ export class UserTeamsUsersMgmtTeamsComponent
                     styleClass: 'usertype',
                     title: 'User Type',
                 },
+                {
+                    id: 'Status',
+                    dataIndex: 'status',
+                    styleClass: 'status',
+                    title: 'Status',
+                },
             ],
         };
     }
@@ -113,37 +119,35 @@ export class UserTeamsUsersMgmtTeamsComponent
     }
 
     private onRequestUserTeamMapSuccess(data: AccountAdminResponse): void {
-        this.processUserTeamMapData(data);
+        this.processUserTeamMapData(data[1].Data as any);
 
         this.updateUIState();
     }
 
-    private processUserTeamMapData(data: AccountAdminResponse): void {
-        if (!(data[1].Data) ||
-            (data[1].Data as any).length === 0 ||
-            (!this.entities) ||
-            this.entities.length === 0) return;
+    private processUserTeamMapData(data): void {
+        if ((!data) || data.length === 0) return;
 
-        _.forEach(this.entities, (user: UserModel.AccountAdminUser) => {
-            const result = _.find(data[1].Data, (res: any) => {
+        _.forEach(this.entitiesArray, (user: UserModel.AccountAdminUser, index: number) => {
+            const result = _.find(data, (res: any) => {
                 return res.userID === user.userID &&
                     res.userTeamID === this.entityId;
             });
 
             if (result) {
-                user.userTeamID = result.userTeamID;
-                user.isActivated = true;
+                this.entitiesArray[index].userTeamID = result.userTeamID;
             }
+
+            this.entitiesArray[index].isActivated = (result) ? true : false;
         });
     }
 
-    updateState(value: boolean, entity: UserModel.AccountAdminUser): void {
+    updateState(entity: UserModel.AccountAdminUser): void {
         if (this.doUpdate) {
             this.service.updateTeamUserMap(
-                value,
+                entity.isActivated,
                 entity.userID,
                 this.entityId,
-                () => this.onUpdateStateSuccess(value),
+                () => this.onUpdateStateSuccess(entity.isActivated, entity.emailAddress),
                 (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
             );
         }

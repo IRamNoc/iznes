@@ -14,6 +14,10 @@
                 [(ngModel)]="showOnlyActivated">
             </label>
         </div>
+
+        <div class="col col-sm-4 justify-end">
+            <a [routerLink]="getCreateNewLink()" class="btn">Create new {{ noun | translate }}</a>
+        </div>
     </div>
 </form>
 
@@ -42,14 +46,13 @@
             <label class="switch">
                 <input class="form-control" id="{{'userMgmtCellAction' + idx}}" type="checkbox"
                     [disabled]="isProcessing()"
-                    [(ngModel)]="entity.isActivated"
-                    (ngModelChange)="updateState($event, entity)">
+                    [(ngModel)]="entity.isActivated">
                 <span class="slider round"></span>
             </label>
         </clr-dg-cell>
     </clr-dg-row>
 
     <clr-dg-footer>{{ pagination.firstItem + 1 }} - {{ pagination.lastItem + 1 }}
-        <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
+        <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
     </clr-dg-footer>
 </clr-datagrid>

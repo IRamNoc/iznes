@@ -20,9 +20,6 @@ import { UserManagementServiceBase } from '../../../base/create-update/user-mana
 export class UserTeamsUsersMgmtUsersComponent
     extends AccountAdminUsersMgmtComponentBase<TeamModel.AccountAdminTeam> implements OnInit, OnDestroy {
 
-    @Input() doUpdate: boolean = true;
-    @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
-
     @select(['accountAdmin', 'teams', 'requested']) teamsReqOb;
     @select(['accountAdmin', 'teams', 'teams']) teamsOb;
 
@@ -41,7 +38,7 @@ export class UserTeamsUsersMgmtUsersComponent
         }));
 
         this.subscriptions.push(this.teamsOb.subscribe((teams: TeamModel.AccountAdminTeam[]) => {
-            this.entities = this.processEntities(teams);
+            this.entitiesArray = this.processEntities(teams);
 
             if (teams.length) {
                 this.requestUserTeamMap();
@@ -56,10 +53,10 @@ export class UserTeamsUsersMgmtUsersComponent
             idIndex: 'userTeamID',
             columns: [
                 {
-                    id: 'Ref',
+                    id: 'Reference',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Ref',
+                    title: 'Reference',
                 },
                 {
                     id: 'Name',
@@ -101,36 +98,31 @@ export class UserTeamsUsersMgmtUsersComponent
     }
 
     private onRequestUserTeamMapSuccess(data: AccountAdminResponse): void {
-        this.processUserTeamMapData(data);
+        this.processUserTeamMapData(data[1].Data as any);
 
         this.updateUIState();
     }
 
-    private processUserTeamMapData(data: AccountAdminResponse): void {
-        if (!(data[1].Data) ||
-            (data[1].Data as any).length === 0 ||
-            (!this.entities) ||
-            this.entities.length === 0) return;
-
-        _.forEach(this.entities, (team: TeamModel.AccountAdminTeam) => {
-            const result = _.find(data[1].Data, (res: any) => {
+    private processUserTeamMapData(data): void {
+        _.forEach(this.entitiesArray, (team: TeamModel.AccountAdminTeam, index: number) => {
+            const result = _.find(data, (res: any) => {
                 return res.userTeamID === team.userTeamID &&
                     res.userID === this.entityId;
             });
 
-            if (result) {
-                team.isActivated = true;
-            }
+            this.entitiesArray[index].isActivated = (result) ? true : false;
         });
+
+        this.entitiesFn.emit(this.entitiesArray);
     }
 
-    updateState(value: boolean, entity: TeamModel.AccountAdminTeam): void {
+    updateState(entity: TeamModel.AccountAdminTeam): void {
         if (this.doUpdate) {
             this.service.updateTeamUserMap(
-                value,
+                entity.isActivated,
                 this.entityId,
                 entity.userTeamID,
-                () => this.onUpdateStateSuccess(value),
+                () => this.onUpdateStateSuccess(entity.isActivated, entity.name),
                 (e: AccountAdminErrorResponse) => this.onRequestError(e, entity),
             );
         }

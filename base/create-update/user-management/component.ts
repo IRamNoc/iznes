@@ -1,12 +1,18 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
-import { Subscription } from 'rxjs/Subscription';
+import * as _ from 'lodash';
+import { Subject, Subscription } from 'rxjs';
 import { ToasterService } from 'angular2-toaster';
+
 import { immutableHelper } from '@setl/utils';
+import {
+    clearRequestedAccountAdminPermissionAreas,
+    clearRequestedAccountAdminUserPermissionAreas,
+} from '@setl/core-store';
+
 import { UserManagementServiceBase } from './service';
 import * as UserMgmtModel from './model';
 import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
-import * as _ from 'lodash';
 
 @Component({
     selector: 'app-core-admin-teams-mgmt',
@@ -15,12 +21,14 @@ import * as _ from 'lodash';
 export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() entityId: number;
+    @Input() noun: string;
+    @Input() doUpdateOb: Subject<number>;
     @Input() doUpdate: boolean = true;
-    @Output() entitiesFn: EventEmitter<Type[]> = new EventEmitter();
+    @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
 
     datagridConfig: DataGridConfig;
 
-    private entitiesArray: Type[];
+    protected entitiesArray: Type[];
     nameSearch: string = '';
     showOnlyActivated: boolean = false;
 
@@ -42,24 +50,30 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
             return entity.isActivated === true;
         });
     }
-    set entities(entities: Type[]) {
-        this.entitiesArray = entities;
-        this.entitiesFn.emit(entities);
-    }
 
     ngOnInit() {
         this.subscriptions.push(this.accountIdOb.subscribe((accountId: number) => {
             this.accountId = accountId;
         }));
 
+        if (this.doUpdateOb) {
+            this.subscriptions.push(this.doUpdateOb.subscribe((entityId: number) => {
+                if (entityId !== undefined) this.entityId = entityId;
+
+                _.forEach(this.entities, (entity: Type) => {
+                    this.updateState(entity);
+                });
+            }));
+        }
+
         this.initDataGridConfig();
     }
 
-    initDataGridConfig(): void {
+    protected initDataGridConfig(): void {
         console.error('method not implemented');
     }
 
-    updateState(value: boolean, entity: Type): void {
+    protected updateState(entity: Type): void {
         console.error('method not implemented');
     }
 
@@ -69,6 +83,10 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
 
     isProcessing(): boolean {
         return this.state === UserMgmtModel.UserMgmtState.Processing;
+    }
+
+    getCreateNewLink(): string {
+        return `/account-admin/${this.noun.toLowerCase()}s/new`;
     }
 
     protected processEntities(entities: any[]): any[] {
@@ -86,25 +104,26 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
         if ((!this.entities) || this.entities.length === 0) this.state = UserMgmtModel.UserMgmtState.Empty;
     }
 
-    protected onUpdateStateSuccess(state: boolean): void {
-        (state) ?
-            this.toaster.pop('success', 'User added to team') :
-            this.toaster.pop('info', 'User removed from team');
+    protected onUpdateStateSuccess(state: boolean, entityName: string): void {
+        this.redux.dispatch(clearRequestedAccountAdminPermissionAreas());
+        this.redux.dispatch(clearRequestedAccountAdminUserPermissionAreas());
     }
 
     protected onRequestError(e: AccountAdminErrorResponse, entity?: any): void {
+        this.toaster.clear();
         this.toaster.pop('error', e[1].Data[0].Message);
 
         if (entity) entity.isActivated = !entity.isActivated;
     }
 
     ngOnDestroy() {
-        this.entities = undefined;
-
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach((sub: Subscription) => {
                 sub.unsubscribe();
             });
         }
+
+        this.subscriptions = [];
+        this.entitiesArray = undefined;
     }
 }

@@ -1,12 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { NgRedux } from '@angular-redux/store';
+import { select, NgRedux } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import * as moment from 'moment';
 
 import { MultilingualService } from '@setl/multilingual';
+import { FileDownloader } from '@setl/utils';
 
+import { AccountAdminBaseService } from '../service';
 import { DataGridConfig } from '../../base/model';
 
 @Component({
@@ -28,6 +29,15 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
     searchForm: FormGroup;
     protected subscriptions: Subscription[] = [];
 
+    protected token: string; // this is only needed for CSV exports
+    protected userId: number; // this is only needed for CSV exports
+    protected username: string; // this is only needed for CSV exports
+    protected csvRequest; // this is only needed for CSV exports
+
+    @select(['user', 'authentication', 'token']) tokenOb;
+    @select(['user', 'myDetail', 'userId']) userIdOb;
+    @select(['user', 'myDetail', 'username']) userNameOb;
+
     /**
      *
      * This is a base class from which both teams and users classes inherit functionality.
@@ -35,12 +45,28 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
      * https://medium.com/@amcdnl/inheritance-in-angular2-components-206a167fc259
      */
     constructor(protected redux: NgRedux<any>,
-                private router: Router,
-                public translate: MultilingualService) {}
+                public translate: MultilingualService,
+                protected fileDownloader: FileDownloader,
+                protected baseService: AccountAdminBaseService) {}
 
     ngOnInit() {
         this.initForm();
         this.initDataGridConfig();
+        this.initSubscriptions();
+    }
+
+    private initSubscriptions(): void {
+        this.subscriptions.push(this.tokenOb.subscribe((token: string) => {
+            this.token = token;
+        }));
+
+        this.subscriptions.push(this.userIdOb.subscribe((userId: number) => {
+            this.userId = userId;
+        }));
+
+        this.subscriptions.push(this.userNameOb.subscribe((username: string) => {
+            this.username = username;
+        }));
     }
 
     protected initDataGridConfig(): void {
@@ -57,6 +83,12 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
         this.searchForm.valueChanges.subscribe(() => {
             this.updateData();
         });
+
+        this.csvRequest = {
+            search: this.searchForm.value.entitySearch,
+            dateFrom: this.searchForm.value.dateFrom,
+            dateTo: this.searchForm.value.dateTo,
+        };
     }
 
     protected updateData(): void {
@@ -75,17 +107,18 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
-    exportEntitiesAsCSV(): void {
-        console.log('export as csv');
+    protected exportEntitiesAsCSV(): void {
+        console.error('method not implemented');
     }
 
     ngOnDestroy() {
-        this.audit = undefined;
-
         if (this.subscriptions.length > 0) {
             this.subscriptions.forEach((sub: Subscription) => {
                 sub.unsubscribe();
             });
         }
+
+        this.subscriptions = [];
+        this.audit = undefined;
     }
 }
