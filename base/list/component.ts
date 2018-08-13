@@ -57,6 +57,10 @@ export class AccountAdminListBase implements OnInit, OnDestroy {
         this.router.navigateByUrl(`/account-admin/${this.noun.toLowerCase()}s/${entityId}`);
     }
 
+    exportCSV(): void {
+        this.exportEntitiesAsCSV();
+    }
+
     protected exportEntitiesAsCSV(): void {
         console.error('method not implemented');
     }

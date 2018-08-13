@@ -107,6 +107,10 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
         return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
+    exportCSV(): void {
+        this.exportEntitiesAsCSV();
+    }
+
     protected exportEntitiesAsCSV(): void {
         console.error('method not implemented');
     }
