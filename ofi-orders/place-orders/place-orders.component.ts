@@ -1,11 +1,11 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {OfiKycService} from '../../ofi-req-services/ofi-kyc/service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {LogService} from '@setl/utils';
-import {MultilingualService} from '@setl/multilingual';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { OfiKycService } from '../../ofi-req-services/ofi-kyc/service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { LogService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 @Component({
     templateUrl: './place-orders.component.html',

@@ -449,74 +449,77 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // List of observable subscription.
         this.shareDataOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((shareData) => {
-                this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
-                this.calenderHelper = new CalendarHelper(this.shareData);
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe((shareData) => {
+            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+            this.calenderHelper = new CalendarHelper(this.shareData);
 
-                this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
-                this.updateDateInputs();
-            });
+            this.updateDateInputs();
+
+            if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
+            if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
+        });
 
         this.connectedWalletOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(connected => {
-                this.connectedWalletId = connected;
-            });
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(connected => {
+            this.connectedWalletId = connected;
+        });
 
         this.addressListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(addressList => this.updateAddressList(addressList));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(addressList => this.updateAddressList(addressList));
 
         this.requestedAddressListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(requested => this.requestAddressList(requested));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(requested => this.requestAddressList(requested));
 
         this.requestedLabelListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe(requested => this.requestWalletLabel(requested));
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(requested => this.requestWalletLabel(requested));
 
         this.cutoffDate.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-                distinctUntilChanged(),
-                throttleTime(1000),
-            )
-            .subscribe((v) => {
-                if (this.toastTimer) {
-                    clearInterval(this.toastTimer);
-                }
-                if (this.timerToast) {
-                    this._toaster.clear(this.timerToast.toastId);
-                    this.timerToast = null;
-                }
-                if (!v) {
-                    return;
-                }
+        .pipe(
+            takeUntil(this.unSubscribe),
+            distinctUntilChanged(),
+            throttleTime(1000),
+        )
+        .subscribe((v) => {
+            if (this.toastTimer) {
+                clearInterval(this.toastTimer);
+            }
+            if (this.timerToast) {
+                this._toaster.clear(this.timerToast.toastId);
+                this.timerToast = null;
+            }
+            if (!v) {
+                return;
+            }
 
-                const cutOffValue = new Date(
-                    this.calenderHelper
-                        .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
-                        .format('YYYY-MM-DD HH:mm'),
-                );
+            const cutOffValue = new Date(
+                this.calenderHelper
+                .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
+                .format('YYYY-MM-DD HH:mm'),
+            );
 
-                const now = new Date();
+            const now = new Date();
 
-                const remainingTime = cutOffValue.getTime() - now.getTime();
-                this.updateToastTimer(remainingTime);
-                this.toastTimer = this.setToastTimer();
-            });
+            const remainingTime = cutOffValue.getTime() - now.getTime();
+            this.updateToastTimer(remainingTime);
+            this.toastTimer = this.setToastTimer();
+        });
     }
 
     updateToastTimer(unixtime: number) {
@@ -534,8 +537,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
-                    .format('YYYY-MM-DD HH:mm'),
+                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
+                .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -1133,7 +1136,7 @@ The IZNES Team.</p>`;
     showAlertCutOffError() {
         if (this.doValidate) {
             this._alertsService
-                .create('error', `
+            .create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
@@ -1142,13 +1145,13 @@ The IZNES Team.</p>`;
                         </tbody>
                     </table>
                 `)
-                .pipe(
-                    take(1),
-                )
-                .subscribe(() => {
-                    this.disclaimer.setValue(false);
-                    this.cutoffDate.setErrors({ tooLate: true });
-                });
+            .pipe(
+                take(1),
+            )
+            .subscribe(() => {
+                this.disclaimer.setValue(false);
+                this.cutoffDate.setErrors({ tooLate: true });
+            });
         }
     }
 
