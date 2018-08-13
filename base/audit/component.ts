@@ -25,8 +25,28 @@ export class AccountAdminAuditBase implements OnInit, OnDestroy {
         //
     }
 
-    exportEntitiesAsCSV(): void {
-        console.log('export as csv');
+    protected updateData(): void {
+        console.error('Method not implemented');
+    }
+
+    protected getSearchRequest(entityIdField: string): any {
+        return {
+            search: this.searchForm.value.entitySearch,
+            dateFrom: moment(this.searchForm.value.dateFrom).format('YYYY-MM-DD 00:00:00'),
+            dateTo: moment(this.searchForm.value.dateTo).format('YYYY-MM-DD 23:59:59'),
+        };
+    }
+
+    goBackURL() {
+        return `/account-admin/${this.noun.toLowerCase()}s`;
+    }
+
+    exportCSV(): void {
+        this.exportEntitiesAsCSV();
+    }
+
+    protected exportEntitiesAsCSV(): void {
+        console.error('method not implemented');
     }
 
     ngOnDestroy() {

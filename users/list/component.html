@@ -10,7 +10,9 @@
                 <div class="col">
                     <a [routerLink]="'/account-admin/users/audit'" class="btn btn-primary">{{ 'Audit Trail' | translate }}</a>
                 </div>
-
+                <div class="col">
+                    <button class="btn btn-primary" (click)="exportCSV()">{{ 'Export Users as CSV' | translate }}</button>
+                </div>
                 <div class="col">
                     <a [routerLink]="'/account-admin/users/new'" class="btn btn-primary">{{ 'Add New User' | translate }}</a>
                 </div>
