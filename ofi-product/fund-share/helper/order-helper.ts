@@ -127,7 +127,7 @@ interface OrderRequestBody {
     orderNote: string;
     contractExpiryTs: number;
     contractStartTs: number;
-
+    uniqueRef: string;
 }
 
 interface UpdateOrderResponse {
@@ -159,6 +159,7 @@ interface UpdateOrderResponse {
     contractAddr: string;
     contractExpiryTs: number;
     contractStartTs: number;
+    uniqueRef: string;
     navEntered: string;
     canceledBy: number;
     dateEntered: string;
@@ -227,6 +228,10 @@ export class OrderHelper {
     fakeValuation: any;
     fakeSettlement: any;
 
+    // unique references for this order helper instance
+    encumberRef: string;
+    poaRef: string;
+
     get feePercentage() {
         return (this.isSellBuy && this.isAllowSellBuy) ?
             0 :
@@ -293,10 +298,10 @@ export class OrderHelper {
         this.investorAddress = orderRequest.subportfolio;
         this.investorWalletId = Number(orderRequest.portfolioid);
 
-        // used for testing when validation is turned off
-        // this.fakeCuoff = moment().add(10, 'seconds');
-        // this.fakeValuation = moment().add(15, 'seconds');
-        // this.fakeSettlement = moment().add(20, 'seconds');
+        // set the unique reference
+        const randomHex = getRandom8Hex();
+        this.setEncumberReference(randomHex);
+        this.setPoaReference();
 
         this.fakeCuoff = moment().add(5, 'minutes');
         this.fakeValuation = this.fakeCuoff.clone().utc().set({ hour: 0, minute: 0, second: 1 });
@@ -385,7 +390,7 @@ export class OrderHelper {
 
     static buildOrderReleaseShareRequestBody(order: UpdateOrderResponse) {
         const walletId = order.amWalletID;
-        const ref = order.amAddress + String(order.contractStartTs) + String(OrderType.Subscription);
+        const ref = order.uniqueRef;
         const fromAddress = order.amAddress;
         const toAddress = order.investorAddress;
         const namespace = order.isin;
@@ -626,6 +631,8 @@ export class OrderHelper {
         const contractExpiryTs = orderTimeStamps.expiryTimeStamp;
         const contractStartTs = orderTimeStamps.settleTimeStamp;
 
+        const uniqueRef = this.encumberRef;
+
         return {
             investorAddress,
             amCompanyID,
@@ -651,6 +658,7 @@ export class OrderHelper {
             orderNote,
             contractExpiryTs,
             contractStartTs,
+            uniqueRef,
         };
     }
 
@@ -1029,7 +1037,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.getEncumberReference(), orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+                [this.investorAddress, this.orderAsset, this.encumberRef, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
             ];
 
         } else if (this.orderBy === OrderByType.Amount) {
@@ -1058,7 +1066,7 @@ export class OrderHelper {
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.getEncumberReference(), amountStr,
+                [this.investorAddress, this.orderAsset, this.encumberRef, amountStr,
                     [], [[this.amIssuingAddress, 0, 0]]]];
 
 
@@ -1095,7 +1103,6 @@ export class OrderHelper {
                 }
             ],
             addEncs,
-            useEncum: [true, this.getEncumberReference()],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
@@ -1216,7 +1223,7 @@ export class OrderHelper {
                 }
             ],
             addEncs,
-            useEncum: [true, this.getEncumberReference()],
+            useEncum: [true, this.encumberRef],
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Redemption order for ' + this.orderAsset,
@@ -1268,18 +1275,17 @@ export class OrderHelper {
 
     /**
      * Get encumber reference
-     * @return {string}
+     * @param randomHex string
      */
-    getEncumberReference() {
-        return this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
+    setEncumberReference(randomHex: string) {
+        this.encumberRef = this.amIssuingAddress + randomHex;
     }
 
     /**
      * Get poa reference
-     * @return {string}
      */
-    getPoaReference() {
-        return 'poa-' + this.amIssuingAddress + String(this.getOrderTimeStamp().settleTimeStamp) + String(this.orderType);
+    setPoaReference() {
+        this.poaRef = 'poa-' + this.encumberRef;
     }
 
     /**
@@ -1301,7 +1307,7 @@ export class OrderHelper {
         const messageBody = {
             txtype: 'encum',
             walletid: this.investorWalletId,
-            reference: this.getEncumberReference(),
+            reference: this.encumberRef,
             address: this.investorAddress,
             subjectaddress: this.investorAddress,
             namespace: this.fundShare.isin,
@@ -1350,7 +1356,7 @@ export class OrderHelper {
                     ]
                 }
             ],
-            poareference: this.getPoaReference(),
+            poareference: this.poaRef,
             enddate: this.getOrderTimeStamp().expiryTimeStamp
         };
 
@@ -1440,4 +1446,24 @@ export function pad(num: number, width: number, fill: string): string {
 
 export function toNormalScale(num: number, numDecimal: number): number {
     return fixToDecimal((num * NumberMultiplier), numDecimal, 'floor');
+}
+
+/**
+ * Get 8 byptes random string
+ * @return {string}
+ */
+export function getRandom8Hex(): string {
+    try {
+        const crypto = require('crypto');
+        return crypto['randomBytes'](8).toString('hex') + getUnixTsInSec();
+    }catch (e) {
+        // otherwise we are working with browser
+        const arr = new Uint32Array(2);
+        return window.crypto.getRandomValues(arr)[0].toString(16) + window.crypto.getRandomValues(arr)[0].toString(16) + getUnixTsInSec();
+    }
+
+}
+
+export function getUnixTsInSec(): number {
+    return Math.floor(((new Date()).valueOf() / 1000));
 }
