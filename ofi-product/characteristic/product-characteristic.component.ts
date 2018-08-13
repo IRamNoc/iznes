@@ -1,10 +1,9 @@
-
-import {takeUntil} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Location } from '@angular/common';
-import { Subject ,  combineLatest } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs';
 import * as _ from 'lodash';
 
 import {
@@ -74,74 +73,73 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.route.params.pipe(
             takeUntil(this.unSubscribe))
-            .subscribe((params) => {
-                if (params.isin) {
-                    this.productCharacteristicsService.getProductCharacteristics(params.isin);
-                    this.isin = params.isin;
-                }
-            });
+        .subscribe((params) => {
+            if (params.isin) {
+                this.productCharacteristicsService.getProductCharacteristics(params.isin);
+                this.isin = params.isin;
+            }
+        });
 
         combineLatest(this.currencies$, this.productCharacteristics$).pipe(
             takeUntil(this.unSubscribe))
-            .subscribe(([c, p]) => {
-                const currencies = c.toJS();
-                if (!currencies.length || !p.get(this.isin)) {
-                    return;
-                }
-                const d = p.get(this.isin).toJS();
+        .subscribe(([c, p]) => {
+            const currencies = c.toJS();
+            if (!currencies.length || !p.get(this.isin)) {
+                return;
+            }
+            const d = p.get(this.isin).toJS();
 
-                const shareClassCurrency = _.find(currencies, { id: d.shareClassCurrency }).text;
-                const prospectus = d.prospectus || '|||';
-                const kiid = d.kiid || '|||';
-                const legalForm = _.find(this.legalFormItems, { id: d.legalForm.toString() }).text;
-                const subscriptionSettlementPeriod = d.subscriptionSettlementPeriod === 0 ? 'D' :
-                    `D+${d.subscriptionSettlementPeriod}`;
-                const navPeriodForSubscription = d.navPeriodForSubscription === 0 ? 'D' :
-                    `D+${d.navPeriodForSubscription}`;
-                const redemptionSettlementPeriod = d.redemptionSettlementPeriod === 0 ? 'D' :
-                    `D+${d.redemptionSettlementPeriod}`;
-                const navPeriodForRedemption = d.navPeriodForRedemption === 0 ? 'D' :
-                    `D+${d.navPeriodForRedemption}`;
+            const shareClassCurrency = _.find(currencies, { id: d.shareClassCurrency }).text;
+            const prospectus = d.prospectus || '|||';
+            const kiid = d.kiid || '|||';
+            const legalForm = _.find(this.legalFormItems, { id: d.legalForm }).text;
+            const subscriptionSettlementPeriod = d.subscriptionSettlementPeriod === 0 ? 'D' :
+                `D+${d.subscriptionSettlementPeriod}`;
+            const navPeriodForSubscription = d.navPeriodForSubscription === 0 ? 'D' :
+                `D+${d.navPeriodForSubscription}`;
+            const redemptionSettlementPeriod = d.redemptionSettlementPeriod === 0 ? 'D' :
+                `D+${d.redemptionSettlementPeriod}`;
+            const navPeriodForRedemption = d.navPeriodForRedemption === 0 ? 'D' :
+                `D+${d.navPeriodForRedemption}`;
 
-                this.currentProduct = {
-                    ...d,
-                    srri: _.get(d.srri, [0, 'text']),
-                    sri: _.get(d.sri, [0, 'text']),
-                    distributionPolicy: _.get(d.distributionPolicy, [0, 'text']),
-                    prospectus: {
-                        fileID: prospectus.split('|')[0],
-                        hash: prospectus.split('|')[1],
-                        name: prospectus.split('|')[2],
-                    },
-                    kiid: {
-                        fileID: kiid.split('|')[0],
-                        hash: kiid.split('|')[1],
-                        name: kiid.split('|')[2],
-                    },
-                    legalForm,
-                    shareClassCurrency,
-                    status: d.status === 2 ? 'No' : StatusEnum[d.status],
-                    valuationFrequency: ValuationFrequencyEnum[d.valuationFrequency],
-                    subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[d.subscriptionTradeCyclePeriod],
-                    redemptionTradeCyclePeriod: TradeCyclePeriodEnum[d.redemptionTradeCyclePeriod],
-                    subscriptionSettlementPeriod,
-                    navPeriodForSubscription,
-                    subscriptionCategory: SubscriptionCategoryEnum[d.subscriptionCategory],
-                    redemptionSettlementPeriod,
-                    navPeriodForRedemption,
-                    redemptionCategory: SubscriptionCategoryEnum[d.redemptionCategory],
-                    maxManagementFee: this.numConverter.toFrontEnd(d.maxManagementFee),
-                    maxSubscriptionFee: this.numConverter.toFrontEnd(d.maxSubscriptionFee),
-                    maxRedemptionFee: this.numConverter.toFrontEnd(d.maxRedemptionFee),
-                    minInitialSubscriptionInAmount: this.numConverter.toFrontEnd(d.minInitialSubscriptionInAmount),
-                    minSubsequentRedemptionInAmount: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInAmount),
-                    minInitialSubscriptionInShare: this.numConverter.toFrontEnd(d.minInitialSubscriptionInShare),
-                    minSubsequentRedemptionInShare: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInShare),
-                    initialNav: this.numConverter.toFrontEnd(d.initialNav),
-                    latestNav: this.numConverter.toFrontEnd(d.latestNav),
-                };
-
-            });
+            this.currentProduct = {
+                ...d,
+                srri: _.get(d.srri, [0, 'text']),
+                sri: _.get(d.sri, [0, 'text']),
+                distributionPolicy: _.get(d.distributionPolicy, [0, 'text']),
+                prospectus: {
+                    fileID: prospectus.split('|')[0],
+                    hash: prospectus.split('|')[1],
+                    name: prospectus.split('|')[2],
+                },
+                kiid: {
+                    fileID: kiid.split('|')[0],
+                    hash: kiid.split('|')[1],
+                    name: kiid.split('|')[2],
+                },
+                legalForm,
+                shareClassCurrency,
+                status: d.status === 2 ? 'No' : StatusEnum[d.status],
+                valuationFrequency: ValuationFrequencyEnum[d.valuationFrequency],
+                subscriptionTradeCyclePeriod: TradeCyclePeriodEnum[d.subscriptionTradeCyclePeriod],
+                redemptionTradeCyclePeriod: TradeCyclePeriodEnum[d.redemptionTradeCyclePeriod],
+                subscriptionSettlementPeriod,
+                navPeriodForSubscription,
+                subscriptionCategory: SubscriptionCategoryEnum[d.subscriptionCategory],
+                redemptionSettlementPeriod,
+                navPeriodForRedemption,
+                redemptionCategory: SubscriptionCategoryEnum[d.redemptionCategory],
+                maxManagementFee: this.numConverter.toFrontEnd(d.maxManagementFee),
+                maxSubscriptionFee: this.numConverter.toFrontEnd(d.maxSubscriptionFee),
+                maxRedemptionFee: this.numConverter.toFrontEnd(d.maxRedemptionFee),
+                minInitialSubscriptionInAmount: this.numConverter.toFrontEnd(d.minInitialSubscriptionInAmount),
+                minSubsequentRedemptionInAmount: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInAmount),
+                minInitialSubscriptionInShare: this.numConverter.toFrontEnd(d.minInitialSubscriptionInShare),
+                minSubsequentRedemptionInShare: this.numConverter.toFrontEnd(d.minSubsequentRedemptionInShare),
+                initialNav: this.numConverter.toFrontEnd(d.initialNav),
+                latestNav: this.numConverter.toFrontEnd(d.latestNav),
+            };
+        });
 
     }
 

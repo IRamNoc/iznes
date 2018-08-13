@@ -716,6 +716,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.fundShare.keyFactOptionalData = currentFundShare.keyFactOptionalData;
         }
 
+        if (!!this.fundShare.keyFactOptionalData.sri) this.fundShare.keyFactOptionalData.sri = this.fundShare.keyFactOptionalData.sri[0].text;
+        if (!!this.fundShare.keyFactOptionalData.srri) this.fundShare.keyFactOptionalData.srri = this.fundShare.keyFactOptionalData.srri[0].text;
+
         this.fundShare.decimalization = currentFundShare.maximumNumDecimal;
         this.fundShare.mifiidChargesOneOff = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOneOff);
         this.fundShare.mifiidChargesOngoing = this._numberConverterService.toFrontEnd(currentFundShare.mifiidChargesOngoing);
