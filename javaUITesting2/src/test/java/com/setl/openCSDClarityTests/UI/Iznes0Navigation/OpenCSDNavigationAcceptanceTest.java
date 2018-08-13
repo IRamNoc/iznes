@@ -206,4 +206,24 @@ public class OpenCSDNavigationAcceptanceTest {
         navigateToPageByID("menu-sub-portfolio");
         verifyCorrectPage("Sub-portfolio");
     }
+    @Test
+    public void shouldNavigateToAdministrationUsers() throws IOException, InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        wait.until(visibilityOfElementLocated(By.id("menu-administration-users")));
+        navigateToDropdown("menu-administration-users");
+        String usersTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/div")).getText();
+        assertTrue(usersTitle.contains("Users"));
+
+    }
+    @Test
+    public void shouldNavigateToAdministrationTeam() throws IOException, InterruptedException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        String teamsTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div")).getText();
+        assertTrue(teamsTitle.contains("Team(s)"));
+    }
 }
