@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { DebugElement, Pipe, PipeTransform } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs/observable/of';
-import { Subject } from 'rxjs/Subject';
 
 import { KycAuditTrailComponent } from './kyc-audit-trail.component';
 import { KycStatusAuditTrailComponent } from './status-audit-trail/kyc-status-audit-trail.component';
@@ -13,6 +12,7 @@ import { ClarityModule } from '@clr/angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DpDatePickerModule } from '@setl/utils/index';
 import { ActivatedRoute } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { MultilingualService } from '@setl/multilingual';
@@ -22,12 +22,12 @@ const getStatusAuditByKycID = jasmine.createSpy('getStatusAuditByKycID')
         new Promise((resolve, reject) => {
             resolve();
         }),
-    );
+);
 const getInformationAuditByKycID = jasmine.createSpy('getInformationAuditByKycID')
-.and.returnValue(
-    new Promise((resolve, reject) => {
-        resolve();
-    }),
+    .and.returnValue(
+        new Promise((resolve, reject) => {
+            resolve();
+        }),
 );
 const ofiKycServiceSpy = {
     getStatusAuditByKycID,
@@ -82,6 +82,7 @@ describe('KycAuditTrailComponent', () => {
                 FormsModule,
                 ReactiveFormsModule,
                 DpDatePickerModule,
+                RouterTestingModule,
             ],
             providers: [
                 { provide: OfiKycService, useValue: ofiKycServiceSpy },
