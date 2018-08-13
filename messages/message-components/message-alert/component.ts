@@ -1,9 +1,9 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {SagaHelper} from '@setl/utils/index';
-import {WalletNodeSocketService} from '@setl/websocket-service';
-import {NgRedux} from '@angular-redux/store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
-import {CoreWorkflowEngineService} from '@setl/core-req-services';
+import { Component, Input, OnInit } from '@angular/core';
+import { SagaHelper } from '@setl/utils/index';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { NgRedux } from '@angular-redux/store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
+import { CoreWorkflowEngineService } from '@setl/core-req-services';
 /**
  * SETL Message Body Component
  *
@@ -12,7 +12,7 @@ import {CoreWorkflowEngineService} from '@setl/core-req-services';
 @Component({
     selector: 'setl-message-alert',
     templateUrl: './component.html',
-    styleUrls: ['./component.css']
+    styleUrls: ['./component.css'],
 })
 export class SetlMessageAlertComponent implements OnInit {
 
@@ -21,25 +21,24 @@ export class SetlMessageAlertComponent implements OnInit {
     messageBody: string = '';
 
     public xparam = {
-        'userid': '',
-        'Header': {
-            'Transaction': '',
-            'Variant': 'T',
-            'Action': 'Set',
-            'Issuer': '',
-            'UnitID': '0',
-            'XParams': {
-                //'ParamName': 'ParamValue'
-            }
-        }
+        userid: '',
+        Header: {
+            Transaction: '',
+            Variant: 'T',
+            Action: 'Set',
+            Issuer: '',
+            UnitID: '0',
+            XParams: {
+            }, // 'ParamName': 'ParamValue'
+        },
     };
 
     private templateDetails;
 
     constructor (private walletNodeSocketService: WalletNodeSocketService,
-                 private _ngRedux: NgRedux<any>,
+                 private ngRedux: NgRedux<any>,
                  private alertsService: AlertsService,
-                 private _coreWorkflowService: CoreWorkflowEngineService) {
+                 private coreWorkflowService: CoreWorkflowEngineService) {
     }
 
     ngOnInit() {
@@ -55,8 +54,9 @@ export class SetlMessageAlertComponent implements OnInit {
     }
 
     sendXparam(type) {
+        const val = type.charCodeAt(0);
         this.xparam['Header']['XParams'] = {};
-        this.xparam['Header']['XParams'][this.data['Xparam']] = type;
+        this.xparam['Header']['XParams'][this.data['Xparam']] = val;
         this.performPost(this.xparam, (r) => {
             if (r[1]['Data'] && r[1]['Data'][0] && r[1]['Data'][0]['error']) {
                 console.error(r[1]['Data'][0]);
@@ -70,11 +70,11 @@ export class SetlMessageAlertComponent implements OnInit {
     }
 
     performPost(data, fnSuccess, fnFail) {
-        const asyncTaskPipe = this._coreWorkflowService.requestNew(data);
-        this._ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
+        const asyncTaskPipe = this.coreWorkflowService.requestNew(data);
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback( // Send a saga action.
             asyncTaskPipe,
             fnSuccess,
-            fnFail
+            fnFail,
         ));
     }
 
