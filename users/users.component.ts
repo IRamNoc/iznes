@@ -999,7 +999,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public getWalletById(id) {
         /* Look for the wallet and return it... */
         for (const key in this.manageWalletList) {
-            if (this.manageWalletList[key].walletId === id) {
+            if (this.manageWalletList[key].walletId === Number(id)) {
                 return this.manageWalletList[key];
             }
         }
