@@ -83,7 +83,7 @@ interface OrderDates {
     settlement: any;
 }
 
-interface OrderFigures {
+export interface OrderFigures {
     quantity: number;
     estimatedQuantity: number;
     amount: number;
@@ -189,6 +189,10 @@ interface ContractRequestBody {
 const OrderTypeNumber = {
     s: 3,
     r: 4,
+};
+const orderTypeToString = {
+    3: 's',
+    4: 'r',
 };
 
 const OrderByNumber = {
@@ -832,8 +836,6 @@ export class OrderHelper {
     }
 
     getOrderFigures(): VerifyResponse | OrderFigures {
-        let quantity, estimatedQuantity, amount, estimatedAmount, amountWithCost, estimatedAmountWithCost, fee;
-
         const checkOrderValue = this.checkOrderValueValid(this.orderValue);
         if (!OrderHelper.isResponseGood(checkOrderValue)) {
             return OrderHelper.getChildErrorMessage(checkOrderValue);
@@ -845,28 +847,67 @@ export class OrderHelper {
             return OrderHelper.getChildErrorMessage(checkAllowOrderType);
         }
 
-        switch (this.orderBy) {
+        try {
+            return OrderHelper.calculateFigures(
+                {
+                    feePercentage: this.feePercentage,
+                    nav: this.nav,
+                    orderBy: this.orderBy,
+                    orderType: this.orderType,
+                    value: this.orderValue,
+                },
+                +this.fundShare.maximumNumDecimal,
+                this.isKnownNav(),
+            );
+        } catch (e) {
+            return {
+                orderValid: false,
+                errorMessage: e.message,
+            };
+        }
+    }
+
+    static calculateFigures(
+        order: {
+            orderBy: OrderByType,
+            orderType: OrderType,
+            value: number,
+            nav: number,
+            feePercentage: number,
+        },
+        maxDecimalisation: number,
+        knownNav: boolean,
+    ): OrderFigures {
+        let amount;
+        let quantity;
+        let estimatedQuantity;
+        let estimatedAmount;
+        let fee;
+        let estimatedAmountWithCost;
+        let amountWithCost;
+
+        switch (order.orderBy) {
         case OrderByType.Quantity:
-            quantity = this.orderValue;
-            estimatedQuantity = this.orderValue;
+            quantity = order.value;
+            estimatedQuantity = quantity;
 
             /**
              * amount = unit * nav
              */
             amount = 0;
-            estimatedAmount = fixToDecimal((quantity * this.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
+            estimatedAmount = fixToDecimal((quantity * order.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
             // change to 2 decimal place
-            estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
+            estimatedAmount = +OrderHelper.getAmountTwoDecimal(estimatedAmount);
 
             // calculate fee
-            fee = calFee(estimatedAmount, this.feePercentage);
+            fee = +calFee(estimatedAmount, order.feePercentage);
 
             // net amount change to 2 decimal place
-            fee = this.getAmountTwoDecimal(fee);
+            fee = +OrderHelper.getAmountTwoDecimal(fee);
 
             // net amount
-            estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            estimatedAmountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
 
             amountWithCost = 0;
 
@@ -878,48 +919,44 @@ export class OrderHelper {
              */
 
             // if redemption amount will always be estimated.
-            estimatedQuantity = fixToDecimal((this.orderValue / this.nav * NumberMultiplier), BlockchainNumberDecimal, 'floor');
+            estimatedQuantity = fixToDecimal((order.value / order.nav * NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
             // make sure the quantity meet the share maximumNumberDecimal
             // 1. convert back to normal number scale
             // 2. meeting the maximumNumberDecimal, and always round down.
             // 3. convert back to blockchain number scale
-            estimatedQuantity = fixToDecimal(estimatedQuantity, Number(this.fundShare.maximumNumDecimal), 'floor');
+            estimatedQuantity = fixToDecimal(estimatedQuantity, +maxDecimalisation, 'floor');
 
             quantity = 0;
 
             // if we are using known nav, we use the quantity to work out the new amount
             // if we are using unknow nav, we put the specified amount back.
-            if (this.isKnownNav()) {
-                estimatedAmount = fixToDecimal((estimatedQuantity * this.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
+            estimatedAmount = order.value;
+            amount = order.value;
+            if (knownNav) {
+                estimatedAmount = fixToDecimal((estimatedQuantity * order.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
 
                 // change to 2 decimal place
-                estimatedAmount = this.getAmountTwoDecimal(estimatedAmount);
+                estimatedAmount = +OrderHelper.getAmountTwoDecimal(estimatedAmount);
 
                 amount = estimatedAmount;
-            }else {
-                estimatedAmount = this.orderValue;
-                amount = this.orderValue;
             }
 
             // calculate fee
-            fee = calFee(estimatedAmount, this.feePercentage);
+            fee = +calFee(estimatedAmount, order.feePercentage);
 
             // change to 2 decimal place
-            fee = this.getAmountTwoDecimal(fee);
+            fee = +OrderHelper.getAmountTwoDecimal(fee);
 
             // net amount
-            estimatedAmountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            estimatedAmountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
 
-            amountWithCost = calNetAmount(estimatedAmount, fee, this.orderRequest.ordertype);
+            amountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
 
             break;
 
         default:
-            return {
-                orderValid: false,
-                errorMessage: 'Invalid orderBy type',
-            };
+            throw new Error('Invalid orderBy type');
         }
 
         return {
@@ -932,14 +969,13 @@ export class OrderHelper {
         };
     }
 
-
     /**
      * Get Amount to Two Decimal Places and converts to blockchain number
      *
      * @param amount
      * @returns {number}
      */
-    getAmountTwoDecimal(amount) {
+    static getAmountTwoDecimal(amount) {
         amount = Math.round((amount / NumberMultiplier) * 100) / 100;
         return (amount * NumberMultiplier);
     }
@@ -1156,24 +1192,21 @@ export class OrderHelper {
                         fromAddress: this.investorAddress,
                         toAddress: this.amIssuingAddress,
                         metaData: {
-                            clientTxType: 'redemption'
-                        }
+                            clientTxType: 'redemption',
+                        },
                     },
-                    actionType: ArrangementActionType.SEND
-                }
+                    actionType: ArrangementActionType.SEND,
+                },
             ];
-
-            // addEncs = [
-            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
-            // ];
 
         } else if (this.orderBy === OrderByType.Amount) {
             // by amount
             const decimalDivider = Math.pow(10, Number(this.fundShare.maximumNumDecimal)) ;
             // the formula before apply maximum number decimal.
-            let amountStr = '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier;
+            let amountStr = `(${orderFigures.amount} / nav) * ${NumberMultiplier}`;
             // apply maximum number decimal.
-            amountStr = 'floor(' + amountStr + '/' + NumberMultiplier + ' * ' + decimalDivider + ') / ' + decimalDivider + ' * ' + NumberMultiplier;
+            // tslint:disable-next-line:max-line-length
+            amountStr = `floor(${amountStr}/${NumberMultiplier} * ${decimalDivider}) / ${decimalDivider} * ${NumberMultiplier}`;
 
             actionData = [
                 {
@@ -1185,16 +1218,12 @@ export class OrderHelper {
                         fromAddress: this.investorAddress,
                         toAddress: this.amIssuingAddress,
                         metaData: {
-                            clientTxType: 'redemption'
-                        }
+                            clientTxType: 'redemption',
+                        },
                     },
-                    actionType: ArrangementActionType.SEND
-                }
+                    actionType: ArrangementActionType.SEND,
+                },
             ];
-
-            // addEncs = [
-            //     [this.investorAddress, this.orderAsset, this.amIssuingAddress + this.getOrderTimeStamp().expiryTimeStamp, '(' + orderFigures.amount + ' / nav' + ') * ' + NumberMultiplier, [], [[this.amIssuingAddress, 0, 0]]]
-            // ];
 
         } else {
             return {
@@ -1206,17 +1235,17 @@ export class OrderHelper {
         const conditions = [
             {
                 conditionData: {
-                    executeTimeStamp: settleTimeStamp
+                    executeTimeStamp: settleTimeStamp,
                 },
-                conditionType: ConditionType.TIME
+                conditionType: ConditionType.TIME,
             },
             {
                 conditionData: {
                     authoriseRef: AuthoriseRef,
                     address: this.amIssuingAddress,
                 },
-                conditionType: ConditionType.AUTHORISE
-            }
+                conditionType: ConditionType.AUTHORISE,
+            },
         ];
 
         return {
@@ -1224,9 +1253,9 @@ export class OrderHelper {
             conditions,
             datas: [
                 {
-                    'parameter': 'nav',
-                    'address': this.amIssuingAddress
-                }
+                    parameter: 'nav',
+                    address: this.amIssuingAddress,
+                },
             ],
             addEncs,
             useEncum: [true, this.encumberRef],
@@ -1234,10 +1263,9 @@ export class OrderHelper {
             numStep: '1',
             stepTitle: 'Redemption order for ' + this.orderAsset,
             mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
-            creatorAddress: 'not being used' // not being used
+            creatorAddress: 'not being used', // not being used
         };
     }
-
 
     checkOrderByIsAllow(orderType = this.orderRequest.orderby): VerifyResponse {
 
@@ -1263,35 +1291,44 @@ export class OrderHelper {
 
         if (typesAllow === 2) {
             return {
-                orderValid: true
+                orderValid: true,
             };
         }
 
         if (typesAllow !== tryingToOrderBy) {
             return {
                 orderValid: false,
-                errorMessage: 'Not allow to order by this type'
-            };
-        } else {
-            return {
-                orderValid: true
+                errorMessage: 'Not allow to order by this type',
             };
         }
+        return {
+            orderValid: true,
+        };
     }
 
     /**
      * Get encumber reference
      * @param randomHex string
      */
+<<<<<<< HEAD
     setEncumberReference(randomHex: string) {
         this.encumberRef = this.amIssuingAddress + randomHex;
+=======
+    getEncumberReference() {
+        return `${this.amIssuingAddress}${this.getOrderTimeStamp().settleTimeStamp}${this.orderType}`;
+>>>>>>> Broadcasting optimisations
     }
 
     /**
      * Get poa reference
      */
+<<<<<<< HEAD
     setPoaReference() {
         this.poaRef = 'poa-' + this.encumberRef;
+=======
+    getPoaReference() {
+        return `poa-${this.getEncumberReference()}`;
+>>>>>>> Broadcasting optimisations
     }
 
     /**
@@ -1304,9 +1341,8 @@ export class OrderHelper {
 
         if (!OrderHelper.isResponseGood(figures as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(figures);
-        } else {
-            figures = figures as OrderFigures;
         }
+        figures = figures as OrderFigures;
 
         const quantity = figures.estimatedQuantity;
 
@@ -1323,12 +1359,12 @@ export class OrderHelper {
             beneficiaries: [[this.amIssuingAddress, 0, 0]],
             administrators: [[this.amIssuingAddress, 0, 0]],
             protocol: '',
-            metadata: ''
+            metadata: '',
         };
 
         return {
             messagetype: 'tx',
-            messagebody: messageBody
+            messagebody: messageBody,
         };
     }
 
@@ -1342,9 +1378,8 @@ export class OrderHelper {
 
         if (!OrderHelper.isResponseGood(figures as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(figures);
-        } else {
-            figures = figures as OrderFigures;
         }
+        figures = figures as OrderFigures;
 
         const quantity = figures.estimatedQuantity;
 
@@ -1358,17 +1393,22 @@ export class OrderHelper {
                     txtype: 'encum',
                     amount: quantity * 10,
                     assets: [
-                        `${this.fundShare.isin}|${this.fundShare.fundShareName}`
-                    ]
-                }
+                        `${this.fundShare.isin}|${this.fundShare.fundShareName}`,
+                    ],
+                },
             ],
+<<<<<<< HEAD
             poareference: this.poaRef,
             enddate: this.getOrderTimeStamp().expiryTimeStamp
+=======
+            poareference: this.getPoaReference(),
+            enddate: this.getOrderTimeStamp().expiryTimeStamp,
+>>>>>>> Broadcasting optimisations
         };
 
         return {
             messagetype: 'tx',
-            messagebody: messageBody
+            messagebody: messageBody,
         };
     }
 

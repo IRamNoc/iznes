@@ -83,6 +83,7 @@ export class OfiMemberNodeChannelService {
             case 'updatenav':
 
                 handleUpdateNav(this.ngRedux);
+
                 this.ngRedux.dispatch(ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
                 break;
 
