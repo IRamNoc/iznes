@@ -113,7 +113,7 @@
                                     }">
                                     <span>from</span>
                                     <span class="fa fa-calendar"></span>
-                                    <input id="{{item}}_from" name="{{item}}_from" placeholder="{{model[item + '_from'].placeholder}}"
+                                    <input id="{{item}}_from" name="{{item}}_from" placeholder="{{model[item].placeholder}}"
                                            formControlName="{{item}}_from"
                                            [dpDayPicker]="model[item].dateOptions"
                                            [readonly]="false"
@@ -123,7 +123,7 @@
                                            autocomplete="off"/>
                                     <span>to</span>
                                     <span class="fa fa-calendar"></span>
-                                    <input id="{{item}}_to" name="{{item}}_to" placeholder="{{model[item + '_to'].placeholder}}"
+                                    <input id="{{item}}_to" name="{{item}}_to" placeholder="{{model[item].placeholder}}"
                                            formControlName="{{item}}_to"
                                            [dpDayPicker]="model[item].dateOptions"
                                            [readonly]="false"
