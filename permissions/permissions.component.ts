@@ -429,8 +429,14 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         }).then(() => {
             /* Then let's find the tab and emit the data to the permission component using that event emitter. */
             let i;
-            const location = (group.groupIsTx === 1 ?
-                'transPermissions' : (group.groupIsTx === 2 ? 'menuPermissions' : 'adminPermissions'));
+            /* Figure out which call to make. */
+            let location = 'adminPermissions';
+
+            if (group.groupIsTx === 1) {
+                location = 'transPermissions';
+            } else if (group.groupIsTx === 2) {
+                location = 'menuPermissions';
+            }
 
             /* Loop over tabs and find this group tab. */
             for (i = 0; i < this.tabsControl.length; i += 1) {
