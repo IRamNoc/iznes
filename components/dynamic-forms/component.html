@@ -115,7 +115,7 @@
                                     <span class="fa fa-calendar"></span>
                                     <input id="{{item}}_from" name="{{item}}_from" placeholder="{{model[item + '_from'].placeholder}}"
                                            formControlName="{{item}}_from"
-                                           [dpDayPicker]="model[item + '_from'].dateOptions"
+                                           [dpDayPicker]="model[item].dateOptions"
                                            [readonly]="false"
                                            mode="day"
                                            type="text"
@@ -125,7 +125,7 @@
                                     <span class="fa fa-calendar"></span>
                                     <input id="{{item}}_to" name="{{item}}_to" placeholder="{{model[item + '_to'].placeholder}}"
                                            formControlName="{{item}}_to"
-                                           [dpDayPicker]="model[item + '_to'].dateOptions"
+                                           [dpDayPicker]="model[item].dateOptions"
                                            [readonly]="false"
                                            mode="day"
                                            type="text"
