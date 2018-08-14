@@ -500,14 +500,12 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = {}; // we're only adding as we're creating.
 
             /* Figure out which function to call. */
-            let functionCall;
+            let functionCall = 'updateAdminPermissions';
 
             if (dataToSend['type'] === 1) {
                 functionCall = 'updateTxPermissions';
             } else if (dataToSend['type'] === 2) {
                 functionCall = 'updateMenuPermissions';
-            } else {
-                functionCall = 'updateAdminPermissions';
             }
 
             /* Then send the request. */
@@ -578,14 +576,12 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             permissionsData['toDelete'] = differences['toDelete'];
 
             /* Figure out which call to make. */
-            let functionCall;
+            let functionCall = 'updateAdminPermissions';
 
             if (dataToSend['type'] === 1) {
                 functionCall = 'updateTxPermissions';
             } else if (dataToSend['type'] === 2) {
                 functionCall = 'updateMenuPermissions';
-            } else {
-                functionCall = 'updateAdminPermissions';
             }
 
             /* Send the request. */
