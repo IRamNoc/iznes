@@ -175,6 +175,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             clientReference: [
                 '',
             ],
+            investorType: [
+                '',
+            ],
             firstName: [
                 '',
             ],
