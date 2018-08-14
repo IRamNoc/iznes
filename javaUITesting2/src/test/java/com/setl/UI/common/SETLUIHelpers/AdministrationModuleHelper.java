@@ -1,27 +1,8 @@
 package com.setl.UI.common.SETLUIHelpers;
 
-import jdk.internal.org.objectweb.asm.tree.analysis.Value;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sun.awt.SunHints;
-
 import java.io.IOException;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertClassRequiredIsPresent;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.assertHiddenAttributeIsPresent;
-import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
-import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.setTime;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.waitForNewShareButton;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;

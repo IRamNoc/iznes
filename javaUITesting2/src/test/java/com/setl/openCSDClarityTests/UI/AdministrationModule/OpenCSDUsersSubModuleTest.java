@@ -5,30 +5,11 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.IOException;
-
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
-import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.navigateToPage;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
-import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuser;
-import static com.setl.UI.common.SETLUIHelpers.SetUp.adminuserPassword;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
-import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOfElementLocated;
 
 
 @RunWith(OrderedJUnit4ClassRunner.class)
