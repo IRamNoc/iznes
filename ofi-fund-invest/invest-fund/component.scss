@@ -65,3 +65,15 @@
     flex-shrink : 0;
   }
 }
+
+.choice{
+  & > label{
+    display: block;
+    line-height: 20px;
+    font-size: 12px;
+  }
+
+  .btn-group{
+    margin-top: 2px;
+  }
+}
