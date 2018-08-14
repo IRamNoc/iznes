@@ -196,6 +196,7 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
                 hasNoNav: Boolean(nav <= 0),
                 position,
                 totalPosition,
+                allowSellBuy: item.get('allowSellBuy', 0),
             });
 
             return result;
