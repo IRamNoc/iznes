@@ -5,14 +5,11 @@ import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.Before;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
-
-import java.io.IOException;
 
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
@@ -51,7 +48,7 @@ public class OpenCSDTeamsSubModuleTest {
     }
 
     @Test
-    public void shouldCreateATeam() throws IOException, InterruptedException {
+    public void shouldCreateATeam() throws InterruptedException {
         String [] teamName = generateRandomTeamName();
         String [] teamReference = generateRandomTeamReference();
         String [] teamDescription = fillInDescription();
