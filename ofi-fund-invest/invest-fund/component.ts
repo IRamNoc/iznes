@@ -341,6 +341,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get isRedeemTooMuch(): boolean {
+        if (this.orderType === 's') {
+            return false;
+        }
+
         const toNumber = this._moneyValuePipe.parse(this.quantity.value, 4);
         const redeeming = this._numberConverterService.toBlockchain(toNumber);
         const balance = this.subPortfolioBalance;
