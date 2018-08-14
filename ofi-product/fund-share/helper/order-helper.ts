@@ -517,6 +517,12 @@ export class OrderHelper {
      * @return {{messagetype: string; messagebody: {txtype: string; walletid: number; address: string; function: string; contractdata: {contractfunction: string; issuingaddress: string; contractaddress: string; party: any[]; commitment: any[]; receive: any[]; authorise: string[][]}; contractaddress: string}}}
      */
     static buildRedeemAuthorisationCommitReqeustBody(order: UpdateOrderResponse) {
+        const authMsg = {
+            type: 'authorisor',
+            msg: AuthoriseRef,
+            address: order.amAddress,
+        };
+
         const contractData = {
             contractfunction: 'dvp_uk_commit',
             issuingaddress: order.amAddress,
@@ -525,7 +531,7 @@ export class OrderHelper {
             commitment: [],
             receive: [],
             authorise: [
-                [order.amAddress, AuthoriseRef, '', ''],
+                [order.amAddress, '0', '', JSON.stringify(authMsg), false],
             ],
         };
 
@@ -1106,7 +1112,7 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
-            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: false },
             creatorAddress: 'not being used'  // not being used
         };
     }
