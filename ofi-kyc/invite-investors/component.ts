@@ -92,6 +92,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                     ],
                     lastName: [
                         '',
+                    ],
+                    message: [
+                        '',
                     ]
                 })
             ])
@@ -176,6 +179,9 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
                 '',
             ],
             lastName: [
+                '',
+            ],
+            message: [
                 '',
             ]
         });
@@ -289,7 +295,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
         return false;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
     }
 }
 
@@ -303,7 +309,8 @@ function constructInvitationRequest(formValue) {
             firstname: item.get('firstName', ''),
             lastname: item.get('lastName', ''),
             lang: item.get('language', 'fr'),
-            clientreference: item.get('clientReference', '')
+            clientreference: item.get('clientReference', ''),
+            message: item.get('message', ''),
         });
         return result;
     }, []);

@@ -7,6 +7,7 @@ interface Invitation {
     lastname?: string;
     lang: any;
     clientreference?: string;
+    message?: string;
 }
 
 export interface SendInvitationRequestData {
