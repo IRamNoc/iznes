@@ -356,11 +356,11 @@ export class OrderHelper {
     }
 
     static getAddressBalancesFromHolderResponse(response: any, address: string): InvestorBalances {
-        const encumbrances = _.get(response, ['data', 'encumbrances'], {});
-        const holders = _.get(response, ['data', 'holders'], {});
+        const encumbrances = get(response, ['data', 'encumbrances'], {});
+        const holders = get(response, ['data', 'holders'], {});
 
-        const totalHolding: number = _.get(holders, [address], 0);
-        const encumbered: number = _.get(encumbrances, [address], 0);
+        const totalHolding: number = get(holders, [address], 0);
+        const encumbered: number = get(encumbrances, [address], 0);
 
         // todo
         // need to get the real redemptionEncumbrance walletnode feature is ready
