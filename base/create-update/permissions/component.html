@@ -1,3 +1,12 @@
+<div class="row teams-dropdown">
+    <div class="col-sm-3">
+        <ng-select id="permissionTeamsSelect" *ngIf="teamsList"
+            [items]="teamsList"
+            [formControl]="teamsControl">
+        </ng-select>
+    </div>
+</div>
+
 <clr-datagrid #dataGrid>
     <clr-dg-column class="col-name">
         <span id="permissionsColName">{{ 'Name' | translate }}</span>

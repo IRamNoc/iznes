@@ -3,6 +3,10 @@
     margin-top: -20px;
 }
 
+.teams-dropdown {
+    padding: 15px 0;
+}
+
 clr-dg-row {
     &.parent { background: rgba(51,153,255,0.05) !important }
     &.hidden { display: none; }

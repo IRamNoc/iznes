@@ -52,16 +52,17 @@ export class AccountAdminPermissionsServiceBase extends AccountAdminBaseService 
     /**
      * Read User Permission Areas
      *
-     * @param userTeamId pass null to retrieve all teams
+     * @param userId
      * @param onSuccess
      * @param onError
      */
-    readUserPermissionAreas(userID: number): void {
+    readUserPermissionAreas(userID: number, userTeamID?: number): void {
 
         const request: ReadUserPermissionAreasRequest = {
             RequestName: 'readuserpermissionareas',
             token: this.memberSocketService.token,
             userID,
+            userTeamID,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
