@@ -1310,25 +1310,15 @@ export class OrderHelper {
      * Get encumber reference
      * @param randomHex string
      */
-<<<<<<< HEAD
     setEncumberReference(randomHex: string) {
         this.encumberRef = this.amIssuingAddress + randomHex;
-=======
-    getEncumberReference() {
-        return `${this.amIssuingAddress}${this.getOrderTimeStamp().settleTimeStamp}${this.orderType}`;
->>>>>>> Broadcasting optimisations
     }
 
     /**
      * Get poa reference
      */
-<<<<<<< HEAD
     setPoaReference() {
         this.poaRef = 'poa-' + this.encumberRef;
-=======
-    getPoaReference() {
-        return `poa-${this.getEncumberReference()}`;
->>>>>>> Broadcasting optimisations
     }
 
     /**
@@ -1397,13 +1387,8 @@ export class OrderHelper {
                     ],
                 },
             ],
-<<<<<<< HEAD
             poareference: this.poaRef,
             enddate: this.getOrderTimeStamp().expiryTimeStamp
-=======
-            poareference: this.getPoaReference(),
-            enddate: this.getOrderTimeStamp().expiryTimeStamp,
->>>>>>> Broadcasting optimisations
         };
 
         return {
