@@ -54,6 +54,7 @@ import {
     OrderTypeNumber,
     orderTypeToString,
     OrderByNumber,
+    InvestorBalances,
 } from './models';
 
 const AuthoriseRef = 'Confirm payment sent';
@@ -352,6 +353,22 @@ export class OrderHelper {
         const encumbered: number = get(encumbrances, [address], 0);
 
         return totalHolding - encumbered;
+    }
+
+    static getAddressBalancesFromHolderResponse(response: any, address: string): InvestorBalances {
+        const encumbrances = _.get(response, ['data', 'encumbrances'], {});
+        const holders = _.get(response, ['data', 'holders'], {});
+
+        const totalHolding: number = _.get(holders, [address], 0);
+        const encumbered: number = _.get(encumbrances, [address], 0);
+
+        // todo
+        // need to get the real redemptionEncumbrance walletnode feature is ready
+        return {
+            investorTotalHolding: totalHolding,
+            investorTotalEncumber: encumbered,
+            investorRedemptionEncumber: 0,
+        };
     }
 
     static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse | IznShareDetailWithNav) {
@@ -855,6 +872,21 @@ export class OrderHelper {
         if (Number(this.fundShare.investorHoling) < orderFigures.quantity) {
             orderValid = false;
             errorMessage = 'Insufficient number of share to redeem.';
+        }
+
+        // check if order is over 80% and is by amount
+        if (this.orderRequest.orderby === 'a') {
+            const redeemOverResponse = OrderHelper.isRedeemOver80Percent(
+                Number(this.orderRequest.ordervalue),
+                this.fundShare.investorTotalHolding,
+                this.fundShare.investorTotalEncumber,
+                this.fundShare.investorRedemptionEncumber,
+                this.fundShare.price,
+            );
+
+            if (!OrderHelper.isResponseGood(redeemOverResponse)) {
+                return OrderHelper.getChildErrorMessage(redeemOverResponse);
+            }
         }
 
         return {
