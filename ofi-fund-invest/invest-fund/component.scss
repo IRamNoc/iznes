@@ -44,36 +44,42 @@
 //}
 
 .resetButton {
-  float: right;
-  position: relative;
-  top: -90px;
-  border-color: #D96F35;
-  background-color: #D96F35;
-  color: #fff;
+    float: right;
+    position: relative;
+    top: -90px;
+    border-color: #D96F35;
+    background-color: #D96F35;
+    color: #fff;
 }
 
-.quantity-group{
-  display : flex;
-  align-items : center;
-  width: 95%;
+.quantity-group {
+    display: flex;
+    align-items: center;
+    width: 95%;
 
-  input{
-    flex-shrink : 1;
-  }
-  button{
-    margin: 0 0 0 15px;
-    flex-shrink : 0;
-  }
+    input {
+        flex-shrink: 1;
+    }
+    button {
+        margin: 0 0 0 15px;
+        flex-shrink: 0;
+    }
 }
 
-.choice{
-  & > label{
-    display: block;
-    line-height: 20px;
-    font-size: 12px;
-  }
+.choice {
+    & > label {
+        display: block;
+        line-height: 20px;
+        font-size: 12px;
+    }
 
-  .btn-group{
-    margin-top: 2px;
-  }
+    .btn-group {
+        margin-top: 2px;
+    }
+}
+
+.btn {
+    .btn-sm {
+        margin-right: 0px;
+    }
 }
