@@ -9,7 +9,7 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
@@ -25,7 +25,7 @@ import {
     immutableHelper,
     mDateHelper,
     MoneyValuePipe,
-    NumberConverterService
+    NumberConverterService,
 } from '@setl/utils';
 import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
@@ -33,15 +33,16 @@ import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
-import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderHelper } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
-import { SellBuyCalendar } from "../../ofi-product/fund-share/FundShareEnum";
-import { Moment } from "moment";
+import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
+import { Moment } from 'moment';
 
 @Component({
     selector: 'app-invest-fund',
