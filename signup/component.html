@@ -32,7 +32,9 @@
                             formControlName="password"
                             [class.error]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
 
-                        <span style="position: absolute; top: 3px; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(1)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                        <span class="toggle-password-visible" (click)="toggleShowPasswords(1)" title="Show/hide passwords">
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        </span>
                     </div>
 
                     <div *ngIf="signupForm.controls.password.hasError('required') && signupForm.controls.password.dirty" class="text-danger">{{'Password is required' | translate}}</div>
@@ -46,7 +48,9 @@
                             formControlName="passwordConfirm"
                             [class.error]="!signupForm.controls.passwordConfirm.valid && signupForm.controls.passwordConfirm.touched">
 
-                        <span style="position: absolute; top: 3px; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(2)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
+                        <span class="toggle-password-visible" (click)="toggleShowPasswords(2)" title="Show/hide passwords">
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        </span>
                     </div>
 
                     <div *ngIf="signupForm.controls.passwordConfirm.hasError('required')

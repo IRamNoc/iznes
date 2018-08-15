@@ -115,3 +115,13 @@ Small screen, landscape
     -moz-box-shadow: 0 0 6px #999999;
     box-shadow: 0 0 6px #999999;
 }
+
+.toggle-password-visible {
+    cursor: pointer;
+    color: grey;
+    font-size: 18px;
+    line-height: 2em;
+    position: absolute;
+    right: 10px;
+    top: 3px;
+}
