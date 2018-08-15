@@ -170,6 +170,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }
     }
 
+
     restartUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {

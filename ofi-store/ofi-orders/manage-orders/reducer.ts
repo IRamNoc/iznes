@@ -1,18 +1,13 @@
 /* Core/Redux imports. */
 import { Action } from 'redux';
-import * as math from 'mathjs';
 
 /* Local types. */
 import { ManageOrders, ManageOrderDetails } from './model';
 import * as ofiManageOrdersActions from './actions';
+import { SET_ALL_TABS } from './actions';
 import { immutableHelper } from '@setl/utils';
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 import { get, merge } from 'lodash';
-import {
-    OrderHelper,
-    IznShareDetailWithNav,
-    OrderFigures,
-} from '@ofi/ofi-main/ofi-product/fund-share/helper/order-helper';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -31,24 +26,10 @@ const patchOrder = (state, orderId, patch) => {
     const update = {
         orderList: {
             [existingOrder.orderID]: { ...existingOrder, ...patch }
-        },
-    };
-    return merge({}, state, update);
-};
-const patchOrderCallback = (state, orderId, callback: (order: ManageOrderDetails) => any) => {
-    const existingOrder = get(state.orderList, orderId, null);
-    if (!existingOrder) {
-        return state;
+        }
     }
-    const patchedOrder = callback.call(null, existingOrder);
-    const update = {
-        orderList: {
-            [existingOrder.orderID]: { ...existingOrder, ...patchedOrder }
-        },
-    };
-
     return merge({}, state, update);
-};
+}
 
 interface PayloadAction extends Action {
     payload: any;
@@ -102,77 +83,47 @@ export const OfiManageOrderListReducer = function (
             const nav = action.payload.nav;
             const navDate = nav.valuationDate.substring(0, 10);
 
-            const baseFilter = o => o.orderStatus === 2 && o.valuationDate.substring(0, 10) === navDate;
-            let filter = o => baseFilter(o) && o.isin === nav.isin;
             if (nav.status !== -1) {
-                // Estimated NAV.
-                Object.keys(state.orderList)
-                    .map(k => state.orderList[k])
-                    .filter(filter)
-                    .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
-                        const figures = OrderHelper.calculateFigures(
-                            {
-                                orderBy: order.byAmountOrQuantity,
-                                orderType: order.orderType,
-                                value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
-                                nav: nav.price,
-                                feePercentage: order.feePercentage,
-                            },
-                            order.maximumNumDecimal,
-                            false,
-                        );
-
-                        let patch = <any>{
-                            latestNav: nav.price,
-                            estimatedQuantity: figures.estimatedQuantity,
-                        };
-                        if (order.byAmountOrQuantity === 1) {
-                            // Quantity - Calculate estimated amount
-                            patch = {
-                                latestNav: nav.price,
-                                estimatedAmount: +figures.estimatedAmount,
-                                estimatedAmountWithCost: +math
-                                    .chain(+figures.estimatedAmount)
-                                    .multiply(1 + (order.feePercentage / 100000))
-                                    .done(),
-                            };
-                        }
-
-                        return patch;
-                    }));
-
+                // This is until we sort out updating for estimates (need to add figure recalculation).
                 return state;
             }
 
-            // We are updating from a validated NAV
-            const patch = {
-                amount: nav.amount,
-                amountWithCost: nav.amountWithCost,
-                price: nav.price,
-                quantity: nav.quantity,
-                orderStatus: 3,
-            };
-            filter = o => baseFilter(o) && o.orderID === nav.orderID;
+            let patch: any = { latestNav: nav.price };
+            const baseFilter = o => o.orderStatus === 2 && o.valuationDate.substring(0, 10) === navDate;
+            let filter = o => baseFilter(o) && o.isin === nav.isin;
+            if (nav.status === -1) {
+                patch = {
+                    amount: nav.amount,
+                    amountWithCost: nav.amountWithCost,
+                    price: nav.price,
+                    quantity: nav.quantity,
+                    orderStatus: 3,
+                };
+                filter = o => baseFilter(o) && o.fundShareID === nav.fundShareID;
+            }
 
             Object.keys(state.orderList)
-                .map(k => state.orderList[k])
-                .filter(filter)
-                .forEach(o => state = patchOrder(state, o.orderID, patch));
+            .map(k => state.orderList[k])
+            .filter(filter)
+            .forEach(o => state = patchOrder(state, o.orderID, patch));
             break;
         }
+
         return state;
+
+
         /* Default. */
     default:
         return state;
     }
 };
 
-function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
+function formatManageOrderDataResponse(rawData: Array<any>): Array<ManageOrderDetails> {
     const rawDataList = fromJS(rawData);
 
     const manageOrdersList = rawDataList.reduce(
-        (result, item, idx) => {
-            const order = {
+        function (result, item, idx) {
+            result[item.get('orderID')] = {
                 amAddress: item.get('amAddress'),
                 amCompanyID: item.get('amCompanyID'),
                 amCompanyName: item.get('amCompanyName'),
@@ -202,7 +153,6 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 isin: item.get('isin'),
                 label: item.get('label'),
                 lastName: item.get('lastName'),
-                maximumNumDecimal: item.get('maximumNumDecimal'),
                 navEntered: item.get('navEntered'),
                 orderID: item.get('orderID'),
                 orderDate: item.get('orderDate'),
@@ -216,42 +166,6 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 totalResult: item.get('totalResult'),
                 valuationDate: item.get('valuationDate'),
             };
-
-            if (order.price > 0) {
-                // Already validated - do not perform estimates.
-                result[order.orderID] = order;
-                return result;
-            }
-
-            // Perform price estimates here.
-            const figures = OrderHelper.calculateFigures(
-                {
-                    orderBy: order.byAmountOrQuantity,
-                    orderType: order.orderType,
-                    value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
-                    nav: order.latestNav,
-                    feePercentage: order.feePercentage,
-                },
-                order.maximumNumDecimal,
-                false,
-            );
-
-            if (order.byAmountOrQuantity === 1) {
-                // Quantity - Calculate estimated amount
-                order.estimatedAmount = +math
-                    .chain(+figures.estimatedAmount)
-                    .done();
-                order.estimatedAmountWithCost = +math
-                    .chain(+figures.estimatedAmount)
-                    .multiply(1 + (order.feePercentage / 100000))
-                    .done();
-            } else {
-                // Amount - Calculate quantity
-                order.estimatedQuantity = figures.estimatedQuantity;
-            }
-
-            result[order.orderID] = order;
-
             return result;
         },
         {});
@@ -285,7 +199,7 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
  * @return {ManageOrders}
  */
 function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
-    return Object.assign({}, state, {requested});
+    return Object.assign({}, state, { requested });
 }
 
 /**
@@ -298,5 +212,5 @@ function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrde
 function handleSetAllTabs(action: Action, state: ManageOrders): ManageOrders {
     const tabs = immutableHelper.get(action, 'tabs', []);
 
-    return Object.assign({}, state, {openedTabs: tabs});
+    return Object.assign({}, state, { openedTabs: tabs });
 }

@@ -489,12 +489,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.calenderHelper = new CalendarHelper(this.shareData);
 
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
-            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
-            this.updateDateInputs();
+            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
             if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
             if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
+
+            this.updateDateInputs();
         });
 
         this.connectedWalletOb
@@ -543,8 +544,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutOffValue = new Date(
                 this.calenderHelper
+<<<<<<< HEAD
                     .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
                     .format('YYYY-MM-DD HH:mm'),
+=======
+                .getCutoffTimeForSpecificDate(moment(v), this.orderTypeNumber)
+                .format('YYYY-MM-DD HH:mm'),
+>>>>>>> 178f5c5f9116d27bad02c64932647659482d02ec
             );
 
             const now = new Date();
@@ -570,8 +576,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
+<<<<<<< HEAD
                     .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
                     .format('YYYY-MM-DD HH:mm'),
+=======
+                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.orderTypeNumber)
+                .format('YYYY-MM-DD HH:mm'),
+>>>>>>> 178f5c5f9116d27bad02c64932647659482d02ec
             );
 
             const now = new Date();

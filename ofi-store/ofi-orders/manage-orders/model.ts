@@ -50,12 +50,11 @@ export interface ManageOrderDetails {
     settlementDate: any;
     totalResult: any;
     valuationDate: any;
-    maximumNumDecimal: number;
 }
 
 export interface ManageOrders {
-    orderList: { [orderId: number]: ManageOrderDetails };
+    orderList: { [id: number]: ManageOrderDetails[] },
     requested: boolean;
-    openedTabs: OrderTab[];
+    openedTabs: Array<OrderTab>;
     filters: any;
 }

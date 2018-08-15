@@ -1,6 +1,6 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 /* Actions. */
 import {
     clearrequested,
@@ -13,17 +13,20 @@ import {
     ofiUpdateOrder,
     setamkyclist
 } from '../../ofi-store';
-import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
-import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
-import {clearRequestedPrecentraFundsList, clearRequestedPrecentraSharesList} from '../../ofi-store/ofi-reports/precentralisation-reports/actions';
-import {setInvestorInvitationListReset} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import { clearRequestedUmbrellaFund } from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
+import { clearRequestedIznesFunds } from '../../ofi-store/ofi-product/fund/fund-list/actions';
+import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
+import {
+    clearRequestedPrecentraFundsList,
+    clearRequestedPrecentraSharesList
+} from '../../ofi-store/ofi-reports/precentralisation-reports/actions';
+import { setInvestorInvitationListReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { setStatusAuditTrailReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
 
 
-import {resetHomepage} from '@setl/core-store';
-import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
-import {LogService} from "@setl/utils";
+import { resetHomepage } from '@setl/core-store';
+import { ofiClearHolderDetailRequested, ofiClearRequestedAmHolders } from "../../ofi-store/ofi-reports/holders/actions";
+import { LogService } from "@setl/utils";
 
 /* Service class. */
 @Injectable()
@@ -55,69 +58,70 @@ export class OfiMemberNodeChannelService {
         this.logService.log(' | data: ', data);
         switch (data.Request) {
             /* Coupon requests. */
-            case 'newcoupon':
-            case 'updatecoupon':
-                /* Dispatch the event. */
-                this.ngRedux.dispatch(
-                    {
-                        type: OFI_SET_COUPON_LIST,
-                        payload: [null, data, null]
-                    }
-                );
+        case 'newcoupon':
+        case 'updatecoupon':
+            /* Dispatch the event. */
+            this.ngRedux.dispatch(
+                {
+                    type: OFI_SET_COUPON_LIST,
+                    payload: [null, data, null]
+                }
+            );
 
-                /* Break. */
-                break;
+            /* Break. */
+            break;
 
-            case 'newmanagementcompany':
-                this.logService.log(' | Update managment company list: ', data);
+        case 'newmanagementcompany':
+            this.logService.log(' | Update managment company list: ', data);
 
-                /* TODO - Dispatch the event to update the management company list. */
-                // this.ngRedux.dispatch({
-                //     type: SET_REQUESTED,
-                //     payload: [ null, data, null ]
-                // });
+            /* TODO - Dispatch the event to update the management company list. */
+            // this.ngRedux.dispatch({
+            //     type: SET_REQUESTED,
+            //     payload: [ null, data, null ]
+            // });
 
-                /* Break. */
-                break;
+            /* Break. */
+            break;
 
-            case 'updatenav':
+        case 'updatenav':
 
-                handleUpdateNav(this.ngRedux);
+            handleUpdateNav(this.ngRedux);
+            this.ngRedux.dispatch(ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
+            break;
 
-                this.ngRedux.dispatch(ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
-                break;
+        case 'getfundaccessmy':
+            this.ngRedux.dispatch(clearRequestedNavFundsList());
+            this.ngRedux.dispatch(clearRequestedFundAccessMy());
+            break;
 
-            case 'getfundaccessmy':
-                this.ngRedux.dispatch(clearRequestedNavFundsList());
-                this.ngRedux.dispatch(clearRequestedFundAccessMy());
-                break;
+        case 'iznesupdateorder':
+            this.logService.log(' | got the broadcast order', data);
+            this.ngRedux.dispatch(ofiUpdateOrder(data.Data));
+            // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
+            this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
+            this.ngRedux.dispatch(ofiClearRequestedAmHolders());
+            this.ngRedux.dispatch(ofiClearHolderDetailRequested());
 
-            case 'iznesupdateorder':
-                this.logService.log(' | got the broadcast order', data);
-                this.ngRedux.dispatch(ofiUpdateOrder(data.Data));
-                // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
-                this.ngRedux.dispatch(ofiClearRequestedAmHolders());
-                this.ngRedux.dispatch(ofiClearHolderDetailRequested());
-                this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
-                this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
-                break;
+            this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
+            this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
 
-            case 'updatekyc':
-                this.ngRedux.dispatch(clearrequested());
-                this.ngRedux.dispatch(setamkyclist());
-                this.ngRedux.dispatch(setInvestorInvitationListReset());
-                this.ngRedux.dispatch(setStatusAuditTrailReset());
-                break;
+            break;
 
-            case 'kycaccepted':
-                //enable menu.
-                this.ngRedux.dispatch(resetHomepage());
-                break;
+        case 'updatekyc':
+            this.ngRedux.dispatch(clearrequested());
+            this.ngRedux.dispatch(setamkyclist());
+            this.ngRedux.dispatch(setInvestorInvitationListReset());
+            this.ngRedux.dispatch(setStatusAuditTrailReset());
+            break;
 
-            case 'iznprekycupdate':
-                this.ngRedux.dispatch(setInvestorInvitationListReset());
-                break;
+        case 'kycaccepted':
+            //enable menu.
+            this.ngRedux.dispatch(resetHomepage());
+            break;
+
+        case 'iznprekycupdate':
+            this.ngRedux.dispatch(setInvestorInvitationListReset());
+            break;
 
             // new umbrella fund created and umbrella fund updated.
             // todo
@@ -125,10 +129,10 @@ export class OfiMemberNodeChannelService {
             // when create/update umbrella fund.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
             // to avoid to make another call.
-            case 'izncreateumbrellafund':
-            case 'iznupdateumbrellafund':
-                this.ngRedux.dispatch(clearRequestedUmbrellaFund());
-                break;
+        case 'izncreateumbrellafund':
+        case 'iznupdateumbrellafund':
+            this.ngRedux.dispatch(clearRequestedUmbrellaFund());
+            break;
 
             // new fund created and fund updated.
             // todo
@@ -136,10 +140,10 @@ export class OfiMemberNodeChannelService {
             // when create/update fund.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
             // to avoid to make another call.
-            case 'izncreatefund':
-            case 'iznupdatefund':
-                this.ngRedux.dispatch(clearRequestedIznesFunds());
-                break;
+        case 'izncreatefund':
+        case 'iznupdatefund':
+            this.ngRedux.dispatch(clearRequestedIznesFunds());
+            break;
 
             // new fund share created and fund share updated.
             // todo
@@ -147,10 +151,10 @@ export class OfiMemberNodeChannelService {
             // when create/update fund share.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
             // to avoid to make another call.
-            case 'iznescreatefundshare':
-            case 'iznesupdatefundshare':
-                this.ngRedux.dispatch(clearRequestedIznesShares());
-                break;
+        case 'iznescreatefundshare':
+        case 'iznesupdatefundshare':
+            this.ngRedux.dispatch(clearRequestedIznesShares());
+            break;
         }
     }
 }
