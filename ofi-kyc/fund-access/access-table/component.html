@@ -34,10 +34,10 @@
 
         <ng-container *ngIf="row['access']">
             <clr-dg-cell id="extry_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
+                <input class="small-input" style="height: 30px;" name="entry{{row['id']}}" [(ngModel)]="row['entry']" (change)="checkFee(row['id'],'entry');">
             </clr-dg-cell>
             <clr-dg-cell id="exit_fee_field_row_{{i}}" class="thin-cell">
-                <input class="small-input" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
+                <input class="small-input" style="height: 30px;" name="exit{{row['id']}}" [(ngModel)]="row['exit']" (change)="checkFee(row['id'],'exit');">
             </clr-dg-cell>
             <clr-dg-cell id="min_invest_amount_btn_row_{{i}}">
                 {{(row['override'] ? row['overrideAmount'] : row['minInvestment'])}}
@@ -74,9 +74,10 @@
         <clr-dg-pagination #otherPagination [clrDgPageSize]="10"></clr-dg-pagination>
     </clr-dg-footer>
 </clr-datagrid><br>
-
-<button id="client_folder_back" class="btn btn-info" (click)="backBtn();">{{'Back' | translate}}</button>
-<button id="client_folder_validate" class="btn btn-primary" (click)="confirmSave();">{{'Validate' | translate}}</button>
+<div align="middle">
+    <button id="client_folder_back" class="btn btn-info" (click)="backBtn();">{{'Back' | translate}}</button>
+    <button id="client_folder_validate" class="btn btn-primary" (click)="confirmSave();">{{'Validate' | translate}}</button>
+</div>
 
 
 <clr-modal [(clrModalOpen)]="showOverrideModal">
