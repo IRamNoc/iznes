@@ -1,42 +1,26 @@
 import {combineReducers, Reducer} from 'redux';
-/* Manage Orders */
-import {ManageOrders, OfiManageOrderListReducer} from './manage-orders';
-/* My Orders */
-import {MyOrders, OfiMyOrderListReducer} from './my-orders';
-/* Home Orders */
-import {HomeOrders, OfiHomeOrderListReducer} from './home-orders';
-// Collective Archive
-import {OfiCollectiveArchiveReducer, OfiCollectiveArchiveState} from './collective-archive';
+import {
+    ManageOrders,
+    OfiManageOrderListReducer,
+} from './manage-orders';
+import {
+    OfiCollectiveArchiveReducer,
+    OfiCollectiveArchiveState,
+} from './collective-archive';
 
 export {
+    ManageOrders,
+    OfiManageOrderListReducer,
     OFI_SET_MANAGE_ORDER_LIST,
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
-    ofiManageOrderActions
+    ofiManageOrderActions,
+    ofiUpdateOrder,
 } from './manage-orders';
 
 export {
-    OFI_SET_MY_ORDER_LIST,
-    ofiClearRequestedMyOrder,
-    ofiSetRequestedMyOrder,
-    ofiMyOrderActions
-    // getOfiMyOrderList,
-} from './my-orders';
-
-export {
-    OFI_SET_HOME_ORDER_LIST,
-    OFI_SET_HOME_ORDER_BUFFER,
-    OFI_RESET_HOME_ORDER_BUFFER,
-    OFI_SET_HOME_ORDER_FILTER,
-    OFI_RESET_HOME_ORDER_FILTER,
-    getOfiHomeOrderList,
-    getOfiHomeOrderViewBuffer,
-    getOfiHomeOrderViewFilter,
-    ofiSetRequestedHomeOrder,
-    ofiClearRequestedHomeOrder
-} from './home-orders';
-
-export {
+    OfiCollectiveArchiveReducer,
+    OfiCollectiveArchiveState,
     SET_COLLECTIVE_ARCHIVE,
     setRequestedCollectiveArchive,
     clearRequestedCollectiveArchive
@@ -44,14 +28,10 @@ export {
 
 export interface OfiOrdersState {
     manageOrders: ManageOrders;
-    myOrders: MyOrders;
-    homeOrders: HomeOrders;
     collectiveArchive: OfiCollectiveArchiveState;
 }
 
 export const OfiOrdersReducer: Reducer<OfiOrdersState> = combineReducers<OfiOrdersState>({
     manageOrders: OfiManageOrderListReducer,
-    myOrders: OfiMyOrderListReducer,
-    homeOrders: OfiHomeOrderListReducer,
     collectiveArchive: OfiCollectiveArchiveReducer
 });

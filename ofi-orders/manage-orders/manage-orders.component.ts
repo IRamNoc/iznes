@@ -44,7 +44,7 @@ import { NumberConverterService } from '@setl/utils/services/number-converter/se
 /* Alerts and confirms. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 /* Ofi Store stuff. */
-import { ofiManageOrderActions, ofiMyOrderActions } from '../../ofi-store';
+import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
 import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
@@ -183,8 +183,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOfiAmOrdersOb;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) OfiAmOrdersListOb;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) OfiAmOrdersFiltersOb;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'requested']) requestedOfiInvOrdersOb: any;
-    @select(['ofi', 'ofiOrders', 'myOrders', 'orderList']) OfiInvOrdersListOb: any;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) requestedOfiInvestorFundListOb;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'fundShareAccessList']) fundShareAccessListOb;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
@@ -314,17 +312,12 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         let orderStream$;
         let orderListStream$;
-        if (!this.isInvestorUser) {  // AM side
-            orderStream$ = this.requestedOfiAmOrdersOb;
-            orderListStream$ = this.OfiAmOrdersListOb;
-            this.subscriptions.push(orderListStream$.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-            this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
-            this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
-        } else if (this.isInvestorUser) {  // INV side
-            orderStream$ = this.requestedOfiInvOrdersOb;
-            orderListStream$ = this.OfiInvOrdersListOb;
-            this.subscriptions.push(orderListStream$.subscribe((list) => this.getInvOrdersListFromRedux(list)));
-        }
+
+        orderStream$ = this.requestedOfiAmOrdersOb;
+        orderListStream$ = this.OfiAmOrdersListOb;
+        this.subscriptions.push(orderListStream$.subscribe((list) => this.getAmOrdersListFromRedux(list)));
+        this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+        this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
 
 
         this.createForm();
@@ -616,19 +609,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    getInvOrdersListFromRedux(list) {
-        this.ordersList = this.ordersObjectToList(list);
-
-        for (const i in this.ordersList) {
-            this.ordersList[i]['orderUnpaid'] = false;
-            if (moment(this.ordersList[i]['settlementDate']).format('Y-M-d') === moment().format('Y-M-d') && this.ordersList[i]['orderStatus'] == 4) this.ordersList[i]['orderUnpaid'] = true;
-        }
-
-        this.updateTabs();
-
-        this.detectChanges();
-    }
-
     ordersObjectToList(list) {
         return Object.keys(list).reduce((result, orderId) => {
             const order = list[orderId];
@@ -699,11 +679,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     setRequested() {
-        if (this.isInvestorUser) {
-            this.ngRedux.dispatch(ofiMyOrderActions.ofiSetRequestedMyOrder());
-        } else {
-            this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
-        }
+        this.ngRedux.dispatch(ofiManageOrderActions.ofiSetRequestedManageOrder());
     }
 
     updateCurrentFundShare() {
@@ -1008,25 +984,19 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     getOrdersList() {
+        let asyncTaskPipe;
         if (!this.isInvestorUser) {  // AM side
-            const asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
-
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
-                [],
-                asyncTaskPipe,
-                {},
-            ));
-        } else if (this.isInvestorUser) {  // INV side
-            const asyncTaskPipe = this.ofiOrdersService.requestInvestorOrdersList(this.dataGridParams);
-
-            this.ngRedux.dispatch(SagaHelper.runAsync(
-                [ofiMyOrderActions.OFI_SET_MY_ORDER_LIST],
-                [],
-                asyncTaskPipe,
-                {},
-            ));
+            asyncTaskPipe = this.ofiOrdersService.requestManageOrdersList(this.dataGridParams);
+        } else {  // INV side
+            asyncTaskPipe = this.ofiOrdersService.requestInvestorOrdersList(this.dataGridParams);
         }
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [ofiManageOrderActions.OFI_SET_MANAGE_ORDER_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
     }
 
     showTypes(order) {
