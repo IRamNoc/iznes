@@ -1262,8 +1262,8 @@ export class OrderHelper {
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Redemption order for ' + this.orderAsset,
-            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: true },
-            creatorAddress: 'not being used', // not being used
+            mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: false },
+            creatorAddress: 'not being used' // not being used
         };
     }
 

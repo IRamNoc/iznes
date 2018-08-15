@@ -319,7 +319,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         if (typeof this.orderHelper === 'undefined') {
             return '';
         } else {
-            return this.orderHelper.checkOrderByIsAllow('a').orderValid ? null : '';
+            let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+            if(this.allowAmountAndQuantity){
+                isValid = isValid && (this.actionBy === 'a');
+            }
+
+            return isValid ? null : '';
         }
     }
 
@@ -327,9 +332,25 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         if (typeof this.orderHelper === 'undefined') {
             return '';
         } else {
-            return this.orderHelper.checkOrderByIsAllow('q').orderValid ? null : '';
+            let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+
+            if(this.allowAmountAndQuantity){
+                isValid = isValid && (this.actionBy === 'q');
+            }
+            return isValid ? null : '';
         }
     }
+
+    get allowAmountAndQuantity(): any{
+        if (typeof this.orderHelper === 'undefined') {
+            return false;
+        } else {
+            let isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+            let isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+            return isAllowedAmount && isAllowedQuantity;
+        }
+    }
+
 
     get shareAsset(): string {
         return this.shareData.isin + '|' + this.shareData.fundShareName;
@@ -458,8 +479,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             },
         }[this.type];
 
-        this.actionBy = 'q';
-
         // List of observable subscription.
         this.shareDataOb
         .pipe(
@@ -470,6 +489,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.calenderHelper = new CalendarHelper(this.shareData);
 
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
             this.updateDateInputs();
 
@@ -872,8 +892,6 @@ The IZNES Team.</p>`;
                 beTriggered.patchValue(amountStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
-
-                this.actionBy = 'q';
             },
             'amount': (value) => {
 
@@ -891,8 +909,6 @@ The IZNES Team.</p>`;
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
-
-                this.actionBy = 'a';
             }
         }[type];
 
