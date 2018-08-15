@@ -15,60 +15,67 @@
             <br>
             <p class="login-subpara text-grey">{{'Please choose a password.' | translate}}</p>
             <br>
+
             <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)" [class.error]="!signupForm.valid && signupForm.touched">
-
-
                 <div class="form-group">
-                    <input id="su-username-field" type="text" name="username" [placeholder]="translate.translate('User name')" class="form-control" disabled formControlName="username" [class.error]="!signupForm.controls['username'].valid && signupForm.controls['username'].touched">
-
-
+                    <input id="su-username-field" class="form-control" type="text" name="username" disabled
+                        [placeholder]="translate.translate('User name')"
+                        formControlName="username"
+                        [class.error]="!signupForm.controls['username'].valid && signupForm.controls['username'].touched">
                 </div>
+
                 <div class="form-group">
                     <div>
-                        <input id="su-password-field" name="password" [type]="(showPasswords1 === true) ? 'text' : 'password'" class="form-control" [placeholder]="translate.translate('Password')" formControlName="password" [class.error]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
-
+                        <input id="su-password-field" class="form-control" name="password"
+                            [type]="(showPasswords1 === true) ? 'text' : 'password'"
+                            [placeholder]="translate.translate('Password')"
+                            formControlName="password"
+                            [class.error]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
 
                         <span style="position: absolute; top: 3px; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(1)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
+
                     <div *ngIf="signupForm.controls.password.hasError('required') && signupForm.controls.password.dirty" class="text-danger">{{'Password is required' | translate}}</div>
                     <div *ngIf="!signupForm.controls.password.valid && !signupForm.controls.password.hasError('required') && signupForm.controls.password.touched" class="text-danger">{{'Your password must be at least 6 characters' | translate}}</div>
                 </div>
                 <div class="form-group">
                     <div>
-                        <input id="su-passwordConfirm-field" name="passwordConfirm" [type]="(showPasswords2 === true) ? 'text' : 'password'" class="form-control" [placeholder]="translate.translate('Retype password')" formControlName="passwordConfirm" [class.error]="!signupForm.controls.passwordConfirm.valid && signupForm.controls.passwordConfirm.touched">
-
+                        <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
+                            [type]="(showPasswords2 === true) ? 'text' : 'password'"
+                            [placeholder]="translate.translate('Retype password')"
+                            formControlName="passwordConfirm"
+                            [class.error]="!signupForm.controls.passwordConfirm.valid && signupForm.controls.passwordConfirm.touched">
 
                         <span style="position: absolute; top: 3px; right: 15px; font-size: 18px; line-height: 2em; color: grey; cursor:pointer;" (click)="toggleShowPasswords(2)" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                     </div>
+
                     <div *ngIf="signupForm.controls.passwordConfirm.hasError('required')
                                 && signupForm.controls.passwordConfirm.touched" class="text-danger">
                         {{'Confirmation is required' | translate}}
-
                     </div>
+
                     <div *ngIf="signupForm.controls.passwordConfirm.hasError('minlength')
                                 && !signupForm.controls.passwordConfirm.hasError('required')
                                 && signupForm.controls.passwordConfirm.dirty" class="text-danger">
-
                         {{'Your password must be at least 6 characters' | translate}}
-
                     </div>
+
                     <div *ngIf="!signupForm.controls.passwordConfirm.hasError('minlength')
                                 && !signupForm.controls.passwordConfirm.hasError('required')
                                 && signupForm.controls.passwordConfirm.dirty
                                 && signupForm.hasError('mismatch')
                                 && signupForm.controls.password.valid" class="text-danger">
-
-
                         {{'Password does not match' | translate}}
-
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b" [disabled]="!signupForm.valid">{{'Create an account' | translate}}</button>
+                    <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b"
+                        [disabled]="!signupForm.valid">
+                        {{'Create an account' | translate}}
+                    </button>
                 </div>
             </form>
-
         </div>
 
         <p>
