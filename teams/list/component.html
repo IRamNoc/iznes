@@ -19,13 +19,13 @@
             </div>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column class="col-ref">
+                <clr-dg-column [clrDgField]="'reference'" class="col-ref">
                     <span id="accountAdminColRef">{{ 'Ref' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-name">
+                <clr-dg-column [clrDgField]="'name'" class="col-name">
                     <span id="accountAdminColName">{{ 'Name' | translate }}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-desc">
+                <clr-dg-column [clrDgField]="'description'" class="col-desc">
                     <span id="accountAdminColDescription">{{ 'Description' | translate }}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
@@ -34,13 +34,13 @@
 
                 <clr-dg-row *clrDgItems="let team of teams; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
                     <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
-                        (click)="navigateToEntity(team.userTeamID)">
+                                 (click)="navigateToEntity(team.userTeamID)">
                         {{ team.reference }}
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellName' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{ team.name }}</clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellDescription' + idx}}" (click)="navigateToEntity(team.userTeamID)">{{ team.description }}</clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" class="col-status"
-                        (click)="navigateToEntity(team.userTeamID)">
+                                 (click)="navigateToEntity(team.userTeamID)">
                         <span [ngSwitch]="team.status">
                             <span *ngSwitchCase="0">
                                 <span class="label label-danger">{{ 'Disabled' | translate }}</span>
