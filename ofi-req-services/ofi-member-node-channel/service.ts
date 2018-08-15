@@ -10,7 +10,7 @@ import {
     ofiClearRequestedCentralisationHistoryReports,
     ofiClearRequestedIssuedAssets,
     ofiClearRequestedManageOrder,
-    ofiClearRequestedMyOrder,
+    ofiUpdateOrder,
     setamkyclist
 } from '../../ofi-store';
 import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
@@ -83,6 +83,8 @@ export class OfiMemberNodeChannelService {
             case 'updatenav':
 
                 handleUpdateNav(this.ngRedux);
+
+                this.ngRedux.dispatch(ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
                 break;
 
             case 'getfundaccessmy':
@@ -91,9 +93,9 @@ export class OfiMemberNodeChannelService {
                 break;
 
             case 'iznesupdateorder':
-                this.logService.log('got the broadcast order');
-                this.ngRedux.dispatch(ofiClearRequestedMyOrder());
-                this.ngRedux.dispatch(ofiClearRequestedManageOrder());
+                this.logService.log(' | got the broadcast order', data);
+                this.ngRedux.dispatch(ofiUpdateOrder(data.Data));
+                // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
                 this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
                 this.ngRedux.dispatch(ofiClearRequestedAmHolders());
                 this.ngRedux.dispatch(ofiClearHolderDetailRequested());
