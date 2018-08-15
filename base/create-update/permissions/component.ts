@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { select, NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
@@ -11,6 +12,8 @@ import {
 } from '@setl/core-store';
 import { AccountAdminPermissionsServiceBase } from './service';
 import * as PermissionsModel from './model';
+import * as TeamsModel from '../../../teams/model';
+import { UserTeamsService } from '../../../teams/service';
 
 @Component({
     selector: 'app-core-admin-permissions',
@@ -25,6 +28,8 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @Input() isUser: boolean = false;
 
     permissions: PermissionsModel.AccountAdminPermission[];
+    teamsControl: FormControl = new FormControl();
+    teamsList: any[];
     private leavePermissionsOpen: boolean = false;
     private subscriptions: Subscription[] = [];
 
@@ -32,10 +37,13 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @select(['accountAdmin', 'permissionAreas', 'requested']) permissionsReqOb;
     @select(['accountAdmin', 'userPermissionAreas', 'permissionAreas']) userPermissionsOb;
     @select(['accountAdmin', 'userPermissionAreas', 'requested']) userPermissionsReqOb;
+    @select(['accountAdmin', 'teams', 'teams']) teamsOb;
+    @select(['accountAdmin', 'teams', 'requested']) teamsReqOb;
 
     constructor(private service: AccountAdminPermissionsServiceBase,
                 private redux: NgRedux<any>,
-                private alerts: AlertsService) { }
+                private alerts: AlertsService,
+                private teamsService: UserTeamsService) { }
 
     ngOnInit() {
         this.initSubscriptions();
@@ -68,13 +76,25 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
             });
         }
 
+        const teamsSub = this.teamsOb.subscribe((teams: TeamsModel.AccountAdminTeam[]) => {
+            this.processTeams(teams);
+        });
+
+        const teamsReqSub = this.teamsReqOb.subscribe((requested: boolean) => {
+            this.requestTeams(requested);
+        });
+
+        this.subscriptions.push(this.teamsControl.valueChanges.subscribe(() => {
+            this.redux.dispatch(clearRequestedAccountAdminUserPermissionAreas());
+        }));
+
         const doUpdateSub = this.doUpdateOb.subscribe((entityId: number) => {
             if (entityId !== undefined) this.entityId = entityId;
 
             this.doUpdatePermissions();
         });
 
-        this.subscriptions.push(permissionsSub, permissionsReqSub, doUpdateSub);
+        this.subscriptions.push(permissionsSub, permissionsReqSub, teamsSub, teamsReqSub, doUpdateSub);
     }
 
     private doUpdatePermissions(): void {
@@ -88,7 +108,11 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     private requestUserPermissions(requested: boolean): void {
         if (requested) return;
 
-        this.service.readUserPermissionAreas(this.entityId);
+        let id = this.teamsControl.value ? this.teamsControl.value[0].id : undefined;
+
+        if (id === 9999) id = undefined;
+
+        this.service.readUserPermissionAreas(this.entityId, id);
     }
 
     private requestTeamPermissions(requested: boolean): void {
@@ -105,6 +129,38 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
 
         this.permissions = permissions;
         this.entitiesFn.emit(this.permissions);
+    }
+
+    private requestTeams(requested: boolean): void {
+        if (requested) return;
+
+        this.teamsService.readUserTeams(null, null, () => {}, () => {});
+    }
+
+    private processTeams(teams: TeamsModel.AccountAdminTeam[]): void {
+        const teamsList = [{
+            id: 9999,
+            text: 'All Teams',
+        }];
+
+        _.forEach(teams, (team: TeamsModel.AccountAdminTeam) => {
+            teamsList.push({
+                id: team.userTeamID,
+                text: team.name,
+            });
+        });
+
+        this.teamsList = teamsList;
+
+        if (!this.teamsControl.value) {
+            this.teamsControl.patchValue([{
+                id: 9999,
+                text: 'All Teams',
+            }],                          {
+                emitEvent: false,
+                onlySelf: true,
+            });
+        }
     }
 
     updatePermission(permission: PermissionsModel.AccountAdminPermission): void {
