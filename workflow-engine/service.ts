@@ -1,17 +1,17 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
     RequestNavListMessageBody,
-    RequestBasicMessageBody
+    RequestBasicMessageBody,
 } from './model';
-import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
+import { SagaHelper, Common } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 import {
     SET_WORKFLOW_LIST,
-    setRequestedWorkflowList
+    setRequestedWorkflowList,
 } from '@setl/core-store';
 
 @Injectable()
@@ -38,7 +38,7 @@ export class CoreWorkflowEngineService {
             [SET_WORKFLOW_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -60,7 +60,7 @@ export class CoreWorkflowEngineService {
         const messageBody: RequestBasicMessageBody = {
             RequestName: 'wfe-basic-get',
             token: this.memberSocketService.token,
-            data: requestData
+            data: requestData,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -70,7 +70,7 @@ export class CoreWorkflowEngineService {
         const messageBody: RequestBasicMessageBody = {
             RequestName: 'wfe-basic-new',
             token: this.memberSocketService.token,
-            data: requestData
+            data: requestData,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -80,7 +80,7 @@ export class CoreWorkflowEngineService {
         const messageBody = {
             RequestName: 'wfe-edit-list',
             token: this.memberSocketService.token,
-            data: data
+            data: data,
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -89,7 +89,7 @@ export class CoreWorkflowEngineService {
         const messageBody = {
             RequestName: 'wfe-edit-load',
             token: this.memberSocketService.token,
-            data: request
+            data: request,
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -98,7 +98,16 @@ export class CoreWorkflowEngineService {
         const messageBody = {
             RequestName: 'wfe-edit-save',
             token: this.memberSocketService.token,
-            data: request
+            data: request,
+        };
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    requestTemplateRename(request = {}): any {
+        const messageBody = {
+            RequestName: 'wfe-edit-rename',
+            token: this.memberSocketService.token,
+            data: request,
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -107,7 +116,7 @@ export class CoreWorkflowEngineService {
         const messageBody = {
             RequestName: 'wfe-ops-report',
             token: this.memberSocketService.token,
-            data: request
+            data: request,
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
@@ -116,7 +125,7 @@ export class CoreWorkflowEngineService {
         const messageBody = {
             RequestName: 'wfe-chain-msg',
             token: this.memberSocketService.token,
-            data: request
+            data: request,
         };
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
