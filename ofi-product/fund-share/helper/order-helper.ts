@@ -412,6 +412,89 @@ export class OrderHelper {
         };
     }
 
+    /**
+     * Check if we have any redemption order that is not settled.
+     * We do the check, by using the amount of encumber in the address.
+     *
+     * @param {number} totalRedemptionEncumber
+     * @return {boolean}
+     */
+    static isOnlyActiveRedeem(totalRedemptionEncumber: number): boolean {
+       return Number(totalRedemptionEncumber) === 0;
+    }
+
+    /**
+     *
+     we have the following:
+     - total balance in the blockchain
+     - total encumber in the blockchain (subscription encumbered + redemption encumbered)
+     - total encumbered amount for the address (might get from walletnode now ?)
+
+     - true free amount = total balance in the blockchain - total encumbered in the blockchain
+     - redemption encumbered amount = get from the blockchain (using encumber reference to find out)
+     - total amount (not including subscription encumbered) = free balance in the blockchain + redeption encumbered
+
+     if the redemption encumbered amount is zero
+     we will check the order value is greater than 80 % of the total free amount
+
+     if the redemption encumbered amount is not zero
+     total 80% = we work out the 80% total amount(not including subscription encumbred)
+     remaining 80% = total 80% - redemption encumbered amount
+     check if the order value is greater than the remaining 80%
+     *
+     * @param {number} orderValue
+     * @param {number} totalBalance
+     * @param {number} totalEncumber
+     * @param totalRedemptionEncumber
+     * @param {number} price
+     * @return {VerifyResponse}
+     *
+     */
+    static isRedeemOver80Percent(orderValue: number, totalBalance: number, totalEncumber: number, totalRedemptionEncumber, price: number): VerifyResponse  {
+        // we have two scenarios to check:
+        // 1. we don't have any active redemption order, so we just check the order value is <= 80% of total free holding.
+        // 2. we got acitve redemption order(s):
+        // total 80% = we work out the 80% total amount(not including subscription encumbred)
+        // remaining 80% = total 80% - redemption encumbered amount
+        // check if the order value is greater than the remaining 80%
+
+        // total free amount
+        const freeAmount = fixToDecimal(totalBalance - totalEncumber, 0, 'floor');
+
+        // Get total amount excluding encumber from subscription.
+        const totalAmountExSub = fixToDecimal(freeAmount + totalRedemptionEncumber, 0, 'floor');
+        const amount80Percent = fixToDecimal(totalAmountExSub * 0.8, 0, 'floor');
+
+        if (OrderHelper.isOnlyActiveRedeem(totalRedemptionEncumber)) {
+
+            // multiply by price because we look at the money value
+           if ( orderValue <= fixToDecimal(amount80Percent * price / NumberMultiplier, 0, 'floor')){
+               return {
+                   orderValid: true,
+               };
+           } else {
+               return {
+                   orderValid: false,
+                   errorMessage: 'Order value over 80%, try to redeem by quantity',
+               };
+           }
+        } else {
+            // the amount remain from the 80%
+            // multiply by price because we look at the money value
+           const remaingFrom80Percent = amount80Percent - totalRedemptionEncumber;
+            if ( orderValue <= fixToDecimal(remaingFrom80Percent * price / NumberMultiplier, 0, 'floor' )) {
+                return {
+                    orderValid: true,
+                };
+            } else {
+                return {
+                    orderValid: false,
+                    errorMessage: 'Order value over 80%, try to redeem by quantity, or cancel the previous redemption order.',
+                };
+            }
+        }
+    }
+
     buildContractData(): VerifyResponse | ContractData {
 
         let arrangementData;

@@ -287,7 +287,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this._moneyValuePipe.parse(this.form.controls.quantity.value, 5)
             ),
             a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.trueAmount, 2)
+                this._moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2)
             )
         }[this.actionBy];
     }
@@ -357,9 +357,47 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.shareData.isin + '|' + this.shareData.fundShareName;
     }
 
+    /**
+     * Get free balance
+     *
+     * @return {number}
+     */
     get subPortfolioBalance(): number {
         const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
         return this.findPortFolioBalance(shareBalanceBreakDown);
+    }
+
+    /**
+     * Get encumber balance
+     *
+     * @return {number}
+     */
+    get subPortfolioEncumberedBalance(): number {
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'encumbrance');
+    }
+
+    /**
+     * Get total balance
+     *
+     * @return {number}
+     */
+    get subPortfolioTotalBalance(): number {
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'balance');
+    }
+
+    /**
+     * Get total redemption encumbered balance
+     *
+     * @return {number}
+     */
+    get subPortfolioRedemptionEncumBalance(): number {
+        // todo
+        // it is a place holder at the moment, later on we will have redemption encumber from holdingsdetail,
+        // and we would be able to work it out by the encumber reference.
+        return 0;
+        // return 3000000;
     }
 
     get isRedeemTooMuch(): boolean {
@@ -778,12 +816,48 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         };
     }
 
+    /**
+     * Handle if we redeem over 80%, it handle the two scenarios: has existing redemption and has no existing redemption.
+     * if everything is of we return true, other return false.
+     */
+    handleIsRedeemOver80Percent(): boolean {
+        // check if this is a redemption order or if it is a sell buy order
+       if ((this.type === 'sellbuy' || 'redeem') && (this.actionBy === 'a')) {
+           const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
+                   this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+
+           if (! OrderHelper.isResponseGood(checkResponse)) {
+               // redeem over 80%
+
+                // we check if this is the first order or not
+                if (OrderHelper.isOnlyActiveRedeem(this.subPortfolioRedemptionEncumBalance)) {
+                   // show have no active redemption error
+                    this.show80PercentNoActiveOrderError();
+
+                } else {
+                    // show have active redemption error.
+                    this.show80PercentHasActiveOrderError();
+                }
+
+                return false;
+           }
+
+           return true;
+       }
+
+       return true;
+    }
+
     handleSubmit() {
         const request = this.buildOrderRequest();
 
         this.logService.log('place an order', request);
 
         if (this.isRedeemTooMuch) {
+            return false;
+        }
+
+        if (!this.handleIsRedeemOver80Percent()) {
             return false;
         }
 
@@ -1224,13 +1298,13 @@ The IZNES Team.</p>`;
         });
     }
 
-    findPortFolioBalance(balances) {
+    findPortFolioBalance(balances, type: 'free' | 'balance' | 'encumbrance' = 'free') {
         const breakDown = _.get(balances, ['breakdown'], []);
 
         for (const balance of breakDown) {
             const addressValue = _.get(this.address.value, ['0', 'id'], '');
             if (balance.addr === addressValue) {
-                return balance.free;
+                return balance[type];
             }
         }
         return 0;
@@ -1418,6 +1492,52 @@ The IZNES Team.</p>`;
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Show alert error that redemption order over 80%, and no active order
+     */
+    show80PercentNoActiveOrderError() {
+        this._alertsService
+        .create('error', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('You may not place a redemption order for more than 80% of your positions.')}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('If you wish to redeem all your positions, you can redeem in quantity by clicking on the button "Redeem All".')}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+    }
+
+    /**
+     * Show alert error that redemption order over 80%, and there are active order(s)
+     */
+    show80PercentHasActiveOrderError() {
+        this._alertsService
+        .create('error', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.')}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantiy.')}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
 }
