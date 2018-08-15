@@ -539,7 +539,7 @@ export class NewRequestService {
             dateOfBirth: ['', Validators.required],
             cityOfBirth: ['', this.getLengthValidator()],
             countryOfBirth: ['', Validators.required],
-            document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.productionOb),
+            document: this.createDocumentFormGroup('kycbeneficiarydoc', !this.isProduction),
             holdingPercentage: ['', [
                 Validators.required,
                 Validators.min(0),
