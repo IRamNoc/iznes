@@ -22,6 +22,9 @@ export const ofiSetRequestedManageOrder = kAction(OFI_SET_REQUESTED_MANAGE_ORDER
 export const OFI_CLEAR_REQUESTED_MANAGE_ORDER = `${name}/OFI_CLEAR_REQUESTED_MANAGE_ORDER`;
 export const ofiClearRequestedManageOrder = kAction(OFI_CLEAR_REQUESTED_MANAGE_ORDER);
 
+export const OFI_UPDATE_ORDER = `${name}/OFI_UPDATE_ORDER`;
+export const ofiUpdateOrder = (data) => ({ type: OFI_UPDATE_ORDER, payload: data });
+
 // update tabs
 export const SET_ALL_TABS = `${name}/SET_ALL_TABS`;
 

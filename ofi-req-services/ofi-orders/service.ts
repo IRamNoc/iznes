@@ -12,14 +12,6 @@ import {
     OFI_SET_MANAGE_ORDER_LIST,
     ofiSetRequestedManageOrder,
     ofiClearRequestedManageOrder,
-    OFI_SET_MY_ORDER_LIST,
-    ofiSetRequestedMyOrder,
-    ofiClearRequestedMyOrder,
-    OFI_SET_HOME_ORDER_LIST,
-    OFI_SET_HOME_ORDER_BUFFER,
-    OFI_RESET_HOME_ORDER_BUFFER,
-    OFI_SET_HOME_ORDER_FILTER,
-    OFI_RESET_HOME_ORDER_FILTER,
     setRequestedCollectiveArchive,
     SET_COLLECTIVE_ARCHIVE
 } from '../../ofi-store/';
@@ -126,7 +118,7 @@ export class OfiOrdersService {
 
     static defaultRequestInvestorOrdersList(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedMyOrder());
+        ngRedux.dispatch(ofiSetRequestedManageOrder());
 
         // Request the list.
         const asyncTaskPipe = ofiOrdersService.requestInvestorOrdersList({
@@ -137,7 +129,7 @@ export class OfiOrdersService {
         });
 
         ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_MY_ORDER_LIST],
+            [OFI_SET_MANAGE_ORDER_LIST],
             [],
             asyncTaskPipe,
             {},
@@ -266,70 +258,6 @@ export class OfiOrdersService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    /**
-     * Set Order Buffer
-     * ------------------
-     * Sets the order buffer to an order's ID.
-     *
-     * @param {number} orderId - the order id.
-     *
-     * @return {void}
-     */
-    public setOrderBuffer(orderId: number): void {
-        /* Dispatch the event. */
-        this.ngRedux.dispatch({
-            'type': OFI_SET_HOME_ORDER_BUFFER,
-            'payload': orderId
-        });
-    }
-
-    /**
-     * Reset Order Buffer
-     * ------------------
-     * Sets the order buffer to -1.
-     *
-     * @return {void}
-     */
-    public resetOrderBuffer(): void {
-        /* Dispatch the event. */
-        this.ngRedux.dispatch({
-            'type': OFI_RESET_HOME_ORDER_BUFFER,
-            'payload': -1,
-        });
-    }
-
-    /**
-     * Set Order Filter
-     * ------------------
-     * Sets the order filter.
-     *
-     * @param {string} filter - the order id.
-     *
-     * @return {void}
-     */
-    public setOrderFilter(filter: string): void {
-        /* Dispatch the event. */
-        this.ngRedux.dispatch({
-            'type': OFI_SET_HOME_ORDER_FILTER,
-            'payload': filter
-        });
-    }
-
-    /**
-     * Reset Order Filter
-     * ------------------
-     * Sets the order filter to ''.
-     *
-     * @return {void}
-     */
-    public resetOrderFilter(): void {
-        /* Dispatch the event. */
-        this.ngRedux.dispatch({
-            'type': OFI_RESET_HOME_ORDER_FILTER,
-            'payload': '',
-        });
     }
 
     /**
