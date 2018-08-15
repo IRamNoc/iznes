@@ -2,13 +2,14 @@ package com.setl.UI.common.SETLUIHelpers;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import java.io.IOException;
+
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
 
 public class AdministrationModuleHelper {
 
@@ -30,14 +31,41 @@ public class AdministrationModuleHelper {
         return new String[]{teamDescription};
 
     }
+    public static String[] generateEmail() {
+        String str1 = randomAlphabetic(7);
+        String str2 = randomNumeric(5);
+        String userEmail = str1 + "email@" + str2 +".co.uk";
+        return new String[]{userEmail};
+    }
+    public static String[] generateBadEmail() {
+        String str1 = randomAlphabetic(7);
+        String str2 = randomNumeric(5);
+        String userEmail = str1 + "_email@_" + str2 +"_.co.uk";
+        return new String[]{userEmail};
+    }
+    public static String[] generatePhoneNumber() {
+        String str = randomNumeric(10);
+        String phoneNo = "+44" + str;
+        return new String[]{phoneNo};
+    }
+    public static String[] generateUser() {
+        String str = randomAlphabetic(5);
+        String userName = "Donald" + str;
+        return new String[]{userName};
+    }
+    public static String[] generateBadUser() {
+        String str = randomAlphabetic(5);
+        String userName = "_Donald_" + str;
+        return new String[]{userName};
+    }
 
-    public static void fillInTeamsDetails(String Name, String Reference, String Description) throws IOException, InterruptedException {
+    public static void fillInTeamsDetails(String Name, String Reference, String Description) {
         driver.findElement(By.id("name")).sendKeys(Name);
         driver.findElement(By.id("reference")).sendKeys(Reference);
         driver.findElement(By.id("description")).sendKeys(Description);
     }
 
-    public static void selectAddNewTeam() throws IOException, InterruptedException {
+    public static void selectAddNewTeam() {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
@@ -49,11 +77,12 @@ public class AdministrationModuleHelper {
         } catch (Exception e) {
             fail("Page heading test was not correct : " + e.getMessage());
         }
-
     }
 
-    public static void SelectCreateNewTeam() throws IOException, InterruptedException {
+    public static void SelectCreateNewTeam() throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button");
+        Thread.sleep(1000);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
         wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")));
         String create = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button")).getText();
@@ -65,20 +94,61 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/div/h1")));
     }
 
-    public static void searchTeam(String ref, String Name, String Description) throws InterruptedException, IOException {
+    public static void searchTeam(String ref, String Name, String Description) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
-
         String columnRef = driver.findElement(By.id("accountAdminTeamCellRef0")).getText();
         assertTrue(columnRef.equals(ref));
-
         String columnName = driver.findElement(By.id("accountAdminTeamCellName0")).getText();
         assertTrue(columnName.equals(Name));
-
         String columnDescription = driver.findElement(By.id("accountAdminTeamCellDescription0")).getText();
         assertTrue(columnDescription.equals(Description));
-
         String status = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/span/span/span")).getAttribute("value");
         assertTrue(status.equals("Active"));
+    }
+    public static void fillInUserDetails(String Email, String firstName, String lastName, String Reference, String phoneNumber) {
+        driver.findElement(By.id("emailAddress")).sendKeys(Email);
+        driver.findElement(By.id("firstName")).sendKeys(firstName);
+        driver.findElement(By.id("lastName")).sendKeys(lastName);
+        driver.findElement(By.id("reference")).sendKeys(Reference);
+        driver.findElement(By.id("phoneNumber")).sendKeys(phoneNumber);
+    }
+    public static void selectAddNewUser() {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]")));
+        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-core-admin-users-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]")).click();
+    }
+    public static void selectCreateUser()throws InterruptedException {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
+        Thread.sleep(1000);
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
+        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(visibilityOfElementLocated(By.id("tabAccountAdminUsersButton")));
+
+    }
+    public static void selectUserType() {
+        driver.findElement(By.cssSelector("#userType > div > div.ui-select-match.dropdown > span > i.pull-right.special.caret")).click();
+        driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys("Standard user");
+        driver.findElement(By.cssSelector("#userType > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > ul > li > div")).click();
+    }
+    public static void selectCreateUserWithBadDetails() {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]");
+        wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        wait.until(elementToBeClickable(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")));
+        driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-users-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[2]/button[1]")).click();
+        wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
+        String error = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")).getText();
+        assertTrue(error.equals("Error!"));
+        String errorMessage = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[3]")).getText();
+        assertTrue(errorMessage.contains("Invalid User Name / Email Address."));
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
     }
 }
