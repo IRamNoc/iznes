@@ -1,91 +1,75 @@
 <div class="login-container">
-    <div>
-        <div class="logo-wrap">
-            <img id="{{appConfig.logoID}}" src="{{appConfig.logoUrl}}">
-        </div>
-
-        <div *ngIf="changedPassword" class="changedPasswordSuccess mt-2">
-            <b>{{'Your password has been changed!' | translate}}</b>
-        </div>
-
-        <div class="login-inner-wrapper">
-            <span class="login-subheading">{{'Sign up to @appConfig.platform@' | translate: {'appConfig.platform': appConfig.platform} }}</span>
-            <br>
-            <p class="login-subpara">{{'Your @appConfig.platform@ account will be created with this email address, provided by the Asset Management company.' | translate: {'appConfig.platform': appConfig.platform} }}</p>
-            <br>
-            <p class="login-subpara text-grey">{{'Please choose a password.' | translate}}</p>
-            <br>
-
-            <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)" [class.error]="!signupForm.valid && signupForm.touched">
-                <div class="form-group">
-                    <input id="su-username-field" class="form-control" type="text" name="username" disabled
-                        [placeholder]="translate.translate('User name')"
-                        formControlName="username"
-                        [class.error]="!signupForm.controls['username'].valid && signupForm.controls['username'].touched">
-                </div>
-
-                <div class="form-group">
-                    <div>
-                        <input id="su-password-field" class="form-control" name="password"
-                            [type]="(showPasswords1 === true) ? 'text' : 'password'"
-                            [placeholder]="translate.translate('Password')"
-                            formControlName="password"
-                            [class.error]="!signupForm.controls['password'].valid && signupForm.controls['password'].touched">
-
-                        <span class="toggle-password-visible" (click)="toggleShowPasswords(1)" title="Show/hide passwords">
-                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <div *ngIf="signupForm.controls.password.hasError('required') && signupForm.controls.password.dirty" class="text-danger">{{'Password is required' | translate}}</div>
-                    <div *ngIf="!signupForm.controls.password.valid && !signupForm.controls.password.hasError('required') && signupForm.controls.password.touched" class="text-danger">{{'Your password must be at least 6 characters' | translate}}</div>
-                </div>
-                <div class="form-group">
-                    <div>
-                        <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
-                            [type]="(showPasswords2 === true) ? 'text' : 'password'"
-                            [placeholder]="translate.translate('Retype password')"
-                            formControlName="passwordConfirm"
-                            [class.error]="!signupForm.controls.passwordConfirm.valid && signupForm.controls.passwordConfirm.touched">
-
-                        <span class="toggle-password-visible" (click)="toggleShowPasswords(2)" title="Show/hide passwords">
-                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <div *ngIf="signupForm.controls.passwordConfirm.hasError('required')
-                                && signupForm.controls.passwordConfirm.touched" class="text-danger">
-                        {{'Confirmation is required' | translate}}
-                    </div>
-
-                    <div *ngIf="signupForm.controls.passwordConfirm.hasError('minlength')
-                                && !signupForm.controls.passwordConfirm.hasError('required')
-                                && signupForm.controls.passwordConfirm.dirty" class="text-danger">
-                        {{'Your password must be at least 6 characters' | translate}}
-                    </div>
-
-                    <div *ngIf="!signupForm.controls.passwordConfirm.hasError('minlength')
-                                && !signupForm.controls.passwordConfirm.hasError('required')
-                                && signupForm.controls.passwordConfirm.dirty
-                                && signupForm.hasError('mismatch')
-                                && signupForm.controls.password.valid" class="text-danger">
-                        {{'Password does not match' | translate}}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b"
-                        [disabled]="!signupForm.valid">
-                        {{'Create an account' | translate}}
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <p>
-            <small>
-                <span class="ml">{{'IZNES is a private environment subject to authorised access only.' | translate}}</span>
-            </small>
-        </p>
+    <div class="logo-wrap">
+        <img id="{{appConfig.logoID}}" src="{{appConfig.logoUrl}}">
     </div>
+
+    <div class="login-inner-wrapper">
+        <p class="login-subheading">{{ title }}</p>
+        <p class="login-subpara">{{ description }}</p>
+        <p class="login-subpara text-grey">{{ 'Please choose a password.' | translate }}</p>
+
+        <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)" [class.error]="!signupForm.valid && signupForm.touched">
+            <div class="form-group">
+                <input id="su-username-field" class="form-control" type="text" name="username" disabled
+                    [placeholder]="translate.translate('User name')"
+                    formControlName="username"
+                    [class.error]="showFieldError(signupForm.controls.username)">
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <input id="su-password-field" class="form-control" name="password"
+                        [type]="(showPassword) ? 'text' : 'password'"
+                        [placeholder]="translate.translate('Password')"
+                        formControlName="password"
+                        [class.error]="showFieldError(signupForm.controls.password)">
+
+                    <span class="toggle-password-visible" (click)="toggleShowPasswords()" title="Show/hide passwords">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <span *ngIf="showPasswordRequiredError(signupForm.controls.password)" class="error-msg text-danger">{{ 'Password is required' | translate }}</span>
+                <span *ngIf="showPasswordLengthError(signupForm.controls.password)" class="error-msg text-danger">{{ 'Your password must be at least 6 characters' | translate }}</span>
+            </div>
+            <div class="form-group">
+                <div>
+                    <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
+                        [type]="(showConfirmPassword) ? 'text' : 'password'"
+                        [placeholder]="translate.translate('Retype password')"
+                        formControlName="passwordConfirm"
+                        [class.error]="showFieldError(signupForm.controls.passwordConfirm)">
+
+                    <span class="toggle-password-visible" (click)="toggleShowPasswords(true)" title="Show/hide passwords">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <span *ngIf="showPasswordRequiredError(signupForm.controls.passwordConfirm)" class="error-msg text-danger">
+                    {{ 'Confirmation is required' | translate }}
+                </span>
+
+                <span *ngIf="showPasswordLengthError(signupForm.controls.passwordConfirm)" class="error-msg text-danger">
+                    {{ 'Your password must be at least 6 characters' | translate }}
+                </span>
+
+                <span *ngIf="showPasswordMismatchError()" class="error-msg text-danger">
+                    {{ 'Passwords do not match' | translate }}
+                </span>
+            </div>
+
+            <div class="form-group">
+                <button id="signup-submit" type="submit" class="btn btn-primary block full-width m-b"
+                    [disabled]="!signupForm.valid">
+                    {{ buttonText }}
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <p>
+        <small>
+            <span class="ml">{{'IZNES is a private environment subject to authorised access only.' | translate}}</span>
+        </small>
+    </p>
 </div>
