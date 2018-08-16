@@ -100,6 +100,7 @@ export interface Fund {
     registerOffice: string;
     registerOfficeAddress: string;
     domicile: string;
+    tradingAccount: string;
     isEuDirective: any;
     typeOfEuDirective: isEuDirective;
     ucitsVersion: number;
