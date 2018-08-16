@@ -1,13 +1,9 @@
 import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { NgRedux } from '@angular-redux/store';
-import * as _ from 'lodash';
 
 import { MultilingualService } from '@setl/multilingual';
-import { SagaHelper, APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
+import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
 import { ISignupConfiguration, ISignupData } from '@setl/core-login';
-import { MyUserService } from '@setl/core-req-services';
 
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
@@ -32,10 +28,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private alertsService: AlertsService,
                 private confirmationService: ConfirmationService,
-                private ofiKycService: OfiKycService,
-                private redux: NgRedux<any>,
-                private myUserService: MyUserService,
-                private router: Router) {
+                private ofiKycService: OfiKycService) {
 
         this.appConfig = appConfig;
 
