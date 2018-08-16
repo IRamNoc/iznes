@@ -34,6 +34,9 @@ export interface IznShareDetailWithNav extends IznesShareDetail {
     platFormFee: number;
     investorHoling: number;
     holidayMgmtConfig: string;
+    investorTotalHolding: number;
+    investorTotalEncumber: number;
+    investorRedemptionEncumber: number;
 }
 
 export interface VerifyResponse {
@@ -135,6 +138,12 @@ export interface UpdateOrderResponse {
     investorAccountID: number;
     clientReference: string;
     subportfolioName: string;
+}
+
+export interface InvestorBalances {
+    investorTotalHolding: number;
+    investorTotalEncumber: number;
+    investorRedemptionEncumber: number;
 }
 
 export interface ContractRequestBody {
