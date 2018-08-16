@@ -1,6 +1,7 @@
 import {multiply, toNormalScale, plus} from './cal-helper';
 import * as math from 'mathjs';
 import * as _ from 'lodash';
+import { OrderType } from "../../../ofi-orders/order.model";
 
 export interface OrderFiguresModel {
     byAmountOrQuantity: number;
@@ -104,4 +105,37 @@ export function getNonZeroValue(val1: number, val2: number, defaultValue: number
     return defaultValue;
 }
 
+/**
+ * Return the string of the order type, base on the order type and sellBuyLinkId (basically, this field should only has
+ * value if it is a sell buy order)
+ * orderType: 3 and sellBuyLinkId : null => 'Subscription',
+ * orderType: 4 and sellBuyLinkId : null => 'Redemption'
+ *
+ * orderType: 3 and sellBuyLinkId : not Null => 'Sell/Buy - Subscription',
+ * orderType: 4 and sellBuyLinkId : not Null => 'Sell/Buy - Redemption'
+ *
+ * @param {{orderType: number | string; sellBuyLinkOrderID: number | string}} orderData
+ * @return {string}
+ */
+export function getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string }): string {
+    const orderType = orderData.orderType;
+    const sellBuyLinkOrderId = orderData.sellBuyLinkOrderID;
 
+    if (!sellBuyLinkOrderId) {
+       if (Number(orderType) === OrderType.Subscription) {
+          return 'Subscription';
+       }
+
+       if(Number(orderType) === OrderType.Redemption) {
+          return 'Redemption';
+       }
+    } else {
+        if (Number(orderType) === OrderType.Subscription) {
+            return 'Sell/Buy - Subscription';
+        }
+
+        if(Number(orderType) === OrderType.Redemption) {
+            return 'Sell/Buy - Redemption';
+        }
+    }
+}
