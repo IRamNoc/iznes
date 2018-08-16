@@ -127,7 +127,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
-                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID);">Download File</button>
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.orderType);">Download File</button>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
