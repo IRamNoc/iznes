@@ -4,6 +4,30 @@
   "main": "index.js",
   "repository": "git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git",
   "author": "SETL.io",
-  "license": "UNLICENCED"
+  "license": "UNLICENCED",
+  "scripts": {
+    "test": "jest --env=node --verbose"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "transformIgnorePatterns": [
+      "<rootDir>/node_modules/(?!@setl/utils)"
+    ],
+    "testMatch": [
+      "**/__tests__/*.+(ts|tsx|js)"
+    ]
+  },
+  "devDependencies": {
+    "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git",
+    "@types/jest": "^23.3.1",
+    "jest": "^23.4.2",
+    "ts-jest": "^23.1.3"
+  }
 }
-

@@ -82,8 +82,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private _userTourService: UserTourService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
-        this.userTourEnums = userToursEnums;
-
         /* tab meta */
         this.tabDetail = [{
             title: {
@@ -172,6 +170,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         }
     }
 
+
     restartUserTour() {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
@@ -224,7 +223,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.launchTour();
     }
 
     /**
@@ -232,7 +230,6 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
      *
      */
     handleAddProfile(): void {
-
     }
 
     handleEditSubPortfolio(address): void {

@@ -9,7 +9,7 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
@@ -25,7 +25,7 @@ import {
     immutableHelper,
     mDateHelper,
     MoneyValuePipe,
-    NumberConverterService
+    NumberConverterService,
 } from '@setl/utils';
 import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
@@ -33,15 +33,16 @@ import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
-import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderHelper } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
-import { SellBuyCalendar } from "../../ofi-product/fund-share/FundShareEnum";
-import { Moment } from "moment";
+import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
+import { Moment } from 'moment';
 
 @Component({
     selector: 'app-invest-fund',
@@ -229,10 +230,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get orderTypeNumber(): number {
-         return {
-             subscribe: 3,
-             redeem: 4,
-         }[this.type];
+        return {
+            subscribe: 3,
+            redeem: 4,
+        }[this.type];
     }
 
     get orderTypeLabel(): string {
@@ -286,7 +287,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this._moneyValuePipe.parse(this.form.controls.quantity.value, 5)
             ),
             a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.trueAmount, 2)
+                this._moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2)
             )
         }[this.actionBy];
     }
@@ -320,7 +321,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return '';
         } else {
             let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            if(this.allowAmountAndQuantity){
+            if (this.allowAmountAndQuantity) {
                 isValid = isValid && (this.actionBy === 'a');
             }
 
@@ -334,14 +335,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else {
             let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
 
-            if(this.allowAmountAndQuantity){
+            if (this.allowAmountAndQuantity) {
                 isValid = isValid && (this.actionBy === 'q');
             }
             return isValid ? null : '';
         }
     }
 
-    get allowAmountAndQuantity(): any{
+    get allowAmountAndQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return false;
         } else {
@@ -356,9 +357,47 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return this.shareData.isin + '|' + this.shareData.fundShareName;
     }
 
+    /**
+     * Get free balance
+     *
+     * @return {number}
+     */
     get subPortfolioBalance(): number {
         const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
         return this.findPortFolioBalance(shareBalanceBreakDown);
+    }
+
+    /**
+     * Get encumber balance
+     *
+     * @return {number}
+     */
+    get subPortfolioEncumberedBalance(): number {
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'encumbrance');
+    }
+
+    /**
+     * Get total balance
+     *
+     * @return {number}
+     */
+    get subPortfolioTotalBalance(): number {
+        const shareBalanceBreakDown = _.get(this.walletBalance, [this.shareAsset]);
+        return this.findPortFolioBalance(shareBalanceBreakDown, 'balance');
+    }
+
+    /**
+     * Get total redemption encumbered balance
+     *
+     * @return {number}
+     */
+    get subPortfolioRedemptionEncumBalance(): number {
+        // todo
+        // it is a place holder at the moment, later on we will have redemption encumber from holdingsdetail,
+        // and we would be able to work it out by the encumber reference.
+        return 0;
+        // return 3000000;
     }
 
     get isRedeemTooMuch(): boolean {
@@ -489,12 +528,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.calenderHelper = new CalendarHelper(this.shareData);
 
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
-            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
-            this.updateDateInputs();
+            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
             if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
             if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
+
+            this.updateDateInputs();
         });
 
         this.connectedWalletOb
@@ -543,8 +583,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutOffValue = new Date(
                 this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
-                    .format('YYYY-MM-DD HH:mm'),
+                .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
+                .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -570,8 +610,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
-                    .format('YYYY-MM-DD HH:mm'),
+                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -776,12 +816,48 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         };
     }
 
+    /**
+     * Handle if we redeem over 80%, it handle the two scenarios: has existing redemption and has no existing redemption.
+     * if everything is of we return true, other return false.
+     */
+    handleIsRedeemOver80Percent(): boolean {
+        // check if this is a redemption order or if it is a sell buy order
+       if ((this.type === 'sellbuy' || 'redeem') && (this.actionBy === 'a')) {
+           const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
+                   this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+
+           if (! OrderHelper.isResponseGood(checkResponse)) {
+               // redeem over 80%
+
+                // we check if this is the first order or not
+                if (OrderHelper.isOnlyActiveRedeem(this.subPortfolioRedemptionEncumBalance)) {
+                   // show have no active redemption error
+                    this.show80PercentNoActiveOrderError();
+
+                } else {
+                    // show have active redemption error.
+                    this.show80PercentHasActiveOrderError();
+                }
+
+                return false;
+           }
+
+           return true;
+       }
+
+       return true;
+    }
+
     handleSubmit() {
         const request = this.buildOrderRequest();
 
         this.logService.log('place an order', request);
 
         if (this.isRedeemTooMuch) {
+            return false;
+        }
+
+        if (!this.handleIsRedeemOver80Percent()) {
             return false;
         }
 
@@ -801,43 +877,43 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             let orderSuccessMsg = '';
 
             if (this.type === 'sellbuy') {
-               const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
-               const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+                const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+                const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
 
-               const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
-               const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+                const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+                const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-               orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
 
-               if (this.amountTooBig) {
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderSubId,
-                       orderRef: orderSubRef,
-                   });
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderSubId,
+                        orderRef: orderSubRef,
+                    });
 
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderRedeemId,
-                       orderRef: orderRedemRef,
-                   });
-               }
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderRedeemId,
+                        orderRef: orderRedemRef,
+                    });
+                }
             } else {
-               const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-               const orderRef = commonHelper.pad(orderId, 8, '0');
+                const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                const orderRef = commonHelper.pad(orderId, 8, '0');
 
-               orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
 
-               if (this.amountTooBig) {
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderId,
-                       orderRef,
-                   });
-               }
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderId,
+                        orderRef,
+                    });
+                }
             }
 
             this._toaster.pop('success', orderSuccessMsg);
@@ -1108,7 +1184,7 @@ The IZNES Team.</p>`;
         let orderValueHtml = '';
 
         if (this.type === 'sellbuy') {
-           orderValueHtml = `
+            orderValueHtml = `
                     <tr>
                         <td class="left"><b>Redemption Quantity:</b></td>
                         <td>${quantityStr}</td>
@@ -1222,13 +1298,13 @@ The IZNES Team.</p>`;
         });
     }
 
-    findPortFolioBalance(balances) {
+    findPortFolioBalance(balances, type: 'free' | 'balance' | 'encumbrance' = 'free') {
         const breakDown = _.get(balances, ['breakdown'], []);
 
         for (const balance of breakDown) {
             const addressValue = _.get(this.address.value, ['0', 'id'], '');
             if (balance.addr === addressValue) {
-                return balance.free;
+                return balance[type];
             }
         }
         return 0;
@@ -1315,11 +1391,11 @@ The IZNES Team.</p>`;
      * @return {string}
      */
     getOrderTypeTitle(): string {
-       return {
-           subscribe: this._translate.getTranslationByString('Subscription'),
-           redeem: this._translate.getTranslationByString('Redemption'),
-           sellbuy: this._translate.getTranslationByString('Sell / Buy'),
-       }[this.type];
+        return {
+            subscribe: this._translate.getTranslationByString('Subscription'),
+            redeem: this._translate.getTranslationByString('Redemption'),
+            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+        }[this.type];
     }
 
     /**
@@ -1348,7 +1424,7 @@ The IZNES Team.</p>`;
             const sellBuyCalendar = Number(this.shareData.sellBuyCalendar);
             if (sellBuyCalendar === SellBuyCalendar.RedemptionCalendar) {
                 orderNumberType = OrderType.Redemption;
-            }else {
+            } else {
                 orderNumberType = OrderType.Subscription;
             }
         } else {
@@ -1416,6 +1492,52 @@ The IZNES Team.</p>`;
         const orderNumberType = this.getCalendarHelperOrderNumber();
 
         return this.calenderHelper.getCutoffDateFromSettlement(momentDateValue, orderNumberType);
+    }
+
+    /**
+     * Show alert error that redemption order over 80%, and no active order
+     */
+    show80PercentNoActiveOrderError() {
+        this._alertsService
+        .create('error', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('You may not place a redemption order for more than 80% of your positions.')}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('If you wish to redeem all your positions, you can redeem in quantity by clicking on the button "Redeem All".')}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+    }
+
+    /**
+     * Show alert error that redemption order over 80%, and there are active order(s)
+     */
+    show80PercentHasActiveOrderError() {
+        this._alertsService
+        .create('error', `
+                <table class="table grid">
+                    <tbody>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('You may not place this redemption order because on the basis of your already made redemption orders you will sell more than 80% of your positions.')}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center text-danger">
+                                ${this._translate.getTranslationByString('If you wish to redeem more than 80% of your position, you can cancel previous redeem orders and place an order in quantiy.')}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
 }

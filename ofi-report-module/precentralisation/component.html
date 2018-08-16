@@ -60,7 +60,7 @@
                                 <div class="form-group col-lg-6">
                                     <div><strong><label>{{'Total Net Amount' | translate}}</label></strong></div>
                                     <span class="readonly-field" style="width: 100%">
-                                        {{fundsTotalNetAmount | moneyValue: 5}}€
+                                        {{fundsTotalNetAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                             </div>
@@ -68,24 +68,24 @@
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Subscription' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #50ad5a; color: #e1e1e1;">
-                                        {{fundsTotalSubscriptionAmount | moneyValue: 5}}€
+                                        {{fundsTotalSubscriptionAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Redemptions' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
-                                        {{fundsTotalRedemptionAmount | moneyValue: 5}}€
+                                        {{fundsTotalRedemptionAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                             </div>
                             <br><br>
                         </div>
                         <div class="col-lg-4">
-                                <ngx-charts-pie-chart
-                                        [scheme]="colorScheme"
-                                        [results]="pieChartDatas">
-                                </ngx-charts-pie-chart>
-                                        <!--[labels]="true"-->
+                            <ngx-charts-pie-chart
+                                [scheme]="colorScheme"
+                                [results]="pieChartDatas">
+                            </ngx-charts-pie-chart>
+                            <!--[labels]="true"-->
                         </div>
                     </div>
                 </form>
@@ -143,12 +143,16 @@
                         <clr-dg-cell>{{data.cutoffDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundName}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundCurrency}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.fundAum | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.subscriptionAmount | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.redemptionAmount | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.fundAum | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell><span style="color:#50ad5a;">{{data.subscriptionAmount | moneyValue:2}}</span>
+                        </clr-dg-cell>
+                        <clr-dg-cell><span style="color:#af2519;">{{data.redemptionAmount | moneyValue:2}}</span>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.fundName)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
+                        <clr-dg-cell>
+                            <button (click)="onClickViewCorrespondingOrders(data.fundName)" class="btn btn-info btn-sm">View</button>
+                        </clr-dg-cell>
                     </clr-dg-row>
 
                     <clr-dg-footer>
@@ -229,7 +233,7 @@
                                 <div class="form-group col-lg-6">
                                     <div><strong><label>{{'Total Net Amount' | translate}}</label></strong></div>
                                     <span class="readonly-field" style="width: 100%">
-                                        {{sharesTotalNetAmount | moneyValue: 5}}€
+                                        {{sharesTotalNetAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                             </div>
@@ -237,13 +241,13 @@
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Subscription' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #50ad5a; color: #e1e1e1;">
-                                        {{sharesTotalSubscriptionAmount | moneyValue: 5}}€
+                                        {{sharesTotalSubscriptionAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <div><label>{{'Total Redemptions' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
-                                        {{sharesTotalRedemptionAmount | moneyValue: 5}}€
+                                        {{sharesTotalRedemptionAmount | moneyValue: 2}}€
                                     </span>
                                 </div>
                             </div>
@@ -251,9 +255,9 @@
                         </div>
                         <div class="col-lg-4">
                             <ngx-charts-pie-chart
-                                    [scheme]="colorScheme"
-                                    [customColors]="customColors"
-                                    [results]="pieChartDatas">
+                                [scheme]="colorScheme"
+                                [customColors]="customColors"
+                                [results]="pieChartDatas">
                             </ngx-charts-pie-chart>
                             <!--[labels]="true"-->
                         </div>
@@ -315,10 +319,12 @@
                         <clr-dg-cell>{{data.isin}}</clr-dg-cell>
                         <clr-dg-cell>{{data.shareCurrency}}</clr-dg-cell>
                         <clr-dg-cell>{{data.latestNav | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.shareAum | moneyValue:5}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.netAmount | moneyValue:5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.shareAum | moneyValue:2}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <clr-dg-cell><button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button></clr-dg-cell>
+                        <clr-dg-cell>
+                            <button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button>
+                        </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
                                 <div class="row">
@@ -336,15 +342,15 @@
                                             <tbody>
                                             <tr>
                                                 <td><b>{{'Subscriptions' | translate}}</b></td>
-                                                <td>{{data.subscriptionQuantity | moneyValue: 4 }}</td>
-                                                <td>{{data.subscriptionAmount | moneyValue: 5 }}</td>
+                                                <td>{{data.subscriptionQuantity | moneyValue: 5 }}</td>
+                                                <td>{{data.subscriptionAmount | moneyValue: 2 }}</td>
                                                 <td>{{data.subscriptionCutoffDate}}</td>
                                                 <td>{{data.subscriptionSettlementDate}}</td>
                                             </tr>
                                             <tr>
                                                 <td><b>{{'Redemptions' | translate}}</b></td>
-                                                <td>{{data.redemptionQuantity | moneyValue: 4 }}</td>
-                                                <td>{{data.redemptionAmount | moneyValue: 5 }}</td>
+                                                <td>{{data.redemptionQuantity | moneyValue: 5 }}</td>
+                                                <td>{{data.redemptionAmount | moneyValue: 2 }}</td>
                                                 <td>{{data.redemptionCutoffDate}}</td>
                                                 <td>{{data.redemptionSettlementDate}}</td>
                                             </tr>

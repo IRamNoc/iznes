@@ -1,9 +1,7 @@
-import {FundShareTest} from './share-data';
-import {RequestData} from './request-data';
-import {OrderHelper} from '../order-helper';
-import {expect} from 'chai';
-import 'mocha';
-import {CalendarHelper} from "../calendar-helper";
+import { FundShareTest } from './test-data/share-data';
+import { RequestData } from './test-data/request-data';
+import { OrderHelper } from '../order-helper';
+import { CalendarHelper } from '../calendar-helper';
 import * as moment from 'moment-business-days';
 
 describe('Subscription order', () => {
@@ -20,7 +18,7 @@ describe('Subscription order', () => {
         requestTestData.ordervalue = 10000000;
         const orderHelper = new OrderHelper(fundshareTestData, requestTestData);
         const requestData = orderHelper.buildContractRequestBody();
-        expect(JSON.stringify(requestData)).to.deep.equal(JSON.stringify({
+        expect(JSON.stringify(requestData)).toEequal(JSON.stringify({
             'messagetype': 'tx',
             'messagebody': {
                 'txtype': 'conew',
@@ -403,14 +401,9 @@ describe('Subscription order', () => {
         const settlement = calendarHelper.getSettlementDateFromCutoff(cutoff, 3);
     });
 
-    xit('calendar set cutoff time', () => {
+    it('calendar set cutoff time', () => {
         const calendarHelper = new CalendarHelper(fundshareTestData);
         const cutoff = moment('2018-05-02 10:00', 'YYYY-MM-DD HH:mm');
         const cutoffWithTime = calendarHelper.getCutoffTimeForSpecificDate(cutoff, 3);
-    });
-
-
-    it('calendar get valuation from cutoff', () => {
-
     });
 });
