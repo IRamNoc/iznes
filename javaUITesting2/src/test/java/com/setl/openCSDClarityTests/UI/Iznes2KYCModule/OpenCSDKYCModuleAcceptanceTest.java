@@ -259,7 +259,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
      }
 
     @Test
-    @Ignore("WIP")
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
         String userNo = "001";
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -322,9 +321,12 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String bankingInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(bankingInfoPercent.equals("0%"));
 
+        System.out.println("Step 3");
         KYCProcessStep3GeneralInfoComplete();
         KYCProcessStep3CompanyInfoComplete();
         KYCProcessStep3BankingInfoComplete();
+
+        Thread.sleep(750);
 
         try {
             driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
@@ -335,27 +337,80 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         /////////////////////////////////////////////////////////////////////////////
 
-        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[1]/a/h2")).click();
-
         Thread.sleep(750);
-        //wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[2]/div/div[1]/div[1]/div[1]/label")));
-
+        System.out.println("Step 4");
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(1000);
         String investmentsNaturePercent = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(investmentsNaturePercent.equals("0%"));
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("document.getElementById('Weekly').click();");
+        js.executeScript("document.getElementById('internalManagement').click();");
+        js.executeScript("document.getElementById('Bonds').click();");
+        String investmentsNaturePercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("Investments' Nature : " + investmentsNaturePercentPost);
+        assertTrue(investmentsNaturePercentPost.equals("100%"));
+        Thread.sleep(1000);
         try {
-            wait.until(elementToBeClickable(By.id("internalManagement")));
-            driver.findElement(By.id("internalManagement")).click();
+            driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[1]/a/h2")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
+            Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
+        Thread.sleep(750);
+        js.executeScript("document.getElementById('Capitalpreservation-0').click();");
+        js.executeScript("document.getElementById('PortfolioComponentDiversification-0').click();");
+        js.executeScript("document.getElementById('Notimeconstraints-0').click();");
+        searchSelectTopOptionXpath("Guaranteed Capital", "//*[@id=\"riskProfile-0\"]/div", "//*[@id=\"riskProfile-0\"]/div/div[3]/div/input", "//*[@id=\"riskProfile-0\"]/div/div[3]/ul/li[1]/div/a");
+
+        scrollElementIntoViewByXpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table");
+
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[1]/td[1]/input")).sendKeys("25");
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[2]/td[1]/input")).sendKeys("25");
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[3]/td[1]/input")).sendKeys("25");
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[2]/div/div/investment-objective-form/div/div[5]/table/tbody/tr[4]/td[1]/input")).sendKeys("25");
+
+        String investmentsObjectivesPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("Investments' Objectives : " + investmentsObjectivesPercentPost);
+        assertTrue(investmentsObjectivesPercentPost.equals("100%"));
+
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-objective/div/div[1]/div[1]/a/h2")).click();
+
+        String investmentsConstraintsPercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-constraint/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("Investments' Constraints : " + investmentsConstraintsPercentPost);
+        assertTrue(investmentsConstraintsPercentPost.equals("100%"));
+
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
         }catch (Exception e){
             fail(e.getMessage());
         }
 
+        Thread.sleep(750);
+        System.out.println("Step 5");
+        String documentsPercentPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[5]/kyc-step-documents/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("Documents : " + documentsPercentPost);
+        assertTrue(documentsPercentPost.equals("100%"));
 
-//        js.executeScript("document.getElementById('internalManagement').selected();");
-//        js.executeScript("document.getElementById('Daily').click();");
-//        js.executeScript("document.getElementById('MoneymarketsecuritiesTreasury').click();");
+        try {
+            driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[3]")).click();
+        }catch (Exception e){
+            fail(e.getMessage());
+        }
 
-        String investmentsNaturePercentPost = driver.findElement(By.xpath("//*[@id=\"step-risk-profile\"]/investment-nature/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        assertTrue(investmentsNaturePercentPost.equals("100%"));
+        driver.findElement(By.xpath("//*[@id=\"step-validation\"]/div/div/p[1]/input[1]")).sendKeys("Jordan Miller");
+        driver.findElement(By.xpath("//*[@id=\"step-validation\"]/div/div/p[1]/input[2]")).sendKeys("SETL Developments LTD");
+        driver.findElement(By.id("doneAt")).sendKeys("Ipswich");
+        driver.findElement(By.id("positionRepresentative")).sendKeys("Head");
+
+        String validationPercentPost = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[2]/div/section[6]/kyc-step-validation/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("Validation : " + validationPercentPost);
+        assertTrue(validationPercentPost.equals("83%"));
+
+        //*[@id="iznes"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[2]/div/section[6]/kyc-step-validation/div/div[1]/div[2]/div/div[1]/div/div/div/span
+
     }
 
     @Test
@@ -493,6 +548,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         assertTrue(percentBarColourPre.equals("rgba(255, 183, 77, 1)"));
         searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryTaxResidence\"]/div", "//*[@id=\"countryTaxResidence\"]/div/div[3]/div/input", "//*[@id=\"countryTaxResidence\"]/div/div[3]/ul/li[1]/div/a");
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
+        System.out.println("General Info : " + percent9);
         assertTrue(percent9.equals("100%"));
         String percentBarColourPost = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
         assertTrue(percentBarColourPost.equals("rgba(102, 187, 106, 1)"));
@@ -508,122 +564,65 @@ public class OpenCSDKYCModuleAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("activities")));
 
         String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent0);
         assertTrue(percent0.equals("0%"));
-
         searchSelectTopOptionXpath("Own-account investor", "//*[@id=\"activities\"]/div", "//*[@id=\"activities\"]/div/div[3]/div/input", "//*[@id=\"activities\"]/div/div[3]/ul/li[1]/div/a");
-
-
         String percent1 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent1);
         assertTrue(percent1.equals("6%"));
-
         searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalAreaOfActivity\"]/div", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/div/input", "//*[@id=\"geographicalAreaOfActivity\"]/div/div[3]/ul/li[1]/div/a");
-
         String percent2 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent2);
         assertTrue(percent2.equals("12%"));
-
         searchSelectTopOptionXpath("Embassies and Consulates", "//*[@id=\"ownAccountinvestor\"]/div", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/div/input", "//*[@id=\"ownAccountinvestor\"]/div/div[3]/ul/li[1]/div/a");
-
         String percent3 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent3);
         assertTrue(percent3.equals("18%"));
-
         driver.findElement(By.id("balanceSheetTotal")).sendKeys("9");
-
         String percent4 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent4);
         assertTrue(percent4.equals("24%"));
-
         driver.findElement(By.id("netRevenuesNetIncome")).sendKeys("9");
-
         String percent5 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent5);
         assertTrue(percent5.equals("29%"));
-
         driver.findElement(By.id("shareholderEquity")).sendKeys("9");
-
         String percent6 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent6);
         assertTrue(percent6.equals("35%"));
-
         driver.findElement(By.id("firstName")).sendKeys("Jordan");
-
         String percent7 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent7);
         assertTrue(percent7.equals("41%"));
-
         driver.findElement(By.id("lastName")).sendKeys("Miller");
-
         String percent8 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent8);
         assertTrue(percent8.equals("47%"));
-
         driver.findElement(By.id("address")).sendKeys("159 Connextions");
-
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent9);
         assertTrue(percent9.equals("53%"));
-
         scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[2]/div/div[7]/div[2]/button");
-
         Thread.sleep(1000);
-
         searchSelectTopOptionXpath("Jordan", "//*[@id=\"nationality\"]/div", "//*[@id=\"nationality\"]/div/div[3]/div/input", "//*[@id=\"nationality\"]/div/div[3]/ul/li[1]/div/a");
-
         String percent10 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent10);
         assertTrue(percent10.equals("59%"));
-
         searchSelectTopOptionXpath("Jordan", "//*[@id=\"countryOfBirth-0\"]/div", "//*[@id=\"countryOfBirth-0\"]/div/div[3]/div/input", "//*[@id=\"countryOfBirth-0\"]/div/div[3]/ul/li[1]/div/a");
-
-
         String percent11 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent11);
-        //assertTrue(percent11.equals("62%"));
-
+        assertTrue(percent11.equals("65%"));
         driver.findElement(By.id("cityOfBirth-0")).sendKeys("Ipswich");
-
         String percent12 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent12);
-        //assertTrue(percent12.equals("68%"));
-
+        assertTrue(percent12.equals("71%"));
         driver.findElement(By.id("dateOfBirth-0")).sendKeys("1997-11-19");
-
         String percent13 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent13);
-        //assertTrue(percent13.equals("73%"));
-
+        assertTrue(percent13.equals("76%"));
         driver.findElement(By.id("holdingPercentage")).sendKeys("19");
-
         String percent14 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent14);
-        //assertTrue(percent14.equals("79%"));
-
+        assertTrue(percent14.equals("82%"));
         driver.findElement(By.id("generalAssets")).click();
-
         String percent15 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent15);
-        //assertTrue(percent15.equals("84%"));
-
+        assertTrue(percent15.equals("88%"));
         searchSelectTopOptionXpath("Area", "//*[@id=\"geographicalOrigin1\"]/div", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin1\"]/div/div[3]/ul/li[1]/div/a");
-
         String percent16 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent16);
-        //assertTrue(percent16.equals("85%"));
-
+        assertTrue(percent16.equals("89%"));
         searchSelectTopOptionXpath("European union", "//*[@id=\"geographicalOrigin2\"]/div", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/div/input", "//*[@id=\"geographicalOrigin2\"]/div/div[3]/ul/li[1]/div/a");
-
         String percent17 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent17);
-        //assertTrue(percent17.equals("90%"));
-
+        assertTrue(percent17.equals("94%"));
         searchSelectTopOptionXpath("0 to 50 million €", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/div/input", "//*[@id=\"totalFinancialAssetsAlreadyInvested\"]/div/div[3]/ul/li[1]/div/a");
 
         String percent18 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent18);
-        //assertTrue(percent18.equals("96%"));
+        System.out.println("Company Info : " + percent18);
+        assertTrue(percent18.equals("100%"));
 
         scrollElementIntoViewByXpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2");
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
@@ -637,13 +636,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
         wait.until(visibilityOfElementLocated(By.id("custodianHolderAccount")));
 
         String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent0);
         assertTrue(percent0.equals("0%"));
-
         searchSelectTopOptionXpath("Banco de Oro Unibank", "//*[@id=\"custodianHolderAccount\"]/div", "//*[@id=\"custodianHolderAccount\"]/div/div[3]/div/input", "//*[@id=\"custodianHolderAccount\"]/div/div[3]/ul/li[1]/div/a");
 
         String percent1 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
-        System.out.println(percent1);
+        System.out.println("Banking Info : " + percent1);
         assertTrue(percent1.equals("100%"));
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/banking-information/div/div[1]/div[1]/a/h2")).click();
