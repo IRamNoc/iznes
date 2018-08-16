@@ -82,7 +82,7 @@ public class OpenCSDTeamsSubModuleTest {
         searchTeam(teamReference[0], updateName[0], teamDescription[0]);
     }
     @Test
-    public void shouldNotDeleteTeam() throws InterruptedException {
+    public void shouldDeleteTeamIfNo() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
         String[] teamReference = generateRandomTeamReference();
         String[] teamDescription = fillInDescription();
@@ -98,7 +98,7 @@ public class OpenCSDTeamsSubModuleTest {
         selectDeleteTeam("No");
     }
     @Test
-    public void shouldDeleteTeam() throws InterruptedException {
+    public void shouldDeleteTeamIfYes() throws InterruptedException {
         String[] teamName = generateRandomTeamName();
         String[] teamReference = generateRandomTeamReference();
         String[] teamDescription = fillInDescription();
