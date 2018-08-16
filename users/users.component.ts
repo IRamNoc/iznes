@@ -180,7 +180,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Subscribe to the user wallet permissions observable. */
         this.subscriptions['usersChainAccess'] =
             this.userAdminService.getUsersChainAccessSubject().subscribe((list) => {
-                console.log('+++ chain access list', list);
 
                 /* Set raw list. */
                 this.usersChainAccess = list;
@@ -194,11 +193,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
-            console.log('+++ tabId SUB', tabId);
 
-            /* If not list tab, set the chain Id on a tab object */
+            /* If tab is Add User, set the chain Id on a tab object */
             if (Number(tabId) === 1 && this.filteredChainList.length) {
-                console.log('+++ this.filteredChainList', this.filteredChainList);
                 this.setFormChainId(Number(tabId), this.filteredChainList[0]);
             }
         });
@@ -291,17 +288,12 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Ok, first, lets save the chainId that is selcted. */
         const selectedChainId = thisTab['selectedChain'] = data.id;
 
-        console.log('+++ this.allGroupList', this.allGroupList);
-        console.log('+++ selectedChainId', selectedChainId);
-        console.log('+++ data.id', data.id);
-
         /* Now let's filter the groups list to just groups assigned to this chain. */
         const groupsOfThisChain = this.allGroupList.filter((group) => {
             /* Check if group is tx. */
             if (Number(group.groupIsTx) === 1) {
                 /* If we're admin, ignore chainId... */
                 if (Number(this.myDetail.admin) === 1) return true;
-
                 /* ...else check if the group belongs to this one. */
                 return group.chainId === Number(selectedChainId);
             }
@@ -322,6 +314,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Now let's get the list of groups this user is in and filter them against
          the groups we have in this chain's filtered list. */
         const allocatedTxList = this.tabsControl[tabid].allocatedTxList;
+
         const filteredAllocatedGroups = groupsOfThisChain.filter((group) => {
             // loop over each group they're in and check if it's in this chain...
             for (const i in allocatedTxList) {
@@ -973,7 +966,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public getGroupById(id) {
         /* Look for the group and return it... */
         for (const key in this.allGroupList) {
-            if (this.allGroupList[key].groupId === id) {
+            if (this.allGroupList[key].groupId === Number(id)) {
                 return this.allGroupList[key];
             }
         }
@@ -993,7 +986,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public getChainById(id) {
         /* Look for the group and return it... */
         for (const key in this.chainList) {
-            if (this.chainList[key].chainId === id) {
+            if (this.chainList[key].chainId === Number(id)) {
                 return this.chainList[key];
             }
         }
@@ -1170,8 +1163,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.tabsControl[newTabId]['oldTxGroups'] = userTxPermissions; // used to diff later.
             this.tabsControl[newTabId]['allocatedTxList'] = this.groupsToArray(userTxPermissions);
 
-            /* Update the chain ID. */
-            this.setFormChainId(newTabId, 0);
         }).catch((error) => {
             /* Handle the error message */
             this.logService.log('Editing user, tx permissions error: ', error);
@@ -1303,6 +1294,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             /* So we've requested the data, now we can access it. */
             let userChainAccess = this.usersChainAccess[user.userID] || [];
             let resolution;
+
+            /* Update the chain ID. */
+            this.setFormChainId(newTabId, { id: userChainAccess[0].chainID });
 
             /* Let's tidy it up for the ng2-select and patch the value... */
             userChainAccess = userChainAccess.map((chain) => {
