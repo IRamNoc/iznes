@@ -4,7 +4,7 @@
     "description": "The distributed version is in [fund-share-helper-dist](http://si-nexus01.dev.setl.io/OFI_Modules/fund-share-helper-dist)",
     "main": "index.js",
     "scripts": {
-        "test": "mocha -r ts-node/register test-data/**/*.test.ts"
+        "test": "cd ../../../ && npm test"
     },
     "author": "",
     "license": "ISC",
@@ -14,10 +14,6 @@
         "moment-business-days": "^1.0.6"
     },
     "devDependencies": {
-        "@types/chai": "^4.1.2",
-        "@types/mocha": "^5.0.0",
-        "chai": "^4.1.2",
-        "mocha": "^5.1.0",
         "ts-node": "^6.0.0"
     }
 }

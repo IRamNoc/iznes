@@ -9,7 +9,7 @@ import {
     OnInit,
     Output,
     ViewChild,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
@@ -25,7 +25,7 @@ import {
     immutableHelper,
     mDateHelper,
     MoneyValuePipe,
-    NumberConverterService
+    NumberConverterService,
 } from '@setl/utils';
 import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
@@ -33,15 +33,16 @@ import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as FundShareValue from '../../ofi-product/fund-share/fundShareValue';
 import { CalendarHelper } from '../../ofi-product/fund-share/helper/calendar-helper';
-import { OrderHelper, OrderRequest } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderHelper } from '../../ofi-product/fund-share/helper/order-helper';
+import { OrderRequest } from '../../ofi-product/fund-share/helper/models';
 import { OrderByType, OrderType } from '../../ofi-orders/order.model';
 import { ToasterService, Toast } from 'angular2-toaster';
 import { Router } from '@angular/router';
 import { LogService } from '@setl/utils';
 import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
-import { SellBuyCalendar } from "../../ofi-product/fund-share/FundShareEnum";
-import { Moment } from "moment";
+import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
+import { Moment } from 'moment';
 
 @Component({
     selector: 'app-invest-fund',
@@ -229,10 +230,10 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get orderTypeNumber(): number {
-         return {
-             subscribe: 3,
-             redeem: 4,
-         }[this.type];
+        return {
+            subscribe: 3,
+            redeem: 4,
+        }[this.type];
     }
 
     get orderTypeLabel(): string {
@@ -320,7 +321,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return '';
         } else {
             let isValid = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            if(this.allowAmountAndQuantity){
+            if (this.allowAmountAndQuantity) {
                 isValid = isValid && (this.actionBy === 'a');
             }
 
@@ -334,14 +335,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         } else {
             let isValid = this.orderHelper.checkOrderByIsAllow('q').orderValid;
 
-            if(this.allowAmountAndQuantity){
+            if (this.allowAmountAndQuantity) {
                 isValid = isValid && (this.actionBy === 'q');
             }
             return isValid ? null : '';
         }
     }
 
-    get allowAmountAndQuantity(): any{
+    get allowAmountAndQuantity(): any {
         if (typeof this.orderHelper === 'undefined') {
             return false;
         } else {
@@ -489,12 +490,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             this.calenderHelper = new CalendarHelper(this.shareData);
 
             this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
-            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
-            this.updateDateInputs();
+            this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
             if (!!this.shareData.keyFactOptionalData.sri) this.shareData.keyFactOptionalData.sri = this.shareData.keyFactOptionalData.sri[0].text;
             if (!!this.shareData.keyFactOptionalData.srri) this.shareData.keyFactOptionalData.srri = this.shareData.keyFactOptionalData.srri[0].text;
+
+            this.updateDateInputs();
         });
 
         this.connectedWalletOb
@@ -543,8 +545,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
             const cutOffValue = new Date(
                 this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
-                    .format('YYYY-MM-DD HH:mm'),
+                .getCutoffTimeForSpecificDate(moment(v), this.getCalendarHelperOrderNumber())
+                .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -570,8 +572,8 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return setInterval(() => {
             const cutOffValue = new Date(
                 this.calenderHelper
-                    .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
-                    .format('YYYY-MM-DD HH:mm'),
+                .getCutoffTimeForSpecificDate(moment(this.cutoffDate.value), this.getCalendarHelperOrderNumber())
+                .format('YYYY-MM-DD HH:mm'),
             );
 
             const now = new Date();
@@ -801,43 +803,43 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             let orderSuccessMsg = '';
 
             if (this.type === 'sellbuy') {
-               const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
-               const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
+                const orderSubId = _.get(data, ['1', 'Data', '0', 'linkedSubscriptionOrderId'], 0);
+                const orderSubRef = commonHelper.pad(orderSubId, 8, '0');
 
-               const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
-               const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
+                const orderRedeemId = _.get(data, ['1', 'Data', '0', 'linkedRedemptionOrderId'], 0);
+                const orderRedemRef = commonHelper.pad(orderRedeemId, 8, '0');
 
-               orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = `Your order ${orderRedemRef} & ${orderSubRef} has been successfully placed and is now initiated.`;
 
-               if (this.amountTooBig) {
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderSubId,
-                       orderRef: orderSubRef,
-                   });
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderSubId,
+                        orderRef: orderSubRef,
+                    });
 
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderRedeemId,
-                       orderRef: orderRedemRef,
-                   });
-               }
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderRedeemId,
+                        orderRef: orderRedemRef,
+                    });
+                }
             } else {
-               const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
-               const orderRef = commonHelper.pad(orderId, 8, '0');
+                const orderId = _.get(data, ['1', 'Data', '0', 'orderID'], 0);
+                const orderRef = commonHelper.pad(orderId, 8, '0');
 
-               orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
+                orderSuccessMsg = `Your order ${orderRef} has been successfully placed and is now initiated.`;
 
-               if (this.amountTooBig) {
-                   this.sendMessageToAM({
-                       walletID: this.shareData.amDefaultWalletId,
-                       orderTypeLabel: this.orderTypeLabel,
-                       orderID: orderId,
-                       orderRef,
-                   });
-               }
+                if (this.amountTooBig) {
+                    this.sendMessageToAM({
+                        walletID: this.shareData.amDefaultWalletId,
+                        orderTypeLabel: this.orderTypeLabel,
+                        orderID: orderId,
+                        orderRef,
+                    });
+                }
             }
 
             this._toaster.pop('success', orderSuccessMsg);
@@ -1108,7 +1110,7 @@ The IZNES Team.</p>`;
         let orderValueHtml = '';
 
         if (this.type === 'sellbuy') {
-           orderValueHtml = `
+            orderValueHtml = `
                     <tr>
                         <td class="left"><b>Redemption Quantity:</b></td>
                         <td>${quantityStr}</td>
@@ -1315,11 +1317,11 @@ The IZNES Team.</p>`;
      * @return {string}
      */
     getOrderTypeTitle(): string {
-       return {
-           subscribe: this._translate.getTranslationByString('Subscription'),
-           redeem: this._translate.getTranslationByString('Redemption'),
-           sellbuy: this._translate.getTranslationByString('Sell / Buy'),
-       }[this.type];
+        return {
+            subscribe: this._translate.getTranslationByString('Subscription'),
+            redeem: this._translate.getTranslationByString('Redemption'),
+            sellbuy: this._translate.getTranslationByString('Sell / Buy'),
+        }[this.type];
     }
 
     /**
@@ -1348,7 +1350,7 @@ The IZNES Team.</p>`;
             const sellBuyCalendar = Number(this.shareData.sellBuyCalendar);
             if (sellBuyCalendar === SellBuyCalendar.RedemptionCalendar) {
                 orderNumberType = OrderType.Redemption;
-            }else {
+            } else {
                 orderNumberType = OrderType.Subscription;
             }
         } else {

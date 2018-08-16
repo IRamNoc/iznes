@@ -1,4 +1,4 @@
-import { IznShareDetailWithNav } from './order-helper';
+import { IznShareDetailWithNav } from './models';
 import { OrderType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
 import * as momentTz from 'moment-timezone';

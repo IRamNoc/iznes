@@ -1,12 +1,16 @@
-import * as math from 'mathjs';
-
 import { CalendarHelper } from './calendar-helper';
-import { IznesShareDetail } from '../../../ofi-store/ofi-product/fund-share-list/model';
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
-import * as E from '../FundShareEnum';
-import * as ShareValue from '../fundShareValue';
-import * as _ from 'lodash';
+import { get } from 'lodash';
+import {
+    calFee,
+    getRandom8Hex,
+    pad,
+    toNormalScale,
+    calNetAmount,
+    getAmountTwoDecimal,
+    calculateFigures,
+} from './order-calculations';
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
@@ -17,7 +21,7 @@ import {
     ContractData,
     ArrangementData,
     ArrangementActionType,
-    ConditionType
+    ConditionType,
 
 // ** please don't remove this below commented import please,
 // as i use it for building the compiled version
@@ -28,183 +32,31 @@ import {
 import { fixToDecimal } from '@setl/utils/helper/common/math-helper';
 
 import { Base64 } from './base64';
+import {
+    BlockchainNumberDecimal,
+    NormalNumberDecimal,
+    NumberMultiplier,
+    ExpirySecond,
+    orderSettlementThreshold,
+} from './config';
 
-// 30 days
-const orderSettlementThreshold = 30;
-
-// todo
-// need to check the user balance. when redeeming
-
-const BlockchainNumberDecimal = 0;
-
-const NormalNumberDecimal = 5;
-
-export interface OrderRequest {
-    token: string;
-    shareisin: string;
-    portfolioid: string;
-    subportfolio: string;
-    dateby: string; // (cutoff, valuation, settlement)
-    datevalue: string; // (date value relate to dateby)
-    ordertype: string; // ('s', 'r', 'sb')
-    orderby: string; // ('q', 'a' )
-    ordervalue: string; // (order value relate to orderby)
-    comment: string;
-    // The reason we need 'sb'(sell buy) in ordertype, and we want to keep the existing two order type: sub and redeem.
-    // So when we got ordertype of 'sb' in the backend, we want to split the request into two orders (subscription and
-    // redemption), but we also need a way to identify whether a order is sell buy order.
-    // the flag isellbuy does not allow to pass in buy the frontend, the backend will append it to the request accordingly.
-    issellbuy?: boolean;
-}
-
-export interface IznShareDetailWithNav extends IznesShareDetail {
-    price: number;
-    priceDate: string;
-    priceStatus: number;
-    amCompanyID: number;
-    amWalletID: number;
-    amAddress: string;
-    entryFee: number;
-    exitFee: number;
-    hasShareAccess: number;
-    platFormFee: number;
-    investorHoling: number;
-    holidayMgmtConfig: string;
-}
-
-interface VerifyResponse {
-    orderValid: boolean;
-    errorMessage?: string;
-}
-
-interface OrderDates {
-    cutoff: any;
-    valuation: any;
-    settlement: any;
-}
-
-export interface OrderFigures {
-    quantity: number;
-    estimatedQuantity: number;
-    amount: number;
-    estimatedAmount: number;
-    amountWithCost: number;
-    estimatedAmountWithCost: number;
-}
-
-interface OrderTimeStamps {
-    settleTimeStamp: number;
-    expiryTimeStamp: number;
-}
-
-interface OrderPrices {
-    price: number;
-    estimatedPrice: number;
-}
-
-interface OrderRequestBody {
-    investorAddress: string;
-    amCompanyID: number;
-    amWalletID: number;
-    amAddress: string;
-    orderStatus: number;
-    currency: number;
-    fundShareID: number;
-    byAmountOrQuantity: number;
-    price: number;
-    estimatedPrice: number;
-    quantity: number;
-    estimatedQuantity: number;
-    amount: number;
-    estimatedAmount: number;
-    amountWithCost: number;
-    estimatedAmountWithCost: number;
-    feePercentage: number;
-    platFormFee: number;
-    cutoffDate: any;
-    valuationDate: any;
-    settlementDate: any;
-    orderNote: string;
-    contractExpiryTs: number;
-    contractStartTs: number;
-    uniqueRef: string;
-}
-
-interface UpdateOrderResponse {
-    orderID: number;
-    orderType: number;
-    investorWalletID: number;
-    investorAddress: string;
-    amCompanyID: number;
-    amWalletID: number;
-    amAddress: string;
-    orderStatus: number;
-    currency: number;
-    fundShareID: number;
-    byAmountOrQuantity: number;
-    price: number;
-    estimatedPrice: number;
-    quantity: number;
-    estimatedQuantity: number;
-    amount: number;
-    estimatedAmount: number;
-    amountWithCost: number;
-    estimatedAmountWithCost: number;
-    feePercentage: number;
-    platFormFee: number;
-    cutoffDate: string;
-    valuationDate: string;
-    settlementDate: string;
-    orderNote: string;
-    contractAddr: string;
-    contractExpiryTs: number;
-    contractStartTs: number;
-    uniqueRef: string;
-    navEntered: string;
-    canceledBy: number;
-    dateEntered: string;
-    fundShareName: string;
-    isin: string;
-    investorWalletName: string;
-    amComPub: string;
-    amAccountID: number;
-    investorAccountID: number;
-    clientReference: string;
-    subportfolioName: string;
-}
-
-type TX = 'tx';
-type NewContractType = 'conew';
-
-interface ContractRequestBody {
-    messagetype: TX;
-    messagebody: {
-        txtype: NewContractType,
-        walletid: any,
-        address: String,
-        contractdata: ContractData,
-    };
-}
-
-const OrderTypeNumber = {
-    s: 3,
-    r: 4,
-};
-const orderTypeToString = {
-    3: 's',
-    4: 'r',
-};
-
-const OrderByNumber = {
-    q: 1,
-    a: 2,
-};
-
-const NumberMultiplier = 100000;
+import {
+    OrderRequest,
+    IznShareDetailWithNav,
+    VerifyResponse,
+    OrderDates,
+    OrderFigures,
+    OrderTimeStamps,
+    OrderPrices,
+    OrderRequestBody,
+    UpdateOrderResponse,
+    ContractRequestBody,
+    OrderTypeNumber,
+    orderTypeToString,
+    OrderByNumber,
+} from './models';
 
 const AuthoriseRef = 'Confirm payment sent';
-
-const ExpirySecond = 2592000;
 
 export class OrderHelper {
     calendarHelper: CalendarHelper;
@@ -240,9 +92,9 @@ export class OrderHelper {
         return (this.isSellBuy && this.isAllowSellBuy) ?
             0 :
             Number({
-            [OrderType.Subscription]: this.fundShare.entryFee || 0,
-            [OrderType.Redemption]: this.fundShare.exitFee || 0,
-        }[this.orderType]);
+                [OrderType.Subscription]: this.fundShare.entryFee || 0,
+                [OrderType.Redemption]: this.fundShare.exitFee || 0,
+            }[this.orderType]);
     }
 
     get currency() {
@@ -278,7 +130,7 @@ export class OrderHelper {
     }
 
     get isSellBuy(): boolean {
-       return this.orderRequest.ordertype === 'sb' || this.orderRequest.issellbuy;
+        return this.orderRequest.ordertype === 'sb' || this.orderRequest.issellbuy;
     }
 
     get isAllowSellBuy(): boolean {
@@ -364,7 +216,8 @@ export class OrderHelper {
      */
 
     static buildCancelContract(walletId: number, contractAddress: string, commitAddress: string) {
-        const contractData = BlockchainContractService.buildCancelContractMessageBody(contractAddress, commitAddress).contractdata;
+        const contractData = BlockchainContractService
+            .buildCancelContractMessageBody(contractAddress, commitAddress).contractdata;
 
         return {
             messagetype: 'tx',
@@ -443,7 +296,7 @@ export class OrderHelper {
                     reference: orderReference,
                     clientReference: order.clientReference,
                     date: todayStr,
-                    numberOfShares: toNormalScale(Number(holding), 5)
+                    numberOfShares: toNormalScale(Number(holding), 5),
                 },
             },
         };
@@ -457,7 +310,7 @@ export class OrderHelper {
     }
 
     static buildSendMessage(subject: string, mailGeneralContent: string, mailActionJson: any, senderWalletId: number,
-                            senderPub: string, recipientWalletAddresses: Array<string>, hasAction: boolean) {
+                            senderPub: string, recipientWalletAddresses: string[], hasAction: boolean) {
 
         const mailBody = JSON.stringify({
             general: Base64.encode(mailGeneralContent),
@@ -481,19 +334,22 @@ export class OrderHelper {
         };
     }
 
-    static buildAddressRecipients(addresses: Array<string>): { [address: string]: 0 } {
-        return addresses.reduce((result, item, index) => {
-            result[item] = 0;
-            return result;
-        }, {});
+    static buildAddressRecipients(addresses: string[]): { [address: string]: 0 } {
+        return addresses.reduce(
+            (result, item, index) => {
+                result[item] = 0;
+                return result;
+            },
+            {},
+        );
     }
 
     static getAddressFreeBalanceFromHolderResponse(response: any, address: string): number {
-        const encumbrances = _.get(response, ['data', 'encumbrances'], {});
-        const holders = _.get(response, ['data', 'holders'], {});
+        const encumbrances = get(response, ['data', 'encumbrances'], {});
+        const holders = get(response, ['data', 'holders'], {});
 
-        const totalHolding: number = _.get(holders, [address], 0);
-        const encumbered: number = _.get(encumbrances, [address], 0);
+        const totalHolding: number = get(holders, [address], 0);
+        const encumbered: number = get(encumbrances, [address], 0);
 
         return totalHolding - encumbered;
     }
@@ -518,7 +374,9 @@ export class OrderHelper {
      * Build redemption's authorisation commit request body
      *
      * @param {UpdateOrderResponse} order
-     * @return {{messagetype: string; messagebody: {txtype: string; walletid: number; address: string; function: string; contractdata: {contractfunction: string; issuingaddress: string; contractaddress: string; party: any[]; commitment: any[]; receive: any[]; authorise: string[][]}; contractaddress: string}}}
+     * @return {{
+     *  messagetype: string;
+     *  messagebody: {txtype: string; walletid: number; address: string; function: string; contractdata: {contractfunction: string; issuingaddress: string; contractaddress: string; party: any[]; commitment: any[]; receive: any[]; authorise: string[][]}; contractaddress: string}}}
      */
     static buildRedeemAuthorisationCommitReqeustBody(order: UpdateOrderResponse) {
         const authMsg = {
@@ -554,7 +412,6 @@ export class OrderHelper {
         };
     }
 
-
     buildContractData(): VerifyResponse | ContractData {
 
         let arrangementData;
@@ -588,9 +445,8 @@ export class OrderHelper {
         let contractData = BlockchainContractService.arrangementToContractData(arrangementData as ArrangementData);
         if (!OrderHelper.isResponseGood(arrangementData)) {
             return OrderHelper.getChildErrorMessage(contractData);
-        } else {
-            contractData = contractData as Contract;
         }
+        contractData = contractData as Contract;
 
         return contractData.contractData;
     }
@@ -610,9 +466,8 @@ export class OrderHelper {
 
         if (!OrderHelper.isResponseGood(orderFigure as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderFigure);
-        } else {
-            orderFigure = orderFigure as OrderFigures;
         }
+        orderFigure = orderFigure as OrderFigures;
 
         const quantity = orderFigure.quantity;
         const estimatedQuantity = orderFigure.estimatedQuantity;
@@ -626,9 +481,8 @@ export class OrderHelper {
         let orderDates = this.getOrderDates();
         if (!OrderHelper.isResponseGood(orderDates as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDates);
-        } else {
-            orderDates = orderDates as OrderDates;
         }
+        orderDates = orderDates as OrderDates;
 
         const cutoffDate = orderDates.cutoff.utc().format('YYYY-MM-DD HH:mm');
         const valuationDate = orderDates.valuation.utc().format('YYYY-MM-DD HH:mm');
@@ -728,7 +582,9 @@ export class OrderHelper {
 
         // depend on order by cutoff, valuation, and settlement date.
         let dateValid = false;
-        let cutoff, valuation, settlement;
+        let cutoff;
+        let valuation;
+        let settlement;
 
         switch (this.orderRequest.dateby) {
         case 'cutoff':
@@ -761,7 +617,6 @@ export class OrderHelper {
             settlement = this.calendarHelper.getSettlementDateFromCutoff(cutoff, this.orderType);
 
             break;
-
 
         case 'settlement':
             dateValid = this.calendarHelper.isValidSettlementDateTime(this.dateValue, this.orderType);
@@ -801,7 +656,8 @@ export class OrderHelper {
     }
 
     getOrderPrice(): OrderPrices {
-        let price, estimatedPrice;
+        let price;
+        let estimatedPrice;
 
         price = 0;
         estimatedPrice = this.fundShare.price;
@@ -826,7 +682,7 @@ export class OrderHelper {
         if (orderValueToCheck < this.subsequentMinFig) {
             return {
                 orderValid: false,
-                errorMessage: 'Order value does not meet subsequent minimum'
+                errorMessage: 'Order value does not meet subsequent minimum',
             };
         }
 
@@ -848,7 +704,7 @@ export class OrderHelper {
         }
 
         try {
-            return OrderHelper.calculateFigures(
+            return calculateFigures(
                 {
                     feePercentage: this.feePercentage,
                     nav: this.nav,
@@ -865,119 +721,6 @@ export class OrderHelper {
                 errorMessage: e.message,
             };
         }
-    }
-
-    static calculateFigures(
-        order: {
-            orderBy: OrderByType,
-            orderType: OrderType,
-            value: number,
-            nav: number,
-            feePercentage: number,
-        },
-        maxDecimalisation: number,
-        knownNav: boolean,
-    ): OrderFigures {
-        let amount;
-        let quantity;
-        let estimatedQuantity;
-        let estimatedAmount;
-        let fee;
-        let estimatedAmountWithCost;
-        let amountWithCost;
-
-        switch (order.orderBy) {
-        case OrderByType.Quantity:
-            quantity = order.value;
-            estimatedQuantity = quantity;
-
-            /**
-             * amount = unit * nav
-             */
-            amount = 0;
-            estimatedAmount = fixToDecimal((quantity * order.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
-
-            // change to 2 decimal place
-            estimatedAmount = +OrderHelper.getAmountTwoDecimal(estimatedAmount);
-
-            // calculate fee
-            fee = +calFee(estimatedAmount, order.feePercentage);
-
-            // net amount change to 2 decimal place
-            fee = +OrderHelper.getAmountTwoDecimal(fee);
-
-            // net amount
-            estimatedAmountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
-
-            amountWithCost = 0;
-
-            break;
-
-        case OrderByType.Amount:
-            /**
-             * quantity = amount / nav
-             */
-
-            // if redemption amount will always be estimated.
-            estimatedQuantity = fixToDecimal((order.value / order.nav * NumberMultiplier), BlockchainNumberDecimal, 'floor');
-
-            // make sure the quantity meet the share maximumNumberDecimal
-            // 1. convert back to normal number scale
-            // 2. meeting the maximumNumberDecimal, and always round down.
-            // 3. convert back to blockchain number scale
-            estimatedQuantity = fixToDecimal(estimatedQuantity, +maxDecimalisation, 'floor');
-
-            quantity = 0;
-
-            // if we are using known nav, we use the quantity to work out the new amount
-            // if we are using unknow nav, we put the specified amount back.
-            estimatedAmount = order.value;
-            amount = order.value;
-            if (knownNav) {
-                estimatedAmount = fixToDecimal((estimatedQuantity * order.nav / NumberMultiplier), BlockchainNumberDecimal, 'floor');
-
-                // change to 2 decimal place
-                estimatedAmount = +OrderHelper.getAmountTwoDecimal(estimatedAmount);
-
-                amount = estimatedAmount;
-            }
-
-            // calculate fee
-            fee = +calFee(estimatedAmount, order.feePercentage);
-
-            // change to 2 decimal place
-            fee = +OrderHelper.getAmountTwoDecimal(fee);
-
-            // net amount
-            estimatedAmountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
-
-            amountWithCost = +calNetAmount(estimatedAmount, fee, orderTypeToString[order.orderType]);
-
-            break;
-
-        default:
-            throw new Error('Invalid orderBy type');
-        }
-
-        return {
-            quantity,
-            estimatedQuantity,
-            amount,
-            estimatedAmount,
-            amountWithCost,
-            estimatedAmountWithCost,
-        };
-    }
-
-    /**
-     * Get Amount to Two Decimal Places and converts to blockchain number
-     *
-     * @param amount
-     * @returns {number}
-     */
-    static getAmountTwoDecimal(amount) {
-        amount = Math.round((amount / NumberMultiplier) * 100) / 100;
-        return (amount * NumberMultiplier);
     }
 
     getOrderTimeStamp(): OrderTimeStamps {
@@ -1039,7 +782,8 @@ export class OrderHelper {
     }
 
     buildSubscriptionArrangementData(): ArrangementData | VerifyResponse {
-        let actionData, addEncs;
+        let actionData;
+        let addEncs;
         // [investorAddress, issueAsset, '', cpToEncToBank, [[bankAddress, 0, 0], [item.address, 0, 0]], []]
 
         let orderDate = this.getOrderDates();
@@ -1047,12 +791,12 @@ export class OrderHelper {
 
         if (!OrderHelper.isResponseGood(orderDate as VerifyResponse)) {
             return OrderHelper.getChildErrorMessage(orderDate);
-        } else if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
-            return OrderHelper.getChildErrorMessage(orderFigures);
-        } else {
-            orderDate = orderDate as OrderDates;
-            orderFigures = orderFigures as OrderFigures;
         }
+        if (!OrderHelper.isResponseGood(orderFigures as VerifyResponse)) {
+            return OrderHelper.getChildErrorMessage(orderFigures);
+        }
+        orderDate = orderDate as OrderDates;
+        orderFigures = orderFigures as OrderFigures;
 
         const settleTimeStamp = Number(orderDate.settlement.valueOf() / 1000);
         const expiryTimeStamp = settleTimeStamp + ExpirySecond;
@@ -1071,15 +815,22 @@ export class OrderHelper {
                         fromAddress: this.amIssuingAddress,
                         toAddress: this.investorAddress,
                         metaData: {
-                            clientTxType: 'subscription'
-                        }
+                            clientTxType: 'subscription',
+                        },
                     },
-                    actionType: ArrangementActionType.ISSUE
-                }
+                    actionType: ArrangementActionType.ISSUE,
+                },
             ];
 
             addEncs = [
-                [this.investorAddress, this.orderAsset, this.encumberRef, orderFigures.quantity, [], [[this.amIssuingAddress, 0, 0]]]
+                [
+                    this.investorAddress,
+                    this.orderAsset,
+                    this.encumberRef,
+                    orderFigures.quantity,
+                    [],
+                    [[this.amIssuingAddress, 0, 0]],
+                ],
             ];
 
         } else if (this.orderBy === OrderByType.Amount) {
@@ -1100,31 +851,29 @@ export class OrderHelper {
                         fromAddress: this.amIssuingAddress,
                         toAddress: this.investorAddress,
                         metaData: {
-                            clientTxType: 'subscription'
-                        }
+                            clientTxType: 'subscription',
+                        },
                     },
-                    actionType: ArrangementActionType.ISSUE
-                }
+                    actionType: ArrangementActionType.ISSUE,
+                },
             ];
 
             addEncs = [
                 [this.investorAddress, this.orderAsset, this.encumberRef, amountStr,
                     [], [[this.amIssuingAddress, 0, 0]]]];
-
-
         } else {
             return {
                 orderValid: false,
-                errorMessage: 'Invalid action-by type.'
+                errorMessage: 'Invalid action-by type.',
             };
         }
 
         const conditions = [
             {
                 conditionData: {
-                    executeTimeStamp: settleTimeStamp
+                    executeTimeStamp: settleTimeStamp,
                 },
-                conditionType: ConditionType.TIME
+                conditionType: ConditionType.TIME,
             },
             // {
             //     conditionData: {
@@ -1140,16 +889,16 @@ export class OrderHelper {
             conditions,
             datas: [
                 {
-                    'parameter': 'nav',
-                    'address': this.amIssuingAddress
-                }
+                    parameter: 'nav',
+                    address: this.amIssuingAddress,
+                },
             ],
             addEncs,
             expiry: expiryTimeStamp,
             numStep: '1',
             stepTitle: 'Subscription order for ' + this.orderAsset,
             mustSigns: { [this.investorAddress]: false, [this.amIssuingAddress]: false },
-            creatorAddress: 'not being used'  // not being used
+            creatorAddress: 'not being used', // not being used
         };
     }
 
@@ -1228,7 +977,7 @@ export class OrderHelper {
         } else {
             return {
                 orderValid: false,
-                errorMessage: 'Invalid action-by type.'
+                errorMessage: 'Invalid action-by type.',
             };
         }
 
@@ -1269,16 +1018,17 @@ export class OrderHelper {
 
     checkOrderByIsAllow(orderType = this.orderRequest.orderby): VerifyResponse {
 
-        // if the order type is sell buy, we don't care about the 'allow by amount' and 'allow by quantity' in the characteristics.
+        // if the order type is sell buy, we don't care about the
+        // 'allow by amount' and 'allow by quantity' in the characteristics.
         if (this.isSellBuy) {
             // if order type of sell buy is allow in the share.
-           if (this.isAllowSellBuy) {
-               return {
-                   orderValid: true,
-               };
-           }
+            if (this.isAllowSellBuy) {
+                return {
+                    orderValid: true,
+                };
+            }
 
-           // if not allow sell buy, we reject it.
+            // if not allow sell buy, we reject it.
             return {
                 orderValid: false,
                 errorMessage: 'Sell buy is not allow for the share.',
@@ -1388,7 +1138,7 @@ export class OrderHelper {
                 },
             ],
             poareference: this.poaRef,
-            enddate: this.getOrderTimeStamp().expiryTimeStamp
+            enddate: this.getOrderTimeStamp().expiryTimeStamp,
         };
 
         return {
@@ -1425,76 +1175,4 @@ export class OrderHelper {
 
         return true;
     }
-}
-
-/**
- * Calculate order fee.
- *
- * @param amount
- * @param feePercent
- * @return {number}
- */
-export function calFee(amount: number | string, feePercent: number | string): number {
-    amount = Number(amount);
-    feePercent = Number(feePercent) / NumberMultiplier;
-    return fixToDecimal((amount * feePercent), BlockchainNumberDecimal, 'floor');
-}
-
-export function convertToBlockChainNumber(num) {
-    return fixToDecimal((num * NumberMultiplier), BlockchainNumberDecimal, 'floor');
-}
-
-/**
- * Calculate order net amount.
- *
- * @param {number | string} amount
- * @param {number | string} fee
- * @param {string} orderType
- * @return {number}
- */
-export function calNetAmount(amount: number | string, fee: number | string, orderType: string): number {
-    amount = Number(amount);
-    fee = Number(fee);
-    return {
-        s: fixToDecimal((amount + fee), BlockchainNumberDecimal, 'floor'),
-        r: fixToDecimal((amount - fee), BlockchainNumberDecimal, 'floor'),
-    }[orderType];
-}
-
-/**
- *  padding number from left.
- *
- * @param num
- * @param width
- * @param fill
- * @return {string}
- */
-export function pad(num: number, width: number, fill: string): string {
-    const numberStr = num.toString();
-    const len = numberStr.length;
-    return len >= width ? numberStr : new Array(width - len + 1).join(fill) + numberStr;
-}
-
-export function toNormalScale(num: number, numDecimal: number): number {
-    return fixToDecimal((num * NumberMultiplier), numDecimal, 'floor');
-}
-
-/**
- * Get 8 byptes random string
- * @return {string}
- */
-export function getRandom8Hex(): string {
-    try {
-        const crypto = require('crypto');
-        return crypto['randomBytes'](8).toString('hex') + getUnixTsInSec();
-    }catch (e) {
-        // otherwise we are working with browser
-        const arr = new Uint32Array(2);
-        return window.crypto.getRandomValues(arr)[0].toString(16) + window.crypto.getRandomValues(arr)[0].toString(16) + getUnixTsInSec();
-    }
-
-}
-
-export function getUnixTsInSec(): number {
-    return Math.floor(((new Date()).valueOf() / 1000));
 }

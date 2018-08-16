@@ -8,11 +8,7 @@ import * as ofiManageOrdersActions from './actions';
 import { immutableHelper } from '@setl/utils';
 import { fromJS } from 'immutable';
 import { get, merge } from 'lodash';
-import {
-    OrderHelper,
-    IznShareDetailWithNav,
-    OrderFigures,
-} from '@ofi/ofi-main/ofi-product/fund-share/helper/order-helper';
+import { calculateFigures } from '@ofi/ofi-main/ofi-product/fund-share/helper/order-calculations';
 
 /* Initial state. */
 const initialState: ManageOrders = {
@@ -102,7 +98,7 @@ export const OfiManageOrderListReducer = function (
             const nav = action.payload.nav;
             const navDate = nav.valuationDate.substring(0, 10);
 
-            const baseFilter = o => o.orderStatus === 2 && o.valuationDate.substring(0, 10) === navDate;
+            const baseFilter = o => (o.orderStatus === 2 || o.orderStatus === 1) && o.valuationDate.substring(0, 10) === navDate;
             let filter = o => baseFilter(o) && o.isin === nav.isin;
             if (nav.status !== -1) {
                 // Estimated NAV.
@@ -110,7 +106,7 @@ export const OfiManageOrderListReducer = function (
                     .map(k => state.orderList[k])
                     .filter(filter)
                     .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
-                        const figures = OrderHelper.calculateFigures(
+                        const figures = calculateFigures(
                             {
                                 orderBy: order.byAmountOrQuantity,
                                 orderType: order.orderType,
@@ -224,7 +220,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
             }
 
             // Perform price estimates here.
-            const figures = OrderHelper.calculateFigures(
+            const figures = calculateFigures(
                 {
                     orderBy: order.byAmountOrQuantity,
                     orderType: order.orderType,

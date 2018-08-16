@@ -7,7 +7,7 @@ import { immutableHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as _ from 'lodash';
@@ -92,6 +92,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 private _ofiKycObservablesService: OfiKycObservablesService,
                 private _ngRedux: NgRedux<any>,
                 private _fileDownloader: FileDownloader,
+                private _route: ActivatedRoute,
                 private router: Router) {
 
         this.investorTypeForm = new FormGroup({
@@ -120,6 +121,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             clientReferential.forEach((client) => {
                 this.clients[client.kycID] = client;
             });
+
+            if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) this.loadTab(2);
 
             this._changeDetectorRef.markForCheck();
         }));
@@ -162,6 +165,14 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.searchForm.valueChanges.pipe(debounceTime(500)).subscribe((form) => {
             if (this.pageType == 'audit') this.requestAuditSearch();
         }));
+
+        this.subscriptions.push(this._route.params.subscribe((params) => {
+            this.kycId = (params.kycId == 'list' ? '' : params.kycId);
+
+            if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) this.loadTab(2);
+
+            this._changeDetectorRef.markForCheck();
+        }));
     }
 
     requestSearch() {
@@ -174,15 +185,15 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     }
 
     viewClient(id) {
-        this.kycId = id;
-        if (this.clients[id].alreadyCompleted == 0) this.loadTab(2);
+        this.router.navigateByUrl('/client-referential/' + id);
     }
 
     loadTab(tab) {
         if (tab == 2) {
+
             let tempOtherData = {};
-            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID === this.kycId) !== -1) {
-                const kyc = this.amKycList.filter((kyc) => kyc.kycID === this.kycId)[0];
+            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
+                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
 
                 this.companyName = kyc.investorCompanyName;
 
@@ -364,11 +375,6 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             userId: this.userId,
             kycId: this.kycId,
         });
-    }
-
-    changePage(page) {
-        this.pageType = page;
-        this.requestAuditSearch();
     }
 
     ngOnDestroy() {
