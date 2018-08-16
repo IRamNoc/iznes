@@ -192,6 +192,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
+
+            /* If tab is Add User, set the chain Id on a tab object */
+            if (Number(tabId) === 1 && this.filteredChainList.length) {
+                this.setFormChainId(Number(tabId), this.filteredChainList[0]);
+            }
         });
     }
 
@@ -251,6 +256,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+
     }
 
     /**
@@ -281,6 +287,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Ok, first, lets save the chainId that is selcted. */
         const selectedChainId = thisTab['selectedChain'] = data.id;
 
+        console.log('+++ this.allGroupList', this.allGroupList);
+        console.log('+++ selectedChainId', selectedChainId);
+
         /* Now let's filter the groups list to just groups assigned to this chain. */
         const groupsOfThisChain = this.allGroupList.filter((group) => {
             /* Check if group is tx. */
@@ -289,7 +298,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 if (Number(this.myDetail.admin) === 1) return true;
 
                 /* ...else check if the group belongs to this one. */
-                return group.chainId === selectedChainId;
+                return group.chainId === Number(selectedChainId);
             }
 
             /* ...if not, axe it. */
