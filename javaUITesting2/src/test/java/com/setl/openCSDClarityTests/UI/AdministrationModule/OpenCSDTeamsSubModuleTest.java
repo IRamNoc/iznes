@@ -11,6 +11,8 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.JavascriptExecutor;
 
+import java.io.IOException;
+
 import static com.setl.UI.common.SETLUIHelpers.AdministrationModuleHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.loginAndVerifySuccess;
@@ -58,7 +60,57 @@ public class OpenCSDTeamsSubModuleTest {
         selectAddNewTeam();
         fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
         SelectCreateNewTeam();
-        //Unable to search for a specific team (at the moment)
-        //searchTeam(teamReference[0],teamName[0],teamDescription[0]);
+        searchTeam(teamReference[0],teamName[0],teamDescription[0]);
+    }
+    @Test
+    public void shouldUpdateTeam() throws InterruptedException {
+        String[] teamName = generateRandomTeamName();
+        String[] teamReference = generateRandomTeamReference();
+        String[] teamDescription = fillInDescription();
+        String[] updateName = generateUpdateTeamName();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        SelectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectTeamRow0();
+        assertTeamName(teamName[0]);
+        editTeamName(updateName[0]);
+        selectUpdateTeam();
+        searchTeam(teamReference[0], updateName[0], teamDescription[0]);
+    }
+    @Test
+    public void shouldDeleteTeamIfNo() throws InterruptedException {
+        String[] teamName = generateRandomTeamName();
+        String[] teamReference = generateRandomTeamReference();
+        String[] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        SelectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectTeamRow0();
+        assertTeamName(teamName[0]);
+        selectDeleteTeam("No");
+    }
+    @Test
+    public void shouldDeleteTeamIfYes() throws InterruptedException {
+        String[] teamName = generateRandomTeamName();
+        String[] teamReference = generateRandomTeamReference();
+        String[] teamDescription = fillInDescription();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("menu-administration");
+        navigateToDropdown("menu-administration-teams");
+        selectAddNewTeam();
+        fillInTeamsDetails(teamName[0], teamReference[0], teamDescription[0]);
+        SelectCreateNewTeam();
+        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
+        selectTeamRow0();
+        assertTeamName(teamName[0]);
+        selectDeleteTeam("Yes");
     }
 }
