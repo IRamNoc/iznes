@@ -11,5 +11,5 @@
         <li *ngFor="let p of data['permissions']">{{ prettyNames(p['txtype']) }} using assets: {{ p['assets'].join(', ') }} with total quantity: {{ p['amount'] }}</li>
     </ul>
     <hr>
-    <button *ngIf="canAct" [disabled]="inProgress" class="btn btn-primary" (click)="acceptPoa()">Sign</button>
+    <button *ngIf="canAct && !isActed" [disabled]="inProgress" class="btn btn-primary" (click)="acceptPoa()">Sign</button>
 </div>
