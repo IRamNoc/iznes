@@ -256,7 +256,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
-
     }
 
     /**
