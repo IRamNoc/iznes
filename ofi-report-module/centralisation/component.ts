@@ -1,29 +1,29 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
-import {MemberSocketService} from '@setl/websocket-service';
+import { MemberSocketService } from '@setl/websocket-service';
 
-import {NgRedux, select} from '@angular-redux/store';
-import {Unsubscribe} from 'redux';
-import {fromJS} from 'immutable';
+import { NgRedux, select } from '@angular-redux/store';
+import { Unsubscribe } from 'redux';
+import { fromJS } from 'immutable';
 /* Utils. */
-import {ConfirmationService, NumberConverterService} from '@setl/utils';
+import { ConfirmationService, NumberConverterService } from '@setl/utils';
 /* Alerts and confirms. */
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
-import {Subject} from 'rxjs';
+import { Subject } from 'rxjs';
 
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 /* Clarity */
 /* services */
-import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 /* store */
-import {ofiManageOrderActions} from '@ofi/ofi-main/ofi-store';
-import {APP_CONFIG, AppConfig, FileDownloader} from "@setl/utils/index";
+import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
+import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
 import * as moment from 'moment';
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 
-import {mDateHelper} from '@setl/utils';
+import { mDateHelper } from '@setl/utils';
 
 /* Types. */
 interface SelectedItem {
@@ -65,20 +65,20 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     };
 
     currencyList = [
-        {id: 0, text: 'EUR'},
-        {id: 1, text: 'USD'},
-        {id: 2, text: 'GBP'},
-        {id: 3, text: 'CHF'},
-        {id: 4, text: 'JPY'},
-        {id: 5, text: 'AUD'},
-        {id: 6, text: 'NOK'},
-        {id: 7, text: 'SEK'},
-        {id: 8, text: 'ZAR'},
-        {id: 9, text: 'RUB'},
-        {id: 10, text: 'SGD'},
-        {id: 11, text: 'AED'},
-        {id: 12, text: 'CNY'},
-        {id: 13, text: 'PLN'},
+        { id: 0, text: 'EUR' },
+        { id: 1, text: 'USD' },
+        { id: 2, text: 'GBP' },
+        { id: 3, text: 'CHF' },
+        { id: 4, text: 'JPY' },
+        { id: 5, text: 'AUD' },
+        { id: 6, text: 'NOK' },
+        { id: 7, text: 'SEK' },
+        { id: 8, text: 'ZAR' },
+        { id: 9, text: 'RUB' },
+        { id: 10, text: 'SGD' },
+        { id: 11, text: 'AED' },
+        { id: 12, text: 'CNY' },
+        { id: 13, text: 'PLN' },
     ];
 
     fundSpecificDates = [];
@@ -108,7 +108,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     dateTo = '';
     mode = 2;   // 1 = NAV ; 2 = Settlement
 
-    colorScheme = {domain: ['#51AD5B', '#AF2418']};
+    colorScheme = { domain: ['#51AD5B', '#AF2418'] };
     pieChartDatas = [
         {
             name: 'Subscription (%)',
@@ -194,10 +194,10 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         this.isShareLevel = (this.router.url.indexOf('/centralisation/shares') !== -1) ? true : false;
 
         this.fundSpecificDates = [
-            {id: 0, text: _translate.translate('Specific NAV Date')},
-            {id: 1, text: _translate.translate('Specific Settlement Date')},
-            {id: 2, text: _translate.translate('Specific NAV Period')},
-            {id: 3, text: _translate.translate('Specific Settlement Period')},
+            { id: 0, text: _translate.translate('Specific NAV Date') },
+            { id: 1, text: _translate.translate('Specific Settlement Date') },
+            { id: 2, text: _translate.translate('Specific NAV Period') },
+            { id: 3, text: _translate.translate('Specific Settlement Period') },
         ];
 
         this.appConfig = appConfig;
@@ -340,15 +340,15 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     getLanguage(requested): void {
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
             this.changeDetectorRef.markForCheck();
         }
@@ -404,11 +404,14 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     updateFiltersForm() {
-        const today = new Date().toISOString().slice(0,10);
-        const lastMonth = new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().slice(0,10);
-        this.filtersForm.get('specificDate').patchValue([{id: 3, text: this._translate.translate('Specific Settlement Period')}], { emitEvent: false });
+        const tomorrow = moment().add(1, 'days').format('YYYY-MM-DD');
+        const lastMonth = moment().subtract(1, 'month').format('YYYY-MM-DD');
+        this.filtersForm.get('specificDate').patchValue([{
+            id: 3,
+            text: this._translate.translate('Specific Settlement Period')
+        }], { emitEvent: false });
         this.filtersForm.get('dateFrom').patchValue(lastMonth, { emitEvent: false });
-        this.filtersForm.get('dateTo').patchValue(today, { emitEvent: false });
+        this.filtersForm.get('dateTo').patchValue(tomorrow, { emitEvent: false });
         this.filtersForm.get('specificDate').updateValueAndValidity();
         this.filtersForm.get('dateFrom').updateValueAndValidity();
         this.filtersForm.get('dateTo').updateValueAndValidity();
@@ -479,7 +482,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         }
 
         this.dateFrom = (this.filtersForm.controls['dateFrom'].value === '' || this.filtersForm.controls['dateFrom'].value === null) ? '' : this.filtersForm.controls['dateFrom'].value;
-        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null ) && !this.isPeriod) ? '' : this.filtersForm.controls['dateTo'].value;
+        this.dateTo = ((this.filtersForm.controls['dateTo'].value === '' || this.filtersForm.controls['dateTo'].value === null) && !this.isPeriod) ? '' : this.filtersForm.controls['dateTo'].value;
 
         if (this.isFundLevel) {
             this.isFundsPayloadOK = true;
@@ -552,15 +555,15 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     filters: {
                         isin: obj.isin,
                         sharename: obj.shareName,
-                        status: {id : -3},
-                        type: {id : 0},
-                        dateType: {id : 'navDate'},
+                        status: { id: -3 },
+                        type: { id: 0 },
+                        dateType: { id: 'navDate' },
                         fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
                         toDate: moment(obj.navDate).format('YYYY-MM-DD')
                     }
                 };
 
-                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+                this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
                 this.router.navigateByUrl('manage-orders/list');
             }
         }
@@ -571,15 +574,15 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                     filters: {
                         isin: obj.isin,
                         fundname: obj.fundName,
-                        status: {id : -3},
-                        type: {id : 0},
-                        dateType: {id : 'navDate'},
+                        status: { id: -3 },
+                        type: { id: 0 },
+                        dateType: { id: 'navDate' },
                         fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
                         toDate: moment(obj.navDate).format('YYYY-MM-DD')
                     }
                 };
 
-                this.ngRedux.dispatch({type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters});
+                this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
                 this.router.navigateByUrl('manage-orders/list');
             }
         }
