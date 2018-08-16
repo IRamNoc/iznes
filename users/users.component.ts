@@ -180,6 +180,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Subscribe to the user wallet permissions observable. */
         this.subscriptions['usersChainAccess'] =
             this.userAdminService.getUsersChainAccessSubject().subscribe((list) => {
+                console.log('+++ chain access list', list);
+
                 /* Set raw list. */
                 this.usersChainAccess = list;
 
@@ -192,9 +194,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['routeParam'] = this.route.params.subscribe((params: Params) => {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
+            console.log('+++ tabId SUB', tabId);
 
-            /* If tab is Add User, set the chain Id on a tab object */
+            /* If not list tab, set the chain Id on a tab object */
             if (Number(tabId) === 1 && this.filteredChainList.length) {
+                console.log('+++ this.filteredChainList', this.filteredChainList);
                 this.setFormChainId(Number(tabId), this.filteredChainList[0]);
             }
         });
@@ -289,6 +293,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         console.log('+++ this.allGroupList', this.allGroupList);
         console.log('+++ selectedChainId', selectedChainId);
+        console.log('+++ data.id', data.id);
 
         /* Now let's filter the groups list to just groups assigned to this chain. */
         const groupsOfThisChain = this.allGroupList.filter((group) => {
