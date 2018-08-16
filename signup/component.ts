@@ -1,12 +1,10 @@
-import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
 import { Subscription } from 'rxjs';
 
-import { MyUserService } from '@setl/core-req-services';
 import { setLanguage } from '@setl/core-store';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
 
@@ -20,19 +18,19 @@ import * as Model from './model';
 export class SignupComponent implements OnDestroy, OnInit {
     appConfig: AppConfig;
     invitationToken = '';
+    language: string;
     redirectURL: string;
     signupForm: FormGroup;
     showPassword: boolean = false;
     showConfirmPassword: boolean = false;
 
-    private configuration: Model.ISignupConfiguration;
     private subscriptions: Subscription[] = [];
 
+    @Input() configuration: Model.ISignupConfiguration;
+    @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
+
     constructor(private ngRedux: NgRedux<any>,
-                private router: Router,
-                private myUserService: MyUserService,
                 private activatedRoute: ActivatedRoute,
-                private alertsService: AlertsService,
                 public translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
@@ -42,6 +40,15 @@ export class SignupComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.initSignupForm();
         this.getQueryParams();
+
+        this.signupDataEmit.emit(() => {
+            return {
+                username: this.signupForm.controls.username.value,
+                password: this.signupForm.controls.password.value,
+                invitationToken: this.invitationToken,
+                language: this.language,
+            };
+        });
 
         window.onbeforeunload = null;
     }
@@ -82,6 +89,7 @@ export class SignupComponent implements OnDestroy, OnInit {
             }
 
             const lang = params.lang;
+            this.language = lang;
             if (lang) {
                 const languages = {
                     en: 'en-Latn',
@@ -95,11 +103,6 @@ export class SignupComponent implements OnDestroy, OnInit {
                 }
             }
         }));
-
-    }
-
-    private configure(configuration: Model.ISignupConfiguration): void {
-        this.configuration = configuration;
     }
 
     private passwordValidator(g: FormGroup) {
