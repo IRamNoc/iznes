@@ -180,7 +180,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Subscribe to the user wallet permissions observable. */
         this.subscriptions['usersChainAccess'] =
             this.userAdminService.getUsersChainAccessSubject().subscribe((list) => {
-
                 /* Set raw list. */
                 this.usersChainAccess = list;
 
