@@ -176,7 +176,7 @@ export class NewRequestService {
             doneAt: ['', this.getLengthValidator()],
             doneDate: ['', Validators.required],
             positionRepresentative: ['', this.getLengthValidator()],
-            electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature')
+            electronicSignatureDocument: this.createDocumentFormGroup('electronicsignature', !this.isProduction)
         });
     }
 
