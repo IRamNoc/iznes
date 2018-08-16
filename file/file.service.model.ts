@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface AddFileMessageBody extends MemberNodeMessageBody {
     token: string;
@@ -12,3 +12,10 @@ export interface GetHistoricalCsvMessageBody extends MemberNodeMessageBody {
     dateFrom: string;
     dateTo: string;
 }
+
+export interface ValidateFileMessageBody extends MemberNodeMessageBody {
+    token: string;
+    walletId: string;
+    fileHash: string;
+}
+
