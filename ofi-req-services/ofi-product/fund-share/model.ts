@@ -32,3 +32,9 @@ export interface IznDeleteShareDraftRequestBody extends MemberNodeMessageBody {
     token: string;
     id: string;
 }
+
+export interface validateKiidRequestBody extends MemberNodeMessageBody {
+    token: string;
+    walletID: number;
+    shareID: number;
+}

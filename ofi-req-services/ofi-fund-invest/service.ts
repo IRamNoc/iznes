@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
 import {
     RequetFundAccessMy,
     AddArrangementRequestBody,
@@ -7,16 +7,20 @@ import {
     AddArrangementContractMapRequestBody,
     InsertIssueAssetMapBody,
 } from './model';
-import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {NgRedux} from '@angular-redux/store';
+import { SagaHelper, Common } from '@setl/utils';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { NgRedux } from '@angular-redux/store';
 import * as _ from 'lodash';
 
-import {setRequestedFundAccessMy, clearRequestedFundAccessMy, SET_FUND_ACCESS_MY} from '../../ofi-store/ofi-fund-invest';
+import { setRequestedFundAccessMy, clearRequestedFundAccessMy, SET_FUND_ACCESS_MY } from '../../ofi-store/ofi-fund-invest';
 
 @Injectable()
 export class OfiFundInvestService {
-    constructor(private memberSocketService: MemberSocketService) {
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux,
+    ) {
+
     }
 
     /**
@@ -31,7 +35,7 @@ export class OfiFundInvestService {
         ngRedux.dispatch(setRequestedFundAccessMy());
 
         // Request the list.
-        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy({walletId});
+        const asyncTaskPipe = ofiFundInvestService.requestFundAccessMy({ walletId });
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_ACCESS_MY],
@@ -41,7 +45,21 @@ export class OfiFundInvestService {
         ));
     }
 
-    requestFundAccessMy(requestData: {walletId: number}): any {
+    fetchFundAccessMy(walletId: number) {
+        const asyncTaskPipe = this.requestFundAccessMy({ walletId });
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_FUND_ACCESS_MY],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(setRequestedFundAccessMy());
+            },
+        ));
+    }
+
+    requestFundAccessMy(requestData: { walletId: number }): any {
         const messageBody: RequetFundAccessMy = {
             RequestName: 'izngetmyfundshareaccesslist',
             token: this.memberSocketService.token,

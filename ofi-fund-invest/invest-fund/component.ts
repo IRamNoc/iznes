@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import * as _ from 'lodash';
-import { Subscription, Subject } from 'rxjs';
+import { Subscription, Subject, combineLatest } from 'rxjs';
 import { distinctUntilChanged, take, takeUntil, throttleTime } from 'rxjs/operators';
 import { NgRedux, select } from '@angular-redux/store';
 import * as moment from 'moment-business-days';
@@ -27,7 +27,12 @@ import {
     MoneyValuePipe,
     NumberConverterService,
 } from '@setl/utils';
-import { InitialisationService, MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
+import {
+    InitialisationService,
+    MyWalletsService,
+    WalletNodeRequestService,
+    FileService,
+} from '@setl/core-req-services';
 import { setRequestedWalletAddresses } from '@setl/core-store';
 import { OfiOrdersService } from '../../ofi-req-services/ofi-orders/service';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
@@ -43,6 +48,12 @@ import { MultilingualService } from '@setl/multilingual';
 import { MessagesService } from '@setl/core-messages';
 import { SellBuyCalendar } from '../../ofi-product/fund-share/FundShareEnum';
 import { Moment } from 'moment';
+
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FileViewerPreviewService } from '@setl/core-fileviewer/preview-modal/service';
+import { FileDownloader } from '@setl/utils/services/file-downloader/service';
+import { validateKiid } from '@ofi/ofi-main/ofi-store/ofi-fund-invest/ofi-fund-access-my';
 
 @Component({
     selector: 'app-invest-fund',
@@ -178,6 +189,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     calenderHelper: CalendarHelper;
 
     redeemedAll: Boolean;
+
+    kiidModal = {
+        isOpen: false,
+        url: null,
+        filename: null,
+    };
 
     /**
      * This function pads floats as string with zeros
@@ -444,26 +461,35 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         };
     }
 
-    constructor(private _changeDetectorRef: ChangeDetectorRef,
-                public _moneyValuePipe: MoneyValuePipe,
-                private _myWalletService: MyWalletsService,
-                private _walletNodeRequestService: WalletNodeRequestService,
-                private _numberConverterService: NumberConverterService,
-                private _ofiOrdersService: OfiOrdersService,
-                private _alertsService: AlertsService,
-                private _confirmationService: ConfirmationService,
-                private _toaster: ToasterService,
-                private _router: Router,
-                private logService: LogService,
-                public _translate: MultilingualService,
-                private _ngRedux: NgRedux<any>,
-                private _messagesService: MessagesService) {
+    constructor(
+        private _changeDetectorRef: ChangeDetectorRef,
+        public _moneyValuePipe: MoneyValuePipe,
+        private _myWalletService: MyWalletsService,
+        private _walletNodeRequestService: WalletNodeRequestService,
+        private _numberConverterService: NumberConverterService,
+        private _ofiOrdersService: OfiOrdersService,
+        private _alertsService: AlertsService,
+        private _confirmationService: ConfirmationService,
+        private _toaster: ToasterService,
+        private _router: Router,
+        private logService: LogService,
+        public _translate: MultilingualService,
+        private _ngRedux: NgRedux<any>,
+        private _messagesService: MessagesService,
+
+        public sanitizer: DomSanitizer,
+        private fileDownloader: FileDownloader,
+        private fileService: FileService,
+        private shareService: OfiFundShareService,
+    ) {
+
     }
 
     ngOnDestroy() {
         if (this.toastTimer) {
             clearInterval(this.toastTimer);
         }
+        this.kiidModal.isOpen = false;
 
         this.unSubscribe.next();
         this.unSubscribe.complete();
@@ -520,14 +546,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // List of observable subscription.
         this.shareDataOb
-        .pipe(
-            takeUntil(this.unSubscribe),
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe((shareData) => {
-            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
-            this.calenderHelper = new CalendarHelper(this.shareData);
+            .subscribe((shareData) => {
+                this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+                this.calenderHelper = new CalendarHelper(this.shareData);
 
-            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+                this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
             this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
@@ -538,48 +564,65 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         });
 
         this.connectedWalletOb
-        .pipe(
-            takeUntil(this.unSubscribe),
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe(connected => {
-            this.connectedWalletId = connected;
-        });
+            .subscribe(connected => {
+                this.connectedWalletId = connected;
+            });
+
+        combineLatest(
+            this.shareDataOb,
+            this.connectedWalletOb,
+        )
+            .pipe(
+                distinctUntilChanged(),
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe(([shareData, connectedWallet]) => {
+                if (!shareData || !connectedWallet) {
+                    return;
+                }
+                if (!this.shareData.hasValidatedKiid) {
+                    this.validateKiid();
+                }
+            });
 
         this.addressListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe(addressList => this.updateAddressList(addressList));
+            .subscribe(addressList => this.updateAddressList(addressList));
 
         this.requestedAddressListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe(requested => this.requestAddressList(requested));
+            .subscribe(requested => this.requestAddressList(requested));
 
         this.requestedLabelListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
+            .pipe(
+                takeUntil(this.unSubscribe),
         )
-        .subscribe(requested => this.requestWalletLabel(requested));
+            .subscribe(requested => this.requestWalletLabel(requested));
 
         this.cutoffDate.valueChanges
-        .pipe(
-            takeUntil(this.unSubscribe),
-            distinctUntilChanged(),
-            throttleTime(1000),
+            .pipe(
+                takeUntil(this.unSubscribe),
+                distinctUntilChanged(),
+                throttleTime(1000),
         )
-        .subscribe((v) => {
-            if (this.toastTimer) {
-                clearInterval(this.toastTimer);
-            }
-            if (this.timerToast) {
-                this._toaster.clear(this.timerToast.toastId);
-                this.timerToast = null;
-            }
-            if (!v) {
-                return;
-            }
+            .subscribe((v) => {
+                if (this.toastTimer) {
+                    clearInterval(this.toastTimer);
+                }
+                if (this.timerToast) {
+                    this._toaster.clear(this.timerToast.toastId);
+                    this.timerToast = null;
+                }
+                if (!v) {
+                    return;
+                }
 
             const cutOffValue = new Date(
                 this.calenderHelper
@@ -587,12 +630,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 .format('YYYY-MM-DD HH:mm'),
             );
 
-            const now = new Date();
+                const now = new Date();
 
-            const remainingTime = cutOffValue.getTime() - now.getTime();
-            this.updateToastTimer(remainingTime);
-            this.toastTimer = this.setToastTimer();
-        });
+                const remainingTime = cutOffValue.getTime() - now.getTime();
+                this.updateToastTimer(remainingTime);
+                this.toastTimer = this.setToastTimer();
+            });
     }
 
     updateToastTimer(unixtime: number) {
@@ -1313,7 +1356,7 @@ The IZNES Team.</p>`;
     showAlertCutOffError() {
         if (this.doValidate) {
             this._alertsService
-            .create('error', `
+                .create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
@@ -1322,13 +1365,13 @@ The IZNES Team.</p>`;
                         </tbody>
                     </table>
                 `)
-            .pipe(
-                take(1),
+                .pipe(
+                    take(1),
             )
-            .subscribe(() => {
-                this.disclaimer.setValue(false);
-                this.cutoffDate.setErrors({ tooLate: true });
-            });
+                .subscribe(() => {
+                    this.disclaimer.setValue(false);
+                    this.cutoffDate.setErrors({ tooLate: true });
+                });
         }
     }
 
@@ -1540,6 +1583,50 @@ The IZNES Team.</p>`;
             `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
+    validateKiid() {
+
+        this.fileService.validateFile(this.shareData.kiid).then((result) => {
+            const data = result[1].Data;
+            if (data.error) {
+                this._alertsService.create('error', `
+                    <table class="table grid">
+                        <tbody>
+                            <tr>
+                                <td class="text-center text-error">Unable to view file</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `);
+                return;
+            }
+
+            this.fileDownloader.getDownLoaderUrl({
+                method: 'retrieve',
+                walletId: this.connectedWalletId,
+                downloadId: data.downloadId,
+            }).subscribe((res) => {
+
+                const url = this.sanitizer.bypassSecurityTrustResourceUrl(res.url);
+
+                this.kiidModal = {
+                    isOpen: true,
+                    url,
+                    filename: data.filename,
+                };
+
+                this._changeDetectorRef.markForCheck();
+            });
+        });
+    }
+
+    onValidateKiid() {
+        this.shareService.validateKiid(this.connectedWalletId, this.shareData.fundShareID)
+            .then(() => {
+                this.kiidModal.isOpen = false;
+                this._changeDetectorRef.markForCheck();
+                this._ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
+            });
+    }
 }
 
 /**

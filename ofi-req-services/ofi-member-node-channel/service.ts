@@ -1,6 +1,6 @@
 /* Core/Angular imports. */
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
 /* Actions. */
 import {
     clearrequested,
@@ -11,30 +11,40 @@ import {
     ofiClearRequestedIssuedAssets,
     ofiClearRequestedManageOrder,
     ofiUpdateOrder,
-    setamkyclist
+    setamkyclist,
+    ofiClearRequestedMyOrder,
 } from '../../ofi-store';
-import {clearRequestedUmbrellaFund} from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-import {clearRequestedIznesFunds} from '../../ofi-store/ofi-product/fund/fund-list/actions';
-import {clearRequestedIznesShares} from '../../ofi-store/ofi-product/fund-share-list/actions';
-import {clearRequestedPrecentraFundsList, clearRequestedPrecentraSharesList} from '../../ofi-store/ofi-reports/precentralisation-reports/actions';
-import {setInvestorInvitationListReset} from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
+import { clearRequestedUmbrellaFund } from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
+import { clearRequestedIznesFunds } from '../../ofi-store/ofi-product/fund/fund-list/actions';
+import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
+import {
+    clearRequestedPrecentraFundsList,
+    clearRequestedPrecentraSharesList,
+} from '../../ofi-store/ofi-reports/precentralisation-reports/actions';
+import { setInvestorInvitationListReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/invitationsByUserAmCompany';
 import { setStatusAuditTrailReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/status-audit-trail';
 
-
-import {resetHomepage} from '@setl/core-store';
-import {ofiClearHolderDetailRequested, ofiClearRequestedAmHolders} from "../../ofi-store/ofi-reports/holders/actions";
-import {LogService} from "@setl/utils";
+import { resetHomepage } from '@setl/core-store';
+import { ofiClearHolderDetailRequested, ofiClearRequestedAmHolders } from '../../ofi-store/ofi-reports/holders/actions';
+import { OfiFundInvestService } from '../ofi-fund-invest/service';
+import { LogService } from '@setl/utils';
 
 /* Service class. */
 @Injectable()
 export class OfiMemberNodeChannelService {
 
+    connectedWalletID: number;
+
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+
     /* Constructor. */
     constructor(
         private ngRedux: NgRedux<any>,
         private logService: LogService,
+        private fundInvestService: OfiFundInvestService,
     ) {
-        /* Stub. */
+        this.connectedWallet$
+            .subscribe(v => this.connectedWalletID = v);
     }
 
     /**
@@ -90,6 +100,7 @@ export class OfiMemberNodeChannelService {
             case 'getfundaccessmy':
                 this.ngRedux.dispatch(clearRequestedNavFundsList());
                 this.ngRedux.dispatch(clearRequestedFundAccessMy());
+                this.fundInvestService.fetchFundAccessMy(this.connectedWalletID);
                 break;
 
             case 'iznesupdateorder':
