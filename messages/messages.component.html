@@ -109,21 +109,16 @@
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
                 <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
-
-
                 </setl-message-form-action>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
                 <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
-
-
                 </setl-message-connection>
             </p>
 
             <p *ngIf="currentMessage.action
-                    && ['kycApproved', 'kycInvestorYes', 'kycInvestorNo', 'kycUserFinished', 'kycInvestorCompletion', 'kycContinuedFromRequest', 'kycContinuedFromAskMoreInfo'].indexOf(currentMessage.action.type) !== -1"
-            >
+                    && ['kycApproved', 'kycInvestorYes', 'kycInvestorNo', 'kycUserFinished', 'kycInvestorCompletion', 'kycContinuedFromRequest', 'kycContinuedFromAskMoreInfo'].indexOf(currentMessage.action.type) !== -1">
                 <setl-message-kyc [config]="currentMessage.action"></setl-message-kyc>
             </p>
 
@@ -136,7 +131,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
-                <setl-message-poa [data]="currentMessage.action.data"></setl-message-poa>
+                <setl-message-poa [data]="currentMessage.action.data" [isActed]="currentMessage.isActed" [walletId]="connectedWalletId" [mailId]="currentMessage.mailId"></setl-message-poa>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
