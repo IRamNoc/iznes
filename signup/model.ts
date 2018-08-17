@@ -1,10 +1,11 @@
 export interface ISignupConfiguration {
+    doLoginAfterCallback: boolean;
     buttonText?: string;
     description?: string;
     redirectURL?: string;
     title?: string;
 
-    signupCallback?: (form: ISignupForm) => Promise<any>;
+    signupCallback?: (form: ISignupForm) => Promise<void>;
 }
 
 export interface ISignupForm {
