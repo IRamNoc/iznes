@@ -377,6 +377,15 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         });
     }
 
+    changePage(page) {
+        if (page == this.pageType) {
+            this.viewClient('list');
+        } else {
+            this.pageType = page;
+        }
+
+    }
+
     ngOnDestroy() {
         for (let key of this.subscriptions) {
             key.unsubscribe();
