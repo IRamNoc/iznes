@@ -13,6 +13,7 @@ import {
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual/multilingual.module';
 import { PermissionGridModule } from '@setl/permission-grid';
+import { SetlLoginModule } from '@setl/core-login';
 
 import {
     AccountAdminCreateUpdateBase,
@@ -44,6 +45,8 @@ import {
     UsersStatusComponent,
 } from './users';
 
+import { AccountSignUpComponent, AccountSignupService } from './signup';
+
 @NgModule({
     imports: [
         RouterModule,
@@ -59,6 +62,7 @@ import {
         SetlDirectivesModule,
         MultilingualModule,
         PermissionGridModule,
+        SetlLoginModule,
     ],
     declarations: [
         AccountAdminCreateUpdateBase,
@@ -77,6 +81,7 @@ import {
         AccountAdminStatusComponentBase,
         UserTeamsStatusComponent,
         UsersStatusComponent,
+        AccountSignUpComponent,
     ],
     providers: [
         UserTeamsService,
@@ -84,6 +89,7 @@ import {
         UserManagementServiceBase,
         AccountAdminPermissionsServiceBase,
         AccountAdminBaseService,
+        AccountSignupService,
     ],
     exports: [],
 })

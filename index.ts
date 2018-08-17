@@ -11,3 +11,5 @@ export {
     UsersCreateUpdateComponent,
     UsersListComponent,
 } from './users';
+
+export { AccountSignUpComponent } from './signup/component';

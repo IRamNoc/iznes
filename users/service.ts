@@ -24,7 +24,6 @@ import {
     ReadUsersAuditRequest,
     UpdateUserStatusRequest,
     InviteUserRequest,
-    ReadUserPermissionsRequest,
 } from './model';
 
 @Injectable()
@@ -310,12 +309,14 @@ export class UsersService extends AccountAdminBaseService {
         const request: InviteUserRequest = {
             RequestName: 'inviteuser',
             token: this.memberSocketService.token,
-            userID: userId,
+            userId,
             userFirstName,
             recipientEmailAddress,
             localeCode,
             assetManagerName,
         };
+
+        console.log(request);
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 

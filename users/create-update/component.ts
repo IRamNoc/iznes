@@ -42,6 +42,7 @@ export class UsersCreateUpdateComponent
     usersPanelOpen: boolean = true;
     userTypes;
 
+    private user: Model.AccountAdminUser;
     private userTeamsSelected: TeamModel.AccountAdminTeam[];
 
     @select(['userAdmin', 'userTypes', 'userTypes']) userTypesOb;
@@ -87,12 +88,6 @@ export class UsersCreateUpdateComponent
         this.teamMembershipsTooltip = {
             text: this.translate.translate(`Add users to this team. Users will inherit
                 the permissions outlined in User permissions.`),
-            size: 'small',
-        };
-
-        this.createUserTooltip = {
-            text: this.translate.translate(`Create a new user on the platform. You maybe also send them
-                and invitation to use the platform.`),
             size: 'small',
         };
     }
@@ -178,8 +173,10 @@ export class UsersCreateUpdateComponent
 
     private onReadUserSuccess(data): void {
         const user: Model.AccountAdminUser = data[1].Data[0];
+        this.user = user;
 
         this.initForm(user.userType);
+        this.initCreateTooltip();
 
         this.form.firstName.preset = user.firstName;
         this.form.lastName.preset = user.lastName;
@@ -188,6 +185,19 @@ export class UsersCreateUpdateComponent
         this.form.reference.preset = user.reference;
 
         this.status = user.userStatus === 1 ? true : false;
+    }
+
+    private initCreateTooltip(): void {
+        this.createUserTooltip = {
+            text: this.translate.translate(`Create a new user on the platform. You maybe also send them
+                and invitation to use the platform.`),
+            size: 'small',
+        };
+
+        if (this.user.invitationToken) {
+            this.createUserTooltip.text +=
+                `<br /><br />Last invite: ${this.user.invitationDate} (${this.user.invitationEmail})`;
+        }
     }
 
     getUserTeams(teams: TeamModel.AccountAdminTeam[]): void {
