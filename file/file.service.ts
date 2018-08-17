@@ -1,9 +1,16 @@
-import {Injectable} from '@angular/core';
-import {DomSanitizer} from "@angular/platform-browser";
-import {MemberSocketService} from '@setl/websocket-service';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
-import {AddFileMessageBody, GetHistoricalCsvMessageBody} from './file.service.model';
-import {select} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { MemberSocketService } from '@setl/websocket-service';
+import {
+    createMemberNodeSagaRequest,
+    createMemberNodeRequest,
+} from '@setl/utils/common';
+import {
+    AddFileMessageBody,
+    GetHistoricalCsvMessageBody,
+    ValidateFileMessageBody,
+} from './file.service.model';
+import { select } from '@angular-redux/store';
 import * as _ from 'lodash';
 
 interface AddFileRequest {
@@ -48,4 +55,14 @@ export class FileService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    validateFile(fileHash: string) {
+        const messageBody: ValidateFileMessageBody = {
+            RequestName: 'validateFile',
+            token: this.memberSocketService.token,
+            walletId: this.connectedWallet,
+            fileHash,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
 }
