@@ -1,0 +1,12 @@
+::ng-deep
+.permission-grid .option-box .fa {
+    margin: 0;
+}
+
+.permission-grid td.left:first-child, .permission-grid th.left:first-child {
+    padding-left: 10px;
+}
+
+.permission-grid tr:hover {
+    background-color: #eee;
+}

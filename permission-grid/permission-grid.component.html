@@ -1,29 +1,28 @@
 <div class="permission-grid">
     <table class="table">
         <thead *ngIf="permissionLevels.length">
-            <th>Permission Area</th>
-            <!-- Permission Levels Headers. -->
-            <th
-            *ngFor="let level of permissionLevels">
-                {{level.text}}
-            </th>
+        <th class="left">Permission Area</th>
+        <!-- Permission Levels Headers. -->
+        <th *ngFor="let level of permissionLevels">
+            {{level.text}}
+        </th>
         </thead>
 
         <tbody *ngIf="permissionAreas.length">
-            <!-- Each Permission Row. -->
-            <tr *ngFor="let area of permissionAreas">
-                <td class="v-middle">
-                    <span>{{area.text}}</span>
-                </td>
-                <td *ngFor="let level of permissionLevels">
-                    <!-- Option List, defaults to this grid. -->
-                    <options-list
-                        (selected)="updateValue( area.id, level.id, $event.id)"
-                        [initData]="rawComponentData[area.id][level.id]"
-                        [metaData]="{ 'permissionId': area.id, 'levelId': level.id }"
-                    ></options-list>
-                </td>
-            </tr>
+        <!-- Each Permission Row. -->
+        <tr *ngFor="let area of permissionAreas">
+            <td class="v-middle left">
+                <span>{{area.text}}</span>
+            </td>
+            <td *ngFor="let level of permissionLevels">
+                <!-- Option List, defaults to this grid. -->
+                <options-list
+                    (selected)="updateValue( area.id, level.id, $event.id)"
+                    [initData]="rawComponentData[area.id][level.id]"
+                    [metaData]="{ 'permissionId': area.id, 'levelId': level.id }"
+                ></options-list>
+            </td>
+        </tr>
         </tbody>
     </table>
 </div>
