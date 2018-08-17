@@ -206,9 +206,12 @@ public class AdministrationModuleHelper {
         wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]")));
         if (Answer == "Yes") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+            //Directs to overview page
+            wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
         }
         if (Answer == "No") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
+            wait.until(visibilityOfElementLocated(By.id("name")));
         }
     }
 }
