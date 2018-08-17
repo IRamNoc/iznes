@@ -21,7 +21,7 @@
       "<rootDir>/node_modules/(?!@setl/utils)"
     ],
     "testMatch": [
-      "**/__tests__/*.+(ts|tsx|js)"
+      "**/__tests__/*.+(ts|tsx)"
     ]
   },
   "devDependencies": {

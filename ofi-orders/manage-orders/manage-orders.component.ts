@@ -48,7 +48,7 @@ import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
 import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
-import { getOrderFigures } from '../../ofi-product/fund-share/helper/order-view-helper';
+import { getOrderFigures, getOrderTypeString } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
@@ -307,6 +307,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.isInvestorUser && this.connectedWalletId) {
                 this.subscriptions.push(this.requestedOfiInvestorFundListOb.subscribe((requested) => this.requestMyFundAccess(requested)));
                 this.subscriptions.push(this.fundShareAccessListOb.subscribe(fundShareAccessList => this.fundShareListObj = fundShareAccessList));
+            } else if(!this.isInvestorUser && this.connectedWalletId) {
+                this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
+                this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
             }
         }));
 
@@ -316,8 +319,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         orderStream$ = this.requestedOfiAmOrdersOb;
         orderListStream$ = this.OfiAmOrdersListOb;
         this.subscriptions.push(orderListStream$.subscribe((list) => this.getAmOrdersListFromRedux(list)));
-        this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
-        this.subscriptions.push(this.shareListObs.subscribe(shares => this.fundShareListObj = shares));
 
 
         this.createForm();
@@ -383,8 +384,8 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
                 this.fundShareID = order.fundShareID;
                 let tabTitle = '';
-                if (order.orderType === 3) tabTitle += 'Subscription: ';
-                if (order.orderType === 4) tabTitle += 'Redemption: ';
+                if (order.orderType === 3) tabTitle += this.getOrderTypeString(order) + ': ';
+                if (order.orderType === 4) tabTitle += this.getOrderTypeString(order) + ': ';
                 tabTitle += ' ' + this.getOrderRef(this.orderID);
 
                 const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
@@ -641,6 +642,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                     orderNote: _.get(order, 'orderNote', ''),
                     orderStatus: _.get(order, 'orderStatus', 1),
                     orderType: _.get(order, 'orderType', 0),
+                    sellBuyLinkOrderID: _.get(order, 'sellBuyLinkOrderID', 0),
                     settlementDate: _.get(order, 'settlementDate', ''),
                     totalResult: _.get(order, 'totalResult', 0),
                     valuationDate: _.get(order, 'valuationDate'),
@@ -975,7 +977,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         // this.loading = false; // temp debug
 
         // send request only if changes
-        if (JSON.stringify(tmpDataGridParams) !== JSON.stringify(this.dataGridParams)) {
+        if (!_.isEqual(tmpDataGridParams, this.dataGridParams)) {
             this.loading = true;
             this.getOrdersList();
         }
@@ -997,15 +999,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             asyncTaskPipe,
             {},
         ));
-    }
-
-    showTypes(order) {
-        const obj = this.orderTypes.find(o => o.id === order.orderType);
-        if (obj !== undefined) {
-            return obj.text;
-        } else {
-            return 'Not found!';
-        }
     }
 
     showInvestor(order) {
@@ -1033,7 +1026,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    buildLink(order, index, event) {
+    buildLink(order, event, orderIdKey = 'orderID') {
         if (
             !event.target.classList.contains('datagrid-expandable-caret') &&
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
@@ -1041,10 +1034,18 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ) {
             let dest = '';
             if (this.isInvestorUser) {
-                dest = 'order-book/my-orders/' + order.orderID;
+                dest = 'order-book/my-orders/' + order[orderIdKey];
+
+                if (orderIdKey === 'sellBuyLinkOrderID') {
+                    this.location.replaceState('order-book/my-orders/list');
+                }
             } else {
-                dest = 'manage-orders/' + order.orderID;
+                dest = 'manage-orders/' + order[orderIdKey];
+                if (orderIdKey === 'sellBuyLinkOrderID') {
+                    this.location.replaceState('manage-orders/list');
+                }
             }
+
             this.router.navigateByUrl(dest);
         }
     }
@@ -1236,5 +1237,26 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
         this.amConfirmModal = {};
+    }
+
+    /**
+     * Get order type string with consideration of transation
+     *
+     * @param {{orderId: number | string; sellBuyLinkOrderID: number | string}} orderData
+     * @return {string | boolean}
+     */
+    getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string;}): string | boolean {
+       const orderString = getOrderTypeString(orderData);
+       return this._translate.getTranslationByString(orderString);
+    }
+
+    /**
+     * check if order is a sell buy order
+     *
+     * @param {{sellBuyLinkOrderID}} orderData
+     * @return {boolean}
+     */
+    isSellBuyOrder(orderData: {sellBuyLinkOrderID}): boolean {
+        return orderData.sellBuyLinkOrderID;
     }
 }

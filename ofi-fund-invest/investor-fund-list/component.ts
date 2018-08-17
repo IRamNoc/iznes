@@ -450,4 +450,5 @@ export class OfiInvestorFundListComponent implements OnInit, OnDestroy {
     allowSellBuy(share: { allowSellBuy: number }): boolean {
         return (share.allowSellBuy === 1);
     }
+
 }

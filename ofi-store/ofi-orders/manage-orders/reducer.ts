@@ -205,6 +205,7 @@ function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
                 orderNote: item.get('orderNote'),
                 orderStatus: item.get('orderStatus'),
                 orderType: item.get('orderType'),
+                sellBuyLinkOrderID: item.get('sellBuyLinkOrderID'),
                 platFormFee: item.get('platFormFee'),
                 price: item.get('price'),
                 quantity: item.get('quantity'),
