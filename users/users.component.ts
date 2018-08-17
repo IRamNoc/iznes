@@ -88,8 +88,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     setInitialTabs() {
-
-        // Get opened tabs from redux store.
+        /* Get opened tabs from redux store. */
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['userAdmin', 'users', 'openedTabs']);
 
         if (_.isEmpty(openedTabs)) {
@@ -125,6 +124,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Recover tabs, and then re-init persist. */
         this.tabsControl = openedTabs;
+
         this.tabsControl[1].formControl =
             this.persistService.watchForm('useradmin/newUser', this.tabsControl[1].formControl);
     }
@@ -193,7 +193,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
 
-            /* If tab is Add User, set the chain Id on a tab object */
+            /* If tab is a user tab (i.e. not 'Search' (0) or 'Add User' (1)) then... */
+            if (Number(tabId) > 1) {
+                const accountType = this.tabsControl[tabId].formControl.value.accountType[0];
+                /* ...update the wallets available to the user using their account type. */
+                this.setFormAccountId(tabId, accountType);
+            }
+
+            /* If tab is 'Add User', set the chain Id on a tab object. */
             if (Number(tabId) === 1 && this.filteredChainList.length) {
                 this.setFormChainId(Number(tabId), this.filteredChainList[0]);
             }
@@ -201,7 +208,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-
         this.subscriptions['chainList'] = this.chainListObservable.subscribe((chainList) => {
             /* Variables. */
             let chainId;
@@ -242,7 +248,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         });
 
         /* Subscribe to the wallets list. */
-
         this.subscriptions['manageWalletList'] = this.manageWalletsListOb.subscribe((manageWalletList) => {
             /* Set raw list. */
             this.manageWalletList = manageWalletList;
@@ -260,7 +265,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Update User List
-     * -----------------
+     * ----------------
      * Updates the user list grid
      *
      * @return {void}
@@ -283,6 +288,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public setFormChainId(tabid, data): void {
         const thisTab = this.tabsControl[tabid];
+
         /* Ok, first, lets save the chainId that is selcted. */
         const selectedChainId = thisTab['selectedChain'] = data.id;
 
@@ -314,14 +320,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         const allocatedTxList = this.tabsControl[tabid].allocatedTxList;
 
         const filteredAllocatedGroups = groupsOfThisChain.filter((group) => {
-            // loop over each group they're in and check if it's in this chain...
+            /* loop over each group they're in and check if it's in this chain... */
             for (const i in allocatedTxList) {
                 if (allocatedTxList[i].id === group.id) {
                     return true;
                 }
             }
 
-            // ...else return negative.
+            /* ...else return negative. */
             return false;
         });
 
@@ -334,7 +340,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Set Form Account Id
-     * -----------------
+     * -------------------
      * Sets the account Id on a tab object, to be used by the tab forms.
      *
      * @param  {tabid} number - The tab id to be set.
@@ -344,7 +350,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     public setFormAccountId(tabid, data): void {
         const thisTab = this.tabsControl[tabid];
-        /* Ok, first, lets save the account Id that is selcted. */
+        /* Ok, first, lets save the account Id that is selected. */
         const selectedAccount = thisTab['selectedAccount'] = data;
 
         /* And now filter the new list to the new account. */
@@ -372,7 +378,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Added Wallet Selection
-     * ------------------------
+     * ----------------------
      * Adds a wallet selection form the opposite wallet dropdown.
      *
      * @param {fullAccess} number - A 1 is full access was changed, 0 not.
@@ -429,7 +435,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Added group Wallet Selection
-     * ------------------------
+     * ----------------------------
      * Adds a group wallet selection form the opposite wallet dropdown.
      *
      * @param {fullAccess} number - A 1 is full access was changed, 0 not.
@@ -487,7 +493,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Convert To Array
-     * ---------------
+     * ----------------
      * Converts an object that holds objects in keys into an array of those same
      * objects.
      *
@@ -507,7 +513,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Filter Groups Lists
-     * -----------------
+     * -------------------
      * Updates the filtered group lists used by UI elements.
      *
      * @return {void}
@@ -546,7 +552,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Convert Groups To Array
-     * ---------------
+     * -----------------------
      * Converts an object that holds objects in keys into an array of those same
      * objects.
      *
@@ -995,7 +1001,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Get Wallet By Id
-     * ---------------
+     * ----------------
      * Get a full wallet object by Id.
      *
      * @param  {id} number - th group id.
@@ -1465,7 +1471,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Validates Password Fields
-     * --------------------------
+     * -------------------------
      * Checks the 2 password fields match and throws an error if not
      *
      * @param {FormGroup} g
@@ -1483,7 +1489,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /**
      * Show An Alert Message
-     * ------------------
+     * ---------------------
      * Shows a success, warning or error popup.
      *
      * @param  {type} string - the type of alert to show.
