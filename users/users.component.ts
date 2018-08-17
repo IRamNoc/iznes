@@ -193,8 +193,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             const tabId = _.get(params, 'tabid', 0);
             this.setTabActive(tabId);
 
-            /* If tablId is a user tab (i.e. not 'Search' (0) or 'Add User' (1)) then... */
-            if (tabId > 1) {
+            /* If tab is a user tab (i.e. not 'Search' (0) or 'Add User' (1)) then... */
+            if (Number(tabId) > 1) {
                 const accountType = this.tabsControl[tabId].formControl.value.accountType[0];
                 /* ...update the wallets available to the user using their account type. */
                 this.setFormAccountId(tabId, accountType);
