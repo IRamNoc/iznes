@@ -3,10 +3,17 @@ import { ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { NgRedux } from '@angular-redux/store';
 import { Subscription } from 'rxjs';
+import * as _ from 'lodash';
 
-import { setLanguage } from '@setl/core-store';
+import {
+    SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
+    SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
+    SET_PRODUCTION, setLanguage,
+} from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
-import { APP_CONFIG, AppConfig } from '@setl/utils';
+import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { MyUserService } from '@setl/core-req-services';
 
 import * as Model from './model';
 
@@ -29,9 +36,11 @@ export class SignupComponent implements OnDestroy, OnInit {
     @Input() configuration: Model.ISignupConfiguration;
     @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
 
-    constructor(private ngRedux: NgRedux<any>,
+    constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
                 public translate: MultilingualService,
+                private alertsService: AlertsService,
+                private myUserService: MyUserService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -99,7 +108,7 @@ export class SignupComponent implements OnDestroy, OnInit {
                 };
 
                 if (languages[lang] != null) {
-                    this.ngRedux.dispatch(setLanguage(languages[lang]));
+                    this.redux.dispatch(setLanguage(languages[lang]));
                 }
             }
         }));
@@ -124,7 +133,62 @@ export class SignupComponent implements OnDestroy, OnInit {
     signup(form: Model.ISignupForm) {
         if (!this.configuration.signupCallback) return;
 
-        this.configuration.signupCallback(form);
+        this.configuration.signupCallback(form).then(() => {
+            if (this.configuration.doLoginAfterCallback) this.loginAfterSignup();
+        });
+    }
+
+    private loginAfterSignup(): void {
+        const loginRequestAction = loginRequestAC();
+        this.redux.dispatch(loginRequestAction);
+
+        const asyncTaskPipe = this.myUserService.loginRequest({
+            username: this.signupForm.controls.username.value,
+            password: this.signupForm.controls.password.value,
+        });
+
+        this.redux.dispatch(SagaHelper.runAsync(
+            [SET_LOGIN_DETAIL, SET_AUTH_LOGIN_DETAIL, SET_PRODUCTION],
+            [RESET_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL],
+            asyncTaskPipe,
+            {},
+            () => {
+            },
+            (data) => {
+                this.handleLoginFailMessage(data);
+            },
+        ));
+    }
+
+    private handleLoginFailMessage(data) {
+        const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
+
+        switch (responseStatus) {
+        case 'fail':
+            this.showLoginErrorMessage(
+                'warning',
+                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
+            );
+            break;
+        case 'locked':
+            this.showLoginErrorMessage(
+                'info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                'Please contact Setl support.</span>',
+            );
+            break;
+        default:
+            this.showLoginErrorMessage(
+                'error',
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, ' +
+                'please try again.</span>',
+            );
+            break;
+        }
+    }
+
+    private showLoginErrorMessage(type, msg) {
+        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
     }
 
     showFieldError(control: FormControl): boolean {
