@@ -1,37 +1,37 @@
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
-import {FormGroup, FormControl, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs/Subscription';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { Subscription } from 'rxjs/Subscription';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
 
-import {walletHelper, mDateHelper} from '@setl/utils';
+import { walletHelper, mDateHelper } from '@setl/utils';
 import {
     setRequestedWalletAddresses,
-    setRequestedWalletToRelationship
+    setRequestedWalletToRelationship,
 } from '@setl/core-store';
 import {
     WalletNodeRequestService,
     InitialisationService,
-    MyWalletsService
+    MyWalletsService,
 } from '@setl/core-req-services';
 
-import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
-import {DVPContractService} from './dvp.service';
-import {ContractService} from '../services';
+import { DvpParty, DvpForm, DvpFormParty, partyA, partyB } from './dvp.model';
+import { DVPContractService } from './dvp.service';
+import { ContractService } from '../services';
 
 @Component({
     selector: 'setl-contracts-dvp',
     templateUrl: 'dvp.component.html',
-    styleUrls: ['dvp.component.css']
+    styleUrls: ['dvp.component.css'],
 })
-export class ContractsDvpComponent implements OnInit {
+export class ContractsDvpComponent implements OnInit, OnDestroy {
     createContractForm: FormGroup;
     parties: [DvpParty, DvpParty];
 
     allInstrumentList: any[];
     connectedWalletId: number;
-    subscriptionsArray: Subscription[] = [];
+    subscriptions: Subscription[] = [];
     addressList: any[];
     toRelationshipSelectItems: any[];
     walletDirectoryList: {} = {};
@@ -43,7 +43,7 @@ export class ContractsDvpComponent implements OnInit {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
 
-    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationshipState;
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationship$;
     @select(['wallet', 'walletRelationship', 'toRelationshipList']) toRelationshipListOb;
 
     @select(['wallet', 'walletDirectory', 'walletList']) directoryListOb;
@@ -69,38 +69,47 @@ export class ContractsDvpComponent implements OnInit {
      * Redux
      */
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe(connected => {
+        this.subscriptions.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
         }));
 
-        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(requested => this.requestAllInstrument(requested)));
-        this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
+        this.subscriptions.push(
+            this.requestedAllInstrumentOb.subscribe((requested) => {
+                this.requestAllInstrument(requested);
+            }),
+        );
+        this.subscriptions.push(this.allInstrumentOb.subscribe((instrumentList) => {
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
 
-        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
+        this.subscriptions.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
         }));
 
-        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe(requested => {
+        this.subscriptions.push(this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
             this.changeDetectorRef.markForCheck();
         }));
 
-        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+        this.subscriptions.push(this.requestedLabelListOb.subscribe((requested) => {
+            this.requestWalletLabel(requested);
+        }));
 
-        this.subscriptionsArray.push(this.requestedToRelationshipState.subscribe((requested) => {
+        this.subscriptions.push(this.requestedToRelationship$.subscribe((requested) => {
             this.requestWalletToRelationship(requested);
         }));
 
-        this.subscriptionsArray.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
-            this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(toRelationshipList, this.walletDirectoryList);
+        this.subscriptions.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
+            this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(
+                toRelationshipList,
+                this.walletDirectoryList,
+            );
             this.changeDetectorRef.markForCheck();
         }));
 
-        this.subscriptionsArray.push(this.directoryListOb.subscribe((directoryList) => {
+        this.subscriptions.push(this.directoryListOb.subscribe((directoryList) => {
             this.walletDirectoryList = directoryList;
             this.changeDetectorRef.markForCheck();
         }));
@@ -108,7 +117,10 @@ export class ContractsDvpComponent implements OnInit {
 
     private requestAllInstrument(requested: boolean): void {
         if (!requested) {
-            InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
+            InitialisationService.requestAllInstruments(
+                this.ngRedux,
+                this.walletNodeRequestService,
+            );
         }
     }
 
@@ -116,13 +128,21 @@ export class ContractsDvpComponent implements OnInit {
         if (!requested && this.connectedWalletId !== 0) {
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(
+                this.ngRedux,
+                this.walletNodeRequestService,
+                this.connectedWalletId,
+            );
         }
     }
 
     private requestWalletLabel(requested: boolean): void {
         if (!requested && this.connectedWalletId !== 0) {
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(
+                this.ngRedux,
+                this.myWalletService,
+                this.connectedWalletId,
+            );
         }
     }
 
@@ -130,7 +150,11 @@ export class ContractsDvpComponent implements OnInit {
         if (!requestedInstrumentState) {
             this.ngRedux.dispatch(setRequestedWalletToRelationship());
 
-            InitialisationService.requestToRelationship(this.ngRedux, this.myWalletService, this.connectedWalletId);
+            InitialisationService.requestToRelationship(
+                this.ngRedux,
+                this.myWalletService,
+                this.connectedWalletId,
+            );
         }
     }
 
@@ -140,11 +164,11 @@ export class ContractsDvpComponent implements OnInit {
     private initParties(): void {
         this.parties = [{
             id: partyA,
-            title: 'Party A'
+            title: 'Party A',
         }, {
             id: partyB,
             title: 'Party B',
-            toggleAssetReturn: true
+            toggleAssetReturn: true,
         }];
     }
 
@@ -152,9 +176,15 @@ export class ContractsDvpComponent implements OnInit {
         const currentDate = moment(mDateHelper.getCurrentUnixTimestamp());
 
         this.createContractForm = new FormGroup({
-            'creator': new FormControl('', Validators.required),
-            'expireDate': new FormControl(currentDate.add(1, 'days').format('YYYY-MM-DD'), Validators.required),
-            'expireTime': new FormControl(currentDate.format('HH:mm'), Validators.required)
+            creator: new FormControl('', Validators.required),
+            expireDate: new FormControl(
+                currentDate.add(1, 'days').format('YYYY-MM-DD'),
+                Validators.required,
+            ),
+            expireTime: new FormControl(
+                currentDate.format('HH:mm'),
+                Validators.required,
+            ),
         });
 
         this.addPartiesToForm();
@@ -174,10 +204,10 @@ export class ContractsDvpComponent implements OnInit {
 
     private generatePartyFormGroup(): FormGroup {
         return new FormGroup({
-            'asset': new FormControl('', Validators.required),
-            'address': new FormControl('', Validators.required),
-            'amount': new FormControl('', Validators.required),
-            'return_asset': new FormControl(false, Validators.required)
+            asset: new FormControl('', Validators.required),
+            address: new FormControl('', Validators.required),
+            amount: new FormControl('', Validators.required),
+            return_asset: new FormControl(false, Validators.required),
         });
     }
 
@@ -188,8 +218,14 @@ export class ContractsDvpComponent implements OnInit {
 
     private toggleReturnAsset(value: boolean): void {
         if (value) {
-            this.createContractForm.controls[partyB].get('asset').setValidators(Validators.required);
-            this.createContractForm.controls[partyB].get('amount').setValidators(Validators.required);
+            this.createContractForm
+                .controls[partyB]
+                .get('asset')
+                .setValidators(Validators.required);
+            this.createContractForm
+                .controls[partyB]
+                .get('amount')
+                .setValidators(Validators.required);
         } else {
             this.createContractForm.controls[partyB].get('asset').clearValidators();
             this.createContractForm.controls[partyB].get('amount').clearValidators();
@@ -203,35 +239,36 @@ export class ContractsDvpComponent implements OnInit {
         return this.createContractForm.valid;
     }
 
-    getError(): any {
-        if (this.fieldHasError('creator')) {
+    getError(): { mltag: string, text: string }|false {
+        switch (true) {
+        case this.fieldHasError('creator'):
             return {
                 mltag: 'txt_contracterror_creator',
-                text: 'Creator Address is Required'
+                text: 'Creator Address is Required',
             };
-        } else if (this.fieldHasError('expireDate')) {
+        case this.fieldHasError('expireDate'):
             return {
                 mltag: 'txt_contracterror_expiredate',
-                text: 'Expire Date is Required'
+                text: 'Expire Date is Required',
             };
-        } else if (this.fieldHasError('expireTime')) {
+        case this.fieldHasError('expireTime'):
             return {
                 mltag: 'txt_contracterror_expiretime',
-                text: 'Expire Time is Required'
+                text: 'Expire Time is Required',
             };
-        } else if (this.fieldHasError(partyA)) {
+        case this.fieldHasError(partyA):
             return {
                 mltag: 'txt_contracterror_partya',
-                text: 'Party A is invalid'
+                text: 'Party A is invalid',
             };
-        } else if (this.fieldHasError(partyB)) {
+        case this.fieldHasError(partyB):
             return {
                 mltag: 'txt_contracterror_partyb',
-                text: 'Party B is invalid'
+                text: 'Party B is invalid',
             };
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     fieldHasError(field: string): boolean {
@@ -252,13 +289,12 @@ export class ContractsDvpComponent implements OnInit {
             this.parties,
             this.createContractForm.value,
             this.connectedWalletId,
-            (res) => this.showResponseModal(res),
-            (res) => this.showErrorModal(res)
+            res => this.showResponseModal(res),
+            res => this.showErrorModal(res),
         );
     }
 
     showResponseModal(createContractResponse) {
-        // const expiryDate = moment.unix(createContractResponse.contractdata.expiry).format('DD/MM/YY HH:mm:ss');
         const expiryDate = 'Broken, Check Code';
 
         this.alertsService.create('success', `
@@ -287,13 +323,12 @@ export class ContractsDvpComponent implements OnInit {
 
     showErrorModal(data): void {
         this.alertsService.create('error',
-            `${data[1].status}`);
+                                  `${data[1].status}`);
     }
 
     ngOnDestroy() {
-        for (const subscription of this.subscriptionsArray) {
+        for (const subscription of this.subscriptions) {
             subscription.unsubscribe();
         }
     }
-
 }

@@ -1,15 +1,16 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ContractsComponent} from '@setl/core-contracts/contracts.component';
-import {ContractsDvpComponent} from '@setl/core-contracts/dvp/dvp.component';
-import {ClarityModule} from '@clr/angular';
-import {SelectModule, SetlPipesModule, SetlComponentsModule} from '@setl/utils';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ContractsComponent } from '@setl/core-contracts/contracts.component';
+import { ContractsDvpComponent } from '@setl/core-contracts/dvp/dvp.component';
+import { ClarityModule } from '@clr/angular';
+import { SelectModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
 import {
     FormsModule,
     ReactiveFormsModule,
 } from '@angular/forms';
-import {ContractService} from './services';
-import {DVPContractService} from './dvp/dvp.service';
+import { ContractService } from './services';
+import { DVPContractService } from './dvp/dvp.service';
+import { CommitComponent } from './commit.component';
 
 @NgModule({
     imports: [
@@ -19,20 +20,20 @@ import {DVPContractService} from './dvp/dvp.service';
         ReactiveFormsModule,
         ClarityModule.forRoot(),
         SetlPipesModule,
-        SetlComponentsModule
+        SetlComponentsModule,
     ],
     declarations: [
         ContractsComponent,
-        ContractsDvpComponent
+        ContractsDvpComponent,
     ],
     exports: [
         ContractsComponent,
-        ContractsDvpComponent
+        ContractsDvpComponent,
     ],
     providers: [
         ContractService,
-        DVPContractService
-    ]
+        DVPContractService,
+    ],
 })
 
 export class ContractsModule {

@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {ContractModel} from '../models';
-import {PartyService} from '../services/party.service';
-import {PartyModel} from '../models';
-import {AuthorisationService} from '../services/authorisation.service';
-import {AuthorisationModel} from '../models';
-import {ParameterItemService} from '../services/parameterItem.service';
-import {ParameterItemModel} from '../models';
-import {EncumbranceService} from '../services/encumbrance.service';
-import {EncumbranceModel} from '../models';
+import { Injectable } from '@angular/core';
+import { PartyService } from '../services/party.service';
+import { AuthorisationService } from '../services/authorisation.service';
+import { AuthorisationModel, ParameterItemModel, PayListItemModel, ReceiveListItemModel, EncumbranceModel, UseEncumbranceModel, PartyModel, ContractModel } from '../models';
+import { ParameterItemService } from '../services/parameterItem.service';
+import { EncumbranceService } from '../services/encumbrance.service';
+import { SagaHelper } from '@setl/utils';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { NgRedux, select } from '@angular-redux/store';
+import { WalletNodeRequestService } from '@setl/core-req-services';
 
 @Injectable()
 export class ContractService {
@@ -17,13 +16,21 @@ export class ContractService {
     private authorisationService: AuthorisationService;
     private parameterItemService: ParameterItemService;
     private encumbranceService: EncumbranceService;
-    public addresses: Array<any> = new Array();
+    public addresses: string[] = [];
+    private walletId: number;
 
-    constructor() {
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
+
+    constructor(
+        private walletNodeRequest: WalletNodeRequestService,
+        private redux: NgRedux<any>,
+    ) {
         this.partyService = new PartyService();
         this.authorisationService = new AuthorisationService();
         this.parameterItemService = new ParameterItemService();
         this.encumbranceService = new EncumbranceService();
+
+        this.connectedWalletId$.subscribe(id => this.walletId = id);
     }
 
     /**
@@ -35,6 +42,7 @@ export class ContractService {
      * @returns {ContractModel}
      */
     public fromJSON(json, addresses): ContractModel {
+        console.log('Contract JSON', json);
         this.addresses = addresses;
         if (typeof json === 'string') {
             json = JSON.parse(json);
@@ -55,6 +63,11 @@ export class ContractService {
             delete contract.contractdata;
         }
 
+        if (json.hasOwnProperty('encumbrance')) {
+            contract.encumbrance.use = json.encumbrance[0];
+            contract.encumbrance.reference = json.encumbrance[1];
+        }
+
         // Parties
         if (typeof contract.parties !== 'undefined' && contract.parties !== null) {
             if (typeof contract.parties[0] === 'number') {
@@ -62,7 +75,8 @@ export class ContractService {
             }
             contract.payors = [];
             contract.payees = [];
-            contract.status = 'Completed';
+            contract.status = (contract.__completed === -1) ? 'Completed' : 'Pending';
+
             _.each(contract.parties, (partyJson, partyIndex) => {
                 if (typeof partyJson !== 'number') {
                     contract.parties[partyIndex] = this.partyService.fromJSON(partyJson);
@@ -75,19 +89,20 @@ export class ContractService {
                             }
                         });
                     }
+
                     if (contract.parties[partyIndex].receiveList.length > 0) {
                         contract.payees[partyIndex] = '';
                         _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
                             if (typeof receiveListItem.quantity !== 'undefined') {
-                                contract.payees[partyIndex] += (+receiveListItem.quantity).toFixed(2) +
-                                    ' ' + receiveListItem.assetId + ' | ' + receiveListItem.namespace;
+                                contract.payees[partyIndex] += (+receiveListItem.quantity)
+                                .toFixed(2) +
+                                    ` ${receiveListItem.assetId} | ${receiveListItem.namespace}`;
                             }
                         });
                     }
-                    contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(contract.parties[partyIndex].sigAddress);
-                }
-                if (contract.__completed === 0) {
-                    contract.status = 'Pending';
+                    contract.parties[partyIndex].sigAddress_label = this.getAddressLabel(
+                        contract.parties[partyIndex].sigAddress,
+                    );
                 }
             });
             contract.name = contract.__address;
@@ -100,7 +115,9 @@ export class ContractService {
         // Authorisations
         if (typeof contract.authorisations !== 'undefined' && contract.authorisations !== null) {
             _.each(contract.authorisations, (authorisationJson, authorisationIndex) => {
-                contract.authorisations[authorisationIndex] = this.authorisationService.fromJSON(authorisationJson);
+                contract.authorisations[authorisationIndex] = this.authorisationService.fromJSON(
+                    authorisationJson,
+                );
             });
         }
 
@@ -110,15 +127,20 @@ export class ContractService {
             const parameters = contract.parameters;
             contract.parameters = [];
             _.each(parameters, (parameterJson, parameterKey) => {
-                contract.parameters[parameterIndex] = this.parameterItemService.fromJSON(parameterJson, parameterKey);
-                parameterIndex++;
+                contract.parameters[parameterIndex] = this.parameterItemService.fromJSON(
+                    parameterJson,
+                    parameterKey,
+                );
+                parameterIndex += 1;
             });
         }
 
         // Encumbrances
         if (typeof contract.addencumbrances !== 'undefined' && contract.addencumbrances !== null) {
             _.each(contract.addencumbrances, (encumbranceJson, encumbranceIndex) => {
-                contract.addencumbrances[encumbranceIndex] = this.encumbranceService.fromJSON(encumbranceJson);
+                contract.addencumbrances[encumbranceIndex] = this.encumbranceService.fromJSON(
+                    encumbranceJson,
+                );
             });
         }
 
@@ -138,6 +160,7 @@ export class ContractService {
             'protocol',
             'expiry',
             'parties',
+            'encumbrance',
             'addencumbrances',
             'encumbrance',
             'issuingaddress',
@@ -154,16 +177,18 @@ export class ContractService {
         ];
 
         const contractJsonObject: any = {
-            contractdata: {}
+            contractdata: {},
         };
 
         for (const index in contractDataFields) {
             if (stringifyDataFields.indexOf(contractDataFields[index]) !== -1 &&
                 typeof contract[contractDataFields[index]] !== 'undefined'
             ) {
-                contractJsonObject.contractdata[contractDataFields[index]] = this.convertSubModels(contract[contractDataFields[index]]);
+                contractJsonObject.contractdata[contractDataFields[index]]
+                    = this.convertSubModels(contract[contractDataFields[index]]);
             } else {
-                contractJsonObject.contractdata[contractDataFields[index]] = contract[contractDataFields[index]];
+                contractJsonObject.contractdata[contractDataFields[index]]
+                    = contract[contractDataFields[index]];
             }
         }
 
@@ -198,6 +223,92 @@ export class ContractService {
         contract.addencumbrances.push(encumbrance);
     }
 
+    public commitParty(party: PartyModel, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            const commitment = party.payList.map((item: PayListItemModel, idx) => {
+                return [idx, item.namespace, item.assetId, item.quantity, '', ''];
+            });
+            const receive = party.receiveList.map((item: ReceiveListItemModel, idx) => {
+                return [idx, party.sigAddress];
+            });
+            const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+                walletid: this.walletId,
+                address: party.sigAddress,
+                function: contract.function + '_commit',
+                contractdata: {
+                    commitment,
+                    receive,
+                    contractfunction: contract.function + '_commit',
+                    issuingaddress: contract.issuingaddress,
+                    contractaddress: contract.address,
+                    party: [
+                        party.partyIdentifier,
+                        '',
+                        '',
+                    ],
+                    parties: contractJson.parties,
+                },
+                contractaddress: contract.address,
+            });
+            this.redux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                }
+            ));
+        });
+    }
+
+    public commitParameter(key: string, value: any, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            // const commitment = party.payList.map((item: PayListItemModel, idx) => {
+            //     return [idx, item.namespace, item.assetId, item.quantity, '', ''];
+            // });
+            // const receive = party.receiveList.map((item: ReceiveListItemModel, idx) => {
+            //     return [idx, party.sigAddress];
+            // });
+            // const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+            //     walletid: this.walletId,
+            //     address: party.sigAddress,
+            //     function: contract.function + '_commit',
+            //     contractdata: {
+            //         commitment,
+            //         receive,
+            //         contractfunction: contract.function + '_commit',
+            //         issuingaddress: contract.issuingaddress,
+            //         contractaddress: contract.address,
+            //         // party: [
+            //         //     party.partyIdentifier,
+            //         //     '',
+            //         //     '',
+            //         // ],
+            //         parameters: contractJson.parameters
+            //     },
+            //     contractaddress: contract.address,
+            // });
+            // this.redux.dispatch(SagaHelper.runAsync(
+            //     [],
+            //     [],
+            //     asyncTaskPipe,
+            //     {},
+            //     (data) => {
+            //         resolve(data);
+            //     },
+            //     (data) => {
+            //         reject(data);
+            //     }
+            // ));
+        });
+    }
+
     public convertSubModels(subModels) {
         if (typeof subModels === 'undefined') {
             return;
@@ -205,22 +316,22 @@ export class ContractService {
         let jsonArray: any = [];
         _.each(subModels, (subModel) => {
             switch (subModel.constructor.name) {
-                case 'AuthorisationModel':
-                    jsonArray.push(this.authorisationService.toJSON(subModel));
-                    break;
-                case 'ParameterItemModel':
-                    jsonArray = {};
-                    jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
-                    break;
-                case 'PartyModel':
-                    if (jsonArray.length === 0) {
-                        jsonArray.push(subModels.length);
-                    }
-                    jsonArray.push(this.partyService.toJSON(subModel));
-                    break;
-                case 'EncumbranceModel':
-                    jsonArray.push(this.encumbranceService.toJSON(subModel));
-                    break;
+            case 'AuthorisationModel':
+                jsonArray.push(this.authorisationService.toJSON(subModel));
+                break;
+            case 'ParameterItemModel':
+                jsonArray = {};
+                jsonArray[subModel.key] = this.parameterItemService.toJSON(subModel);
+                break;
+            case 'PartyModel':
+                if (jsonArray.length === 0) {
+                    jsonArray.push(subModels.length);
+                }
+                jsonArray.push(this.partyService.toJSON(subModel));
+                break;
+            case 'EncumbranceModel':
+                jsonArray.push(this.encumbranceService.toJSON(subModel));
+                break;
             }
         });
         return jsonArray;
@@ -234,7 +345,7 @@ export class ContractService {
     }
 
     public debugLog() {
-        for (let i = 0; i < arguments.length; i++) {
+        for (let i = 0; i < arguments.length; i += 1) {
             arguments[i] = JSON.parse(JSON.stringify(arguments[i]));
         }
         console.log.apply(this, arguments);

@@ -1,5 +1,5 @@
-export const partyA = "partyA";
-export const partyB = "partyB";
+export const partyA = 'partyA';
+export const partyB = 'partyB';
 
 export class DvpParty {
     id: string;

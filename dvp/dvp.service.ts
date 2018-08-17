@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 
-import {ContractService} from '../services';
-import {WalletnodeTxService} from '@setl/core-req-services';
-import {SagaHelper, mDateHelper} from '@setl/utils';
+import { ContractService } from '../services';
+import { WalletnodeTxService } from '@setl/core-req-services';
+import { SagaHelper, mDateHelper } from '@setl/utils';
 
-import {ContractModel, ParameterItemModel, PartyModel, PayListItemModel, ReceiveListItemModel} from '../models';
-import {DvpParty, DvpForm, DvpFormParty, partyA, partyB} from './dvp.model';
+import { ContractModel, ParameterItemModel,
+    PartyModel, PayListItemModel, ReceiveListItemModel } from '../models';
+import { DvpParty, DvpForm, DvpFormParty, partyA, partyB } from './dvp.model';
 import * as moment from 'moment';
 import { error } from 'selenium-webdriver';
 
@@ -14,14 +15,14 @@ import { error } from 'selenium-webdriver';
 export class DVPContractService {
 
     constructor(private contractService: ContractService,
-        private walletnodeTxService: WalletnodeTxService,
-        private ngRedux: NgRedux<any>) {}
+                private walletnodeTxService: WalletnodeTxService,
+                private ngRedux: NgRedux<any>) {}
 
     create(parties: [DvpParty, DvpParty],
-        values: DvpForm,
-        walletId: number,
-        successCallback: (res) => void,
-        errorCallback: (res) => void): void {
+           values: DvpForm,
+           walletId: number,
+           successCallback: (res) => void,
+           errorCallback: (res) => void): void {
 
         const model: ContractModel = new ContractModel();
 
@@ -40,20 +41,26 @@ export class DVPContractService {
 
         const contractData = JSON.parse(this.contractService.toJSON(model));
 
-        this.submitContract(walletId, values.creator[0].id, contractData.contractdata, successCallback, errorCallback);
+        this.submitContract(
+            walletId,
+            values.creator[0].id,
+            contractData.contractdata,
+            successCallback,
+            errorCallback,
+        );
     }
 
     private submitContract(walletId: number,
-        address: string,
-        contractData: any,
-        successCallback: (res) => void,
-        errorCallback: (res) => void): void {
+                           address: string,
+                           contractData: any,
+                           successCallback: (res) => void,
+                           errorCallback: (res) => void): void {
 
         const asyncTaskPipe = this.walletnodeTxService.newContract({
-            walletId: walletId,
-            address: address,
+            walletId,
+            address,
+            contractData,
             function: 'dvp_uk',
-            contractData: contractData
         });
 
         console.log('ABOUT TO DISPATCH DVP', asyncTaskPipe, this.ngRedux, SagaHelper);
@@ -70,12 +77,12 @@ export class DVPContractService {
             (data) => {
                 console.log('DVP ERROR');
                 errorCallback(data);
-            }
+            },
         ));
     }
 
     private addPartiesToContract(model: ContractModel, values: DvpForm, isExchange: boolean): void {
-        if(!model.parties) model.parties = [];
+        if (!model.parties) model.parties = [];
 
         model.parties.push(this.createPartyA(values, isExchange));
         model.parties.push(this.createPartyB(values, isExchange));
@@ -94,15 +101,15 @@ export class DVPContractService {
         party.payList.push(this.createPayListItem(
             values[partyA].address,
             values[partyA].asset[0].id,
-            values[partyA].amount
+            values[partyA].amount,
         ));
 
-        if(isExchange) {
+        if (isExchange) {
             // configure receive list
             party.receiveList.push(this.createReceiveListItem(
                 values[partyA].address,
                 values[partyB].asset[0].id,
-                values[partyB].amount
+                values[partyB].amount,
             ));
         }
 
@@ -122,15 +129,15 @@ export class DVPContractService {
         party.receiveList.push(this.createReceiveListItem(
             values[partyB].address,
             values[partyA].asset[0].id,
-            values[partyA].amount
+            values[partyA].amount,
         ));
 
-        if(isExchange) {
+        if (isExchange) {
             // configure pay list
             party.payList.push(this.createPayListItem(
                 values[partyB].address,
                 values[partyB].asset[0].id,
-                values[partyB].amount
+                values[partyB].amount,
             ));
         }
 
@@ -148,7 +155,7 @@ export class DVPContractService {
             '',
             '',
             false,
-            ''
+            '',
         ];
     }
 
@@ -159,7 +166,7 @@ export class DVPContractService {
             address,
             splitAsset[0],
             splitAsset[1],
-            amount
+            amount,
         ];
     }
 

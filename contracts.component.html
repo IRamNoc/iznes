@@ -5,14 +5,14 @@
 <clr-tabs *ngIf="tabs.length">
     <clr-tab *ngFor="let tab of tabs; let id = index">
         <button clrTabLink id="tablink{{id}}" innerHTML="<i class='fa fa-{{tab.icon}}'></i> {{tab.title}}"></button>
-        
+
         <clr-tab-content *clrIfActive="tab.active">
             <section>
                 <ng-container *ngIf="id === 0">
                     <ng-container *ngTemplateOutlet="contractsListTab"></ng-container>
                 </ng-container>
                 <ng-container *ngIf="id >= 1">
-                    <ng-container *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'contractFields': contractFields, 'contract': tab.data.contract, 'template': tab.data.template}"></ng-container>
+                    <ng-container *ngTemplateOutlet="dynamicViewTab; context: {'formControl': tab.formControl, 'id': id, 'contract': tab.data.contract, 'template': tab.data.template}"></ng-container>
                 </ng-container>
             </section>
         </clr-tab-content>
@@ -37,7 +37,7 @@
                     <span *ngIf="contract.__completed !== -1" class="label label-warning" mltag="txt_incomplete">Incomplete</span>
                 </clr-dg-cell>
                 <clr-dg-cell class="right">
-                    <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn btn-orange btn-sm">
+                    <button id="edit-{{contract.address}}" (click)="handleView(contract)" class="btn btn-sm">
                         <i class="fa fa-search"></i>&nbsp;<span mltag="txt_view">View</span>
                     </button>
                 </clr-dg-cell>
@@ -53,109 +53,242 @@
 
 <ng-template #dynamicViewTab let-formControl="formControl" let-id="id" let-contract="contract" let-template="template">
     <div class="panel-body">
-        <table style="width:100%">
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="header-breadcrumbs">
-                            <h1 mltag="txt_contract"><i class="fa fa-book"></i>Contract</h1>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group tx-view-header" style="float:right">
-                            <span *ngIf="contract.__completed == -1" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
-                            <span *ngIf="contract.__completed != -1" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <form>
-            <section class="form-block">
-                <label>Details</label>
-                <div class="form-group">
-                    <label for="startDate" mltag="txt_startdate">Start Date</label>
-                    <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+        <div class="row">
+            <div class="col-xs-6">
+                <h1 mltag="txt_contract"><i class="fa fa-book" style="margin-right: 10px"></i>Contract</h1>
+            </div>
+            <div class="col-xs-6">
+                <div class="form-group tx-view-header" style="float:right">
+                    <span *ngIf="contract.__completed == -1" class="label label-success" style="font-size:16px" mltag="txt_enabled">Complete</span>
+                    <span *ngIf="contract.__completed != -1" class="label label-warning" style="font-size:16px" mltag="txt_incomplete">Incomplete</span>
                 </div>
-                <div class="form-group">
-                    <label for="expiryDate" mltag="txt_expirydate">Expiry Date</label>
-                    <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+            </div>
+        </div>
+
+        <div class="list-group list-group-flush-lg">
+            <div class="list-group-item list-group-header">Details</div>
+            <div class="list-group-item">
+                <form>
+                    <section class="form-block">
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="expiryDate" mltag="txt_address">Address</label>
+                                <input type="text" id="address" size="45" disabled [value]="contract.__address">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="issuer" mltag="txt_issuer">Issuer</label>
+                                <input type="text" id="issuer"size="45" disabled [value]="contract.issuingaddress">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="expiryDate" mltag="txt_expirydate">Expiry Date</label>
+                                <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="startDate" mltag="txt_startdate">Start Date</label>
+                                <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <label for="useEncumbrance" mltag="txt_useencumbrance">Use Encumbrance</label>
+                                <div *ngIf="contract.encumbrance.use"><span class="label label-success" style="padding: 10px; margin-top: 10px !important;"><i class="fa fa-check" style="margin-right: 5px;"></i> Reference: {{contract.encumbrance.reference}}</span></div>
+                                <div *ngIf="!contract.encumbrance.use"><span class="label label-danger" style="padding: 10px; margin-right: 5px; margin-top: 10px !important;"><i class="fa fa-times" style="margin-right: 5px;"></i> No Encumbrance</span></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="useEncumbrance" mltag="txt_metadata">Metadata</label>
+                                <div><code class="metadata" *ngIf="contract.metadata">{{contract.metadata}}</code></div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+            <div class="list-group-item list-group-header">Parties</div>
+            <div class="list-group-item">
+                <div class="card card-party" *ngFor="let party of contract.parties">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4 class="card-title"><i class="fa fa-user"></i> {{party.partyIdentifier}}</h4>
+                                <p class="card-text"><span class="label">{{party.sigAddress}}<span *ngIf="party.sigAddress_label != party.sigAddress">&nbsp;| {{party.sigAddress_label}}</span></span></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="pull-right">
+                                    <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                                    <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
+                                    <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress && !committing.includes(party.partyIdentifier)">
+                                        <span id="edit-{{i}}" (click)="commitParty(party, contract)" class="label label-commit">
+                                            <i class="fa fa-check"></i>&nbsp;Commit
+                                        </span>
+                                    </span>
+                                    <span class="label label-committing" *ngIf="party.signature == '' && committing.includes(party.partyIdentifier)"><i class="fa fa-spinner fa-spin"></i> Committing...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item list-group-header">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    Direction
+                                </div>
+                                <div class="col-xs-1 text-right">
+                                    Amount
+                                </div>
+                                <div class="col-xs-3">
+                                    Asset
+                                </div>
+                                <div class="col-xs-1">
+                                    Issuance
+                                </div>
+                                <div class="col-xs-1">
+                                    Metadata
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item" *ngFor="let item of party.payList">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <span class="label label-success"><i class="fa fa-arrow-up" style="margin-right: 5px"></i> send</span>
+                                </div>
+                                <div class="col-xs-1 text-right">
+                                    <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="label">{{item.namespace}} | {{item.assetId}}</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span class="label label-success" *ngIf="item.issuance"><i class="fa fa-check" style="margin-right: 5px"></i> yes</span>
+                                    <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> no</span>
+                                </div>
+                                <div class="col-xs-5">
+                                    <code class="metadata" *ngIf="item.metadata">{{item.metadata}}</code>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item" *ngFor="let item of party.receiveList">
+                            <div class="row">
+                                <div class="col-xs-2">
+                                    <span class="label label-danger"><i class="fa fa-arrow-down" style="margin-right: 5px"></i> receive</span>
+                                </div>
+                                <div class="col-xs-1 text-right">
+                                    <span style="font-family: monospace">{{item.quantity|moneyValue}}</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span class="label">{{item.namespace}} | {{item.assetId}}</span>
+                                </div>
+                                <div class="col-xs-1">
+                                    <span class="label label-success" *ngIf="item.issuance"><i class="fa fa-check" style="margin-right: 5px"></i> yes</span>
+                                    <span class="label label-danger" *ngIf="!item.issuance"><i class="fa fa-times" style="margin-right: 5px"></i> no</span>
+                                </div>
+                                <div class="col-xs-5">
+                                    <code class="metadata" *ngIf="item.metadata">{{item.metadata}}</code>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </section>
-        </form>
-        <div *ngIf="contract.parties.length > 0">
-            Parties
-            <clr-datagrid #partiesDataGrid>
-                <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
-                <clr-dg-column mltag="txt_element">Element</clr-dg-column>
-                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
-                <clr-dg-row *clrDgItems="let party of contract.parties; let i = index">
-                    <clr-dg-cell>
-                        <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{party.sigAddress_label}}</clr-dg-cell>
-                    <clr-dg-cell>
-                        <span *ngIf="contract.payors[i] !== undefined" mltag="txt_pay">Pay</span> {{contract.payors[i]}}
-                        <span *ngIf="contract.payors[i] !== undefined && contract.payees[i] !== undefined"> - </span>
-                        <span *ngIf="contract.payees[i] !== undefined" mltag="txt_receive">Receive</span> {{contract.payees[i]}}
-                    </clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                        <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
-                        <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress">
-                            <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn btn-success btn-sm">
-                                <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
-                            </button>
-                        </span>
-                    </clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
+            </div>
+
+            <!-- Authorisations -->
+            <div class="list-group-item list-group-header" *ngIf="contract.authorisations.length">Authorisations</div>
+            <div class="list-group-item" *ngIf="contract.authorisations.length">
+                <clr-datagrid #authorisationsDataGrid>
+                    <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
+                    <clr-dg-column mltag="txt_status">Status</clr-dg-column>
+                    <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
+                    <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
+                        <clr-dg-cell>
+                            <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
+                        </clr-dg-cell>
+                        <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
+                        <clr-dg-cell class="right">
+                            <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                            <span *ngIf="authorisation.signature == ''">
+                                <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn btn-success btn-sm">
+                                    <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
+                                </button>
+                            </span>
+                        </clr-dg-cell>
+                    </clr-dg-row>
+                </clr-datagrid>
+            </div>
+
+            <!-- Add Encumbrances -->
+            <div class="list-group-item list-group-header" *ngIf="contract.addencumbrances.length">Add Encumbrances</div>
+            <div class="list-group-item" *ngIf="contract.addencumbrances.length">
+                <div class="card card-encumbrance" *ngFor="let encumbrance of contract.addencumbrances; let idx = index">
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <h4 class="card-title"><i class="fa fa-bank" style="margin-right: 5px"></i> Encumbrance {{idx+1}}</h4>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <p class="card-text"><span class="label label-success">Reference {{encumbrance.reference}}</span></p>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 10px">
+                            <div class="col-xs-12">
+                                <p class="card-text">
+                                    <span class="label">{{encumbrance.fullAssetId}}</span> x <span style="font-family: monospace">{{encumbrance.amount|moneyValue}}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item list-group-header">
+                            <div class="row">
+                                <div class="col-xs-2">Type</div>
+                                <div class="col-xs-4">Address</div>
+                                <div class="col-xs-3">Valid From</div>
+                                <div class="col-xs-3">Valid To</div>
+                            </div>
+                        </div>
+                        <div class="list-group-item" *ngFor="let item of encumbrance.beneficiaries">
+                            <div class="row">
+                                <div class="col-xs-2"><span class="label label-success">beneficiary</span></div>
+                                <div class="col-xs-4"><span class="label">{{item.address}}</span></div>
+                                <div class="col-xs-3"><span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span></div>
+                                <div class="col-xs-3"><span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span></div>
+                            </div>
+                        </div>
+                        <div class="list-group-item" *ngFor="let item of encumbrance.administrators">
+                            <div class="row">
+                                <div class="col-xs-2"><span class="label label-info">administrator</span></div>
+                                <div class="col-xs-4"><span class="label">{{item.address}}</span></div>
+                                <div class="col-xs-3"><span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span></div>
+                                <div class="col-xs-3"><span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parameters -->
+            <div class="list-group-item list-group-header" *ngIf="contract.parameters.length">Parameters</div>
+            <div class="list-group-item" *ngIf="contract.parameters.length">
+                <form>
+                    <clr-datagrid #parametersDataGrid>
+                        <clr-dg-column mltag="txt_parameter">Parameter</clr-dg-column>
+                        <clr-dg-column mltag="txt_value">Value</clr-dg-column>
+                        <clr-dg-row *clrDgItems="let parameter of contract.parameters">
+                            <clr-dg-cell>{{parameter.key}}</clr-dg-cell>
+                            <clr-dg-cell *ngIf="parameter.value && parameter.signature">
+                                {{parameter.value}} <span class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                            </clr-dg-cell>
+                            <clr-dg-cell *ngIf="!parameter.value && !parameter.signature">
+                                <div class="form-group">
+                                    <input type="text" style="width: 3rem" (change)="updateParameter(parameter.key, $event.target.value)"/><span class="label label-commit" style="position:relative; top: 10px" (click)="commitParameter(parameter.key)"><i class="fa fa-check"></i>&nbsp;Commit</span>
+                                </div>
+                            </clr-dg-cell>
+                        </clr-dg-row>
+                    </clr-datagrid>
+                </form>
+            </div>
         </div>
-        <div *ngIf="contract.authorisations.length > 0">
-            Authorisations
-            <clr-datagrid #authorisationsDataGrid>
-                <clr-dg-column mltag="txt_participant">Participant</clr-dg-column>
-                <clr-dg-column mltag="txt_status">Status</clr-dg-column>
-                <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
-                <clr-dg-row *clrDgItems="let authorisation of contract.authorisations; let i = index">
-                    <clr-dg-cell>
-                        <span><i class="fa fa-clock-o"></i> {{contract.status}}</span>
-                    </clr-dg-cell>
-                    <clr-dg-cell>{{authorisation.sigAddress_label}}</clr-dg-cell>
-                    <clr-dg-cell class="right">
-                        <span *ngIf="authorisation.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
-                        <span *ngIf="authorisation.signature == ''">
-                            <button id="edit-{{i}}" (click)="commitAuthorisation(i, contract)" class="btn btn-success btn-sm">
-                                <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
-                            </button>
-                        </span>
-                    </clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
-        </div>
-        <div *ngIf="contract.addencumbrances.length > 0">
-            Encumbrances
-            <clr-datagrid #encumbrancesDataGrid>
-                <clr-dg-column mltag="txt_parameter">Asset Id</clr-dg-column>
-                <clr-dg-column mltag="txt_value">Amount</clr-dg-column>
-                <clr-dg-row *clrDgItems="let encumbrance of contract.addencumbrances">
-                    <clr-dg-cell>{{encumbrance.fullAssetId}}</clr-dg-cell>
-                    <clr-dg-cell>{{encumbrance.amount}}</clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
-        </div>
-        <div *ngIf="contract.parameters.length > 0">
-            Parameters
-            <clr-datagrid #parametersDataGrid>
-                <clr-dg-column mltag="txt_parameter">Parameter</clr-dg-column>
-                <clr-dg-column mltag="txt_value">Value</clr-dg-column>
-                <clr-dg-row *clrDgItems="let parameter of contract.parameters">
-                    <clr-dg-cell>{{parameter.key}}</clr-dg-cell>
-                    <clr-dg-cell>{{parameter.value}}</clr-dg-cell>
-                </clr-dg-row>
-            </clr-datagrid>
-        </div>
+
         <div class="form-group tx-view-header">
             <button type="button" class="btn btn-primary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;Close</button>
         </div>

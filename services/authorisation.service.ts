@@ -3,7 +3,7 @@ import { AuthorisationModel } from '../models';
 @Injectable()
 export class AuthorisationService {
     public fromJSON(json) {
-        let authorisation = new AuthorisationModel();
+        const authorisation = new AuthorisationModel();
         authorisation.publicKey = json[0];
         authorisation.authorisationId = json[1];
         authorisation.signature = json[2];
@@ -18,7 +18,7 @@ export class AuthorisationService {
             authorisation.authorisationId,
             authorisation.signature,
             authorisation.metadata,
-            authorisation.refused
+            authorisation.refused,
         ];
     }
 }

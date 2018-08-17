@@ -5,7 +5,7 @@ export class EncumbranceModel {
     public fullAssetId: string = null;
     public reference: string = null;
     public amount: number = null;
-    public beneficiaries: Array<EncumbranceAddressModel> = new Array();
-    public administrators: Array<EncumbranceAddressModel> = new Array();
+    public beneficiaries: EncumbranceAddressModel[] = [];
+    public administrators: EncumbranceAddressModel[] = [];
     public signature: string = null;
 }
