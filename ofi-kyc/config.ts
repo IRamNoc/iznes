@@ -2,12 +2,14 @@ export interface Endpoints {
     alreadyDoneWaitingForApproval: string;
     alreadyDoneConfirmation: string;
     home: string;
+    myRequests: string
 }
 
 export default {
     alreadyDoneWaitingForApproval: '/new-investor/already-done/waiting-for-validation',
     alreadyDoneConfirmation: '/new-investor/already-done/confirmation',
     home: '/home',
+    myRequests: '/my-requests/list'
 };
 
 export const kycEnums = {

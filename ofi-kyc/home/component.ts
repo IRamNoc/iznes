@@ -149,7 +149,7 @@ export class OfiKycHomeComponent implements AfterViewInit, OnDestroy {
             phoneCode: this.userInfo.phoneCode,
             phoneNumber: this.userInfo.phoneNumber,
             companyName: this.userInfo.companyName,
-            defaultHomePage: this.endpointsConfig.home,
+            defaultHomePage: this.endpointsConfig.myRequests, // @todo When superadmin role is developed, check the role here
         };
         const asyncTaskPipe = this.myUserService.saveMyUserDetails(user);
         this._ngRedux.dispatch(SagaHelper.runAsyncCallback(
