@@ -32,8 +32,18 @@ export class SignupComponent implements OnDestroy, OnInit {
     showConfirmPassword: boolean = false;
 
     private subscriptions: Subscription[] = [];
+    private config: Model.ISignupConfiguration;
 
-    @Input() configuration: Model.ISignupConfiguration;
+    @Input() set configuration(config: Model.ISignupConfiguration) {
+        this.config = config;
+
+        if (this.signupForm && config.username) {
+            this.signupForm.controls.username.patchValue(config.username);
+        }
+    }
+    get configuration(): Model.ISignupConfiguration {
+        return this.config;
+    }
     @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
 
     constructor(private redux: NgRedux<any>,
@@ -65,7 +75,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     private initSignupForm(): void {
         this.signupForm = new FormGroup({
             username: new FormControl(
-                '',
+                this.configuration.username ? this.configuration.username : '',
                 Validators.required,
             ),
             password: new FormControl(
@@ -191,15 +201,15 @@ export class SignupComponent implements OnDestroy, OnInit {
         this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
     }
 
-    showFieldError(control: FormControl): boolean {
+    showFieldError(control: any): boolean {
         return !control.valid && control.touched;
     }
 
-    showPasswordRequiredError(control: FormControl): boolean {
+    showPasswordRequiredError(control: any): boolean {
         return control.hasError('required') && control.dirty;
     }
 
-    showPasswordLengthError(control: FormControl): boolean {
+    showPasswordLengthError(control: any): boolean {
         return !control.valid &&
             !control.hasError('required') &&
             control.touched;
