@@ -40,9 +40,9 @@ const LocationSpy = {
 };
 
 const iznCreateFund = jasmine.createSpy('iznCreateFund')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            const payload =
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        const payload =
             {
                 "draft": 0,
                 "isFundStructure": 0,
@@ -113,27 +113,27 @@ const iznCreateFund = jasmine.createSpy('iznCreateFund')
                 "umbrellaFundID": "0"
             }
 
-                ;
-            resolve([null, { Data: [{ ...payload }] }]);
-        }),
+        ;
+        resolve([null, { Data: [{ ...payload }] }]);
+    }),
 );
 const iznUpdateFund = jasmine.createSpy('iznUpdateFund')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
 );
 const defaultRequestIznesFundList = jasmine.createSpy('defaultRequestIznesFundList')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
 );
 const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
 );
 
 const fundServiceSpy = {
@@ -156,10 +156,10 @@ const ActivatedRouteStub = {
 };
 
 const pop = jasmine.createSpy('pop')
-    .and.returnValue(
-        new Promise((resolve, reject) => {
-            resolve();
-        }),
+.and.returnValue(
+    new Promise((resolve, reject) => {
+        resolve();
+    }),
 );
 const toasterServiceMock = {
     pop,
@@ -330,7 +330,7 @@ describe('FundComponent', () => {
         fixture.detectChanges();
 
         linkDes = fixture.debugElement
-            .queryAll(By.directive(RouterLinkDirectiveStub));
+        .queryAll(By.directive(RouterLinkDirectiveStub));
 
         // get attached link directive instances
         // using each DebugElement's injector
@@ -421,7 +421,7 @@ describe('FundComponent', () => {
             const formGroupMainEls = fixture.debugElement.queryAllNodes(
                 By.css('form.fundForm > .well + .well .well:first-child div.form-group'),
             );
-            expect(formGroupMainEls.length).toEqual(26);
+            expect(formGroupMainEls.length).toEqual(27);
 
             // Fund Optionnal Informations (these are still rendered but with display: none from the expandable)
             const formGroupOptionEls = fixture.debugElement.queryAllNodes(
@@ -775,8 +775,7 @@ describe('FundComponent', () => {
                 ],
                 isEuDirective: '0',
                 isFundStructure: '0',
-                typeOfEuDirective: [
-                ],
+                typeOfEuDirective: [],
                 UcitsVersion: [
                     {
                         id: 4,
@@ -795,8 +794,7 @@ describe('FundComponent', () => {
                         text: 'ID Open-ended investment company (OEIC)'
                     },
                 ],
-                homeCountryLegalType: [
-                ],
+                homeCountryLegalType: [],
                 fundCreationDate: null,
                 fundLaunchate: null,
                 fundCurrency: [
@@ -826,8 +824,7 @@ describe('FundComponent', () => {
                         text: 'Custodian Bank 1',
                     },
                 ],
-                investmentManagerID: [
-                ],
+                investmentManagerID: [],
                 principlePromoterID: [
                     {
                         id: 2,
@@ -849,10 +846,8 @@ describe('FundComponent', () => {
                     },
                 ],
                 fundManagers: '',
-                transferAgentID: [
-                ],
-                centralizingAgentID: [
-                ],
+                transferAgentID: [],
+                centralizingAgentID: [],
                 isDedicatedFund: '0',
                 portfolioCurrencyHedge: [
                     {
@@ -861,8 +856,7 @@ describe('FundComponent', () => {
                     },
                 ],
                 globalItermediaryIdentification: null,
-                delegatedManagementCompany: [
-                ],
+                delegatedManagementCompany: [],
                 investmentAdvisorID: [
                     {
                         id: 2,
@@ -895,8 +889,7 @@ describe('FundComponent', () => {
                 hasEmbeddedDirective: '0',
                 hasCapitalPreservation: '0',
                 capitalPreservationLevel: null,
-                capitalPreservationPeriod: [
-                ],
+                capitalPreservationPeriod: [],
                 hasCppi: '1',
                 cppiMultiplier: '6',
                 hasHedgeFundStrategy: '0',
@@ -909,11 +902,11 @@ describe('FundComponent', () => {
                 hasSwap: '1',
                 hasDurationHedge: '0',
                 useDefaultHolidayMgmt: '1',
-                holidayMgmtConfig: [
-                ],
+                holidayMgmtConfig: [],
                 investmentObjective: null,
                 internalReference: '',
                 additionnalNotes: '',
+                tradingAccount: ''
             };
             describe('create mode', () => {
                 beforeEach(fakeAsync(() => {
