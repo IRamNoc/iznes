@@ -1026,7 +1026,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    buildLink(order, index, event) {
+    buildLink(order, event, orderIdKey = 'orderID') {
         if (
             !event.target.classList.contains('datagrid-expandable-caret') &&
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
@@ -1034,10 +1034,18 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         ) {
             let dest = '';
             if (this.isInvestorUser) {
-                dest = 'order-book/my-orders/' + order.orderID;
+                dest = 'order-book/my-orders/' + order[orderIdKey];
+
+                if (orderIdKey === 'sellBuyLinkOrderID') {
+                    this.location.replaceState('order-book/my-orders/list');
+                }
             } else {
-                dest = 'manage-orders/' + order.orderID;
+                dest = 'manage-orders/' + order[orderIdKey];
+                if (orderIdKey === 'sellBuyLinkOrderID') {
+                    this.location.replaceState('manage-orders/list');
+                }
             }
+
             this.router.navigateByUrl(dest);
         }
     }
@@ -1240,5 +1248,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     getOrderTypeString(orderData: {orderType: number | string; sellBuyLinkOrderID: number | string;}): string | boolean {
        const orderString = getOrderTypeString(orderData);
        return this._translate.getTranslationByString(orderString);
+    }
+
+    /**
+     * check if order is a sell buy order
+     *
+     * @param {{sellBuyLinkOrderID}} orderData
+     * @return {boolean}
+     */
+    isSellBuyOrder(orderData: {sellBuyLinkOrderID}): boolean {
+        return orderData.sellBuyLinkOrderID;
     }
 }
