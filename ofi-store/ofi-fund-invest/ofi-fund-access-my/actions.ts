@@ -20,3 +20,9 @@ export const setRequestedFundAccessMy = kAction(SET_REQUESTED_FUND_ACCESS_MY);
  */
 export const CLEAR_REQUESTED_FUND_ACCESS_MY = `${name}/CLEAR_REQUESTED_FUND_ACCESS_MY`;
 export const clearRequestedFundAccessMy = kAction(CLEAR_REQUESTED_FUND_ACCESS_MY);
+
+export const VALIDATE_KIID = `${name}/VALIDATE_KIID`;
+export const validateKiid = shareID => ({
+    type: VALIDATE_KIID,
+    payload: shareID,
+});

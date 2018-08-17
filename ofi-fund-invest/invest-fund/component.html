@@ -4,7 +4,8 @@
         <h2>{{getOrderTypeTitle()}}</h2>
         {{getOrderTypeSubTitle()}}
 
-        <br><br>
+        <br>
+        <br>
 
         <button type="button" class="btn resetButton" (click)="resetForm(form)">{{'Reset Order Information' | translate}}</button>
 
@@ -38,7 +39,9 @@
                                 <span class="">{{'Investment Portfolio' | translate}}</span>
                             </label>
                             <div>
-                                <ng-select id="subportfolio" [class.error]="!form.controls['address'].valid && form.controls['address'].touched" [items]="addressList" [allowClear]="false" [placeholder]="_translate.translate('Select an investment porfolio')" formControlName="address" (selected)="handleSelectedAddress($event)">
+                                <ng-select id="subportfolio" [class.error]="!form.controls['address'].valid && form.controls['address'].touched" [items]="addressList"
+                                    [allowClear]="false" [placeholder]="_translate.translate('Select an investment porfolio')"
+                                    formControlName="address" (selected)="handleSelectedAddress($event)">
                                 </ng-select>
                             </div>
                             <span *ngIf="address.hasError('required') && address.touched" class="text-danger">{{'Field is required' | translate}}</span>
@@ -90,7 +93,8 @@
                                             <span class="">{{'Costs related to transactions initiated' | translate}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'" [readonly]="true">
+                                            <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'"
+                                                [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -124,7 +128,8 @@
                                             <span class="ml_translated">{{metadata.feeLabel}}</span>
                                         </label>
                                         <div>
-                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' " [readonly]="true">
+                                            <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' "
+                                                [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -275,7 +280,8 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input [value]="today" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" disabled>
+                                <input [value]="today" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
+                                    disabled>
                             </div>
                         </div>
                     </div>
@@ -288,10 +294,9 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff"
-                                       [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material"
-                                       [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                       (dateChange)="subscribeForChangeDate('cutoff', $event)">
+                                <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                    (dateChange)="subscribeForChangeDate('cutoff', $event)">
 
 
                             </div>
@@ -311,10 +316,9 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="valuationdate" formControlName="valuationDate" [dpDayPicker]="configDateValuation"
-                                       [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material"
-                                       [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                       (dateChange)="subscribeForChangeDate('valuation', $event)">
+                                <input id="valuationdate" formControlName="valuationDate" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')"
+                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                    (dateChange)="subscribeForChangeDate('valuation', $event)">
 
 
                             </div>
@@ -330,13 +334,9 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                    <input id="settlementdate" formControlName="settlementDate"
-                                           [dpDayPicker]="configDateSettlement"
-                                           [placeholder]="_translate.translate('Choose a date')"
-                                           mode="day" theme="dp-material"
-                                           [ngStyle]="{'width':'100%'}"
-                                           [readonly]="doValidate" autocomplete="off"
-                                           (dateChange)="subscribeForChangeDate('settlement', $event)">
+                                    <input id="settlementdate" formControlName="settlementDate" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')"
+                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                        (dateChange)="subscribeForChangeDate('settlement', $event)">
 
 
                                 </div>
@@ -431,10 +431,12 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">
-                            <input id="checkbox" class="form-check-input" style="margin-top: 10px; margin-right: 10px;" type="checkbox" formControlName="disclaimer" [attr.disabled]="allowCheckDisclaimer" value="false">
+                            <input id="checkbox" class="form-check-input" style="margin-top: 10px; margin-right: 10px;" type="checkbox" formControlName="disclaimer"
+                                [attr.disabled]="allowCheckDisclaimer" value="false">
 
 
-                            <label class="form-check-label" for="checkbox">{{'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate}}
+                            <label class="form-check-label" for="checkbox">{{'I confirm that I have read and understood the latest version of the Key Investor Information
+                                Document (KIID) for the fund share I am considering investing in.' | translate}}
 
                             </label>
                         </div>
@@ -554,4 +556,39 @@
 
 </form>
 
-
+<clr-modal *ngIf="kiidModal.isOpen" class="kiidModal" [(clrModalOpen)]="kiidModal.isOpen" [clrModalSize]="'xl'" [clrModalClosable]="false">
+    <div class="modal-title">
+        <div class="alert alert-success">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="check-circle"></clr-icon>
+                    </div>
+                    <span class="alert-text">
+                        {{'File \'@kiidModal.filename@\' is verified' | translate: {'kiidModal.filename': kiidModal.filename} }}
+                        <br/>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-body">
+        <div class="modal-body fileviewer-main" *ngIf="kiidModal.url">
+            <iframe class="fileviewer-contents" [src]="kiidModal.url"></iframe>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <form class="form-block">
+            <div class="form-group">
+                <clr-checkbox
+                    name="kiidCheckbox"
+                    id="kiidCheckbox"
+                    #kiidModalCheckbox
+                >
+                    {{'I have read the document and want to place an order' | translate}}
+                </clr-checkbox>
+            </div>
+        </form>
+        <button type="button" class="btn btn-primary" [disabled]="!kiidModalCheckbox.checked" (click)="onValidateKiid()" >{{type}}</button>
+    </div>
+</clr-modal>

@@ -12,7 +12,8 @@ import {
     CreateFundShareRequestData,
     IznesShareListRequestMessageBody,
     IznDeleteShareDraftRequestBody,
-    InvestorHoldingsRequestBody
+    InvestorHoldingsRequestBody,
+    validateKiidRequestBody,
 } from './model';
 import {
     SET_FUND_SHARE,
@@ -414,5 +415,15 @@ export class OfiFundShareService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    validateKiid(walletID: number, shareID: number) {
+        const messageBody: validateKiidRequestBody = {
+            RequestName: 'iznessharevalidatekiid',
+            token: this.memberSocketService.token,
+            walletID,
+            shareID,
+        };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
+    }
 
 }

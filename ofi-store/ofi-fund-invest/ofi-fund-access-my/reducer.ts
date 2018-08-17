@@ -1,5 +1,5 @@
 import { OfiFundAccessMyState } from './model';
-import { Action } from 'redux';
+import { Action, AnyAction } from 'redux';
 import * as _ from 'lodash';
 import { fromJS } from 'immutable';
 
@@ -7,13 +7,14 @@ import {
     SET_FUND_ACCESS_MY,
     SET_REQUESTED_FUND_ACCESS_MY,
     CLEAR_REQUESTED_FUND_ACCESS_MY,
+    VALIDATE_KIID,
 } from './actions';
 import { commonHelper } from '@setl/utils';
 
 const initialState: OfiFundAccessMyState = {
     fundAccessList: {},
     fundShareAccessList: {},
-    requested: false
+    requested: false,
 };
 
 /**
@@ -23,7 +24,7 @@ const initialState: OfiFundAccessMyState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action): OfiFundAccessMyState {
+export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: AnyAction): OfiFundAccessMyState {
     switch (action.type) {
     case SET_FUND_ACCESS_MY:
         return handleSetFundAccessMy(state, action);
@@ -33,6 +34,18 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
 
     case CLEAR_REQUESTED_FUND_ACCESS_MY:
         return handleClearRequestedFundAccessMy(state, action);
+
+    case VALIDATE_KIID:
+        return {
+            ...state,
+            fundShareAccessList: {
+                ...state.fundShareAccessList,
+                [action.payload]: {
+                    ...state.fundShareAccessList[action.payload],
+                    hasValidatedKiid: true,
+                },
+            },
+        };
 
     default:
         return state;
@@ -70,7 +83,6 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
         const taxationOptionalData = commonHelper.safeJsonParse(item.get('taxationOptionalData', '{}'));
         const solvencyIIOptionalData = commonHelper.safeJsonParse(item.get('solvencyIIOptionalData', '{}'));
         const representationOptionalData = commonHelper.safeJsonParse(item.get('representationOptionalData', '{}'));
-
 
         result.fundShareAccessList[shareId] = {
             shareId,
@@ -150,6 +162,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
             kiid: item.get('kiid', ''),
             prospectus: item.get('prospectus', ''),
             holidayMgmtConfig: item.get('holidayMgmtConfig', '[]'),
+            hasValidatedKiid: item.get('hasValidatedKiid') === 1,
         };
 
         return result;

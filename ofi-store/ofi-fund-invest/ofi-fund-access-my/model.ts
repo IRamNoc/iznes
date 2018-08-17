@@ -18,6 +18,7 @@ export interface FundShareAccessDetail {
     managementCompany: string;
     price: number;
     holidayMgmtConfig: string;
+    hasValidatedKiid: boolean;
 }
 
 export interface FundShareAccessList {
