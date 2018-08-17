@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
-    SET_PRODUCTION, setLanguage,
+    SET_PRODUCTION, setLanguage, SET_SITE_MENU,
 } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual';
 import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
@@ -163,6 +163,13 @@ export class SignupComponent implements OnDestroy, OnInit {
             asyncTaskPipe,
             {},
             () => {
+                const asyncTaskPipes = this.myUserService.getSiteMenu(this.redux);
+                this.redux.dispatch(SagaHelper.runAsync(
+                    [SET_SITE_MENU],
+                    [],
+                    asyncTaskPipes, {},
+                ));
+
             },
             (data) => {
                 this.handleLoginFailMessage(data);
