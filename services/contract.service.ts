@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { PartyService } from '../services/party.service';
 import { AuthorisationService } from '../services/authorisation.service';
-import { AuthorisationModel, ParameterItemModel } from '../models';
+import { AuthorisationModel, ParameterItemModel, PayListItemModel, ReceiveListItemModel, EncumbranceModel, UseEncumbranceModel, PartyModel, ContractModel } from '../models';
 import { ParameterItemService } from '../services/parameterItem.service';
 import { EncumbranceService } from '../services/encumbrance.service';
-import { EncumbranceModel, UseEncumbranceModel, PartyModel, ContractModel } from '../models';
+import { SagaHelper } from '@setl/utils';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { NgRedux, select } from '@angular-redux/store';
+import { WalletNodeRequestService } from '@setl/core-req-services';
 
 @Injectable()
 export class ContractService {
@@ -15,12 +17,20 @@ export class ContractService {
     private parameterItemService: ParameterItemService;
     private encumbranceService: EncumbranceService;
     public addresses: string[] = [];
+    private walletId: number;
 
-    constructor() {
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletId$;
+
+    constructor(
+        private walletNodeRequest: WalletNodeRequestService,
+        private redux: NgRedux<any>,
+    ) {
         this.partyService = new PartyService();
         this.authorisationService = new AuthorisationService();
         this.parameterItemService = new ParameterItemService();
         this.encumbranceService = new EncumbranceService();
+
+        this.connectedWalletId$.subscribe(id => this.walletId = id);
     }
 
     /**
@@ -211,6 +221,92 @@ export class ContractService {
 
     public addEncumbrance(contract: ContractModel, encumbrance: EncumbranceModel): void {
         contract.addencumbrances.push(encumbrance);
+    }
+
+    public commitParty(party: PartyModel, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            const commitment = party.payList.map((item: PayListItemModel, idx) => {
+                return [idx, item.namespace, item.assetId, item.quantity, '', ''];
+            });
+            const receive = party.receiveList.map((item: ReceiveListItemModel, idx) => {
+                return [idx, party.sigAddress];
+            });
+            const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+                walletid: this.walletId,
+                address: party.sigAddress,
+                function: contract.function + '_commit',
+                contractdata: {
+                    commitment,
+                    receive,
+                    contractfunction: contract.function + '_commit',
+                    issuingaddress: contract.issuingaddress,
+                    contractaddress: contract.address,
+                    party: [
+                        party.partyIdentifier,
+                        '',
+                        '',
+                    ],
+                    parties: contractJson.parties,
+                },
+                contractaddress: contract.address,
+            });
+            this.redux.dispatch(SagaHelper.runAsync(
+                [],
+                [],
+                asyncTaskPipe,
+                {},
+                (data) => {
+                    resolve(data);
+                },
+                (data) => {
+                    reject(data);
+                }
+            ));
+        });
+    }
+
+    public commitParameter(key: string, value: any, contract: ContractModel): Promise<any> {
+        return new Promise((resolve, reject) => {
+            const contractJson = JSON.parse(this.toJSON(contract)).contractdata;
+            // const commitment = party.payList.map((item: PayListItemModel, idx) => {
+            //     return [idx, item.namespace, item.assetId, item.quantity, '', ''];
+            // });
+            // const receive = party.receiveList.map((item: ReceiveListItemModel, idx) => {
+            //     return [idx, party.sigAddress];
+            // });
+            // const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
+            //     walletid: this.walletId,
+            //     address: party.sigAddress,
+            //     function: contract.function + '_commit',
+            //     contractdata: {
+            //         commitment,
+            //         receive,
+            //         contractfunction: contract.function + '_commit',
+            //         issuingaddress: contract.issuingaddress,
+            //         contractaddress: contract.address,
+            //         // party: [
+            //         //     party.partyIdentifier,
+            //         //     '',
+            //         //     '',
+            //         // ],
+            //         parameters: contractJson.parameters
+            //     },
+            //     contractaddress: contract.address,
+            // });
+            // this.redux.dispatch(SagaHelper.runAsync(
+            //     [],
+            //     [],
+            //     asyncTaskPipe,
+            //     {},
+            //     (data) => {
+            //         resolve(data);
+            //     },
+            //     (data) => {
+            //         reject(data);
+            //     }
+            // ));
+        });
     }
 
     public convertSubModels(subModels) {

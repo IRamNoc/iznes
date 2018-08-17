@@ -10,18 +10,19 @@ import { NgRedux, select } from '@angular-redux/store';
 import { SagaHelper } from '@setl/utils';
 import { AlertsService, AlertType } from '@setl/jaspero-ng2-alerts';
 import { MemberSocketService } from '@setl/websocket-service';
-import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { APP_CONFIG, AppConfig } from '@setl/utils';
 import { ContractService } from '@setl/core-contracts/services';
 import { MyWalletsService, WalletNodeRequestService } from '@setl/core-req-services';
-import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '@setl/core-balances/tabs';
+import { Observable, Subscription } from 'rxjs';
 import * as _ from 'lodash';
-import { ContractModel } from '@setl/core-contracts/models';
+import { ContractModel, PartyModel, PayListItemModel, ReceiveListItemModel } from '@setl/core-contracts/models';
 import {
     SET_CONTRACT_LIST,
     UPDATE_CONTRACT,
 } from '@setl/core-store/wallet/my-wallet-contract/actions';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'setl-contracts',
@@ -32,11 +33,14 @@ import {
 export class ContractsComponent implements OnInit, OnDestroy {
     public token: string = null;
     public userId: string = null;
-    public walletId: string = null;
+    public walletId: number = null;
     public addresses: string[] = [];
     public contracts: ContractModel[] = [];
     public contract;
     public contractFields;
+    public committing: string[] = [];
+    public parameterValues = {};
+    private unsubscribe = new Subject();
 
     // Rows Per Page datagrid size
     public pageSize: number;
@@ -44,9 +48,7 @@ export class ContractsComponent implements OnInit, OnDestroy {
     public tabControl: TabControl;
     public tabs: Tab[];
 
-    private subscriptions: Subscription[] = [];
-
-    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['user', 'connected', 'connectedWallet']) getConnectedWallet: Observable<number>;
     @select(['user', 'myDetail', 'userId']) getUser;
     @select(['wallet', 'myWalletContract', 'contractList']) getContractList;
     @select(['wallet', 'myWalletContract', 'updatedContractList']) updateContractList;
@@ -71,19 +73,17 @@ export class ContractsComponent implements OnInit, OnDestroy {
                 template: 'contractsListTab',
             },
         });
-        this.subscriptions.push(
-            this.tabControl.getTabs().subscribe((tabs) => {
-                this.tabs = tabs;
-                this.changeDetectorRef.markForCheck();
-            }),
-        );
+        this.tabControl.getTabs().pipe(takeUntil(this.unsubscribe)).subscribe((tabs) => {
+            this.tabs = tabs;
+            this.changeDetectorRef.markForCheck();
+        }),
 
         this.token = this.memberSocketService.token;
         if (this.updateContractList) {
-            this.updateContractList.subscribe(
+            this.updateContractList.pipe(takeUntil(this.unsubscribe)).subscribe(
                 (data) => {
-                    if (this.walletId === '0' || this.walletId === null) {
-                        this.walletId = '5';
+                    if (this.walletId === 0 || this.walletId === null) {
+                        this.walletId = 5;
                     }
                     const asyncTaskPipe = this.walletNodeRequest.requestContractsByWallet({
                         walletId: this.walletId,
@@ -101,10 +101,12 @@ export class ContractsComponent implements OnInit, OnDestroy {
             );
         }
         if (this.getUser) {
-            this.getUser.subscribe(data => this.userId = data);
+            this.getUser.pipe(takeUntil(this.unsubscribe)).subscribe(data => this.userId = data);
         }
 
-        this.getConnectedWallet.subscribe((data) => {
+        //this.subscribe<number>(this.getConnectedWallet, id => this.walletId = id);
+
+        this.getConnectedWallet.pipe(takeUntil(this.unsubscribe)).subscribe((data) => {
             this.walletId = data;
             const asyncTaskPipe = this.walletService.requestWalletLabel({ walletId: data });
             return new Promise((resolve, reject) => {
@@ -138,14 +140,18 @@ export class ContractsComponent implements OnInit, OnDestroy {
             });
         });
 
-        this.subscriptions.push(this.getContractList.subscribe((data) => {
-            if (typeof data === 'undefined' || data.length <= 0) {
-                return;
-            }
-            this.contracts = data[0].contractData.map((contract) => {
-                return this.updateContract(this.contractService.fromJSON(contract, this.addresses));
-            });
-        }));
+        this.getContractList.pipe(takeUntil(this.unsubscribe)).subscribe(
+            (data) => {
+                if (typeof data === 'undefined' || data.length <= 0) {
+                    return;
+                }
+                this.contracts = data[0].contractData.map((contract) => {
+                    return this.updateContract(this.contractService.fromJSON(contract, this.addresses));
+                });
+            },
+            err => console.error(err),
+            done => console.log('Unsubscribed contract list'),
+        );
     }
 
     private updateContract(contract: ContractModel) {
@@ -162,9 +168,8 @@ export class ContractsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 
     public commitAuthorisation(index: number, contract: ContractModel): void {
@@ -210,50 +215,26 @@ export class ContractsComponent implements OnInit, OnDestroy {
         ));
     }
 
-    public commitParty(index: number, contract: ContractModel): void {
-        index += 1;
-        console.log('INDEX:', index);
-        let contractJson = JSON.parse(this.contractService.toJSON(contract));
-        contractJson = contractJson.contractdata;
-        console.log('CONTRACT JSON:', contractJson);
-        const commitment = [];
-        _.each(contractJson.parties[index][2], (payListItem, i) => {
-            commitment[i] = [i, payListItem[1], payListItem[2], payListItem[3], '', ''];
-        });
-        const receive = [];
-        _.each(contractJson.parties[index][3], (receiveListItem, i) => {
-            receive[i] = [i, contract.parties[index - 1].sigAddress];
-        });
-
-        const asyncTaskPipe = this.walletNodeRequest.walletCommitToContract({
-            walletid: this.walletId,
-            address: contract.parties[index - 1].sigAddress,
-            function: contract.function + '_commit',
-            contractdata: {
-                commitment,
-                receive,
-                contractfunction: contract.function + '_commit',
-                issuingaddress: contract.issuingaddress,
-                contractaddress: contract.address,
-                party: [
-                    contract.parties[index - 1].partyIdentifier,
-                    '',
-                    '',
-                ],
-                parties: contractJson.parties,
-                authorise: contractJson.authorisations,
-            },
-            contractaddress: contract.address,
-        });
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [],
-            [],
-            asyncTaskPipe,
-            {},
-            () => {
+    public commitParty(party: PartyModel, contract: ContractModel): void {
+        this.contractService.commitParty(party, contract)
+            .then((data) => {
+                this.committing = [...this.committing, party.partyIdentifier];
+                this.changeDetectorRef.markForCheck();
                 this.showAlert('Committing to Contract', 'success');
-            },
-        ));
+            })
+            .catch(data => console.log('Bad commit', data));
+    }
+
+    public updateParameter(key, value) {
+        this.parameterValues[key] = value;
+        console.log(key, value);
+    }
+
+    public commitParameter(key) {
+        const value = this.parameterValues[key];
+
+        console.log(`Commit ${key} -> ${value}`);
+
     }
 
     /**

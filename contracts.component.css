@@ -53,3 +53,13 @@ code.metadata {
     background: #d5d6da;
     color: #656880;
 }
+.label-commit {
+    border-color: #ccc;
+    color: #ccc;
+}
+.label-commit:hover {
+    cursor: pointer;
+    border: 1px solid #60b515;
+    background: #dff0d0;
+    color: #266900;
+}

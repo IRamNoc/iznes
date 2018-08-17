@@ -117,11 +117,12 @@
                                 <div class="pull-right">
                                     <span *ngIf="party.signature != ''" class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
                                     <span *ngIf="party.signature == '' && party.sigAddress_label == party.sigAddress" class="label label-info"><i class="fa fa-clock-o"></i>&nbsp;Not Committed</span>
-                                    <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress">
-                                        <button id="edit-{{i}}" (click)="commitParty(i, contract)" class="btn btn-success btn-sm">
-                                            <i class="fa fa-check"></i>&nbsp;<span mltag="txt_view">Commit</span>
-                                        </button>
+                                    <span *ngIf="party.signature == '' && party.sigAddress_label != party.sigAddress && !committing.includes(party.partyIdentifier)">
+                                        <span id="edit-{{i}}" (click)="commitParty(party, contract)" class="label label-commit">
+                                            <i class="fa fa-check"></i>&nbsp;Commit
+                                        </span>
                                     </span>
+                                    <span class="label label-committing" *ngIf="party.signature == '' && committing.includes(party.partyIdentifier)"><i class="fa fa-spinner fa-spin"></i> Committing...</span>
                                 </div>
                             </div>
                         </div>
@@ -268,14 +269,23 @@
             <!-- Parameters -->
             <div class="list-group-item list-group-header" *ngIf="contract.parameters.length">Parameters</div>
             <div class="list-group-item" *ngIf="contract.parameters.length">
-                <clr-datagrid #parametersDataGrid>
-                    <clr-dg-column mltag="txt_parameter">Parameter</clr-dg-column>
-                    <clr-dg-column mltag="txt_value">Value</clr-dg-column>
-                    <clr-dg-row *clrDgItems="let parameter of contract.parameters">
-                        <clr-dg-cell>{{parameter.key}}</clr-dg-cell>
-                        <clr-dg-cell>{{parameter.value}}</clr-dg-cell>
-                    </clr-dg-row>
-                </clr-datagrid>
+                <form>
+                    <clr-datagrid #parametersDataGrid>
+                        <clr-dg-column mltag="txt_parameter">Parameter</clr-dg-column>
+                        <clr-dg-column mltag="txt_value">Value</clr-dg-column>
+                        <clr-dg-row *clrDgItems="let parameter of contract.parameters">
+                            <clr-dg-cell>{{parameter.key}}</clr-dg-cell>
+                            <clr-dg-cell *ngIf="parameter.value && parameter.signature">
+                                {{parameter.value}} <span class="label label-success"><i class="fa fa-check"></i>&nbsp;Committed</span>
+                            </clr-dg-cell>
+                            <clr-dg-cell *ngIf="!parameter.value && !parameter.signature">
+                                <div class="form-group">
+                                    <input type="text" style="width: 3rem" (change)="updateParameter(parameter.key, $event.target.value)"/><span class="label label-commit" style="position:relative; top: 10px" (click)="commitParameter(parameter.key)"><i class="fa fa-check"></i>&nbsp;Commit</span>
+                                </div>
+                            </clr-dg-cell>
+                        </clr-dg-row>
+                    </clr-datagrid>
+                </form>
             </div>
         </div>
 
