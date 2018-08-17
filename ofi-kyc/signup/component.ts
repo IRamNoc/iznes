@@ -1,5 +1,8 @@
 import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { select } from '@angular-redux/store';
+import { Observable, Subscription } from 'rxjs';
 
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, ConfirmationService } from '@setl/utils';
@@ -22,13 +25,17 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
     configuration: ISignupConfiguration;
 
     private appConfig;
+    private authSub: Subscription;
     private signupData: () => ISignupData;
+
+    @select(['user', 'authentication']) authenticationOb: Observable<any>;
 
     constructor(private translate: MultilingualService,
                 @Inject(APP_CONFIG) appConfig: AppConfig,
                 private alertsService: AlertsService,
                 private confirmationService: ConfirmationService,
-                private ofiKycService: OfiKycService) {
+                private ofiKycService: OfiKycService,
+                private router: Router) {
 
         this.appConfig = appConfig;
 
@@ -77,6 +84,10 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
                         btnClass: 'success',
                     },
                 ).subscribe(() => {
+                    this.authSub = this.authenticationOb.subscribe((authentication) => {
+                        this.updateState(authentication);
+                    });
+
                     resolve();
                 });
             }).catch((e) => {
@@ -88,9 +99,29 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
         });
     }
 
+    private updateState(myAuthenData) {
+        if (myAuthenData.isLogin) {
+            const redirect = myAuthenData.defaultHomePage ? myAuthenData.defaultHomePage : '/home';
+
+            if (this.signupData().invitationToken) {
+                const extras = {
+                    queryParams: {
+                        invitationToken: this.signupData().invitationToken,
+                        redirect,
+                    },
+                };
+                this.router.navigate(['consume'], extras);
+            } else {
+                this.router.navigateByUrl(redirect);
+            }
+        }
+    }
+
     setSignupData(signupData: () => ISignupData): void {
         this.signupData = signupData;
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() {
+        this.authSub.unsubscribe();
+    }
 }
