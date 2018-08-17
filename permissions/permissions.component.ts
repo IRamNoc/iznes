@@ -525,7 +525,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.clearNewGroup(1, false); // send false in to disable the preventDefault.
 
             /* Success message. */
-            this.showSuccess('Successfully created group');
+            this.showSuccess('Successfully created group', () => {
+                this.closeTab(tabid);
+            });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
             this.showError('Failed to update this permission group.');
@@ -602,11 +604,13 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             });
 
             /* Success message. */
-            this.showSuccess('Successfully updated this permission group');
+            this.showSuccess('Successfully updated this permission group', () => {
+                this.closeTab(tabid);
+            });
         }).catch((response) => {
             /* Implement an error message for failing to update the group. */
             console.warn('Failed to update the group.', response);
-            this.showSuccess('Failed to update this permission group');
+            this.showError('Failed to update this permission group');
         });
 
         /* Clear the form. */
@@ -754,7 +758,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
      *
      * @return {void}
      */
-    showSuccess(message) {
+    showSuccess(message, callback: () => void = () => {
+    }) {
         /* Show the message. */
         this.alertsService.create('success', `
               <table class="table grid">
@@ -764,7 +769,16 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                       </tr>
                   </tbody>
               </table>
-          `);
+          `).subscribe(
+            () => {
+                setTimeout(
+                    () => {
+                        callback();
+                    },
+                    50,
+                );
+            },
+        );
     }
 
     ngOnDestroy(): void {
