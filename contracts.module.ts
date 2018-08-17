@@ -10,7 +10,6 @@ import {
 } from '@angular/forms';
 import { ContractService } from './services';
 import { DVPContractService } from './dvp/dvp.service';
-import { CommitComponent } from './commit.component';
 
 @NgModule({
     imports: [
