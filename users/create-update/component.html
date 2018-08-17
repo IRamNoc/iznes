@@ -112,7 +112,7 @@
                         'Update &amp; Send Invitation'
                         | translate }}
                     </button>
-                    <i class="tooltip fa fa-question-circle" [tooltip]="createUserTooltip"></i>
+                    <i class="tooltip fa fa-question-circle" *ngIf="createUserTooltip" [tooltip]="createUserTooltip"></i>
                 </div>
 
                 <div class="col justify-end" *ngIf="isUpdateMode()">

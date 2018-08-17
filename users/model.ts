@@ -11,6 +11,9 @@ export class AccountAdminUser {
     phoneNumber: string;
     userTypeID: number;
     userType: string;
+    invitationToken: string;
+    invitationEmail: string;
+    invitationDate: string;
     userStatus: number;
     isActivated?: boolean;
 }
@@ -94,7 +97,7 @@ export interface CreateUserRequest extends MemberNodeMessageBody {
 
 export interface InviteUserRequest extends MemberNodeMessageBody {
     token: string;
-    userID: number;
+    userId: number;
     userFirstName: string;
     recipientEmailAddress: string;
     localeCode: string;

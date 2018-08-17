@@ -1,3 +1,5 @@
+import { MemberNodeMessageBody } from '@setl/utils/common';
+
 export type AccountAdminResponse = AccountAdminSuccessResponse | AccountAdminErrorResponse;
 
 export type AccountAdminSuccessResponse = [
