@@ -3,6 +3,7 @@ export interface ISignupConfiguration {
     buttonText?: string;
     description?: string;
     redirectURL?: string;
+    username?: string;
     title?: string;
 
     signupCallback?: (form: ISignupForm) => Promise<void>;
