@@ -186,6 +186,8 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
                     this.showSuccessResponse('Chain updated');
+
+                    this.tabsControl[tabId]['title'] = '<i class="fa fa-chain"></i> ' + chainName;
                 },
                 (data) => {
                     this.showErrorResponse(data);
@@ -218,7 +220,7 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
             formControl: new FormGroup(
                 {
                     chainId: new FormControl(chain.chainId),
-                    chainName: new FormControl('', Validators.required),
+                    chainName: new FormControl(chain.chainName, Validators.required),
                 },
             ),
             active: false,
