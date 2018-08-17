@@ -1,5 +1,5 @@
 import { OfiFundAccessMyState } from './model';
-import { Action } from 'redux';
+import { Action, AnyAction } from 'redux';
 import * as _ from 'lodash';
 import { fromJS } from 'immutable';
 
@@ -24,7 +24,7 @@ const initialState: OfiFundAccessMyState = {
  * @return {any}
  * @constructor
  */
-export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: Action): OfiFundAccessMyState {
+export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = initialState, action: AnyAction): OfiFundAccessMyState {
     switch (action.type) {
     case SET_FUND_ACCESS_MY:
         return handleSetFundAccessMy(state, action);

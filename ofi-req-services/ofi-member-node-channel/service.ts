@@ -12,7 +12,6 @@ import {
     ofiClearRequestedManageOrder,
     ofiUpdateOrder,
     setamkyclist,
-    ofiClearRequestedMyOrder,
 } from '../../ofi-store';
 import { clearRequestedUmbrellaFund } from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import { clearRequestedIznesFunds } from '../../ofi-store/ofi-product/fund/fund-list/actions';

@@ -18,7 +18,7 @@ import { setRequestedFundAccessMy, clearRequestedFundAccessMy, SET_FUND_ACCESS_M
 export class OfiFundInvestService {
     constructor(
         private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux,
+        private ngRedux: NgRedux<any>,
     ) {
 
     }
