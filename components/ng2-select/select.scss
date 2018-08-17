@@ -13,11 +13,12 @@
     float: left;
 }
 
-.ui-select-multiple{
-    cursor : pointer;
+.ui-select-multiple {
+    cursor: pointer;
 
     .ui-select-placeholder {
-        padding : 0 15px;
+        padding: 0 15px;
+        margin: -6px 0 !important;
     }
 }
 
@@ -215,7 +216,7 @@
 
 .ui-select-container:hover {
     .dropdown-menu {
-        border-color: #a4c4fa;
+        border-color: #a4c4fa !important;
     }
     .ui-select-match.dropdown.open .ui-select-toggle {
         border-color: #a4c4fa !important;
@@ -273,6 +274,6 @@
     padding: 0px 10px !important;
 }
 
-.no-active-top{
+.no-active-top {
     top: 1px;
 }
