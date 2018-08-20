@@ -90,12 +90,16 @@ Small screen, landscape
     margin: 0 auto;
 }
 
-.toggle-password-visible {
-    cursor: pointer;
-    color: grey;
-    font-size: 18px;
-    line-height: 2em;
-    position: absolute;
-    right: 10px;
-    top: 3px;
+.toggle-parent{
+    position: relative;
+
+    .toggle-password {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        font-size: 18px;
+        line-height: 2em;
+        color: grey;
+        cursor: pointer;
+    }
 }
