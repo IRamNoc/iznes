@@ -33,6 +33,7 @@ export class FundShare {
     fundOptionnal = new ShareFundOptionnal();
     umbrella = new ShareUmbrellaFund();
     umbrellaOptionnal = new ShareUmbrellaFundOptionnal();
+
     calendar = {
         mandatory: new ShareCalendarMandatory(),
         subscriptionTradeCycle: null,

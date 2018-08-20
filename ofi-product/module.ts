@@ -37,6 +37,7 @@ import { FundAuditComponent } from './fund-audit/fund-audit.component';
 import {
     FundAuditDatagridComponent,
 } from './fund-audit/fund-audit-datagrid/fund-audit-datagrid.component';
+import { OfiManagementCompanyComponent } from './management-company/management-company.component';
 
 /* Graphs. */
 import { ChartsModule } from 'ng2-charts';
@@ -67,6 +68,7 @@ import productConfig from './productConfig';
         UmbrellaAuditDatagridComponent,
         FundAuditComponent,
         FundAuditDatagridComponent,
+        OfiManagementCompanyComponent,
     ],
     exports: [
         ProductHomeComponent,
@@ -82,6 +84,7 @@ import productConfig from './productConfig';
         UmbrellaAuditDatagridComponent,
         FundAuditComponent,
         FundAuditDatagridComponent,
+        OfiManagementCompanyComponent,
     ],
     imports: [
         CommonModule,

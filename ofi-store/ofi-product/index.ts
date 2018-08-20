@@ -16,7 +16,6 @@ import {
 import {
     FundState,
     FundReducer,
-    SET_FUND_LIST,
 } from './fund';
 
 import {
@@ -147,7 +146,6 @@ export {
     // FUNDS
     FundState,
     FundReducer,
-    SET_FUND_LIST,
     // UMBRELLA FUNDS
     UmbrellaFundState,
     umbrellaFundReducer,

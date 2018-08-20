@@ -28,7 +28,6 @@ import {
     OfiFundShare,
     OfiProductReducer,
     OfiProductState,
-    SET_FUND_LIST,
     SET_FUND_SHARE,
     SET_MANAGEMENT_COMPANY_LIST,
     SET_SICAV_LIST,
@@ -119,7 +118,6 @@ export {
     OfiProductReducer,
     SET_MANAGEMENT_COMPANY_LIST,
     SET_SICAV_LIST,
-    SET_FUND_LIST,
 };
 
 export {
