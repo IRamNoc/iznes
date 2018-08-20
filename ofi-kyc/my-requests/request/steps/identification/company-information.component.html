@@ -185,7 +185,7 @@
                             <div class="form-group required-field col-sm-6">
                                 <label for="beneficiary-document-{{i}}" class="control-label">{{'Document' | translate}}</label>
                                 <div class="filedrop-wrapper">
-                                    <setl-file-drop class="form-control" id="beneficiary-document-{{i}}"
+                                    <setl-file-drop filePermission="0" class="form-control" id="beneficiary-document-{{i}}"
                                                     (onDrop)="uploadFile($event, i)"
                                                     [preset]="form.get(['beneficiaries', i, 'document']).value"
                                                     ngDefaultControl
