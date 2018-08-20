@@ -1,10 +1,19 @@
 import { Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
-import { NgRedux } from '@angular-redux/store';
+import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
+import {
+    MyUserService,
+    InitialisationService,
+    MyWalletsService,
+    ChannelService,
+    AccountsService,
+    PermissionGroupService,
+    ChainService,
+} from '@setl/core-req-services';
 import {
     SET_LOGIN_DETAIL, RESET_LOGIN_DETAIL, loginRequestAC,
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
@@ -13,9 +22,9 @@ import {
 import { MultilingualService } from '@setl/multilingual';
 import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { MyUserService } from '@setl/core-req-services';
 
 import * as Model from './model';
+import { MemberSocketService } from '@setl/websocket-service';
 
 @Component({
     selector: 'app-signup',
@@ -46,11 +55,20 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
     @Output() signupDataEmit: EventEmitter<() => Model.ISignupData> = new EventEmitter();
 
+    @select(['user', 'authentication']) authenticationOb;
+
     constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
                 public translate: MultilingualService,
                 private alertsService: AlertsService,
                 private myUserService: MyUserService,
+                private myWalletsService: MyWalletsService,
+                private memberSocketService: MemberSocketService,
+                private channelService: ChannelService,
+                private accountsService: AccountsService,
+                private permissionGroupService: PermissionGroupService,
+                private chainService: ChainService,
+                private initialisationService: InitialisationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -68,6 +86,10 @@ export class SignupComponent implements OnDestroy, OnInit {
                 language: this.language,
             };
         });
+
+        this.subscriptions.push(this.authenticationOb.subscribe((auth) => {
+            this.updateState(auth);
+        }));
 
         window.onbeforeunload = null;
     }
@@ -140,6 +162,22 @@ export class SignupComponent implements OnDestroy, OnInit {
         return this.configuration ? this.configuration.buttonText : this.translate.translate('Create an account');
     }
 
+    private updateState(auth): void {
+        this.memberSocketService.token = auth.token;
+
+        InitialisationService.membernodeInitialisation(
+            this.redux,
+            this.myWalletsService,
+            this.memberSocketService,
+            this.channelService,
+            this.accountsService,
+            this.myUserService,
+            this.permissionGroupService,
+            this.chainService,
+            this.initialisationService,
+        );
+    }
+
     signup(form: Model.ISignupForm) {
         if (!this.configuration.signupCallback) return;
 
@@ -169,7 +207,6 @@ export class SignupComponent implements OnDestroy, OnInit {
                     [],
                     asyncTaskPipes, {},
                 ));
-
             },
             (data) => {
                 this.handleLoginFailMessage(data);
