@@ -12,4 +12,4 @@ export {
     UsersListComponent,
 } from './users';
 
-export { AccountSignUpComponent } from './signup/component';
+export { AccountSignUpComponent, AccountSignUpRedirectComponent } from './signup';

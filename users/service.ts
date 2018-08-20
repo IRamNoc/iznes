@@ -316,8 +316,6 @@ export class UsersService extends AccountAdminBaseService {
             assetManagerName,
         };
 
-        console.log(request);
-
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
