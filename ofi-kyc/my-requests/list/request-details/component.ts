@@ -1,19 +1,27 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, AfterViewInit, Input } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    AfterViewInit,
+    Input
+} from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { select, NgRedux } from '@angular-redux/store';
 import { Subscription, Subject } from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ToasterService } from 'angular2-toaster';
 import * as moment from 'moment';
 import { fromJS } from 'immutable';
-import {groupBy, find} from 'lodash';
-import {NewRequestService} from '../../request/new-request.service';
-import {Router} from '@angular/router';
+import { groupBy, find } from 'lodash';
+import { NewRequestService } from '../../request/new-request.service';
+import { Router } from '@angular/router';
 
 import { MultilingualService } from '@setl/multilingual';
-import {KycStatus as statusList} from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
+import { KycStatus as statusList } from '@ofi/ofi-main/ofi-kyc/my-requests/requests.service';
 
 @Component({
     selector: 'my-requests-details',
@@ -54,7 +62,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         public _translate: MultilingualService,
         private ngRedux: NgRedux<any>,
         private newRequestService: NewRequestService,
-        private router : Router,
+        private router: Router,
     ) {
         this.statusList = statusList;
     }
@@ -66,41 +74,47 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     initSubscriptions() {
         this.myKycList$
-            .pipe(
-                takeUntil(this.unSubscribe)
-            )
-            .subscribe(kycList => {
-                this.kycList = kycList;
-                const kyc = this.kycList.find((item) => item.kycID === this.kycID);
-                if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
-                    this.requestDetailStatus = this.statusList[kyc.status];
-                    this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
-                    this.companyName = kyc.companyName;
-                    this.lastUpdate = kyc.lastUpdated;
-                    this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
-                }
-            })
+        .pipe(
+            takeUntil(this.unSubscribe)
+        )
+        .subscribe(kycList => {
+            this.kycList = kycList;
+            const kyc = this.kycList.find((item) => item.kycID === this.kycID);
+            if (kyc && typeof kyc !== 'undefined' && kyc !== undefined && kyc !== null) {
+                this.requestDetailStatus = this.statusList[kyc.status];
+                this.isKYCFull = (kyc.alreadyCompleted === 1 || kyc.status === 2) ? false : true;
+                this.companyName = kyc.companyName;
+                this.disabledForm.patchValue({
+                    firstName: kyc.firstName,
+                    lastName: kyc.lastName,
+                    email: kyc.emailAddress,
+                    phone: kyc.phoneNumber
+                });
+                this.lastUpdate = kyc.lastUpdated;
+                this._ofiKycService.fetchStatusAuditByKycID(this.kycID);
+            }
+        })
         ;
 
         this.statusAuditTrail$
-            .takeUntil(this.unSubscribe)
-            .subscribe((d) => {
-                if (!this.kycID || !Object.keys(d).length) {
-                    return;
-                }
+        .takeUntil(this.unSubscribe)
+        .subscribe((d) => {
+            if (!this.kycID || !Object.keys(d).length) {
+                return;
+            }
 
-                if (d[this.kycID]) {
-                    if (d[this.kycID][0]) {
-                        if (d[this.kycID][0].message) {
-                            this.statusAuditItems = d[this.kycID][0].message;
-                            this.disabledForm.get('rejectionMessage').patchValue(this.statusAuditItems, {emitEvent: false});
-                            this.disabledForm.get('informationMessage').patchValue(this.statusAuditItems, {emitEvent: false});
-                        }
+            if (d[this.kycID]) {
+                if (d[this.kycID][0]) {
+                    if (d[this.kycID][0].message) {
+                        this.statusAuditItems = d[this.kycID][0].message;
+                        this.disabledForm.get('rejectionMessage').patchValue(this.statusAuditItems, { emitEvent: false });
+                        this.disabledForm.get('informationMessage').patchValue(this.statusAuditItems, { emitEvent: false });
                     }
                 }
+            }
 
-                this._changeDetectorRef.markForCheck();
-            })
+            this._changeDetectorRef.markForCheck();
+        })
         ;
     }
 
@@ -113,12 +127,12 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
 
     constructDisabledForm() {
         this.disabledForm = this._fb.group({
-            firstName: new FormControl({value: 'first name', disabled: true}),
-            lastName: new FormControl({value: 'last name', disabled: true}),
-            email: new FormControl({value: 'email address', disabled: true}),
-            phone: new FormControl({value: 'phone number', disabled: true}),
-            rejectionMessage: new FormControl({value: 'No message', disabled: true}),
-            informationMessage: new FormControl({value: 'No message', disabled: true}),
+            firstName: new FormControl({ value: 'first name', disabled: true }),
+            lastName: new FormControl({ value: 'last name', disabled: true }),
+            email: new FormControl({ value: 'email address', disabled: true }),
+            phone: new FormControl({ value: 'phone number', disabled: true }),
+            rejectionMessage: new FormControl({ value: 'No message', disabled: true }),
+            informationMessage: new FormControl({ value: 'No message', disabled: true }),
         });
     }
 
@@ -145,15 +159,15 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
             kycIDs.push({
                 kycID: kyc.kycID,
                 amcID: kyc.amManagementCompanyID,
-                completedStep : completedStep
+                completedStep: completedStep
             });
         });
 
-        if(completedStep){
+        if (completedStep) {
             extras = {
-                queryParams : {
-                    step : completedStep,
-                    completed : currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true)
+                queryParams: {
+                    step: completedStep,
+                    completed: currentGroup.reduce((acc, kyc) => acc && !!kyc.alreadyCompleted, true)
                 }
             };
         }
