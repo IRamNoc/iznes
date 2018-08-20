@@ -63,7 +63,7 @@
 
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                                <input readonly [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
                             </div>
 
                             <span class="field-error" *ngIf="hasError('doneDate')">{{'Field is required' | translate}}</span>
@@ -84,7 +84,7 @@
                                 {{'As electronic signature, please upload here representative ID\'s card' | translate}}:
                             </label>
                             <div class="filedrop-wrapper">
-                                <setl-file-drop class="form-control" id="electronicSignatureDocument"
+                                <setl-file-drop filePermission="0" class="form-control" id="electronicSignatureDocument"
                                                 (onDrop)="uploadFile($event)"
                                                 [preset]="form.get('electronicSignatureDocument').value"
                                                 ngDefaultControl
