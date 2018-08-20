@@ -1,13 +1,12 @@
 import { Component, OnDestroy, Inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { ToasterService } from 'angular2-toaster';
+import * as _ from 'lodash';
 
 import { MultilingualService } from '@setl/multilingual';
 import { APP_CONFIG, AppConfig, ConfirmationService, immutableHelper } from '@setl/utils';
 import { ISignupConfiguration, ISignupData } from '@setl/core-login';
 
-import { AccountAdminBaseService } from '../base/service';
 import { AccountSignupService } from './service';
 
 @Component({
@@ -27,7 +26,6 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private toasterService: AlertsService,
                 private confirmationService: ConfirmationService,
-                private accountAdminService: AccountAdminBaseService,
                 private router: Router) {
 
         this.appConfig = appConfig;
@@ -132,5 +130,5 @@ export class AccountSignUpComponent implements OnInit, OnDestroy {
         this.validateSignupData();
     }
 
-    ngOnDestroy() {}
+    ngOnDestroy() { }
 }

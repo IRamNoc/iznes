@@ -45,7 +45,11 @@ import {
     UsersStatusComponent,
 } from './users';
 
-import { AccountSignUpComponent, AccountSignupService } from './signup';
+import {
+    AccountSignUpComponent,
+    AccountSignUpRedirectComponent,
+    AccountSignupService,
+} from './signup';
 
 @NgModule({
     imports: [
@@ -82,6 +86,7 @@ import { AccountSignUpComponent, AccountSignupService } from './signup';
         UserTeamsStatusComponent,
         UsersStatusComponent,
         AccountSignUpComponent,
+        AccountSignUpRedirectComponent,
     ],
     providers: [
         UserTeamsService,
