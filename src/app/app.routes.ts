@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, UrlSegment, UrlMatchResult } from '@angular/router';
 /* Layouts. */
 import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
 import {
@@ -74,6 +74,8 @@ import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
+    AccountSignUpComponent,
+    AccountSignUpRedirectComponent,
 } from '@setl/core-account-admin';
 import {
     ProductHomeComponent,
@@ -161,6 +163,14 @@ export const ROUTES: Routes = [
                 component: OfiSignUpComponent,
             },
         ],
+    },
+    {
+        path: 'account-signup',
+        component: AccountSignUpComponent,
+    },
+    {
+        path: 'account-signup-redirect/:invitationToken',
+        component: AccountSignUpRedirectComponent,
     },
     /* Basic Layout pages. */
     {
