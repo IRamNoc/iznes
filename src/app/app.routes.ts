@@ -13,13 +13,8 @@ import { SetlMyAccountComponent } from '@setl/core-account';
  * Login Guard service
  */
 import { LoginGuardService } from '@setl/core-login';
-/* Ofi Manage Orders Module. */
-/* Ofi Home Page. */
 /**
  * Ofi main module.
- */
-/**
- * Ofi report module
  */
 import {
     CouponPaymentComponent,
@@ -58,6 +53,7 @@ import {
     OfiClientReferentialComponent,
     UmbrellaAuditComponent,
     FundAuditComponent,
+    OfiManagementCompanyComponent,
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -79,12 +75,6 @@ import {
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
 } from '@setl/core-account-admin';
-/* Product */
-import {
-    OfiFundComponent,
-    OfiManagementCompanyComponent,
-    OfiSicavComponent,
-} from '@ofi/product';
 import {
     ProductHomeComponent,
     UmbrellaFundComponent,
@@ -152,7 +142,7 @@ export const ROUTES: Routes = [
                 path: 'reset/:token',
                 component: SetlLoginComponent,
             },
-        ]
+        ],
     },
     {
         path: 'redirect/:lang/:invitationToken',
@@ -344,16 +334,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'product/fund-share',
                         component: FundShareComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'fund',
-                        component: OfiFundComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'sicav',
-                        component: OfiSicavComponent,
                         canActivate: [LoginGuardService],
                     },
                     {
