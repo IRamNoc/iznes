@@ -1,11 +1,13 @@
 /* Core imports. */
-import {Injectable} from '@angular/core';
-import {FormGroup} from "@angular/forms";
-import * as _ from 'lodash';
-/* Request service. */
-import {PersistRequestService} from "@setl/core-req-services";
+import { Injectable } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { select } from '@angular-redux/store';
 
-/* Low dash */
+/* Request service. */
+import { PersistRequestService } from '@setl/core-req-services';
+
+/* Low dash. */
+import * as _ from 'lodash';
 
 /* Decorator. */
 @Injectable()
@@ -13,15 +15,17 @@ import {PersistRequestService} from "@setl/core-req-services";
 /* Class. */
 export class PersistService {
     /* Settables. */
-    private _inputBuffer: number = .5; // Number of seconds to wait for another key press before saving form state.
+    private inputBuffer: number = .5; // Number of seconds to wait for another key press before saving form state.
 
     /* Private properties. */
-    private _forms: any = {};
-    private _subscriptions: Array<any> = [];
-    private _wait: any;
+    private forms: any = {};
+    private subscriptions: any[] = [];
+    private wait: any;
+
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     /* Constructor. */
-    constructor(private _persistRequestService: PersistRequestService) {
+    constructor(private persistRequestService: PersistRequestService) {
         /* Stub. */
     }
 
@@ -30,22 +34,38 @@ export class PersistService {
      * ----------
      * Allows a form group value changes observable to be monitored and for the value to be restored.
      *
-     * @param {string} name - The name identifier of the form, must coenside with the name registered in the database.
+     * @param {string} name - The name identifier of the form, must coincide with the name registered in the database.
      * @param {FormGroup} group - The FormGroup to be watched and restored.
-     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
+     * @param {string|null} context - The context of the form (for the case of one form used with several parameters).
+     * @param {Object} options - Configuration options (e.g. isWalletSensitive to save a form against a wallet ID).
      *
-     * @return {FormGroup} - The FormGroup origininally passed in.
+     * @return {FormGroup} - The FormGroup originally passed in.
      */
-    public watchForm(name: string, group: FormGroup, context: string = null): FormGroup {
+    public watchForm(name: string, group: FormGroup, context: string = null, options: object = {}): FormGroup {
         console.log(' |-- Persist - watchForm: ', name);
+
+        /* Check if the form is wallet sensitive. */
+        if (options.hasOwnProperty('isWalletSensitive') && options['isWalletSensitive']) {
+            /* Subscribe for changes on wallet. */
+            this.connectedWalletOb.subscribe((wallet) => {
+                /* If the wallet has changed... */
+                if (wallet !== Number(context)) {
+                    /* Watch a new form instance for the changed wallet using the wallet as the form context. */
+                    this.watchForm(name, group, String(wallet), { isWalletSensitive: true });
+                }
+            });
+        }
+
         /* Check if we have a state for this form. */
-        this._persistRequestService.loadFormState(name, context).then((data) => {
+        this.persistRequestService.loadFormState(name, context).then((data) => {
             /* Get recovered data. */
             const recoveredData = JSON.parse(_.get(data, '[1].Data[0].data', false));
 
             /* If we couldn't then we'll just return. */
             if (!recoveredData) {
                 console.warn(' | Failed to read a previous state, maybe there isn\'t one?: ', data);
+                /* Clear the form's values. */
+                group.reset();
             } else {
                 /* If it was ok, we'll try set the value. */
                 try {
@@ -61,7 +81,7 @@ export class PersistService {
         });
 
         /* Re-subscribe to changes. */
-        this._subscribeToChanges(name, group, context);
+        this.subscribeToChanges(name, group, context);
 
         /* Return. */
         console.log(' | returning group.');
@@ -76,51 +96,51 @@ export class PersistService {
      *
      * @param {string} name - The name of a form.
      *
-     * @return {boolean}    - True for a successful unsubscription and false for no subscription that needed to be unsubscribed.
+     * @return {boolean} - True for successful unsubscription; false for no subscription that needed to be unsubscribed.
      */
     public unwatchForm(name: string): boolean {
         console.log(' |-- Persist - unwatchForm: ', name);
         /* If we have a subscription... */
-        if (this._subscriptions[name]) {
+        if (this.subscriptions[name]) {
             console.log(' | Unsubscribing from group.');
             /* ...unsubscribe... */
-            this._subscriptions[name].unsubscribe();
+            this.subscriptions[name].unsubscribe();
 
             /* ...and return true. */
             return true;
         }
 
-        /* else, return false, as we didn't unsubscribe anything. */
+        /* Else, return false, as we didn't unsubscribe anything. */
         return false;
     }
 
     /**
      * Refresh State
-     * -----------
+     * -------------
      * Refreshes the saved state of a form to the value of a new FormGroup.
      *
-     * @param  {string} name     - the name of the form.
-     * @param  {FormGroup} group - the new FormGroup object.
-     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
+     * @param  {string} name - The name of the form.
+     * @param  {FormGroup} group - The new FormGroup object.
+     * @param  {string|null} context - The context of the form (for the case of one form used with several parameters).
      *
-     * @return {FormGroup} group - the FormGroup passed in.
+     * @return {FormGroup} group - The FormGroup passed in.
      */
     public refreshState(name: string, group: FormGroup, context: string = null): FormGroup {
         console.log(' |--- Persist - clearState: ', name);
         /* Let's firstly set the new form value. */
-        this._forms[name] = this.stripSensitiveData(group.value);
-        console.log(' | Form value in service: ', this._forms[name]);
+        this.forms[name] = this.stripSensitiveData(group.value);
+        console.log(' | Form value in service: ', this.forms[name]);
 
         /* Then let's save the empty value to the server. */
-        this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name]), context).then((save_data) => {
+        this.persistRequestService.saveFormState(name, JSON.stringify(this.forms[name]), context).then((saveData) => {
             /* Stub. */
-            console.log(' | Form state refesh reply: ', save_data);
+            console.log(' | Form state refresh reply: ', saveData);
         }).catch((error) => {
             console.warn(' | Failed to refresh this form\'s state: ', error);
         });
 
         /* Re-subscribe to changes. */
-        this._subscribeToChanges(name, group, context);
+        this.subscribeToChanges(name, group, context);
 
         /* Return. */
         return group;
@@ -131,41 +151,46 @@ export class PersistService {
      * --------------------
      * Subscribes a watcher to the valueChanges observable of a FormGroup.
      *
-     * @param  {string} name     - the form name.
-     * @param  {FormGroup} group - the FormGroup.
-     * @param  {string|null} context - the context of the form (for the case of one form used with several parameters).
+     * @param  {string} name - The form name.
+     * @param  {FormGroup} group - The FormGroup.
+     * @param  {string|null} context - The context of the form (for the case of one form used with several parameters).
      *
-     * @return {boolean}         - true.
+     * @return {boolean} - True.
      */
-    private _subscribeToChanges (name: string, group: FormGroup, context: string = null): boolean {
+    private subscribeToChanges (name: string, group: FormGroup, context: string = null): boolean {
         /* Unsubscribe if already subscribed. */
-        if (this._subscriptions[name]) {
+        if (this.subscriptions[name]) {
             console.log(' | Unsubscribing from group.');
-            this._subscriptions[name].unsubscribe();
+            this.subscriptions[name].unsubscribe();
         }
 
         /* Subscribe to the value changes. */
         console.log(' | Subscribing to group.');
-        this._subscriptions[name] = group.valueChanges.subscribe((data) => {
+        this.subscriptions[name] = group.valueChanges.subscribe((data) => {
             /* Set the form. */
-            this._forms[name] = this.stripSensitiveData(data);
+            this.forms[name] = this.stripSensitiveData(data);
 
             /* Check if we're already waiting for another change, remove the old timeout. */
-            if (this._wait) {
-                clearTimeout(this._wait);
+            if (this.wait) {
+                clearTimeout(this.wait);
             }
 
-            /* Set the timeout to then send an update up the socket, but wait N seconds in case the user types again.. */
+            /* Set the timeout to then send an update up the socket, but wait N seconds in case the user types again. */
             const secondsToWait = .5; // Seconds.
-            this._wait = setTimeout(() => {
-                /* Send the request. */
-                this._persistRequestService.saveFormState(name, JSON.stringify(this._forms[name]), context).then((save_data) => {
-                    /* Stub. */
-                    console.log(' | Form state save reply: ', save_data);
-                }).catch((error) => {
-                    console.warn(' | Failed to save this form\'s state: ', error);
-                });
-            }, 1000 * this._inputBuffer);
+            this.wait = setTimeout(
+                () => {
+                    /* Send the request. */
+                    this.persistRequestService.saveFormState(
+                        name,
+                        JSON.stringify(this.forms[name]),
+                        context).then((saveData) => {
+                            /* Stub. */
+                            console.log(' | Form state save reply: ', saveData);
+                        }).catch((error) => {
+                            console.warn(' | Failed to save this form\'s state: ', error);
+                        });
+                },
+                1000 * this.inputBuffer);
         });
 
         /* Return. */
@@ -177,7 +202,7 @@ export class PersistService {
      * ---------------
      * Strips passwords from the form data.
      *
-     * @param  {any}    data - the form data.
+     * @param  {any} data - The form data.
      * @return {void}
      */
     private stripSensitiveData (data: any): any {
@@ -190,12 +215,12 @@ export class PersistService {
 
     private loopAndRemovePassword (object) {
         /* Check if this is an object... */
-    	if (object && typeof object == 'object' && ! object.length) {
+    	if (object && typeof object === 'object' && !object.length) {
     		/* Loop over keys... */
-    		var key;
+    		let key;
     		for (key in object) {
     			/* ...if the key contains password, delete it... */
-    			if (key.indexOf('password') != -1) {
+    			if (key.indexOf('password') !== -1) {
     				delete object[key];
     			} else {
                     /* ...otherwise, let's loop over this object too... */
