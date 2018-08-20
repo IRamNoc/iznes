@@ -4,7 +4,7 @@
         <h1 id="ofi-client-referential"><i class="fa fa-users"></i>
             {{'Client Referential: ' | translate}}
             <span *ngIf="kycId == ''">{{'All Clients' | translate}}</span>
-            <span *ngIf="kycId != ''">{{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
+            <span *ngIf="kycId != '' && !!clients[kycId]">{{clients[kycId].companyName}} - {{clients[kycId].clientReference}}</span>
         </h1>
     </div>
 
@@ -85,7 +85,7 @@
     </clr-tabs>
 
     <clr-tabs *ngIf="kycId != ''">
-        <clr-tab *ngIf="clients[kycId].alreadyCompleted == 0">
+        <clr-tab *ngIf="!!clients[kycId] && clients[kycId].alreadyCompleted == 0">
             <button clrTabLink>{{'KYC Information' | translate}}</button>
             <clr-tab-content *clrIfActive="true">
                 <div class="row">
