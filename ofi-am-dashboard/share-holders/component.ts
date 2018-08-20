@@ -363,49 +363,55 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     fundWithHoldersList(list) {
-        const listImu = fromJS(list);
-        this.fundsData = [];
-        this.fundsData = listImu.reduce((result, item) => {
-            result.push({
-                fundId: item.get('fundId'),
-                fundName: item.get('fundName'),
-                fundAum: item.get('fundAum'),
-                fundHolderNumber: item.get('fundHolderNumber'),
-                lastSettlementDate: item.get('lastSettlementDate'),
-                fundCurrency: item.get('fundCurrency'),
-                holders: item.get('holders'),
-            });
-            return result;
-        }, []);
-
         this.fundsNbHolders = 0;
         this.fundsAUM = 0;
         this.fundsCCY = 'EUR';
         this.fundSettlementDate = '';
+        this.holdersFundData = [];
 
         if (list.length > 0) {
-            let lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
-            this.tabTitle = `${this.fundsData[0].fundName}${lei}`;
-            this.gotDataToExport = true;
+            if (!!list[0].Message) {
+                this.gotDataToExport = false;
+                let id = this.fundList.findIndex((r) => r.id == this.selectedFundId)
+                this.tabTitle = (id > -1 ? this.fundList[id].text : '');
+            } else {
+                const listImu = fromJS(list);
+                this.fundsData = [];
+                this.fundsData = listImu.reduce((result, item) => {
+                    result.push({
+                        fundId: item.get('fundId'),
+                        fundName: item.get('fundName'),
+                        fundAum: item.get('fundAum'),
+                        fundHolderNumber: item.get('fundHolderNumber'),
+                        lastSettlementDate: item.get('lastSettlementDate'),
+                        fundCurrency: item.get('fundCurrency'),
+                        holders: item.get('holders'),
+                    });
+                    return result;
+                }, []);
 
-            this.fundSettlementDate = this.fundsData[0].lastSettlementDate;
-            this.fundsNbHolders = this.fundsData[0].fundHolderNumber;
-            this.fundsAUM = this.fundsData[0].fundAum;
-            this.fundsCCY = this.fundsData[0].fundCurrency;
+                let lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
+                this.tabTitle = `${this.fundsData[0].fundName}${lei}`;
+                this.gotDataToExport = true;
 
-            this.holdersFundData = [];
-            this.holdersFundData = this.fundsData[0].holders.reduce((result, item) => {
-                result.push({
-                    ranking: item.get('ranking'),
-                    portfolio: item.get('portfolio'),
-                    investorName: item.get('investorName'),
-                    quantity: item.get('quantity'),
-                    amount: item.get('amount'),
-                    shareRatio: item.get('shareRatio'),
-                    fundRatio: item.get('fundRatio'),
-                });
-                return result;
-            }, []);
+                this.fundSettlementDate = this.fundsData[0].lastSettlementDate;
+                this.fundsNbHolders = this.fundsData[0].fundHolderNumber;
+                this.fundsAUM = this.fundsData[0].fundAum;
+                this.fundsCCY = this.fundsData[0].fundCurrency;
+
+                this.holdersFundData = this.fundsData[0].holders.reduce((result, item) => {
+                    result.push({
+                        ranking: item.get('ranking'),
+                        portfolio: item.get('portfolio'),
+                        investorName: item.get('investorName'),
+                        quantity: item.get('quantity'),
+                        amount: item.get('amount'),
+                        shareRatio: item.get('shareRatio'),
+                        fundRatio: item.get('fundRatio'),
+                    });
+                    return result;
+                }, []);
+            }
         }
 
         this.changeDetectorRef.markForCheck();
