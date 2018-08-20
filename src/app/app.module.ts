@@ -58,7 +58,6 @@ import { SetlLayoutModule } from '@setl/core-layout';
 import { LogService } from '@setl/utils';
 
 /* OFI Modules */
-import { OfiProductModule } from '@ofi/product';
 import { OfiMainModule } from '@ofi/ofi-main';
 /* Internal Components. */
 import { AppComponent } from './app.component';
@@ -121,7 +120,6 @@ export function memberSocketServiceFactory() {
         SetlMessagesModule,
         SetlAccountModule,
         CoreAccountAdminModule,
-        OfiProductModule,
         AssetServicingModule,
         SetlBalancesModule,
         PermissionGridModule,

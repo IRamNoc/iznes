@@ -16,7 +16,7 @@
         "../node_modules/@setl/core-messages/messages/mockMailHelper.ts",
         "../node_modules/@setl/core-fileviewer/http.mock.ts",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/node_modules/**/*",
-        "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/test-data/**/*",
+        "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/__tests__/**/*",
         "../setl_modules/**/*.spec.ts",
         "../ofi_modules/**/*.spec.ts",
         "../ofi_modules/**/*.test.ts",
@@ -27,7 +27,7 @@
         "../setl_modules/utils/components/ng2-date-picker/demo/**/*",
         "../setl_modules/core-messages/messages/mockMailHelper.ts",
         "../setl_modules/ofi-main/ofi-product/fund-share/helper/node_modules/**/*",
-        "../setl_modules/ofi-main/ofi-product/fund-share/helper/test-data/**/*",
+        "../setl_modules/ofi-main/ofi-product/fund-share/helper/__tests__/**/*",
         "../setl_modules/core-fileviewer/http.mock.ts"
     ],
     "include": [

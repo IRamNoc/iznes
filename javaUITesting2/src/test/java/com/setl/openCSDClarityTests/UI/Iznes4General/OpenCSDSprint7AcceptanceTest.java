@@ -29,9 +29,7 @@ import static com.setl.openCSDClarityTests.UI.Iznes1MyProduct.Funds.OpenCSD2Fund
 import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.*;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.inviteAnInvestor;
 import static com.setl.openCSDClarityTests.UI.Iznes4General.OpenCSDGeneralAcceptanceTest.navigateToInviteInvestorPage;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 
@@ -113,11 +111,8 @@ public class OpenCSDSprint7AcceptanceTest {
 
         assertTrue(driver.findElement(By.id("nextTab")).isDisplayed());
         assertTrue(driver.findElement(By.id("previousTab")).isDisplayed());
-
-        String disabledPrev = driver.findElement(By.id("previousTab")).getAttribute("disabled");
-        assertTrue(disabledPrev.equals("true"));
+        assertTrue(driver.findElement(By.id("previousTab")).getAttribute("disabled").equals("true"));
         assertTrue(driver.findElement(By.id("fundShareName")).isDisplayed());
-        wait.until(elementToBeClickable(By.id("nextTab")));
         scrollElementIntoViewById("nextTab");
         wait.until(visibilityOfElementLocated(By.id("nextTab")));
         wait.until(elementToBeClickable(By.id("nextTab")));
@@ -127,13 +122,10 @@ public class OpenCSDSprint7AcceptanceTest {
         driver.findElement(By.id("tabDocumentsButton")).click();
         wait.until(visibilityOfAllElementsLocatedBy(By.id("prospectus")));
 
-        String disabledNext = driver.findElement(By.id("nextTab")).getAttribute("disabled");
-        assertTrue(disabledNext.equals("true"));
+        assertTrue(driver.findElement(By.id("nextTab")).getAttribute("disabled").equals("true"));
         assertTrue(driver.findElement(By.id("prospectus")).isDisplayed());
         driver.findElement(By.id("previousTab")).click();
         wait.until(visibilityOfElementLocated(By.id("toggleSolvencyOptional")));
-
-
     }
 
     @Test
