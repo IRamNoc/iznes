@@ -132,14 +132,6 @@ import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
 
-export function accountSignupMatcher(url: UrlSegment[]): UrlMatchResult {
-    return {
-        consumed: [
-            new UrlSegment('account-signup%3FinvitationToken%3D', {}),
-        ],
-    };
-}
-
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
