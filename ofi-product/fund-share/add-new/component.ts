@@ -8,13 +8,13 @@ import { select, NgRedux } from '@angular-redux/store';
 import { Observable, Subscription } from 'rxjs';
 
 import {
-    setRequestedFund,
-    clearRequestedFund,
+    setRequestedIznesFunds,
+    clearRequestedIznesFunds,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list';
 import {
     getOfiFundShareSelectedFund,
     ofiSetCurrentFundShareSelectedFund,
-    ofiClearCurrentFundShareSelectedFund
+    ofiClearCurrentFundShareSelectedFund,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
@@ -182,7 +182,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     private requestFundList(requested: boolean): void {
         if (requested) return;
 
-        OfiFundService.defaultRequestFundList(this.ofiFundService, this.redux);
+        OfiFundService.defaultRequestIznesFundList(this.ofiFundService, this.redux);
     }
 
     /**
@@ -199,7 +199,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         this.fundList = filteredFundList ? filteredFundList : undefined;
         this.fundListItems = filteredFundList ? this.processFundList(filteredFundList) : undefined;
 
-        if (this.fundList) this.redux.dispatch(setRequestedFund());
+        if (this.fundList) this.redux.dispatch(setRequestedIznesFunds());
 
         this.changeDetectorRef.markForCheck();
     }

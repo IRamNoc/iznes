@@ -16,7 +16,7 @@ import { ToasterService } from 'angular2-toaster';
 import { ClrTabs } from '@clr/angular';
 import { ConfirmationService, ClrTabsHelper } from '@setl/utils';
 
-import { setRequestedFund } from '@ofi/ofi-main/ofi-store/ofi-product/fund';
+import { setRequestedIznesFunds } from '@ofi/ofi-main/ofi-store/ofi-product/fund';
 import { setRequestedUmbrellaFund } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund';
 import {
     clearRequestedFundShare,
@@ -37,7 +37,9 @@ import {
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
-import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import {
+    OfiManagementCompanyService,
+} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
 import { FundShareTestData } from './TestData';
 import * as Enum from '../FundShareEnum';
@@ -51,13 +53,14 @@ import { MultilingualService } from '@setl/multilingual';
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class FundShareComponent implements OnInit, OnDestroy {
     private fundShareData: OfiFundShare;
     private fundShareDocsData: OfiFundShareDocuments;
     isReady: boolean = false;
     model: FundShare;
     mode: FundShareMode = FundShareMode.Create;
+
+    // ID of the share to hydrate the model with
     private prefill: number;
     private fundList;
     fundListItems = [];
@@ -87,7 +90,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareDocs', 'requested']) fundShareDocsRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareDocs', 'fundShareDocuments']) fundShareDocsOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
-    @select(['user', 'myDetail', 'accountId']) accountIdOb: Observable<any>;
+    @select(['user', 'myDetail']) userDetailOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) fundListRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) umbrellaFundListRequestedOb: Observable<any>;
@@ -302,7 +305,11 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.iznShareList = fundShareList;
         }));
 
-        this.subscriptionsArray.push(this.accountIdOb.subscribe(accountId => this.model.accountId = accountId));
+        this.subscriptionsArray.push(
+            this.userDetailOb.subscribe((userDetail) => {
+                this.model.accountId = userDetail.accountId;
+            }),
+        );
 
         this.subscriptionsArray.push(this.fundListRequestedOb.subscribe(requested => {
             this.requestFundList(requested);
@@ -403,6 +410,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
                     this.model.documents.mandatory.kiid.required = false;
                     this.model.documents.mandatory.prospectus.required = false;
                 }
+
                 this.isReady = true;
 
                 this.changeDetectorRef.markForCheck();
@@ -517,7 +525,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private requestFundList(requested: boolean): void {
         if (requested) return;
 
-        OfiFundService.defaultRequestFundList(this.ofiFundService, this.redux);
+        OfiFundService.defaultRequestIznesFundList(this.ofiFundService, this.redux);
     }
 
     /**
@@ -538,7 +546,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         });
 
         if (this.fundList) {
-            this.redux.dispatch(setRequestedFund());
+            this.redux.dispatch(setRequestedIznesFunds());
         }
 
         this.changeDetectorRef.markForCheck();
