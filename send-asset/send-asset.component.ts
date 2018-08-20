@@ -56,22 +56,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        /* send asset form */
-        const formGroup = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            assetAddress: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
-        });
-
-        // this.sendAssetForm = this.persistService.watchForm('assetServicing/sendAsset', formGroup);
-        this.sendAssetForm = this.persistService.watchForm(
-            'assetServicing/sendAsset/AC',
-            formGroup,
-            null,
-            { isWalletSensitive: true },
-        );
-
         /* data subscriptions */
         this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(
             requested => this.requestAllInstrument(requested)));
@@ -99,10 +83,33 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
+
+        this.setPersistForm(String(this.connectedWalletId));
     }
 
     ngOnInit() {
-        console.log('+++ this.sendAssetForm: ', this.sendAssetForm);
+    }
+
+    setPersistForm(context: string): void {
+        const formName = 'assetServicing/sendAsset';
+
+        /* Create a formGroup for sendAssetForm. */
+        const formGroup = new FormGroup({
+            asset: new FormControl('', Validators.required),
+            assetAddress: new FormControl('', Validators.required),
+            recipient: new FormControl('', Validators.required),
+            amount: new FormControl('', Validators.required),
+        });
+
+        /* Set persist watcher on sendAssetForm. */
+        this.sendAssetForm = this.persistService.watchForm(
+            formName,
+            formGroup,
+            context,
+            {
+                isWalletSensitive: true,
+            },
+        );
     }
 
     sendAsset(): void {
