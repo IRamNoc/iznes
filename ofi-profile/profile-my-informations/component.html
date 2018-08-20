@@ -27,6 +27,8 @@
 
             <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
                 <section class="form-block">
+
+                    <!-- Old password -->
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label for="cpOldPassword">{{'Old Password' | translate}}
@@ -36,23 +38,30 @@
                                 <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpOldPassword" [formControl]="oldPassword" size="45">
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
-                            <div *ngIf="oldPassword.hasError('required') && oldPassword.touched" class="text-danger">{{'Old Password is required' | translate}}</div>
+                            <div *ngIf="hasError('oldPassword', 'required')" class="text-danger">{{'Old password is required' | translate}}</div>
                         </div>
                     </div>
+
+                    <!-- New password -->
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
-                            <label for="cpPassword">{{'Password' | translate}}
-
+                            <label for="cpPassword">
+                                {{'Password' | translate}}
+                                <app-password-tooltip></app-password-tooltip>
                             </label>
                             <div class="password-container">
                                 <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45">
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
-                            <div *ngIf="password.hasError('required') && password.touched" class="text-danger">{{'Password is required' | translate}}</div>
-                            <div *ngIf="changePassForm.controls.password.hasError('minlength') && !password.hasError('required') && password.touched" class="text-danger">{{'Your password must be at least 6 characters' | translate}}</div>
-                            <div *ngIf="!changePassForm.controls.password.hasError('required') && !changePassForm.controls.password.hasError('minlength') && changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty" class="text-danger">{{'The new password should not be the same as the old' | translate}}</div>
+                            <div *ngIf="hasError('password', 'required')" class="text-danger">{{'Password is required' | translate}}</div>
+                            <div *ngIf="hasError('password', 'rules') && isTouched('password')" class="text-danger">
+                                {{'Your password doesn\'t meet the security critera' | translate}}
+                            </div>
+                            <div *ngIf="hasError('', 'oldNew') && isTouched('password') && isTouched('oldPassword') && !hasError('password', 'required')" class="text-danger">{{'The new password should not be the same as the old' | translate}}</div>
                         </div>
                     </div>
+
+                    <!-- New password confirmation-->
                     <div class="row">
                         <div class="form-group required-field col-sm-6">
                             <label for="cpPasswordConfirm">{{'Password confirmation' | translate}}
@@ -62,9 +71,8 @@
                                 <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
-                            <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger">{{'Confirmation is required' | translate}}</div>
-                            <div *ngIf="changePassForm.controls.passwordConfirm.hasError('minlength') && !passwordConfirm.hasError('required') && passwordConfirm.touched" class="text-danger">{{'Your password must be at least 6 characters' | translate}}</div>
-                            <div *ngIf="!passwordConfirm.hasError('required') && !changePassForm.controls.passwordConfirm.hasError('minlength') && changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine" class="text-danger">{{'Password does not match' | translate}}</div>
+                            <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">{{'Confirmation is required' | translate}}</div>
+                            <div *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">{{'Password does not match' | translate}}</div>
                         </div>
                     </div>
                     <div class="row">

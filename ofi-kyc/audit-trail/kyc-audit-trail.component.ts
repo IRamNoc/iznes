@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
-import { select } from "@angular-redux/store";
-import { combineLatest as observableCombineLatest } from 'rxjs';
+import { select } from '@angular-redux/store';
+import { combineLatest } from 'rxjs';
 
 @Component({
     templateUrl: './kyc-audit-trail.component.html',
@@ -24,17 +24,22 @@ export class KycAuditTrailComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.kycListOb
-        .takeUntil(
-            observableCombineLatest(
-                this.activatedRoute.params,
-                this.kycListOb,
-            )
+
+        combineLatest(
+            this.activatedRoute.params,
+            this.kycListOb,
+        )
+            .takeUntil(
+                this.unSubscribe,
+        )
             .subscribe(([params, kycList]) => {
+                if (!params.kycID || !kycList.length) {
+                    return;
+                }
                 this.kycID = Number(params.kycID);
-                this.amCompanyName = kycList[kycList.findIndex((x) => x.kycID == this.kycID)]['companyName'];
-            }),
-        );
+                const kycIdx = kycList.findIndex(x => x.kycID === this.kycID);
+                this.amCompanyName = kycList[kycIdx]['companyName'];
+            });
     }
 
     ngOnDestroy() {
