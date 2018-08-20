@@ -105,6 +105,12 @@ describe('KycAuditTrailComponent', () => {
 
         comp = fixture.componentInstance;
 
+        comp.kycListOb.next([
+            {
+                kycID: fakeKycID,
+            },
+        ]);
+
         tick();
         fixture.detectChanges();
 
