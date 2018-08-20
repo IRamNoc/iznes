@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, UrlSegment, UrlMatchResult } from '@angular/router';
 /* Layouts. */
 import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
 import {
@@ -78,6 +78,8 @@ import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
+    AccountSignUpComponent,
+    AccountSignUpRedirectComponent,
 } from '@setl/core-account-admin';
 /* Product */
 import {
@@ -130,6 +132,14 @@ import { SetlMessagesComponent } from '@setl/core-messages';
 import { OfiWaitingApprovalComponent } from '@ofi/ofi-main/ofi-kyc/waiting-approval/component';
 import { SetlLoginComponent, SetlLogoutComponent } from '@setl/core-login';
 
+export function accountSignupMatcher(url: UrlSegment[]): UrlMatchResult {
+    return {
+        consumed: [
+            new UrlSegment('account-signup%3FinvitationToken%3D', {}),
+        ],
+    };
+}
+
 export const ROUTES: Routes = [
     { path: '', redirectTo: 'login', pathMatch: 'full' },
     { path: 'user-administration', redirectTo: 'user-administration/users', pathMatch: 'full' },
@@ -152,7 +162,7 @@ export const ROUTES: Routes = [
                 path: 'reset/:token',
                 component: SetlLoginComponent,
             },
-        ]
+        ],
     },
     {
         path: 'redirect/:lang/:invitationToken',
@@ -171,6 +181,14 @@ export const ROUTES: Routes = [
                 component: OfiSignUpComponent,
             },
         ],
+    },
+    {
+        path: 'account-signup',
+        component: AccountSignUpComponent,
+    },
+    {
+        path: 'account-signup-redirect/:invitationToken',
+        component: AccountSignUpRedirectComponent,
     },
     /* Basic Layout pages. */
     {

@@ -8,7 +8,7 @@ import { SetlLoginModule, LoginGuardService } from '@setl/core-login';
 import { HttpClientModule } from '@angular/common/http';
 import { SidebarModule } from 'ng-sidebar';
 
-import {GlobalErrorHandler} from '../error_handler';
+import { GlobalErrorHandler } from '../error_handler';
 
 import {
     APP_CONFIG,
@@ -19,9 +19,9 @@ import {
     SetlServicesModule,
 } from '@setl/utils';
 
-import {NgxPaginationModule} from 'ngx-pagination';
+import { NgxPaginationModule } from 'ngx-pagination';
 /* Connection Services */
-import {MemberSocketService, WalletNodeSocketService} from '@setl/websocket-service';
+import { MemberSocketService, WalletNodeSocketService } from '@setl/websocket-service';
 /* Core services*/
 import {
     AccountsService,
@@ -41,41 +41,41 @@ import {
     NodeAlertsService,
 } from '@setl/core-req-services';
 /* Routes. */
-import {ROUTES} from './app.routes';
+import { ROUTES } from './app.routes';
 /* SETL Modules. */
 
-import {SetlMessagesModule} from '@setl/core-messages';
-import {SetlAccountModule} from '@setl/core-account';
-import {SetlBalancesModule} from '@setl/core-balances';
-import {UserAdminModule} from '@setl/core-useradmin';
-import {CoreAccountAdminModule} from '@setl/core-account-admin';
-import {AssetServicingModule} from '@setl/asset-servicing';
-import {PermissionGridModule} from '@setl/permission-grid';
-import {CoreManageMemberModule} from '@setl/core-manage-member';
-import {CorpActionsModule} from '@setl/core-corp-actions';
-import {ConnectionsModule} from '@setl/core-connections/connections.module';
-import {SetlLayoutModule} from '@setl/core-layout';
-import {LogService} from '@setl/utils';
+import { SetlMessagesModule } from '@setl/core-messages';
+import { SetlAccountModule } from '@setl/core-account';
+import { SetlBalancesModule } from '@setl/core-balances';
+import { UserAdminModule } from '@setl/core-useradmin';
+import { CoreAccountAdminModule } from '@setl/core-account-admin';
+import { AssetServicingModule } from '@setl/asset-servicing';
+import { PermissionGridModule } from '@setl/permission-grid';
+import { CoreManageMemberModule } from '@setl/core-manage-member';
+import { CorpActionsModule } from '@setl/core-corp-actions';
+import { ConnectionsModule } from '@setl/core-connections/connections.module';
+import { SetlLayoutModule } from '@setl/core-layout';
+import { LogService } from '@setl/utils';
 
 /* OFI Modules */
-import {OfiProductModule} from '@ofi/product';
-import {OfiMainModule} from '@ofi/ofi-main';
+import { OfiProductModule } from '@ofi/product';
+import { OfiMainModule } from '@ofi/ofi-main';
 /* Internal Components. */
-import {AppComponent} from './app.component';
+import { AppComponent } from './app.component';
 /**
  * Vendor Modules and Services.
  */
-import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {JasperoAlertsModule} from '@setl/jaspero-ng2-alerts';
-import {FileViewerModule} from '@setl/core-fileviewer';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { JasperoAlertsModule } from '@setl/jaspero-ng2-alerts';
+import { FileViewerModule } from '@setl/core-fileviewer';
 /**
  * App main state
  */
-import {NgRedux, NgReduxModule} from '@angular-redux/store';
+import { NgRedux, NgReduxModule } from '@angular-redux/store';
 
-import {appSaga, createAppStore, sagaMiddleware} from './store/app.store';
+import { appSaga, createAppStore, sagaMiddleware } from './store/app.store';
 
-import {AppState} from './store/app.reducer';
+import { AppState } from './store/app.reducer';
 /**
  * Environment
  */
@@ -140,7 +140,7 @@ export function memberSocketServiceFactory() {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler,
         },
-        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        { provide: LocationStrategy, useClass: HashLocationStrategy },
 
         {
             provide: MemberSocketService,
