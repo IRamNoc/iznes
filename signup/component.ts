@@ -163,19 +163,21 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     private updateState(auth): void {
-        this.memberSocketService.token = auth.token;
+        if (auth.isLogin) {
+            this.memberSocketService.token = auth.token;
 
-        InitialisationService.membernodeInitialisation(
-            this.redux,
-            this.myWalletsService,
-            this.memberSocketService,
-            this.channelService,
-            this.accountsService,
-            this.myUserService,
-            this.permissionGroupService,
-            this.chainService,
-            this.initialisationService,
-        );
+            InitialisationService.membernodeInitialisation(
+                this.redux,
+                this.myWalletsService,
+                this.memberSocketService,
+                this.channelService,
+                this.accountsService,
+                this.myUserService,
+                this.permissionGroupService,
+                this.chainService,
+                this.initialisationService,
+            );
+        }
     }
 
     signup(form: Model.ISignupForm) {
