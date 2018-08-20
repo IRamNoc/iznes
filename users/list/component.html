@@ -19,25 +19,25 @@
             </div>
 
             <clr-datagrid #dataGrid>
-                <clr-dg-column class="col-ref">
+                <clr-dg-column [clrDgField]="'reference'" class="col-ref">
                     <span id="accountAdminColRef">{{'Ref' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-firstname">
+                <clr-dg-column [clrDgField]="'firstName'" class="col-firstname">
                     <span id="accountAdminColFirstName">{{'First name' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-lastname">
+                <clr-dg-column [clrDgField]="'lastName'" class="col-lastname">
                     <span id="accountAdminColLastName">{{'Last name' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-email">
+                <clr-dg-column [clrDgField]="'emailAddress'" class="col-email">
                     <span id="accountAdminColEmail">{{'Email address' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-phone">
+                <clr-dg-column [clrDgField]="'phoneNumber'" class="col-phone">
                     <span id="accountAdminColPhone">{{'Phone' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-type">
+                <clr-dg-column [clrDgField]="'userType'" class="col-type">
                     <span id="accountAdminColType">{{'Type' | translate}}</span>
                 </clr-dg-column>
-                <clr-dg-column class="col-teams">
+                <clr-dg-column [clrDgField]="'totalTeams'" class="col-teams">
                     <span id="accountAdminColTeams">{{'Team(s)' | translate}}</span>
                 </clr-dg-column>
                 <clr-dg-column class="col-status">
@@ -46,7 +46,7 @@
 
                 <clr-dg-row *clrDgItems="let user of users; let idx = index;" id="{{'accountAdminTeamRow' + idx}}" clrDgRowClickable>
                     <clr-dg-cell id="{{'accountAdminTeamCellRef' + idx}}" class="col-ref"
-                        (click)="navigateToEntity(user.userID)">
+                                 (click)="navigateToEntity(user.userID)">
                         {{ (user.reference) ? user.reference : 'N/A' }}
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellFirstName' + idx}}" (click)="navigateToEntity(user.userID)">{{user.firstName}}</clr-dg-cell>
@@ -56,8 +56,8 @@
                     <clr-dg-cell id="{{'accountAdminTeamCellType' + idx}}" (click)="navigateToEntity(user.userID)">{{user.userType}}</clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellTeams' + idx}}" (click)="navigateToEntity(user.userID)">
                         <span class="label"
-                            [class.label-danger]="user.totalTeams == 0"
-                            [class.label-info]="user.totalTeams > 0">
+                              [class.label-danger]="user.totalTeams == 0"
+                              [class.label-info]="user.totalTeams > 0">
                             {{user.totalTeams}}
                         </span>
                     </clr-dg-cell>
