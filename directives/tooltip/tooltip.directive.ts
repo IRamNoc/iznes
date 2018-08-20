@@ -83,6 +83,9 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         this.UserTourService = this.injector.get(UserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
+        if(!this.parentDiv){
+            this.parentDiv = document.getElementsByClassName('router-container')[0];
+        }
     }
 
     ngOnInit() {
@@ -264,7 +267,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         this.divBackgroundTour.style.top = '0';
         this.divBackgroundTour.style.backgroundColor = 'rgba(0,0,0,0.6)';
         this.divBackgroundTour.style.width = '100%';
-        this.divBackgroundTour.style.zIndex = 1002;
+        this.divBackgroundTour.style.zIndex = 1101;
         const pageSize = this.getPageSize();
         this.divBackgroundTour.style.height = pageSize.height + 'px';
         document.body.appendChild(this.divBackgroundTour);
@@ -396,7 +399,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             }
 
             if (this.isTour) {
-                this.divTooltip.style.zIndex = 1003;
+                this.divTooltip.style.zIndex = 1102;
 
                 // add button back/next
                 this.btnContainer = document.createElement('div');
