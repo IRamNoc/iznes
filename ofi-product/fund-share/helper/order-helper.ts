@@ -1,7 +1,7 @@
 import { CalendarHelper } from './calendar-helper';
 import { OrderType, OrderByType } from '../../../ofi-orders/order.model';
 import * as moment from 'moment-business-days';
-import { get } from 'lodash';
+import { get, sumBy } from 'lodash';
 import {
     calFee,
     getRandom8Hex,
@@ -362,13 +362,21 @@ export class OrderHelper {
         const totalHolding: number = get(holders, [address], 0);
         const encumbered: number = get(encumbrances, [address], 0);
 
-        // todo
-        // need to get the real redemptionEncumbrance walletnode feature is ready
         return {
             investorTotalHolding: totalHolding,
             investorTotalEncumber: encumbered,
-            investorRedemptionEncumber: 0,
         };
+    }
+
+    static getInvestorRedemptionTotalEcumbrance(encumbranceDetail: any, address: string, isin: string, shareName: string) {
+        const encumbrancesArr = get(encumbranceDetail, ['data', address, isin, shareName], []);
+
+        // As all the redemption encumbrance, would start with the order type 4 (hopefully), so we just get all the
+        // encumbrance that with reference start with 4.
+        const redemptionEncuArr = encumbrancesArr.filter( encum => get(encum, 'reference', '')[0] === '4');
+
+        // return the sum
+        return sumBy(redemptionEncuArr, 'amount');
     }
 
     static buildRequestInvestorHoldingRequestBody(order: UpdateOrderResponse | IznShareDetailWithNav) {
@@ -1176,7 +1184,7 @@ export class OrderHelper {
      * @param randomHex string
      */
     setEncumberReference(randomHex: string) {
-        this.encumberRef = this.amIssuingAddress + randomHex;
+        this.encumberRef = this.orderType + '-' + this.amIssuingAddress + randomHex;
     }
 
     /**

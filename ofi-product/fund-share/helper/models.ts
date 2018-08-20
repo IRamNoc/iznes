@@ -143,7 +143,6 @@ export interface UpdateOrderResponse {
 export interface InvestorBalances {
     investorTotalHolding: number;
     investorTotalEncumber: number;
-    investorRedemptionEncumber: number;
 }
 
 export interface ContractRequestBody {
