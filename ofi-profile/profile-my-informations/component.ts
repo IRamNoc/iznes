@@ -3,6 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {ToasterService} from 'angular2-toaster';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {SagaHelper} from '@setl/utils/index';
+import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
 import {MyUserService} from '@setl/core-req-services/index';
 import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
@@ -59,6 +60,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     ) {
         this.appConfig = appConfig;
 
+        let validator = this.appConfig.production ? passwordValidator : null;
         this.changePassForm = new FormGroup({
             'oldPassword': new FormControl(
                 '',
@@ -68,14 +70,13 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.minLength(6)
+                    validator
                 ])
             ),
             'passwordConfirm': new FormControl(
                 '',
                 Validators.compose([
                     Validators.required,
-                    Validators.minLength(6)
                 ])
             )
         }, this.passwordValidator);
@@ -186,6 +187,23 @@ export class OfiProfileMyInformationsComponent implements OnInit {
                 this.toasterService.pop('error', JSON.stringify(data));
             })
         );
+    }
+
+    hasError(path, error) {
+        if (this.changePassForm) {
+            let formControl: AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
+
+            if (error !== 'required' && formControl.hasError('required')) {
+                return false;
+            }
+            return formControl.touched && (error ? formControl.hasError(error) : formControl.errors);
+        }
+    }
+
+    isTouched(path) {
+        let formControl: AbstractControl = this.changePassForm.get(path);
+
+        return formControl.touched;
     }
 
     closeUserInformations() {
