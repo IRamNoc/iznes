@@ -357,7 +357,7 @@ Here is the message that will be sent to the investor:<br />
             this.setAmKycListRequested(true);
 
             /* Redirect to fund access page when the kyc is being approved */
-            this._router.navigate(['fund-access', this.kycId]);
+            this._router.navigate(['client-referential', this.kycId]);
         }).catch((error) => {
             const data = error[1].Data[0];
 
