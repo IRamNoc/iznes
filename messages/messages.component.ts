@@ -591,11 +591,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
-    downloadTxtFile(id, type) {
+    downloadTxtFile(id, MT502ID, type) {
         this._fileDownloader.downLoaderFile({
             method: 'getIznMT502',
             token: this.socketToken,
             orderId: id,
+            MT502ID: MT502ID,
             type: type,
             userId: this.userId,
         });
