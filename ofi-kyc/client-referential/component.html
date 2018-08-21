@@ -88,6 +88,61 @@
         <clr-tab *ngIf="!!clients[kycId] && clients[kycId].alreadyCompleted == 0">
             <button clrTabLink>{{'KYC Information' | translate}}</button>
             <clr-tab-content *clrIfActive="true">
+
+                <h2>{{'Professional Investor Details' | translate}}</h2>
+                <form [formGroup]="investorForm" (ngSubmit)="saveClientReference()">
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <label for="companyName">{{'Company name:' | translate}}</label>
+                            <div>
+                                <input type="text" id="companyName" class="form-control" formControlName="companyName">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="clientReference">{{'Client reference:' | translate}}</label>
+                            <div>
+                                <input type="text" id="clientReference" class="form-control" formControlName="clientReference">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="firstName">{{'First name:' | translate}}</label>
+                            <div>
+                                <input type="text" id="firstName" class="form-control" formControlName="firstName">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="lastName">{{'Last name:' | translate}}</label>
+                            <div>
+                                <input type="text" id="lastName" class="form-control" formControlName="lastName">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="email">{{'Email address:' | translate}}</label>
+                            <div>
+                                <input type="text" id="email" class="form-control" formControlName="email">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="phoneNumber">{{'Phone number:' | translate}}</label>
+                            <div>
+                                <input type="text" id="phoneNumber" class="form-control" formControlName="phoneNumber">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label for="approvalDateRequest">{{'Date of approval request:' | translate}}</label>
+                            <div>
+                                <input type="text" id="approvalDateRequest" class="form-control" formControlName="approvalDateRequest">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-sm-12 submit-container">
+                            <button id="investorForm-btn-submit" type="submit" class="btn btn-primary" [disabled]="!investorForm.dirty">{{'Save' | translate}}</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="hr-line-dashed"></div>
+
                 <div class="row">
                     <div class="col-sm-12" style="margin-top: 0.5rem">
                         <p>{{'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>

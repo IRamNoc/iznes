@@ -7,13 +7,12 @@ import {
 } from '@angular/core';
 import { Location } from '@angular/common';
 import * as _ from 'lodash';
-import { ConfirmationService, SagaHelper } from '@setl/utils';
+import { ConfirmationService, SagaHelper } from '@setl/utils/index';
 import { FileService } from '@setl/core-req-services';
 import { NgRedux } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
 import { OfiKycService } from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
 import { MessagesService } from "@setl/core-messages/index";
-import { Datagrid } from '@clr/angular';
 
 /* Redux */
 

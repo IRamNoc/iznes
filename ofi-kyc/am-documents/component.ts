@@ -242,8 +242,8 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
             !event.target.classList.contains('datagrid-expandable-caret-button') &&
             !event.target.classList.contains('datagrid-expandable-caret-icon')
         ) {
-            let ret = row.status === 'Accepted' ? '/fund-access/:kycID' : '/kyc-documents/client/:kycID';
-            const link = row.status === -1 ? '/fund-access/:kycID' : '/kyc-documents/client/:kycID';
+            let ret = row.status === 'Accepted' ? '/client-referential/:kycID' : '/kyc-documents/client/:kycID';
+            const link = row.status === -1 ? '/client-referential/:kycID' : '/kyc-documents/client/:kycID';
             link.match(/:\w+/g).forEach((match) => {
                 const key = match.substring(1);
                 const regex = new RegExp(match);

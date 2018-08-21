@@ -28,7 +28,6 @@ import { MockKYCDocumentsService } from './documents/documents.mock.service';
 import { OfiKycHomeComponent } from './home/component';
 import { OfiMyInformationsModule } from '../ofi-my-informations/module';
 import { OfiWaitingApprovalComponent } from './waiting-approval/component';
-import { OfiFundAccessComponent } from './fund-access/component';
 import { OfiAmDocumentsComponent } from './am-documents/component';
 import { TextInputListComponent } from './text-input-list/component';
 import { OfiKycAlreadyDoneComponent } from './already-done/component';
@@ -38,7 +37,7 @@ import { KycInformationAuditTrailComponent } from './audit-trail/information-aud
 import { OfiRedirectTokenComponent } from './invitation-token/redirect-token.component';
 import { OfiConsumeTokenComponent } from './invitation-token/consume-token.component';
 import { OfiClientReferentialComponent } from './client-referential/component';
-import { OfiFundAccessTable } from './fund-access/access-table/component';
+import { OfiFundAccessTable } from './client-referential/access-table/component';
 
 import { KycRequestsModule } from './my-requests/requests.module';
 
@@ -57,7 +56,6 @@ import config, { kycEnums } from './config';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
-        OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
@@ -76,7 +74,6 @@ import config, { kycEnums } from './config';
         OfiDocumentsComponent,
         OfiKycHomeComponent,
         OfiWaitingApprovalComponent,
-        OfiFundAccessComponent,
         OfiAmDocumentsComponent,
         OfiKycAlreadyDoneComponent,
         TextInputListComponent,
