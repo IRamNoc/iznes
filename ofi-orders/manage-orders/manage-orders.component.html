@@ -45,8 +45,14 @@
                                     <div class="form-group">
                                         <label>{{'ISIN' | translate}}</label>
                                         <div class="input-button-group">
-                                            <input id="orders-search-isin" [formControl]="tabsControl[0].searchForm.controls['isin']" name="search-sharename" type="text"
-                                                   [placeholder]="_translate.translate('ISIN')" style="width: 100% !important">
+                                            <input
+                                                id="orders-search-isin"
+                                                [formControl]="tabsControl[0].searchForm.controls['isin']"
+                                                name="search-sharename"
+                                                type="text"
+                                                [placeholder]="translation.translate('ISIN')"
+                                                style="width: 100% !important"
+                                            >
                                         </div>
                                     </div>
                                 </td>
@@ -55,7 +61,7 @@
                                         <label>{{'Fund Name' | translate}}</label>
                                         <div class="input-button-group">
                                             <input id="orders-search-fundname" [formControl]="tabsControl[0].searchForm.controls['fundname']" name="search-fundname"
-                                                   type="text" [placeholder]="_translate.translate('Fund Name')" style="width: 100% !important">
+                                                   type="text" [placeholder]="translation.translate('Fund Name')" style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -64,7 +70,7 @@
                                         <label>{{'Share Name' | translate}}</label>
                                         <div class="input-button-group">
                                             <input id="orders-search-sharename" [formControl]="tabsControl[0].searchForm.controls['sharename']" name="search-sharename"
-                                                   type="text" [placeholder]="_translate.translate('Share Name')" style="width: 100% !important">
+                                                   type="text" [placeholder]="translation.translate('Share Name')" style="width: 100% !important">
                                         </div>
                                     </div>
                                 </td>
@@ -72,8 +78,14 @@
                                     <div class="form-group">
                                         <label>{{'Status' | translate}}</label>
                                         <div>
-                                            <ng-select id="orders-search-status" class="fluid-width" [active]="[orderStatuses[0]]" [items]="orderStatuses" [formControl]="tabsControl[0].searchForm.controls['status']"
-                                                       [placeholder]="_translate.translate('Status')">
+                                            <ng-select
+                                                id="orders-search-status"
+                                                class="fluid-width"
+                                                [active]="[orderStatuses[0]]"
+                                                [items]="orderStatuses"
+                                                [formControl]="tabsControl[0].searchForm.controls['status']"
+                                                [placeholder]="translation.translate('Status')"
+                                            >
                                             </ng-select>
                                         </div>
                                     </div>
@@ -82,8 +94,14 @@
                                     <div class="form-group">
                                         <label>{{'Order type' | translate}}</label>
                                         <div>
-                                            <ng-select id="orders-search-type" class="fluid-width" [active]="[orderTypes[0]]" [items]="orderTypes" [formControl]="tabsControl[0].searchForm.controls['type']"
-                                                       [placeholder]="_translate.translate('Type')">
+                                            <ng-select
+                                                id="orders-search-type"
+                                                class="fluid-width"
+                                                [active]="[orderTypes[0]]"
+                                                [items]="orderTypes"
+                                                [formControl]="tabsControl[0].searchForm.controls['type']"
+                                                [placeholder]="translation.translate('Type')"
+                                            >
                                             </ng-select>
                                         </div>
                                     </div>
@@ -114,7 +132,7 @@
                                             </label>
                                             <div class="input-button-group">
                                                 <input id="orders-search-orderid" [formControl]="tabsControl[0].searchForm.controls['orderID']" name="search-sharename" type="number"
-                                                       [placeholder]="_translate.translate('Order ID')" style="width: 100% !important">
+                                                       [placeholder]="translation.translate('Order ID')" style="width: 100% !important">
                                             </div>
                                         </div>
                                     </div>
@@ -124,7 +142,7 @@
                                         </label>
                                         <div>
                                             <ng-select id="orders-search-date-types" class="fluid-width" [active]="[dateTypes[2]]" [items]="dateTypes" [allowClear]="false"
-                                                       [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="_translate.translate('Type')">
+                                                       [formControl]="tabsControl[0].searchForm.controls['dateType']" [placeholder]="translation.translate('Type')">
                                             </ng-select>
                                         </div>
                                     </div>
@@ -134,7 +152,7 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
                                                    mode="day" theme="dp-material">
 
                                         </div>
@@ -145,7 +163,7 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
                                                    mode="day" theme="dp-material">
 
                                         </div>
@@ -155,7 +173,7 @@
                         </div>
                         <div class="form-group col-sm-3">
                             <div class="text-right">
-                                <button class="btn" (click)="clearForm()">
+                                <button class="btn" (click)="searchFilters.clear()">
                                     <i class="fa fa-trash"></i> {{'Clear filters' | translate}}
                                 </button>
                                 <button class="btn btn-success nomargin" (click)="exportOrders()">
@@ -893,13 +911,13 @@
             </div>
         </div>
 
-        <div class="jaspero__dialog-content" [innerHtml]="_translate.translate(amConfirmModal.body)"></div>
+        <div class="jaspero__dialog-content" [innerHtml]="translation.translate(amConfirmModal.body)"></div>
 
         <form>
             <section class="form-block">
                 <div class="row">
                     <div class="form-group col-sm-12">
-                        <textarea id="cancelModalTextArea" style="min-height: 80px" [placeholder]="_translate.translate(amConfirmModal.placeholder)"
+                        <textarea id="cancelModalTextArea" style="min-height: 80px" [placeholder]="translation.translate(amConfirmModal.placeholder)"
                                   [(ngModel)]="cancelModalMessage" [ngModelOptions]="{standalone: true}">
                         </textarea>
                     </div>
