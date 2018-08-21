@@ -29,7 +29,6 @@ import {
     CentralisationSelectComponent,
     OfiCentralisationHistoryComponent,
     OfiDocumentsComponent,
-    OfiFundAccessComponent,
     OfiHomeComponent,
     OfiInvestorFundListComponent,
     OfiInviteInvestorsComponent,
@@ -231,11 +230,6 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
-                canActivate: [LoginGuardService],
-            },
-            {
-                path: 'fund-access/:kycId',
-                component: OfiFundAccessComponent,
                 canActivate: [LoginGuardService],
             },
             {
