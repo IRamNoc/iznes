@@ -88,8 +88,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         if (this.connectedWalletId) {
             this.setPersistForm(String(this.connectedWalletId));
         }
-
-        // this.setPersistForm(String(0)); //  testing when no wallet selected
     }
 
     ngOnInit() {
