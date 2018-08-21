@@ -18,7 +18,7 @@
                 <input id="su-username-field" class="form-control" type="text" name="username" disabled
                     [placeholder]="translate.translate('User name')"
                     formControlName="username"
-                    [class.error]="hasError('username')">
+                    [class.error]="hasError('username', 'required')">
             </div>
 
             <!-- Password -->
@@ -33,7 +33,7 @@
                             [type]="(showPassword) ? 'text' : 'password'"
                             [placeholder]="translate.translate('Password')"
                             formControlName="password"
-                            [class.error]="hasError('password')">
+                            [class.error]="hasError('password', 'required')">
 
                         <span class="toggle-password" (click)="toggleShowPasswords()" title="Show/hide passwords">
                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -61,7 +61,7 @@
                             [type]="(showConfirmPassword) ? 'text' : 'password'"
                             [placeholder]="translate.translate('Retype password')"
                             formControlName="passwordConfirm"
-                            [class.error]="hasError('passwordConfirm')">
+                            [class.error]="hasError('passwordConfirm', 'rules')">
 
                         <span class="toggle-password" (click)="toggleShowPasswords(true)" title="Show/hide passwords">
                             <i class="fa fa-eye-slash" aria-hidden="true"></i>
