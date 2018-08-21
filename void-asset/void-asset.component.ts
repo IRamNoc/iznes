@@ -1,29 +1,29 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SagaHelper, walletHelper} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SagaHelper, walletHelper } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     InitialisationService, MyWalletsService, WalletNodeRequestService,
-    WalletnodeTxService
+    WalletnodeTxService,
 } from '@setl/core-req-services';
 import {
-    setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail
+    setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail,
 } from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Unsubscribe} from 'redux';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs';
-import {PersistService} from '@setl/core-persist';
+import { Subscription } from 'rxjs/Subscription';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-void-asset',
     templateUrl: './void-asset.component.html',
-    styleUrls: ['./void-asset.component.css']
+    styleUrls: ['./void-asset.component.css'],
 })
 
 export class VoidAssetComponent implements OnInit, OnDestroy {
-    // Observable subscription array.
     subscriptionsArray: Array<Subscription> = [];
+    // subscriptionsArray: Subscription[] = [];
 
     voidAssetForm: FormGroup;
     connectedWalletId: number;
@@ -32,7 +32,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         walletIssuerAddress: string;
     };
 
-    walletInstrumentsSelectItems: Array<any>;
+    walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
 
     // List of redux observable
@@ -49,7 +49,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletsService: MyWalletsService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
 
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
@@ -64,12 +64,17 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
             amount: new FormControl('', Validators.required),
         });
 
-        this.voidAssetForm = this._persistService.watchForm('assetServicing/VoidAsset', formGroup);
+        this.voidAssetForm = this.persistService.watchForm('assetServicing/VoidAsset', formGroup);
 
         // List of observable subscriptions.
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
-        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            this.connectedWalletId = connectedWalletId;
+        }));
+        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => {
+            this.requestWalletLabel(requested);        }));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => {
+            this.requestWalletAddressList(requested);
+        }));
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
@@ -87,7 +92,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     }
 
     /**
-     *  Request wallet address list.
+     * Request wallet address list.
      *
      * @param requestedState
      */
@@ -97,7 +102,8 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(
+                this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -137,7 +143,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 instrument,
                 fromAddress,
                 toAddress,
-                amount
+                amount,
             });
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -145,12 +151,12 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 [],
                 asyncTaskPipe,
                 {},
-                function (data) {
+                (data) => {
                     console.log('void asset:', data);
                 },
-                function (data) {
+                (data) => {
                     console.log('fail', data);
-                }
+                },
             ));
         }
     }

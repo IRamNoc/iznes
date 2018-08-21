@@ -23,7 +23,7 @@ import { PersistService } from '@setl/core-persist';
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
     sendAssetForm: FormGroup;
-    subscriptionsArray: Subscription[] = [];
+    subscriptionsArray: Array<Subscription> = [];
     connectedWalletId: number;
     allInstrumentList: any[];
     addressList: any;
@@ -66,7 +66,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
-            console.log('+++ connected: ', connected);
         }));
 
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
