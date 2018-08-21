@@ -29,8 +29,8 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { MemberSocketServiceMock } from "@setl/core-test-util/mock/member-socket-service/index";
 import { NumberConverterService, LogService, APP_CONFIG } from '@setl/utils';
 
-const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['defaultRequestUmbrellaFundList', 'requestUmbrellaFundList']);
-const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['defaultRequestManagementCompanyList', 'requestManagementCompanyList']);
+const OfiUmbrellaFundServiceStub = jasmine.createSpyObj('OfiUmbrellaFundService', ['fetchUmbrellaList']);
+const OfiManagementCompanyServiceStub = jasmine.createSpyObj('OfiManagementCompanyService', ['getManagementCompanyList']);
 const OfiCurrenciesServiceStub = jasmine.createSpyObj('OfiCurrenciesService', ['getCurrencyList']);
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
@@ -123,13 +123,13 @@ const iznUpdateFund = jasmine.createSpy('iznUpdateFund')
         resolve();
     }),
 );
-const defaultRequestIznesFundList = jasmine.createSpy('defaultRequestIznesFundList')
+const getFundList = jasmine.createSpy('getFundList')
 .and.returnValue(
     new Promise((resolve, reject) => {
         resolve();
     }),
 );
-const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
+const fetchFundList = jasmine.createSpy('fetchFundList')
 .and.returnValue(
     new Promise((resolve, reject) => {
         resolve();
@@ -139,8 +139,8 @@ const requestIznesFundList = jasmine.createSpy('requestIznesFundList')
 const fundServiceSpy = {
     iznCreateFund,
     iznUpdateFund,
-    defaultRequestIznesFundList,
-    requestIznesFundList,
+    getFundList,
+    fetchFundList,
 };
 
 const ActivatedRouteStub = {

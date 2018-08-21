@@ -3,6 +3,8 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { SagaHelper, Common } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 import {
     IznesCreateFundRequestBody,
@@ -23,40 +25,56 @@ import { OfiUmbrellaFundService } from '../umbrella-fund/service';
 @Injectable()
 export class OfiFundService {
 
-    @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     accountId = 0;
+    isFundRequested: boolean;
+
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['user', 'myDetail', 'accountId']) getMyAccountId;
+    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedIznesFund$;
+    @select(['user', 'authentication', 'isLogin']) isLogin$;
 
     constructor(
         private memberSocketService: MemberSocketService,
         private ngRedux: NgRedux<any>,
     ) {
-        this.getMyAccountId
-            .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
+
+        this.isLogin$.subscribe((isLogin) => {
+            if (isLogin) {
+                this.initSubscribers();
+                return;
+            }
+            this.unSubscribe.next();
+            this.unSubscribe.complete();
+        });
+
     }
 
-    static defaultRequestIznesFundList(ofiFundService: OfiFundService, ngRedux: NgRedux<any>) {
-        ngRedux.dispatch(setRequestedIznesFunds());
+    initSubscribers() {
+        this.getMyAccountId
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
 
-        // Request the list.
-        const asyncTaskPipe = ofiFundService.requestIznesFundList();
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [GET_IZN_FUND_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
+        this.requestedIznesFund$
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe(v => this.isFundRequested = v);
     }
 
     myAccountId(accountId) {
         this.accountId = accountId;
     }
 
-    /**
-     * Get the list of iznes funds
-     *
-     * @returns {any}
-     */
+    getFundList() {
+        if (this.isFundRequested) {
+            return;
+        }
+        this.fetchFundList();
+    }
+
     requestIznesFundList(): any {
         const messageBody: IznesFundRequestMessageBody = {
             RequestName: 'izngetfundlist',

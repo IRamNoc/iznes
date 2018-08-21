@@ -123,7 +123,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.mcService, this._ngRedux);
+        this.mcService.getManagementCompanyList();
     }
 
     @Input() set userInfo(userInfo) {

@@ -1,24 +1,24 @@
 
-import {debounceTime, filter} from 'rxjs/operators';
-import {Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy} from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {NgRedux, select} from '@angular-redux/store';
+import { debounceTime, filter } from 'rxjs/operators';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {fromJS} from 'immutable';
-import {Observable, Subscription} from 'rxjs';
+import { fromJS } from 'immutable';
+import { Observable, Subscription } from 'rxjs';
 
-import {FundShareAuditService} from './service';
-import {OfiFundShareService} from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
+import { FundShareAuditService } from './service';
+import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
 import {
     FundShareAuditDetail,
     clearRequestedFundShareAudit,
     setRequestedFundShareAudit
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-audit';
 
-import {MultilingualService} from '@setl/multilingual';
-import {getOfiFundShareCurrentRequest} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
+import { MultilingualService } from '@setl/multilingual';
+import { getOfiFundShareCurrentRequest } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -54,7 +54,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         private service: FundShareAuditService,
         public _translate: MultilingualService,
         private ofiFundShareService: OfiFundShareService) { }
-        
+
     ngOnInit() {
         this.initSearchForm();
         this.initSubscriptions();
@@ -74,9 +74,13 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
             this.updateFundShareAudit(fundShareAudit);
         }));
 
-        const fundShareRequestedSubscription = this.fundShareRequestedOb.pipe(filter(requested => !requested)).subscribe(() => {
-            this.requestFundShare();
+        const fundShareRequestedSubscription = this.fundShareRequestedOb
+            .pipe(
+                filter(requested => !requested),
+        ).subscribe(() => {
+            this.ofiFundShareService.fetchFundShareByID(this.fundShareId);
         });
+
         this.subscriptionsArray.push(fundShareRequestedSubscription);
 
         const fundShareSubscription = this.fundShareOb.subscribe(fundShare => {
@@ -93,7 +97,7 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
         });
 
         this.subscriptionsArray.push(this.searchForm.valueChanges.pipe(debounceTime(1000)).subscribe((values) => {
-            if(this.ignoreFormChange) {
+            if (this.ignoreFormChange) {
                 this.ignoreFormChange = false;
                 return;
             }
@@ -105,19 +109,21 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
     private requestFundShareAudit(requested: boolean): void {
         if (requested) return;
 
-        OfiFundShareService.defaultFundShareAudit(this.ofiFundShareService,
+        OfiFundShareService.defaultFundShareAudit(
+            this.ofiFundShareService,
             this.redux,
             {
                 fundShareID: this.fundShareId,
                 dateFrom: this.searchForm.value.dateFrom ? this.searchForm.value.dateFrom : '',
-                dateTo: this.searchForm.value.dateTo ? this.searchForm.value.dateTo : ''
+                dateTo: this.searchForm.value.dateTo ? this.searchForm.value.dateTo : '',
             },
-            () => {},
-            () => {});
+            () => { },
+            () => { },
+        );
     }
 
     private updateFundShareAudit(fundShareAudit): void {
-        if(fundShareAudit && fundShareAudit[this.fundShareId]) {
+        if (fundShareAudit && fundShareAudit[this.fundShareId]) {
             this.fundShareAuditData = this.service.processAuditData(fundShareAudit[this.fundShareId]);
         } else {
             this.fundShareAuditData = [];
@@ -125,13 +131,6 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
 
         this.redux.dispatch(setRequestedFundShareAudit());
         this.changeDetectorRef.markForCheck();
-    }
-
-    private requestFundShare(): void {
-        const requestData = getOfiFundShareCurrentRequest(this.redux.getState());
-        requestData.fundShareID = this.fundShareId;
-
-        OfiFundShareService.defaultRequestFundShare(this.ofiFundShareService, this.redux, requestData);
     }
 
     returnToShare(): void {
@@ -143,5 +142,4 @@ export class FundShareAuditComponent implements OnInit, OnDestroy {
             subscription.unsubscribe();
         }
     }
-
 }

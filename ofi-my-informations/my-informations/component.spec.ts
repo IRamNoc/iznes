@@ -16,7 +16,7 @@ const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['tra
 const ngReduxSpy = jasmine.createSpyObj('NgRedux', ['dispatch']);
 
 class OfiManagementCompanyServiceMock {
-    static defaultRequestManagementCompanyList() {
+    getManagementCompanyList() {
         return;
     }
 }
@@ -40,7 +40,6 @@ describe('OfiMyInformationsComponent', () => {
 
     beforeAll(done => (async () => {
         TestBed.resetTestingModule();
-        spyOn(OfiManagementCompanyService, 'defaultRequestManagementCompanyList');
         TestBed.configureTestingModule({
             declarations: [
                 OfiMyInformationsComponent,

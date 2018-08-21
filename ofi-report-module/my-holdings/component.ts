@@ -94,7 +94,7 @@ export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
     getINVManagementCompanyListRequested(requested): void {
         // this.logService.log('requested', requested);
         if (!requested) {
-            OfiManagementCompanyService.defaultRequestINVManagementCompanyList(this.mcService, this.ngRedux, true);
+            this.mcService.fetchManagementCompanyForInvestor(true);
         }
     }
 
