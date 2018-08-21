@@ -46,11 +46,11 @@ export class PersistService {
 
         /* Check if the form is wallet sensitive. */
         if (options.hasOwnProperty('isWalletSensitive') && options['isWalletSensitive']) {
-            /* Subscribe for changes on wallet. */
+            /* Subscribe for changes on the wallet. */
             this.connectedWalletOb.subscribe((wallet) => {
                 /* If the wallet has changed... */
                 if (wallet !== Number(context)) {
-                    /* Watch a new form instance for the changed wallet using the wallet as the form context. */
+                    /* ...watch a new form instance for the changed wallet using the wallet as the form context. */
                     this.watchForm(name, group, String(wallet), { isWalletSensitive: true });
                 }
             });
@@ -61,11 +61,10 @@ export class PersistService {
             /* Get recovered data. */
             const recoveredData = JSON.parse(_.get(data, '[1].Data[0].data', false));
 
-            /* If we couldn't then we'll just return. */
+            /* If we couldn't then clear the form values. */
             if (!recoveredData) {
-                console.warn(' | Failed to read a previous state, maybe there isn\'t one?: ', data);
-                /* Clear the form's values. */
                 group.reset();
+                console.warn(' | Failed to read a previous state, maybe there isn\'t one?: ', data);
             } else {
                 /* If it was ok, we'll try set the value. */
                 try {
