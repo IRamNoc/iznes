@@ -459,7 +459,7 @@
                                                     <div *ngIf="isLeiVisible">
                                                         <input type="text" name="legalEntityIdentifier" id="legalEntityIdentifier" formControlName="legalEntityIdentifier" maxlength="20">
                                                         <span *ngIf="fundForm.controls['legalEntityIdentifier'].touched && fundForm.controls['legalEntityIdentifier'].hasError('pattern')"
-                                                              class="field-error">{{'Incorrect LEI' | translate}}</span>
+                                                              class="field-error">{{'LEI must meet ISO 17442 format (20 characters).' | translate}}</span>
                                                     </div>
                                                 </div>
                                             </div>
