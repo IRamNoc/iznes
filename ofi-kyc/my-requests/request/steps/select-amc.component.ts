@@ -168,11 +168,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     getAssetManagementCompanies() {
-        OfiManagementCompanyService.defaultRequestINVManagementCompanyList(
-            this.ofiManagementCompanyService,
-            this.ngRedux,
-            true,
-        );
+        this.ofiManagementCompanyService.fetchManagementCompanyForInvestor(true);
     }
 
     onRegisteredChange() {

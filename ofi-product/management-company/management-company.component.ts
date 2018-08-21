@@ -4,23 +4,23 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 
-import {Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, Inject} from '@angular/core';
-import {FileDropComponent} from '@setl/core-filedrop';
-import {FormGroup, FormArray, FormControl, FormBuilder, Validators} from '@angular/forms';
-import {FileService} from '@setl/core-req-services';
-import {ManagementCompanyInterface} from './management-company.interface';
-import {ManagementCompanyModel} from './management-company.model';
-import {SagaHelper, Common, LogService} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy, Inject } from '@angular/core';
+import { FileDropComponent } from '@setl/core-filedrop';
+import { FormGroup, FormArray, FormControl, FormBuilder, Validators } from '@angular/forms';
+import { FileService } from '@setl/core-req-services';
+import { ManagementCompanyInterface } from './management-company.interface';
+import { ManagementCompanyModel } from './management-company.model';
+import { SagaHelper, Common, LogService } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 
 // Internal
-import {Subscription} from 'rxjs/Subscription';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { Subscription } from 'rxjs/Subscription';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 // Services
-import {OfiManagementCompanyService} from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiManagementCompanyService } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 
 @Component({
     selector: 'management-company',
@@ -68,19 +68,21 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
     @select(['user', 'siteSettings', 'production']) productionOb;
 
-    constructor(private _fb: FormBuilder,
-                private ngRedux: NgRedux<any>,
-                private mcService: OfiManagementCompanyService,
-                private _changeDetectorRef: ChangeDetectorRef,
-                private fileService: FileService,
-                private logService: LogService,
-                private alertsService: AlertsService) {
+    constructor(
+        private _fb: FormBuilder,
+        private ngRedux: NgRedux<any>,
+        private mcService: OfiManagementCompanyService,
+        private _changeDetectorRef: ChangeDetectorRef,
+        private fileService: FileService,
+        private logService: LogService,
+        private alertsService: AlertsService,
+    ) {
+        this.mcService.getManagementCompanyList();
+
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
-        this.subscriptionsArray.push(this.requestedOfiManagementCompanyListOb.subscribe((requested) => this.getManagementCompanyListRequested(requested)));
         this.subscriptionsArray.push(this.managementCompanyAccessListOb.subscribe((managementCompanyList) => this.getManagementCompanyListFromRedux(managementCompanyList)));
         this.subscriptionsArray.push(this.productionOb.subscribe(production => this.production = production));
     }
@@ -215,7 +217,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     isNumericInput(control: FormControl) {
         if (control && control.value) {
             if (isNaN(control.value)) {
-                return {invalid: true};
+                return { invalid: true };
             }
         }
         return null;
@@ -248,13 +250,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         this.showConfirmModal = false;
         if (response === 1) {
             this.deleteCompany(this.companyToDelete);
-        }
-    }
-
-    getManagementCompanyListRequested(requested): void {
-        // this.logService.log('requested', requested);
-        if (!requested) {
-            OfiManagementCompanyService.defaultRequestManagementCompanyList(this.mcService, this.ngRedux);
         }
     }
 
@@ -396,7 +391,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                OfiManagementCompanyService.setRequested(false, this.ngRedux);
+                this.mcService.fetchManagementCompanyList();
                 // this.logService.log('success update sicav', data); // success
                 // this.modalTitle = 'Information';
                 // this.modalText = 'Your Management Company has been deleted successfully!';
@@ -451,7 +446,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        OfiManagementCompanyService.setRequested(false, this.ngRedux);
+                        this.mcService.fetchManagementCompanyList();
                         // this.logService.log('success update company', data); // success
                         // this.modalTitle = 'Information';
                         // this.modalText = 'Management company has successfully been updated';
@@ -497,7 +492,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        OfiManagementCompanyService.setRequested(false, this.ngRedux);
+                        this.mcService.fetchManagementCompanyList();
                         // this.logService.log('success new company', data); // success
                         // this.modalTitle = 'Information';
                         // this.modalText = 'Management company has successfully been created';

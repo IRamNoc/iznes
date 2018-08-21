@@ -38,7 +38,6 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     private subscriptionsArray: Subscription[] = [];
 
-    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requested']) fundListRequestedOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListOb: Observable<any>;
 
@@ -52,6 +51,8 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.ofiFundService.getFundList();
+
         this.initForms();
         this.initSubscriptions();
         this.checkIfFromFund();
@@ -106,9 +107,6 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     }
 
     private initSubscriptions(): void {
-        this.subscriptionsArray.push(this.fundListRequestedOb.subscribe(requested => {
-            this.requestFundList(requested);
-        }));
         this.subscriptionsArray.push(this.fundListOb.subscribe(navFund => {
             this.updateFundList(navFund);
         }));
@@ -172,17 +170,6 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         const legalEntity = fundObj.legalEntityIdentifier ? fundObj.legalEntityIdentifier : 'N/A';
         this.fundForm.controls.legalEntity.patchValue(legalEntity);
         this.fundForm.controls.domicile.patchValue(fundObj.domicile);
-    }
-
-    /**
-     * request the fund list
-     * @param requested boolean
-     * @return void
-     */
-    private requestFundList(requested: boolean): void {
-        if (requested) return;
-
-        OfiFundService.defaultRequestIznesFundList(this.ofiFundService, this.redux);
     }
 
     /**

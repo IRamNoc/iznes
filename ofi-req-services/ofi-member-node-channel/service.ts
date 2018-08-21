@@ -26,6 +26,9 @@ import { setStatusAuditTrailReset } from '@ofi/ofi-main/ofi-store/ofi-kyc/status
 import { resetHomepage } from '@setl/core-store';
 import { ofiClearHolderDetailRequested, ofiClearRequestedAmHolders } from '../../ofi-store/ofi-reports/holders/actions';
 import { OfiFundInvestService } from '../ofi-fund-invest/service';
+import { OfiManagementCompanyService } from '../ofi-product/management-company/management-company.service';
+import { OfiUmbrellaFundService } from '../ofi-product/umbrella-fund/service';
+import { OfiFundService } from '../ofi-product/fund/fund.service';
 import { LogService } from '@setl/utils';
 
 /* Service class. */
@@ -41,6 +44,9 @@ export class OfiMemberNodeChannelService {
         private ngRedux: NgRedux<any>,
         private logService: LogService,
         private fundInvestService: OfiFundInvestService,
+        private managementCompanyService: OfiManagementCompanyService,
+        private umbrellaService: OfiUmbrellaFundService,
+        private fundService: OfiFundService,
     ) {
         this.connectedWallet$
             .subscribe(v => this.connectedWalletID = v);
@@ -79,14 +85,7 @@ export class OfiMemberNodeChannelService {
 
             case 'newmanagementcompany':
                 this.logService.log(' | Update managment company list: ', data);
-
-                /* TODO - Dispatch the event to update the management company list. */
-                // this.ngRedux.dispatch({
-                //     type: SET_REQUESTED,
-                //     payload: [ null, data, null ]
-                // });
-
-                /* Break. */
+                this.managementCompanyService.fetchManagementCompanyList();
                 break;
 
             case 'updatenav':
@@ -129,30 +128,29 @@ export class OfiMemberNodeChannelService {
                 this.ngRedux.dispatch(setInvestorInvitationListReset());
                 break;
 
-            // new umbrella fund created and umbrella fund updated.
-            // todo
+            // TODO
             // At the moment, this broacast will cause the front-end to request all the umbrella fund
             // when create/update umbrella fund.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
             // to avoid to make another call.
+
             case 'izncreateumbrellafund':
             case 'iznupdateumbrellafund':
-                this.ngRedux.dispatch(clearRequestedUmbrellaFund());
+                this.umbrellaService.fetchUmbrellaList();
                 break;
 
-            // new fund created and fund updated.
-            // todo
+            // TODO
             // At the moment, this broacast will cause the front-end to request all the fund
             // when create/update fund.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
             // to avoid to make another call.
+
             case 'izncreatefund':
             case 'iznupdatefund':
-                this.ngRedux.dispatch(clearRequestedIznesFunds());
+                this.fundService.fetchFundList();
                 break;
 
-            // new fund share created and fund share updated.
-            // todo
+            // TODO
             // At the moment, this broacast will cause the front-end to request all the fund share
             // when create/update fund share.
             // we should broadcast the changes from the backend. and the front should just handle the new/updated entry

@@ -272,19 +272,10 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     /* Redux observables. */
     @select(['user', 'myDetail']) userDetailObs;
-    @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'requestedIznesFund']) requestedFundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'requestedIznesShare']) requestedShareListObs;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListObs;
-    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
-    @select([
-        'ofi',
-        'ofiProduct',
-        'ofiManagementCompany',
-        'managementCompanyList',
-        'requested',
-    ]) requestManagementCompanyAccessListOb;
     @select([
         'ofi',
         'ofiProduct',
@@ -316,20 +307,18 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.ofiCurrenciesService.getCurrencyList();
+        this.ofiManagementCompanyService.getManagementCompanyList();
+        this._ofiUmbrellaFundService.fetchUmbrellaList();
+        this._ofiFundService.getFundList();
 
         this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
-        this.subscriptions.push(this.requestManagementCompanyAccessListOb
-        .subscribe((d: any) => this.requestManagementCompanyAccessList(d)));
         this.subscriptions.push(this.managementCompanyAccessListOb
         .subscribe(d => this.managementCompanyAccessList = d));
         this.subscriptions.push(this.userDetailObs
         .subscribe(userDetail => this.amManagementCompany = userDetail.companyName));
-        this.subscriptions.push(this.requestedFundListObs.subscribe(requested => this.requestFundList(requested)));
         this.subscriptions.push(this.fundListObs.subscribe(funds => this.getFundList(funds)));
         this.subscriptions.push(this.requestedShareListObs.subscribe(requested => this.requestShareList(requested)));
         this.subscriptions.push(this.shareListObs.subscribe(shares => this.getShareList(shares)));
-        this.subscriptions.push(this.requestedOfiUmbrellaFundListOb
-        .subscribe((requested: any) => this.getUmbrellaFundRequested(requested)));
         this.subscriptions.push(this.umbrellaFundAccessListOb.subscribe((list: any) => this.getUmbrellaFundList(list)));
 
         //drafts
@@ -339,8 +328,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             })
         );
 
-        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
-        OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
         OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
     }
 
@@ -351,21 +338,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.subscriptions.forEach((subscription: Subscription) => {
             subscription.unsubscribe();
         });
-    }
-
-    requestManagementCompanyAccessList(requested): void {
-        if (!requested) {
-            OfiManagementCompanyService.defaultRequestManagementCompanyList(
-                this.ofiManagementCompanyService,
-                this._ngRedux,
-            );
-        }
-    }
-
-    requestFundList(requested): void {
-        if (!requested) {
-            OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
-        }
     }
 
     getFundList(funds: any): void {
@@ -447,12 +419,6 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         this.panelDefs[2].data = this.filteredShareList;
         this.panelDefs[2].count = this.filteredShareList.length;
         this._changeDetectorRef.markForCheck();
-    }
-
-    getUmbrellaFundRequested(requested): void {
-        if (!requested) {
-            OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
-        }
     }
 
     getUmbrellaFundList(umbrellaFunds) {
@@ -574,11 +540,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 if (ans.resolved) {
                     if (dataType == 'Umbrella Fund') {
                         this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
-                        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this._ngRedux);
+                        this._ofiUmbrellaFundService.fetchUmbrellaList();
                     }
                     if (dataType == 'Fund') {
                         this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
-                        OfiFundService.defaultRequestIznesFundList(this._ofiFundService, this._ngRedux);
+                        this._ofiFundService.fetchFundList();
                     }
                     if (dataType == 'Fund Share') {
                         this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
