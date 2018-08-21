@@ -266,10 +266,13 @@ export class SignupComponent implements OnDestroy, OnInit {
         }
     }
 
-    hasError(path, error) {
+    hasError(path, error?) {
         if (this.signupForm) {
             let formControl: AbstractControl = path ? this.signupForm.get(path) : this.signupForm;
 
+            if(!error){
+                return formControl.touched && formControl.errors;
+            }
             if (error !== 'required' && formControl.hasError('required')) {
                 return false;
             }
