@@ -19,7 +19,6 @@ export { OfiSignUpComponent } from './ofi-kyc/signup/component';
 export { OfiDocumentsComponent } from './ofi-kyc/documents/component';
 export { OfiAmDocumentsComponent } from './ofi-kyc/am-documents/component';
 export { OfiKycHomeComponent } from './ofi-kyc/home/component';
-export { OfiFundAccessComponent } from './ofi-kyc/fund-access/component';
 export { OfiKycAlreadyDoneComponent } from './ofi-kyc/already-done/component';
 export { OfiRedirectTokenComponent } from './ofi-kyc/invitation-token/redirect-token.component';
 export { OfiConsumeTokenComponent } from './ofi-kyc/invitation-token/consume-token.component';
