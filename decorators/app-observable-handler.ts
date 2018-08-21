@@ -18,8 +18,13 @@ export function AppObservableHandler(constructor) {
     constructor.prototype.localSubscriptions = [] as Subscription[];
 
     // create a subscribe method for component to call when create subscription
-    constructor.prototype.appSubscribe = function ($ob: Observable<any>, callback: (data: any) => void) {
-        this.localSubscriptions.push($ob.subscribe(callback));
+    constructor.prototype.appSubscribe = function<T>(
+        obs: Observable<T>,
+        next?: (value: T) => void,
+        error?: (error: any) => void,
+        complete?: () => void,
+    ) {
+        this.localSubscriptions.push(obs.subscribe(next, error, complete));
     };
 
     // handle auto unsubscribe.
@@ -37,7 +42,6 @@ export function AppObservableHandler(constructor) {
 
         // apply the onDestroy function stored above here.
         original && typeof original === 'function' && original.apply(this, arguments);
-
     };
-
 }
+

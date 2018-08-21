@@ -3,6 +3,7 @@ import { always as k } from 'ramda';
 import * as _ from 'lodash';
 
 export const kAction = type => k({ type });
+export const kPayloadAction = (type, payload) => k({ type, payload });
 
 /******************************************************************************************************************
  *
