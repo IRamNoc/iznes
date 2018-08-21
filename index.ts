@@ -1,5 +1,5 @@
 /* Service. */
-export {PersistService} from './service/service';
+export { PersistService } from './service/service';
 
 /* Module. */
-export {PersistModule} from './persist.module';
+export { PersistModule } from './persist.module';
