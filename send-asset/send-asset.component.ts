@@ -66,6 +66,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
+            console.log('+++ connected: ', connected);
         }));
 
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
@@ -84,7 +85,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             this.showResponseModal(newSendAssetRequest);
         }));
 
-        this.setPersistForm(String(this.connectedWalletId));
+        if (this.connectedWalletId) {
+            this.setPersistForm(String(this.connectedWalletId));
+        }
+
+        // this.setPersistForm(String(0)); //  testing when no wallet selected
     }
 
     ngOnInit() {
