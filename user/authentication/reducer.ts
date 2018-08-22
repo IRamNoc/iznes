@@ -10,6 +10,7 @@ const initialState: AuthenticationState = {
     isLogin: false,
     defaultHomePage: '/home',
     mustChangePassword: false,
+    changedPassword: false
 };
 
 export const AuthenticationReducer = function (state: AuthenticationState = initialState, action: Action) {
