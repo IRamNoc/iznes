@@ -26,7 +26,10 @@
     ]
   },
   "devDependencies": {
+    "@angular/common": "^6.1.3",
     "@angular/core": "^6.1.3",
+    "@angular/forms": "^6.1.3",
+    "@angular/platform-browser": "^6.1.3",
     "@setl/utils": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git",
     "@types/jest": "^23.3.1",
     "immutable": "^3.8.2",
