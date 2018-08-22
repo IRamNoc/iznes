@@ -14,7 +14,6 @@ import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-send-asset',
@@ -23,15 +22,15 @@ import { PersistService } from '@setl/core-persist';
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
     sendAssetForm: FormGroup;
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
     connectedWalletId: number;
     allInstrumentList: any[];
     addressList: any;
     toRelationshipSelectItems: any[];
+    noInstrumentsAlert: boolean = false;
 
     // Asset
-    @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
-    @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
+    @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
 
     // Asset Address
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -50,68 +49,77 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletService: MyWalletsService,
-                private persistService: PersistService) {
+                private myWalletService: MyWalletsService) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        /* data subscriptions */
-        this.subscriptionsArray.push(this.requestedAllInstrumentOb.subscribe(
-            requested => this.requestAllInstrument(requested)));
-        this.subscriptionsArray.push(this.allInstrumentOb.subscribe((instrumentList) => {
-            this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
-            this.changeDetectorRef.markForCheck();
-        }));
-
+        /* Subscribe to get the connected Wallet ID and setup/clear form group on change */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
+            this.setFormGroup();
         }));
 
+        /* Filter the instrument list to only those the current wallet has positive balance of */
+        this.subscriptionsArray.push(this.holdingByAssetOb.subscribe((holdings) => {
+            if (!_.isEmpty(holdings) && holdings.hasOwnProperty(this.connectedWalletId) && this.connectedWalletId) {
+                const positiveHoldings = {};
+                this.allInstrumentList = [];
+                this.noInstrumentsAlert = false;
+                for (const holding in holdings[this.connectedWalletId]) {
+                    /* Add to instrument list if free holdings is greater than 0 */
+                    if (holdings[this.connectedWalletId][holding].free > 0) {
+                        positiveHoldings[holding] = holding;
+                    }
+                    this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(positiveHoldings);
+                    this.changeDetectorRef.markForCheck();
+                }
+            }
+            /* Display alert if there are no instruments in the list */
+            if (!this.allInstrumentList.length) {
+                this.noInstrumentsAlert = true;
+            }
+        }));
+
+        /* Subscribe to get the wallet list and set the select items */
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
+            console.log('+++ addressList', addressList);
         }));
+
+        /* Request address list if flag is not set */
         this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
             this.changeDetectorRef.markForCheck();
         }));
+
+        /* Request label list if flag is not set */
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe((requested) => {
             this.requestWalletLabel(requested);
         }));
 
+        /* Subscribe to get the response from the Send Asset Request and show a modal */
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
 
-        if (this.connectedWalletId) {
-            this.setPersistForm(String(this.connectedWalletId));
-        }
+        /*        if (this.connectedWalletId) {
+                    this.setFormGroup();
+                }*/
     }
 
     ngOnInit() {
     }
 
-    setPersistForm(context: string): void {
-        const formName = 'assetServicing/sendAsset';
-
+    setFormGroup(): void {
         /* Create a formGroup for sendAssetForm. */
-        const formGroup = new FormGroup({
+        this.sendAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             assetAddress: new FormControl('', Validators.required),
             recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
+            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
         });
-
-        /* Set persist watcher on sendAssetForm. */
-        this.sendAssetForm = this.persistService.watchForm(
-            formName,
-            formGroup,
-            context,
-            {
-                isWalletSensitive: true,
-            },
-        );
     }
 
     sendAsset(): void {
@@ -208,13 +216,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
         this.toRelationshipSelectItems =
             walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
-    }
-
-    requestAllInstrument(requested: boolean): void {
-        if (!requested) {
-            // request all instruments
-            InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
-        }
     }
 
     requestAddressList(requested: boolean): void {
