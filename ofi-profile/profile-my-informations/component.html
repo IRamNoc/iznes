@@ -57,7 +57,9 @@
                             <div *ngIf="hasError('password', 'rules') && isTouched('password')" class="text-danger">
                                 {{'Your password doesn\'t meet the security critera' | translate}}
                             </div>
-                            <div *ngIf="hasError('', 'oldNew') && isTouched('password') && isTouched('oldPassword') && !hasError('password', 'required')" class="text-danger">{{'The new password should not be the same as the old' | translate}}</div>
+                            <div *ngIf="!hasError('password', 'rules') && hasError('', 'oldNew') && isTouched('password') && isTouched('oldPassword') && !hasError('password', 'required')" class="text-danger">
+                                {{'The new password should not be the same as the old' | translate}}
+                            </div>
                         </div>
                     </div>
 
@@ -72,7 +74,7 @@
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">{{'Confirmation is required' | translate}}</div>
-                            <div *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">{{'Password does not match' | translate}}</div>
+                            <div *ngIf="!hasError('passwordConfirm', 'required') && hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">{{'Password does not match' | translate}}</div>
                         </div>
                     </div>
                     <div class="row">
