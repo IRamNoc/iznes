@@ -154,47 +154,58 @@
         <br><br>
         <form [formGroup]="changePasswordForm" novalidate (ngSubmit)="saveNewPassword(changePasswordForm.value)">
             <section class="form-block">
+
                 <div class="form-group">
                     <div>
-                        <input id="fp-password-field"
-                               [type]="(showPasswords.change1 === true) ? 'text' : 'password'"
-                               class="form-control"
-                               formControlName="password"
-                               size="45"
-                               [placeholder]="_translate.translate('New password')"
-                        >
-                        <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="_translate.translate('Show/hide passwords')">
-                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                        </span>
+                        <label for="fp-password-field">
+                            {{'New password' | translate}}
+                            <app-password-tooltip></app-password-tooltip>
+                        </label>
+                        <div class="toggle-parent">
+                            <input id="fp-password-field"
+                                   [type]="(showPasswords.change1 === true) ? 'text' : 'password'"
+                                   class="form-control"
+                                   formControlName="password"
+                                   size="45"
+                                   [placeholder]="_translate.translate('New password')"
+                            >
+                            <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="_translate.translate('Show/hide passwords')">
+                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                     <div>
-                        <div *ngIf="changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.dirty" class="text-danger">
+                        <div *ngIf="hasError(changePasswordForm.get('password'), 'required')" class="text-danger">
                             {{'Password is required' | translate}}
                         </div>
-                        <div *ngIf="!changePasswordForm.controls.password.valid && !changePasswordForm.controls.password.hasError('required') && changePasswordForm.controls.password.touched" class="text-danger">
-                            {{'Your password must be at least 6 characters' | translate}}
+                        <div *ngIf="hasError(changePasswordForm.get('password'), 'rules')" class="text-danger">
+                            {{'Your password doesn\'t meet the security criteria' | translate}}
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group text-center">
                     <div>
-                        <input id="fp-passwordconfirm-field"
-                               [type]="(showPasswords.change2 === true) ? 'text' : 'password'"
-                               class="form-control"
-                               formControlName="passwordConfirm"
-                               [placeholder]="_translate.translate('Password confirmation')">
-                        <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="_translate.translate('Show/hide passwords')">
-                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                        </span>
+                        <label for="fp-passwordconfirm-field">
+                            {{'Password confirmation' | translate}}
+                        </label>
+
+                        <div class="toggle-parent">
+                            <input id="fp-passwordconfirm-field"
+                                   [type]="(showPasswords.change2 === true) ? 'text' : 'password'"
+                                   class="form-control"
+                                   formControlName="passwordConfirm"
+                                   [placeholder]="_translate.translate('Password confirmation')">
+                            <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="_translate.translate('Show/hide passwords')">
+                                <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                            </span>
+                        </div>
                     </div>
                     <div>
-                        <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger">
+                        <div *ngIf="hasError(changePasswordForm.get('passwordConfirm'), 'required')" class="text-danger">
                             {{'Confirmation is required' | translate}}
                         </div>
-                        <div *ngIf="changePasswordForm.controls.passwordConfirm.hasError('minlength') && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger">
-                            {{'Your password must be at least 6 characters' | translate}}
-                        </div>
-                        <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.dirty" class="text-danger">
+                        <div *ngIf="!changePasswordForm.controls.passwordConfirm.hasError('minlength') && changePasswordForm.hasError('mismatch') && changePasswordForm.controls.password.valid && !changePasswordForm.controls.passwordConfirm.hasError('required') && changePasswordForm.controls.passwordConfirm.touched" class="text-danger">
                             {{'Password does not match' | translate}}
                         </div>
                     </div>

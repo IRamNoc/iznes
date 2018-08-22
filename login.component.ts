@@ -1,5 +1,5 @@
 // Vendors
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild, ChangeDetectorRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {NgRedux, select} from '@angular-redux/store';
@@ -24,6 +24,7 @@ import {
     SET_LOGIN_DETAIL,
     SET_PRODUCTION,
     SET_SITE_MENU,
+    SET_NEW_PASSWORD,
     setLanguage,
 } from '@setl/core-store';
 import {MemberSocketService} from '@setl/websocket-service';
@@ -117,6 +118,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private loginGuardService: LoginGuardService,
                 private logService: LogService,
                 public _translate: MultilingualService,
+                private changeDetectorRef: ChangeDetectorRef,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -491,20 +493,25 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     resetUserPassword(values, $event : Event){
         $event.preventDefault();
-        let silent = true;
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
             oldPassword : values.oldPassword,
             newPassword : values.password,
-        }, silent);
-        const saga = SagaHelper.runAsyncCallback(
+        });
+        const saga = SagaHelper.runAsync(
+            [SET_NEW_PASSWORD],
+            [],
             asyncTaskPipe,
+            {},
             () => {
-                let message = this._translate.translate('Your password has been changed! Please login again.');
+                let message = this._translate.translate('Your password has been successfully changed!');
                 this.toasterService.pop('success', message);
                 this.resetPassword = false;
                 this.loginForm.get('password').patchValue(values.password);
                 this.resetPasswordForm.reset();
+                this.login(this.loginForm.value);
+
+                this.changeDetectorRef.detectChanges();
             },
             () => {
                 let message = this._translate.translate('An error has occurred, please make sure the data you entered is correct.');
