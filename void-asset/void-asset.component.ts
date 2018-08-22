@@ -9,11 +9,8 @@ import {
 import {
     setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail,
 } from '@setl/core-store';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-void-asset',
@@ -22,8 +19,7 @@ import { PersistService } from '@setl/core-persist';
 })
 
 export class VoidAssetComponent implements OnInit, OnDestroy {
-    subscriptionsArray: Array<Subscription> = [];
-    // subscriptionsArray: Subscription[] = [];
+    subscriptionsArray: Subscription[] = [];
 
     voidAssetForm: FormGroup;
     connectedWalletId: number;
@@ -45,11 +41,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsService: MyWalletsService,
-                private persistService: PersistService) {
+                private myWalletsService: MyWalletsService) {
 
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
