@@ -1,0 +1,6 @@
+before_script:
+  - npm install --only=dev
+
+test:
+  script:
+      - npm test
