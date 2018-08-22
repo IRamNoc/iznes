@@ -16,7 +16,8 @@
                             <div class="form-group col-sm-6">
                                 <label>{{'Asset Management Company' | translate}}</label>
                                 <div class="input-button-group">
-                                    <ng-select id="my-holdings-search-field" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Asset Management Company')" [formControl]="searchForm.controls['search']"></ng-select>
+                                    <ng-select id="my-holdings-search-field" [items]="managementCompanyList" [allowClear]="true" [placeholder]="_translate.translate('Asset Management Company')"
+                                        [formControl]="searchForm.controls['search']"></ng-select>
                                 </div>
                             </div>
                         </div>
@@ -62,7 +63,7 @@
                         <clr-dg-cell>{{data.shareClassCurrency}}</clr-dg-cell>
                         <clr-dg-cell>{{data.quantity | moneyValue: 5 }}</clr-dg-cell>
                         <clr-dg-cell>{{data.latestNav | moneyValue: 2}}</clr-dg-cell>
-                        <clr-dg-cell>{{data.amount | moneyValue: 5}}</clr-dg-cell>
+                        <clr-dg-cell>{{data.amount | moneyValue: 2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.ratio | moneyValue: 2}}%</clr-dg-cell>
                     </clr-dg-row>
 
