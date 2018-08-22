@@ -139,6 +139,7 @@ export class OfiManageNavPopup implements OnInit {
 
         const nav = this.isDeleteMode() ? this.numberConverterService.toFrontEnd(share.nav) : this.navLatest;
 
+        let status = _.isNil(share.status) ? [] : [{id : share.status}];
         this.navForm = new FormGroup({
             nav: new FormControl(nav),
             price: new FormControl('', Validators.compose([
@@ -148,7 +149,7 @@ export class OfiManageNavPopup implements OnInit {
             ])),
             navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
             navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
-            status: new FormControl([], Validators.required)
+            status: new FormControl(status, Validators.required)
         });
 
         if(mode === model.NavPopupMode.ADD) {
