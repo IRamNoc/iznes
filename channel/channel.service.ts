@@ -3,6 +3,7 @@ import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper, LogService} from '@setl/utils';
 import {ToasterService} from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import {take} from 'rxjs/operators';
 
 import {
     /* Useradmin */
@@ -36,19 +37,33 @@ export class ChannelService {
 
     @select(['user', 'authentication', 'changedPassword']) checkChangedPassword;
 
-    changedPassword = false;
-
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private toasterService: ToasterService,
                 private myWalletsService: MyWalletsService,
                 private logService: LogService,
                 private chainService: ChainService) {
-        this.checkChangedPassword.subscribe(
-            (data) => {
-                this.changedPassword = data;
-            }
-        );
+    }
+
+    checkIfPasswordChanged() {
+        this.checkChangedPassword
+            .pipe(
+                take(1)
+            )
+            .subscribe(
+                (changedPassword) => {
+                    this.logService.log(changedPassword);
+
+                    if (!changedPassword) {
+                        this.alertsService.create('warning', `
+                        The password for this account has been changed! Logging out in 5 seconds.`);
+                        setTimeout(function () {
+                            document.location.reload(true);
+                        }, 5000);
+                    }
+                }
+            )
+        ;
     }
 
     /**
@@ -100,14 +115,9 @@ export class ChannelService {
 
             case 'setpassword': // guess...
                 this.logService.log(' | UPDATE USER PASSWORD: ', data);
-                this.logService.log(this.changedPassword);
-                if (this.changedPassword !== true) {
-                    this.alertsService.create('warning', `
-                        The password for this account has been changed! Logging out in 5 seconds.`);
-                    setTimeout(function () {
-                        document.location.reload(true);
-                    }, 5000);
-                }
+
+                this.checkIfPasswordChanged();
+
                 break;
 
 
