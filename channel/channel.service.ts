@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
 import {SagaHelper, LogService} from '@setl/utils';
-import {ToasterService} from 'angular2-toaster';
+import { ToasterService, Toast } from 'angular2-toaster';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {take} from 'rxjs/operators';
+import { debounce } from 'lodash';
 
 import {
     /* Useradmin */
@@ -234,7 +235,7 @@ export class ChannelService {
                 this.ngRedux.dispatch(clearRequestedMailInitial());
                 this.ngRedux.dispatch(clearRequestedMailList());
 
-                this.toasterService.pop('info', 'You got mail!');
+                this.popNewMail();
                 break;
 
             case 'email_mark_read': // email read
@@ -256,4 +257,9 @@ export class ChannelService {
         }
     }
 
+    popNewMail = debounce(() => {
+        const toast: Toast = { type: 'info', title: 'You got mail!', toastId: 'new_mail' };
+        this.toasterService.clear('new_mail');
+        this.toasterService.pop(toast);
+    }, 1000);
 }
