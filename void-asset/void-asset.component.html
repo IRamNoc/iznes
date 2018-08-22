@@ -35,7 +35,7 @@
                         <label class="control-label required-field" for="amount" mltag="txt_amount">Amount</label>
                         <input type="text" 
                                 id="amount" 
-                                placeholder="Amount" 
+                                placeholder="Amount"
                                 size="45"
                                 [formControl]="voidAssetForm.controls['amount']"
                                 [class.error]="!voidAssetForm.controls['amount'].valid &&
@@ -43,6 +43,7 @@
                                 mltag="txt_amount"/>
 
                         <span *ngIf="voidAssetForm.controls['amount'].hasError('required') && voidAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="voidAssetForm.controls['amount'].hasError('pattern') && voidAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Amount must be a number</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" mltag="txt_voidasset" [disabled]="voidAssetForm.invalid">Void Asset</button>                    

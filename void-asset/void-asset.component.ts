@@ -74,8 +74,6 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        /* Set up the voidAssetForm. */
-        this.setForm();
     }
 
     /**
@@ -87,7 +85,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         this.voidAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             fromAddress: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
+            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
         });
     }
 
