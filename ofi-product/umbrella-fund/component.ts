@@ -106,9 +106,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'requested']) requestedOfiUmbrellaFundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundAccessListOb;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) requestedOfiManagementCompanyListOb;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
 
     static getListItem(value: string | number, list: any[]): any[] {
@@ -134,7 +132,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         private _numberConverterService: NumberConverterService,
         private _toasterService: ToasterService,
         private _ofiUmbrellaFundService: OfiUmbrellaFundService,
-        private _ofiManagementCompanyService: OfiManagementCompanyService,
+        private managementCompanyService: OfiManagementCompanyService,
         private logService: LogService,
         private confirmationService: ConfirmationService,
         public _translate: MultilingualService,
@@ -152,6 +150,9 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.legalAdvisorOptions = productConfig.fundItems.legalAdvisorItems;
         this.transferAgentOptions = productConfig.fundItems.transferAgentItems;
         this.centralizingAgentOptions = productConfig.fundItems.centralizingAgentItems;
+
+        this.managementCompanyService.getManagementCompanyList();
+        this._ofiUmbrellaFundService.fetchUmbrellaList();
 
         // param url
         this._activatedRoute.params
@@ -296,18 +297,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         )
         .subscribe(d => this.getLanguage(d));
 
-        this.requestedOfiUmbrellaFundListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(requested => this.getUmbrellaFundRequested(requested));
-
-        this.requestedOfiManagementCompanyListOb
-        .pipe(
-            takeUntil(this.unSubscribe),
-        )
-        .subscribe(requested => this.getManagementCompanyRequested(requested));
-
         combineLatest(
             this.umbrellaFundAccessListOb,
             this.managementCompanyAccessListOb,
@@ -402,12 +391,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         };
     }
 
-    getUmbrellaFundRequested(requested): void {
-        if (!requested) {
-            OfiUmbrellaFundService.defaultRequestUmbrellaFundList(this._ofiUmbrellaFundService, this.ngRedux);
-        }
-    }
-
     getListItems(
         val: string[],
         list: { id: string, text: string }[],
@@ -497,12 +480,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 additionnalNotes: u.additionnalNotes || '',
             };
         });
-    }
-
-    getManagementCompanyRequested(requested): void {
-        if (!requested) {
-            OfiManagementCompanyService.defaultRequestManagementCompanyList(this._ofiManagementCompanyService, this.ngRedux);
-        }
     }
 
     getManagementCompanyList(list) {

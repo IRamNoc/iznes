@@ -41,23 +41,6 @@ export class OfiUmbrellaFundService {
         }
     }
 
-    static defaultRequestUmbrellaFundList(ofiUmbrellaFundService: OfiUmbrellaFundService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedUmbrellaFund());
-
-        // Request the list.
-        const asyncTaskPipe = ofiUmbrellaFundService.requestUmbrellaFundList();
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_UMBRELLA_FUND_LIST],  // SET est en fait un GETLIST
-            [],
-            asyncTaskPipe,
-            {},
-        ));
-    }
-
-    // clean version of defaultRequestUmbrellaFundList
-    // TODO: migrate app from defaultRequestUmbrellaFundList to fetchUmbrellaList
     fetchUmbrellaList() {
         const asyncTaskPipe = this.requestUmbrellaFundList();
 

@@ -77,7 +77,7 @@
                                         <input type="text" id="uf_lei" formControlName="legalEntityIdentifier" maxlength="20">
                                         <div *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].touched && umbrellaFundForm.controls['legalEntityIdentifier'].errors" class="field-error">
                                             <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('required')">{{'This field is required' | translate}}</span>
-                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{'Incorrect LEI' | translate}}</span>
+                                            <span *ngIf="umbrellaFundForm.controls['legalEntityIdentifier'].hasError('pattern')">{{'LEI must meet ISO 17442 format (20 characters).' | translate}}</span>
                                         </div>
                                     </div>
                                 </div>

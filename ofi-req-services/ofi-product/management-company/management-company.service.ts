@@ -1,11 +1,25 @@
-import {Injectable} from '@angular/core';
-import {MemberSocketService} from '@setl/websocket-service';
-import {SagaHelper, Common} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { MemberSocketService } from '@setl/websocket-service';
+import { SagaHelper, Common } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
+import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
-import {ManagementCompanyRequestMessageBody, SaveManagementCompanyRequestBody, UpdateManagementCompanyRequestBody, DeleteManagementCompanyRequestBody} from './management-company.service.model';
-import {setRequestedManagementCompany, clearRequestedManagementCompany, SET_MANAGEMENT_COMPANY_LIST, setRequestedINVManagementCompany, clearRequestedINVManagementCompany, SET_INV_MANAGEMENT_COMPANY_LIST} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
+import {
+    ManagementCompanyRequestMessageBody,
+    SaveManagementCompanyRequestBody,
+    UpdateManagementCompanyRequestBody,
+    DeleteManagementCompanyRequestBody,
+} from './management-company.service.model';
+import {
+    setRequestedManagementCompany,
+    clearRequestedManagementCompany,
+    SET_MANAGEMENT_COMPANY_LIST,
+    setRequestedINVManagementCompany,
+    clearRequestedINVManagementCompany,
+    SET_INV_MANAGEMENT_COMPANY_LIST,
+} from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
 interface ManagementCompanyData {
     companyID: any;
@@ -40,15 +54,45 @@ interface DeleteManagementCompany {
 @Injectable()
 export class OfiManagementCompanyService {
 
-    @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     accountID = 0;
+    isManagementCompanyRequested: boolean;
 
-    constructor(private memberSocketService: MemberSocketService) {
-        this.getMyAccountId.subscribe((getMyAccountId) => this.myAccountId(getMyAccountId));
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['user', 'myDetail', 'accountId']) getMyAccountId;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) reqManagementCompany$;
+    @select(['user', 'authentication', 'isLogin']) isLogin$;
+
+    constructor(
+        private memberSocketService: MemberSocketService,
+        private ngRedux: NgRedux<any>,
+    ) {
+        this.isLogin$.subscribe((isLogin) => {
+            if (isLogin) {
+                this.initSubscribers();
+                return;
+            }
+            this.unSubscribe.next();
+            this.unSubscribe.complete();
+        });
+    }
+
+    initSubscribers() {
+        this.getMyAccountId
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
+
+        this.reqManagementCompany$
+            .pipe(
+                takeUntil(this.unSubscribe),
+        )
+            .subscribe(v => this.isManagementCompanyRequested = v);
     }
 
     myAccountId(accountId) {
-        this.accountID  = accountId;
+        this.accountID = accountId;
     }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -60,42 +104,47 @@ export class OfiManagementCompanyService {
         }
     }
 
-    static defaultRequestManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedManagementCompany());
+    getManagementCompanyList() {
+        if (this.isManagementCompanyRequested) {
+            return;
+        }
+        this.fetchManagementCompanyList();
+    }
 
-        // Request the list.
-        const asyncTaskPipe = ofiManagementCompanyService.requestManagementCompanyList();
+    fetchManagementCompanyList() {
+        const asyncTaskPipe = this.requestManagementCompanyList();
 
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_MANAGEMENT_COMPANY_LIST],  // SET est en fait un GETLIST
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_MANAGEMENT_COMPANY_LIST],
             [],
             asyncTaskPipe,
             {},
+            () => {
+                this.ngRedux.dispatch(setRequestedManagementCompany());
+            },
         ));
     }
 
     static setINVRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
         // false = doRequest | true = already requested
-        if(!boolValue){
+        if (!boolValue) {
             ngRedux.dispatch(clearRequestedINVManagementCompany());
         } else {
             ngRedux.dispatch(setRequestedINVManagementCompany());
         }
     }
 
-    static defaultRequestINVManagementCompanyList(ofiManagementCompanyService: OfiManagementCompanyService, ngRedux: NgRedux<any>, requestAll = false) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedINVManagementCompany());
+    fetchManagementCompanyForInvestor(requestAll = false) {
+        const asyncTaskPipe = this.requestINVManagementCompanyList(requestAll);
 
-        // Request the list.
-        const asyncTaskPipe = ofiManagementCompanyService.requestINVManagementCompanyList(requestAll);
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_INV_MANAGEMENT_COMPANY_LIST],  // SET est en fait un GETLIST
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_INV_MANAGEMENT_COMPANY_LIST],
             [],
             asyncTaskPipe,
             {},
+            () => {
+                this.ngRedux.dispatch(setRequestedINVManagementCompany());
+            },
         ));
     }
 
@@ -113,7 +162,7 @@ export class OfiManagementCompanyService {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'getManagementCompanyList',
             token: this.memberSocketService.token,
-            accountID: this.accountID
+            accountID: this.accountID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

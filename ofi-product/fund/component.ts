@@ -171,9 +171,10 @@ export class FundComponent implements OnInit, OnDestroy {
         @Inject('product-config') productConfig,
     ) {
 
-        OfiUmbrellaFundService.defaultRequestUmbrellaFundList(umbrellaService, ngRedux);
-        OfiManagementCompanyService.defaultRequestManagementCompanyList(this.ofiManagementCompanyService, this.ngRedux);
+        this.umbrellaService.fetchUmbrellaList();
+        this.ofiManagementCompanyService.getManagementCompanyList();
         this.ofiCurrenciesService.getCurrencyList();
+        this.fundService.getFundList();
 
         this.fundItems = productConfig.fundItems;
         this.enums = productConfig.enums;
@@ -979,7 +980,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 } else {
                     this.creationSuccess(fundName);
                 }
-                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.fundService.fetchFundList();
                 return;
             })
             .catch((err) => {
@@ -994,7 +995,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     'success',
                     `${this.fundForm.controls['fundName'].value} has been successfully updated.`,
                 );
-                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.fundService.fetchFundList();
                 this.location.back();
                 return;
             })
@@ -1020,7 +1021,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     'success',
                     `${this.fundForm.controls['fundName'].value} draft has been successfully saved.`,
                 );
-                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.fundService.fetchFundList();
                 this.location.back();
                 return;
             })
@@ -1036,7 +1037,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     'success',
                     `${this.fundForm.controls['fundName'].value} draft has been successfully updated.`,
                 );
-                OfiFundService.defaultRequestIznesFundList(this.fundService, this.ngRedux);
+                this.fundService.fetchFundList();
                 this.location.back();
                 return;
             })
