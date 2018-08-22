@@ -40,7 +40,7 @@ node {
         }
 
         stage('Check node server is running') {
-            sh 'ssh -t root@139.162.213.130 \'node checkServer.js\''
+            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
         }
 
     }
