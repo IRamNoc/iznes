@@ -1,7 +1,7 @@
-import {name} from './__init__';
-import {kAction} from '@setl/utils/common';
-import {Action, ActionCreator} from 'redux';
-import {OrderTab} from './model';
+import { name } from './__init__';
+import { kAction, kPayloadAction } from '@setl/utils/common';
+import { Action, ActionCreator } from 'redux';
+import { OrderTab } from './model';
 
 /**
  * Set the order list.
@@ -23,7 +23,18 @@ export const OFI_CLEAR_REQUESTED_MANAGE_ORDER = `${name}/OFI_CLEAR_REQUESTED_MAN
 export const ofiClearRequestedManageOrder = kAction(OFI_CLEAR_REQUESTED_MANAGE_ORDER);
 
 export const OFI_UPDATE_ORDER = `${name}/OFI_UPDATE_ORDER`;
-export const ofiUpdateOrder = (data) => ({ type: OFI_UPDATE_ORDER, payload: data });
+export const ofiUpdateOrder = data => kPayloadAction(OFI_UPDATE_ORDER, data)();
+
+export const SET_CURRENT_PAGE = `${name}/SET_CURRENT_PAGE`;
+export const setCurrentPage = number => kPayloadAction(SET_CURRENT_PAGE, { number })();
+
+export const SET_TOTAL_RESULTS = `${name}/SET_TOTAL_RESULTS`;
+export const setTotalResults = results => kPayloadAction(SET_TOTAL_RESULTS, { results })();
+
+export const resetTotalResults = () => setTotalResults(0);
+
+export const INCREMENT_TOTAL_RESULTS = `${name}/INCREMENT_TOTAL_RESULTS`;
+export const incrementTotalResults = kAction(INCREMENT_TOTAL_RESULTS);
 
 // update tabs
 export const SET_ALL_TABS = `${name}/SET_ALL_TABS`;

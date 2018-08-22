@@ -6,7 +6,8 @@
   "author": "SETL.io",
   "license": "UNLICENCED",
   "scripts": {
-    "test": "jest --env=node --verbose"
+    "test": "jest --env=node --verbose",
+    "test:watch": "jest --watch --env=node --verbose"
   },
   "jest": {
     "moduleFileExtensions": [

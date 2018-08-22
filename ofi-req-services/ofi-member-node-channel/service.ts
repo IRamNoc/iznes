@@ -10,8 +10,10 @@ import {
     ofiClearRequestedCentralisationHistoryReports,
     ofiClearRequestedIssuedAssets,
     ofiClearRequestedManageOrder,
-    ofiUpdateOrder,
     setamkyclist,
+    ofiListOfFundsComponentActions,
+    ofiManageOrderActions,
+    FundAccessMyActions,
 } from '../../ofi-store';
 import { clearRequestedUmbrellaFund } from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
 import { clearRequestedIznesFunds } from '../../ofi-store/ofi-product/fund/fund-list/actions';
@@ -70,100 +72,105 @@ export class OfiMemberNodeChannelService {
         this.logService.log(' | data: ', data);
         switch (data.Request) {
             /* Coupon requests. */
-            case 'newcoupon':
-            case 'updatecoupon':
-                /* Dispatch the event. */
-                this.ngRedux.dispatch(
-                    {
-                        type: OFI_SET_COUPON_LIST,
-                        payload: [null, data, null]
-                    }
-                );
+        case 'newcoupon':
+        case 'updatecoupon':
+            /* Dispatch the event. */
+            this.ngRedux.dispatch(
+                {
+                    type: OFI_SET_COUPON_LIST,
+                    payload: [null, data, null]
+                }
+            );
 
-                /* Break. */
-                break;
+            /* Break. */
+            break;
 
-            case 'newmanagementcompany':
-                this.logService.log(' | Update managment company list: ', data);
-                this.managementCompanyService.fetchManagementCompanyList();
-                break;
+        case 'newmanagementcompany':
+            this.logService.log(' | Update managment company list: ', data);
+            this.managementCompanyService.fetchManagementCompanyList();
+            break;
 
-            case 'updatenav':
+        case 'latestnav':
+            this.ngRedux.dispatch(FundAccessMyActions.ofiFundLatestNav(data.Data));
+            break;
 
-                handleUpdateNav(this.ngRedux);
+        case 'validatednav': // Called when a validated NAV is entered
+            this.ngRedux.dispatch(ofiManageOrderActions.ofiUpdateOrder({ event: 'validatednav', nav: data.Data }));
+            break;
 
-                this.ngRedux.dispatch(ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
-                break;
+        case 'updatenav': // Update the NAV
+            handleUpdateNav(this.ngRedux);
+            this.ngRedux.dispatch(ofiManageOrderActions.ofiUpdateOrder({ event: 'updatenav', nav: data.Data }));
+            break;
 
-            case 'getfundaccessmy':
-                this.ngRedux.dispatch(clearRequestedNavFundsList());
-                this.ngRedux.dispatch(clearRequestedFundAccessMy());
-                this.fundInvestService.fetchFundAccessMy(this.connectedWalletID);
-                break;
+        case 'getfundaccessmy':
+            this.ngRedux.dispatch(clearRequestedNavFundsList());
+            this.ngRedux.dispatch(clearRequestedFundAccessMy());
+            this.fundInvestService.fetchFundAccessMy(this.connectedWalletID);
+            break;
 
-            case 'iznesupdateorder':
-                this.logService.log(' | got the broadcast order', data);
-                this.ngRedux.dispatch(ofiUpdateOrder(data.Data));
-                // this.ngRedux.dispatch(ofiClearRequestedManageOrder());
-                this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
-                this.ngRedux.dispatch(ofiClearRequestedAmHolders());
-                this.ngRedux.dispatch(ofiClearHolderDetailRequested());
-                this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
-                this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
-                break;
+        case 'iznesupdateorder':
+            this.logService.log(' | got the broadcast order', data);
+            this.ngRedux.dispatch(ofiManageOrderActions.ofiUpdateOrder(data.Data));
+            this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
+            this.ngRedux.dispatch(ofiClearRequestedAmHolders());
+            this.ngRedux.dispatch(ofiClearHolderDetailRequested());
+            this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
+            this.ngRedux.dispatch(clearRequestedPrecentraSharesList());
+            break;
 
-            case 'updatekyc':
-                this.ngRedux.dispatch(clearrequested());
-                this.ngRedux.dispatch(setamkyclist());
-                this.ngRedux.dispatch(setInvestorInvitationListReset());
-                this.ngRedux.dispatch(setStatusAuditTrailReset());
-                break;
+        case 'updatekyc':
+            this.ngRedux.dispatch(clearrequested());
+            this.ngRedux.dispatch(setamkyclist());
+            this.ngRedux.dispatch(setInvestorInvitationListReset());
+            this.ngRedux.dispatch(setStatusAuditTrailReset());
+            break;
 
-            case 'kycaccepted':
-                //enable menu.
-                this.ngRedux.dispatch(resetHomepage());
-                break;
+        case 'kycaccepted':
+            //enable menu.
+            this.ngRedux.dispatch(resetHomepage());
+            break;
 
-            case 'iznprekycupdate':
-                this.ngRedux.dispatch(setInvestorInvitationListReset());
-                break;
+        case 'iznprekycupdate':
+            this.ngRedux.dispatch(setInvestorInvitationListReset());
+            break;
 
-            // TODO
-            // At the moment, this broacast will cause the front-end to request all the umbrella fund
-            // when create/update umbrella fund.
-            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-            // to avoid to make another call.
+        // new umbrella fund created and umbrella fund updated.
+        // todo
+        // At the moment, this broacast will cause the front-end to request all the umbrella fund
+        // when create/update umbrella fund.
+        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+        // to avoid to make another call.
+        case 'izncreateumbrellafund':
+        case 'iznupdateumbrellafund':
+            this.umbrellaService.fetchUmbrellaList();
+            break;
 
-            case 'izncreateumbrellafund':
-            case 'iznupdateumbrellafund':
-                this.umbrellaService.fetchUmbrellaList();
-                break;
+        // new fund created and fund updated.
+        // todo
+        // At the moment, this broacast will cause the front-end to request all the fund
+        // when create/update fund.
+        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+        // to avoid to make another call.
+        case 'izncreatefund':
+        case 'iznupdatefund':
+            this.fundService.fetchFundList();
+            break;
 
-            // TODO
-            // At the moment, this broacast will cause the front-end to request all the fund
-            // when create/update fund.
-            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-            // to avoid to make another call.
-
-            case 'izncreatefund':
-            case 'iznupdatefund':
-                this.fundService.fetchFundList();
-                break;
-
-            // TODO
-            // At the moment, this broacast will cause the front-end to request all the fund share
-            // when create/update fund share.
-            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-            // to avoid to make another call.
-            case 'iznescreatefundshare':
-            case 'iznesupdatefundshare':
-                this.ngRedux.dispatch(clearRequestedIznesShares());
-                break;
+        // new fund share created and fund share updated.
+        // todo
+        // At the moment, this broacast will cause the front-end to request all the fund share
+        // when create/update fund share.
+        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+        // to avoid to make another call.
+        case 'iznescreatefundshare':
+        case 'iznesupdatefundshare':
+            this.ngRedux.dispatch(clearRequestedIznesShares());
+            break;
         }
     }
 }
 
 function handleUpdateNav(ngRedux) {
     ngRedux.dispatch(ofiClearRequestedIssuedAssets());
-    ngRedux.dispatch(clearRequestedNavFundsList());
 }

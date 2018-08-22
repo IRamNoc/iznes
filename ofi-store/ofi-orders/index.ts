@@ -15,7 +15,6 @@ export {
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
     ofiManageOrderActions,
-    ofiUpdateOrder,
 } from './manage-orders';
 
 export {
@@ -23,7 +22,7 @@ export {
     OfiCollectiveArchiveState,
     SET_COLLECTIVE_ARCHIVE,
     setRequestedCollectiveArchive,
-    clearRequestedCollectiveArchive
+    clearRequestedCollectiveArchive,
 } from './collective-archive';
 
 export interface OfiOrdersState {

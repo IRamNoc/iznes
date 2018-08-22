@@ -55,7 +55,10 @@ export interface ManageOrderDetails {
 
 export interface ManageOrders {
     orderList: { [orderId: number]: ManageOrderDetails };
+    listOrder: number[];
     requested: boolean;
     openedTabs: OrderTab[];
     filters: any;
+    currentPage: number;
+    totalResults: number;
 }

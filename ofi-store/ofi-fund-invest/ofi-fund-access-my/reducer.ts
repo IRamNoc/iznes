@@ -1,6 +1,6 @@
 import { OfiFundAccessMyState } from './model';
 import { Action, AnyAction } from 'redux';
-import * as _ from 'lodash';
+import { get, merge } from 'lodash';
 import { fromJS } from 'immutable';
 
 import {
@@ -8,6 +8,7 @@ import {
     SET_REQUESTED_FUND_ACCESS_MY,
     CLEAR_REQUESTED_FUND_ACCESS_MY,
     VALIDATE_KIID,
+    OFI_FUND_LATEST_NAV,
 } from './actions';
 import { commonHelper } from '@setl/utils';
 
@@ -46,6 +47,8 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
                 },
             },
         };
+    case OFI_FUND_LATEST_NAV:
+        return handleLatestNav(state, action);
 
     default:
         return state;
@@ -59,7 +62,7 @@ export const OfiFundAccessMyReducer = function (state: OfiFundAccessMyState = in
  * @return {OfiFundAccessMyState}
  */
 function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): OfiFundAccessMyState {
-    const accessData = _.get(action, 'payload[1].Data', []);
+    const accessData = get(action, 'payload[1].Data', []);
     const accessDataImu = fromJS(accessData);
 
     const accessDataList = accessDataImu.reduce((result, item) => {
@@ -70,7 +73,7 @@ function handleSetFundAccessMy(state: OfiFundAccessMyState, action: Action): Ofi
                 fundName: item.get('fundName', ''),
                 fundProspectus: item.get('fundProspectus', ''),
                 fundReport: item.get('fundReport', ''),
-                fundSicavId: item.get('fundSICAVID', 0)
+                fundSicavId: item.get('fundSICAVID', 0),
             };
         }
 
@@ -207,4 +210,30 @@ function handleClearRequestedFundAccessMy(state: OfiFundAccessMyState, action: A
     return Object.assign({}, state, {
         requested
     });
+}
+
+const patchFundShare = (state, id, patch) => {
+    const existinFundShare = get(state.fundShareAccessList, id, null);
+    if (!existinFundShare) {
+        return state;
+    }
+
+    const update = {
+        fundShareAccessList: {
+            [existinFundShare.fundShareID]: { ...existinFundShare, ...patch },
+        },
+    };
+    return merge({}, state, update);
+};
+
+function handleLatestNav(state, action): OfiFundAccessMyState {
+
+    const { isin, price } = action.payload;
+
+    Object.keys(state.fundShareAccessList)
+        .map(k => state.fundShareAccessList[k])
+        .filter(s => s.isin === isin)
+        .forEach(s => state = patchFundShare(state, s.fundShareID, { price }));
+
+    return state;
 }

@@ -9,13 +9,17 @@ import { immutableHelper } from '@setl/utils';
 import { fromJS } from 'immutable';
 import { get, merge } from 'lodash';
 import { calculateFigures } from '@ofi/ofi-main/ofi-product/fund-share/helper/order-calculations';
+import { OrderStatus } from '../../../ofi-product/fund-share/helper/order-view-helper';
 
 /* Initial state. */
 const initialState: ManageOrders = {
     orderList: {},
+    listOrder: [],
     requested: false,
     openedTabs: [],
     filters: {},
+    currentPage: 1,
+    totalResults: 0,
 };
 
 const patchOrder = (state, orderId, patch) => {
@@ -39,7 +43,7 @@ const patchOrderCallback = (state, orderId, callback: (order: ManageOrderDetails
     const patchedOrder = callback.call(null, existingOrder);
     const update = {
         orderList: {
-            [existingOrder.orderID]: { ...existingOrder, ...patchedOrder }
+            [existingOrder.orderID]: { ...existingOrder, ...patchedOrder },
         },
     };
 
@@ -71,97 +75,112 @@ export const OfiManageOrderListReducer = function (
 
     case ofiManageOrdersActions.OFI_SET_ORDERS_FILTERS:
         const filters = get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
-        return Object.assign({}, state, filters);
+        return { ...state, filters };
 
     case ofiManageOrdersActions.OFI_UPDATE_ORDER:
-        console.log('MANAGE ORDERS REDUCER', action);
         switch (action.payload.event) {
         case 'create':
-            state = merge({}, state, { orderList: formatManageOrderDataResponse([action.payload.order]) });
-            break;
+            return handleNewOrder(state, action);
         case 'cutoff':
-            state = patchOrder(state, action.payload.order.orderId, { orderStatus: 2 });
-            break;
+            return patchOrder(state, action.payload.order.orderId, { orderStatus: 2 });
         case 'cancel':
-            state = patchOrder(state, action.payload.orderID, { orderStatus: 0 });
-            break;
+            return patchOrder(state, action.payload.orderID, { orderStatus: 0 });
         case 'commit':
-            state = patchOrder(state, action.payload.orderID, { orderStatus: 3 });
-            break;
+            return patchOrder(state, action.payload.orderID, { orderStatus: 3 });
         case 'complete':
-            state = patchOrder(state, action.payload.orderID, { orderStatus: 4 });
-            break;
+            return patchOrder(state, action.payload.orderID, { orderStatus: 4 });
         case 'settled':
-            state = patchOrder(state, action.payload.order.orderID, { orderStatus: -1 });
-            break;
+            return patchOrder(state, action.payload.order.orderID, { orderStatus: -1 });
         case 'updatenav':
-            const nav = action.payload.nav;
-            const navDate = nav.valuationDate.substring(0, 10);
-
-            const baseFilter = o => (o.orderStatus === 2 || o.orderStatus === 1) && o.valuationDate.substring(0, 10) === navDate;
-            let filter = o => baseFilter(o) && o.isin === nav.isin;
-            if (nav.status !== -1) {
-                // Estimated NAV.
-                Object.keys(state.orderList)
-                    .map(k => state.orderList[k])
-                    .filter(filter)
-                    .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
-                        const figures = calculateFigures(
-                            {
-                                orderBy: order.byAmountOrQuantity,
-                                orderType: order.orderType,
-                                value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
-                                nav: nav.price,
-                                feePercentage: order.feePercentage,
-                            },
-                            order.maximumNumDecimal,
-                            false,
-                        );
-
-                        let patch = <any>{
-                            latestNav: nav.price,
-                            estimatedQuantity: figures.estimatedQuantity,
-                        };
-                        if (order.byAmountOrQuantity === 1) {
-                            // Quantity - Calculate estimated amount
-                            patch = {
-                                latestNav: nav.price,
-                                estimatedAmount: +figures.estimatedAmount,
-                                estimatedAmountWithCost: +math
-                                    .chain(+figures.estimatedAmount)
-                                    .multiply(1 + (order.feePercentage / 100000))
-                                    .done(),
-                            };
-                        }
-
-                        return patch;
-                    }));
-
-                return state;
-            }
-
-            // We are updating from a validated NAV
-            const patch = {
-                amount: nav.amount,
-                amountWithCost: nav.amountWithCost,
-                price: nav.price,
-                quantity: nav.quantity,
-                orderStatus: 3,
-            };
-            filter = o => baseFilter(o) && o.orderID === nav.orderID;
-
-            Object.keys(state.orderList)
-                .map(k => state.orderList[k])
-                .filter(filter)
-                .forEach(o => state = patchOrder(state, o.orderID, patch));
-            break;
+            return handleUpdateNav(state, action);
+        case 'validatednav':
+            return handleValidatedOrder(state, action);
+        default:
+            return state;
         }
-        return state;
-        /* Default. */
+    case ofiManageOrdersActions.SET_CURRENT_PAGE:
+        return { ...state, currentPage: action.payload.number };
+    case ofiManageOrdersActions.SET_TOTAL_RESULTS:
+        return { ...state, totalResults: action.payload.results };
+    case ofiManageOrdersActions.INCREMENT_TOTAL_RESULTS:
+        return { ...state, totalResults: state.totalResults + 1 };
     default:
         return state;
     }
 };
+
+function handleUpdateNav(state: ManageOrders, action: PayloadAction): ManageOrders {
+    const { date, status, price, isin } = action.payload.nav;
+
+    const filter = o =>
+        o.isin === isin
+        && (o.orderStatus === OrderStatus.Initiated || o.orderStatus === OrderStatus.WaitingNAV)
+        && o.valuationDate.substring(0, 10) === date;
+
+    if (status === -1) {
+        return state;
+    }
+
+    Object.keys(state.orderList)
+        .map(k => state.orderList[k])
+        .filter(filter)
+        .forEach(o => state = patchOrderCallback(state, o.orderID, (order) => {
+            const figures = calculateFigures(
+                {
+                    orderBy: order.byAmountOrQuantity,
+                    orderType: order.orderType,
+                    value: (order.byAmountOrQuantity === 1) ? order.quantity : order.amount,
+                    nav: price,
+                    feePercentage: order.feePercentage,
+                },
+                order.maximumNumDecimal,
+                false,
+            );
+
+            let patch = <any>{
+                latestNav: price,
+                estimatedQuantity: figures.estimatedQuantity,
+            };
+            if (order.byAmountOrQuantity === 1) {
+                // Quantity - Calculate estimated amount
+                patch = {
+                    latestNav: price,
+                    estimatedAmount: +figures.estimatedAmount,
+                    estimatedAmountWithCost: +math
+                        .chain(+figures.estimatedAmount)
+                        .multiply(1 + (order.feePercentage / 100000))
+                        .done(),
+                };
+            }
+
+            return patch;
+        }));
+
+    return state;
+}
+
+function handleValidatedOrder(state: ManageOrders, action: PayloadAction): ManageOrders {
+    const { orderID, amount, amountWithCost, price, quantity, valuationDate } = action.payload.nav;
+
+    const patch = {
+        amount,
+        amountWithCost,
+        price,
+        quantity,
+        orderStatus: 3,
+    };
+    const filter = o =>
+        o.orderID === orderID
+        && (o.orderStatus === OrderStatus.Initiated || o.orderStatus === OrderStatus.WaitingNAV)
+        && o.valuationDate.substring(0, 10) === valuationDate;
+
+    Object.keys(state.orderList)
+        .map(k => state.orderList[k])
+        .filter(filter)
+        .forEach(o => state = patchOrder(state, o.orderID, patch));
+
+    return state;
+}
 
 function formatManageOrderDataResponse(rawData: any[]): ManageOrderDetails[] {
     const rawDataList = fromJS(rawData);
@@ -269,9 +288,11 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
 
     const data = get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
+    const listOrder = data.map(order => order.orderID);
     const orderList = formatManageOrderDataResponse(data);
     return Object.assign({}, state, {
-        orderList
+        listOrder,
+        orderList,
     });
 }
 
@@ -282,7 +303,7 @@ function ofiSetOrderList(state: ManageOrders, action: Action) {
  * @return {ManageOrders}
  */
 function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrders {
-    return Object.assign({}, state, {requested});
+    return Object.assign({}, state, { requested });
 }
 
 /**
@@ -295,5 +316,18 @@ function toggleRequestState(state: ManageOrders, requested: boolean): ManageOrde
 function handleSetAllTabs(action: Action, state: ManageOrders): ManageOrders {
     const tabs = immutableHelper.get(action, 'tabs', []);
 
-    return Object.assign({}, state, {openedTabs: tabs});
+    return Object.assign({}, state, { openedTabs: tabs });
+}
+
+function handleNewOrder(state: ManageOrders, action: PayloadAction): ManageOrders {
+
+    if (state.currentPage !== 1 || Object.keys(state.filters).length > 0) {
+        // Only add orders to the first page and when no filters are set!
+        return;
+    }
+
+    const orderList = { ...formatManageOrderDataResponse([action.payload.order]), ...state.orderList };
+    const listOrder = [action.payload.order.orderID, ...state.listOrder.slice(0, 9)];
+
+    return { ...state, orderList, listOrder };
 }

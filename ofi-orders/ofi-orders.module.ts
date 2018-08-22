@@ -21,6 +21,7 @@ import {OfiOrdersService} from '../ofi-req-services/ofi-orders/service';
 
 /* Multilingual module. */
 import {MultilingualModule} from '@setl/multilingual';
+import { ManageOrdersService } from './manage-orders/manage-orders.service';
 
 /* Decorator. */
 @NgModule({
@@ -48,7 +49,8 @@ import {MultilingualModule} from '@setl/multilingual';
         SetlDirectivesModule
     ],
     providers: [
-        OfiOrdersService
+        OfiOrdersService,
+        ManageOrdersService,
     ]
 })
 
