@@ -3,18 +3,18 @@ node {
 
         stage('Deploy Membership-db to Test Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opecnsd.io membership-db master'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io membership-db master'
             sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes \''
         }
 
         stage('Deploy Frontend to Test Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opecnsd.io opencsd-iznes master'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io opencsd-iznes master'
         }
 
         stage('Deploy Backend to Test Environment') {
 
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opecnsd.io membernode master'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io membernode master'
         }
 
         stage('Deploy Daemon Node to Test Environment') {
@@ -32,7 +32,7 @@ node {
         }
 
         stage('Deploy Blockchain jars to Test Environment') {
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opecnsd.io blockchain 1.0.36'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io blockchain 1.0.36'
         }
 
         stage('Restart All Services') {
