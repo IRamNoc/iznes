@@ -146,16 +146,19 @@
                         <div class="form-group col-sm-6">
                             <form [formGroup]="changePassForm" (ngSubmit)="changePass(changePassForm.value)">
                                 <div class="form-group">
+
+                                    <!-- Old password -->
                                     <div class="col-xs-11 no-gutter">
                                         <label for="cpOldPassword" class="required-field" mltag="txt_oldpassword">Old
                                             Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpOldPassword" [formControl]="oldPassword"
+                                               [class.error]="hasError('oldPassword')"
                                                size="45">
 
-                                        <div *ngIf="oldPassword.hasError('required') && oldPassword.touched"
-                                             class="field-error" mltag="txt_oldpasswordrequired">Field is required
+                                        <div *ngIf="hasError('oldPassword', 'required')" class="text-danger">
+                                            {{'Field is required' | translate}}
                                         </div>
                                     </div>
                                     <div class="col-xs-1 no-gutter">
@@ -166,23 +169,28 @@
                                                 aria-hidden="true"></i></div>
                                     </div>
                                 </div>
+
+                                <!-- New password -->
                                 <div class="form-group">
                                     <div class="col-xs-11 no-gutter">
                                         <label for="cpPassword" class="required-field" mltag="txt_password">Password
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
+                                               [class.error]="hasError('password')"
                                                id="cpPassword" [formControl]="password" size="45">
-                                        <div *ngIf="!changePassForm.controls.password.hasError('required') && !changePassForm.controls.password.hasError('minlength') && changePassForm.hasError('oldNew') && oldPassword.valid && password.dirty"
-                                             class="field-error" mltag="txt_passwordnewdiffold">The new password should
-                                            not be the same as the old
+
+
+                                        <div *ngIf="hasError('', 'oldNew') && isTouched('oldPassword') && isTouched('password') && !hasError('password', 'required')"
+                                             class="text-danger">
+                                            {{'The new password should not be the same as the old' | translate}}
                                         </div>
-                                        <div *ngIf="password.hasError('required') && password.touched"
-                                             class="field-error"
-                                             mltag="txt_passwordrequired">Field is required
+                                        <div *ngIf="hasError('password', 'required')"
+                                             class="text-danger">
+                                            {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="changePassForm.controls.password.hasError('minlength') && !password.hasError('required') && password.touched"
-                                             class="field-error" mltag="txt_password6chars">Your password must be at
-                                            least 6 characters
+                                        <div *ngIf="hasError('password', 'rules') && !hasError('', 'oldNew')"
+                                             class="text-danger">
+                                            {{'Your password doesn\'t meet the security criteria' | translate}}
                                         </div>
 
                                     </div>
@@ -194,6 +202,8 @@
                                                 aria-hidden="true"></i></div>
                                     </div>
                                 </div>
+
+                                <!-- New password confirm -->
                                 <div class="form-group">
                                     <div class="col-xs-11 no-gutter">
                                         <label for="cpPasswordConfirm" class="required-field"
@@ -201,16 +211,15 @@
                                         </label>
                                         <input [type]="(showPasswords === true) ? 'text' : 'password'"
                                                id="cpPasswordConfirm"
+                                               [class.error]="hasError('passwordConfirm')"
                                                [formControl]="passwordConfirm" size="45">
-                                        <div *ngIf="passwordConfirm.hasError('required') && passwordConfirm.touched"
-                                             class="field-error" mltag="txt_confirmationrequired">Field is required
+
+                                        <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">
+                                            {{'Field is required' | translate}}
                                         </div>
-                                        <div *ngIf="changePassForm.controls.passwordConfirm.hasError('minlength') && !passwordConfirm.hasError('required') && passwordConfirm.touched"
-                                             class="field-error" mltag="txt_password6chars">Your password must be at
-                                            least 6 characters
-                                        </div>
-                                        <div *ngIf="!passwordConfirm.hasError('required') && !changePassForm.controls.passwordConfirm.hasError('minlength') && changePassForm.hasError('mismatch') && password.valid && !passwordConfirm.pristine"
-                                             class="field-error" mltag="txt_passwordsdonotmatch">Password does not match
+                                        <div *ngIf="hasError('', 'mismatch') && !hasError('passwordConfirm', 'required') && isTouched('passwordConfirm')"
+                                             class="text-danger">
+                                            {{'Password does not match' | translate}}
                                         </div>
                                     </div>
                                     <div class="col-xs-1 no-gutter">

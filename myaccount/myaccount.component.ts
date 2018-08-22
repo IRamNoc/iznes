@@ -4,14 +4,15 @@
  * The full license information can be found in LICENSE in the root directory of this project.
  */
 
-import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectorRef, AfterViewInit, OnDestroy, Inject} from '@angular/core';
 import {SagaHelper, Common} from '@setl/utils';
 import {NgRedux, select} from '@angular-redux/store';
 import * as _ from 'lodash';
 import {AlertsService} from '@setl/jaspero-ng2-alerts';
 import {FormGroup, FormControl, Validators, AbstractControl} from '@angular/forms';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import {immutableHelper} from '@setl/utils';
+import {immutableHelper, APP_CONFIG, AppConfig} from '@setl/utils';
+import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
 
 // Internal
 import {Subscription} from 'rxjs/Subscription';
@@ -315,6 +316,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     password: AbstractControl;
     passwordConfirm: AbstractControl;
 
+    appConfig: AppConfig;
+
     tabStates: TabState;
 
     public showPasswords = false;
@@ -333,7 +336,10 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 private ngRedux: NgRedux<any>,
                 private memberSocketService: MemberSocketService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private myUserService: MyUserService) {
+                private myUserService: MyUserService,
+                @Inject(APP_CONFIG) appConfig: AppConfig
+    ) {
+        this.appConfig = appConfig;
         ngRedux.subscribe(() => this.updateState());
 
         // changeUserDetails form
@@ -412,33 +418,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.memorableAnswer = this.userDetailsForm.controls['memorableAnswer'];
         this.profileText = this.userDetailsForm.controls['profileText'];
 
-        // changePassword form
-
-        this.changePassForm = new FormGroup({
-            'oldPassword': new FormControl(
-                '',
-                Validators.required
-            ),
-            'password': new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                    Validators.minLength(6)
-                ])
-            ),
-            'passwordConfirm': new FormControl(
-                '',
-                Validators.compose([
-                    Validators.required,
-                    Validators.minLength(6)
-                ])
-            )
-        }, this.passwordValidator);
-
-        this.oldPassword = this.changePassForm.controls['oldPassword'];
-        this.password = this.changePassForm.controls['password'];
-        this.passwordConfirm = this.changePassForm.controls['passwordConfirm'];
-
         this.updateState();
 
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
@@ -464,6 +443,32 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.subscriptionsArray.push(this.connectedWalletId$.subscribe((id) => {
             this.connectedWalletId = id;
         }));
+
+        // Set changePassword form
+        let validator = this.appConfig.production ? passwordValidator : null;
+        this.changePassForm = new FormGroup({
+            'oldPassword': new FormControl(
+                '',
+                Validators.required
+            ),
+            'password': new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required,
+                    validator
+                ])
+            ),
+            'passwordConfirm': new FormControl(
+                '',
+                Validators.compose([
+                    Validators.required
+                ])
+            )
+        }, this.passwordValidator);
+
+        this.oldPassword = this.changePassForm.controls['oldPassword'];
+        this.password = this.changePassForm.controls['password'];
+        this.passwordConfirm = this.changePassForm.controls['passwordConfirm'];
     }
 
     setTabActive(tabId: string) {
@@ -516,15 +521,11 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         // Get response
         this.ngRedux.dispatch(
             SagaHelper.runAsync(
-                [SET_NEW_PASSWORD], // redux success
-                [], // redux fail
+                [SET_NEW_PASSWORD],
+                [],
                 asyncTaskPipe,
                 {},
-                (data) => { // anonymous : don't' loose this context
-                    // console.clear();
-                    // console.log('success: ');
-                    // console.log(data); // success
-                    // console.log(data[1].Data[0].Token); // token
+                (data) => {
                     this.changePassForm.reset();
                     this.alertsService.create('success', `
                         Your password has been successfully changed!
@@ -630,5 +631,24 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
             this.copied = false;
             this.changeDetectorRef.markForCheck();
         }, 500);
+    }
+
+    hasError(path, error?) {
+        let formControl : AbstractControl = path ? this.changePassForm.get(path) : this.changePassForm;
+
+        if(!error){
+            return formControl.errors;
+        }
+        if (error !== 'required' && formControl.hasError('required')) {
+            return false;
+        }
+
+        return formControl.touched && (error ? formControl.hasError(error) : formControl.errors);
+    }
+
+    isTouched(path) {
+        let formControl: AbstractControl = this.changePassForm.get(path);
+
+        return formControl.touched;
     }
 }
