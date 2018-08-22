@@ -85,7 +85,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
-            console.log('+++ addressList', addressList);
         }));
 
         /* Request address list if flag is not set */
