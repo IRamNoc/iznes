@@ -130,18 +130,6 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             }
         }));
 
-        this.subscriptions.push(this.clientReferentialOb.subscribe((clientReferential) => {
-            this.clientReferential = clientReferential;
-
-            clientReferential.forEach((client) => {
-                this.clients[client.kycID] = client;
-            });
-
-            if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) this.loadTab(2);
-
-            this._changeDetectorRef.markForCheck();
-        }));
-
         this.subscriptions.push(this.clientReferentialAuditOb.subscribe((clientReferentialAudit) => {
             this.clientReferentialAudit = clientReferentialAudit;
             this._changeDetectorRef.markForCheck();
@@ -172,13 +160,20 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
         this.subscriptions.push(
             observableCombineLatest(
+                this.clientReferentialOb,
                 this.amKycListObs,
                 this._route.params
             )
-            .subscribe(([amKycList, params]) => {
+            .subscribe(([clientReferential, amKycList, params]) => {
                 this.kycId = (params.kycId == 'list' ? '' : params.kycId);
 
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) this.loadTab(2);
+                this.clientReferential = clientReferential;
+
+                clientReferential.forEach((client) => {
+                    this.clients[client.kycID] = client;
+                });
+
+                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 1) this.loadTab(2);
 
                 Object.keys(amKycList).forEach((key) => {
                     this.amKycList.push(amKycList[key]);
@@ -235,7 +230,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 this.companyName = kyc.investorCompanyName;
 
                 tempOtherData['amCompany'] = kyc.companyName;
-                tempOtherData['investorData'] = kyc.investorWalletID;
+                tempOtherData['investorData'] = {
+                    firstName: kyc.investorFirstName,
+                    companyName: kyc.investorCompanyName,
+                    investorWalletID: kyc.investorWalletID
+                };
+                
                 this.otherData = tempOtherData;
                 let investorWalletData = [];
 
