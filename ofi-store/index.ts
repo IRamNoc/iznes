@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from 'redux';
 /*
  Ofi Invest
  */
-import { OfiFundInvestReducer, OfiFundInvestState } from './ofi-fund-invest';
+import { OfiFundInvestReducer, OfiFundInvestState, FundAccessMyActions } from './ofi-fund-invest';
 /*
  Ofi AM Dashboard
  */
@@ -53,6 +53,7 @@ export {
     clearRequestedFundAccessMy,
     setRequestedFundAccessMy,
     ofiListOfFundsComponentActions,
+    FundAccessMyActions,
 } from './ofi-fund-invest';
 
 export {
@@ -90,7 +91,6 @@ export {
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
     ofiManageOrderActions,
-    ofiUpdateOrder,
 
     // Collective report
     setRequestedCollectiveArchive,
@@ -191,7 +191,7 @@ export {
     OFI_SET_REQUESTED_MY_DOCUMENTS,
     OFI_CLEAR_REQUESTED_MY_DOCUMENTS,
     OFI_SET_REQUESTED_CLIENT_REFERENTIAL,
-    OFI_SET_CLIENT_REFERENTIAL_AUDIT
+    OFI_SET_CLIENT_REFERENTIAL_AUDIT,
 } from './ofi-kyc';
 
 /* Currencies */

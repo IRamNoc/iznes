@@ -1,17 +1,24 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import {NgRedux, select} from '@angular-redux/store';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
+
 import {ToasterService} from 'angular2-toaster';
+
+import { MemberSocketService } from '@setl/websocket-service';
 import {APP_CONFIG, AppConfig} from '@setl/utils';
 import {SagaHelper} from '@setl/utils/index';
 import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
 import {MyUserService} from '@setl/core-req-services/index';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {SET_NEW_PASSWORD} from '@setl/core-store/index';
 import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
-import { Router } from '@angular/router';
 import {MultilingualService} from '@setl/multilingual';
+
+import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+
 import { take } from 'rxjs/operators';
+import {get as getValue} from 'lodash'
+
 
 @Component({
     selector: 'app-profile-my-informations',
@@ -56,6 +63,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         private ofiKycService: OfiKycService,
         private alertsService: AlertsService,
         public _translate: MultilingualService,
+        private memberSocketService: MemberSocketService,
         @Inject(APP_CONFIG) appConfig: AppConfig,
     ) {
         this.appConfig = appConfig;
@@ -130,11 +138,14 @@ export class OfiProfileMyInformationsComponent implements OnInit {
         // Get response
         this._ngRedux.dispatch(
             SagaHelper.runAsync(
-                [SET_NEW_PASSWORD], // redux success
-                [], // redux fail
+                [SET_NEW_PASSWORD],
+                [],
                 asyncTaskPipe,
                 {},
-                (data) => { // anonymous : don't' loose this context
+                (data) => {
+                    const token = getValue(data, '[1].Data[0].Token', '');
+                    this.memberSocketService.token = token;
+
                     this.changePassForm.reset();
                     this.alertsService.create('success', `
                         Your password has been successfully changed!

@@ -6,3 +6,6 @@ export {
     clearRequestedFundAccessMy,
     validateKiid,
 } from './actions';
+
+import * as FundAccessMyActions from './actions';
+export { FundAccessMyActions };

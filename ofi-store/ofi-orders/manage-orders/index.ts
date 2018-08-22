@@ -5,10 +5,15 @@ export {ManageOrders} from './model';
 export {OfiManageOrderListReducer} from './reducer';
 
 /* Actions. */
-export {OFI_SET_MANAGE_ORDER_LIST, OFI_SET_ORDERS_FILTERS, ofiClearRequestedManageOrder, ofiUpdateOrder, ofiSetRequestedManageOrder} from './actions';
+export {
+    OFI_SET_MANAGE_ORDER_LIST,
+    OFI_SET_ORDERS_FILTERS,
+    ofiClearRequestedManageOrder,
+    ofiSetRequestedManageOrder,
+} from './actions';
 import * as ofiManageOrderActions from './actions';
 
-export {ofiManageOrderActions};
+export { ofiManageOrderActions };
 
 /* Selectors. */
 // export {getOfiManageOrderList} from './selectors';

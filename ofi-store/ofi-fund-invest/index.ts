@@ -7,7 +7,8 @@ import {
     // Actions
     SET_FUND_ACCESS_MY,
     setRequestedFundAccessMy,
-    clearRequestedFundAccessMy
+    clearRequestedFundAccessMy,
+    FundAccessMyActions,
 } from './ofi-fund-access-my';
 
 export {
@@ -17,13 +18,14 @@ export {
     // Actions
     SET_FUND_ACCESS_MY,
     setRequestedFundAccessMy,
-    clearRequestedFundAccessMy
+    clearRequestedFundAccessMy,
+    FundAccessMyActions,
 };
 
 import {
     OfiListOfFundsComponentState,
     OfiListOfFundComponentReducer,
-    ofiListOfFundsComponentActions
+    ofiListOfFundsComponentActions,
 } from './ofi-list-of-funds-component';
 
 export {ofiListOfFundsComponentActions};
@@ -36,5 +38,5 @@ export interface OfiFundInvestState {
 
 export const OfiFundInvestReducer: Reducer<OfiFundInvestState> = combineReducers<OfiFundInvestState>({
     ofiInvestorFundList: OfiFundAccessMyReducer,
-    ofiListOfFundsComponent: OfiListOfFundComponentReducer
+    ofiListOfFundsComponent: OfiListOfFundComponentReducer,
 });
