@@ -19,6 +19,7 @@ import { FileDownloader, SagaHelper } from '@setl/utils';
 import { OFI_SET_CLIENT_REFERENTIAL_AUDIT } from "@ofi/ofi-main/ofi-store";
 import { mDateHelper } from "@setl/utils";
 import { combineLatest as observableCombineLatest } from 'rxjs';
+import { Observable } from "rxjs/Rx";
 
 @AppObservableHandler
 @Component({
@@ -77,7 +78,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     currentInvestor: any = {};
 
     @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
-    @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) clientReferentialOb;
+    @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
     @select(['ofi', 'ofiKyc', 'clientReferentialAudit', 'clientReferentialAudit']) clientReferentialAuditOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'requested']) requestedOfiKycListOb;
     @select(['ofi', 'ofiKyc', 'amKycList', 'amKycList']) amKycListObs;
@@ -235,7 +236,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     companyName: kyc.investorCompanyName,
                     investorWalletID: kyc.investorWalletID
                 };
-                
+
                 this.otherData = tempOtherData;
                 let investorWalletData = [];
 
