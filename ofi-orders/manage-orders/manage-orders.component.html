@@ -229,6 +229,11 @@
                             <span class="column-label"></span>
                         </ng-container>
                     </clr-dg-column>
+                    <clr-dg-column [clrDgField]="'tradedBy'" clrDgSortIcon clrDgSortNoSearch id="Order-Traded-By">
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Traded By' | translate}}
+                            <span class="column-label"></span>
+                        </ng-container>
+                    </clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNAV'" clrDgSortIcon clrDgSortNoSearch id="Order-Latest-NAV">
                         <ng-container *clrDgHideableColumn="{hidden: true}">{{'Latest NAV' | translate}}
                             <span class="column-label"></span>
@@ -325,6 +330,16 @@
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- quantity -->{{ order.quantity | moneyValue: 5}}
 
+                        </clr-dg-cell>
+                        <clr-dg-cell (click)="buildLink(order, $event)">
+                            <!-- byAmountOrQuantity -->
+                            <span *ngIf="order.byAmountOrQuantity === 1">
+                                {{ 'Quantity' | translate}}
+                            </span>
+
+                            <span *ngIf="order.byAmountOrQuantity === 2">
+                                {{ 'Amount' | translate}}
+                            </span>
                         </clr-dg-cell>
                         <clr-dg-cell (click)="buildLink(order, $event)">
                             <!-- latestNAV -->{{ order.price | moneyValue: 4}}
