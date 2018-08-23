@@ -58,7 +58,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showUsertour = false;
     private tourObject = [];
-    userTourEnums: any;
+    // userToursEnums: any;
 
     showAddress = {};
 
@@ -67,6 +67,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['user', 'myDetail', 'defaultHomePage']) defaultHomePageOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
@@ -104,6 +105,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             this.requestAddressList(requested);
         }));
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested => this.requestWalletLabel(requested)));
+
+        this.subscriptionsArray.push(this.defaultHomePageOb.subscribe(defaultHomePage => {
+            if (defaultHomePage == '/user-administration/subportfolio') {
+
+                //launch the tour!
+
+            }
+        }));
     }
 
     newForm() {
@@ -175,7 +184,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         if (this.connectedWalletId > 0) {
             setTimeout(() => {
                 const asyncTaskPipe = this._userTourService.saveUserTour({
-                    type: this.userTourEnums.names.utmysubportfolios,
+                    type: userToursEnums.names.utmysubportfolios,
                     value: 0,
                     walletid: this.connectedWalletId,
                 });
@@ -203,7 +212,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.tourObject = [];
         this.tourObject.push(
             {
-                usertourName: this.userTourEnums.names.utmysubportfolios,
+                usertourName: userToursEnums.names.utmysubportfolios,
                 title: this._translate.translate('My Sub-portfolios'),
                 text: this._translate.translate('In this module, you will be able to create and manage your sub-porfolios. Sub-portfolios are the bank accounts that you will use to place orders on IZNES. You can create as many sub-portfolios as you want, depending on your investments objectives.'),
                 target: 'menu-sub-portfolio',
@@ -223,6 +232,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+        //if home = subport then launch tour!
+
+        //on save make home blank.
+
     }
 
     /**
