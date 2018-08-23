@@ -5,4 +5,5 @@ export interface AuthenticationState {
     mustChangePassword: boolean;
     isLogin: boolean;
     defaultHomePage: string;
+    changedPassword: boolean;
 }
