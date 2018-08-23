@@ -4,56 +4,70 @@
 
 <clr-tabs>
     <clr-tab>
-        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newsendasset">New Send Asset</span></button>
+        <button clrTabLink><i class="fa fa-plus-circle"></i> <span mltag="txt_newsendasset">New Send Asset</span>
+        </button>
         <clr-tab-content *clrIfActive>
             <form [formGroup]="sendAssetForm" (ngSubmit)="sendAsset()">
                 <section class="form-block">
                     <div class="form-group col-sm-6">
+
+                        <div class="alert alert-warning" *ngIf="noInstrumentsAlert">
+                            <div class="alert-items">
+                                <div class="alert-item static">
+                                    <div class="alert-icon-wrapper">
+                                        <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                    </div>
+                                    <span class="alert-text">There are no assets with available balance in this wallet</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <label class="control-label required-field" for="asset" mltag="txt_asset">Asset</label>
                         <ng-select id="asset"
-                                    [items]="allInstrumentList"
-                                    [allowClear]="true"
-                                    placeholder="Select Issuer"
-                                    [formControl]="sendAssetForm.controls['asset']"
-                                    mltag="txt_selectissuer">
+                                   [items]="allInstrumentList"
+                                   [allowClear]="true"
+                                   placeholder="Select Issuer"
+                                   [formControl]="sendAssetForm.controls['asset']"
+                                   mltag="txt_selectissuer">
                         </ng-select>
 
                         <span *ngIf="sendAssetForm.controls['asset'].hasError('required') && sendAssetForm.controls['asset'].touched"
-                            class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                              class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="asset" mltag="txt_sendfromaddress">Send From Address</label>
                         <ng-select id="assetAddress"
-                                    [items]="addressList"
-                                    [allowClear]="true"
-                                    placeholder="Asset Address"
-                                    [formControl]="sendAssetForm.controls['assetAddress']"
-                                    mltag="txt_assetaddress">
+                                   [items]="addressList"
+                                   [allowClear]="true"
+                                   placeholder="Asset Address"
+                                   [formControl]="sendAssetForm.controls['assetAddress']"
+                                   mltag="txt_assetaddress">
                         </ng-select>
 
                         <span *ngIf="sendAssetForm.controls['assetAddress'].hasError('required') && sendAssetForm.controls['assetAddress'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
-                    
+
                     <div class="form-group">
-                        <various-address-select [formControl]="sendAssetForm.controls['recipient']" 
-                                            [relationshipArray]="toRelationshipSelectItems"
-                                            [ownWalletAddressArray]="addressList" 
-                                            [required]="true"></various-address-select>
+                        <various-address-select [formControl]="sendAssetForm.controls['recipient']"
+                                                [relationshipArray]="toRelationshipSelectItems"
+                                                [ownWalletAddressArray]="addressList"
+                                                [required]="true"></various-address-select>
 
                         <span *ngIf="sendAssetForm.controls['recipient'].hasError('required') && !sendAssetForm.controls['recipient'].pristine" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div>
 
                     <div class="form-group col-sm-6">
                         <label class="control-label required-field" for="amount" mltag="txt_amount">Amount</label>
-                        <input type="text" 
-                                id="amount" 
-                                placeholder="Amount" size="45"
-                                [formControl]="sendAssetForm.controls['amount']"
-                                [class.error]="!sendAssetForm.controls['amount'].valid && sendAssetForm.controls['amount'].touched" 
-                                mltag="txt_amount"/>
+                        <input type="text"
+                               id="amount"
+                               placeholder="Amount" size="45"
+                               [formControl]="sendAssetForm.controls['amount']"
+                               [class.error]="!sendAssetForm.controls['amount'].valid && sendAssetForm.controls['amount'].touched"
+                               mltag="txt_amount"/>
 
                         <span *ngIf="sendAssetForm.controls['amount'].hasError('required') && sendAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
+                        <span *ngIf="sendAssetForm.controls['amount'].hasError('pattern') && sendAssetForm.controls['amount'].touched" class="field-error" mltag="txt_fieldisrequired">Amount must be a number</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary" mltag="txt_sendasset" [disabled]="sendAssetForm.invalid">Send Asset</button>
