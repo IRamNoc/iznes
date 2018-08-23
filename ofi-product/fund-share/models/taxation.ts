@@ -1,4 +1,4 @@
-import {FormItem, FormItemType} from '@setl/utils';
+import { FormItem, FormItemType } from '@setl/utils';
 import * as E from '../FundShareEnum';
 
 export class ShareTaxationOptional {
@@ -28,7 +28,7 @@ export class ShareTaxationOptional {
     }
     luxembourgTax: FormItem = {
         type: FormItemType.number,
-        label: "Luxembourg Taxe d'abonnement",
+        label: "Luxembourg Subscription Fee",
         required: false,
         mltag: 'txt_fundshare_luxtax'
     }
@@ -92,25 +92,52 @@ export class ShareTaxationOptional {
         required: false,
         listItems: [
             { id: E.FatcaStatusV2Enum.SponsoredFFI, text: 'Sponsored FFI' },
-            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantNonRegisteringLocalBank, text: 'Certified deemed-compliant nonregistering local bank' },
-            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantFFILowValueAccounts, text: 'Certified deemed-compliant FFI with only low-value accounts' },
-            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantSponsoredCloselyHeldInvestment, text: 'Certified deemed-compliant sponsored, closely held investment vehicle' },
-            { id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantLimitedLifeDebtInvestmentEntity, text: 'Certified deemed-compliant limited life debt investment entity' },
-            { id: E.FatcaStatusV2Enum.CertainInvestmentEntitiesThatDoNotMaintainFinancialAccounts, text: 'Certain investment entities that do not maintain financial accounts' },
+            {
+                id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantNonRegisteringLocalBank,
+                text: 'Certified deemed-compliant nonregistering local bank'
+            },
+            {
+                id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantFFILowValueAccounts,
+                text: 'Certified deemed-compliant FFI with only low-value accounts'
+            },
+            {
+                id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantSponsoredCloselyHeldInvestment,
+                text: 'Certified deemed-compliant sponsored, closely held investment vehicle'
+            },
+            {
+                id: E.FatcaStatusV2Enum.CertifiedDeemedCompliantLimitedLifeDebtInvestmentEntity,
+                text: 'Certified deemed-compliant limited life debt investment entity'
+            },
+            {
+                id: E.FatcaStatusV2Enum.CertainInvestmentEntitiesThatDoNotMaintainFinancialAccounts,
+                text: 'Certain investment entities that do not maintain financial accounts'
+            },
             { id: E.FatcaStatusV2Enum.OwnerDocumentedFFI, text: 'Owner-documented FFI' },
             { id: E.FatcaStatusV2Enum.RestrictedDistributor, text: 'Restricted distributor' },
             { id: E.FatcaStatusV2Enum.NonreportingIGAFFI, text: 'Nonreporting IGA FFI' },
-            { id: E.FatcaStatusV2Enum.ForeignGovernment, text: 'Foreign government, government of a U.S. possession, or foreign central bank of issue' },
+            {
+                id: E.FatcaStatusV2Enum.ForeignGovernment,
+                text: 'Foreign government, government of a U.S. possession, or foreign central bank of issue'
+            },
             { id: E.FatcaStatusV2Enum.InternationalOrganization, text: 'International organization' },
             { id: E.FatcaStatusV2Enum.ExemptRetirementPlans, text: 'Exempt retirement plans' },
             { id: E.FatcaStatusV2Enum.EntityWhollyOwned, text: 'Entity wholly owned by exempt beneficial owners' },
             { id: E.FatcaStatusV2Enum.TerritoryFinancialInstitution, text: 'Territory financial institution' },
             { id: E.FatcaStatusV2Enum.ExceptedNonfinancialGroupEntity, text: 'Excepted nonfinancial group entity' },
-            { id: E.FatcaStatusV2Enum.ExceptedNonfinancialStartupCompany, text: 'Excepted nonfinancial start-up company' },
-            { id: E.FatcaStatusV2Enum.ExceptedNonfinancialEntityInLiquidationOrBankruptcy, text: 'Excepted nonfinancial entity in liquidation or bankruptcy' },
+            {
+                id: E.FatcaStatusV2Enum.ExceptedNonfinancialStartupCompany,
+                text: 'Excepted nonfinancial start-up company'
+            },
+            {
+                id: E.FatcaStatusV2Enum.ExceptedNonfinancialEntityInLiquidationOrBankruptcy,
+                text: 'Excepted nonfinancial entity in liquidation or bankruptcy'
+            },
             { id: E.FatcaStatusV2Enum.FiveHundredOneCOrganisation, text: '501(c) organization' },
             { id: E.FatcaStatusV2Enum.NonprofitOrganization, text: 'Nonprofit organization' },
-            { id: E.FatcaStatusV2Enum.PubliclyTradedNFFEOrNFFEAffiliateOfAPubliclyTradedCorporation, text: 'Publicly traded NFFE or NFFE affiliate of a publicly traded corporation' },
+            {
+                id: E.FatcaStatusV2Enum.PubliclyTradedNFFEOrNFFEAffiliateOfAPubliclyTradedCorporation,
+                text: 'Publicly traded NFFE or NFFE affiliate of a publicly traded corporation'
+            },
             { id: E.FatcaStatusV2Enum.ExceptedTerritoryNFFE, text: 'Excepted territory NFFE' },
             { id: E.FatcaStatusV2Enum.ActiveNFFE, text: 'Active NFFE' },
             { id: E.FatcaStatusV2Enum.PassiveNFFE, text: 'Passive NFFE' },
