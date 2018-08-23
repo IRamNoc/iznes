@@ -191,6 +191,13 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
         this.updateEvent.emit(emitData);
     }
 
+    /**
+     * Option Select
+     * -----------------
+     * Takes a property name and permission level, and returns the value of the matched property in the optionsList
+     *
+     * @return string
+     */
     optionSelect(property, level) {
         let value = 1;
         if (level) {
@@ -200,12 +207,28 @@ export class PermissionGridComponent implements OnInit, AfterViewInit {
         return this.optionsList.find(el => el.id === value)[property];
     }
 
+    /**
+     * Set Open
+     * -----------------
+     * Sets a property using the areaIndex and levelIndex as an identifier on the optionOpen object which controls the
+     * opening and closing of option list dropdowns
+     *
+     * @return {void}
+     */
     setOpen(areaIndex, levelIndex) {
         const initial = this.optionOpen[String(areaIndex) + String(levelIndex)];
         this.optionOpen = {};
         this.optionOpen[String(areaIndex) + String(levelIndex)] = initial ? false : true;
     }
 
+    /**
+     * Check Open
+     * -----------------
+     * Checks if the optionOpen object contains a matched property and returns true if so, which opens the option list
+     * dropdown
+     *
+     * @return boolean
+     */
     checkOpen(areaIndex, levelIndex) {
         if (this.optionOpen[String(areaIndex) + String(levelIndex)]) {
             return true;
