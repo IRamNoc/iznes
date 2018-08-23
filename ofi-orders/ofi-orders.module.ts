@@ -2,7 +2,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
+import { FormsModule, FormBuilder } from '@angular/forms';
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 
@@ -18,6 +18,7 @@ import {PlaceOrdersComponent} from './place-orders/place-orders.component';
 
 /* Services. */
 import {OfiOrdersService} from '../ofi-req-services/ofi-orders/service';
+import { SearchFilters, IFilterStore } from './manage-orders/search-filters';
 
 /* Multilingual module. */
 import {MultilingualModule} from '@setl/multilingual';
@@ -27,11 +28,11 @@ import { ManageOrdersService } from './manage-orders/manage-orders.service';
 @NgModule({
     declarations: [
         ManageOrdersComponent,
-        PlaceOrdersComponent
+        PlaceOrdersComponent,
     ],
     exports: [
         ManageOrdersComponent,
-        PlaceOrdersComponent
+        PlaceOrdersComponent,
     ],
     imports: [
         CommonModule,
@@ -46,12 +47,13 @@ import { ManageOrdersService } from './manage-orders/manage-orders.service';
         MultilingualModule,
         RouterModule,
         DpDatePickerModule,
-        SetlDirectivesModule
+        SetlDirectivesModule,
     ],
     providers: [
         OfiOrdersService,
         ManageOrdersService,
-    ]
+        { provide: IFilterStore, useExisting: ManageOrdersService },
+    ],
 })
 
 /* Class. */
