@@ -243,6 +243,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.isInvestorUser && this.connectedWalletId) {
                 this.appSubscribe(this.requestedOfiInvestorFundList$, requested => this.requestMyFundAccess(requested));
                 this.appSubscribe(this.fundShareAccessList$, list => this.fundShareList = list);
+            } else {
+                this.appSubscribe(this.requestedShareList$, requested => this.requestShareList(requested));
+                this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
             }
         });
         this.appSubscribe(
@@ -250,8 +253,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             ([list, listOrder]) => {
                 this.getAmOrdersListFromRedux(list, listOrder);
             });
-        this.appSubscribe(this.requestedShareList$, requested => this.requestShareList(requested));
-        this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
         this.appSubscribe(this.totalResults$, (total) => {
             this.total = total;
             this.lastPage = Math.ceil(this.total / this.itemPerPage);
