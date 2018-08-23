@@ -72,70 +72,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    @Ignore("Needs to be revisited in the future")
-    public void shouldFillKYCAndGrantFundAccess() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops005@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops005@setl.io", "FundFlow", "Testing");
-        fillKYCLowerFields("JORDAN Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
-        selectOptionAndSubmitKYC("yes");
-        logout();
-
-        //Login as AM and accept KYC
-        loginAndVerifySuccess("am", "alex01");
-        navigateToKYCPage();
-
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/div[8]/div[1]/div/a/h2")));
-        driver.findElement(By.xpath("//*[@id=\"Waiting-Expandable-KYC\"]/i")).click();
-
-        wait.until(visibilityOfElementLocated(By.id("Waiting-Status-KYC-0")));
-        driver.findElement(By.xpath("//*[@id=\"Waiting-Status-KYC-0\"]/a")).click();
-
-//        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
-//        String reviewedByColumn = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/div[8]/div[2]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row//*[text()[contains(.,'FundFlow')]]/parent::clr-dg-cell")).getAttribute("id");
-//        System.out.println(reviewedByColumn);
-//        int clientRowNo = Integer.parseInt(reviewedByColumn.replaceAll("[\\D]", ""));
-//        System.out.println(clientRowNo);
-//        driver.findElement(By.id("AllClients-Status-KYC-" + clientRowNo)).click();
-//        wait.until(visibilityOfElementLocated(By.id("clr-tab-content-0")));
-        driver.findElement(By.id("checkbox")).click();
-
-        try{
-            wait.until(elementToBeClickable(By.id("submitButton")));
-            driver.findElement(By.id("submitButton")).click();
-        }catch (Exception e){
-            fail(e.getMessage());
-        }
-        wait.until(visibilityOfElementLocated(By.id("am-fund-holdings-tab")));
-//        scrollElementIntoViewByXpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]");
-//        wait.until(visibilityOfAllElementsLocatedBy(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
-//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[1]")));
-//        String isin = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[3]")).getAttribute("value");
-//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-0\"]/div/div[3]/form/div[1]/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[4]/div/label")).click();
-//        wait.until(elementToBeClickable(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")));
-//        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-6\"]/div/div[3]/form/div[2]/button[2]")).click();
-//        try{
-//            wait.until(visibilityOfElementLocated(By.className("jaspero__dialog-title")));
-//            String confirmAccessTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-//            assertTrue(confirmAccessTitle.equals("Confirm Fund Share Access:"));
-//        }catch (Exception e){
-//            fail(e.getMessage());
-//        }
-//
-//        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
-//
-//        try {
-//            String permissionToaster = driver.findElement(By.className("toast-title")).getText();
-//            assertTrue(permissionToaster.equals("Share Permissions Saved"));
-//        } catch (Exception e) {
-//            fail(e.getMessage());
-//        }
-
-    }
-
-    @Test
     @Ignore("KYC PROCESS BEING UPDATED")
     public void shouldInviteInvestorsFromTopbarNavigation() throws IOException, InterruptedException{
         loginAndVerifySuccess("am", "alex01");
@@ -206,69 +142,25 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldShowKYCLandingPageOnFirstLoginAsInvestor() throws IOException, InterruptedException, SQLException {
-        String userNo = "003";
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-
-        String kycEmail = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
-        assertTrue(kycEmail.equals("testops" + userNo + "@setl.io"));
-        String kycInvitedBy = driver.findElement(By.id("kyc_additionnal_invitedBy")).getAttribute("value");
-        assertTrue(kycInvitedBy.equals("Management Company"));
-        String kycFirstName = driver.findElement(By.id("kyc_additionnal_firstName")).getAttribute("value");
-        assertTrue(kycFirstName.equals("Jordan" + userNo));
-        String kycLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
-        assertTrue(kycLastName.equals("Miller" + userNo));
-
-        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("Jordan Corp");
-        openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
-
-        String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
-        assertTrue(disabled.equals("true"));
-        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
-        driver.findElement(By.id("btnKycSubmit")).click();
-
-        try {
-            String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(header2.equals("My Information"));
-        }catch (Exception e){
-            fail(e.getMessage());}
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")));
-        String myRequests = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")).getText();
-        assertTrue(myRequests.equals("My requests"));
-        driver.findElement(By.id("kyc-newRequestBtn")).click();
-        String newRequests = driver.findElement(By.id("new-request-title")).getText();
-        assertTrue(newRequests.equals("Make a new request"));
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")));
-        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select")).click();
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")));
-        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/div/input")).sendKeys("Management Company");
-        driver.findElement(By.xpath("//*[@id=\"step-selection\"]/div[1]/div/ng-select/div/div[2]/ul/li[1]/div/a")).click();
-
-        try {
-            String selectionStepKYC = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/ng-component/ng-component/div[3]/div[1]/div/div[1]")).getAttribute("class");
-            assertTrue(selectionStepKYC.equals("fs-active"));
-        }catch (Exception e){
-            fail(e.getMessage());}
-
-        js.executeScript("document.getElementById('registered_1').click();");
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[3]/button[2]")).click();
-     }
-
-    @Test
-    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
         String userNo = "001";
         String managementCompEntered = "Management Company";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
         KYCProcessWelcomeToIZNES(userNo);
         KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered);
+        KYCProcessStep1(managementCompEntered, "Yes");
+     }
+
+    @Test
+    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+        String userNo = "002";
+        String managementCompEntered = "Management Company";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No");
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete();
         KYCProcessStep3CompanyInfoComplete();
@@ -276,7 +168,21 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Success!", managementCompEntered, "Waiting approval");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval");
+    }
+
+    @Test
+    public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
+        String userNo = "003";
+        String managementCompEntered = "Management Company";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No");
+        KYCProcessStep2();
+        KYCProcessClose();
+        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft");
     }
 
     @Test
