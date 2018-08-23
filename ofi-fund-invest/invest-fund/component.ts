@@ -476,7 +476,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         public _translate: MultilingualService,
         private _ngRedux: NgRedux<any>,
         private _messagesService: MessagesService,
-
         public sanitizer: DomSanitizer,
         private fileDownloader: FileDownloader,
         private fileService: FileService,
@@ -546,14 +545,14 @@ export class InvestFundComponent implements OnInit, OnDestroy {
 
         // List of observable subscription.
         this.shareDataOb
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe((shareData) => {
-                this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
-                this.calenderHelper = new CalendarHelper(this.shareData);
+        .subscribe((shareData) => {
+            this.shareData = immutableHelper.get(shareData, String(this.shareId), {});
+            this.calenderHelper = new CalendarHelper(this.shareData);
 
-                this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
+            this.orderHelper = new OrderHelper(this.shareData, this.buildFakeOrderRequestToBackend());
 
             this.actionBy = _.isNull(this.allowAmount) ? 'a' : 'q';
 
@@ -564,65 +563,65 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         });
 
         this.connectedWalletOb
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(connected => {
-                this.connectedWalletId = connected;
-            });
+        .subscribe(connected => {
+            this.connectedWalletId = connected;
+        });
 
         combineLatest(
             this.shareDataOb,
             this.connectedWalletOb,
         )
-            .pipe(
-                distinctUntilChanged(),
-                takeUntil(this.unSubscribe),
+        .pipe(
+            distinctUntilChanged(),
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(([shareData, connectedWallet]) => {
-                if (!shareData || !connectedWallet) {
-                    return;
-                }
-                if (!this.shareData.hasValidatedKiid) {
-                    this.validateKiid();
-                }
-            });
+        .subscribe(([shareData, connectedWallet]) => {
+            if (!shareData || !connectedWallet) {
+                return;
+            }
+            if (!this.shareData.hasValidatedKiid) {
+                this.validateKiid();
+            }
+        });
 
         this.addressListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(addressList => this.updateAddressList(addressList));
+        .subscribe(addressList => this.updateAddressList(addressList));
 
         this.requestedAddressListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(requested => this.requestAddressList(requested));
+        .subscribe(requested => this.requestAddressList(requested));
 
         this.requestedLabelListOb
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(requested => this.requestWalletLabel(requested));
+        .subscribe(requested => this.requestWalletLabel(requested));
 
         this.cutoffDate.valueChanges
-            .pipe(
-                takeUntil(this.unSubscribe),
-                distinctUntilChanged(),
-                throttleTime(1000),
+        .pipe(
+            takeUntil(this.unSubscribe),
+            distinctUntilChanged(),
+            throttleTime(1000),
         )
-            .subscribe((v) => {
-                if (this.toastTimer) {
-                    clearInterval(this.toastTimer);
-                }
-                if (this.timerToast) {
-                    this._toaster.clear(this.timerToast.toastId);
-                    this.timerToast = null;
-                }
-                if (!v) {
-                    return;
-                }
+        .subscribe((v) => {
+            if (this.toastTimer) {
+                clearInterval(this.toastTimer);
+            }
+            if (this.timerToast) {
+                this._toaster.clear(this.timerToast.toastId);
+                this.timerToast = null;
+            }
+            if (!v) {
+                return;
+            }
 
             const cutOffValue = new Date(
                 this.calenderHelper
@@ -630,12 +629,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 .format('YYYY-MM-DD HH:mm'),
             );
 
-                const now = new Date();
+            const now = new Date();
 
-                const remainingTime = cutOffValue.getTime() - now.getTime();
-                this.updateToastTimer(remainingTime);
-                this.toastTimer = this.setToastTimer();
-            });
+            const remainingTime = cutOffValue.getTime() - now.getTime();
+            this.updateToastTimer(remainingTime);
+            this.toastTimer = this.setToastTimer();
+        });
     }
 
     updateToastTimer(unixtime: number) {
@@ -865,16 +864,16 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     handleIsRedeemOver80Percent(): boolean {
         // check if this is a redemption order or if it is a sell buy order
-       if ((this.type === 'sellbuy' || 'redeem') && (this.actionBy === 'a')) {
-           const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
-                   this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+        if ((this.type === 'sellbuy' || 'redeem') && (this.actionBy === 'a')) {
+            const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
+                this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
 
-           if (! OrderHelper.isResponseGood(checkResponse)) {
-               // redeem over 80%
+            if (!OrderHelper.isResponseGood(checkResponse)) {
+                // redeem over 80%
 
                 // we check if this is the first order or not
                 if (OrderHelper.isOnlyActiveRedeem(this.subPortfolioRedemptionEncumBalance)) {
-                   // show have no active redemption error
+                    // show have no active redemption error
                     this.show80PercentNoActiveOrderError();
 
                 } else {
@@ -883,12 +882,12 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 }
 
                 return false;
-           }
+            }
 
-           return true;
-       }
+            return true;
+        }
 
-       return true;
+        return true;
     }
 
     handleSubmit() {
@@ -1356,7 +1355,7 @@ The IZNES Team.</p>`;
     showAlertCutOffError() {
         if (this.doValidate) {
             this._alertsService
-                .create('error', `
+            .create('error', `
                     <table class="table grid">
                         <tbody>
                             <tr>
@@ -1365,13 +1364,13 @@ The IZNES Team.</p>`;
                         </tbody>
                     </table>
                 `)
-                .pipe(
-                    take(1),
+            .pipe(
+                take(1),
             )
-                .subscribe(() => {
-                    this.disclaimer.setValue(false);
-                    this.cutoffDate.setErrors({ tooLate: true });
-                });
+            .subscribe(() => {
+                this.disclaimer.setValue(false);
+                this.cutoffDate.setErrors({ tooLate: true });
+            });
         }
     }
 
@@ -1447,9 +1446,9 @@ The IZNES Team.</p>`;
      */
     getOrderTypeSubTitle(): string {
         return {
-            subscribe: this._translate.getTranslationByString('Please fill up the following information to subscribe to this share'),
-            redeem: this._translate.getTranslationByString('Please fill up the following information to redeem this share'),
-            sellbuy: this._translate.getTranslationByString('Please fill up the following information to **simultaneously** redeem and subscribe to this share:'),
+            subscribe: this._translate.getTranslationByString('Please fill in the following information to subscribe to this share'),
+            redeem: this._translate.getTranslationByString('Please fill in the following information to redeem this share'),
+            sellbuy: this._translate.getTranslationByString('Please fill in the following information to **simultaneously** redeem and subscribe to this share:'),
         }[this.type];
     }
 
@@ -1621,11 +1620,11 @@ The IZNES Team.</p>`;
 
     onValidateKiid() {
         this.shareService.validateKiid(this.connectedWalletId, this.shareData.fundShareID)
-            .then(() => {
-                this.kiidModal.isOpen = false;
-                this._changeDetectorRef.markForCheck();
-                this._ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
-            });
+        .then(() => {
+            this.kiidModal.isOpen = false;
+            this._changeDetectorRef.markForCheck();
+            this._ngRedux.dispatch(validateKiid(this.shareData.fundShareID));
+        });
     }
 }
 
