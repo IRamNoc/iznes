@@ -311,7 +311,10 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * Delete Single Messaged - Called from Single Message View
      */
     deleteMessage() {
-        this.closeMessage();
+        setTimeout(() => {
+            this.closeMessage();
+            this.changeDetectorRef.detectChanges();
+        });
         this.mailHelper.deleteMessage(this.connectedWalletId, this.currentMessage, 1);
         this.refreshMailbox(this.currentPage);
     }
