@@ -51,7 +51,7 @@ export class OfiMemberNodeChannelService {
         private fundService: OfiFundService,
     ) {
         this.connectedWallet$
-            .subscribe(v => this.connectedWalletID = v);
+        .subscribe(v => this.connectedWalletID = v);
     }
 
     /**
@@ -135,34 +135,34 @@ export class OfiMemberNodeChannelService {
             this.ngRedux.dispatch(setInvestorInvitationListReset());
             break;
 
-        // new umbrella fund created and umbrella fund updated.
-        // todo
-        // At the moment, this broacast will cause the front-end to request all the umbrella fund
-        // when create/update umbrella fund.
-        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-        // to avoid to make another call.
+            // new umbrella fund created and umbrella fund updated.
+            // todo
+            // At the moment, this broacast will cause the front-end to request all the umbrella fund
+            // when create/update umbrella fund.
+            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+            // to avoid to make another call.
         case 'izncreateumbrellafund':
         case 'iznupdateumbrellafund':
             this.umbrellaService.fetchUmbrellaList();
             break;
 
-        // new fund created and fund updated.
-        // todo
-        // At the moment, this broacast will cause the front-end to request all the fund
-        // when create/update fund.
-        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-        // to avoid to make another call.
+            // new fund created and fund updated.
+            // todo
+            // At the moment, this broacast will cause the front-end to request all the fund
+            // when create/update fund.
+            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+            // to avoid to make another call.
         case 'izncreatefund':
         case 'iznupdatefund':
             this.fundService.fetchFundList();
             break;
 
-        // new fund share created and fund share updated.
-        // todo
-        // At the moment, this broacast will cause the front-end to request all the fund share
-        // when create/update fund share.
-        // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
-        // to avoid to make another call.
+            // new fund share created and fund share updated.
+            // todo
+            // At the moment, this broacast will cause the front-end to request all the fund share
+            // when create/update fund share.
+            // we should broadcast the changes from the backend. and the front should just handle the new/updated entry
+            // to avoid to make another call.
         case 'iznescreatefundshare':
         case 'iznesupdatefundshare':
             this.ngRedux.dispatch(clearRequestedIznesShares());

@@ -182,42 +182,42 @@ export class OfiAmDocumentsComponent implements OnDestroy, OnInit {
                 id: 'Waiting',
                 title: 'Waiting for Approval',
                 columns: [columns[1], columns[2], columns[3], columns[4]],
-                open: false,
+                open: true,
                 data: tables[1]
             },
             {
                 id: 'Accepted',
                 title: 'Accepted - Funds Access Authorizations',
                 columns: [columns[1], columns[2], columns[5], columns[4], columns[6]],
-                open: false,
+                open: true,
                 data: tables[-1]
             },
             {
                 id: 'Awaiting',
                 title: 'Awaiting for more information from your client',
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
-                open: false,
+                open: true,
                 data: tables[2]
             },
             {
                 id: 'Rejected',
                 title: 'Rejected',
                 columns: [columns[1], columns[2], columns[9], columns[4], columns[10]],
-                open: false,
+                open: true,
                 data: tables[-2]
             },
             {
                 id: 'StartedClients',
                 title: 'Started by your clients',
                 columns: [columns[1], columns[2], columns[7], columns[4], columns[8]],
-                open: false,
+                open: true,
                 data: tables['invited']
             },
             {
                 id: 'AllClients',
                 title: 'All your KYC and Client Folders',
                 columns: [columns[1], columns[2], columns[11], columns[4], columns[8]],
-                open: false,
+                open: true,
                 data: tables['all']
             }
         ];
