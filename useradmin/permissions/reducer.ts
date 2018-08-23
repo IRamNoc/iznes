@@ -11,7 +11,7 @@ import * as _ from 'lodash';
 const initialState: PermissionsState = {
     adminPermissions: {},
     transPermissions: {},
-    menuPermissions: {}
+    menuPermissions: {},
 };
 
 export const permissionsReducer = function (state: PermissionsState = initialState,
@@ -20,13 +20,13 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
     /* Local variables. */
     let newState: PermissionsState;
     let adminPermissions: {
-        [key: number]: AdminPermissonDetail
+        [key: number]: AdminPermissonDetail,
     };
     let transPermissions: {
-        [key: number]: TransPermissonDetail
+        [key: number]: TransPermissonDetail,
     };
     let menuPermissions: {
-        [key: number]: MenuPermissonDetail
+        [key: number]: MenuPermissonDetail,
     };
     let newEntityPermissions: any;
 
@@ -48,8 +48,6 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
         newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
         /* Assign the new permissions with the old ones. */
-        //adminPermissions = Object.assign({}, state.adminPermissions, newEntityPermissions);
-
         if (Object.keys(newEntityPermissions).length) {
             adminPermissions = Object.assign({}, state.adminPermissions, newEntityPermissions);
         } else {
@@ -58,7 +56,7 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
 
         /* Generate the new state. */
         newState = Object.assign({}, state, {
-            adminPermissions
+            adminPermissions,
         });
 
         /* Return the new state. */
@@ -87,7 +85,7 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
 
         /* Generate the new state. */
         newState = Object.assign({}, state, {
-            transPermissions
+            transPermissions,
         });
 
         /* Return the new state. */
@@ -113,7 +111,7 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
 
         /* Generate the new state. */
         newState = Object.assign({}, state, {
-            menuPermissions
+            menuPermissions,
         });
 
         /* Return the new state. */
@@ -147,12 +145,11 @@ export const permissionsReducer = function (state: PermissionsState = initialSta
  */
 function sortPermissionsArray(permissions) {
     /* New data. */
-    let
-        i,
-        newStructure = {};
+    let i;
+    const newStructure = {};
 
     /* Let's flatten the array into an object of permissions by permission ID. */
-    for (i = 0; i < permissions.length; i++) {
+    for (i = 0; i < permissions.length; i += 1) {
         /* Handle the entity object not existing. */
         if (!newStructure[permissions[i].entityID]) newStructure[permissions[i].entityID] = {};
 
