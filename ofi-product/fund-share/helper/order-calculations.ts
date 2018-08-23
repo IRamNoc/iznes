@@ -27,6 +27,7 @@ export const calculateFigures = (
     let fee;
     let estimatedAmountWithCost;
     let amountWithCost;
+    const validatedPrice = knownNav ? order.nav : 0;
 
     switch (order.orderBy) {
     case OrderByType.Quantity:
@@ -117,6 +118,7 @@ export const calculateFigures = (
         amountWithCost,
         estimatedAmountWithCost,
         knownNav,
+        validatedPrice,
     };
 };
 

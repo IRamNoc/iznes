@@ -58,6 +58,7 @@ export interface OrderFigures {
     amountWithCost: number;
     estimatedAmountWithCost: number;
     knownNav: boolean;
+    validatedPrice: number;
 }
 
 export interface OrderTimeStamps {
