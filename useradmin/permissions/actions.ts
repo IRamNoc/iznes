@@ -1,4 +1,4 @@
-import {name} from './__init__';
+import { name } from './__init__';
 
 /**
  * Set administrative permissions group list

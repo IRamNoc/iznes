@@ -40,12 +40,12 @@ export interface MenuPermissonDetail {
 
 export interface PermissionsState {
     adminPermissions: {
-        [entityId: number]: AdminPermissonDetail
+        [entityId: number]: AdminPermissonDetail,
     };
     transPermissions: {
-        [entityId: number]: TransPermissonDetail
+        [entityId: number]: TransPermissonDetail,
     };
     menuPermissions: {
-        [entityId: number]: MenuPermissonDetail
+        [entityId: number]: MenuPermissonDetail,
     };
 }

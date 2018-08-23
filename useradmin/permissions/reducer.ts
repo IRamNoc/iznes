@@ -1,15 +1,12 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as PermissionsActions from './actions';
 import {
     PermissionsState,
     AdminPermissonDetail,
     TransPermissonDetail,
-    MenuPermissonDetail
+    MenuPermissonDetail,
 } from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
-
-import {getAdminPermissions, getTranPermissions} from '@setl/core-store'
 
 const initialState: PermissionsState = {
     adminPermissions: {},
@@ -17,7 +14,7 @@ const initialState: PermissionsState = {
     menuPermissions: {}
 };
 
-export const PermissionsReducer = function (state: PermissionsState = initialState,
+export const permissionsReducer = function (state: PermissionsState = initialState,
                                             action: Action) {
 
     /* Local variables. */
@@ -43,23 +40,29 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
          *
          * @payload {entityPermissions} - an object of permissions for an entity.
          */
-        case PermissionsActions.SET_ADMIN_PERMISSIONS:
-            /* Pull the data from the message body. */
-            newEntityPermissions = _.get(action, 'payload[1].Data', []);
+    case PermissionsActions.SET_ADMIN_PERMISSIONS:
+        /* Pull the data from the message body. */
+        newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
-            /* Now tidy the data up. */
-            newEntityPermissions = sortPermissionsArray(newEntityPermissions);
+        /* Now tidy the data up. */
+        newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
-            /* Assign the new permissions with the old ones. */
+        /* Assign the new permissions with the old ones. */
+        //adminPermissions = Object.assign({}, state.adminPermissions, newEntityPermissions);
+
+        if (Object.keys(newEntityPermissions).length) {
             adminPermissions = Object.assign({}, state.adminPermissions, newEntityPermissions);
+        } else {
+            adminPermissions = {};
+        }
 
-            /* Generate the new state. */
-            newState = Object.assign({}, state, {
-                adminPermissions
-            });
+        /* Generate the new state. */
+        newState = Object.assign({}, state, {
+            adminPermissions
+        });
 
-            /* Return the new state. */
-            return newState;
+        /* Return the new state. */
+        return newState;
 
         /**
          * Set trans permissions.
@@ -68,23 +71,27 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
          *
          * @payload {entityPermissions} - an object of permissions for an entity.
          */
-        case PermissionsActions.SET_TX_PERMISSIONS:
-            /* Pull the data from the message body. */
-            newEntityPermissions = _.get(action, 'payload[1].Data', []);
+    case PermissionsActions.SET_TX_PERMISSIONS:
+        /* Pull the data from the message body. */
+        newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
-            /* Now tidy the data up. */
-            newEntityPermissions = sortPermissionsArray(newEntityPermissions);
+        /* Now tidy the data up. */
+        newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
-            /* Assign the new permissions with the old ones. */
+        /* Assign the new permissions with the old ones. */
+        if (Object.keys(newEntityPermissions).length) {
             transPermissions = Object.assign({}, state.transPermissions, newEntityPermissions);
+        } else {
+            transPermissions = {};
+        }
 
-            /* Generate the new state. */
-            newState = Object.assign({}, state, {
-                transPermissions
-            });
+        /* Generate the new state. */
+        newState = Object.assign({}, state, {
+            transPermissions
+        });
 
-            /* Return the new state. */
-            return newState;
+        /* Return the new state. */
+        return newState;
 
         /**
          * Set menu permissions.
@@ -93,32 +100,32 @@ export const PermissionsReducer = function (state: PermissionsState = initialSta
          *
          * @payload {entityPermissions} - an object of permissions for an entity.
          */
-        case PermissionsActions.SET_MENU_PERMISSIONS:
+    case PermissionsActions.SET_MENU_PERMISSIONS:
 
-            /* Pull the data from the message body. */
-            newEntityPermissions = _.get(action, 'payload[1].Data', []);
+        /* Pull the data from the message body. */
+        newEntityPermissions = _.get(action, 'payload[1].Data', []);
 
-            /* Now tidy the data up. */
-            newEntityPermissions = sortPermissionsArray(newEntityPermissions);
+        /* Now tidy the data up. */
+        newEntityPermissions = sortPermissionsArray(newEntityPermissions);
 
-            /* Assign the new permissions with the old ones. */
-            menuPermissions = Object.assign({}, state.menuPermissions, newEntityPermissions);
+        /* Assign the new permissions with the old ones. */
+        menuPermissions = Object.assign({}, state.menuPermissions, newEntityPermissions);
 
-            /* Generate the new state. */
-            newState = Object.assign({}, state, {
-                menuPermissions
-            });
+        /* Generate the new state. */
+        newState = Object.assign({}, state, {
+            menuPermissions
+        });
 
-            /* Return the new state. */
-            return newState;
+        /* Return the new state. */
+        return newState;
 
         /**
          * Default
          * -------
          * Returns the original state.
          */
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
