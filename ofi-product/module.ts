@@ -23,6 +23,7 @@ import { ProductHomeComponent } from './home/component';
 import { ProductConfigurationComponent } from './configuration/component';
 import { UmbrellaFundComponent } from './umbrella-fund/component';
 import { FundShareComponent } from './fund-share/form/component';
+import { OfiFundShareFormService } from './fund-share/form/service';
 import { FundShareTradeCycleComponent } from './fund-share/form/trade-cycle/component';
 import { AddNewFundShareComponent } from './fund-share/add-new/component';
 import { FundShareAuditComponent } from './fund-share/audit/component';
@@ -107,6 +108,7 @@ import productConfig from './productConfig';
     providers: [
         FundShareAuditService,
         ProductCharacteristicsService,
+        OfiFundShareFormService,
         { provide: 'product-config', useValue: productConfig },
     ],
 })

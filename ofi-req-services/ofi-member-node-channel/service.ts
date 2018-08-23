@@ -31,6 +31,7 @@ import { OfiFundInvestService } from '../ofi-fund-invest/service';
 import { OfiManagementCompanyService } from '../ofi-product/management-company/management-company.service';
 import { OfiUmbrellaFundService } from '../ofi-product/umbrella-fund/service';
 import { OfiFundService } from '../ofi-product/fund/fund.service';
+import { OfiFundShareFormService } from '../../ofi-product/fund-share/form/service';
 import { LogService } from '@setl/utils';
 
 /* Service class. */
@@ -49,6 +50,7 @@ export class OfiMemberNodeChannelService {
         private managementCompanyService: OfiManagementCompanyService,
         private umbrellaService: OfiUmbrellaFundService,
         private fundService: OfiFundService,
+        private fundShareService: OfiFundShareFormService,
     ) {
         this.connectedWallet$
             .subscribe(v => this.connectedWalletID = v);
@@ -78,8 +80,8 @@ export class OfiMemberNodeChannelService {
             this.ngRedux.dispatch(
                 {
                     type: OFI_SET_COUPON_LIST,
-                    payload: [null, data, null]
-                }
+                    payload: [null, data, null],
+                },
             );
 
             /* Break. */
@@ -166,6 +168,10 @@ export class OfiMemberNodeChannelService {
         case 'iznescreatefundshare':
         case 'iznesupdatefundshare':
             this.ngRedux.dispatch(clearRequestedIznesShares());
+            break;
+
+        case 'scsu':
+            this.fundShareService.publishStep(data.Data);
             break;
         }
     }

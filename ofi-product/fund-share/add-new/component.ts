@@ -24,7 +24,7 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
     styleUrls: ['./component.scss'],
     selector: 'app-ofi-am-product-add-fund-share',
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class AddNewFundShareComponent implements OnInit, OnDestroy {
@@ -42,12 +42,12 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListOb: Observable<any>;
 
     constructor(private redux: NgRedux<any>,
-        private changeDetectorRef: ChangeDetectorRef,
-        private router: Router,
-        private ofiFundService: OfiFundService,
-        private ofiFundShareService: OfiFundShareService,
-        private route: ActivatedRoute,
-        private location: Location) {
+                private changeDetectorRef: ChangeDetectorRef,
+                private router: Router,
+                private ofiFundService: OfiFundService,
+                private ofiFundShareService: OfiFundShareService,
+                private route: ActivatedRoute,
+                private location: Location) {
     }
 
     ngOnInit() {
@@ -63,7 +63,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     checkIfFromFund() {
         this.route.queryParams.subscribe(params => {
             if (params.fund) {
-                let fundID = parseInt(params.fund);
+                const fundID = parseInt(params.fund);
                 this.waitForCurrentFund(fundID);
             }
         });
@@ -78,15 +78,15 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
             take(1),
         )
             .subscribe(fundItem => {
-                let newUrl = this.router.createUrlTree([], {
+                const newUrl = this.router.createUrlTree([], {
                     queryParams: { fund: null },
-                    queryParamsHandling: "merge"
+                    queryParamsHandling: 'merge',
                 });
                 this.location.replaceState(this.router.serializeUrl(newUrl));
 
                 this.newFundShareForm.controls['fund'].patchValue([{
                     id: fundItem.fundID,
-                    text: fundItem.fundName
+                    text: fundItem.fundName,
                 }]);
             });
     }
@@ -99,7 +99,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
         this.fundForm = new FormGroup({
             legalEntity: new FormControl(),
-            domicile: new FormControl()
+            domicile: new FormControl(),
         });
 
         this.fundForm.controls.legalEntity.disable();
@@ -178,7 +178,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
      * @return void
      */
     private updateFundList(fundList: any): void {
-        let filteredFundList = {};
+        const filteredFundList = {};
         Object.keys(fundList).forEach((key) => {
             if (fundList[key].draft == 0) filteredFundList[key] = fundList[key];
         });
@@ -197,7 +197,7 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         _.forEach(fundList, (fund) => {
             arr.push({
                 id: fund.fundID,
-                text: fund.fundName
+                text: fund.fundName,
             });
         });
 
