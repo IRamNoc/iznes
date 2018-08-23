@@ -21,7 +21,6 @@ import { setRequestedIznesFunds } from '@ofi/ofi-main/ofi-store/ofi-product/fund
 import { setRequestedUmbrellaFund } from '@ofi/ofi-main/ofi-store/ofi-product/umbrella-fund';
 import {
     clearRequestedFundShare,
-    getOfiFundShareCurrentRequest,
     OfiFundShare,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share';
 import {
@@ -30,8 +29,6 @@ import {
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 import {
     clearRequestedFundShareDocs,
-    getOfiFundShareDocsCurrentRequest,
-    setRequestedFundShareDocs,
     OfiFundShareDocuments,
     setCurrentFundShareDocsRequest,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-docs';
@@ -42,11 +39,16 @@ import {
     OfiManagementCompanyService,
 } from '@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service';
 import { FundShare, FundShareMode, PanelData } from '../model';
+import { OfiFundShareFormService } from './service';
 import { FundShareTestData } from './TestData';
 import * as Enum from '../FundShareEnum';
 import { FundShareTradeCycleModel } from './trade-cycle/model';
 import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
+import {
+    StepsHelper,
+    ShareCreationStep,
+} from '@ofi/ofi-main/ofi-product/fund-share/form/StepsHelper';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -70,9 +72,10 @@ export class FundShareComponent implements OnInit, OnDestroy {
     private managementCompanyList;
 
     private fundShareId: number;
-    private routeParams: Subscription;
-    private panels: { [key: string]: any } = new PanelData();
+    routeParams: Subscription;
+    panels: { [key: string]: any } = new PanelData();
     private iznShareList;
+    private errorHelper: StepsHelper;
 
     selectFundForm: FormGroup;
     shareControl = new FormControl([]);
@@ -95,7 +98,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
     @select(['user', 'myDetail']) userDetailOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb;
     @select(['ofi', 'ofiProduct', 'ofiUmbrellaFund', 'umbrellaFundList', 'umbrellaFundList']) umbrellaFundListOb;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyListOb;
+    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList'])
+        managementCompanyListOb;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs: Observable<any>;
     @select(['user', 'siteSettings', 'production']) productionOb;
 
@@ -111,6 +115,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         private ofiUmbrellaFundService: OfiUmbrellaFundService,
         private ofiManagementCompanyService: OfiManagementCompanyService,
         private ofiFundService: OfiFundService,
+        private ofiFundShareFormService: OfiFundShareFormService,
         private ofiCurrenciesService: OfiCurrenciesService,
         private fb: FormBuilder,
         public _translate: MultilingualService,
@@ -125,6 +130,8 @@ export class FundShareComponent implements OnInit, OnDestroy {
             domicile: [{ value: '', disabled: true }],
             lei: [{ value: '', disabled: true }],
         });
+
+        this.errorHelper = new StepsHelper(this._translate);
     }
 
     ngOnInit() {
@@ -261,21 +268,21 @@ export class FundShareComponent implements OnInit, OnDestroy {
         .pipe(
             takeUntil(this.unSubscribe),
         )
-        .subscribe(params => {
-            const fundShareId = params.get('shareId') as any;
-            this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
+            .subscribe((params) => {
+                const fundShareId = params.get('shareId') as any;
+                this.fundShareId = fundShareId ? parseInt(fundShareId) : fundShareId;
 
-            if (this.fundShareId != undefined) {
-                this.model.fundShareId = parseInt(fundShareId);
-                this.mode = FundShareMode.Update;
-            }
+                if (this.fundShareId != undefined) {
+                    this.model.fundShareId = parseInt(fundShareId);
+                    this.mode = FundShareMode.Update;
+                }
 
-            // if (this.mode === FundShareMode.Create) {
-            //     this.model = FundShareTestData.generate(new FundShare());
-            // }
+                if (this.mode === FundShareMode.Create) {
+                    this.model = FundShareTestData.generate(new FundShare());
+                }
 
-            this.configureFormForMode();
-        });
+                this.configureFormForMode();
+            });
 
         this.currenciesObs
         .pipe(
@@ -484,6 +491,13 @@ export class FundShareComponent implements OnInit, OnDestroy {
                 }
             });
 
+        this.ofiFundShareFormService.subscribeToSteps((step) => {
+            const stepObj = (this.errorHelper.steps(step.Step) as ShareCreationStep);
+            const message = stepObj ? stepObj.message : '';
+            const stepNo = step.Step === 9 ? 100 : step.Step * 10;
+
+            this.alerts.updateView('info', this.getSaveShareText(message, stepNo));
+        });
     }
 
     private getCurrencyList(data): void {
@@ -613,7 +627,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
 
         this.fundShareData = fundShare;
 
-        if (this.currDraft === 1) {
+        if (this.currDraft == 1) {
             this.model.keyFacts.mandatory.fundShareName.disabled = false;
             this.model.keyFacts.mandatory.isin.disabled = false;
         }
@@ -659,7 +673,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             });
 
             return result;
-        }, []);
+        },                           []);
 
         this.managementCompanyList = items;
     }
@@ -671,37 +685,39 @@ export class FundShareComponent implements OnInit, OnDestroy {
     saveFundShare(): void {
         const request = this.model.getRequest(0);
         if (this.mode === FundShareMode.Create || this.currDraft == 1) {
-            this.alerts.create('info', `
-                <table class="table grid">
-                    <tbody>
-                        <tr>
-                            <td class="text-center text-info">Creating Fund Share.<br />This may take a few moments.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `, {
+            this.alerts.create('info', this.getSaveShareText('', 0), {
                 showCloseButton: false,
                 overlayClickToClose: false,
             });
 
-            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-                this.redux,
-                request,
-                (data) => {
-                    if (FundShareMode.Create) {
-                        this.onCreateSuccess(data[1].Data, 0);
-                    } else {
-                        this.onUpdateSuccess(data[1].Data, 0);
-                    }
-                },
-                (e) => this.onCreateError(e[1].Data[0], 0));
+            OfiFundShareService
+                .defaultCreateFundShare(this.ofiFundShareService,
+                                        this.redux,
+                                        request,
+                                        (data: any) => this.onCreateSuccess(data[1].Data, 0),
+                                        (e: any) => this.onCreateError(e[1].Data[0], 0));
         } else {
-            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-                this.redux,
-                request,
-                (data) => this.onUpdateSuccess(data[1].Data, 0),
-                (e) => this.onUpdateError(e[1].Data[0], 0));
+            OfiFundShareService
+                .defaultUpdateFundShare(this.ofiFundShareService,
+                                        this.redux,
+                                        request,
+                                        (data: any) => this.onUpdateSuccess(data[1].Data, 0),
+                                        (e: any) => this.onUpdateError(0));
         }
+    }
+
+    private getSaveShareText(message: string, progress: number): string {
+        return `<table class="table grid">
+            <tbody>
+                <tr>
+                    <td class="text-center text-info">Creating Fund Share.<br /><i>` +
+                    message + `</i></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="progress-bar">
+            <span class="progress-` + progress + `"></span>
+        </div>`;
     }
 
     /**
@@ -712,63 +728,81 @@ export class FundShareComponent implements OnInit, OnDestroy {
         const request = this.model.getRequest(1);
 
         if (this.mode === FundShareMode.Create) {
-            OfiFundShareService.defaultCreateFundShare(this.ofiFundShareService,
-                this.redux,
-                request,
-                (data) => this.onCreateSuccess(data[1].Data, 1),
-                (e) => this.onCreateError(e[1].Data[0], 1));
+            OfiFundShareService
+                .defaultCreateFundShare(this.ofiFundShareService,
+                                        this.redux,
+                                        request,
+                                        (data: any) => this.onCreateSuccess(data[1].Data, 1),
+                                        (e: any) => this.onCreateError(e[1].Data[0], 1));
         } else {
-            OfiFundShareService.defaultUpdateFundShare(this.ofiFundShareService,
-                this.redux,
-                request,
-                (data) => this.onUpdateSuccess(data[1].Data, 1),
-                (e) => this.onUpdateError(e[1].Data[0], 1));
+            OfiFundShareService
+                .defaultUpdateFundShare(this.ofiFundShareService,
+                                        this.redux,
+                                        request,
+                                        (data: any) => this.onUpdateSuccess(data[1].Data, 1),
+                                        (e: any) => this.onUpdateError(1));
         }
     }
 
-    private onCreateSuccess(data, draft): void {
+    private onCreateSuccess(data, draft: number): void {
         if (data.Status === 'Fail') {
             this.onCreateError(data, draft);
             return;
         }
 
-        OfiFundShareService.defaultCreateFundShareDocuments(this.ofiFundShareService,
-            this.redux,
-            this.model.getDocumentsRequest(data.fundShareID),
-            (docsData) => {
-                this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') + ' has been successfully created');
-                this.router.navigateByUrl(`product-module/product`);
-            },
-            (e) => this.onCreateError(e[1].Data[0], draft));
+        OfiFundShareService
+            .defaultCreateFundShareDocuments(this.ofiFundShareService,
+                                             this.redux,
+                                             this.model.getDocumentsRequest(data.fundShareID),
+                                             () => this.onCreateDocumentsSuccess(data, draft),
+                                             (e: any) => this.onCreateError(e[1].Data[0], draft));
     }
 
-    private onCreateError(e, draft): void {
+    private onCreateDocumentsSuccess(data, draft: number): void {
+        this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') +
+            ' has been successfully created');
+
+        this.router.navigateByUrl(`product-module/product`);
+    }
+
+    private onCreateError(e, draft: number): void {
+        let message: string;
+
+        if (e && e.Step !== undefined) {
+            message = `(#${e.Step}) ` + (this.errorHelper.steps(e.Step) as ShareCreationStep).error;
+        } else if (e && e.Message) {
+            message = e.Message;
+        }
+
         this.alerts.create('error', `
             <table class="table grid">
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">There was an issue creating the ` + (draft == 1 ? 'draft' : '') + `Fund Share.<br />
-                        ${e.Message}</td>
+                        <td class="text-center text-danger"><b>An error occured</b><br />
+                        <i>${message}</i></td>
                     </tr>
                 </tbody>
             </table>
         `);
     }
 
-    private onUpdateSuccess(data, draft): void {
-        OfiFundShareService.defaultUpdateFundShareDocuments(this.ofiFundShareService,
-            this.redux,
-            this.model.getDocumentsRequest(data.fundShareID),
-            (docsData) => {
-                this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
-                    (draft == 1 ? ' draft' : '') +
-                    ' has been successfully updated');
-                this.router.navigateByUrl(`product-module/product`);
-            },
-            (e) => this.onUpdateError(e[1].Data[0], draft));
+    private onUpdateSuccess(data, draft: number): void {
+        OfiFundShareService
+            .defaultUpdateFundShareDocuments(this.ofiFundShareService,
+                                             this.redux,
+                                             this.model.getDocumentsRequest(data.fundShareID),
+                                             () => this.onUpdateDocumentSuccess(draft),
+                                             (e: any) => this.onUpdateError(draft));
     }
 
-    private onUpdateError(e, draft): void {
+    private onUpdateDocumentSuccess(draft: number): void {
+        this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
+            (draft == 1 ? ' draft' : '') + ' has been successfully updated');
+
+        this.router.navigateByUrl(`product-module/product`);
+    }
+
+    private onUpdateError(draft: number): void {
         this.toaster.pop('error', this.model.keyFacts.mandatory.fundShareName.value() +
             (draft == 1 ? ' draft' : '') +
             ' could not be updated');

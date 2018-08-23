@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="well">
+            <div class="well" *ngIf="model.fund">
                 <div class="row panel-header">
                     <div class="col-sm-12">
                         <a href="#" (click)="openPanel(panels['fund']['root'], $event)">
