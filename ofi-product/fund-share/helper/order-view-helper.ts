@@ -139,3 +139,13 @@ export function getOrderTypeString(orderData: {orderType: number | string; sellB
         }
     }
 }
+
+/**
+ * Return different css class depend if order price is validated price of not.
+ * if order.price (validated price) is not 0, order have the validated price, otherwise, it is not validated price.
+ * @param {{price: number}} order
+ * @return {"text-warning" | "text-success"}
+ */
+export function getPriceStatusCss(order: {price: number}): 'text-warning' | 'text-success' {
+    return Number(order.price) === 0 ? 'text-warning' : 'text-success';
+}
