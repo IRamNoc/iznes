@@ -113,6 +113,12 @@ describe('calculateFigures', () => {
                 expect(figures.estimatedAmountWithCost).toBe(1006_00000);
             });
         });
+
+        describe('Known nav is returned in results', () => {
+            const figures = calculateFigures(getOrder({ orderBy: 1, value: 100_00000 }), maxDecimalisation, false);
+
+            expect(figures.knownNav).toBe(false);
+        });
     });
     describe('Known NAV', () => {
         describe('By amount', () => {
@@ -134,6 +140,12 @@ describe('calculateFigures', () => {
 
                 expect(figures.estimatedAmountWithCost).toBe(1006_00000);
             });
+        });
+
+        describe('Known nav is returned in results', () => {
+            const figures = calculateFigures(getOrder({ orderBy: 1, value: 100_00000 }), maxDecimalisation, true);
+
+            expect(figures.knownNav).toBe(true);
         });
     });
 });
