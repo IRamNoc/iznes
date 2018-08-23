@@ -83,7 +83,7 @@
                     </ng-select>
                 </div>
 
-                <span id="Warning-nav-msg" class="text-danger">{{'Warning: If you click "validate", the NAV will be modified at the selected date.' | translate}}
+                <span *ngIf="!isDeleteMode()" id="Warning-nav-msg" class="text-danger">{{'Warning: If you click "validate", the NAV will be modified at the selected date.' | translate}}
 
                 </span>
             </div>
