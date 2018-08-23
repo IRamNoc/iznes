@@ -1,6 +1,16 @@
 <!-- The wrapper, holds everything in. -->
 <div class="option-wrap">
 
+    <!--    <select>
+            <option *ngFor="let option of optionsList">
+                <i class="fa"
+                   [ngClass]="option.icon"
+                   [ngStyle]="{'color': option.color}"
+                ></i>
+                {{ option.text }}
+            </option>
+        </select>-->
+
     <!-- The option box, shows the value and is the toggle to show the list. -->
     <div class="option-box"
          (click)="toggleOpen()">
@@ -14,8 +24,9 @@
     </div>
 
     <!-- The option list. -->
-    <ul class="option-list"
-        [ngClass]="{'open': uiListOpen}">
+    <!--<ul class="option-list open"
+        [ngClass]="{'open': uiListOpen}">-->
+    <ul *ngIf="this.uiListOpen" class="option-list open">
 
         <!-- Each option. -->
         <li *ngFor="let option of optionsList"
