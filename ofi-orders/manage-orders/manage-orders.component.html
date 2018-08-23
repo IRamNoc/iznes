@@ -429,7 +429,7 @@
                                                 <td>
                                                     <b>{{'Latest NAV' | translate}}</b>
                                                 </td>
-                                                <td>{{order.price | moneyValue: 2}}</td>
+                                                <td [style.color]="order.knownNav ? 'green' : 'orange'">{{order.price | moneyValue: 2}}</td>
                                             </tr>
                                             </tbody>
                                         </table>

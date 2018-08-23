@@ -1,4 +1,4 @@
-import { debounceTime, take, switchMap, filter, takeUntil } from 'rxjs/operators';
+import { debounceTime, take, switchMap, filter, takeUntil, bufferTime } from 'rxjs/operators';
 import { Observable, combineLatest as observableCombineLatest, Subscription, zip } from 'rxjs';
 /* Core/Angular imports. */
 import {
@@ -21,8 +21,6 @@ import { MemberSocketService } from '@setl/websocket-service';
 import { NgRedux, select } from '@angular-redux/store';
 import { Unsubscribe } from 'redux';
 import {
-    APP_CONFIG,
-    AppConfig,
     commonHelper,
     ConfirmationService,
     FileDownloader,
@@ -55,7 +53,7 @@ import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 import { MultilingualService } from '@setl/multilingual';
 import { AppObservableHandler } from '@setl/utils/decorators/app-observable-handler';
-import { SearchFilters } from './search-filters';
+import { SearchFilters, ISearchFilters } from './search-filters';
 import { labelForOrder } from '../order.model';
 import { orderStatuses, orderTypes, dateTypes } from './lists';
 import { DatagridParams } from './datagrid-params';
@@ -72,6 +70,9 @@ interface SelectedItem {
     styleUrls: ['./manage-orders.component.scss'],
     templateUrl: './manage-orders.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        SearchFilters,
+    ],
 })
 @AppObservableHandler
 
@@ -108,7 +109,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* Tabs Control array */
     tabsControl: any[] = [];
-    orderID = 0;
 
     /* expandable div */
     isOptionalFilters = false;
@@ -121,7 +121,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     orderInformation = true;
 
     currencyList = [];
-    appConfig: AppConfig;
 
     @ViewChild('ordersDataGrid') orderDatagrid: Datagrid;
     /* Public Properties */
@@ -154,9 +153,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     @select(['wallet', 'walletDirectory', 'walletList']) readonly walletDirectory$: any;
     @select(['user', 'myDetail']) readonly myDetail$: any;
     @select(['user', 'connected', 'connectedWallet']) readonly connectedWallet$: any;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'requested']) requestedOrders$;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'orderList']) orderList$;
-    @select(['ofi', 'ofiOrders', 'manageOrders', 'filters']) orderFilters$;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'listOrder']) readonly listOrder$: Observable<number[]>;
     @select(['ofi', 'ofiOrders', 'manageOrders', 'totalResults']) readonly totalResults$: Observable<number>;
     @select(['ofi', 'ofiFundInvest', 'ofiInvestorFundList', 'requested']) readonly requestedOfiInvestorFundList$;
@@ -169,10 +166,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     private myWallets: any = [];
     private walletDirectory: any = [];
     private connectedWalletId: any = 0;
-    private requestedSearch: any;
-    private sort: { name: string, direction: string } = { name: 'dateEntered', direction: 'ASC' }; // default search.
-
-    private searchFilters: SearchFilters;
 
     constructor(private ofiOrdersService: OfiOrdersService,
                 private ngRedux: NgRedux<any>,
@@ -184,7 +177,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private confirmationService: ConfirmationService,
                 private fundInvestService: OfiFundInvestService,
                 private logService: LogService,
-                private formBuilder: FormBuilder,
                 private fileDownloader: FileDownloader,
                 public numberConverter: NumberConverterService,
                 private messagesService: MessagesService,
@@ -192,7 +184,9 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 public translation: MultilingualService,
                 private ofiCurrenciesService: OfiCurrenciesService,
                 private manageOrdersService: ManageOrdersService,
-                private location: Location) {
+                private location: Location,
+                private searchFilters: SearchFilters,
+            ) {
 
         this.isAmConfirmModalDisplayed = false;
         this.cancelModalMessage = '';
@@ -211,7 +205,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.searchFilters = new SearchFilters(this.formBuilder, this.orderFilters$);
         this.searchFilters.filtersApplied.subscribe(() => {
             this.datagridParams.setSearchFilters(this.searchFilters);
             this.detectChanges();
@@ -248,10 +241,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.appSubscribe(this.shareList$, shares => this.fundShareList = shares);
             }
         });
+        const bufferedOrders$ = this.orderList$.pipe(bufferTime(2000, 2000, 50));
+        const bufferedAndZippedOrders$ = zip(this.orderList$, this.listOrder$).pipe(bufferTime(2000, 2000, 50));
         this.appSubscribe(
-            zip(this.orderList$, this.listOrder$),
-            ([list, listOrder]) => {
-                this.getAmOrdersListFromRedux(list, listOrder);
+            bufferedAndZippedOrders$,
+            (orders) => {
+                console.log(orders);
+                orders.forEach(([list, listOrder]) => {
+                    this.getAmOrdersListFromRedux(list, listOrder);
+                });
             });
         this.appSubscribe(this.totalResults$, (total) => {
             this.total = total;
@@ -259,7 +257,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.detectChanges(true);
         });
         this.appSubscribe(
-            this.orderList$
+            bufferedOrders$
                 .pipe(
                     filter(orders => !isEmpty(orders)),
                     switchMap(() => this.route.params),
@@ -285,38 +283,44 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     routeUpdate(params) {
-        this.orderID = params['tabid'];
-        if (typeof this.orderID !== 'undefined' && this.orderID > 0) {
-            const order = this.ordersList.find((elmt) => {
-                if (elmt.orderID.toString() === this.orderID.toString()) {
-                    return elmt;
-                }
-            });
-            if (order && typeof order !== 'undefined' && order !== undefined && order !== null) {
-                this.fundShareID = order.fundShareID;
-                let tabTitle = '';
-                if (order.orderType === 3) tabTitle += this.getOrderTypeString(order) + ': ';
-                if (order.orderType === 4) tabTitle += this.getOrderTypeString(order) + ': ';
-                tabTitle += ' ' + this.getOrderRef(this.orderID);
-
-                const tabAlreadyHere = this.tabsControl.find(o => o.orderId === this.orderID);
-                if (tabAlreadyHere === undefined) {
-                    this.tabsControl.push(
-                        {
-                            title: {
-                                icon: 'fa-shopping-basket',
-                                text: tabTitle,
-                            },
-                            orderId: this.orderID,
-                            active: true,
-                            orderData: order,
-                        },
-                    );
-                }
-                this.setTabActive(this.orderID);
-                this.updateCurrentFundShare();
-            }
+        const order = this.getOrder(params);
+        if (!order) {
+            return;
         }
+        this.fundShareID = order.fundShareID;
+        let tabTitle = '';
+        if (order.orderType === 3) tabTitle += this.getOrderTypeString(order) + ': ';
+        if (order.orderType === 4) tabTitle += this.getOrderTypeString(order) + ': ';
+        tabTitle += ' ' + this.getOrderRef(order.orderID);
+
+        const tabAlreadyHere = this.tabsControl.find(o => o.orderId === order.orderID);
+        if (tabAlreadyHere === undefined) {
+            this.tabsControl.push(
+                {
+                    title: {
+                        icon: 'fa-shopping-basket',
+                        text: tabTitle,
+                    },
+                    orderId: order.orderID,
+                    active: true,
+                    orderData: order,
+                },
+            );
+        }
+        this.setTabActive(order.orderID);
+        this.updateCurrentFundShare();
+    }
+
+    getOrder(params) {
+        const orderID = +get(params, 'tabid', 0);
+        if (orderID === 0) {
+            return;
+        }
+        const order = this.ordersList.find(o => +o.orderID === orderID);
+        if (!order) {
+            return;
+        }
+        return order;
     }
 
     ngAfterViewInit() {
@@ -399,9 +403,30 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.detectChanges(true);
     }
 
+    subEstimated(order, field: string, estimatedField: string): number {
+        let val = get(order, field, 0);
+        val = (val > 0) ? val : get(order, estimatedField, 0);
+        return this.numberConverter.toFrontEnd(val);
+    }
+
     ordersObjectToList(list, listOrder) {
         return listOrder.map((orderId) => {
-            return { ...list[orderId], orderUnpaid: this.orderUnpaid(list[orderId]) };
+            const order = list[orderId];
+            const price = this.subEstimated(order, 'price', 'estimatedPrice');
+            const amount = this.subEstimated(order, 'amount', 'estimatedAmount');
+            const amountWithCost = this.subEstimated(order, 'amountWithCost', 'estimatedAmountWithCost');
+            const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
+            const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage);
+            return {
+                ...list[orderId],
+                price,
+                amount,
+                amountWithCost,
+                quantity,
+                feePercentage,
+                knownNav: order.price > 0,
+                orderUnpaid: this.orderUnpaid(list[orderId]),
+            };
         });
     }
 
