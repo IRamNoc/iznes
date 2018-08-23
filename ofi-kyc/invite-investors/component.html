@@ -164,7 +164,7 @@
 
             <clr-datagrid #dataGrid>
                 <clr-dg-column [clrDgField]="'inviteSent'">{{'Date Sent' | translate}}</clr-dg-column>
-                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Account Status' | translate}}</clr-dg-column>
+                <clr-dg-column [clrDgField]="'tokenUsedAt'">{{'Invitation Status' | translate}}</clr-dg-column>
                 <clr-dg-column [clrDgField]="'email'">{{'Email Address' | translate}}</clr-dg-column>
                 <clr-dg-column [clrDgField]="'companyName'">{{'Company Name' | translate}}</clr-dg-column>
                 <clr-dg-column [clrDgField]="'lastName'">{{'Last Name' | translate}}</clr-dg-column>
@@ -176,7 +176,15 @@
 
                 <clr-dg-row *clrDgItems="let item of inviteItems">
                     <clr-dg-cell>{{item.inviteSent}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.tokenUsedAt}}</clr-dg-cell>
+                    <clr-dg-cell>
+                        <span *ngIf="item.tokenUsedAt">
+                            {{'Invitation used' | translate}} -
+                            {{item.tokenUsedAt}}
+                        </span>
+                        <span *ngIf="!item.tokenUsedAt">
+                            {{'Invitation not used' | translate}}
+                        </span>
+                    </clr-dg-cell>
                     <clr-dg-cell>{{item.email}}</clr-dg-cell>
                     <clr-dg-cell>{{item.companyName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.lastName}}</clr-dg-cell>
