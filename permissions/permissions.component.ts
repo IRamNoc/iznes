@@ -48,9 +48,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public groupTypes: any;
 
     /* Subs from service observables. */
-    private adminGroupListSub: any;
-    private adminPermAreaListSub: any;
-    private txPermAreaListSub: any;
     private subscriptions = {};
 
     /* Lists set by those observables. */
@@ -119,11 +116,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public filteredTxAreaList = [];
     public filteredMenuAreaList = [];
 
-    public oldMenuPermission = {};
     public currentTab = '';
-    public relationships = {};
     public new = false;
-    public duplicateEvent = {};
 
     /* Rows Per Page datagrid size */
     public pageSize: number;
@@ -138,10 +132,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 private confirmationService: ConfirmationService,
                 private logService: LogService,
                 private persistService: PersistService) {
-
-        /* Set up the Permissions Levels */
-        // this.permissionLevelsList = this.permissionTxLevelsList.push(this.permissionLevelsList);
-
     }
 
     public ngOnInit() {
@@ -198,7 +188,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
             /* Set the list. */
             this.permissionsList = list;
-            console.log('+++ this.permissionsList SET', this.permissionsList);
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -374,7 +363,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                     this.userAdminService.deleteGroup(request).then(() => {
                         /* Close any edit tabs created for this group. */
                         for (tab in this.tabsControl) {
-                            if (this.tabsControl[tab].groupId == this.allGroupList[index].groupId) this.closeTab(tab);
+                            if (this.tabsControl[tab].groupId === this.allGroupList[index].groupId) this.closeTab(tab);
                         }
 
                         /* Handle success. */
@@ -451,9 +440,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which call to make. */
             let location = 'adminPermissions';
 
-            if (group.groupIsTx == 1) {
+            if (group.groupIsTx === 1) {
                 location = 'transPermissions';
-            } else if (group.groupIsTx == 2) {
+            } else if (group.groupIsTx === 2) {
                 location = 'menuPermissions';
             }
 
@@ -464,12 +453,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                     let permissions = {};
                     if (this.permissionsList[location][group.groupId]) {
 
-                        console.log('+++ this.permissionsList', this.permissionsList);
-
                         permissions = this.permissionsList[location][group.groupId];
                     }
-
-                    console.log('+++ permissions', permissions);
 
                     /* Then patch the permissions value. */
                     this.tabsControl[i].permissionsEmitter.emit(permissions);
@@ -532,9 +517,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which function to call. */
             let functionCall = 'updateAdminPermissions';
 
-            if (dataToSend['type'] == 1) {
+            if (dataToSend['type'] === 1) {
                 functionCall = 'updateTxPermissions';
-            } else if (dataToSend['type'] == 2) {
+            } else if (dataToSend['type'] === 2) {
                 functionCall = 'updateMenuPermissions';
             }
 
@@ -576,7 +561,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
          Let's sort the data structure for the edit group call.
          */
         const formData = this.tabsControl[tabid].formControl.value;
-        console.log('+++ this.tabsControl', this.tabsControl);
         const dataToSend = {};
 
         /* Assign the data to send. */
@@ -602,8 +586,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 dataToSend['type'],
             );
 
-            console.log('+++ differences', differences);
-
             /* Assign all the data. */
             permissionsData['entityId'] = dataToSend['groupId'];
             permissionsData['isGroup'] = 1;
@@ -615,13 +597,11 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which call to make. */
             let functionCall = 'updateAdminPermissions';
 
-            if (dataToSend['type'] == 1) {
+            if (dataToSend['type'] === 1) {
                 functionCall = 'updateTxPermissions';
-            } else if (dataToSend['type'] == 2) {
+            } else if (dataToSend['type'] === 2) {
                 functionCall = 'updateMenuPermissions';
             }
-
-            console.log('+++ permissionsData', permissionsData);
 
             /* Send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
@@ -720,7 +700,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         /* Remove the object from the tabsControl. */
         this.tabsControl = [
             ...this.tabsControl.slice(0, index),
-            ...this.tabsControl.slice(index + 1, this.tabsControl.length)
+            ...this.tabsControl.slice(index + 1, this.tabsControl.length),
         ];
 
         /* Reset tabs. */

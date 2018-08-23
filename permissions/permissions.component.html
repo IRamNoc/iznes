@@ -128,7 +128,7 @@
                         2 - menu.
                     -->
 
-                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+                    <div class="form-group" *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
                             *ngSwitchCase="'0'"
@@ -154,17 +154,15 @@
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button id="group-clear-btn"
-                                    (click)="clearNewGroup(tabid, $event)"
-                                    class="btn btn-secondary"
-                                    mltag="txt_clear">Clear
-                            </button>
-                        </div>
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
+                        <button id="group-clear-btn"
+                                (click)="clearNewGroup(tabid, $event)"
+                                class="btn btn-secondary"
+                                mltag="txt_clear">Clear
+                        </button>
                     </div>
                 </div>
             </form>
@@ -226,7 +224,7 @@
                         2 - menu
                     -->
 
-                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+                    <div class="form-group" *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
                             *ngSwitchCase="'0'"
@@ -255,16 +253,14 @@
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
-                                <i class="fa fa-cancel"></i> <span class="ml_translated"
-                                                                   mltag="txt_cancel">Cancel</span>
-                            </button>
-                        </div>
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
+                        <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <i class="fa fa-cancel"></i> <span class="ml_translated"
+                                                               mltag="txt_cancel">Cancel</span>
+                        </button>
                     </div>
                 </div>
             </form>
