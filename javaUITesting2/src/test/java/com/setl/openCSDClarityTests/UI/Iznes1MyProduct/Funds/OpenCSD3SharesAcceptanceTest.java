@@ -44,7 +44,7 @@ public class OpenCSD3SharesAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(90000);
+    public Timeout globalTimeout = new Timeout(100000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
