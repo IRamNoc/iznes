@@ -10,6 +10,8 @@ import {SagaHelper} from '@setl/utils';
 import {SET_LANGUAGE} from '@setl/core-store/user/site-settings/actions';
 
 import {MultilingualService} from '@setl/multilingual';
+import { ActivationStart, Router } from '@angular/router';
+import { get } from 'lodash';
 
 @Component({
     selector: 'app-basic-layout',
@@ -46,6 +48,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
     public menuShown: number;
     public currentLanguage: string;
+    public currentParentUrl: string;
 
     /* Observable subscription array. */
     subscriptionsArray: Array<Subscription> = [];
@@ -53,6 +56,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
                 public _translate: MultilingualService,
+                private router: Router,
                 public changeDetectorRef: ChangeDetectorRef) {
         /* By default show the menu. */
         this.menuShown = 1;
@@ -67,6 +71,14 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
 
         /* Subscribe to the language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe((language) => this.getLanguage(language)));
+
+        this.subscriptionsArray.push(router.events.subscribe((event) => {
+            if (event instanceof ActivationStart) {
+                // update current ParentUrl, but we excluding the parameter
+                this.currentParentUrl = get(event, 'snapshot.routeConfig.path', this.currentParentUrl);
+                console.log(this.currentParentUrl);
+            }
+        }));
     }
 
     /**
@@ -155,13 +167,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     public isCurrentLanguage(lang: string): boolean {
         /* Return the match. */
         return lang === this.currentLanguage;
-    }
-
-    public getRouterOutletState(outlet) {
-        if (!outlet || !outlet.activated) {
-            return;
-        }
-        return outlet.activatedRoute.snapshot._routerState.url || null;
     }
 
     /**
