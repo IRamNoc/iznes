@@ -13,9 +13,7 @@
 
         </button>
 
-        <clr-tab-content *clrIfActive>{{'Please fill up the following information to @subtitleLabel@ a new share:' | translate: {'subtitleLabel': subtitleLabel} }}
-
-
+        <clr-tab-content *clrIfActive>{{'Please fill in the following information to @subtitleLabel@ a new share:' | translate: {'subtitleLabel': subtitleLabel} }}
 
 
             <form [formGroup]="placeOrdersFormGroup" (ngSubmit)="handleSubmitButtonClick()">
@@ -40,7 +38,6 @@
                                 <input id="assetManagementCompany" class="form-control" type="text" formControlName="assetManagementCompany">
 
 
-
                             </div>
 
                             <!-- Investment portfolio -->
@@ -52,9 +49,6 @@
                                         <ng-select id="investmentPortfolio" [placeholder]="_translate.translate('Select an investment portfolio')" [items]="investmentPortfolioItems" [allowClear]="true" [formControl]="placeOrdersFormGroup.controls['investmentPortfolio']" (selected)="handleDropdownItemSelect($event)">
 
 
-
-
-
                                         </ng-select>
                                     </div>
                                 </div>
@@ -64,7 +58,6 @@
                             <div class="col-sm-6">
                                 <label for="entryExitFees">{{'@entryExitFeesLabel@ fees:' | translate: {'entryExitFeesLabel': entryExitFeesLabel} }}</label>
                                 <input id="entryExitFees" class="form-control" type="number" formControlName="entryExitFees">
-
 
 
                             </div>
@@ -86,14 +79,12 @@
                                         <input id="oneOffCharges" class="form-control" type="number" formControlName="oneOffCharges">
 
 
-
                                     </div>
 
                                     <!-- On-going charges -->
                                     <div class="col-sm-6">
                                         <label for="onGoingCharges">{{'On-going charges:' | translate}}</label>
                                         <input id="onGoingCharges" class="form-control" type="number" formControlName="onGoingCharges">
-
 
 
                                     </div>
@@ -107,7 +98,6 @@
                                         <input id="costsTransactionsInitiated" class="form-control" type="number" formControlName="costsTransactionsInitiated">
 
 
-
                                     </div>
 
                                     <!-- Charges related to anciliary services -->
@@ -119,14 +109,12 @@
                                         <input id="chargesAnciliaryServices" class="form-control" type="number" formControlName="chargesAnciliaryServices">
 
 
-
                                     </div>
 
                                     <!-- Incidental costs -->
                                     <div class="col-sm-6">
                                         <label for="incidentalCosts">{{'Incidental costs:' | translate}}</label>
                                         <input id="incidentalCosts" class="form-control" type="number" formControlName="incidentalCosts">
-
 
 
                                     </div>
@@ -154,14 +142,12 @@
                                 <input id="isin" class="form-control" type="text" formControlName="isin">
 
 
-
                             </div>
 
                             <!-- Share name -->
                             <div class="col-sm-6">
                                 <label for="shareName">{{'Share Name:' | translate}}</label>
                                 <input id="shareName" class="form-control" type="text" formControlName="shareName">
-
 
 
                             </div>
@@ -172,14 +158,12 @@
                                 <input id="assetClass" class="form-control" type="text" formControlName="assetClass">
 
 
-
                             </div>
 
                             <!-- SRRI -->
                             <div class="col-sm-6">
                                 <label for="srri">{{'SRRI:' | translate}}</label>
                                 <input id="srri" class="form-control" type="text" formControlName="srri">
-
 
 
                             </div>
@@ -190,7 +174,6 @@
                                 <input id="sri" class="form-control" type="text" formControlName="sri">
 
 
-
                             </div>
 
                             <!-- Share Currency -->
@@ -199,14 +182,12 @@
                                 <input id="shareCurrency" class="form-control" type="text" formControlName="shareCurrency">
 
 
-
                             </div>
 
                             <!-- NAV -->
                             <div class="col-sm-6">
                                 <label for="nav">{{'NAV:' | translate}}</label>
                                 <input id="nav" class="form-control" type="text" formControlName="nav">
-
 
 
                             </div>
@@ -220,10 +201,6 @@
                                     <input id="navDate" [placeholder]="_translate.translate('Choose a date')" formControlName="navDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
 
 
-
-
-
-
                                 </div>
                             </div>
 
@@ -231,7 +208,6 @@
                             <div class="col-sm-6">
                                 <label for="decimalization">{{'Decimalization:' | translate}}</label>
                                 <input id="decimalization" class="form-control" type="text" formControlName="decimalization">
-
 
 
                             </div>
@@ -260,10 +236,6 @@
                                     <input id="orderDate" [placeholder]="_translate.translate('Choose a date')" formControlName="orderDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
 
 
-
-
-
-
                                 </div>
                             </div>
 
@@ -274,10 +246,6 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                     <input id="cutOffDate" [placeholder]="_translate.translate('Choose a date')" formControlName="cutOffDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
-
-
-
-
 
 
                                 </div>
@@ -292,10 +260,6 @@
                                     <input id="dateInfoNavDate" [placeholder]="_translate.translate('Choose a date')" formControlName="dateInfoNavDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
 
 
-
-
-
-
                                 </div>
                             </div>
 
@@ -306,10 +270,6 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                     <input id="settlementDate" [placeholder]="_translate.translate('Choose a date')" formControlName="settlementDate" [dpDayPicker]="datePickerConfig" mode="day" theme="dp-material">
-
-
-
-
 
 
                                 </div>
@@ -336,14 +296,12 @@
                                 <input id="orderReference" class="form-control" type="text" formControlName="orderReference">
 
 
-
                             </div>
 
                             <!-- Order Type -->
                             <div class="col-sm-6">
                                 <label for="orderType">{{'Order Type:' | translate}}</label>
                                 <input id="orderType" class="form-control" type="text" formControlName="orderType">
-
 
 
                             </div>
@@ -356,14 +314,12 @@
                                 <input id="quantity" class="form-control" type="number" formControlName="quantity">
 
 
-
                             </div>
 
                             <!-- Amount -->
                             <div class="col-sm-6">
                                 <label for="amount">{{'Amount:' | translate}}</label>
                                 <input id="amount" class="form-control" type="number" formControlName="amount">
-
 
 
                             </div>
@@ -386,11 +342,7 @@
                             <input id="checkbox" class="form-check-input" type="checkbox" formControlName="isDisclaimerChecked" value="false">
 
 
-
-
-
-                            <label class="form-check-label" for="checkbox">{{'I confirm that I have read and understood the latest version of the Key Investor                                Information Document (KIID) for the fund share I am considering investing in.' | translate}}
-
+                            <label class="form-check-label" for="checkbox">{{'I confirm that I have read and understood the latest version of the Key Investor Information Document (KIID) for the fund share I am considering investing in.' | translate}}
 
 
                             </label>
@@ -406,13 +358,9 @@
                         <button id="cancelButton" type="button" class="btn btn-light" (click)="handleCancelButtonClick()">{{'Cancel' | translate}}
 
 
-
-
                         </button>
 
                         <button id="saveButton" type="submit" class="btn btn-primary" [disabled]="!placeOrdersFormGroup.controls['isDisclaimerChecked'].value">{{'Save' | translate}}
-
-
 
 
                         </button>
@@ -445,8 +393,6 @@
 
     <div class="modal-footer text-center">
         <button id="modalCancelButton" type="button" class="btn btn-outline-info" (click)="handleModalCancelButtonClick()">{{'Cancel' | translate}}
-
-
 
 
         </button>
