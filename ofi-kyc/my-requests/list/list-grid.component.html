@@ -1,12 +1,12 @@
 <clr-datagrid>
-    <clr-dg-column>{{'Asset Management Companies' | translate}}</clr-dg-column>
-    <clr-dg-column>{{'Status' | translate}}</clr-dg-column>
-    <clr-dg-column>{{'Update Date' | translate}}</clr-dg-column>
-    <clr-dg-column>{{'Actions' | translate}}</clr-dg-column>
+    <clr-dg-column id="companyName_column">{{'Asset Management Companies' | translate}}</clr-dg-column>
+    <clr-dg-column id="status_column">{{'Status' | translate}}</clr-dg-column>
+    <clr-dg-column id="lastUpdated_column">{{'Update Date' | translate}}</clr-dg-column>
+    <clr-dg-column id="action_column">{{'Actions' | translate}}</clr-dg-column>
 
-    <clr-dg-row *clrDgItems="let kyc of kycList">
-        <clr-dg-cell>{{kyc.companyName}}</clr-dg-cell>
-        <clr-dg-cell [ngSwitch]="kyc.status">
+    <clr-dg-row *clrDgItems="let kyc of kycList; let i = index">
+        <clr-dg-cell id="companyName_cell_{{i}}">{{kyc.companyName}}</clr-dg-cell>
+        <clr-dg-cell id="status_cell_{{i}}" [ngSwitch]="kyc.status">
             <span class="label label-danger" *ngSwitchCase="statusList.Rejected">{{'Rejected' | translate}}</span>
             <span class="label label-success" *ngSwitchCase="statusList.Approved">{{'Accepted' | translate}}</span>
             <span class="label label-info" *ngSwitchCase="statusList.Draft">{{'Draft' | translate}}</span>
@@ -14,20 +14,20 @@
             <span class="label label-warning" *ngSwitchCase="statusList.WaitingForMoreInfo">{{'Waiting Information' | translate}}</span>
         </clr-dg-cell>
 
-        <clr-dg-cell>{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
-        <clr-dg-cell class="actions">
+        <clr-dg-cell id="lastUpdated_cell_{{i}}">{{convertDate(kyc.lastUpdated)}}</clr-dg-cell>
+        <clr-dg-cell id="action_cell_{{i}}" class="actions">
             <div *ngIf="buttonToDisplay(kyc.status) === 'view'">
-                <button class="btn btn-sm" (click)="viewDetails(kyc)">
+                <button id="view_btn_{{i}}" class="btn btn-sm" (click)="viewDetails(kyc)">
                     {{'View' | translate}}
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'waitingInformation'">
-                <button class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
+                <button id="waitingInfo_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="viewDetails(kyc)">
                     {{'To complete' | translate}}
                 </button>
             </div>
             <div *ngIf="buttonToDisplay(kyc.status) === 'draft'">
-                <button class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
+                <button id="draft_toComplete_btn_{{i}}" class="btn btn-orange btn-sm" (click)="redirectToRelatedKycs(kyc.kycID)">
                     {{'To complete' | translate}}
                 </button>
             </div>
