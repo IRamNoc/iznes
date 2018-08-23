@@ -33,6 +33,12 @@ export class OfiManageNavPopup implements OnInit {
 
     navLatest: number;
 
+    currencySymbols = {
+        EUR: '€',
+        USD: '$',
+        GBP: '£',
+    };
+
     navDateConfig: any = {
         firstDayOfWeek: 'mo',
         format: 'YYYY-MM-DD',

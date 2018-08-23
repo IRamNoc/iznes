@@ -25,8 +25,8 @@
                     </div>
 
                     <div class="form-group col-sm-4">
-                        <label class="control-label">{{'&nbsp;' | translate}}</label>
-                        <input type="text" id="Currency-nav-btn" name="navCurrency" value="{{getCurrencyString(share.currency)}}" readonly>
+                        <label class="control-label">{{'Currency' | translate}}</label>
+                        <input type="text" id="Currency-nav-btn" name="navCurrency" value="{{getCurrencyString(share.currency)}} ({{currencySymbols[getCurrencyString(share.currency)]}})" readonly>
                     </div>
                 </div>
 
@@ -53,9 +53,6 @@
                         <input id="Date-nav-btn" name="navDate" [placeholder]="_translate.translate('Select date')" formControlName="navDate" [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker>
 
 
-
-
-
                     </div>
                 </div>
 
@@ -66,18 +63,12 @@
                         <input id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="_translate.translate('Select date')" formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material" #navPublishDatePicker>
 
 
-
-
-
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="Status-nav-btn">{{'Status' | translate}}</label>
                     <ng-select id="Status-nav-btn" class="fluid-width" [disabled]="navForm.controls['status'].disabled" [items]="statusItems" formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
-
-
-
 
 
                     </ng-select>
