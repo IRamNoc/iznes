@@ -54,24 +54,15 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
 
-        /**
-         * Void Asset form
-         */
-        const formGroup = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            fromAddress: new FormControl('', Validators.required),
-            toAddress: new FormControl(this.walletIssuerDetail.walletIssuer, Validators.required),
-            amount: new FormControl('', Validators.required),
-        });
-
-        this.voidAssetForm = this.persistService.watchForm('assetServicing/VoidAsset', formGroup);
-
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
+            /* Reset the voidAssetForm. */
+            this.setForm();
         }));
         this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => {
-            this.requestWalletLabel(requested);        }));
+            this.requestWalletLabel(requested);
+        }));
         this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => {
             this.requestWalletAddressList(requested);
         }));
@@ -89,6 +80,21 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        /* Set up the voidAssetForm. */
+        this.setForm();
+    }
+
+    /**
+     * Sets up the voidAssetForm.
+     *
+     * @return void
+     */
+    setForm() {
+        this.voidAssetForm = new FormGroup({
+            asset: new FormControl('', Validators.required),
+            fromAddress: new FormControl('', Validators.required),
+            amount: new FormControl('', Validators.required),
+        });
     }
 
     /**
