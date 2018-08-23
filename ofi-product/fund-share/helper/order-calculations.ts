@@ -116,6 +116,7 @@ export const calculateFigures = (
         estimatedAmount,
         amountWithCost,
         estimatedAmountWithCost,
+        knownNav,
     };
 };
 
