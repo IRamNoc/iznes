@@ -1,4 +1,8 @@
 ::ng-deep
+setl-permission-grid {
+    width: 100%;
+}
+
 .permission-grid .option-box .fa {
     margin: 0;
 }
