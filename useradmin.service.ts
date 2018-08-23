@@ -993,7 +993,7 @@ export class UserAdminService {
             /* Add it if it didn't exist. */
             if (typeof oldPermissions[i] === 'undefined') {
                 toAdd[i] = newPermissions[i];
-            /* Else, if there's differences, add it to update. */
+                /* Else, if there's differences, add it to update. */
             } else {
                 if (oldPermissions[i]['canDelegate'] !== newPermissions[i]['canDelegate'] ||
                     oldPermissions[i]['canDelete'] !== newPermissions[i]['canDelete'] ||

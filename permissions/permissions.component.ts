@@ -61,6 +61,21 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     public permissionsList: any;
 
     /* The permission levels list. */
+    public permissionTxLevelsList = [
+        {
+            id: 'canDelegate',
+            text: 'Delegate',
+        },
+        {
+            id: 'canRead',
+            text: 'Read',
+        },
+        {
+            id: 'canInsert',
+            text: 'Insert',
+        },
+    ];
+
     public permissionLevelsList = [
         {
             id: 'canDelegate',
@@ -123,7 +138,10 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 private confirmationService: ConfirmationService,
                 private logService: LogService,
                 private persistService: PersistService) {
-        /* Stub. */
+
+        /* Set up the Permissions Levels */
+        // this.permissionLevelsList = this.permissionTxLevelsList.push(this.permissionLevelsList);
+
     }
 
     public ngOnInit() {
@@ -180,6 +198,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
         this.subscriptions['permissionsList'] = this.userAdminService.getPermissionsListSubject().subscribe((list) => {
             /* Set the list. */
             this.permissionsList = list;
+            console.log('+++ this.permissionsList SET', this.permissionsList);
 
             /* Override the changes. */
             this.changeDetectorRef.detectChanges();
@@ -441,11 +460,16 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Loop over tabs and find this group tab. */
             for (i = 0; i < this.tabsControl.length; i += 1) {
                 if (this.tabsControl[i].groupId === group.groupId) {
-                    /* Get permissions or default to emtpy. */
+                    /* Get permissions or default to empty. */
                     let permissions = {};
                     if (this.permissionsList[location][group.groupId]) {
+
+                        console.log('+++ this.permissionsList', this.permissionsList);
+
                         permissions = this.permissionsList[location][group.groupId];
                     }
+
+                    console.log('+++ permissions', permissions);
 
                     /* Then patch the permissions value. */
                     this.tabsControl[i].permissionsEmitter.emit(permissions);
@@ -526,7 +550,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
 
             /* Success message. */
             this.showSuccess('Successfully created group', () => {
-                this.closeTab(tabid);
+                if (tabid > 1) {
+                    this.closeTab(tabid);
+                }
             });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
@@ -550,6 +576,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
          Let's sort the data structure for the edit group call.
          */
         const formData = this.tabsControl[tabid].formControl.value;
+        console.log('+++ this.tabsControl', this.tabsControl);
         const dataToSend = {};
 
         /* Assign the data to send. */
@@ -575,6 +602,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 dataToSend['type'],
             );
 
+            console.log('+++ differences', differences);
+
             /* Assign all the data. */
             permissionsData['entityId'] = dataToSend['groupId'];
             permissionsData['isGroup'] = 1;
@@ -591,6 +620,8 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             } else if (dataToSend['type'] == 2) {
                 functionCall = 'updateMenuPermissions';
             }
+
+            console.log('+++ permissionsData', permissionsData);
 
             /* Send the request. */
             this.userAdminService[functionCall](permissionsData).then((response) => {
