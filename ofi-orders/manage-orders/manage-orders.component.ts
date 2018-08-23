@@ -246,7 +246,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.appSubscribe(
             bufferedAndZippedOrders$,
             (orders) => {
-                console.log(orders);
                 orders.forEach(([list, listOrder]) => {
                     this.getAmOrdersListFromRedux(list, listOrder);
                 });
