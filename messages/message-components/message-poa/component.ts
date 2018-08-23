@@ -117,7 +117,6 @@ export class SetlMessagePOAComponent implements OnInit {
                 }).catch((err) => {
                     console.error('Could not set acted', err);
                 });
-
             },
             (e) => {
                 console.error(e);
