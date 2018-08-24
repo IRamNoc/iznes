@@ -411,7 +411,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     ordersObjectToList(list, listOrder) {
         return listOrder.map((orderId) => {
             const order = list[orderId];
-            const price = this.subEstimated(order, 'price', 'estimatedPrice');
+            const price = this.subEstimated(order, 'price', 'latestNav');
             const amount = this.subEstimated(order, 'amount', 'estimatedAmount');
             const amountWithCost = this.subEstimated(order, 'amountWithCost', 'estimatedAmountWithCost');
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
