@@ -1,4 +1,4 @@
-import {WalletNodeRequest, WalletNodeMessageBody} from '@setl/utils/common';
+import { WalletNodeRequest, WalletNodeMessageBody } from '@setl/utils/common';
 
 export interface WalletAddressRequestMessageBody extends WalletNodeMessageBody {
     topic: string;

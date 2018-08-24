@@ -1,11 +1,9 @@
-import {Injectable, Inject} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {NgRedux, select} from '@angular-redux/store';
-
-import {WalletNodeSocketService} from '@setl/websocket-service';
-import {AppConfig, APP_CONFIG} from '@setl/utils';
-import {createWalletNodeSagaRequest, createWalletNodeRequest} from '@setl/utils/common';
+import { Injectable, Inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/Observable';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { AppConfig, APP_CONFIG } from '@setl/utils';
+import { createWalletNodeSagaRequest, createWalletNodeRequest } from '@setl/utils/common';
 import {
     WalletAddressRequestMessageBody,
     WalletIssuerRequestMessageBody,
@@ -13,7 +11,7 @@ import {
     WalletInstrumentRequestMessageBody,
     RequestContractByAddressBody,
     RequestTransactionHistoryBody,
-    RequestContractsByWalletBody
+    RequestContractsByWalletBody,
 } from './walletnode-request.service.model';
 import * as _ from 'lodash';
 
@@ -41,50 +39,47 @@ interface RequestWalletInstrument {
 
 @Injectable()
 export class WalletNodeRequestService {
-
     constructor(private walletNodeSocketService: WalletNodeSocketService,
                 private http: HttpClient,
                 @Inject(APP_CONFIG) public appConfig: AppConfig) {
     }
 
     walletAddressRequest(requestData: RequestWalletAddress): any {
-
         const messageBody: WalletAddressRequestMessageBody = {
             topic: 'addresses',
             walletid: _.get(requestData, 'walletId', 0),
             namespace: _.get(requestData, 'namespace', ''),
             classid: _.get(requestData, 'classId', ''),
-            address: _.get(requestData, 'address', '')
+            address: _.get(requestData, 'address', ''),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
     walletIssuerRequest(requestData: RequestWalletIssuer): any {
-
         const messageBody: WalletIssuerRequestMessageBody = {
             topic: 'issuers',
             walletid: _.get(requestData, 'walletId', 0),
-            address: _.get(requestData, 'address', '')
+            address: _.get(requestData, 'address', ''),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
     walletInstrumentRequest(requestData: RequestWalletInstrument): any {
-
         const messageBody: WalletInstrumentRequestMessageBody = {
             topic: 'instruments',
-            walletid: _.get(requestData, 'walletId', 0)
+            walletid: _.get(requestData, 'walletId', 0),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
     /**
-     * Request Wallet Holding for a Wallet ID
+     * Requests Wallet Holding for a Wallet ID
      *
      * @param {RequestWalletAddress} requestData {walletId}
+     *
      * @returns {any}
      */
     requestWalletHolding(requestData: RequestWalletAddress): any {
@@ -94,20 +89,20 @@ export class WalletNodeRequestService {
             walletid: _.get(requestData, 'walletId', 0),
             namespace: _.get(requestData, 'namespace', ''),
             classid: _.get(requestData, 'classId', ''),
-            address: _.get(requestData, 'address', '')
+            address: _.get(requestData, 'address', ''),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
     /**
-     * Request Issue Holding for Asset {Issue|Instrument}
+     * Requests Issue Holding for Asset {Issue|Instrument}
      *
      * @param {RequestWalletAddress} requestData {walletId, issuer, instrument}
+     *
      * @returns {any}
      */
     requestWalletIssueHolding(requestData: RequestIssueHolding): any {
-
         const messageBody: RequestWalletHoldingMessageBody = {
             topic: 'holders',
             walletid: _.get(requestData, 'walletId', 0),
@@ -119,13 +114,13 @@ export class WalletNodeRequestService {
     }
 
     /**
-     * request Contract By Address
+     * Requests Contract By Address
      *
      * @param {object} requestData {walletId, issuer, instrument}
+     *
      * @returns {any}
      */
     requestContractByAddress(requestData: any): any {
-
         const messageBody: RequestContractByAddressBody = {
             topic: 'contract',
             walletid: _.get(requestData, 'walletId', 0),
@@ -145,13 +140,13 @@ export class WalletNodeRequestService {
     requestContractsByWallet(requestData: any): any {
         const messageBody: RequestContractsByWalletBody = {
             topic: 'contract',
-            walletid: _.get(requestData, 'walletId', 0)
+            walletid: _.get(requestData, 'walletId', 0),
         };
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'request', messageBody);
     }
 
     walletCommitToContract(requestData: any) {
-        let messageBody: any = {
+        const messageBody: any = {
             topic: 'cocom',
             walletid: _.get(requestData, 'walletid', 0),
             address: _.get(requestData, 'address', 0),
@@ -163,11 +158,11 @@ export class WalletNodeRequestService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
-
     /**
-     * request Transaction History
+     * Requests Transaction History
      *
      * @param {object} requestData {walletIds, chainid}
+     *
      * @returns {any}
      */
     requestTransactionHistory(requestData: any, pageSize: number = 10, pageNum: number = 0): any {
@@ -177,23 +172,23 @@ export class WalletNodeRequestService {
             chainid: requestData.chainId,
             pagesize: pageSize,
             classid: requestData.asset || '',
-            pagenum: pageNum
+            pagenum: pageNum,
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'signreq', messageBody);
     }
 
-    requestTransactionHistoryFromReportingNode(msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
-        return this.http.post(this.appConfig.reportingNodeUrl, {request: msgId});
+    requestTransactionHistoryFromReportingNode(
+        msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
+        return this.http.post(this.appConfig.reportingNodeUrl, { request: msgId });
     }
 
     requestWalletNodeInitialSnapshot() {
         const messageBody = {
-            topic: 'state'
+            topic: 'state',
         };
-        return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then(response => {
+        return createWalletNodeRequest(this.walletNodeSocketService, 'request', messageBody).then((response) => {
             return _.get(response, '[1].data');
         });
     }
-
 }

@@ -1,4 +1,4 @@
-import {WalletNodeRequest, WalletNodeMessageBody} from '@setl/utils/common';
+import { WalletNodeRequest, WalletNodeMessageBody } from '@setl/utils/common';
 
 export interface RegisterIssuerMessageBody extends WalletNodeMessageBody {
     walletid: number;
@@ -29,11 +29,11 @@ export interface IssueAssetMessageBody extends WalletNodeMessageBody {
 
 export interface VoidAssetMessageBody extends WalletNodeMessageBody {
     walletid: number;
+    address: string;
     namespace: string;
     instrument: string;
-    fromaddress: string;
-    toaddress: string;
     amount: number;
+    paymentlist: object;
 }
 
 export interface SendAssetMessageBody extends WalletNodeMessageBody {
@@ -85,4 +85,3 @@ export interface UnencumberMessageBody extends WalletNodeMessageBody {
     protocol: number;
     metadata: number;
 }
-
