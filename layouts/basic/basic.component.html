@@ -68,7 +68,7 @@
                     <app-navigation-sidebar></app-navigation-sidebar>
                 </nav>
 
-                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="getRouterOutletState(o)">
+                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="currentParentUrl">
                     <!--
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.
