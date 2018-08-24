@@ -152,7 +152,7 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-from-date" formControlName="fromDate" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
+                                            <input id="orders-search-from-date" formControlName="fromDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
                                                    mode="day" theme="dp-material">
 
                                         </div>
@@ -163,7 +163,7 @@
                                         </label>
                                         <div class="input-group date-pick-wrapper">
                                             <span class="fa fa-calendar" aria-hidden="true"></span>
-                                            <input id="orders-search-to-date" formControlName="toDate" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
+                                            <input id="orders-search-to-date" formControlName="toDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="translation.translate('Choose a date')"
                                                    mode="day" theme="dp-material">
 
                                         </div>

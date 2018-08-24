@@ -40,8 +40,8 @@
                             </label>
                             <div>
                                 <ng-select id="subportfolio" [class.error]="!form.controls['address'].valid && form.controls['address'].touched" [items]="addressList"
-                                    [allowClear]="false" [placeholder]="_translate.translate('Select an investment porfolio')"
-                                    formControlName="address" (selected)="handleSelectedAddress($event)">
+                                           [allowClear]="false" [placeholder]="_translate.translate('Select an investment porfolio')"
+                                           formControlName="address" (selected)="handleSelectedAddress($event)">
                                 </ng-select>
                             </div>
                             <span *ngIf="address.hasError('required') && address.touched" class="text-danger">{{'Field is required' | translate}}</span>
@@ -94,7 +94,7 @@
                                         </label>
                                         <div>
                                             <input type="text" class="form-control" [value]="_moneyValuePipe.transform(feeFrontend.mifiidTransactionCosts, 2) + '%'"
-                                                [readonly]="true">
+                                                   [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -129,7 +129,7 @@
                                         </label>
                                         <div>
                                             <input type="text" class="form-control mlp_translated" formControlName="feeControl" [value]="_moneyValuePipe.transform((feePercentage * 100),2) + '%' "
-                                                [readonly]="true">
+                                                   [readonly]="true">
                                         </div>
                                     </div>
                                 </div>
@@ -281,7 +281,7 @@
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
                                 <input [value]="today" [placeholder]="_translate.translate('Choose a date')" mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}"
-                                    disabled>
+                                       disabled>
                             </div>
                         </div>
                     </div>
@@ -294,9 +294,9 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="cutoffdate" formControlName="cutoffDate" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                    (dateChange)="subscribeForChangeDate('cutoff', $event)">
+                                <input id="cutoffdate" formControlName="cutoffDate" autocomplete="off" [dpDayPicker]="configDateCutoff" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('cutoff', $event)">
 
 
                             </div>
@@ -316,9 +316,9 @@
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                <input id="valuationdate" formControlName="valuationDate" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')"
-                                    mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                    (dateChange)="subscribeForChangeDate('valuation', $event)">
+                                <input id="valuationdate" formControlName="valuationDate" autocomplete="off" [dpDayPicker]="configDateValuation" [placeholder]="_translate.translate('Choose a date')"
+                                       mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                       (dateChange)="subscribeForChangeDate('valuation', $event)">
 
 
                             </div>
@@ -334,9 +334,9 @@
                                 <div class="input-group date-pick-wrapper">
                                     <span class="fa fa-calendar" aria-hidden="true"></span>
 
-                                    <input id="settlementdate" formControlName="settlementDate" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')"
-                                        mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
-                                        (dateChange)="subscribeForChangeDate('settlement', $event)">
+                                    <input id="settlementdate" formControlName="settlementDate" autocomplete="off" [dpDayPicker]="configDateSettlement" [placeholder]="_translate.translate('Choose a date')"
+                                           mode="day" theme="dp-material" [ngStyle]="{'width':'100%'}" [readonly]="doValidate" autocomplete="off"
+                                           (dateChange)="subscribeForChangeDate('settlement', $event)">
 
 
                                 </div>
@@ -432,7 +432,7 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <input id="checkbox" class="form-check-input" style="margin-top: 10px; margin-right: 10px;" type="checkbox" formControlName="disclaimer"
-                                [attr.disabled]="allowCheckDisclaimer" value="false">
+                                   [attr.disabled]="allowCheckDisclaimer" value="false">
 
 
                             <label class="form-check-label" for="checkbox">{{'I confirm that I have read and understood the latest version of the Key Investor Information
@@ -478,8 +478,10 @@
     <ng-template #orderValueInputs let-orderType="orderType">
 
         <div class="row">
-            <ng-container *ngIf=" orderType === 'subscribe' "><p>{{'Please type below a quantity or an amount to subscribe' | translate}}</p></ng-container>
-            <ng-container *ngIf=" orderType === 'redeem' "><p>{{'Please type below a quantity or an amount to redeem' | translate}}</p></ng-container>
+            <ng-container *ngIf=" orderType === 'subscribe' ">
+                <p>{{'Please type below a quantity or an amount to subscribe' | translate}}</p></ng-container>
+            <ng-container *ngIf=" orderType === 'redeem' ">
+                <p>{{'Please type below a quantity or an amount to redeem' | translate}}</p></ng-container>
 
             <span class="text-warning" *ngIf="isKnownNav()">&nbsp;(Using known nav)</span><span class="text-warning" *ngIf="!isKnownNav()">&nbsp;(Using unknown nav)</span>
         </div>
@@ -589,6 +591,6 @@
                 </clr-checkbox>
             </div>
         </form>
-        <button type="button" class="btn btn-primary" [disabled]="!kiidModalCheckbox.checked" (click)="onValidateKiid()" >{{type}}</button>
+        <button type="button" class="btn btn-primary" [disabled]="!kiidModalCheckbox.checked" (click)="onValidateKiid()">{{type}}</button>
     </div>
 </clr-modal>
