@@ -34,6 +34,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
     @Input() fileHash: string = null;
     @Input() pdfId: string = null;
     @Input() viewType: ViewType = ViewType.Button;
+    @Input() secure: boolean = false;
+    @Input() securePath: string = '';
     public token: string = null;
     public userId: string = null;
     public walletId: string = null;
@@ -116,6 +118,8 @@ export class FileViewerComponent implements OnInit, OnChanges {
             token: this.memberSocketService.token,
             walletId: this.walletId,
             fileHash: this.fileHash,
+            secure: this.secure,
+            path: this.securePath,
         };
 
         createMemberNodeRequest(this.memberSocketService, messageBody).then((result) => {
@@ -126,16 +130,22 @@ export class FileViewerComponent implements OnInit, OnChanges {
             } else {
                 const fileName = data.filename;
                 const downloadId = data.downloadId;
-
-                this.fileDownloader.getDownLoaderUrl({
+                const request = this.secure ?
+                    this.getSecureFileRequest() :
+                {
                     method: 'retrieve',
                     walletId: this.walletId,
                     downloadId,
-                }).subscribe((downloadData) => {
+                };
+
+                this.fileDownloader.getDownLoaderUrl(
+                    request,
+                    this.secure,
+                ).subscribe((downloadData) => {
                     const downloadUrl = downloadData.url;
                     this.previewModalService.open({
-                        name: fileName,
-                        url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl),
+                        name: fileName ? fileName : downloadData.filename,
+                        url: this.sanitizer.bypassSecurityTrustResourceUrl(downloadUrl) as string,
                     });
                 });
             }
@@ -143,6 +153,11 @@ export class FileViewerComponent implements OnInit, OnChanges {
     }
 
     public downloadFile() {
+        if (this.secure) {
+            this.downloadSecureFile();
+            return;
+        }
+
         const messageBody: ValidateFileMessageBody = {
             RequestName: 'validateFile',
             token: this.memberSocketService.token,
@@ -159,10 +174,26 @@ export class FileViewerComponent implements OnInit, OnChanges {
                     method: 'retrieve',
                     walletId: this.walletId,
                     downloadId: data.downloadId,
-                    download: true
+                    download: true,
                 });
             }
         });
+    }
+
+    public downloadSecureFile() {
+        this.fileDownloader.downLoaderFile(
+            this.getSecureFileRequest(),
+            true,
+        );
+    }
+
+    private getSecureFileRequest() {
+        return {
+            token: this.memberSocketService.token,
+            walletId: this.walletId,
+            fileHash: this.fileHash,
+            path: '/iznes/kyc-inv-docs',
+        };
     }
 
     /**
