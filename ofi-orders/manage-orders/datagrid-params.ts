@@ -27,6 +27,7 @@ export class DatagridParams {
     private defaults: DatagridParamsData;
     private data: DatagridParamsData;
     private changedSubject = new Subject<void>();
+    private isFirstLoad = true;
 
     constructor(itemsPerPage: number) {
         this.defaults = {
@@ -96,11 +97,16 @@ export class DatagridParams {
         };
 
         this.data.sortByField = get(fieldMap, get(state, 'sort.by'), this.data.sortByField);
-        this.data.sortOrder = get(state, 'sort.reverse', false) ? 'desc' : 'asc';
+        this.data.sortOrder = get(state, 'sort.reverse', true) ? 'desc' : 'asc';
         this.data.rowOffSet = get(state, 'page.from', 0) / this.data.pageSize;
 
-        if (!isEqual(tmpData, this.data)) {
+        if (!isEqual(tmpData, this.data) || this.isFirstLoad) {
             this.changedSubject.next();
+
+            // if done first load. set it to false.
+            if( this.isFirstLoad ) {
+               this.isFirstLoad = false;
+            }
         }
     }
 

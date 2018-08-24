@@ -246,7 +246,6 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.appSubscribe(
             bufferedAndZippedOrders$,
             (orders) => {
-                console.log(orders);
                 orders.forEach(([list, listOrder]) => {
                     this.getAmOrdersListFromRedux(list, listOrder);
                 });
@@ -416,6 +415,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const amount = this.subEstimated(order, 'amount', 'estimatedAmount');
             const amountWithCost = this.subEstimated(order, 'amountWithCost', 'estimatedAmountWithCost');
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
+            const fee = amountWithCost - amount;
             const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage);
             return {
                 ...list[orderId],
@@ -424,6 +424,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
                 amountWithCost,
                 quantity,
                 feePercentage,
+                fee,
                 knownNav: order.price > 0,
                 orderUnpaid: this.orderUnpaid(list[orderId]),
             };
@@ -843,5 +844,15 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     isSellBuyOrder(orderData: {sellBuyLinkOrderID}): boolean {
         return orderData.sellBuyLinkOrderID;
+    }
+
+    /**
+     * Return different css class depend if order price is validated price of not.
+     * if order.price (validated price) is not 0, order have the validated price, otherwise, it is not validated price.
+     * @param {{knownNav: boolean}} order
+     * @return {"text-warning" | "text-success"}
+     */
+    getPriceStatusCss(order: {knownNav: boolean}): 'text-warning' | 'text-success' {
+        return order.knownNav ? 'text-success' : 'text-warning';
     }
 }
