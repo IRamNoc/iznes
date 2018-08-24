@@ -98,6 +98,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     Validators.required,
                 ])
             ],
+            mc_emailAddress: [
+                '',
+                Validators.compose([
+                    Validators.required,
+                ])
+            ],
             mc_country_select: [
                 '',
                 Validators.compose([
@@ -233,15 +239,15 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         this.logService.log('Language changed from ' + this.language + ' to ' + requested);
         if (requested) {
             switch (requested) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
@@ -295,77 +301,80 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
         // this.logService.log('editCompany', company);
         for (const result in company) {
             switch (result) {
-                case 'companyID':
-                    this.modelForm.companyID = company[result];
-                    break;
-                case 'companyName':
-                    this.modelForm.mc_name = company[result];
-                    break;
-                case 'country':
-                    this.modelForm.mc_country_select = company[result];
-                    this.managementCompanyForm.controls['mc_country_select'].setValue([company[result]]);
-                    break;
-                case 'addressPrefix':
-                    this.modelForm.mc_addressPrefix = company[result];
-                    break;
-                case 'postalAddressLine1':
-                    this.modelForm.mc_address1 = company[result];
-                    break;
-                case 'postalAddressLine2':
-                    this.modelForm.mc_address2 = company[result];
-                    break;
-                case 'city':
-                    this.modelForm.mc_address3 = company[result];
-                    break;
-                case 'stateArea':
-                    this.modelForm.mc_address4 = company[result];
-                    break;
-                case 'postalCode':
-                    this.modelForm.mc_postalCode = company[result];
-                    break;
-                case 'taxResidence':
-                    this.modelForm.mc_tax_residence = company[result];
-                    break;
-                case 'registrationNum':
-                    this.modelForm.mc_registration_number = company[result];
-                    break;
-                case 'supervisoryAuthority':
-                    this.modelForm.mc_supervisory_authority = company[result];
-                    break;
-                case 'numSiretOrSiren':
-                    this.modelForm.mc_siret_siren = company[result];
-                    break;
-                case 'creationDate':
-                    this.modelForm.mc_creation_date = new Date(company[result]).toISOString().substring(0, 10);
-                    break;
-                case 'shareCapital':
-                    this.modelForm.mc_share_capital = company[result];
-                    break;
-                case 'commercialContact':
-                    this.modelForm.mc_commercial_contact = company[result];
-                    break;
-                case 'operationalContact':
-                    this.modelForm.mc_operational_contact = company[result];
-                    break;
-                case 'directorContact':
-                    this.modelForm.mc_director_contact = company[result];
-                    break;
-                case 'lei':
-                    this.modelForm.mc_lei = company[result];
-                    break;
-                case 'bic':
-                    this.modelForm.mc_bic = company[result];
-                    break;
-                case 'giinCode':
-                    this.modelForm.mc_giin = company[result];
-                    break;
-                case 'logoName':
-                    this.modelForm.mc_logo_name = company[result];
-                    break;
-                case 'logoURL':
-                    this.modelForm.mc_logo = company[result];
-                    this.managementCompanyForm.controls['mc_logo'].patchValue(company[result]);
-                    break;
+            case 'companyID':
+                this.modelForm.companyID = company[result];
+                break;
+            case 'companyName':
+                this.modelForm.mc_name = company[result];
+                break;
+            case 'emailAddress':
+                this.modelForm.mc_emailAddress = company[result];
+                break;
+            case 'country':
+                this.modelForm.mc_country_select = company[result];
+                this.managementCompanyForm.controls['mc_country_select'].setValue([company[result]]);
+                break;
+            case 'addressPrefix':
+                this.modelForm.mc_addressPrefix = company[result];
+                break;
+            case 'postalAddressLine1':
+                this.modelForm.mc_address1 = company[result];
+                break;
+            case 'postalAddressLine2':
+                this.modelForm.mc_address2 = company[result];
+                break;
+            case 'city':
+                this.modelForm.mc_address3 = company[result];
+                break;
+            case 'stateArea':
+                this.modelForm.mc_address4 = company[result];
+                break;
+            case 'postalCode':
+                this.modelForm.mc_postalCode = company[result];
+                break;
+            case 'taxResidence':
+                this.modelForm.mc_tax_residence = company[result];
+                break;
+            case 'registrationNum':
+                this.modelForm.mc_registration_number = company[result];
+                break;
+            case 'supervisoryAuthority':
+                this.modelForm.mc_supervisory_authority = company[result];
+                break;
+            case 'numSiretOrSiren':
+                this.modelForm.mc_siret_siren = company[result];
+                break;
+            case 'creationDate':
+                this.modelForm.mc_creation_date = new Date(company[result]).toISOString().substring(0, 10);
+                break;
+            case 'shareCapital':
+                this.modelForm.mc_share_capital = company[result];
+                break;
+            case 'commercialContact':
+                this.modelForm.mc_commercial_contact = company[result];
+                break;
+            case 'operationalContact':
+                this.modelForm.mc_operational_contact = company[result];
+                break;
+            case 'directorContact':
+                this.modelForm.mc_director_contact = company[result];
+                break;
+            case 'lei':
+                this.modelForm.mc_lei = company[result];
+                break;
+            case 'bic':
+                this.modelForm.mc_bic = company[result];
+                break;
+            case 'giinCode':
+                this.modelForm.mc_giin = company[result];
+                break;
+            case 'logoName':
+                this.modelForm.mc_logo_name = company[result];
+                break;
+            case 'logoURL':
+                this.modelForm.mc_logo = company[result];
+                this.managementCompanyForm.controls['mc_logo'].patchValue(company[result]);
+                break;
             }
         }
         this.showSearchTab = false;
@@ -419,6 +428,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     {
                         companyID: formValues.companyID,
                         companyName: formValues.mc_name,
+                        emailAddress: formValues.mc_emailAddress,
                         country: formValues.mc_country_select[0],
                         addressPrefix: formValues.mc_addressPrefix,
                         postalAddressLine1: formValues.mc_address1,
@@ -465,6 +475,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     {
                         companyID: formValues.companyID,
                         companyName: formValues.mc_name,
+                        emailAddress: formValues.mc_emailAddress,
                         country: formValues.mc_country_select[0].id,
                         addressPrefix: formValues.mc_addressPrefix,
                         postalAddressLine1: formValues.mc_address1,
@@ -493,13 +504,12 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                     asyncTaskPipe,
                     (data) => {
                         this.mcService.fetchManagementCompanyList();
-                        // this.logService.log('success new company', data); // success
-                        // this.modalTitle = 'Information';
-                        // this.modalText = 'Management company has successfully been created';
-                        // this.showModal = true;
+
+                        let tempPassword = data[1].Data[0].newPasswordString;
+
                         this.resetForm();
                         this.showSearchTab = true;
-                        this.showSuccessResponse('Management company has successfully been created');
+                        this.showSuccessResponse('Management company has successfully been created.<br><br>Temporary password: ' + tempPassword);
                     },
                     (data) => {
                         this.logService.log('error: ', data);
