@@ -323,7 +323,7 @@ function handleNewOrder(state: ManageOrders, action: PayloadAction): ManageOrder
 
     if (state.currentPage !== 1 || Object.keys(state.filters).length > 0) {
         // Only add orders to the first page and when no filters are set!
-        return;
+        return state;
     }
 
     const orderList = { ...formatManageOrderDataResponse([action.payload.order]), ...state.orderList };

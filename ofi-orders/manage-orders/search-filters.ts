@@ -1,18 +1,25 @@
+import { Injectable, Inject } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { get, isUndefined, isEmpty, find, isNumber, isEqual } from 'lodash';
 import { Subject, BehaviorSubject, Observable } from 'rxjs';
-import { orderStatuses, orderTypes, dateTypes} from './lists';
+import { orderStatuses, orderTypes, dateTypes } from './lists';
+import { ManageOrdersService } from './manage-orders.service';
 
 interface SelectedItem {
     id: any;
     text: number | string;
 }
 
-export interface ISearchFilters {
-    getForm(): FormGroup;
-    get(): any;
+export abstract class ISearchFilters {
+    abstract getForm(): FormGroup;
+    abstract get(): any;
 }
 
+export abstract class IFilterStore {
+    abstract getFilters(): Observable<object>;
+}
+
+@Injectable()
 export class SearchFilters implements ISearchFilters {
 
     private defaultForm = {
@@ -33,9 +40,9 @@ export class SearchFilters implements ISearchFilters {
     private optionalFiltersSubject = new BehaviorSubject<boolean>(false);
     private filtersAppliedSubject = new Subject<void>();
 
-    constructor(private formBuilder: FormBuilder, filterStore$: Observable<object>) {
+    constructor(private formBuilder: FormBuilder, filterStore: IFilterStore) {
         this.getForm();
-        filterStore$.subscribe((store) => {
+        filterStore.getFilters().subscribe((store) => {
             this.filterStore = store;
             this.apply();
         });

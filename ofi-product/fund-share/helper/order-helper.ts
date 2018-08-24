@@ -568,7 +568,6 @@ export class OrderHelper {
         const currency = this.currency;
         const fundShareID = this.fundShare.fundShareID;
         const byAmountOrQuantity = this.orderBy;
-        const price = 0;
         const estimatedPrice = this.nav;
         let orderFigure = this.getOrderFigures();
 
@@ -583,6 +582,7 @@ export class OrderHelper {
         const estimatedAmount = orderFigure.estimatedAmount;
         const amountWithCost = orderFigure.amountWithCost;
         const estimatedAmountWithCost = orderFigure.estimatedAmountWithCost;
+        const price = orderFigure.validatedPrice;
         const feePercentage = this.feePercentage;
         const platFormFee = this.fundShare.platFormFee || 0;
 
