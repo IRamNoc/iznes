@@ -47,7 +47,7 @@ import { ofiManageOrderActions } from '../../ofi-store';
 /* Clarity */
 import { ClrDatagridStateInterface, Datagrid } from '@clr/angular';
 /* helper */
-import { getOrderFigures, getOrderTypeString, getPriceStatusCss } from '../../ofi-product/fund-share/helper/order-view-helper';
+import { getOrderFigures, getOrderTypeString } from '../../ofi-product/fund-share/helper/order-view-helper';
 import { OfiFundInvestService } from '../../ofi-req-services/ofi-fund-invest/service';
 import { MessageCancelOrderConfig, MessagesService } from '@setl/core-messages';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
@@ -849,10 +849,10 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Return different css class depend if order price is validated price of not.
      * if order.price (validated price) is not 0, order have the validated price, otherwise, it is not validated price.
-     * @param {{price: number}} order
+     * @param {{knownNav: boolean}} order
      * @return {"text-warning" | "text-success"}
      */
-    getPriceStatusCss(order: {price: number}): 'text-warning' | 'text-success' {
-        return getPriceStatusCss(order);
+    getPriceStatusCss(order: {knownNav: boolean}): 'text-warning' | 'text-success' {
+        return order.knownNav ? 'text-success' : 'text-warning';
     }
 }
