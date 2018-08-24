@@ -693,6 +693,15 @@ export const menuSpec: MenuSpec = {
                 ],
             },
         ],
+        iznes_admin: [
+            {
+                label: 'Management Companies',
+                label_txt: 'txt_management-companies',
+                icon_class: 'fa fa-users',
+                element_id: 'menu-management-companies',
+                router_link: '/management-company',
+            }
+        ]
     },
     disabled: [],
 };
