@@ -15,6 +15,7 @@
       "polyfills.ts"
   ],
     "exclude": [
+        "../**/*.test.ts",
         "../setl_modules/module-template",
         "../node_modules/@ofi/ofi-main/ofi-product/fund-share/helper/__tests__/**/*",
         "../setl_modules/ofi-main/ofi-product/fund-share/helper/__tests__/**/*"
