@@ -226,7 +226,7 @@
                                             </label>
                                             <div class="input-group date-pick-wrapper">
                                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                                <input id="uf_umbrellaFundCreationDate" formControlName="umbrellaFundCreationDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
                                                        mode="day" theme="dp-material">
                                             </div>
                                         </div>
@@ -575,7 +575,7 @@
                                                 <label class="control-label" for="fundCreationDate">{{'Fund Creation Date (YYYY-MM-DD)' | translate}}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                                                    <input id="fundCreationDate" formControlName="fundCreationDate" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
+                                                    <input id="fundCreationDate" formControlName="fundCreationDate" autocomplete="off" [dpDayPicker]="configDate" [placeholder]="_translate.translate('Choose a date')"
                                                            mode="day" theme="dp-material">
                                                 </div>
                                                 <span *ngIf="fundForm.controls['fundCreationDate'].touched && fundForm.controls['fundCreationDate'].hasError('pattern')"
