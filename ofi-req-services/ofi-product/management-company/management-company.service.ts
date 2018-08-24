@@ -24,6 +24,7 @@ import {
 interface ManagementCompanyData {
     companyID: any;
     companyName: any;
+    emailAddress: any;
     country: any;
     addressPrefix: any;
     postalAddressLine1: any;
@@ -79,16 +80,16 @@ export class OfiManagementCompanyService {
 
     initSubscribers() {
         this.getMyAccountId
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
+        .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
 
         this.reqManagementCompany$
-            .pipe(
-                takeUntil(this.unSubscribe),
+        .pipe(
+            takeUntil(this.unSubscribe),
         )
-            .subscribe(v => this.isManagementCompanyRequested = v);
+        .subscribe(v => this.isManagementCompanyRequested = v);
     }
 
     myAccountId(accountId) {
@@ -175,6 +176,7 @@ export class OfiManagementCompanyService {
             token: this.memberSocketService.token,
             entityId: this.accountID,   // entityId = accountID (name just changed)
             companyName: mcData.companyName,
+            emailAddress: mcData.emailAddress,
             country: mcData.country,
             addressPrefix: mcData.addressPrefix,
             postalAddressLine1: mcData.postalAddressLine1,
@@ -220,6 +222,7 @@ export class OfiManagementCompanyService {
             entityId: this.accountID,   // entityId = accountID (name just changed)
             companyID: mcData.companyID,
             companyName: mcData.companyName,
+            emailAddress: mcData.emailAddress,
             country: mcData.country,
             addressPrefix: mcData.addressPrefix,
             postalAddressLine1: mcData.postalAddressLine1,

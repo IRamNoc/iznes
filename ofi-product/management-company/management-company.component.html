@@ -4,13 +4,15 @@
 
 <clr-tabs>
     <clr-tab>
-        <button id="mcTabList" clrTabLink (click)="resetForm()"><i class="fa fa-th-list" mltag="txt_nbsp">&nbsp;</i><span mltag="txt_list">List</span>
+        <button id="mcTabList" clrTabLink (click)="resetForm()">
+            <i class="fa fa-th-list" mltag="txt_nbsp">&nbsp;</i><span mltag="txt_list">List</span>
         </button>
         <clr-tab-content *clrIfActive="showSearchTab">
             <section class="form-block">
 
                 <clr-datagrid>
-                    <clr-dg-column [clrDgField]="'companyName'"><span mltag="txt_managementcompanyname">Management Company Name</span></clr-dg-column>
+                    <clr-dg-column [clrDgField]="'companyName'">
+                        <span mltag="txt_managementcompanyname">Management Company Name</span></clr-dg-column>
                     <clr-dg-column [clrDgField]="'lei'"><span mltag="txt_lei">LEI</span></clr-dg-column>
                     <clr-dg-column [clrDgField]="'country'"><span mltag="txt_country">Country</span></clr-dg-column>
                     <clr-dg-column><span mltag="txt_action">Action</span></clr-dg-column>
@@ -21,7 +23,8 @@
                         <clr-dg-cell>{{managementCompany.country}}</clr-dg-cell>
                         <clr-dg-cell>
                             <div class="btn-group btn-sm">
-                                <button id="mcBtnEditMc" class="btn" (click)="editCompany(managementCompany)"><i class="fa fa-edit"></i></button>
+                                <button id="mcBtnEditMc" class="btn" (click)="editCompany(managementCompany)">
+                                    <i class="fa fa-edit"></i></button>
                                 <button id="mcBtnDeleteMc" class="btn" (click)="companyToDelete = managementCompany; showConfirmModal = true;">
                                     <i class="fa fa-trash"></i>
                                 </button>
@@ -38,7 +41,7 @@
             </section>
         </clr-tab-content>
     </clr-tab>
-    <clr-tab *ngIf = "allowAddMc">
+    <clr-tab *ngIf="allowAddMc">
         <div *ngIf="!editForm; else editMcFTemplate">
             <button id="mcTabAddNewMc" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
                 <span mltag="txt_newmanagementcompany">New Management company</span>
@@ -57,22 +60,28 @@
                             <div *ngIf="modelForm.companyID">
                                 <input type="hidden" id="companyID" class="form-control" formControlName="companyID" [(ngModel)]="modelForm.companyID" placeholder="companyID" mltag="txt_companyid">
                             </div>
-                            <label for="mc_name">
+                            <label class="required-field" for="mc_name">
                                 <span mltag="txt_managementcompanyname">Management Company Name</span>
-                                <div class="mandatory text-danger">*</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_name" class="form-control" formControlName="mc_name" [(ngModel)]="modelForm.mc_name" placeholder="Management Company Name" mltag="txt_managementcompanyname">
                             </div>
                             <div *ngIf="managementCompanyForm.controls.mc_name.hasError('required') && managementCompanyForm.controls.mc_name.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
-                        <div class="form-group col-sm-6"></div>
+                        <div class="form-group col-sm-6">
+                            <label class="required-field" for="mc_emailAddress">
+                                <span mltag="txt_emailaddress">Email Address</span>
+                            </label>
+                            <div>
+                                <input type="text" id="mc_emailAddress" class="form-control" formControlName="mc_emailAddress" [(ngModel)]="modelForm.mc_emailAddress" placeholder="Email Address" mltag="txt_emailAddress">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.mc_emailAddress.hasError('required') && managementCompanyForm.controls.mc_emailAddress.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="country">
+                            <label class="required-field" for="country">
                                 <span mltag="txt_country">Country</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div id="country">
                                 <ng-select [items]="mcCountryOptions" [allowClear]="true" mltag="txt_selectCountry" placeholder="Select a country" formControlName="mc_country_select"></ng-select>
@@ -91,9 +100,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_address1">
+                            <label class="required-field" for="mc_address1">
                                 <span mltag="txt_postaladdress">Postal Address</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_address1" class="form-control" formControlName="mc_address1" [(ngModel)]="modelForm.mc_address1" placeholder="Line 1" mltag="txt_line1">
@@ -112,9 +120,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_address3">
+                            <label class="required-field" for="mc_address3">
                                 <span mltag="txt_cityortown">City or Town</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_address3" class="form-control" formControlName="mc_address3" [(ngModel)]="modelForm.mc_address3" placeholder="City or Town" mltag="txt_cityortown">
@@ -122,9 +129,8 @@
                             <div *ngIf="managementCompanyForm.controls.mc_address3.hasError('required') && managementCompanyForm.controls.mc_address3.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_address4">
+                            <label class="required-field" for="mc_address4">
                                 <span mltag="txt_stateorarea">State or Area</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_address4" class="form-control" formControlName="mc_address4" [(ngModel)]="modelForm.mc_address4" placeholder="State or Area" mltag="txt_stateorarea">
@@ -134,9 +140,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_postalCode">
+                            <label class="required-field" for="mc_postalCode">
                                 <span mltag="txt_postalcode">Postal Code</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_postalCode" class="form-control" formControlName="mc_postalCode" [(ngModel)]="modelForm.mc_postalCode" placeholder="Postal Code" mltag="txt_postalcode">
@@ -144,9 +149,8 @@
                             <div *ngIf="managementCompanyForm.controls.mc_postalCode.hasError('required') && managementCompanyForm.controls.mc_postalCode.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_tax_residence">
+                            <label class="required-field" for="mc_tax_residence">
                                 <span mltag="txt_taxresidence">Tax Residence</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_tax_residence" class="form-control" formControlName="mc_tax_residence" [(ngModel)]="modelForm.mc_tax_residence" placeholder="Tax Residence" mltag="txt_taxresidence">
@@ -156,9 +160,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_registration_number">
+                            <label class="required-field" for="mc_registration_number">
                                 <span mltag="txt_taxresidence">Registration Number</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_registration_number" class="form-control" formControlName="mc_registration_number" [(ngModel)]="modelForm.mc_registration_number" placeholder="Registration Number" mltag="txt_registrationnumber">
@@ -166,9 +169,8 @@
                             <div *ngIf="managementCompanyForm.controls.mc_registration_number.hasError('required') && managementCompanyForm.controls.mc_registration_number.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_supervisory_authority">
+                            <label class="required-field" for="mc_supervisory_authority">
                                 <span mltag="txt_supervisoryauthority">Supervisory Authority</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_supervisory_authority" class="form-control" formControlName="mc_supervisory_authority" [(ngModel)]="modelForm.mc_supervisory_authority" placeholder="Supervisory Authority" mltag="txt_supervisoryauthority">
@@ -178,9 +180,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_siret_siren">
+                            <label class="required-field" for="mc_siret_siren">
                                 <span mltag="txt_numbersiretsiren">Number SIRET / SIREN</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_siret_siren" class="form-control" formControlName="mc_siret_siren" [(ngModel)]="modelForm.mc_siret_siren" placeholder="Number SIRET / SIREN" mltag="txt_numbersiretsiren">
@@ -188,9 +189,8 @@
                             <div *ngIf="managementCompanyForm.controls.mc_siret_siren.hasError('required') && managementCompanyForm.controls.mc_siret_siren.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_creation_date">
+                            <label class="required-field" for="mc_creation_date">
                                 <span mltag="txt_creationdate">Creation Date</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div class="customFormGroup">
                                 <div class="input-group date-pick-wrapper">
@@ -204,20 +204,18 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_share_capital">
+                            <label class="required-field" for="mc_share_capital">
                                 <span mltag="txt_sharecapital">Share Capital</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
-                                <input type="text" id="mc_share_capital" class="form-control" formControlName="mc_share_capital" [(ngModel)]="modelForm.mc_share_capital" placeholder="Share Capital" mltag="txt_sharecapital" appNumberFormatter fractionSize="4">
+                                <input type="text" id="mc_share_capital" class="form-control" formControlName="mc_share_capital" [(ngModel)]="modelForm.mc_share_capital" placeholder="Share Capital" mltag="txt_sharecapital">
                             </div>
                             <div *ngIf="managementCompanyForm.controls.mc_share_capital.hasError('required') && managementCompanyForm.controls.mc_share_capital.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                             <div *ngIf="!managementCompanyForm.controls.mc_share_capital.hasError('required') && managementCompanyForm.controls.mc_share_capital.hasError('invalid') && managementCompanyForm.controls.mc_share_capital.touched" class="text-danger" mltag="txt_thisfieldmustbenumeric">This field must be numeric</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_commercial_contact">
+                            <label class="required-field" for="mc_commercial_contact">
                                 <span mltag="txt_commercialcontact">Commercial Contact</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_commercial_contact" class="form-control" formControlName="mc_commercial_contact" [(ngModel)]="modelForm.mc_commercial_contact" placeholder="Commercial Contact" mltag="txt_commercialcontact">
@@ -227,9 +225,8 @@
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label for="mc_operational_contact">
+                            <label class="required-field" for="mc_operational_contact">
                                 <span mltag="txt_operationalcontact">Operational Contact</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_operational_contact" class="form-control" formControlName="mc_operational_contact" [(ngModel)]="modelForm.mc_operational_contact" placeholder="Operational Contact" mltag="txt_operationalcontact">
@@ -237,9 +234,8 @@
                             <div *ngIf="managementCompanyForm.controls.mc_operational_contact.hasError('required') && managementCompanyForm.controls.mc_operational_contact.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                            <label for="mc_director_contact">
+                            <label class="required-field" for="mc_director_contact">
                                 <span mltag="txt_directorcontact">Director Contact</span>
-                                <div class="mandatory text-danger"> *</div>
                             </label>
                             <div>
                                 <input type="text" id="mc_director_contact" class="form-control" formControlName="mc_director_contact" [(ngModel)]="modelForm.mc_director_contact" placeholder="Director Contact" mltag="txt_directorcontact">
@@ -251,7 +247,6 @@
                         <div class="form-group col-sm-6">
                             <label for="mc_lei">
                                 <span mltag="txt_lei">LEI</span>
-                                <!--<div class="mandatory text-danger"> *</div>-->
                             </label>
                             <div>
                                 <input type="text" id="mc_lei" class="form-control" formControlName="mc_lei" [(ngModel)]="modelForm.mc_lei" placeholder="LEI" mltag="txt_lei">
@@ -259,21 +254,19 @@
                             <div *ngIf="managementCompanyForm.controls.mc_lei.hasError('required') && managementCompanyForm.controls.mc_lei.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                         <div class="form-group col-sm-6">
-                        <label for="mc_bic">
-                            <span mltag="txt_bic">BIC</span>
-                            <!--<div class="mandatory text-danger"> *</div>-->
-                        </label>
-                        <div>
-                            <input type="text" id="mc_bic" class="form-control" formControlName="mc_bic" [(ngModel)]="modelForm.mc_bic" placeholder="BIC" mltag="txt_bic">
-                        </div>
-                        <div *ngIf="managementCompanyForm.controls.mc_bic.hasError('required') && managementCompanyForm.controls.mc_bic.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
+                            <label for="mc_bic">
+                                <span mltag="txt_bic">BIC</span>
+                            </label>
+                            <div>
+                                <input type="text" id="mc_bic" class="form-control" formControlName="mc_bic" [(ngModel)]="modelForm.mc_bic" placeholder="BIC" mltag="txt_bic">
+                            </div>
+                            <div *ngIf="managementCompanyForm.controls.mc_bic.hasError('required') && managementCompanyForm.controls.mc_bic.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label for="mc_giin">
                                 <span mltag="txt_giincode">GIIN_code</span>
-                                <!--<div class="mandatory text-danger"> *</div>-->
                             </label>
                             <div>
                                 <input type="text" id="mc_giin" class="form-control" formControlName="mc_giin" [(ngModel)]="modelForm.mc_giin" placeholder="GIIN_code" mltag="txt_giincode">
@@ -282,32 +275,6 @@
                         </div>
                         <div class="form-group col-sm-6"></div>
                     </div>
-                    <!--<div class="row">-->
-                        <!--<div class="form-group col-sm-12">-->
-                            <!--<div class="col-sm-3">-->
-                                <!--<label for="mc_logo_name" class="text-right pt-1" mltag="txt_logo"> Logo</label>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-9 text-left">-->
-                                <!--<input type="text" id="mc_logo_name" class="form-control" formControlName="mc_logo_name" [(ngModel)]="modelForm.mc_logo_name" placeholder="Logo" mltag="txt_logo">-->
-                                <!--<div class="mandatory text-danger"> *</div>-->
-                                <!--<div *ngIf="managementCompanyForm.controls.mc_logo_name.hasError('required') && managementCompanyForm.controls.mc_logo_name.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-sm-12">-->
-                            <!--<div class="col-sm-3">-->
-                                <!--<label class="text-right pt-1">-->
-                                <!--</label>-->
-                            <!--</div>-->
-                            <!--<div class="col-sm-9 text-left">-->
-                                <!--<div *ngIf="!!managementCompanyForm.value.mc_logo">-->
-                                    <!--<setl-file-viewer fileHash="{{managementCompanyForm.value.mc_logo}}"></setl-file-viewer>-->
-                                <!--</div>-->
-                                <!--<input type="hidden" class="form-control" formControlName="mc_logo">-->
-                                <!--<setl-file-drop name="mc_logo" (onDrop)="onDropFiles($event, managementCompanyForm, 'mc_logo')" ngDefaultControl></setl-file-drop>-->
-                                <!--<div *ngIf="managementCompanyForm.controls.mc_logo.hasError('required') && managementCompanyForm.controls.mc_logo_name.touched" class="text-danger" mltag="txt_thisfieldisrequired">This field is required</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
-                    <!--</div>-->
                     <div class="row">
                         <div class="form-group col-sm-12">
                             <button id="mcBtnSubmitForm" type="submit" class="btn btn-primary" [disabled]="!managementCompanyForm.valid">
