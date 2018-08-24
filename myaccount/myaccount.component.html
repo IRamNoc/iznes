@@ -165,8 +165,8 @@
                                         <div class="show-hide" (click)="toggleShowPasswords()"
                                              mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                                [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
-                                                aria-hidden="true"></i></div>
+                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                            aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
@@ -198,8 +198,8 @@
                                         <div class="show-hide"
                                              (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                                [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
-                                                aria-hidden="true"></i></div>
+                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                            aria-hidden="true"></i></div>
                                     </div>
                                 </div>
 
@@ -226,12 +226,12 @@
                                         <div class="show-hide"
                                              (click)="toggleShowPasswords()" mltag="txt_showhidepassword"
                                              title="Show/hide passwords"><i
-                                                [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
-                                                aria-hidden="true"></i></div>
+                                            [class]="(showPasswords === true) ? 'fa fa-eye-slash' : 'fa fa-eye'"
+                                            aria-hidden="true"></i></div>
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid"><i
-                                        class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
+                                    class="fa fa-save"></i> <span mltag="txt_update">Update</span></button>
                             </form>
                         </div>
                         <div class="form-group col-sm-6"></div>
@@ -260,23 +260,35 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col-xs-6">
                             <div class="form-group">
                                 <label>API Key</label>
-                                <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey"
-                                       readonly>
-                                <input *ngIf="!showApiKey" type="text" class="form-control mono"
-                                       [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
-                                       readonly>
-                                <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i
+                                <div class="alert alert-warning api-alert" *ngIf="!apiKey; else apiInput">
+                                    <div class="alert-items">
+                                        <div class="alert-item static">
+                                            <div class="alert-icon-wrapper">
+                                                <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                                            </div>
+                                            <span class="alert-text">There is no API key available for this user</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ng-template #apiInput>
+                                    <input *ngIf="showApiKey" type="text" class="form-control mono" [value]="apiKey"
+                                           readonly>
+                                    <input *ngIf="!showApiKey" type="text" class="form-control mono"
+                                           [value]="apiKey.substr(0, 4) + '•'.repeat(apiKey.length - 8) + apiKey.substr(apiKey.length - 4, 4)"
+                                           readonly>
+                                    <span *ngIf="!showApiKey" (click)="showApiKey = true" class="click"><i
                                         class="fa fa-eye"></i> show</span>
-                                <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i
+                                    <span *ngIf="showApiKey" (click)="showApiKey = false" class="click"><i
                                         class="fa fa-eye-slash"></i> hide</span>
-                                &nbsp;
-                                <span (click)="handleCopyApiKey($event)" class="click"><i
+                                    &nbsp;
+                                    <span (click)="handleCopyApiKey($event)" class="click"><i
                                         class="fa fa-files-o"></i> <span *ngIf="copied"
                                                                          class="text-success">copied!</span><span
                                         *ngIf="!copied">copy</span></span>
+                                </ng-template>
                             </div>
                         </div>
                     </div>
