@@ -168,21 +168,9 @@ export class OfiProfileMyInformationsComponent implements OnInit {
 
     saveUserInformations(userInformations) {
         const user = {
-            displayName: '',
             firstName: userInformations.firstName,
             lastName: userInformations.lastName,
             email: userInformations.email,
-            mobilePhone: '',
-            addressPrefix: '',
-            address1: '',
-            address2: '',
-            address3: '',
-            address4: '',
-            postalCode: '',
-            country: '',
-            memorableQuestion: '',
-            memorableAnswer: '',
-            profileText: '',
             phoneCode: userInformations.phoneCode,
             phoneNumber: userInformations.phoneNumber,
             companyName: userInformations.companyName,
