@@ -31,6 +31,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
 
     walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
+    deleteAsset = false;
 
     /* List of redux observables. */
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
@@ -77,6 +78,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.voidAssetForm.controls.deleteAsset.valueChanges.subscribe((value: boolean) => {
+            this.deleteAsset = value;
+        });
     }
 
     /**
@@ -87,6 +91,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     setForm() {
         this.voidAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
+            deleteAsset: new FormControl(''),
         });
     }
 
@@ -153,6 +158,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
             const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
             const namespace = fullAssetIdSplit.issuer;
             const instrument = fullAssetIdSplit.instrument;
+            const metaData = {};
 
             const requestData = {
                 walletId: this.connectedWalletId,
@@ -170,8 +176,6 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 (data) => {
                     const issuanceHolders = data[1].data.holders;
 
-                    console.log('+++ issuanceHolders: ', issuanceHolders);
-
                     if (Object.keys(issuanceHolders).length) {
                         let amount = 0;
                         const paymentlist = [];
@@ -183,7 +187,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             }
                         });
 
-                        const asyncTaskPipe = this.walletnodeTxService.voidAsset({
+                        const voidAssetAsyncTaskPipe = this.walletnodeTxService.voidAsset({
                             walletId,
                             address,
                             namespace,
@@ -195,12 +199,70 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                         this.ngRedux.dispatch(SagaHelper.runAsync(
                             [],
                             [],
-                            asyncTaskPipe,
+                            voidAssetAsyncTaskPipe,
                             {},
                             (data) => {
-                                console.log('success:', data);
-                                this.showSuccess('Issuance has been successfully voided');
-                                this.voidAssetForm.reset();
+                                console.log('void asset success:', data);
+
+                                setTimeout(
+                                    () => {
+                                        if (this.deleteAsset) {
+                                            const deleteAssetAsyncTaskPipe = this.walletnodeTxService.deleteAsset({
+                                                walletId,
+                                                address,
+                                                namespace,
+                                                instrument,
+                                                metaData,
+                                            });
+
+                                            this.ngRedux.dispatch(SagaHelper.runAsync(
+                                                [],
+                                                [],
+                                                deleteAssetAsyncTaskPipe,
+                                                {},
+                                                (data) => {
+                                                    console.log('+++ deleteAsset response: ', data);
+
+                                                    /* Check instruments. */
+                                                    // setTimeout(
+                                                    //     () => {
+                                                    //         const requestData = {
+                                                    //             walletId: this.connectedWalletId,
+                                                    //         };
+
+                                                    //         const instrumentsRequest = this.walletNodeRequestService.walletIssuerRequest(
+                                                    //             requestData);
+
+                                                    //         this.ngRedux.dispatch(SagaHelper.runAsync(
+                                                    //             [],
+                                                    //             [],
+                                                    //             instrumentsRequest,
+                                                    //             {},
+                                                    //             (data) => {
+                                                    //                 console.log('+++ instrumentsRequest data: ', data);
+                                                    //             },
+                                                    //             (data) => { },
+                                                    //         ));
+
+                                                    //         /* Show success modal. */
+                                                    //         this.showSuccess(
+                                                    //             'Asset issuance has been successfully voided and deleted.');
+                                                    //         this.voidAssetForm.reset();
+                                                    //     },
+                                                    //     5000);
+                                                },
+                                                (data) => {
+                                                    console.log('fail', data);
+                                                    this.showError(data[1].data.status);
+                                                },
+                                            ));
+                                        } else {
+                                            /* Show success modal. */
+                                            this.showSuccess('Asset issuance has been successfully voided.');
+                                            this.voidAssetForm.reset();
+                                        }
+                                    },
+                                    5000);
                             },
                             (data) => {
                                 console.log('fail', data);
@@ -208,7 +270,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             },
                         ));
                     } else {
-                        this.showError('There are no holders of this issuance.');
+                        this.showError('There are no holders of this asset.');
                     }
                 },
                 (data) => {

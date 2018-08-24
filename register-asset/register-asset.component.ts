@@ -10,7 +10,6 @@ import {
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-register-asset',
@@ -31,20 +30,17 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService,
-                private persistService: PersistService) {
+                private walletnodeTxService: WalletnodeTxService) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
          * Register Asset form
          */
-        const formGroup = new FormGroup({
+        this.registerAssetForm = new FormGroup({
             issuerIdentifier: new FormControl(this.walletIssuerDetail.walletIssuer, Validators.required),
             instrumentIdentifier: new FormControl('', Validators.required),
         });
-
-        this.registerAssetForm = this.persistService.watchForm('assetServicing/registerAsset', formGroup);
     }
 
     ngOnInit() {

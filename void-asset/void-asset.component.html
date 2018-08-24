@@ -21,6 +21,12 @@
 
                         <span *ngIf="voidAssetForm.controls['asset'].hasError('required') && voidAssetForm.controls['asset'].touched" class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                     </div> 
+              
+                    <div class="form-group col-sm-6">
+                        <label>
+                            <input id="deleteInstrumentAndAsset" type="checkbox" class="form-control" formControlName="deleteAsset"> Delete asset?
+                        </label>
+                    </div>                 
 
                     <button type="submit" class="btn btn-primary" mltag="txt_voidasset" [disabled]="voidAssetForm.invalid">Void Asset</button>                    
                 </section>

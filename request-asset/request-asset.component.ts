@@ -12,7 +12,6 @@ import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-request-asset',
@@ -45,16 +44,13 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private messagesService: MessagesService,
-                private persistService: PersistService) {
+                private messagesService: MessagesService) {
 
         /* send asset form */
-        const formGroup = new FormGroup({
+        this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required)
         });
-
-        this.requestAssetForm = this.persistService.watchForm('assetServicing/requestAsset', formGroup);
 
         /* data subscriptions */
         this.initAssetSubscriptions();

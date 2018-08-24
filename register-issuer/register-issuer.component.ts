@@ -14,7 +14,6 @@ import {
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-register-issuer',
@@ -41,8 +40,7 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private alertsService: AlertsService,
                 private changeDetectorRef: ChangeDetectorRef,
-                private myWalletService: MyWalletsService,
-                private persistService: PersistService) {
+                private myWalletService: MyWalletsService) {
 
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
@@ -50,12 +48,10 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
         /**
          * Register Issuer form
          */
-        const formGroup = new FormGroup({
+        this.registerIssuerForm = new FormGroup({
             issueIdentifier: new FormControl('', Validators.required),
-            issuerAddress: new FormControl('', Validators.required)
+            issuerAddress: new FormControl('', Validators.required),
         });
-
-        this.registerIssuerForm = this.persistService.watchForm('assetServicing/registerIssuer', formGroup);
 
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe(requested =>

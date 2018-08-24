@@ -13,7 +13,6 @@ import {
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-issue-asset',
@@ -54,19 +53,17 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsService: MyWalletsService,
-                private persistService: PersistService) {
+                private myWalletsService: MyWalletsService) {
 
         /**
          * Issuer Asset form
          */
-        const formGroup = new FormGroup({
+
+        this.issueAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             recipient: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
         });
-
-        this.issueAssetForm = this.persistService.watchForm('assetServicing/issueAsset', formGroup);
 
         // List of observable subscriptions.
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {

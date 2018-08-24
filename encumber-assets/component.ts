@@ -99,10 +99,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList);
         }));
         this.subscriptionsArray.push(this.requestedLabelListObs.subscribe((requested) => {
-            this.requestWalletLabel(requested)
+            this.requestWalletLabel(requested);
         }));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => {
-            this.getAddressList(addresses)
+            this.getAddressList(addresses);
         }));
     }
 
