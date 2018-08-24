@@ -128,7 +128,7 @@
                         2 - menu.
                     -->
 
-                    <div class="form-group" *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
                             *ngSwitchCase="'0'"
@@ -224,7 +224,7 @@
                         2 - menu
                     -->
 
-                    <div class="form-group" *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
+                    <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
                             *ngSwitchCase="'0'"
