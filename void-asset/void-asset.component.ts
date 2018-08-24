@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SagaHelper, walletHelper } from '@setl/utils';
+import { SagaHelper, walletHelper, LogService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import {
     InitialisationService, MyWalletsService, WalletNodeRequestService,
@@ -11,6 +11,7 @@ import {
 } from '@setl/core-store';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 @Component({
     selector: 'app-void-asset',
@@ -31,7 +32,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
 
-    // List of redux observable
+    /* List of redux observables. */
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -43,12 +44,14 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
-                private myWalletsService: MyWalletsService) {
+                private myWalletsService: MyWalletsService,
+                private logService: LogService,
+                private alertsService: AlertsService) {
 
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
 
-        // List of observable subscriptions.
+        /* List of observable subscriptions. */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
             /* Reset the voidAssetForm. */
@@ -79,20 +82,20 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     /**
      * Sets up the voidAssetForm.
      *
-     * @return void
+     * @returns void
      */
     setForm() {
         this.voidAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
-            fromAddress: new FormControl('', Validators.required),
-            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
         });
     }
 
     /**
-     * Request wallet address list.
+     * Requests wallet address list.
      *
      * @param requestedState
+     *
+     * @returns void
      */
     requestWalletAddressList(requestedState: boolean) {
         // If the state is false, that means we need to request the list.
@@ -105,6 +108,13 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Requests wallet labels.
+     *
+     * @param requestedState
+     *
+     * @returns void
+     */
     requestWalletLabel(requestedState: boolean) {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -112,6 +122,13 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Requests wallet instruments.
+     *
+     * @param requestedInstrumentState
+     *
+     * @returns void
+     */
     requestWalletInstruments(requestedInstrumentState) {
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
@@ -123,40 +140,108 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Sends voidAsset requests.
+     *
+     * @returns void
+     */
     voidAsset() {
         if (this.voidAssetForm.valid) {
             const walletId = this.connectedWalletId;
+            const address = this.walletIssuerDetail.walletIssuerAddress;
             const fullAssetId = _.get(this.voidAssetForm.value.asset, '[0].id', '');
             const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
             const namespace = fullAssetIdSplit.issuer;
             const instrument = fullAssetIdSplit.instrument;
-            const fromAddress = this.voidAssetForm.value.fromAddress;
-            const toAddress =  this.walletIssuerDetail.walletIssuerAddress;
-            const amount = this.voidAssetForm.value.amount;
 
-            // Create a saga pipe.
-            const asyncTaskPipe = this.walletnodeTxService.voidAsset({
-                walletId,
-                namespace,
+            const requestData = {
+                walletId: this.connectedWalletId,
+                issuer: namespace,
                 instrument,
-                fromAddress,
-                toAddress,
-                amount,
-            });
+            };
+
+            const request = this.walletNodeRequestService.requestWalletIssueHolding(requestData);
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
                 [],
                 [],
-                asyncTaskPipe,
+                request,
                 {},
                 (data) => {
-                    console.log('void asset:', data);
+                    const issuanceHolders = data[1].data.holders;
+
+                    console.log('+++ issuanceHolders: ', issuanceHolders);
+
+                    if (Object.keys(issuanceHolders).length) {
+                        let amount = 0;
+                        const paymentlist = [];
+
+                        Object.keys(issuanceHolders).forEach((key) => {
+                            if (key !== address) {
+                                paymentlist.push([key, String(issuanceHolders[key])]);
+                                amount += issuanceHolders[key];
+                            }
+                        });
+
+                        const asyncTaskPipe = this.walletnodeTxService.voidAsset({
+                            walletId,
+                            address,
+                            namespace,
+                            instrument,
+                            amount,
+                            paymentlist,
+                        });
+
+                        this.ngRedux.dispatch(SagaHelper.runAsync(
+                            [],
+                            [],
+                            asyncTaskPipe,
+                            {},
+                            (data) => {
+                                console.log('success:', data);
+                                this.showSuccess('Issuance has been successfully voided');
+                                this.voidAssetForm.reset();
+                            },
+                            (data) => {
+                                console.log('fail', data);
+                                this.showError(data[1].data.status);
+                            },
+                        ));
+                    } else {
+                        this.showError('There are no holders of this issuance.');
+                    }
                 },
                 (data) => {
-                    console.log('fail', data);
+                    this.logService.log('Get issue holders error:', data);
                 },
             ));
         }
+    }
+
+    showSuccess(message) {
+        /* Show the message. */
+        this.alertsService.create('success', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-success">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
+    }
+
+    showError(message) {
+        /* Show the error. */
+        this.alertsService.create('error', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-danger">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
     ngOnDestroy() {

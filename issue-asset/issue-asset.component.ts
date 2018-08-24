@@ -1,29 +1,28 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {SagaHelper, walletHelper} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SagaHelper, walletHelper } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import {
     InitialisationService, MyWalletsService, WalletNodeRequestService,
-    WalletnodeTxService
+    WalletnodeTxService,
 } from '@setl/core-req-services';
 import {
     finishIssueAssetNotification, ISSUE_ASSET_FAIL, ISSUE_ASSET_SUCCESS, setRequestedWalletAddresses,
-    setRequestedWalletInstrument, setRequestedWalletToRelationship
+    setRequestedWalletInstrument, setRequestedWalletToRelationship,
 } from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Unsubscribe} from 'redux';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
-import {Subscription} from 'rxjs';
-import {PersistService} from '@setl/core-persist';
+import { Subscription } from 'rxjs/Subscription';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-issue-asset',
     templateUrl: './issue-asset.component.html',
-    styleUrls: ['./issue-asset.component.css']
+    styleUrls: ['./issue-asset.component.css'],
 })
 export class IssueAssetComponent implements OnInit, OnDestroy {
     // Observable subscription array.
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     issueAssetForm: FormGroup;
     connectedWalletId: number;
@@ -32,9 +31,9 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         walletIssuerAddress: string;
     };
 
-    walletInstrumentsSelectItems: Array<any>;
+    walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
-    toRelationshipSelectItems: Array<any> = [];
+    toRelationshipSelectItems: any[] = [];
     toRelationshipList = {};
     walletDirectoryList = {};
 
@@ -56,7 +55,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletsService: MyWalletsService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
 
         /**
          * Issuer Asset form
@@ -67,12 +66,18 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             amount: new FormControl('', Validators.required),
         });
 
-        this.issueAssetForm = this._persistService.watchForm('assetServicing/issueAsset', formGroup);
+        this.issueAssetForm = this.persistService.watchForm('assetServicing/issueAsset', formGroup);
 
         // List of observable subscriptions.
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
-        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            this.connectedWalletId = connectedWalletId;
+        }));
+        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => {
+            this.requestWalletLabel(requested);
+        }));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => {
+            this.requestWalletAddressList(requested);
+        }));
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
@@ -107,7 +112,8 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     updateToRelationship() {
-        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(this.toRelationshipList, this.walletDirectoryList);
+        this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(
+            this.toRelationshipList, this.walletDirectoryList);
     }
 
     /**
@@ -121,7 +127,8 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(
+                this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -147,8 +154,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
 
-            // Set request wallet to-relationship flag to true, to indicate that we have already requested wallet to
-            // relationship.
+            // Set requestedWalletToRelationship to true, to indicate we've already requested wallet to relationship.
             this.ngRedux.dispatch(setRequestedWalletToRelationship());
 
             InitialisationService.requestToRelationship(this.ngRedux, this.myWalletsService, walletId);
@@ -171,7 +177,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 address,
                 namespace,
                 instrument,
-                amount
+                amount,
             });
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
@@ -179,12 +185,12 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                 [ISSUE_ASSET_FAIL],
                 asyncTaskPipe,
                 {},
-                function (data) {
+                (data) => {
                     console.log('issue asset:', data);
                 },
-                function (data) {
+                (data) => {
                     console.log('fail', data);
-                }
+                },
             ));
         }
     }

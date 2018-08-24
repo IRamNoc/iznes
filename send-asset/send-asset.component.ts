@@ -23,7 +23,7 @@ import { PersistService } from '@setl/core-persist';
 })
 export class SendAssetComponent implements OnInit, OnDestroy {
     sendAssetForm: FormGroup;
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
     connectedWalletId: number;
     allInstrumentList: any[];
     addressList: any;
@@ -63,11 +63,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
-
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
         }));
-
         this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
             this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
             this.changeDetectorRef.markForCheck();
@@ -79,7 +77,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.requestedLabelListOb.subscribe((requested) => {
             this.requestWalletLabel(requested);
         }));
-
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));

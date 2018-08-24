@@ -1,32 +1,32 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {walletHelper} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {MessageActionsConfig, MessagesService} from '@setl/core-messages';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { walletHelper } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
+import { MessageActionsConfig, MessagesService } from '@setl/core-messages';
 import {
-    InitialisationService, MyWalletsService, WalletNodeRequestService,
-    WalletnodeTxService
+    InitialisationService, WalletNodeRequestService,
 } from '@setl/core-req-services';
-import {TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS} from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Unsubscribe} from 'redux';
+import { TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS } from '@setl/core-store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
-import {Subscription, Observable} from 'rxjs';
-import {PersistService} from '@setl/core-persist';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import { PersistService } from '@setl/core-persist';
 
 @Component({
     selector: 'app-request-asset',
     templateUrl: './request-asset.component.html',
-    styleUrls: ['./request-asset.component.css']
+    styleUrls: ['./request-asset.component.css'],
 })
 export class RequestAssetComponent implements OnInit, OnDestroy {
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     connectedWalletId: number;
     requestAssetForm: FormGroup;
-    allInstrumentList: Array<any>;
-    walletAddressList: Array<any>;
-    walletRelationshipType: Array<any>;
+    allInstrumentList: any[];
+    walletAddressList: any[];
+    walletRelationshipType: any[];
     requestType: number;
     fromRelationship: number;
     walletFrom: number;
@@ -45,10 +45,8 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService,
-                private myWalletService: MyWalletsService,
                 private messagesService: MessagesService,
-                private _persistService: PersistService) {
+                private persistService: PersistService) {
 
         /* send asset form */
         const formGroup = new FormGroup({
@@ -56,7 +54,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             amount: new FormControl('', Validators.required)
         });
 
-        this.requestAssetForm = this._persistService.watchForm('assetServicing/requestAsset', formGroup);
+        this.requestAssetForm = this.persistService.watchForm('assetServicing/requestAsset', formGroup);
 
         /* data subscriptions */
         this.initAssetSubscriptions();
@@ -78,7 +76,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             }),
             this.connectedWalletOb.subscribe(connected => {
                 this.connectedWalletId = connected;
-            })
+            }),
         );
     }
 
@@ -118,34 +116,38 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 topic: 'astra',
                 walletid: this.connectedWalletId,
                 toaddress: this.addressTo,
-                namespace: namespace,
-                instrument: instrument,
-                amount: amount
+                namespace,
+                instrument,
+                amount,
             },
             successType: TRANSFER_ASSET_SUCCESS,
-            failureType: TRANSFER_ASSET_FAIL
+            failureType: TRANSFER_ASSET_FAIL,
         });
 
         // Add the data regarding the asset transfer to the email
-        actionConfig.content.push({
-            name: 'Asset',
-            name_mltag: 'txt_asset',
-            content: fullAssetId
-        }, {
-            name: 'Address To',
-            name_mltag: 'txt_addressto',
-            content: this.addressTo
-        }, {
-            name: 'Amount',
-            name_mltag: 'txt_amount',
-            content: amount
-        });
+        actionConfig.content.push(
+            {
+                name: 'Asset',
+                name_mltag: 'txt_asset',
+                content: fullAssetId,
+            },
+            {
+                name: 'Address To',
+                name_mltag: 'txt_addressto',
+                content: this.addressTo,
+            },
+            {
+                name: 'Amount',
+                name_mltag: 'txt_amount',
+                content: amount,
+            },
+        );
 
         this.messagesService.sendMessage(
             [this.walletFrom],
             'Transfer Asset Request',
             null,
-            actionConfig
+            actionConfig,
         ).then((data) => {
             this.alertsService.create('success', `<table class="table grid">
                 <tbody>
