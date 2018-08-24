@@ -11,7 +11,22 @@ export interface RegisterIssuerMessage extends WalletNodeRequest {
     MessageBody: RegisterIssuerMessageBody;
 }
 
+export interface DeleteIssuerMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    name: string;
+    address: string;
+    metadata: object;
+}
+
 export interface RegisterAssetMessageBody extends WalletNodeMessageBody {
+    walletid: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metadata: object;
+}
+
+export interface DeleteAssetMessageBody extends WalletNodeMessageBody {
     walletid: number;
     address: string;
     namespace: string;

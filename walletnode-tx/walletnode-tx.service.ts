@@ -3,7 +3,9 @@ import { WalletNodeSocketService } from '@setl/websocket-service';
 import { createWalletNodeSagaRequest } from '@setl/utils/common';
 import {
     RegisterIssuerMessageBody,
+    DeleteIssuerMessageBody,
     RegisterAssetMessageBody,
+    DeleteAssetMessageBody,
     IssueAssetMessageBody,
     VoidAssetMessageBody,
     SendAssetMessageBody,
@@ -21,7 +23,23 @@ interface RegisterIssuer {
     metaData: object;
 }
 
+interface DeleteIssuer {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metaData: object;
+}
+
 interface RegisterAsset {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metaData: object;
+}
+
+interface DeleteAsset {
     walletId: number;
     address: string;
     namespace: string;
@@ -153,9 +171,34 @@ export class WalletnodeTxService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
+    deleteIssuer(requestData: DeleteIssuer): any {
+        const messageBody: DeleteIssuerMessageBody = {
+            topic: 'nsdel',
+            walletid: _.get(requestData, 'walletId', 0),
+            name: _.get(requestData, 'issuerIdentifier', ''),
+            address: _.get(requestData, 'issuerAddress', ''),
+            metadata: _.get(requestData, 'metadata', {}),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
     registerAsset(requestData: RegisterAsset): any {
         const messageBody: RegisterAssetMessageBody = {
             topic: 'asreg',
+            walletid: _.get(requestData, 'walletId', 0),
+            address: _.get(requestData, 'address', ''),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            metadata: _.get(requestData, 'metadata', {}),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    deleteAsset(requestData: DeleteAsset): any {
+        const messageBody: DeleteAssetMessageBody = {
+            topic: 'asdel',
             walletid: _.get(requestData, 'walletId', 0),
             address: _.get(requestData, 'address', ''),
             namespace: _.get(requestData, 'namespace', ''),
