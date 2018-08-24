@@ -157,13 +157,12 @@ export class MyUserService implements OnDestroy {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveNewPassword(userData: NewPasswordData, silent = false): any {
+    saveNewPassword(userData: NewPasswordData): any {
         const messageBody: SaveNewPasswordRequestBody = {
             RequestName: 'setpassword',
             token: this.memberSocketService.token,
             oldPassword: userData.oldPassword,
-            newPassword: userData.newPassword,
-            silent
+            newPassword: userData.newPassword
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
