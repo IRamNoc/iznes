@@ -116,12 +116,12 @@ describe('OfiInviteInvestorsComponent', () => {
                 expect(subtitleEl[0].nativeNode.innerText).toEqual('Please find below invitations that have been sent to investors:');
             });
 
-            it('should have the columns: Date Sent, Account Status, Email Address, Company Name, Last Name, First Name, Invitation Sent By, Date KYC Started, Invitation Link, KYC Status', () => {
+            it('should have the columns: Date Sent, Invitation Status, Email Address, Company Name, Last Name, First Name, Invitation Sent By, Date KYC Started, Invitation Link, KYC Status', () => {
                 const datagridColumnEls = fixture.debugElement.queryAll(By.css('clr-dg-column'));
                 expect(datagridColumnEls.length).toBe(10);
 
                 expect(datagridColumnEls[0].nativeNode.innerText).toContain('Date Sent');
-                expect(datagridColumnEls[1].nativeNode.innerText).toContain('Account Status');
+                expect(datagridColumnEls[1].nativeNode.innerText).toContain('Invitation Status');
                 expect(datagridColumnEls[2].nativeNode.innerText).toContain('Email Address');
                 expect(datagridColumnEls[3].nativeNode.innerText).toContain('Company Name');
                 expect(datagridColumnEls[4].nativeNode.innerText).toContain('Last Name');
