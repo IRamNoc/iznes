@@ -1,6 +1,7 @@
 export interface ManagementCompanyInterface {
     companyID: any;
     mc_name: any;
+    mc_emailAddress: any;
     mc_country_select: any;
     mc_addressPrefix: any;
     mc_address1: any;

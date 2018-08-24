@@ -1,4 +1,4 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
 export interface ManagementCompanyRequestMessageBody extends MemberNodeMessageBody {
     token: any;
@@ -9,6 +9,7 @@ export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody 
     token: any;
     entityId: any;
     companyName: any;
+    emailAddress: any;
     country: any;
     addressPrefix: any;
     postalAddressLine1: any;
@@ -37,6 +38,7 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     entityId: any;
     companyID: any;
     companyName: any;
+    emailAddress: any;
     country: any;
     addressPrefix: any;
     postalAddressLine1: any;
