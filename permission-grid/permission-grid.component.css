@@ -3,6 +3,10 @@ setl-permission-grid {
     width: 100%;
 }
 
+.permission-grid {
+    margin-bottom: 15px;
+}
+
 .permission-grid .option-box .fa {
     margin: 0;
 }
@@ -30,6 +34,7 @@ div.option-box {
     height: 30px;
     width: 30px;
     line-height: 20px;
+    background: #ffffff;
 }
 
 ul.option-list {
