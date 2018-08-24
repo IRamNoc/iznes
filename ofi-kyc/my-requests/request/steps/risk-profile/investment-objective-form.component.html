@@ -77,7 +77,7 @@
             <div *ngIf="horizon.id === 'specific' && !isDisabled('investmentHorizonWantedSpecificPeriod')">
                 <div class="input-group date-pick-wrapper">
                     <span class="fa fa-calendar" aria-hidden="true"></span>
-                    <input [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                    <input autocomplete="off" [dpDayPicker]="configDate" id="investmentHorizonWantedSpecificPeriod-{{index}}" formControlName="investmentHorizonWantedSpecificPeriod" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
                 </div>
                 <span class="field-error" *ngIf="hasError('investmentHorizonWantedSpecificPeriod')">{{'Field is required' | translate}}</span>
             </div>
