@@ -1,8 +1,8 @@
-import {HttpClient, HttpHandler, HttpHeaders} from '@angular/common/http';
-import {Inject, Injectable} from '@angular/core';
-import {Subject} from 'rxjs';
-import {AppConfig} from '../../appConfig/appConfig.model';
-import {APP_CONFIG} from '../../appConfig/appConfig';
+import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { AppConfig } from '../../appConfig/appConfig.model';
+import { APP_CONFIG } from '../../appConfig/appConfig';
 
 @Injectable()
 export class FileDownloader {
@@ -13,41 +13,46 @@ export class FileDownloader {
         this.appConfig = appConfig;
     }
 
-    getFileDownloadBaseUrl(): string {
+    getFileDownloadBaseUrl(secure: boolean): string {
         const isProduction = this.appConfig.production;
+
+        if (secure) return `http://${window.location.hostname}:9788/aws`;
+
         return isProduction ? `https://${window.location.hostname}/mn/file` :
             `http://${window.location.hostname}:9788/file`;
     }
 
-    downLoaderFile(body: any) {
-        this.http.request('POST', this.getFileDownloadBaseUrl(), {
-            body: body,
+    downLoaderFile(body: any, secure = false) {
+        this.http.request('POST', this.getFileDownloadBaseUrl(secure), {
+            body,
             responseType: 'blob',
-            observe: 'response'
+            observe: 'response',
         }).subscribe((response) => {
             // generate temporary link to down file.
             const downloadUrl = window.URL.createObjectURL(response.body);
             const a = document.createElement('a');
             const fileName = response.headers.get('content-filename');
+
             document.body.appendChild(a);
             a.setAttribute('style', 'display: none');
             a.href = downloadUrl;
             a.download = fileName;
             a.click();
+
             window.URL.revokeObjectURL(downloadUrl);
             console.log(downloadUrl);
             a.remove(); // remove the element
-        }, (err) => {
+        },           (err) => {
         });
     }
 
-    getDownLoaderUrl(body: any) {
+    getDownLoaderUrl(body: any, secure = false) {
         const $downLoadUrl: Subject<{ filename: string, url: string }> = new Subject();
 
-        this.http.request('POST', this.getFileDownloadBaseUrl(), {
-            body: body,
+        this.http.request('POST', this.getFileDownloadBaseUrl(secure), {
+            body,
             responseType: 'blob',
-            observe: 'response'
+            observe: 'response',
         }).subscribe((response) => {
 
             // generate temporary link to down file.
@@ -56,14 +61,12 @@ export class FileDownloader {
 
             $downLoadUrl.next({
                 filename,
-                url: downloadUrl
+                url: downloadUrl,
             });
-        }, (err) => {
+        },           (err) => {
         });
 
         return $downLoadUrl;
     }
 
-
 }
-
