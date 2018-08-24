@@ -34,7 +34,7 @@
             </div>
 
             <div *ngIf="viewMode === 'UMBRELLA'" class="umbrellaForm">
-                <h3>{{'Please fill up the following information to create a new Fund:' | translate}}</h3>
+                <h3>{{'Please fill in the following information to create a new Fund:' | translate}}</h3>
 
                 <form [formGroup]="umbrellaForm" (ngSubmit)="submitUmbrellaForm()">
                     <section class="form-block">
@@ -617,7 +617,7 @@
                                             </div>
 
                                             <div class="form-group required-field col-sm-6">
-                                                <label class="control-label" for="fiscalYearEnd">{{'Next Fiscal Year End (MM-DD)' | translate}}</label>
+                                                <label class="control-label" for="fiscalYearEnd">{{'Next Fiscal Year End (YYYY-MM)' | translate}}</label>
                                                 <div class="input-group">
                                                     <span class="fa fa-calendar" aria-hidden="true"></span>
                                                     <input id="fiscalYearEnd" formControlName="fiscalYearEnd" [dpDayPicker]="configMonth" [required]="true" [placeholder]="_translate.translate('Choose a date')"

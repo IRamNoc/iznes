@@ -21,7 +21,7 @@
                 <p *ngIf="isEditMode" class="text-overflow">
                     {{'Please find below all the information for the umbrella fund @umbrellaFundForm.controls.umbrellaFundName.value@' | translate: {'umbrellaFundForm.controls.umbrellaFundName.value': umbrellaFundForm.controls.umbrellaFundName.value} }}
                 </p>
-                <p id="new-fund-text-span" *ngIf="!isEditMode">{{'Please fill up the following information to create a new Umbrella Fund' | translate}}
+                <p id="new-fund-text-span" *ngIf="!isEditMode">{{'Please fill in the following information to create a new Umbrella Fund' | translate}}
 
                 </p>
                 <div class="form-group">
@@ -260,7 +260,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_principalPromoter" class="control-label">{{'Principal Promoter' | translate}}</label>
-                                <ng-select id="uf_principalPromoter" [items]="principalPromoterOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
+                                <ng-select id="uf_principalPromoter" style="width: 95%" [items]="principalPromoterOptions" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')" formControlName="principlePromoterID">
 
 
                                 </ng-select>
@@ -268,7 +268,7 @@
 
                             <div class="form-group col-sm-6">
                                 <label for="uf_legalAdvisor" class="control-label">{{'Legal Advisor' | translate}}</label>
-                                <ng-select id="uf_legalAdvisor" [items]="legalAdvisorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="legalAdvisorID">
+                                <ng-select id="uf_legalAdvisor" style="margin-bottom: 8px;" [items]="legalAdvisorOptions" [allowClear]="true" [placeholder]="_translate.translate('Select')" formControlName="legalAdvisorID">
 
 
                                 </ng-select>

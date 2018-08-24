@@ -123,7 +123,7 @@ export class OfiInviteInvestorsComponent implements OnInit, OnDestroy {
             this.inviteItems = d;
             if (this.inviteItems.length) {
                 this.inviteItems = this.inviteItems.map((invite) => {
-                    const tokenUsedAt = invite.tokenUsedAt ? `Account created - ${moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss')}` : `Account not created`;
+                    const tokenUsedAt = invite.tokenUsedAt ? moment(invite.tokenUsedAt).local().format('YYYY-MM-DD HH:mm:ss') : null;
                     const kycStarted = invite.kycStarted ? moment(invite.kycStarted).local().format('YYYY-MM-DD HH:mm:ss') : '';
                     return {
                         ...invite,

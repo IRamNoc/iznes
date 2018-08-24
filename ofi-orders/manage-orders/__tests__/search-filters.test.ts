@@ -4,11 +4,12 @@ import { of, Observable, Subject } from 'rxjs';
 
 describe('SearchFilters:', () => {
     let fixture: SearchFilters;
-    const fixtureFactory = (filters = {}): SearchFilters => {
-        return new SearchFilters(new FormBuilder(), of(filters));
+    const filterStoreFactory = obs => ({ getFilters: _ => obs });
+    const obsFixtureFactory = (obs: Observable<any>): SearchFilters => {
+        return new SearchFilters(new FormBuilder(), filterStoreFactory(obs));
     };
-    const subjectFixtureFactory = (obs: Observable<any>): SearchFilters => {
-        return new SearchFilters(new FormBuilder(), obs);
+    const fixtureFactory = (filters = {}): SearchFilters => {
+        return obsFixtureFactory(of(filters));
     };
     beforeEach(() => {
         fixture = fixtureFactory();
@@ -77,7 +78,7 @@ describe('SearchFilters:', () => {
             subj = new Subject<any>();
         });
         it('orderID', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('orderID').value).not.toBe(99);
 
             subj.next({ orderID: 99 });
@@ -85,7 +86,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('orderID').value).toBe(99));
         });
         it('orderID as string', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('orderID').value).not.toBe('99');
 
             subj.next({ orderID: '99' });
@@ -93,7 +94,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('orderID').value).toBe('99'));
         });
         it('isin', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('isin').value).not.toBe('IS001');
 
             subj.next({ isin: 'IS001' });
@@ -101,7 +102,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('isin').value).toBe('IS001'));
         });
         it('sharename', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('sharename').value).not.toBe('share1');
 
             subj.next({ sharename: 'share1' });
@@ -109,7 +110,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('sharename').value).toBe('share1'));
         });
         it('fundname', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('fundname').value).not.toBe('fund1');
 
             subj.next({ fundname: 'fund1' });
@@ -117,7 +118,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('fundname').value).toBe('fund1'));
         });
         it('fromDate', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('fromDate').value).not.toBe('2018-01-01');
 
             subj.next({ fromDate: '2018-01-01' });
@@ -125,7 +126,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('fromDate').value).toBe('2018-01-01'));
         });
         it('toDate', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('toDate').value).not.toBe('2018-01-02');
 
             subj.next({ toDate: '2018-01-02' });
@@ -133,7 +134,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('toDate').value).toBe('2018-01-02'));
         });
         it('status', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('status').value).not.toBe([{ id: 4, text: 'Unpaid' }]);
 
             subj.next({ status: [{ id: 4 }] });
@@ -141,7 +142,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('status').value).toEqual([{ id: 4, text: 'Unpaid' }]));
         });
         it('type', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('type').value).not.toBe([{ id: 4, text: 'Redemption' }]);
 
             subj.next({ type: [{ id: 4 }] });
@@ -149,7 +150,7 @@ describe('SearchFilters:', () => {
             expect(expect(form.get('type').value).toEqual([{ id: 4, text: 'Redemption' }]));
         });
         it('dateType', () => {
-            const form = subjectFixtureFactory(subj.asObservable()).getForm();
+            const form = obsFixtureFactory(subj.asObservable()).getForm();
             expect(form.get('dateType').value).not.toBe([{ id: 'orderDate', text: 'Order Date' }]);
 
             subj.next({ dateType: [{ id: 'orderDate' }] });
