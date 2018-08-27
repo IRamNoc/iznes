@@ -85,9 +85,6 @@ export class OfiHomeComponent implements AfterViewInit, OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
-        console.log('defo home');
-
         const combined$ = observableCombineLatest(this.connectedWalletOb, this.myDetailOb);
 
         const combinedSubscription = combined$.subscribe(([connectedWalletId, details]) => {
