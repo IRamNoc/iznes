@@ -1,6 +1,5 @@
 import {Component, OnInit, Input, HostBinding} from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { positionToGridAreaNotation } from '../helpers';
 
 @Component({
     selector: 'app-counter-tile',
@@ -9,8 +8,7 @@ import { positionToGridAreaNotation } from '../helpers';
 })
 export class CounterTileComponent implements OnInit {
 
-    @HostBinding('style') style: any = '';
-    @HostBinding('class') class = '';
+    @HostBinding('style.backgroundColor') backgroundColor: any = '';
 
     @Input() public name: string;
     @Input() public icon: string;
@@ -25,7 +23,6 @@ export class CounterTileComponent implements OnInit {
         green: '#49A45F',
         orange: '#E8A02E',
     };
-    public backgroundColor: string;
 
     constructor(
         private sanitizer: DomSanitizer,
@@ -33,25 +30,6 @@ export class CounterTileComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.style = this.sanitizer.bypassSecurityTrustStyle(this.getStyle());
-        this.class = 'blocs';
         this.backgroundColor = this.colors[this.color];
     }
-
-    getStyle(): string {
-        const styles = {
-            'grid-area': this.name,
-            'background-color': this.colors[this.color],
-            'padding-top': '10px',
-        };
-
-        return Object.keys(styles).reduce(
-            (acc, key) => `${acc} ${key}: ${styles[key]};`,
-            '',
-        );
-    }
-
-    // public getColor() {
-    //     return this.sanitizer.bypassSecurityTrustStyle(this.colors[this.color]);
-    // }
 }

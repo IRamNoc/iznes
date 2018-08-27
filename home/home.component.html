@@ -12,7 +12,7 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <app-dashboard [rows]="2" [columns]="4">
+            <app-dashboard>
                 <app-counter-tile name="actions" icon="rocket" [count]="actionCount" color="red" route="messages/action">{{'Actions' | translate}}
                 </app-counter-tile>
 
@@ -32,7 +32,7 @@
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]}"></ng-container>
                 </app-basic-tile>
                 
-                <app-basic-tile name="search" color="blue">
+                <app-basic-tile name="search" color="blue" data-span="2">
                     <h1 class="tile-heading">{{'Search' | translate}}</h1>
                     <div class="input-group">
                         <input type="text" style="background: white!important; width: calc(100% - 60px)!important;" class="form-control" [placeholder]="translate.translate('Search by Tx ID, Contract Address, Instruments or Address')">

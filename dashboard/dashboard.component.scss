@@ -1,76 +1,33 @@
-h1 {
-    color: #383d48;
-    font-weight: bold;
-    margin-top: 0;
-    font-size: 22px;
-    padding-left: 5px;
-    color: red;
-}
-.grid {
-    display: grid;
-    grid-gap: 12px;
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-        "actions connections"
-        "messages contracts"
-        "asset1 asset2"
-        "search search"
-        "balances balances"
-        "transactions transactions"
+.dash-grid{
+    display : flex;
+    margin: 0 -12px;
+    flex-wrap: wrap;
 
-}
-.x-actions {
-    grid-area: actions;
-}
-.x-connections {
-    grid-area: connections;
-}
-.x-messages {
-    grid-area: messages;
-}
-.x-asset1 {
-    grid-area: asset1;
-}
-.x-asset2 {
-    grid-area: asset2;
-}
-.x-search {
-    grid-area: search;
-}
-.x-contracts {
-    grid-area: contracts;
-}
-.x-balances {
-    grid-area: balances;
-}
-.x-transactions {
-    grid-area: transactions;
-}
-@media(min-width: 941px) {
-    .grid {
-        display: grid;
-        grid-gap: 12px;
-        grid-template-columns: 1fr 1fr 1fr;
-        grid-template-areas:
-                "actions connections messages"
-                "contracts asset1 asset2"
-                "search search search"
-                "balances balances balances"
-                "transactions transactions transactions";
+    h1 {
+        color: #383d48;
+        font-weight: bold;
+        margin-top: 0;
+        font-size: 22px;
+        padding-left: 5px;
     }
-}
-@media(min-width: 1100px) {
-    .grid {
-        display: grid;
-        grid-gap: 12px;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-areas:
-                "actions connections messages contracts"
-                "asset1 asset2 search search"
-                "balances balances balances balances"
-                "transactions transactions transactions transactions";
+
+    app-counter-tile,
+    app-basic-tile
+    {
+        width: calc(50% - 24px);
+        margin: 0 12px 12px;
+        padding-top: 10px;
+
+        &[data-span="2"]{
+            width: calc(100% - 24px);
+        }
+
+        @media screen and (min-width: 1441px) {
+            width: calc(25% - 24px);
+
+            &[data-span="2"]{
+                width: calc(50% - 24px);
+            }
+        }
     }
-}
-.balances-grid, .transactions-grid {
-    grid-column: span 4;
 }
