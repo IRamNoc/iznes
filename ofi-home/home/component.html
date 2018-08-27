@@ -4,7 +4,7 @@
     </h1>
 
     <!--AM-->
-    <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 36">
+    <app-dashboard *ngIf="userType == 36">
         <app-counter-tile name="actions" icon="sitemap" [count]="" color="red" route="product-module/product">{{'My Products' | translate}}</app-counter-tile>
         <app-counter-tile name="connections" icon="line-chart" [count]="" color="green" route="product-module/net-asset-value">{{'Net Asset Value' | translate}}</app-counter-tile>
 
@@ -13,7 +13,7 @@
     </app-dashboard>
 
     <!--INV-->
-    <app-dashboard [rows]="2" [columns]="4" *ngIf="userType == 46">
+    <app-dashboard *ngIf="userType == 46">
         <app-counter-tile name="actions" icon="list-ul" [count]="" color="red" route="my-holdings">{{'My Holdings' | translate}}</app-counter-tile>
         <app-counter-tile name="connections" icon="id-badge" [count]="" color="green" route="user-administration/subportfolio">{{'Sub-portfolio' | translate}}</app-counter-tile>
 
