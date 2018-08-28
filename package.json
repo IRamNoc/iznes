@@ -59,6 +59,7 @@
     "@swimlane/ngx-graph": "^5.1.0",
     "@webcomponents/custom-elements": "^1.0.8",
     "angular2-toaster": "6.1.0",
+    "classlist.js": "^1.1.20150312",
     "core-js": "^2.5.3",
     "immutable": "^3.8.1",
     "karma-headless-chrome-launcher": "0.0.6",
