@@ -1,10 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl, SafeUrl } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: 'dashboard.component.html',
-    styleUrls: ['dashboard.component.scss']
+    styleUrls: ['dashboard.component.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DashboardComponent implements OnInit {
 
