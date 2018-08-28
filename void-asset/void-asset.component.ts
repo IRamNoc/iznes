@@ -250,6 +250,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                     //         this.voidAssetForm.reset();
                                                     //     },
                                                     //     5000);
+
+                                                    this.showSuccess('Asset issuance has been successfully voided and deleted.');
+                                                    this.voidAssetForm.reset();
                                                 },
                                                 (data) => {
                                                     console.log('fail', data);
@@ -262,7 +265,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                             this.voidAssetForm.reset();
                                         }
                                     },
-                                    5000);
+                                    10000);
                             },
                             (data) => {
                                 console.log('fail', data);
