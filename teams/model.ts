@@ -71,7 +71,7 @@ export interface UpdateUserTeamRequest extends MemberNodeMessageBody {
 export interface UpdateUserTeamStatusRequest extends MemberNodeMessageBody {
     token: string;
     userTeamID: number;
-    status: boolean;
+    status: number;
 }
 
 export interface DeleteUserTeamRequest extends MemberNodeMessageBody {

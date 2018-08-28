@@ -54,7 +54,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     }
 
     protected onStatusUpdateError(): void {
-        this.status = !this.status; // reset the status to it's previous
+        this.status = this.status === 1 ? 0 : 1; // reset the status to it's previous
 
         this.toaster.pop('error', this.translate.translate(
             `${this.noun} could not be ${this.status ? 'enabled' : 'disabled'}`,
