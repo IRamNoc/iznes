@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { AlertsService } from './alerts.service';
 import { AlertSettings } from './interfaces/alert-settings';
 import { AlertComponent } from './alert.component';
-import { Observable ,  Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'jaspero-alerts',
@@ -22,9 +22,9 @@ import { Observable ,  Subscription } from 'rxjs';
         <div #comp></div>`,
 })
 export class AlertsComponent implements OnInit, OnDestroy {
-    constructor(private _service: AlertsService,
-                private _resolver: ComponentFactoryResolver,
-                private _router: Router) {
+    constructor(private service: AlertsService,
+                private resolver: ComponentFactoryResolver,
+                private router: Router) {
     }
 
     @ViewChild('comp', { read: ViewContainerRef }) compViewContainerRef: ViewContainerRef;
@@ -41,18 +41,21 @@ export class AlertsComponent implements OnInit, OnDestroy {
         buttonMessage: 'Close',
     };
 
-    private _current: ComponentRef<AlertComponent>;
-    private _latestSub: any;
-    private _listener: any;
-    private _updateViewListener: any;
-    private _routerOb: Subscription;
+    private current: ComponentRef<AlertComponent>;
+    private latestSub: any;
+    private listener: any;
+    private updateViewListener: any;
+    private routerOb: Subscription;
 
     ngOnInit() {
 
-        this._listener = this._service.alert$.subscribe(alert => {
-            if (this._current) {
-                if (alert.close) setTimeout(() => this._destroy(), 450);
-                else this._destroy();
+        this.listener = this.service.alert$.subscribe((alert) => {
+            let prevType = null;
+
+            if (this.current) {
+                prevType = this.current.instance.type;
+                if (alert.close) setTimeout(() => this.destroy(), 450);
+                else this.destroy();
             }
 
             if (alert.close) return;
@@ -65,57 +68,61 @@ export class AlertsComponent implements OnInit, OnDestroy {
             }
 
             const inputProviders = [
-                    { key: 'titleMessage', value: alert.titleMessage },
-                    { key: 'message', value: alert.message },
-                    { key: 'type', value: alert.type },
-                    ...settingsFinalAsArray,
-                ].map((input) => {
-                    return { provide: input.key, useValue: input.value };
-                }),
-                resolvedInputs = ReflectiveInjector.resolve(inputProviders),
-                injector = ReflectiveInjector.fromResolvedProviders(resolvedInputs, this.compViewContainerRef.parentInjector),
-                factory = this._resolver.resolveComponentFactory(AlertComponent),
-                component = factory.create(injector);
+                { key: 'titleMessage', value: alert.titleMessage },
+                { key: 'message', value: alert.message },
+                { key: 'type', value: alert.type },
+                { key: 'prevType', value: prevType },
+                ...settingsFinalAsArray,
+            ].map((input) => {
+                return { provide: input.key, useValue: input.value };
+            });
+            const resolvedInputs = ReflectiveInjector.resolve(inputProviders);
+            const injector = ReflectiveInjector.fromResolvedProviders(
+                resolvedInputs,
+                this.compViewContainerRef.parentInjector,
+            );
+            const factory = this.resolver.resolveComponentFactory(AlertComponent);
+            const component = factory.create(injector);
 
             this.compViewContainerRef.insert(component.hostView);
 
-            this._current = component;
+            this.current = component;
 
-            this._latestSub = component.instance.close.subscribe((res: any) => {
-                this._service.alert$.next(res);
+            this.latestSub = component.instance.close.subscribe((res: any) => {
+                this.service.alert$.next(res);
 
-                this._routerOb.unsubscribe();
+                this.routerOb.unsubscribe();
             });
 
-            this._routerOb = this._router.events.subscribe((event) => {
-                if (this._current) this._current.instance.closeSelf();
+            this.routerOb = this.router.events.subscribe((event) => {
+                if (this.current) this.current.instance.closeSelf();
             });
         });
 
-        this._updateViewListener = this._service.update$.subscribe((updateView) => {
-            if (this._current) {
-                this._current.instance.updateAlertType(updateView.type);
-                this._current.instance.updateMessage(updateView.message);
+        this.updateViewListener = this.service.update$.subscribe((updateView) => {
+            if (this.current) {
+                this.current.instance.updateAlertType(updateView.type);
+                this.current.instance.updateMessage(updateView.message);
             }
         });
     }
 
-    private _destroy() {
+    private destroy() {
         /*
          We run the check twice in case the component timed out
          This can happen on short durations
          */
 
-        if (this._current) {
-            this._current.destroy();
-            this._current = null;
+        if (this.current) {
+            this.current.destroy();
+            this.current = null;
         }
-        this._latestSub.unsubscribe();
-        // this._listener.unsubscribe();
+        this.latestSub.unsubscribe();
+        // this.listener.unsubscribe();
     }
 
     ngOnDestroy() {
-        this._listener.unsubscribe();
-        this._updateViewListener.unsubscribe();
+        this.listener.unsubscribe();
+        this.updateViewListener.unsubscribe();
     }
 }

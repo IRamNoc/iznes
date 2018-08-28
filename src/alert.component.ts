@@ -1,78 +1,97 @@
-import {Component, Injector, HostBinding, Output, EventEmitter, OnInit, NgZone} from '@angular/core';
-import {AlertType} from './interfaces/alert-type';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { Component, Injector, HostBinding, Output, EventEmitter, OnInit, NgZone } from '@angular/core';
+import { AlertType } from './interfaces/alert-type';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
     selector: 'jaspero-alert',
     template: `
-        <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState" (click)="overlayClick()"
-             (window:keydown)="keyDownFunction($event)"></div>
-        <div class="jaspero__dialog" [@wrapperAn]="animationState">
-
-            <div *ngIf="incomingData.titleMessage" class="jaspero__dialog-title">
-                {{incomingData.titleMessage}}
+        <div *ngIf="type === 'loading'; else showAlerts">
+            <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAnEnter]="animationState"
+                 (window:keydown)="$event.preventDefault()"></div>
+            <div class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
+        </div>
 
-            <div *ngIf="!incomingData.titleMessage" class="jaspero__dialog-title">
-                {{type}}!
+        <ng-template #showAlerts>
+            <div *ngIf="prevType === 'loading'; else overlay">
+                <div *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAnLeave]="animationState"
+                     (click)="overlayClick()"
+                     (window:keydown)="keyDownFunction($event)"></div>
             </div>
+            <div #overlay *ngIf="incomingData.overlay" class="jaspero__overlay" [@overlayAn]="animationState"
+                 (click)="overlayClick()"
+                 (window:keydown)="keyDownFunction($event)"></div>
 
-            <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
-                <ng-template ngSwitchCase="success">
-                    <div class="f-modal-alert">
-                        <div class="f-modal-icon f-modal-success animate">
-                            <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
-                            <span class="f-modal-line f-modal-long animateSuccessLong"></span>
-                            <div class="f-modal-placeholder"></div>
-                            <div class="f-modal-fix"></div>
+            <div class="jaspero__dialog" [@wrapperAn]="animationState">
+
+                <div *ngIf="incomingData.titleMessage" class="jaspero__dialog-title">
+                    {{incomingData.titleMessage}}
+                </div>
+
+                <div *ngIf="!incomingData.titleMessage" class="jaspero__dialog-title">
+                    {{type}}!
+                </div>
+
+                <div class="jaspero__dialog-icon" [class.fixedHeight]="type==='waiting'" [ngSwitch]="type">
+                    <ng-template ngSwitchCase="success">
+                        <div class="f-modal-alert">
+                            <div class="f-modal-icon f-modal-success animate">
+                                <span class="f-modal-line f-modal-tip animateSuccessTip"></span>
+                                <span class="f-modal-line f-modal-long animateSuccessLong"></span>
+                                <div class="f-modal-placeholder"></div>
+                                <div class="f-modal-fix"></div>
+                            </div>
                         </div>
-                    </div>
-                </ng-template>
+                    </ng-template>
 
-                <ng-template ngSwitchCase="error">
-                    <div class="f-modal-alert">
-                        <div class="f-modal-icon f-modal-error animate">
+                    <ng-template ngSwitchCase="error">
+                        <div class="f-modal-alert">
+                            <div class="f-modal-icon f-modal-error animate">
                             <span class="f-modal-x-mark">
                                 <span class="f-modal-line f-modal-left animateXLeft"></span>
                                 <span class="f-modal-line f-modal-right animateXRight"></span>
                             </span>
-                            <div class="f-modal-placeholder"></div>
-                            <div class="f-modal-fix"></div>
+                                <div class="f-modal-placeholder"></div>
+                                <div class="f-modal-fix"></div>
+                            </div>
                         </div>
-                    </div>
-                </ng-template>
+                    </ng-template>
 
-                <ng-template ngSwitchCase="warning">
-                    <div class="f-modal-alert">
-                        <div class="f-modal-icon f-modal-warning scaleWarning">
-                            <span class="f-modal-body pulseWarningIns"></span>
-                            <span class="f-modal-dot pulseWarningIns"></span>
+                    <ng-template ngSwitchCase="warning">
+                        <div class="f-modal-alert">
+                            <div class="f-modal-icon f-modal-warning scaleWarning">
+                                <span class="f-modal-body pulseWarningIns"></span>
+                                <span class="f-modal-dot pulseWarningIns"></span>
+                            </div>
                         </div>
-                    </div>
-                </ng-template>
+                    </ng-template>
 
-                <ng-template ngSwitchCase="info">
-                    <div class="f-modal-alert">
-                        <div class="f-modal-icon f-modal-info scaleWarning">
-                            <span class="f-modal-body pulseWarningInsBlue"></span>
-                            <span class="f-modal-dot pulseWarningInsBlue"></span>
+                    <ng-template ngSwitchCase="info">
+                        <div class="f-modal-alert">
+                            <div class="f-modal-icon f-modal-info scaleWarning">
+                                <span class="f-modal-body pulseWarningInsBlue"></span>
+                                <span class="f-modal-dot pulseWarningInsBlue"></span>
+                            </div>
                         </div>
-                    </div>
-                </ng-template>
+                    </ng-template>
 
-                <ng-template ngSwitchCase="waiting">
-                    <div class="loader"></div>
-                </ng-template>
-            </div>
+                    <ng-template ngSwitchCase="waiting">
+                        <div class="loader"></div>
+                    </ng-template>
+                </div>
 
-            <div class="jaspero__dialog-content" [innerHTML]="incomingData.message">
+                <div class="jaspero__dialog-content" [innerHTML]="incomingData.message">
+                </div>
+                <div class="jaspero__dialog-actions">
+                    <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">
+                        {{incomingData.buttonMessage}}
+                    </button>
+                </div>
             </div>
-            <div class="jaspero__dialog-actions">
-                <button type="button" class="default" *ngIf="incomingData.showCloseButton" (click)="closeSelf()">
-                    {{incomingData.buttonMessage}}
-                </button>
-            </div>
-        </div>
+        </ng-template>
     `,
     styles: [`
         :host {
@@ -121,7 +140,6 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
             outline: none;
             border-radius: 4px;
             opacity: 0;
-            /*box-shadow: 0 7px 9px -4px rgba(0, 0, 0, .2), 0 14px 21px 2px rgba(0, 0, 0, .14), 0 5px 26px 4px rgba(0, 0, 0, .12);*/
             -ms-transform: scale(.9, .85);
             transform: scale(.9, .85);
             -ms-transform-origin: center center;
@@ -240,33 +258,86 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
         :host(.info) .jaspero__dialog-icon svg path, :host(.info) .jaspero__dialog-icon svg circle {
             fill: #8FBFE0
         }
+
+        .loading-dots span {
+            border-radius: 100%;
+            background: #ffffff;
+            width: 25px;
+            height: 25px;
+            content: '';
+            animation-name: blink;
+            animation-duration: 1.4s;
+            animation-iteration-count: infinite;
+            animation-fill-mode: both;
+            z-index: 2110;
+            position: fixed;
+            top: 50%;
+            margin-top: -12.5px;
+            margin-left: -35px;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: .2s;
+            margin-left: 0;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: .4s;
+            margin-left: 35px;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: .2;
+            }
+            20% {
+                opacity: 1;
+            }
+            100% {
+                opacity: .2;
+            }
+        }
     `],
     animations: [
         trigger('overlayAn', [
-            state('void', style({opacity: 0})),
-            state('leave', style({opacity: 0})),
-            state('enter', style({opacity: 1})),
+            state('void', style({ opacity: 0 })),
+            state('leave', style({ opacity: 0 })),
+            state('enter', style({ opacity: 1 })),
             transition('void => enter', animate('400ms cubic-bezier(.25,.8,.25,1)')),
-            transition('enter => leave', animate('400ms cubic-bezier(.25,.8,.25,1)'))
+            transition('enter => leave', animate('400ms cubic-bezier(.25,.8,.25,1)')),
+        ]),
+        trigger('overlayAnEnter', [
+            state('void', style({ opacity: 0 })),
+            state('leave', style({ opacity: 0 })),
+            state('enter', style({ opacity: 1 })),
+            transition('void => enter', animate('400ms cubic-bezier(.25,.8,.25,1)')),
+        ]),
+        trigger('overlayAnLeave', [
+            state('void', style({ opacity: 0 })),
+            state('leave', style({ opacity: 0 })),
+            state('enter', style({ opacity: 1 })),
+            transition('enter => leave', animate('400ms cubic-bezier(.25,.8,.25,1)')),
         ]),
         trigger('wrapperAn', [
-            state('void', style({opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)'})),
-            state('leave', style({opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)'})),
-            state('enter', style({opacity: 1, transform: 'scale(1, 1) translate(0, 0)'})),
+            state('void', style({ opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)' })),
+            state('leave', style({ opacity: 0, transform: 'scale(0.75, 0.75) translate(0, 0)' })),
+            state('enter', style({ opacity: 1, transform: 'scale(1, 1) translate(0, 0)' })),
             transition('void => enter', animate('450ms cubic-bezier(.5, 1.4, .5, 1)')),
-            transition('enter => leave', animate('450ms cubic-bezier(.5, 1.4, .5, 1)'))
-        ])
-    ]
+            transition('enter => leave', animate('450ms cubic-bezier(.5, 1.4, .5, 1)')),
+        ]),
+    ],
 })
 export class AlertComponent implements OnInit {
-    constructor(private _injector: Injector,
-                private _ngZone: NgZone) {
+
+    constructor(private injector: Injector,
+                private ngZone: NgZone) {
     }
 
     animationState = 'enter';
 
     @Output() close: EventEmitter<any> = new EventEmitter();
     @HostBinding('class') type: AlertType;
+    @HostBinding('class') prevType: string;
 
     incomingData: any = {
         titleMessage: false,
@@ -275,28 +346,30 @@ export class AlertComponent implements OnInit {
         overlayClickToClose: true,
         showCloseButton: true,
         duration: 0,
-        buttonMessage: 'Close'
+        buttonMessage: 'Close',
     };
 
     ngOnInit() {
-        this.type = this._injector.get('type');
-        for (let key in this.incomingData) this.incomingData[key] = this._injector.get(key);
+        this.type = this.injector.get('type');
+        this.prevType = this.injector.get('prevType');
+        for (const key in this.incomingData) this.incomingData[key] = this.injector.get(key);
 
         if (this.incomingData.duration) {
-            this._ngZone.runOutsideAngular(() =>
-                setTimeout(() =>
-                        this._ngZone.run(() =>
-                            this.closeSelf()
+            this.ngZone.runOutsideAngular(() =>
+                setTimeout(
+                    () =>
+                        this.ngZone.run(() =>
+                            this.closeSelf(),
                         ),
-                    this.incomingData.duration
-                )
+                    this.incomingData.duration,
+                ),
             );
         }
     }
 
     closeSelf() {
         this.animationState = 'leave';
-        this.close.emit(Object.assign({close: true}, this.incomingData));
+        this.close.emit(Object.assign({ close: true }, this.incomingData));
     }
 
     overlayClick() {
@@ -307,7 +380,6 @@ export class AlertComponent implements OnInit {
     keyDownFunction(event) {
         if (!this.incomingData.overlayClickToClose) return;
         if (event.keyCode === 13 || event.keyCode === 27) {
-            console.log('Enter or Esc pressed - close alert');
             event.preventDefault();
             this.closeSelf();
         }
