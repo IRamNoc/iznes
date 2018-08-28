@@ -24,14 +24,14 @@
                 <!-- User add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                            *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
+                        *ngTemplateOutlet="staticGroupAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}">
                     </ng-container>
                 </ng-container>
 
                 <!-- User edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                            *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
+                        *ngTemplateOutlet="dynamicGroupEditTab; context: {'formControl': tabdata.formControl, 'tabid': id, 'permissionsEmitter': tabdata.permissionsEmitter}">
                     </ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -131,40 +131,38 @@
                     <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
-                                *ngSwitchCase="'0'"
-                                [permissionAreas]="filteredAdminAreaList"
-                                [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'0'"
+                            [permissionAreas]="filteredAdminAreaList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-permission-grid>
 
                         <setl-permission-grid
-                                *ngSwitchCase="'1'"
-                                [permissionAreas]="filteredTxAreaList"
-                                [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'1'"
+                            [permissionAreas]="filteredTxAreaList"
+                            [permissionLevels]="permissionTxLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-permission-grid>
 
                         <setl-menu-permission-grid
-                                *ngSwitchCase="'2'"
-                                [permissionAreas]="filteredMenuAreaList"
-                                [permissionLevels]="menuPermissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'2'"
+                            [permissionAreas]="filteredMenuAreaList"
+                            [permissionLevels]="menuPermissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-menu-permission-grid>
 
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button id="group-clear-btn"
-                                    (click)="clearNewGroup(tabid, $event)"
-                                    class="btn btn-secondary"
-                                    mltag="txt_clear">Clear
-                            </button>
-                        </div>
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
+                        <button id="group-clear-btn"
+                                (click)="clearNewGroup(tabid, $event)"
+                                class="btn btn-secondary"
+                                mltag="txt_clear">Clear
+                        </button>
                     </div>
                 </div>
             </form>
@@ -229,42 +227,40 @@
                     <div *ngIf="formControl.value.type[0]" [ngSwitch]="formControl.value.type[0].id">
 
                         <setl-permission-grid
-                                *ngSwitchCase="'0'"
-                                [initData]="permissionsEmitter"
-                                [permissionAreas]="filteredAdminAreaList"
-                                [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'0'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredAdminAreaList"
+                            [permissionLevels]="permissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-permission-grid>
 
                         <setl-permission-grid
-                                *ngSwitchCase="'1'"
-                                [initData]="permissionsEmitter"
-                                [permissionAreas]="filteredTxAreaList"
-                                [permissionLevels]="permissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'1'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredTxAreaList"
+                            [permissionLevels]="permissionTxLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-permission-grid>
 
                         <setl-menu-permission-grid
-                                *ngSwitchCase="'2'"
-                                [initData]="permissionsEmitter"
-                                [permissionAreas]="filteredMenuAreaList"
-                                [permissionLevels]="menuPermissionLevelsList"
-                                (updateEvent)="formControl.controls['permissions'].patchValue($event)">
+                            *ngSwitchCase="'2'"
+                            [initData]="permissionsEmitter"
+                            [permissionAreas]="filteredMenuAreaList"
+                            [permissionLevels]="menuPermissionLevelsList"
+                            (updateEvent)="formControl.controls['permissions'].patchValue($event)">
                         </setl-menu-permission-grid>
 
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button id="group-submit-btn" type="submit" class="btn btn-primary"
-                                    [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                            <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
-                                <i class="fa fa-cancel"></i> <span class="ml_translated"
-                                                                   mltag="txt_cancel">Cancel</span>
-                            </button>
-                        </div>
+                        <button id="group-submit-btn" type="submit" class="btn btn-primary"
+                                [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
+                        <button id="group-cancel-btn" (click)="closeTab(tabid)" class="btn btn-secondary">
+                            <i class="fa fa-cancel"></i> <span class="ml_translated"
+                                                               mltag="txt_cancel">Cancel</span>
+                        </button>
                     </div>
                 </div>
             </form>
