@@ -1,18 +1,18 @@
 /* Name. */
-export {name} from './__init__';
+export { name } from './__init__';
 
 /* Reducer. */
-export {PermissionsReducer} from './reducer';
+export { permissionsReducer } from './reducer';
 
 /* State. */
-export {PermissionsState} from './model';
+export { PermissionsState } from './model';
 
 /* Actions. */
 export {
     SET_ADMIN_PERMISSIONS,
     SET_TX_PERMISSIONS,
-    SET_MENU_PERMISSIONS
+    SET_MENU_PERMISSIONS,
 } from './actions';
 
 /* Selectors. */
-export {getPermissions, getAdminPermissions, getTranPermissions, getMenuPermissions} from './selectors';
+export { getPermissions, getAdminPermissions, getTranPermissions, getMenuPermissions } from './selectors';

@@ -8,7 +8,7 @@ export interface AdminPermissonDetail {
         entityId: string;
         isGroup: string;
         permissionId: string;
-    }
+    };
 }
 
 export interface TransPermissonDetail {
@@ -21,7 +21,7 @@ export interface TransPermissonDetail {
         entityId: string;
         isGroup: string;
         permissionId: string;
-    }
+    };
 }
 
 export interface MenuPermissonDetail {
@@ -35,17 +35,17 @@ export interface MenuPermissonDetail {
         isGroup: string;
         permissionId: string;
         menuOrder: string;
-    }
+    };
 }
 
 export interface PermissionsState {
     adminPermissions: {
-        [entityId: number]: AdminPermissonDetail
+        [entityId: number]: AdminPermissonDetail,
     };
     transPermissions: {
-        [entityId: number]: TransPermissonDetail
+        [entityId: number]: TransPermissonDetail,
     };
     menuPermissions: {
-        [entityId: number]: MenuPermissonDetail
+        [entityId: number]: MenuPermissonDetail,
     };
 }

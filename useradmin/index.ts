@@ -58,7 +58,7 @@ export {
 /* Group permissions. */
 import {
     PermissionsState,
-    PermissionsReducer,
+    permissionsReducer,
 } from './permissions';
 
 export {
@@ -174,7 +174,7 @@ export const adminUserReducer: Reducer<AdminUsersState> = combineReducers<AdminU
     users: UsersReducer,
     permissionGroup: PermissionGroupReducer,
     permAreaList: PermAreasReducer,
-    permissions: PermissionsReducer,
+    permissions: permissionsReducer,
     walletNode: WalletNodeReducer,
     chains: ChainReducer,
     chainMembership: ChainMembershipReducer,
