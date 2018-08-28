@@ -24,7 +24,7 @@
 
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="legalForm">{{'Legal form' | translate}}</label>
-                    <ng-select id="legalForm" [items]="legalFormList" [formControl]="form.get('legalForm')" placeholder="{{'Please select a legal form for your country' | translate}}"></ng-select>
+                    <ng-select id="legalForm" [items]="legalFormList" [formControl]="form.get('legalForm')" placeholder="{{'Please select a legal form for your company' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('legalForm')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
