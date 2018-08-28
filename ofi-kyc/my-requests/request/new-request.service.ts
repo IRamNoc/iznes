@@ -561,7 +561,7 @@ export class NewRequestService {
             custodianID: '',
             custodianHolderAccount: '',
             custodianName: ['', this.getLengthValidator()],
-            custodianIban: ['', this.getLengthValidator()],
+            custodianIban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
             custodianAddressLine1: ['', this.getLengthValidator(255)],
             custodianAddressLine2: ['', Validators.maxLength(255)],
             custodianZipCode: ['', this.getLengthValidator(10)],
