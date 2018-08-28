@@ -1,15 +1,25 @@
 .switch-container {
-  position: absolute;
-  right: 15px;
-  top: 80px;
+    position: absolute;
+    right: 15px;
+    top: 80px;
 }
+
 .slider {
-  left: 0;
+    left: 0;
 }
+
 .slider.round {
-  min-height: 24px;
-  margin-top: -6px;
+    min-height: 24px;
+    margin-top: -6px;
 }
-.dropdown.open>.dropdown-menu{
-  margin-top: 9px!important;
+
+.dropdown.open > .dropdown-menu {
+    margin-top: 9px !important;
+}
+
+header .header-actions > .dropdown .dropdown-menu {
+    left: auto;
+    right: 0;
+    margin-right: 0;
+    top: 65px;
 }
