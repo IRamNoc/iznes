@@ -5,3 +5,8 @@
     &.enabled { color: green; }
     &.disabled { color: red; }
 }
+
+.status-pending {
+    display: block;
+    font-style: italic;
+}
