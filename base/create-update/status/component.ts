@@ -13,7 +13,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
     @Input() noun: string;
     @Input() entityId: number;
-    @Input() status: boolean = false;
+    @Input() status: number = 0;
 
     private textEnable: string = '';
     private textDisable: string = '';
@@ -36,7 +36,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
         this.confirmation.create(title, message).subscribe((ans) => {
             if (ans.resolved) {
-                this.status = !this.status;
+                this.status = this.status === 1 ? 0 : 1;
 
                 this.onUpdateStatus();
             }
