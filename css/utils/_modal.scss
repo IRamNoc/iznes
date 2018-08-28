@@ -44,11 +44,16 @@
 
 .modal-body {
     background: white;
+    padding: 20px;
     border-bottom: 0px solid #e5e5e5;
     border-top: 0px solid #e5e5e5;
 
     iframe {
         border-width: 0;
+    }
+
+    .fileviewer-main {
+        padding:0px;
     }
 }
 
