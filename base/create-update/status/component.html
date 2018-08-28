@@ -4,7 +4,11 @@
 
         <p>Current status: <span class="status"
             [class.enabled]="status"
-            [class.disabled]="!status">{{ status ? 'Enabled' : 'Disabled' | translate }}</span>
+            [class.disabled]="!status">
+            {{ status ? 'Enabled' : 'Disabled' | translate }}</span>
+            <span class="status-pending" [hidden]="status !== 2">
+                {{ 'Pending: please add users and permissions' | translate }}
+            </span>
         </p>
 
         <button class="btn btn-warning"
