@@ -1,10 +1,10 @@
-import {AlertType} from './alert-type';
-import {AlertSettings} from './alert-settings';
+import { AlertType } from './alert-type';
+import { AlertSettings } from './alert-settings';
 
 export interface AlertEmit {
     close?: boolean;
     message?: string;
-    titleMessage?: string | boolean,
+    titleMessage?: string | boolean;
     type?: AlertType;
     override?: AlertSettings;
 }
