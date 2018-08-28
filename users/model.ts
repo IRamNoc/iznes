@@ -107,7 +107,7 @@ export interface InviteUserRequest extends MemberNodeMessageBody {
 export interface UpdateUserStatusRequest extends MemberNodeMessageBody {
     token: string;
     userID: number;
-    status: boolean;
+    status: number;
 }
 
 export interface UpdateUserDetailsRequest extends MemberNodeMessageBody {

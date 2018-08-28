@@ -139,7 +139,7 @@ export class UserTeamsService extends AccountAdminBaseService {
      * @param onError
      */
     updateUserTeamStatus(userTeamID: number,
-                         status: boolean,
+                         status: number,
                          onSuccess: RequestCallback,
                          onError: RequestCallback): void {
 

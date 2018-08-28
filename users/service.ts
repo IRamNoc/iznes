@@ -176,7 +176,7 @@ export class UsersService extends AccountAdminBaseService {
      * @param onError
      */
     updateUserStatus(userID: number,
-                     status: boolean,
+                     status: number,
                      onSuccess: RequestCallback,
                      onError: RequestCallback): void {
 
