@@ -56,6 +56,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public showDeleteModal: boolean = false;
 
     public unreadMessages;
+    public selectAll: boolean = false;
 
     public items: Array<string> = [];
 
@@ -244,6 +245,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param messages
      */
     messagesList(messages) {
+        this.selectAll = false;
         this.messages = messages.map((message) => {
             if (message.senderId) {
                 if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
@@ -360,6 +362,19 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             return;
         }
         this.messages[index].isChecked = true;
+    }
+
+    /**
+     * Checks All Messages
+     *
+     * @param index
+     */
+    messageAllChecked(index, event) {
+        this.selectAll = this.selectAll ? false : true;
+
+        this.messages = this.messages.map((message) => {
+            return { ...message, isChecked: this.selectAll };
+        });
     }
 
     /**

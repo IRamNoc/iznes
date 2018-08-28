@@ -47,7 +47,10 @@
         <!-- Header row -->
         <div *ngIf="messages.length">
             <div class="message_list_item">
-                <div class="message_list_item_check"></div>
+                <div class="message_list_item_check">
+                    <i class="fa" [ngClass]="{'fa-check': selectAll === true}" (click)="messageAllChecked(i, $event)">
+                    </i>
+                </div>
                 <div class="message_list_item_sender">{{(this.currentCategory==2?'To':'From')}}</div>
                 <div class="message_list_item_subject" mltag="txt_subject">Subject</div>
                 <div class="message_list_item_date" mltag="txt_date">Date</div>
