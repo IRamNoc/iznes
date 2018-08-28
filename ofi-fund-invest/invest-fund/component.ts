@@ -864,7 +864,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
      */
     handleIsRedeemOver80Percent(): boolean {
         // check if this is a redemption order or if it is a sell buy order
-        if ((this.type === 'sellbuy' || 'redeem') && (this.actionBy === 'a')) {
+        if ((this.type === 'sellbuy' || this.type === 'redeem') && (this.actionBy === 'a')) {
             const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
                 this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
 
@@ -970,8 +970,6 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         });
 
     }
-
-    //this.shareData.walletId
 
     sendMessageToAM(params) {
         const amWalletID = params.walletID;
