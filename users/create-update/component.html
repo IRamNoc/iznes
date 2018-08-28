@@ -65,6 +65,7 @@
                         [entityId]="entityId"
                         [noun]="nouns.Team"
                         [doUpdateOb]="doUserManagementUpdateOb"
+                        [showOnlyActiveFilter]="isUpdateMode()"
                         (entitiesFn)="getUserTeams($event)">
                     </app-core-admin-users-team-mgmt>
                 </div>
