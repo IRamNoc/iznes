@@ -1129,6 +1129,10 @@ export const capitalNatureList = [
         text: 'Sale of goods and services'
     },
     {
+        id: 'exceptionalEvents',
+        text: 'Exceptional Events'
+    },
+    {
         id: 'treasury',
         text: 'Treasury'
     },

@@ -286,6 +286,7 @@ export class NewRequestService {
                 generalAssets: '',
                 premiumsAndContributions: '',
                 saleGoodsServices: '',
+                exceptionalEvents: '',
                 treasury: '',
                 others: '',
                 othersText: [{ value: '', disabled: true }, Validators.required]
