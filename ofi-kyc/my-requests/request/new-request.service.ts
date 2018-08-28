@@ -271,8 +271,14 @@ export class NewRequestService {
             keyFinancialData: '',
             balanceSheetTotal: ['', Validators.required],
 
-            netRevenuesNetIncome: ['', Validators.required],
-            shareholderEquity: ['', Validators.required],
+            netRevenuesNetIncome: ['', [
+                Validators.required,
+                Validators.min(0)
+            ]],
+            shareholderEquity: ['', [
+                Validators.required,
+                Validators.min(0)
+            ]],
 
             beneficiaries: fb.array([this.createBeneficiary()]),
             capitalNature: fb.group({
