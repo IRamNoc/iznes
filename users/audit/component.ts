@@ -87,6 +87,16 @@ export class UsersAuditComponent
                     dataIndex: 'oldValue',
                     styleClass: 'previous',
                     title: 'Previous value',
+                    valueDecorator: function (entity) {
+                        if (entity.field === 'Status') {
+                            if (entity.oldValue === '0') entity.oldValue = 'Enabled';
+                            if (entity.oldValue === '1') entity.oldValue = 'Disabled';
+                            if (entity.newValue === '0') entity.newValue = 'Enabled';
+                            if (entity.newValue === '1') entity.newValue = 'Disabled';
+                        }
+
+                        return entity;
+                    },
                 },
                 {
                     id: 'New',
