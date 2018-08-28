@@ -125,9 +125,12 @@ export class UserTeamsUsersMgmtTeamsComponent
     }
 
     private processUserTeamMapData(data): void {
-        if ((!data) || data.length === 0) return;
-
         _.forEach(this.entitiesArray, (user: UserModel.AccountAdminUser, index: number) => {
+            if ((!data) || data.length === 0) {
+                this.entitiesArray[index].isActivated = false;
+                return;
+            }
+
             const result = _.find(data, (res: any) => {
                 return res.userID === user.userID &&
                     res.userTeamID === this.entityId;
