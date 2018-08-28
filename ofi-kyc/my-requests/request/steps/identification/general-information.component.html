@@ -46,7 +46,7 @@
 
             <div class="row">
                 <div class="form-group required-field col-sm-6">
-                    <label class="control-label" for="registeredCompanyAddressLine1">{{"Registered company's headquarters address (including country)" | translate}}</label>
+                    <label class="control-label" for="registeredCompanyAddressLine1">{{"Registered company's headquarters address" | translate}}</label>
                     <input type="text" id="registeredCompanyAddressLine1" formControlName="registeredCompanyAddressLine1" placeholder="{{'Please fill in your company headquarter address' | translate}}">
                     <span class="field-error" *ngIf="hasError('registeredCompanyAddressLine1', ['required'])">{{'Field is required' | translate}}</span>
                     <span class="field-error" *ngIf="hasError('registeredCompanyAddressLine1', ['maxlength'])">{{'Field is too long' | translate}}</span>
