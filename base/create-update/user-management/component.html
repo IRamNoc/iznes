@@ -8,7 +8,7 @@
         </div>
 
         <div class="col col-sm-4 show-active">
-            <label class="control-label">
+            <label class="control-label" *ngIf="showOnlyActiveFilter">
                 {{ 'Show only Active' | translate }}
                 <input type="checkbox" name="showOnlyActivated" id="showOnlyActivated"
                 [(ngModel)]="showOnlyActivated">

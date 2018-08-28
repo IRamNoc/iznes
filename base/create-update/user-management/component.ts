@@ -24,6 +24,7 @@ export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestr
     @Input() noun: string;
     @Input() doUpdateOb: Subject<number>;
     @Input() doUpdate: boolean = true;
+    @Input() showOnlyActiveFilter: boolean = true;
     @Output() entitiesFn: EventEmitter<any[]> = new EventEmitter();
 
     datagridConfig: DataGridConfig;
