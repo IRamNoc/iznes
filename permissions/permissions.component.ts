@@ -440,9 +440,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which call to make. */
             let location = 'adminPermissions';
 
-            if (group.groupIsTx === 1) {
+            if (Number(group.groupIsTx) === 1) {
                 location = 'transPermissions';
-            } else if (group.groupIsTx === 2) {
+            } else if (Number(group.groupIsTx) === 2) {
                 location = 'menuPermissions';
             }
 
@@ -517,9 +517,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which function to call. */
             let functionCall = 'updateAdminPermissions';
 
-            if (dataToSend['type'] === 1) {
+            if (Number(dataToSend['type']) === 1) {
                 functionCall = 'updateTxPermissions';
-            } else if (dataToSend['type'] === 2) {
+            } else if (Number(dataToSend['type']) === 2) {
                 functionCall = 'updateMenuPermissions';
             }
 
@@ -597,9 +597,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             /* Figure out which call to make. */
             let functionCall = 'updateAdminPermissions';
 
-            if (dataToSend['type'] === 1) {
+            if (Number(dataToSend['type']) === 1) {
                 functionCall = 'updateTxPermissions';
-            } else if (dataToSend['type'] === 2) {
+            } else if (Number(dataToSend['type']) === 2) {
                 functionCall = 'updateMenuPermissions';
             }
 
