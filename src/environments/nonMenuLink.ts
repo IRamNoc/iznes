@@ -18,7 +18,6 @@ export const nonMenuLink = {
         '\/nav-fund-view\/[^\/]*\/audit',
         '\/centralisation-history\/[^\/]*',
         '\/kyc-documents\/client\/[^\/]*',
-        '\/fund-access\/[^\/]*',
         '\/management-company',
         '\/reports\/holders-list\/funds\/[^\\/]*',
         '\/reports\/holders-list\/shares\/[^\\/]*',

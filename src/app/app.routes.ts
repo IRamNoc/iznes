@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes, UrlSegment, UrlMatchResult } from '@angular/router';
 /* Layouts. */
 import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
 import {
@@ -13,13 +13,8 @@ import { SetlMyAccountComponent } from '@setl/core-account';
  * Login Guard service
  */
 import { LoginGuardService } from '@setl/core-login';
-/* Ofi Manage Orders Module. */
-/* Ofi Home Page. */
 /**
  * Ofi main module.
- */
-/**
- * Ofi report module
  */
 import {
     CouponPaymentComponent,
@@ -34,7 +29,6 @@ import {
     CentralisationSelectComponent,
     OfiCentralisationHistoryComponent,
     OfiDocumentsComponent,
-    OfiFundAccessComponent,
     OfiHomeComponent,
     OfiInvestorFundListComponent,
     OfiInviteInvestorsComponent,
@@ -58,6 +52,7 @@ import {
     OfiClientReferentialComponent,
     UmbrellaAuditComponent,
     FundAuditComponent,
+    OfiManagementCompanyComponent,
 } from '@ofi/ofi-main';
 
 import { requestsRoute } from '@ofi/ofi-main/ofi-kyc/my-requests/requests-route.config';
@@ -78,13 +73,9 @@ import {
     UserTeamsAuditComponent,
     UserTeamsCreateUpdateComponent,
     UserTeamsListComponent,
+    AccountSignUpComponent,
+    AccountSignUpRedirectComponent,
 } from '@setl/core-account-admin';
-/* Product */
-import {
-    OfiFundComponent,
-    OfiManagementCompanyComponent,
-    OfiSicavComponent,
-} from '@ofi/product';
 import {
     ProductHomeComponent,
     UmbrellaFundComponent,
@@ -152,7 +143,7 @@ export const ROUTES: Routes = [
                 path: 'reset/:token',
                 component: SetlLoginComponent,
             },
-        ]
+        ],
     },
     {
         path: 'redirect/:lang/:invitationToken',
@@ -171,6 +162,14 @@ export const ROUTES: Routes = [
                 component: OfiSignUpComponent,
             },
         ],
+    },
+    {
+        path: 'account-signup',
+        component: AccountSignUpComponent,
+    },
+    {
+        path: 'account-signup-redirect/:invitationToken',
+        component: AccountSignUpRedirectComponent,
     },
     /* Basic Layout pages. */
     {
@@ -194,12 +193,11 @@ export const ROUTES: Routes = [
                 canActivate: [LoginGuardService],
             },
             {
-                path: 'client-referential',
+                path: 'client-referential/:kycId',
                 component: OfiClientReferentialComponent,
                 canActivate: [LoginGuardService],
             },
             {
-
                 path: 'messages/:category',
                 component: SetlMessagesComponent,
                 canActivate: [LoginGuardService],
@@ -232,11 +230,6 @@ export const ROUTES: Routes = [
             {
                 path: 'kyc',
                 component: OfiDocumentsComponent,
-                canActivate: [LoginGuardService],
-            },
-            {
-                path: 'fund-access/:kycId',
-                component: OfiFundAccessComponent,
                 canActivate: [LoginGuardService],
             },
             {
@@ -345,16 +338,6 @@ export const ROUTES: Routes = [
                     {
                         path: 'product/fund-share',
                         component: FundShareComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'fund',
-                        component: OfiFundComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'sicav',
-                        component: OfiSicavComponent,
                         canActivate: [LoginGuardService],
                     },
                     {

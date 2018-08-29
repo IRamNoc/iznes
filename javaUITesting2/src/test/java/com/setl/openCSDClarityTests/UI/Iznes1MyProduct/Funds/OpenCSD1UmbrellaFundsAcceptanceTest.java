@@ -511,7 +511,7 @@ public class OpenCSD1UmbrellaFundsAcceptanceTest {
         String[] uFundDetails = generateRandomUmbrellaFundsDetails();
         fillUmbrellaDetailsNotCountry(uFundDetails[0], "16616758475934857432");
         searchAndSelectTopDropdownXpath("uf_domicile", "Jordan");
-        fillInOptionalDetails();
+        fillInOptionalDetailsUmbrellaFund();
         String payingAgent = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[11]/ng-select/div/span/span/span/span")).getText();
         String investmentAdvisor = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[1]/div[2]/div[10]/ng-select/div/span/span/span/span")).getText();
         String delegatedManagementCo = driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-ofi-am-product-umbrella-fund/clr-tabs/clr-tab/clr-tab-content/form/section/div[2]/div[2]/div[2]/ng-select/div/div[2]/span/span")).getText();
