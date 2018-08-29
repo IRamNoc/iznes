@@ -1,19 +1,19 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import {DomSanitizer} from '@angular/platform-browser';
-import {NgRedux} from '@angular-redux/store';
-import {MockNgRedux} from "@angular-redux/store/lib/testing";
-import {MemberSocketService} from '@setl/websocket-service';
-import {ClarityModule} from '@clr/angular';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {APP_CONFIG} from '@setl/utils';
-import {FileViewerComponent} from './fileviewer.component';
-import {FileViewerPreviewComponent} from './preview-modal/component';
-import {FileViewerPreviewService} from './preview-modal/service';
-import {PdfService} from '@setl/core-req-services/pdf/pdf.service';
-import {PdfMockService} from '@setl/core-req-services/pdf/pdf.mock.service';
-import {SecurityContext} from "@angular/core";
-import {SagaHelper, FileDownloader, SetlServicesModule} from '@setl/utils';
-import {HttpClientModule} from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DomSanitizer } from '@angular/platform-browser';
+import { NgRedux } from '@angular-redux/store';
+import { MockNgRedux } from '@angular-redux/store/lib/testing';
+import { MemberSocketService } from '@setl/websocket-service';
+import { ClarityModule } from '@clr/angular';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { APP_CONFIG } from '@setl/utils';
+import { FileViewerComponent } from './fileviewer.component';
+import { FileViewerPreviewComponent } from './preview-modal/component';
+import { FileViewerPreviewService } from './preview-modal/service';
+import { PdfService } from '@setl/core-req-services/pdf/pdf.service';
+import { PdfMockService } from '@setl/core-req-services/pdf/pdf.mock.service';
+import { SecurityContext } from '@angular/core';
+import { SagaHelper, FileDownloader, SetlServicesModule } from '@setl/utils';
+import { HttpClientModule } from '@angular/common/http';
 
 let origRunAsync;
 
@@ -38,21 +38,21 @@ describe('FileViewerComponent', () => {
             providers: [
                 AlertsService,
                 FileViewerPreviewService,
-                {provide: PdfService, useValue: pdfMockService},
-                {provide: MemberSocketService, useValue: {hostname: '127.0.0.1', port: '9788', path: '/'}},
-                {provide: NgRedux, useClass: MockNgRedux},
+                { provide: PdfService, useValue: pdfMockService },
+                { provide: MemberSocketService, useValue: { hostname: '127.0.0.1', port: '9788', path: '/' } },
+                { provide: NgRedux, useClass: MockNgRedux },
                 {
                     provide: APP_CONFIG,
                     useValue: {
                         MEMBER_NODE_CONNECTION: {
                             host: '127.0.0.1',
-                            port: 443
-                        }
-                    }
+                            port: 443,
+                        },
+                    },
                 },
                 FileDownloader,
-                SetlServicesModule
-            ]
+                SetlServicesModule,
+            ],
         });
 
         fixture = TestBed.createComponent(FileViewerComponent);
