@@ -146,9 +146,9 @@ public class DatabaseHelper {
         stmt.close();
     }
 
-    public static void validatePopulatedDatabaseUsersFormdataTable(String formId, String userId, String userName, String email) throws SQLException {
+    public static void validatePopulatedDatabaseUsersFormdataTable(String formId, String userId, String userName, String email) throws SQLException, InterruptedException {
             conn = DriverManager.getConnection(connectionString, DBUsername, DBPassword);
-
+            Thread.sleep(500);
             //for the query
             Statement stmt = conn.createStatement();
             ResultSet rs = null;
