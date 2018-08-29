@@ -342,8 +342,12 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private showErrorModal(data): void {
-        this.alertsService.create('error',
-            `${data[1].Data[0].Message}`);
+        const result = data[1].Data[0].Message;
+        const errorMessage = result && result.length === 1
+            ? result
+            : this._translate.translate('Please ensure that all inputs are in the right format');
+
+        this.alertsService.create('error', `${errorMessage}`);
 
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
