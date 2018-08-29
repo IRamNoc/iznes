@@ -26,7 +26,8 @@
 
                     <div class="form-group col-sm-4">
                         <label class="control-label">{{'Currency' | translate}}</label>
-                        <input type="text" id="Currency-nav-btn" name="navCurrency" value="{{getCurrencyString(share.currency)}} ({{currencySymbols[getCurrencyString(share.currency)]}})" readonly>
+                        <input type="text" id="Currency-nav-btn" name="navCurrency" value="{{getCurrencyString(share.currency)}} ({{currencySymbols[getCurrencyString(share.currency)]}})"
+                            readonly>
                     </div>
                 </div>
 
@@ -43,53 +44,67 @@
                             {{'Value is too high' | translate}}
                         </span>
                     </div>
-                    <span id="Set-nav-caution" class="text-danger" [hidden]="!navExceedsThreshold">{{'Caution: the NAV is being modified by more than 10%.' | translate}}</span>
+                    <span id="Set-nav-caution" class="text-danger" [hidden]="!navExceedsThreshold">
+                        {{'Caution: the NAV is being modified by more than 10%.' | translate}}
+                    </span>
                 </div>
 
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="Date-nav-btn">{{'NAV Date' | translate}}</label>
+
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
-                        <input id="Date-nav-btn" name="navDate" [placeholder]="_translate.translate('Select date')" formControlName="navDate" [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker>
 
+                        <input type='text' id="Date-nav-btn" name="navDate" [placeholder]="_translate.translate('Select date')" formControlName="navDate"
+                            [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker />
 
+                        <span *ngIf="navForm.controls['navDate'].touched && navForm.controls['navDate'].hasError('pattern')" class='field-error'>
+                            {{'Incorrect date format' | translate}}
+                        </span>
                     </div>
+
                 </div>
 
                 <div class="form-group col-sm-6">
                     <label class="control-label" for="PublicationDate-nav-btn">{{'Publication Date' | translate}}</label>
                     <div class="input-group date-pick-wrapper">
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
-                        <input id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="_translate.translate('Select date')" formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material" #navPublishDatePicker>
 
+                        <input type='text' id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="_translate.translate('Select date')"
+                            formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material"
+                            #navPublishDatePicker />
 
+                        <span *ngIf="navForm.controls['navPubDate'].touched && navForm.controls['navPubDate'].hasError('pattern')" class="field-error">
+                            {{'Incorrect date format' | translate}}
+                        </span>
                     </div>
                 </div>
 
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="Status-nav-btn">{{'Status' | translate}}</label>
-                    <ng-select id="Status-nav-btn" class="fluid-width" [disabled]="navForm.controls['status'].disabled" [items]="statusItems" formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
-
-
+                    <ng-select id="Status-nav-btn" class="fluid-width" [disabled]="navForm.controls['status'].disabled" [items]="statusItems"
+                        formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
                     </ng-select>
                 </div>
 
-                <span *ngIf="!isDeleteMode()" id="Warning-nav-msg" class="text-danger">{{'Warning: If you click "validate", the NAV will be modified at the selected date.' | translate}}
-
+                <span *ngIf="!isDeleteMode()" id="Warning-nav-msg" class="text-danger">
+                    {{'Warning: If you click "validate", the NAV will be modified at the selected date.' | translate}}
                 </span>
             </div>
         </form>
 
     </div>
     <div class="modal-footer">
-        <button id="Cancel-nav-btn" class="btn btn-secondary" (click)="close()">{{'Cancel' | translate}}
-
+        <button id="Cancel-nav-btn" class="btn btn-secondary" (click)="close()">
+            {{'Cancel' | translate}}
         </button>
-        <button id="Validate-nav-btn" class="btn btn-primary" *ngIf="!isDeleteMode()" [disabled]="!navFormValid()" (click)="updateNav()">{{'Validate' | translate}}
 
+        <button id="Validate-nav-btn" class="btn btn-primary" *ngIf="!isDeleteMode()" [disabled]="!navFormValid()" (click)="updateNav()">
+            {{'Validate' | translate}}
         </button>
-        <button id="Delete-nav-btn" class="btn btn-primary" *ngIf="isDeleteMode()" (click)="deleteNav()">{{'Delete' | translate}}
 
+        <button id="Delete-nav-btn" class="btn btn-primary" *ngIf="isDeleteMode()" (click)="deleteNav()">
+            {{'Delete' | translate}}
         </button>
     </div>
 </clr-modal>
