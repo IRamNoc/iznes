@@ -89,8 +89,8 @@ import { ofiSetRequestedClientReferential, OFI_SET_CLIENT_REFERENTIAL } from "@o
 @Injectable()
 export class OfiKycService {
 
-    informationAuditTrailList;
-    statusAuditTrailList;
+    informationAuditTrailList = [];
+    statusAuditTrailList = [];
     unSubscribe: Subject<any> = new Subject();
 
     @select(['ofi', 'ofiKyc', 'informationAuditTrail', 'list']) informationAuditTrailList$;
