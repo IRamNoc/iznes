@@ -1,21 +1,27 @@
-.content-area:not(.pure-scroll){
-  scroll-behavior: smooth;
+.content-area:not(.pure-scroll) {
+    scroll-behavior: smooth;
 }
 
 .backToTop {
-  position: fixed;
-  right: 40px;
-  bottom: 80px;
-  opacity: 0;
-  cursor: pointer;
-  -webkit-transition: opacity 0.2s ease-out;
-  -moz-transition: opacity 0.2s ease-out;
-  -ms-transition: opacity 0.2s ease-out;
-  -o-transition: opacity 0.2s ease-out;
-  transition: opacity 0.2s ease-out;
+    position: fixed;
+    right: 40px;
+    bottom: 80px;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-transition: opacity 0.2s ease-out;
+    -moz-transition: opacity 0.2s ease-out;
+    -ms-transition: opacity 0.2s ease-out;
+    -o-transition: opacity 0.2s ease-out;
+    transition: opacity 0.2s ease-out;
 }
 
 .backToTop i {
-  font-size: 6.5em;
-  color: rgba(0,0,0,0.5);
+    font-size: 6.5em;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.version {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 }

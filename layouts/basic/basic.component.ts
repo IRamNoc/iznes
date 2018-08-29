@@ -1,17 +1,25 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ElementRef} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {Subscription} from 'rxjs';
-import {FadeSlideRight} from '../../animations/fade-slide-right';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewChild,
+    ElementRef,
+} from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { setVersion } from '@setl/core-store';
+import { Subscription } from 'rxjs/Subscription';
+import { FadeSlideRight } from '../../animations/fade-slide-right';
 
-import {setLanguage} from '@setl/core-store';
+import { MyUserService } from '@setl/core-req-services';
+import { SagaHelper } from '@setl/utils';
+import { SET_LANGUAGE } from '@setl/core-store/user/site-settings/actions';
 
-import {MyUserService} from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils';
-import {SET_LANGUAGE} from '@setl/core-store/user/site-settings/actions';
-
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 import { ActivationStart, Router } from '@angular/router';
-import { get } from 'lodash';
+import { get, isEmpty } from 'lodash';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
     selector: 'app-basic-layout',
@@ -22,42 +30,58 @@ import { get } from 'lodash';
 })
 
 export class BasicLayoutComponent implements OnInit, OnDestroy {
-    @ViewChild('main') mainEl : ElementRef;
+    @ViewChild('main') mainEl: ElementRef;
 
-    public _opened = false;
-    public _modeNum = 0;
-    public _positionNum = 1;
-    public _dock = false;
-    public _closeOnClickOutside = false;
-    public _closeOnClickBackdrop = true;
-    public _showBackdrop = true;
-    public _animate = true;
-    public _trapFocus = true;
-    public _autoFocus = true;
-    public _keyClose = false;
-    public _autoCollapseHeight: number = null;
-    public _autoCollapseWidth: number = null;
+    public opened = false;
+    public modeNum = 0;
+    public positionNum = 1;
+    public dock = false;
+    public closeOnClickOutside = false;
+    public closeOnClickBackdrop = true;
+    public showBackdrop = true;
+    public animate = true;
+    public trapFocus = true;
+    public autoFocus = true;
+    public keyClose = false;
+    public autoCollapseHeight: number = null;
+    public autoCollapseWidth: number = null;
 
     /* Redux observables. */
-    public _MODES: Array<string> = ['over', 'push', 'slide'];
-    public _POSITIONS: Array<string> = ['left', 'right', 'top', 'bottom'];
+    public _MODES: string[] = ['over', 'push', 'slide'];
+    public POSITIONS: string[] = ['left', 'right', 'top', 'bottom'];
 
     /* Redux observables. */
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
+    @select(['user', 'siteSettings', 'version']) requestVersionObj;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
+    @select(['user', 'siteSettings', 'production']) requestProductionObj;
 
     public menuShown: number;
+    public production: boolean;
+    public currentVersion: string;
     public currentLanguage: string;
     public currentParentUrl: string;
 
     /* Observable subscription array. */
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     constructor(private ngRedux: NgRedux<any>,
                 private myUserService: MyUserService,
-                public _translate: MultilingualService,
+                public translate: MultilingualService,
                 private router: Router,
-                public changeDetectorRef: ChangeDetectorRef) {
+                public changeDetectorRef: ChangeDetectorRef,
+                private http: HttpClient) {
+
+        /* If on production build, request current version and save to Redux */
+        this.subscriptionsArray.push(this.requestVersionObj.subscribe(version => this.currentVersion = version));
+        this.subscriptionsArray.push(this.requestProductionObj.subscribe(production => this.production = production));
+        if (isEmpty(this.currentVersion) && this.production) {
+            const version = this.http.get('/VERSION', { responseType: 'text' });
+            this.subscriptionsArray.push(version.subscribe((v) => {
+                this.ngRedux.dispatch(setVersion(v));
+            }));
+        }
+
         /* By default show the menu. */
         this.menuShown = 1;
 
@@ -66,11 +90,11 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
             (menuState) => {
                 /* Call menu has changed. */
                 this.menuHasChanged(menuState);
-            }
+            },
         ));
 
         /* Subscribe to the language flag in redux. */
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((language) => this.getLanguage(language)));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.getLanguage(language)));
 
         this.subscriptionsArray.push(router.events.subscribe((event) => {
             if (event instanceof ActivationStart) {
@@ -100,9 +124,9 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
      *
      * @returns {boolean}
      */
-    public _toggleSidebar() {
+    public toggleSidebar() {
         /* Invert the opened state. */
-        this._opened = !this._opened;
+        this.opened = !this.opened;
 
         /* Detect changes. */
         this.changeDetectorRef.detectChanges();
@@ -119,18 +143,18 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     public changeLanguage(lang) {
         const validLocales = [
             'en-Latn',
-            'fr-Latn'
+            'fr-Latn',
         ];
 
-        this._translate.updateLanguage(lang);
+        this.translate.updateLanguage(lang);
 
-        //save language in db
-        let asyncTaskPipe = this.myUserService.setLanguage({lang: lang});
+        // save language in db
+        const asyncTaskPipe = this.myUserService.setLanguage({ lang });
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_LANGUAGE],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
 
         /* Detect changes. */
@@ -179,8 +203,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
         }
     }
 
-    onDeactivate(){
-        let element = this.mainEl.nativeElement;
+    onDeactivate() {
+        const element = this.mainEl.nativeElement;
         element.classList.add('pure-scroll');
         element.scrollTop = 0;
         element.classList.remove('pure-scroll');
