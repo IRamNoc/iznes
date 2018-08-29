@@ -3,6 +3,7 @@ package com.setl.openCSDClarityTests.UI.Iznes2KYCModule;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import custom.junit.runners.OrderedJUnit4ClassRunner;
 import org.junit.*;
 import org.junit.rules.Timeout;
@@ -14,6 +15,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
@@ -22,6 +26,7 @@ import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.LoginAndNavigationHelper.*;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageById;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.UserDetailsHelper.generateRandomUserDetails;
@@ -145,20 +150,24 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
         String userNo = "001";
         String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
         KYCProcessMakeNewRequest();
         KYCProcessStep1(managementCompEntered, "Yes", "False", "");
      }
 
     @Test
-    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateKYCRequest() throws IOException, InterruptedException, SQLException {
         String userNo = "002";
         String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
         KYCProcessMakeNewRequest();
         KYCProcessStep1(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
@@ -172,13 +181,15 @@ public class OpenCSDKYCModuleAcceptanceTest {
     }
 
     @Test
-    public void shouldCompleteFullKYCProcessWith2AMs() throws IOException, InterruptedException, SQLException {
+    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
         String userNo = "003";
         String managementCompEntered = "Management Company";
         String managementComp2Entered = "am2";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
         KYCProcessMakeNewRequest();
         KYCProcessStep1(managementCompEntered, "No", "True", managementComp2Entered);
         KYCProcessStep2();
@@ -195,14 +206,76 @@ public class OpenCSDKYCModuleAcceptanceTest {
     public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
         String userNo = "004";
         String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
         KYCProcessMakeNewRequest();
         KYCProcessStep1(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessClose();
         KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft", "No", "", "");
+    }
+
+    @Test
+    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+        String No = "2";
+        String userNo = "00" + No;
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String phoneNo = "07956701992";
+
+        DateFormat dateFormat = new SimpleDateFormat("dd / MM / yyyy");
+        Date date = new Date();
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete();
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
+
+        logout();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("top-menu-my-clients");
+        navigateToPageByID("top-menu-onboarding-management");
+        verifyCorrectPage("On-boarding Management");
+        String waitingCompanyName = driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).getText();
+        assertTrue(waitingCompanyName.equals(companyName));
+        System.out.println("Company name matches");
+        driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).click();
+        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
+        String KYCheading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-waiting-approval/div/h1/span")).getText();
+        assertTrue(KYCheading.contains(companyName));
+        System.out.println("KYC Heading contains the company name");
+
+        String generalInfoCompanyName = driver.findElement(By.id("companyName")).getAttribute("value");
+        assertTrue(generalInfoCompanyName.equals(companyName));
+        String generalInfoReference = driver.findElement(By.id("clientReference")).getAttribute("value");
+        assertTrue(generalInfoReference.equals(No));
+        String generalInfoFirstName = driver.findElement(By.id("firstName")).getAttribute("value");
+        assertTrue(generalInfoFirstName.equals(firstName + userNo));
+        String generalInfoLastName = driver.findElement(By.id("lastName")).getAttribute("value");
+        assertTrue(generalInfoLastName.equals(lastName + userNo));
+        String generalInfoEmail = driver.findElement(By.id("email")).getAttribute("value");
+        assertTrue(generalInfoEmail.equals("testops" + userNo + "@setl.io"));
+        String generalInfoDate = driver.findElement(By.id("approvalDateRequest")).getAttribute("value");
+        assertTrue(generalInfoDate.equals(dateFormat.format(date)));
+        String generalInfoPhone = driver.findElement(By.id("phoneNumber")).getAttribute("value");
+        assertTrue(generalInfoPhone.equals("+7 840 " + phoneNo));
+
+        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-10\"]/div[1]/div[2]/div[1]/div/a/h2")).click();
+        wait.until(invisibilityOfElementLocated(By.id("clientReference")));
     }
 
     @Test
