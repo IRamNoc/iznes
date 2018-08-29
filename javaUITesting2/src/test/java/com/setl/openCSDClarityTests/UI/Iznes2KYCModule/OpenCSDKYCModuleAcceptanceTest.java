@@ -149,7 +149,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
         KYCProcessWelcomeToIZNES(userNo);
         KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "Yes");
+        KYCProcessStep1(managementCompEntered, "Yes", "False", "");
      }
 
     @Test
@@ -160,7 +160,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
         KYCProcessWelcomeToIZNES(userNo);
         KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No");
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessStep3GeneralInfoComplete();
         KYCProcessStep3CompanyInfoComplete();
@@ -168,21 +168,41 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep4();
         KYCProcessStep5();
         KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
+    }
+
+    @Test
+    public void shouldCompleteFullKYCProcessWith2AMs() throws IOException, InterruptedException, SQLException {
+        String userNo = "003";
+        String managementCompEntered = "Management Company";
+        String managementComp2Entered = "am2";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "True", managementComp2Entered);
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete();
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "Yes", "am2", "Waiting approval");
     }
 
     @Test
     public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
-        String userNo = "003";
+        String userNo = "004";
         String managementCompEntered = "Management Company";
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
         KYCProcessWelcomeToIZNES(userNo);
         KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No");
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
         KYCProcessStep2();
         KYCProcessClose();
-        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft");
+        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft", "No", "", "");
     }
 
     @Test
@@ -291,13 +311,10 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         String identificationTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[3]/div[2]/div/section[3]/kyc-step-identification/h3")).getText();
         assertTrue(identificationTitle.equals("CLIENT'S IDENTIFICATION AS A LEGAL ENTITY"));
-
         String generalInfoPercent = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(generalInfoPercent.equals("0%"));
-
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("registeredCompanyName")));
-
         driver.findElement(By.id("registeredCompanyName")).sendKeys("Jordan Millers Company");
         String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent0.equals("10%"));
@@ -331,6 +348,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         String percent9 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         System.out.println("General Info : " + percent9);
         assertTrue(percent9.equals("100%"));
+
         String percentBarColourPost = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");
         assertTrue(percentBarColourPost.equals("rgba(102, 187, 106, 1)"));
 
@@ -346,6 +364,11 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("activities")));
+
+        ///////
+
+
+        //////
 
         String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent0.equals("0%"));
