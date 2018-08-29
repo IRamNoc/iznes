@@ -52,20 +52,10 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
  * @returns {any}
  */
 function setVersion(actionType, action, state) {
-    let newState;
-    let versionData;
 
-    if (_.get(action, 'payload[1].Data[0]', '') === '') {
-        versionData = action;
-    } else {
-        versionData = _.get(action, 'payload[1].Data[0]');
-    }
-
+    const versionData = _.get(action, 'payload[1].Data[0]', '') === '' ? action : _.get(action, 'payload[1].Data[0]');
     const version = _.get(versionData, 'version', '');
-
-    newState = Object.assign({}, state, {
-        version,
-    });
+    const newState = Object.assign({}, state, { version });
 
     return newState;
 }
