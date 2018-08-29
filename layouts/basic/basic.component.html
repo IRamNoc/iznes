@@ -2,11 +2,11 @@
 
     <ng-sidebar-container>
 
-        <ng-sidebar [(opened)]="_opened" [mode]="_MODES[_modeNum]" [keyClose]="_keyClose" [position]="_POSITIONS[_positionNum]" [dock]="_dock" [dockedSize]="'50px'" [autoCollapseHeight]="_autoCollapseHeight" [autoCollapseWidth]="_autoCollapseWidth" [closeOnClickOutside]="_closeOnClickOutside" [closeOnClickBackdrop]="_closeOnClickBackdrop" [showBackdrop]="_showBackdrop" [animate]="_animate" [trapFocus]="_trapFocus" [autoFocus]="_autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
+        <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="_animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
             <div class="ng-sidebar-header">
                 <div class="ng-sidebar-header-left">
-                    <button class="btn btn-outline btn-sm mr-1" (click)="_toggleSidebar()">{{'Close' | translate}}</button>
+                    <button class="btn btn-outline btn-sm mr-1" (click)="toggleSidebar()">{{'Close' | translate}}</button>
                 </div>
                 <div class="ng-sidebar-header-middle title_text">
                     <i class="fa fa-cogs"></i>{{'Settings' | translate}}
@@ -20,7 +20,8 @@
                 <div class="ng-sidebar-section-header">
                     <div class="title_text">
                         <i class="fa fa-language"></i> {{'Language' | translate}}
-                    </div>{{'Choose your language.' | translate}}
+                    </div>
+                    {{'Choose your language.' | translate}}
 
                 </div>
                 <div class="ng-sidebar-section-body">
@@ -46,6 +47,8 @@
                         </div>
                     </section>
 
+                    <p *ngIf="currentVersion" class="version">Version: {{ currentVersion }}</p>
+
                 </div>
             </div>
 
@@ -59,7 +62,7 @@
         <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
 
             <!-- Navigation Topbar. -->
-            <app-navigation-topbar (toggleSidebar)="_toggleSidebar()"></app-navigation-topbar>
+            <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
 
             <div class="content-container">
 
