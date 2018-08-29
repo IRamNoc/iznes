@@ -63,7 +63,9 @@ export class PersistService {
 
             /* If we couldn't then clear the form values. */
             if (!recoveredData) {
-                group.reset();
+                if(options['reset'] !== false){
+                    group.reset();
+                }
                 console.warn(' | Failed to read a previous state, maybe there isn\'t one?: ', data);
             } else {
                 /* If it was ok, we'll try set the value. */
