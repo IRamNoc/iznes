@@ -57,11 +57,6 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     private processParams(): void {
         this.route.paramMap.subscribe((params) => {
             this.entityId = parseInt(params.get('id'));
-            console.log('');
-            console.log('');
-            console.log(params.get('id'));
-            console.log('');
-            console.log('');
 
             if (this.entityId) {
                 this.mode = 1;

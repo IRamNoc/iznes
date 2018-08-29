@@ -68,12 +68,6 @@ export class UserManagementServiceBase extends AccountAdminBaseService {
             userTeamID: userTeamId,
         };
 
-        console.log('');
-        console.log('');
-        console.log(userId);
-        console.log('');
-        console.log('');
-
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
 
         this.callAccountAdminAPI(asyncTaskPipe,
