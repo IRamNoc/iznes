@@ -153,9 +153,21 @@ export class OfiManageNavPopup implements OnInit {
                 Validators.max(10000000),
                 numberValidator,
             ])),
-            navDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
-            navPubDate: new FormControl(moment(share.navDate).format('YYYY-MM-DD'), Validators.required),
-            status: new FormControl(status, Validators.required)
+            navDate: new FormControl(
+                moment(share.navDate).format('YYYY-MM-DD'),
+                Validators.compose([
+                    Validators.required,
+                    Validators.pattern(/^(19[5-9][0-9]|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/),
+                ]),
+            ),
+            navPubDate: new FormControl(
+                moment(share.navDate).format('YYYY-MM-DD'),
+                Validators.compose([
+                    Validators.required,
+                    Validators.pattern(/^(19[5-9][0-9]|20[0-9]{2})-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[01])$/),
+                ]),
+            ),
+            status: new FormControl(status, Validators.required),
         });
 
         if(mode === model.NavPopupMode.ADD) {
@@ -342,8 +354,12 @@ export class OfiManageNavPopup implements OnInit {
     }
 
     private showErrorModal(data): void {
-        this.alertsService.create('error',
-            `${data[1].Data[0].Message}`);
+        const result = data[1].Data[0].Message;
+        const errorMessage = result && result.length === 1
+            ? result
+            : this._translate.translate('Please ensure that all inputs are in the right format');
+
+        this.alertsService.create('error', `${errorMessage}`);
 
         this.redux.dispatch(clearRequestedNavFundsList());
         this.redux.dispatch(clearRequestedNavFundHistory());
