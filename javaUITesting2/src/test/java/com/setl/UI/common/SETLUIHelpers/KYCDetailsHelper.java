@@ -24,7 +24,7 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
 public class KYCDetailsHelper extends LoginAndNavigationHelper {
 
-    public static void KYCProcessWelcomeToIZNES(String testUserNo) throws SQLException, InterruptedException {
+    public static void KYCProcessWelcomeToIZNES(String testUserNo, String companyName, String phoneNumber) throws SQLException, InterruptedException {
         String kycEmail = driver.findElement(By.id("kyc_additionnal_email")).getAttribute("value");
         assertTrue(kycEmail.equals("testops" + testUserNo + "@setl.io"));
 
@@ -37,11 +37,11 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String kycLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
         assertTrue(kycLastName.equals("Miller" + testUserNo));
 
-        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys("Jordan Corp");
+        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
         openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
         String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
         assertTrue(disabled.equals("true"));
-        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys("07956701992");
+        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
         driver.findElement(By.id("btnKycSubmit")).click();
         try {
             String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
