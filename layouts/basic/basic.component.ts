@@ -5,7 +5,7 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
-    ElementRef,
+    ElementRef, Inject,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { setVersion } from '@setl/core-store';
@@ -20,6 +20,8 @@ import { MultilingualService } from '@setl/multilingual';
 import { ActivationStart, Router } from '@angular/router';
 import { get, isEmpty } from 'lodash';
 import { HttpClient } from '@angular/common/http';
+import { AppConfig } from '@setl/utils/appConfig/appConfig.model';
+import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
 
 @Component({
     selector: 'app-basic-layout',
@@ -31,6 +33,8 @@ import { HttpClient } from '@angular/common/http';
 
 export class BasicLayoutComponent implements OnInit, OnDestroy {
     @ViewChild('main') mainEl: ElementRef;
+
+    private appConfig: AppConfig;
 
     public opened = false;
     public modeNum = 0;
@@ -54,7 +58,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     @select(['user', 'siteSettings', 'menuShown']) menuShowOb;
     @select(['user', 'siteSettings', 'version']) requestVersionObj;
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['user', 'siteSettings', 'production']) requestProductionObj;
 
     public menuShown: number;
     public production: boolean;
@@ -70,11 +73,14 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
                 public translate: MultilingualService,
                 private router: Router,
                 public changeDetectorRef: ChangeDetectorRef,
+                @Inject(APP_CONFIG) appConfig: AppConfig,
                 private http: HttpClient) {
+
+        this.appConfig = appConfig;
+        this.production = this.appConfig.production;
 
         /* If on production build, request current version and save to Redux */
         this.subscriptionsArray.push(this.requestVersionObj.subscribe(version => this.currentVersion = version));
-        this.subscriptionsArray.push(this.requestProductionObj.subscribe(production => this.production = production));
         if (isEmpty(this.currentVersion) && this.production) {
             const version = this.http.get('/VERSION', { responseType: 'text' });
             this.subscriptionsArray.push(version.subscribe((v) => {
