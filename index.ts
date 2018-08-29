@@ -27,10 +27,12 @@ export {
     resetMembernodeSessionManager,
 
     // site settings
+    setVersion,
     setLanguage,
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
+    SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU,
 

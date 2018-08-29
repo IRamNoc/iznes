@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU } from './actions';
+import { SET_VERSION, SET_LANGUAGE, SET_MENU_SHOWN, SET_PRODUCTION, SET_SITE_MENU } from './actions';
 import { SiteSettingsState } from './model';
 import * as _ from 'lodash';
 
@@ -17,6 +17,7 @@ default:
 }
 
 const initialState: SiteSettingsState = {
+    version: '',
     language: defaultLanguage,
     menuShown: true,
     production: true,
@@ -27,6 +28,8 @@ const initialState: SiteSettingsState = {
 
 export const SiteSettingsReducer = function (state: SiteSettingsState = initialState, action: Action) {
     switch (action.type) {
+    case SET_VERSION:
+        return setVersion(SET_VERSION, action, state);
     case SET_LANGUAGE:
         return setLanguage(SET_LANGUAGE, action, state);
     case SET_MENU_SHOWN:
@@ -48,6 +51,25 @@ export const SiteSettingsReducer = function (state: SiteSettingsState = initialS
  * @param state
  * @returns {any}
  */
+function setVersion(actionType, action, state) {
+    let newState;
+    let versionData;
+
+    if (_.get(action, 'payload[1].Data[0]', '') === '') {
+        versionData = action;
+    } else {
+        versionData = _.get(action, 'payload[1].Data[0]');
+    }
+
+    const version = _.get(versionData, 'version', '');
+
+    newState = Object.assign({}, state, {
+        version,
+    });
+
+    return newState;
+}
+
 function setLanguage(actionType, action, state) {
     let newState;
     let languageData;
