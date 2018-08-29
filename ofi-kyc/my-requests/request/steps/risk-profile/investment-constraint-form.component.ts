@@ -1,8 +1,8 @@
 import {Component, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {find} from 'lodash';
+import {takeUntil, filter as rxFilter} from 'rxjs/operators';
+import {find, isEmpty} from 'lodash';
 
 import {NewRequestService} from "../../new-request.service";
 import {RiskProfileService} from '../risk-profile.service';
@@ -58,6 +58,7 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     initData() {
         this.managementCompanyList$
             .pipe(
+                rxFilter((amcList: Array<any>) => !isEmpty(amcList)),
                 takeUntil(this.unsubscribe)
             )
             .subscribe(amcList => {
