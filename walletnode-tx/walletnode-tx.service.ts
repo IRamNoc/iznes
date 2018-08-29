@@ -1,16 +1,18 @@
-import {Injectable} from '@angular/core';
-import {WalletNodeSocketService} from '@setl/websocket-service';
-import {createWalletNodeSagaRequest} from '@setl/utils/common';
+import { Injectable } from '@angular/core';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { createWalletNodeSagaRequest } from '@setl/utils/common';
 import {
     RegisterIssuerMessageBody,
+    DeleteIssuerMessageBody,
     RegisterAssetMessageBody,
+    DeleteAssetMessageBody,
     IssueAssetMessageBody,
     VoidAssetMessageBody,
     SendAssetMessageBody,
     NewAddressMessageBody,
     NewContractMessageBody,
     EncumberMessageBody,
-    UnencumberMessageBody
+    UnencumberMessageBody,
 } from './walletnode-request.service.model';
 import * as _ from 'lodash';
 
@@ -21,7 +23,23 @@ interface RegisterIssuer {
     metaData: object;
 }
 
+interface DeleteIssuer {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metaData: object;
+}
+
 interface RegisterAsset {
+    walletId: number;
+    address: string;
+    namespace: string;
+    instrument: string;
+    metaData: object;
+}
+
+interface DeleteAsset {
     walletId: number;
     address: string;
     namespace: string;
@@ -39,11 +57,11 @@ interface IssueAsset {
 
 interface VoidAsset {
     walletId: number;
+    address: string;
     namespace: string;
     instrument: string;
-    fromAddress: string;
-    toAddress: string;
     amount: number;
+    paymentlist: object;
 }
 
 interface SendAsset {
@@ -99,7 +117,6 @@ interface GetContracts {
 
 @Injectable()
 export class WalletnodeTxService {
-
     constructor(private walletNodeSocketService: WalletNodeSocketService) {
     }
 
@@ -136,7 +153,7 @@ export class WalletnodeTxService {
             instrument: _.get(requestData, 'instrument', ''),
             amount: _.get(requestData, 'amount', 0),
             protocol: _.get(requestData, 'protocol', ''),
-            metadata: _.get(requestData, 'metadata', {})
+            metadata: _.get(requestData, 'metadata', {}),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -148,7 +165,19 @@ export class WalletnodeTxService {
             walletid: _.get(requestData, 'walletId', 0),
             name: _.get(requestData, 'issuerIdentifier', ''),
             address: _.get(requestData, 'issuerAddress', ''),
-            metadata: _.get(requestData, 'metadata', {})
+            metadata: _.get(requestData, 'metadata', {}),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    deleteIssuer(requestData: DeleteIssuer): any {
+        const messageBody: DeleteIssuerMessageBody = {
+            topic: 'nsdel',
+            walletid: _.get(requestData, 'walletId', 0),
+            name: _.get(requestData, 'issuerIdentifier', ''),
+            address: _.get(requestData, 'issuerAddress', ''),
+            metadata: _.get(requestData, 'metadata', {}),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -161,7 +190,20 @@ export class WalletnodeTxService {
             address: _.get(requestData, 'address', ''),
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
-            metadata: _.get(requestData, 'metadata', {})
+            metadata: _.get(requestData, 'metadata', {}),
+        };
+
+        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
+    }
+
+    deleteAsset(requestData: DeleteAsset): any {
+        const messageBody: DeleteAssetMessageBody = {
+            topic: 'asdel',
+            walletid: _.get(requestData, 'walletId', 0),
+            address: _.get(requestData, 'address', ''),
+            namespace: _.get(requestData, 'namespace', ''),
+            instrument: _.get(requestData, 'instrument', ''),
+            metadata: _.get(requestData, 'metadata', {}),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -174,7 +216,7 @@ export class WalletnodeTxService {
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
             address: _.get(requestData, 'address', ''),
-            amount: _.get(requestData, 'amount', 0)
+            amount: _.get(requestData, 'amount', 0),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -182,13 +224,13 @@ export class WalletnodeTxService {
 
     voidAsset(requestData: VoidAsset): any {
         const messageBody: VoidAssetMessageBody = {
-            topic: 'istra',
+            topic: 'istfm',
             walletid: _.get(requestData, 'walletId', 0),
+            address: _.get(requestData, 'address', ''),
             namespace: _.get(requestData, 'namespace', ''),
             instrument: _.get(requestData, 'instrument', ''),
-            fromaddress: _.get(requestData, 'fromAddress', ''),
-            toaddress: _.get(requestData, 'toAddress', ''),
-            amount: _.get(requestData, 'amount', 0)
+            amount: _.get(requestData, 'amount', 0),
+            paymentlist: _.get(requestData, 'paymentlist', []),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -202,7 +244,7 @@ export class WalletnodeTxService {
             instrument: _.get(requestData, 'instrument', ''),
             fromaddress: _.get(requestData, 'fromAddress', ''),
             toaddress: _.get(requestData, 'toAddress', ''),
-            amount: _.get(requestData, 'amount', 0)
+            amount: _.get(requestData, 'amount', 0),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
@@ -224,7 +266,7 @@ export class WalletnodeTxService {
             walletid: _.get(requestData, 'walletId', 0),
             address: _.get(requestData, 'address', ''),
             'function': _.get(requestData, 'function', ''),
-            contractdata: _.get(requestData, 'contractData', '')
+            contractdata: _.get(requestData, 'contractData', ''),
         };
 
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
