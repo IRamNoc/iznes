@@ -15,6 +15,8 @@ import * as _ from 'lodash';
 
 interface AddFileRequest {
     files: string;
+    secure?: boolean;
+    path?: string;
 }
 
 @Injectable()
