@@ -56,7 +56,12 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     private processParams(): void {
         this.route.paramMap.subscribe((params) => {
-            this.entityId = parseInt(params.get('id'), undefined);
+            this.entityId = parseInt(params.get('id'));
+            console.log('');
+            console.log('');
+            console.log(params.get('id'));
+            console.log('');
+            console.log('');
 
             if (this.entityId) {
                 this.mode = 1;
@@ -104,6 +109,8 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
     }
 
     protected onSaveSuccess(entityName: string, entityId: number): void {
+        this.entityId = entityId;
+
         let message = `${entityName} successfully `;
 
         if (this.isCreateMode()) {
