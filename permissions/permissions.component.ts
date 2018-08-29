@@ -772,7 +772,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
     showSuccess(message, callback: () => void = () => {
     }) {
         /* Show the message. */
-        this.alertsService.create('success', `
+        this.subscriptions['successAlert'] = this.alertsService.create('success', `
               <table class="table grid">
                   <tbody>
                       <tr>
