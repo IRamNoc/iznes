@@ -11,7 +11,7 @@ import { FileDropItem } from './FileDrop';
 @Component({
     selector: 'setl-file-drop',
     templateUrl: 'filedrop.component.html',
-    styleUrls: ['filedrop.component.css']
+    styleUrls: ['filedrop.component.css'],
 })
 
 export class FileDropComponent implements OnInit {
