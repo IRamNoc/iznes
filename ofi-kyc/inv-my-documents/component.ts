@@ -8,7 +8,7 @@ import {
     OnInit,
     ViewChild,
     AfterViewInit,
-    ElementRef
+    ElementRef,
 } from '@angular/core';
 /* Redux */
 import { NgRedux, select } from '@angular-redux/store';
@@ -27,7 +27,7 @@ import { ofiClearRequestedMyDocuments } from '@ofi/ofi-main/ofi-store/ofi-kyc/in
 @Component({
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewInit {
 
@@ -41,6 +41,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     nbUploads = 13;
 
     filesFromRedux = [];
+
+    kycDocPath: string = '/iznes/kyc-inv-docs';
 
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['ofi', 'ofiKyc', 'invMyDocuments', 'requested']) requestedOfiInvMyDocsOb;
@@ -57,7 +59,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     ) {
         this.kycEnums = kycEnums.documents;
 
-        for (var k in this.kycEnums) {
+        for (const k in this.kycEnums) {
             if (this.kycEnums.hasOwnProperty(this.kycEnums[k])) {
                 this.allUploadsFiles[this.kycEnums[k]] = {
                     fileID: 0,
@@ -118,7 +120,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
 
     ngAfterViewInit() {
         const allFileDrop = document.getElementsByClassName('drop-file-nofile') as HTMLCollectionOf<HTMLElement>;
-        for (let i in allFileDrop) {
+        for (const i in allFileDrop) {
             if (allFileDrop[i] && allFileDrop[i] !== undefined) {
                 if (allFileDrop[i].tagName === 'DIV') {
                     allFileDrop[i].style.zIndex = '0';
@@ -132,7 +134,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         if (!requested) {
             OfiKycService.defaultRequestGetInvKycDocuments(this._ofiKycService, this.ngRedux, {
                 walletID: this.connectedWalletId,
-                kycID: 0
+                kycID: 0,
             });
         }
     }
@@ -151,11 +153,11 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 isDefault: item.get('default'),
             });
             return result;
-        }, []);
+        },                                   []);
 
         let allChecked = true;
-        for (let i in this.allUploadsFiles) {
-            for (let j in this.filesFromRedux) {
+        for (const i in this.allUploadsFiles) {
+            for (const j in this.filesFromRedux) {
                 if (this.allUploadsFiles[i].type === this.filesFromRedux[j].type) {
                     if (this.filesFromRedux[j].common !== 1) {
                         allChecked = false;
@@ -193,7 +195,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
         for (let i = 0; i < this.nbUploads; i++) {
             this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).patchValue(this.uploadMyDocumentsForm.get('shareAll').value, { emitEvent: false });
         }
-        for (let i in this.allUploadsFiles) {
+        for (const i in this.allUploadsFiles) {
             this.allUploadsFiles[i].common = (this.uploadMyDocumentsForm.get('shareAll').value) ? 1 : 0;
             this.saveFileInDatabase(i);
         }
@@ -212,12 +214,12 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
                 for (let i = 0; i < this.nbUploads; i++) {
                     this.uploadMyDocumentsForm.get('shareUpload' + (i + 1)).patchValue(true, { emitEvent: false });
                 }
-                for (let i in this.allUploadsFiles) {
+                for (const i in this.allUploadsFiles) {
                     this.allUploadsFiles[i].common = 1;
                 }
             } else {
                 this.uploadMyDocumentsForm.get('shareAll').patchValue(true, { emitEvent: false });
-                for (let i in this.allUploadsFiles) {
+                for (const i in this.allUploadsFiles) {
                     this.allUploadsFiles[i].common = 1;
                 }
             }
@@ -231,7 +233,7 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
     }
 
     getUpload(event, fileRelated) {
-        console.log('send', event, fileRelated)
+        console.log('send', event, fileRelated);
         this.uploadFile(event, fileRelated, this._changeDetectorRef);
     }
 
@@ -241,6 +243,8 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             files: _.filter(event.files, (file) => {
                 return file.status !== 'uploaded-file';
             }),
+            secure: true,
+            path: '/iznes/kyc-inv-docs',
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
@@ -334,15 +338,14 @@ export class OfiInvMyDocumentsComponent implements OnDestroy, OnInit, AfterViewI
             },
             (data) => {
                 console.log('error: ', data);
-            })
+            }),
         );
     }
-
 
     /* On Destroy. */
     ngOnDestroy(): void {
         /* Unsunscribe Observables. */
-        for (let key of this.subscriptions) {
+        for (const key of this.subscriptions) {
             key.unsubscribe();
         }
 
