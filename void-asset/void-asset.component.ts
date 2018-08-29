@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SagaHelper, walletHelper } from '@setl/utils';
+import { SagaHelper, walletHelper, LogService } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import {
     InitialisationService, MyWalletsService, WalletNodeRequestService,
@@ -9,11 +9,9 @@ import {
 import {
     setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail,
 } from '@setl/core-store';
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
-import { PersistService } from '@setl/core-persist';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
 @Component({
     selector: 'app-void-asset',
@@ -22,8 +20,7 @@ import { PersistService } from '@setl/core-persist';
 })
 
 export class VoidAssetComponent implements OnInit, OnDestroy {
-    subscriptionsArray: Array<Subscription> = [];
-    // subscriptionsArray: Subscription[] = [];
+    subscriptionsArray: Subscription[] = [];
 
     voidAssetForm: FormGroup;
     connectedWalletId: number;
@@ -34,8 +31,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
 
     walletInstrumentsSelectItems: any[];
     walletAddressSelectItems: any;
+    deleteAsset = false;
 
-    // List of redux observable
+    /* List of redux observables. */
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
@@ -45,16 +43,16 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletsService: MyWalletsService,
-                private persistService: PersistService) {
+                private logService: LogService,
+                private alertsService: AlertsService) {
 
         const newState = this.ngRedux.getState();
         this.walletIssuerDetail = getWalletIssuerDetail(newState);
 
-        // List of observable subscriptions.
+        /* List of observable subscriptions. */
         this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
             this.connectedWalletId = connectedWalletId;
             /* Reset the voidAssetForm. */
@@ -80,27 +78,29 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        /* Set up the voidAssetForm. */
-        this.setForm();
+        this.voidAssetForm.controls.deleteAsset.valueChanges.subscribe((value: boolean) => {
+            this.deleteAsset = value;
+        });
     }
 
     /**
      * Sets up the voidAssetForm.
      *
-     * @return void
+     * @returns void
      */
     setForm() {
         this.voidAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
-            fromAddress: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
+            deleteAsset: new FormControl(''),
         });
     }
 
     /**
-     * Request wallet address list.
+     * Requests wallet address list.
      *
      * @param requestedState
+     *
+     * @returns void
      */
     requestWalletAddressList(requestedState: boolean) {
         // If the state is false, that means we need to request the list.
@@ -113,6 +113,13 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Requests wallet labels.
+     *
+     * @param requestedState
+     *
+     * @returns void
+     */
     requestWalletLabel(requestedState: boolean) {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
@@ -120,6 +127,13 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Requests wallet instruments.
+     *
+     * @param requestedInstrumentState
+     *
+     * @returns void
+     */
     requestWalletInstruments(requestedInstrumentState) {
         if (!requestedInstrumentState) {
             const walletId = this.connectedWalletId;
@@ -131,40 +145,168 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
+    /**
+     * Sends voidAsset requests.
+     *
+     * @returns void
+     */
     voidAsset() {
         if (this.voidAssetForm.valid) {
             const walletId = this.connectedWalletId;
+            const address = this.walletIssuerDetail.walletIssuerAddress;
             const fullAssetId = _.get(this.voidAssetForm.value.asset, '[0].id', '');
             const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
             const namespace = fullAssetIdSplit.issuer;
             const instrument = fullAssetIdSplit.instrument;
-            const fromAddress = this.voidAssetForm.value.fromAddress;
-            const toAddress =  this.walletIssuerDetail.walletIssuerAddress;
-            const amount = this.voidAssetForm.value.amount;
+            const metaData = {};
 
-            // Create a saga pipe.
-            const asyncTaskPipe = this.walletnodeTxService.voidAsset({
-                walletId,
-                namespace,
+            const requestData = {
+                walletId: this.connectedWalletId,
+                issuer: namespace,
                 instrument,
-                fromAddress,
-                toAddress,
-                amount,
-            });
+            };
+
+            const request = this.walletNodeRequestService.requestWalletIssueHolding(requestData);
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
                 [],
                 [],
-                asyncTaskPipe,
+                request,
                 {},
                 (data) => {
-                    console.log('void asset:', data);
+                    const issuanceHolders = data[1].data.holders;
+
+                    if (Object.keys(issuanceHolders).length) {
+                        let amount = 0;
+                        const paymentlist = [];
+
+                        Object.keys(issuanceHolders).forEach((key) => {
+                            if (key !== address) {
+                                paymentlist.push([key, String(issuanceHolders[key])]);
+                                amount += issuanceHolders[key];
+                            }
+                        });
+
+                        const voidAssetAsyncTaskPipe = this.walletnodeTxService.voidAsset({
+                            walletId,
+                            address,
+                            namespace,
+                            instrument,
+                            amount,
+                            paymentlist,
+                        });
+
+                        this.ngRedux.dispatch(SagaHelper.runAsync(
+                            [],
+                            [],
+                            voidAssetAsyncTaskPipe,
+                            {},
+                            (data) => {
+                                console.log('void asset success:', data);
+
+                                setTimeout(
+                                    () => {
+                                        if (this.deleteAsset) {
+                                            const deleteAssetAsyncTaskPipe = this.walletnodeTxService.deleteAsset({
+                                                walletId,
+                                                address,
+                                                namespace,
+                                                instrument,
+                                                metaData,
+                                            });
+
+                                            this.ngRedux.dispatch(SagaHelper.runAsync(
+                                                [],
+                                                [],
+                                                deleteAssetAsyncTaskPipe,
+                                                {},
+                                                (data) => {
+                                                    console.log('+++ deleteAsset response: ', data);
+
+                                                    /* Check instruments. */
+                                                    // setTimeout(
+                                                    //     () => {
+                                                    //         const requestData = {
+                                                    //             walletId: this.connectedWalletId,
+                                                    //         };
+
+                                                    //         const instrumentsRequest = this.walletNodeRequestService.walletIssuerRequest(
+                                                    //             requestData);
+
+                                                    //         this.ngRedux.dispatch(SagaHelper.runAsync(
+                                                    //             [],
+                                                    //             [],
+                                                    //             instrumentsRequest,
+                                                    //             {},
+                                                    //             (data) => {
+                                                    //                 console.log('+++ instrumentsRequest data: ', data);
+                                                    //             },
+                                                    //             (data) => { },
+                                                    //         ));
+
+                                                    //         /* Show success modal. */
+                                                    //         this.showSuccess(
+                                                    //             'Asset issuance has been successfully voided and deleted.');
+                                                    //         this.voidAssetForm.reset();
+                                                    //     },
+                                                    //     5000);
+
+                                                    this.showSuccess('Asset issuance has been successfully voided and deleted.');
+                                                    this.voidAssetForm.reset();
+                                                },
+                                                (data) => {
+                                                    console.log('fail', data);
+                                                    this.showError(data[1].data.status);
+                                                },
+                                            ));
+                                        } else {
+                                            /* Show success modal. */
+                                            this.showSuccess('Asset issuance has been successfully voided.');
+                                            this.voidAssetForm.reset();
+                                        }
+                                    },
+                                    10000);
+                            },
+                            (data) => {
+                                console.log('fail', data);
+                                this.showError(data[1].data.status);
+                            },
+                        ));
+                    } else {
+                        this.showError('There are no holders of this asset.');
+                    }
                 },
                 (data) => {
-                    console.log('fail', data);
+                    this.logService.log('Get issue holders error:', data);
                 },
             ));
         }
+    }
+
+    showSuccess(message) {
+        /* Show the message. */
+        this.alertsService.create('success', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-success">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
+    }
+
+    showError(message) {
+        /* Show the error. */
+        this.alertsService.create('error', `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-danger">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
     ngOnDestroy() {

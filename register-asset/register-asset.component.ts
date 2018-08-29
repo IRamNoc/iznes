@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux} from '@angular-redux/store';
-import {WalletNodeRequestService, WalletnodeTxService} from '@setl/core-req-services';
-import {SagaHelper} from '@setl/utils';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux } from '@angular-redux/store';
+import { WalletNodeRequestService, WalletnodeTxService } from '@setl/core-req-services';
+import { SagaHelper } from '@setl/utils';
 import {
     finishRegisterInstrumentNotification, getConnectedWallet, getNewInstrumentRequest, getRequestedIssuerState,
-    getWalletIssuerDetail, REGISTER_ASSET_FAIL, REGISTER_ASSET_SUCCESS, SET_WALLET_ISSUER_LIST, setRequestedWalletIssuer
+    getWalletIssuerDetail, REGISTER_ASSET_FAIL, REGISTER_ASSET_SUCCESS, SET_WALLET_ISSUER_LIST,
+    setRequestedWalletIssuer,
 } from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Unsubscribe} from 'redux';
-import {PersistService} from '@setl/core-persist';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Unsubscribe } from 'redux';
 
 @Component({
     selector: 'app-register-asset',
@@ -30,20 +30,17 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
     constructor(private alertsService: AlertsService,
                 private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private walletnodeTxService: WalletnodeTxService,
-                private _persistService: PersistService) {
+                private walletnodeTxService: WalletnodeTxService) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
         /**
          * Register Asset form
          */
-        const formGroup = new FormGroup({
+        this.registerAssetForm = new FormGroup({
             issuerIdentifier: new FormControl(this.walletIssuerDetail.walletIssuer, Validators.required),
-            instrumentIdentifier: new FormControl('', Validators.required)
+            instrumentIdentifier: new FormControl('', Validators.required),
         });
-
-        this.registerAssetForm = this._persistService.watchForm('assetServicing/registerAsset', formGroup);
     }
 
     ngOnInit() {
@@ -57,8 +54,8 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
 
         // If my issuer list is not yet requested,
         // Request wallet issuers
-        const RequestedIssuerState = getRequestedIssuerState(newState);
-        if (!RequestedIssuerState) {
+        const requestedIssuerState = getRequestedIssuerState(newState);
+        if (!requestedIssuerState) {
             this.requestWalletIssuer();
         }
 
@@ -67,7 +64,7 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
         this.walletIssuerDetail = walletIssuerDetail;
         if (this.registerAssetForm) {
             const walletIssuer = this.walletIssuerDetail.walletIssuer;
-            this.registerAssetForm.controls['issuerIdentifier'].patchValue(walletIssuer, {onlySelf: true});
+            this.registerAssetForm.controls['issuerIdentifier'].patchValue(walletIssuer, { onlySelf: true });
         }
 
         // Get register Asset response
@@ -76,7 +73,6 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
             this.showResponseModal(currentRegisterAssetRequest);
 
             // Set need notify to false;
-
             this.ngRedux.dispatch(finishRegisterInstrumentNotification());
         }
     }
@@ -89,7 +85,7 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
 
         // Create a saga pipe.
         const asyncTaskPipe = this.walletNodeRequestService.walletIssuerRequest({
-            walletId
+            walletId,
         });
 
         // Send a saga action.
@@ -97,7 +93,7 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
             [SET_WALLET_ISSUER_LIST],
             [],
             asyncTaskPipe,
-            {}
+            {},
         ));
     }
 
@@ -115,19 +111,14 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                 address,
                 namespace,
                 instrument,
-                metaData
+                metaData,
             });
 
-            // Send a saga action.
-            // Actions to dispatch, when request success:  LOGIN_SUCCESS.
-            // Actions to dispatch, when request fail:  RESET_LOGIN_DETAIL.
-            // saga pipe function descriptor.
-            // Saga pipe function arguments.
             this.ngRedux.dispatch(SagaHelper.runAsync(
                 [REGISTER_ASSET_SUCCESS],
                 [REGISTER_ASSET_FAIL],
                 asyncTaskPipe,
-                {}
+                {},
             ));
         }
     }

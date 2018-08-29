@@ -1,31 +1,23 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import {
-    AbstractControl, // less code
-    FormArray,
-    FormControl,
     FormBuilder,
     FormGroup,
     Validators,
 } from '@angular/forms';
-import {ConfirmationService, SagaHelper, walletHelper} from '@setl/utils';
-import {NgRedux, select} from '@angular-redux/store';
-import {fromJS} from 'immutable';
+import { SagaHelper, walletHelper } from '@setl/utils';
+import { NgRedux, select } from '@angular-redux/store';
 import * as _ from 'lodash';
 
-// import {ChainInterface} from './interface';
-// import {ChainModel} from './model';
-
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Subscription} from 'rxjs';
-import {Unsubscribe} from 'redux';
-import {WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService} from '@setl/core-req-services';
-import {MultilingualService} from '@setl/multilingual';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Subscription } from 'rxjs/Subscription';
+import { Unsubscribe } from 'redux';
+import { WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
+} from '@setl/core-req-services';
 
 import {
     getWalletToRelationshipList,
     getWalletDirectoryList,
     getWalletAddressList,
-    getConnectedWallet,
     setRequestedWalletAddresses,
     setRequestedWalletInstrument,
 } from '@setl/core-store';
@@ -34,7 +26,7 @@ import {
     selector: 'app-unencumber-assets',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class UnencumberAssetsComponent implements OnInit, OnDestroy {
@@ -51,20 +43,20 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         format: 'YYYY-MM-DD',
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
     };
 
     configFiltersTime = {
         closeOnSelect: true,
         disableKeypress: true,
-        locale: this.language
+        locale: this.language,
     };
 
     connectedWalletId: number;
     toRelationshipSelectItems = [];
 
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
 
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
@@ -79,56 +71,65 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     reduxUnsubscribe: Unsubscribe;
 
     constructor(
-        private _fb: FormBuilder,
+        private formBuilder: FormBuilder,
         private ngRedux: NgRedux<any>,
-        private _walletnodeTxService: WalletnodeTxService,
-        private _myWalletService: MyWalletsService,
+        private walletnodeTxService: WalletnodeTxService,
+        private myWalletService: MyWalletsService,
         private walletNodeRequestService: WalletNodeRequestService,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _alertsService: AlertsService,
-        // private _chainService: ChainService,
-        private multilingualService: MultilingualService,
-        private _confirmationService: ConfirmationService,
+        private changeDetectorRef: ChangeDetectorRef,
+        private alertsService: AlertsService,
     ) {
         this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
         this.updateState();
 
-        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => this.getLanguage(locale)));
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => this.connectedWalletId = connectedWalletId));
-        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => this.requestWalletAddressList(requested)));
-        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) =>
-            this.requestWalletInstruments(requestedState)));
-        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) =>
-            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)));
-        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
+        this.subscriptionsArray.push(this.requestLanguageObj.subscribe((locale) => {
+            this.getLanguage(locale);
+        }));
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            this.connectedWalletId = connectedWalletId;
+        }));
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => {
+            this.requestWalletAddressList(requested);
+        }));
+        this.subscriptionsArray.push(this.requestedInstrumentState.subscribe((requestedState) => {
+            this.requestWalletInstruments(requestedState);
+        }));
+        this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)
+        }));
+        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => {
+            this.requestWalletLabel(requested)
+        }));
+        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => {
+            this.getAddressList(addresses)
+        }));
     }
 
     ngOnInit() {
-        this.unencumberAssetsForm = this._fb.group({
+        this.unencumberAssetsForm = this.formBuilder.group({
             asset: [
                 '',
                 Validators.compose([
                     Validators.required,
-                ])
+                ]),
             ],
             fromAddress: [
                 '',
                 Validators.compose([
                     Validators.required,
-                ])
+                ]),
             ],
             toAddress: [
                 '',
                 Validators.compose([
                     Validators.required,
-                ])
+                ]),
             ],
             amount: [
                 '',
                 Validators.compose([
                     Validators.required,
-                ])
+                ]),
             ],
             reference: [
                 '',
@@ -156,24 +157,25 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         if (this.toRelationshipSelectItems.length === 0) {
             const walletToRelationship = getWalletToRelationshipList(newState);
             const walletDirectoryList = getWalletDirectoryList(newState);
-            this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
+            this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(
+                walletToRelationship, walletDirectoryList);
         }
 
-        this.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
-    getAddressList(addresses: Array<any>) {
+    getAddressList(addresses: any[]) {
         const data = [];
 
         Object.keys(addresses).map((key) => {
             data.push({
                 id: key,
-                text: addresses[key].label
+                text: addresses[key].label,
             });
         });
 
         this.fromAddressListOption = data;
-        this.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     requestWalletAddressList(requestedState: boolean) {
@@ -182,7 +184,8 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
             // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(
+                this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -200,22 +203,22 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     requestWalletLabel(requestedState: boolean) {
         // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
     getLanguage(locale): void {
         if (locale) {
             switch (locale) {
-                case 'fra':
-                    this.language = 'fr';
-                    break;
-                case 'eng':
-                    this.language = 'en';
-                    break;
-                default:
-                    this.language = 'en';
-                    break;
+            case 'fra':
+                this.language = 'fr';
+                break;
+            case 'eng':
+                this.language = 'en';
+                break;
+            default:
+                this.language = 'en';
+                break;
             }
         }
     }
@@ -226,7 +229,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const asyncTaskPipe = this._walletnodeTxService.unencumber(
+        const asyncTaskPipe = this.walletnodeTxService.unencumber(
             {
                 txtype: 'unenc',
                 walletid: this.connectedWalletId,
@@ -244,21 +247,18 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
             asyncTaskPipe,
             (data) => {
                 this.showSuccess('Unencumber has successfully been created');
-                this.resetForm();
+                this.unencumberAssetsForm.reset();
             },
             (data) => {
+                console.log('+++ error data: ', data);
                 this.showError(data[1].data.status);
-            })
+            }),
         );
-    }
-
-    resetForm(): void {
-        this.unencumberAssetsForm.reset();
     }
 
     showError(message) {
         /* Show the error. */
-        this._alertsService.create('error', `
+        this.alertsService.create('error', `
               <table class="table grid">
                   <tbody>
                       <tr>
@@ -270,8 +270,8 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     showWarning(message) {
-        /* Show the error. */
-        this._alertsService.create('warning', `
+        /* Show the warning. */
+        this.alertsService.create('warning', `
               <table class="table grid">
                   <tbody>
                       <tr>
@@ -284,7 +284,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
 
     showSuccess(message) {
         /* Show the message. */
-        this._alertsService.create('success', `
+        this.alertsService.create('success', `
               <table class="table grid">
                   <tbody>
                       <tr>
@@ -293,9 +293,5 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                   </tbody>
               </table>
           `);
-    }
-
-    markForCheck() {
-        this._changeDetectorRef.markForCheck();
     }
 }

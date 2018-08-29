@@ -102,10 +102,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
-
-        /*        if (this.connectedWalletId) {
-                    this.setFormGroup();
-                }*/
     }
 
     ngOnInit() {
