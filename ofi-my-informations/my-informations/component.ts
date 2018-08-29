@@ -61,7 +61,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _ngRedux: NgRedux<any>,
         private _fb: FormBuilder,
-        private mcService: OfiManagementCompanyService,
         public _translate: MultilingualService,
         @Inject('my-information-config') config,
     ) {
@@ -123,7 +122,6 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.mcService.getManagementCompanyList();
     }
 
     @Input() set userInfo(userInfo) {
