@@ -64,21 +64,25 @@ export {
 import {
     SiteSettingsReducer,
     SiteSettingsState,
+    setVersion,
     setLanguage,
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
+    SET_VERSION,
     SET_LANGUAGE,
     SET_SITE_MENU
 } from './site-settings';
 
 export {
+    setVersion,
     setLanguage,
     setMenuShown,
     getSiteSettings,
     SET_PRODUCTION,
+    SET_VERSION,
     SET_LANGUAGE,
-    SET_SITE_MENU
+    SET_SITE_MENU,
 };
 
 export interface UserState {
