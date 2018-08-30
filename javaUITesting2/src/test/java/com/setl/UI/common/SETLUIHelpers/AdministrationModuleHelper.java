@@ -1,8 +1,6 @@
 package com.setl.UI.common.SETLUIHelpers;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
@@ -171,6 +169,9 @@ public class AdministrationModuleHelper {
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[4]/button")).click();
     }
     public static void selectTeamRow0() {
+        final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.until(visibilityOfElementLocated(By.id("accountAdminTeamRow0")));
+        wait.until(elementToBeClickable(By.id("accountAdminTeamRow0")));
         driver.findElement(By.id("accountAdminTeamRow0")).click();
     }
     public static void editTeamName(String nameUpdate) {
@@ -191,14 +192,14 @@ public class AdministrationModuleHelper {
         driver.findElement((By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]"))).click();
         wait.until(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton")));
     }
-    public static void assertTeamName (String Name) {
+    public static void assertTeamName (String reName) {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.until(visibilityOfElementLocated(By.id("name")));
         wait.until(elementToBeClickable(By.id("name")));
-        String teamName = driver.findElement(By.id("name")).getText();
-        assertTrue(teamName.equals(teamName));
+        String nameEntry = driver.findElement(By.id("name")).getAttribute("value");
+        assertTrue(nameEntry.equals(reName));
     }
-    public static void selectDeleteTeam (String Answer) throws InterruptedException {
+    public static void selectDeleteTeam (String Answer, String teamName) throws InterruptedException {
         final WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[3]/button");
         Thread.sleep(2000);
@@ -208,10 +209,18 @@ public class AdministrationModuleHelper {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
             //Directs to overview page
             wait.until(refreshed(visibilityOfElementLocated(By.id("tabAccountAdminTeamsButton"))));
+            Thread.sleep(2000);
+            driver.findElement(By.cssSelector(".col-name > div:nth-child(1) > clr-dg-string-filter:nth-child(1) > clr-dg-filter:nth-child(1) > button:nth-child(1)")).click();
+            driver.findElement(By.cssSelector("input.ng-pristine")).sendKeys(teamName);
+            wait.until(invisibilityOfElementLocated(By.id("accountAdminTeamRow0")));
+
         }
         if (Answer == "No") {
             driver.findElement(By.xpath("/html/body/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[1]")).click();
             wait.until(visibilityOfElementLocated(By.id("name")));
+            scrollElementIntoViewByXpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a");
+            driver.findElement(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-crud/clr-tabs/clr-tab/clr-tab-content/div[5]/div[1]/a")).click();
+            wait.until(visibilityOfElementLocated(By.xpath("/html/body/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div[1]/div/app-core-admin-teams-list/clr-tabs/clr-tab/clr-tab-content/div/div[3]/a")));
         }
     }
 }
