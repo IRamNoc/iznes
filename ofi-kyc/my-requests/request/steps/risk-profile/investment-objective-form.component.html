@@ -91,7 +91,7 @@
         <div class="form-group required-field col-sm-6">
             <label for="riskProfile-{{index}}">{{'Risk profile: ability to incur losses' | translate}}</label>
 
-            <ng-select id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
+            <ng-select class="large-select" id="riskProfile-{{index}}" [items]="riskProfileList" formControlName="riskProfile"></ng-select>
             <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
 
             <div class="form-group mt-1" *ngIf="!isDisabled('riskProfileCapital')">
