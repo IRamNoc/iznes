@@ -47,7 +47,10 @@
         <!-- Header row -->
         <div *ngIf="messages.length">
             <div class="message_list_item">
-                <div class="message_list_item_check"></div>
+                <div class="message_list_item_check">
+                    <i class="fa" [ngClass]="{'fa-check': selectAll === true}" (click)="messageAllChecked(i, $event)">
+                    </i>
+                </div>
                 <div class="message_list_item_sender">{{(this.currentCategory==2?'To':'From')}}</div>
                 <div class="message_list_item_subject" mltag="txt_subject">Subject</div>
                 <div class="message_list_item_date" mltag="txt_date">Date</div>
@@ -127,7 +130,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'sendTxt'">
-                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.orderType);">Download File</button>
+                <button class="btn btn-primary" (click)="downloadTxtFile(currentMessage.action.orderID, currentMessage.action.MT502ID, currentMessage.action.orderType);">Download File</button>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
@@ -135,7 +138,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
-                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId"></setl-message-alert>
+                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="connectedWalletId"></setl-message-alert>
             </p>
 
             <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'" [data]="currentMessage.action.data" [userId]="userId"></setl-message-workflow>

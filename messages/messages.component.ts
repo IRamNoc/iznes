@@ -57,6 +57,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     public showDeleteModal: boolean = false;
 
     public unreadMessages;
+    public selectAll: boolean = false;
 
     public items: string[] = [];
 
@@ -248,6 +249,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      * @param messages
      */
     messagesList(messages) {
+        this.selectAll = false;
         this.messages = messages.map((message) => {
             if (message.senderId) {
                 if (typeof this.walletDirectoryList[message.senderId] !== 'undefined') {
@@ -364,6 +366,19 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
     }
 
     /**
+     * Checks All Messages
+     *
+     * @param index
+     */
+    messageAllChecked(index, event) {
+        this.selectAll = this.selectAll ? false : true;
+
+        this.messages = this.messages.map((message) => {
+            return { ...message, isChecked: this.selectAll };
+        });
+    }
+
+    /**
      * Show message when clicked
      *
      * @param index
@@ -401,7 +416,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
 
             // Mark message as read (if necessary)
-            if (!messages[index].isRead && messages[index].senderId != this.walletId) {
+            // comment out the senderId and connectedWalletId checkout to avoid could not able to mark
+            // message send from himself to read. But commented out might cause marking outgoing email to read,
+            // however, after a bit testing, it seem work ok.
+            // if (!messages[index].isRead && messages[index].senderId != this.walletId) {
+            if (!messages[index].isRead) {
                 this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
                 messages[index].isRead = true;
             }
@@ -595,11 +614,12 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         this.router.navigateByUrl('/messages/compose');
     }
 
-    downloadTxtFile(id, type) {
+    downloadTxtFile(id, MT502ID, type) {
         this.fileDownloader.downLoaderFile({
             method: 'getIznMT502',
             token: this.socketToken,
             orderId: id,
+            MT502ID,
             type,
             userId: this.userId,
         });

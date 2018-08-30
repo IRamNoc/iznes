@@ -112,13 +112,13 @@ export class SetlMessagePOAComponent implements OnInit {
                 this.knownPOAs.push(this.data['poareference']);
                 window.localStorage.setItem('activatedPOAs', JSON.stringify(this.knownPOAs)); // use new user storage?
                 this.showSuccessResponse('POA has been signed on the blockchain');
+
                 const req = this.messagesService.markMessageAsActedRequest(this.walletId, this.mailId, '0').then(
                     (res) => {
                         console.log('Flag as acted response', res);
                     }).catch((err) => {
                         console.error('Could not set acted', err);
                     });
-
             },
             (e) => {
                 console.error(e);

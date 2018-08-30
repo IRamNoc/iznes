@@ -4,6 +4,8 @@ import { WalletNodeSocketService } from '@setl/websocket-service';
 import { NgRedux } from '@angular-redux/store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
 import { CoreWorkflowEngineService } from '@setl/core-req-services';
+import { MessagesService } from '../../../messages.service';
+
 /**
  * SETL Message Body Component
  *
@@ -18,6 +20,10 @@ export class SetlMessageAlertComponent implements OnInit {
 
     @Input() data;
     @Input() userId;
+    @Input() walletId: number;
+    @Input() mailId: number;
+    @Input() isActed: boolean; // from db
+
     messageBody: string = '';
 
     public xparam = {
@@ -36,6 +42,7 @@ export class SetlMessageAlertComponent implements OnInit {
     private templateDetails;
 
     constructor (private walletNodeSocketService: WalletNodeSocketService,
+                 private messagesService: MessagesService,
                  private ngRedux: NgRedux<any>,
                  private alertsService: AlertsService,
                  private coreWorkflowService: CoreWorkflowEngineService) {
@@ -60,9 +67,17 @@ export class SetlMessageAlertComponent implements OnInit {
         this.performPost(this.xparam, (r) => {
             if (r[1]['Data'] && r[1]['Data'][0] && r[1]['Data'][0]['error']) {
                 console.error(r[1]['Data'][0]);
-                return this.showSuccessResponse('Server error occurred.');
+                return this.showErrorResponse('Server error occurred.');
+            }
+            if (r[1]['Data'] && r[1]['Data'][0] && r[1]['Data'][0]['Success'] && r[1]['Data'][0]['Success'] === -1) {
+                return this.showErrorResponse('A non-fatal error occurred');
             }
             this.showSuccessResponse('Workflow engine notified of your choice.');
+            const req = this.messagesService.markMessageAsActedRequest(this.walletId, this.mailId, '0').then((res) => {
+                console.log('Flag as acted response', res);
+            }).catch((err) => {
+                console.error('Could not set acted', err);
+            });
         }, (e) => {
             console.error(e);
             this.showErrorResponse('Unable to send parameter');
