@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
-import {get as getValue, isEmpty, castArray} from 'lodash';
+import {get as getValue, isEmpty, castArray, find} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
@@ -41,11 +41,15 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
         let investorType = changes.investorType.currentValue;
 
         if (investorType !== changes.investorType.previousValue) {
-            let investorStatus = investorType === 'nonPro' ? 0 : 1;
-
-            this.form.get('investorStatus').patchValue(investorStatus);
-            this.toggleForm(investorType);
+            this.investorChanged(investorType);
         }
+    }
+
+    investorChanged(investorType){
+        let investorStatus = investorType === 'nonPro' ? 0 : 1;
+
+        this.form.get('investorStatus').patchValue(investorStatus);
+        this.toggleForm(investorType);
     }
 
     get isPro() {
@@ -60,6 +64,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
 
         this.initCheckForm();
         this.getCurrentFormData();
+        this.investorChanged(this.investorType);
     }
 
     toggleForm(investorType) {
@@ -101,9 +106,7 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe)
             )
             .subscribe(data => {
-                let financialInstrumentsValue = getValue(data, [0, 'id']);
-
-                this.formCheckFinancialInstruments(financialInstrumentsValue);
+                this.formCheckFinancialInstruments(data);
             })
         ;
         this.form.get('nonPro.activitiesBenefitFromExperience').valueChanges
@@ -146,9 +149,11 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     formCheckFinancialInstruments(value) {
+        let hasOther = find(value, ['id', 'other']);
+        
         let financialInstrumentsTextControl: FormGroup = this.form.get('nonPro.financialInstrumentsSpecification');
 
-        if (value === 'other') {
+        if (hasOther) {
             financialInstrumentsTextControl.enable();
         } else {
             financialInstrumentsTextControl.disable();
