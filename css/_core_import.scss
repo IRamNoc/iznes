@@ -29,6 +29,10 @@ $setlHover: darken($setl, 2%);
 
 app-navigation-topbar {
     height: 75px;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 3;
 }
 
 .table {
@@ -55,7 +59,7 @@ td > .btn-group {
     -webkit-box-direction: normal;
     -ms-flex-direction: column;
     flex-direction: column;
-    height: 100vh;
+    // height: 100vh;
     background: #fafafa;
 }
 

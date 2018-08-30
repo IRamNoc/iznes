@@ -1,6 +1,6 @@
 <div class="main-container">
 
-    <ng-sidebar-container>
+    <ng-sidebar-container (scroll)="onScroll($event)" [scrollTop]="scrollTopPosition">
 
         <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
@@ -59,16 +59,18 @@
 
         </ng-sidebar>
 
-        <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
+        <div ng-sidebar-content #sidebarContainer class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
 
             <!-- Navigation Topbar. -->
             <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
 
-            <div class="content-container">
+            <div class="content-container" [ngStyle]="{'min-height.px' : sidebarHeight}">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav">
-                    <app-navigation-sidebar></app-navigation-sidebar>
+                <nav class="sidenav" (wheel)="sidebarWheel($event)" [class.fixed]="fixSidebar" [class.fixed-bottom]="fixSidebarBottom">
+                    <div #sidebar class="sidebar-wrapper">
+                        <app-navigation-sidebar></app-navigation-sidebar>
+                    </div>
                 </nav>
 
                 <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="currentParentUrl">

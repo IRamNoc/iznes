@@ -5,7 +5,10 @@ import {
     OnDestroy,
     OnInit,
     ViewChild,
-    ElementRef, Inject,
+    ElementRef,
+    Inject,
+    HostListener,
+    AfterViewInit,
 } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
 import { setVersion } from '@setl/core-store';
@@ -31,8 +34,10 @@ import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
     animations: [FadeSlideRight],
 })
 
-export class BasicLayoutComponent implements OnInit, OnDestroy {
+export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('main') mainEl: ElementRef;
+    @ViewChild('sidebar') sidebarEl: ElementRef;
+    @ViewChild('sidebarContainer') sidebarContainerEl: ElementRef;
 
     private appConfig: AppConfig;
 
@@ -49,6 +54,10 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
     public keyClose = false;
     public autoCollapseHeight: number = null;
     public autoCollapseWidth: number = null;
+    public fixSidebar: boolean = true;
+    public fixSidebarBottom: boolean = false;
+    public sidebarHeight: number;
+    public scrollTopPosition: number;
 
     /* Redux observables. */
     public _MODES: string[] = ['over', 'push', 'slide'];
@@ -116,6 +125,35 @@ export class BasicLayoutComponent implements OnInit, OnDestroy {
      */
     ngOnInit() {
         /* Stub. */
+    }
+
+    ngAfterViewInit() {
+        // Check height of sidebar and if greater than window height remove fixed class
+        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+        console.log('+++ this.sidebarHeight', this.sidebarHeight);
+        if (this.sidebarHeight > window.innerHeight) this.fixSidebar = false;
+
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onWindowResize() {
+        this.fixSidebar = this.sidebarEl.nativeElement.clientHeight > window.innerHeight ? false : true;
+    }
+
+    onScroll(event) {
+
+        this.scrollTopPosition = event.target.scrollTop;
+
+        const sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+
+        if (sidebarHeight > window.innerHeight) {
+            this.fixSidebarBottom =
+                (sidebarHeight - event.target.scrollTop) <= (window.innerHeight - 75) ? true : false;
+        }
+    }
+
+    sidebarWheel(event) {
+        this.scrollTopPosition += event.deltaY;
     }
 
     getLanguage(language): void {
