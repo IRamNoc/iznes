@@ -6,7 +6,7 @@ import { FileService } from '@setl/core-req-services/file/file.service';
 import * as SagaHelper from '@setl/utils/sagaHelper';
 import { ToasterService } from 'angular2-toaster';
 
-import { FormItem, FormItemType, FormItemStyle } from './DynamicForm';
+import { FormItem, FormItemType, FormItemStyle, FormElement, isFormHeader, isFormItem } from './DynamicForm';
 
 @Injectable()
 export class DynamicFormService {
@@ -16,13 +16,16 @@ export class DynamicFormService {
                 private redux: NgRedux<any>) {
     }
 
-    generateForm(model: { [key: string]: FormItem }): FormGroup {
+    generateForm(model: { [key: string]: FormElement }): FormGroup {
         const form = new FormGroup({});
 
-        _.forEach(model, (item: FormItem, index: string) => {
-            const formControl: FormControl = this.generateControl(model, index, item);
+        _.forEach(model, (item: FormElement, index: string) => {
+            if (isFormItem(item)) {
+                const formControl: FormControl =
+                    this.generateControl(model as { [key: string]: FormItem }, index, item as FormItem);
 
-            form.addControl(index, formControl);
+                form.addControl(index, formControl);
+            }
         });
 
         return form;
@@ -57,77 +60,82 @@ export class DynamicFormService {
         return formControl;
     }
 
-    updateModel(model: { [key: string]: FormItem }, form: FormGroup): { [key: string]: FormItem } {
-        _.forEach(model, (item: FormItem, index: string) => {
-            model[index].control = form.controls[index] as FormControl;
+    updateModel(model: { [key: string]: FormElement }, form: FormGroup): { [key: string]: FormElement } {
+        _.forEach(model, (element: FormElement, index: string) => {
+            if (isFormItem(element)) {
+                const item: FormItem = element as FormItem;
+                const modelItem: FormItem = model[index] as FormItem;
 
-            model[index].value = function (val?: any) {
-                if (!val) return this.control.value;
+                modelItem.control = form.controls[index] as FormControl;
 
-                form.controls[index].patchValue(val);
-            };
+                modelItem.value = function (val?: any) {
+                    if (!val) return this.control.value;
 
-            model[index].isValid = function (val?: any) {
-                return (((model[index].hidden) && model[index].hidden()) 
-                || form.controls[index].disabled) ? true : form.controls[index].valid;
-            };
-
-            model[index].cssClass = this.getFormItemStyles(item);
-
-            if (item.type === FormItemType.date && !item.dateOptions) {
-                item.dateOptions = {
-                    firstDayOfWeek: 'mo',
-                    format: 'YYYY-MM-DD',
-                    closeOnSelect: true,
-                    disableKeypress: true,
-                    locale: null,
+                    form.controls[index].patchValue(val);
                 };
+
+                modelItem.isValid = function (val?: any) {
+                    return (((modelItem.hidden) && modelItem.hidden()) ||
+                        form.controls[index].disabled) ? true : form.controls[index].valid;
+                };
+
+                if (item.type === FormItemType.date && !item.dateOptions) {
+                    item.dateOptions = {
+                        firstDayOfWeek: 'mo',
+                        format: 'YYYY-MM-DD',
+                        closeOnSelect: true,
+                        disableKeypress: true,
+                        locale: null,
+                    };
+                }
+
+                if (item.type === FormItemType.time && !item.timeOptions) {
+                    item.timeOptions = {
+                        showSeconds: false,
+                    };
+                }
             }
 
-            if (item.type === FormItemType.time && !item.timeOptions) {
-                item.timeOptions = {
-                    showSeconds: false,
-                };
-            }
+            model[index].cssClass = this.getFormItemStyles(element);
         });
 
         return model;
     }
 
-    getFormKeys(model: { [key: string]: FormItem }): string[] {
+    getFormKeys(model: { [key: string]: FormElement }): string[] {
         const formKeys: string[] = [];
 
-        _.forEach(model, (item: FormItem, index: string) => {
+        _.forEach(model, (item: FormElement, index: string) => {
             formKeys.push(index);
         });
 
         return formKeys;
     }
 
-    private getFormItemStyles(item: FormItem): string {
+    private getFormItemStyles(item: FormElement): string {
         let cssClass = 'col-sm-6 ';
 
         if ((item.style) && item.style.length > 0) {
             item.style.forEach((style: FormItemStyle) => {
                 switch (style) {
-                    case FormItemStyle.SingleRow:
-                        cssClass = cssClass.replace('col-sm-6 ', '');
-                        cssClass += 'col-sm-12 ';
-                        break;
-                    case FormItemStyle.BreakOnBefore:
-                        cssClass += 'break-on-before ';
-                        break;
-                    case FormItemStyle.BreakOnAfter:
-                        cssClass += 'break-on-after ';
-                        break;
-                    case FormItemStyle.WidthThird:
-                        cssClass = cssClass.replace('col-sm-6 ', '');
-                        cssClass += 'col-sm-4 ';
-                        break;
-                    case FormItemStyle.WidthFourth:
-                        cssClass = cssClass.replace('col-sm-6 ', '');
-                        cssClass += 'col-sm-3 ';
-                        break;
+                case FormItemStyle.SingleRow:
+                    cssClass = cssClass.replace('col-sm-6 ', '');
+                    cssClass += 'col-sm-12 ';
+                    break;
+                case FormItemStyle.BreakOnBefore:
+                    cssClass += 'break-on-before ';
+                    break;
+                case FormItemStyle.BreakOnAfter:
+                    cssClass += 'break-on-after ';
+                    break;
+                case FormItemStyle.WidthThird:
+                    cssClass = cssClass.replace('col-sm-6 ', '');
+                    cssClass += 'col-sm-4 ';
+                    break;
+                case FormItemStyle.WidthFourth:
+                    cssClass = cssClass.replace('col-sm-6 ', '');
+                    cssClass += 'col-sm-3 ';
+                    break;
                 }
             });
         }

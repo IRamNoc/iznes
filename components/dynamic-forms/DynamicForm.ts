@@ -1,6 +1,8 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 import { FilePermission } from '@setl/core-filedrop/drophandler/drophandler.component';
 
+export type FormElement = FormItem | FormHeader;
+
 export interface FormItem {
     cssClass?: string;
     control?: FormControl;
@@ -55,4 +57,20 @@ export enum FormItemStyle {
 export interface FormItemDropdown {
     id: any;
     text: string;
+}
+
+export interface FormHeader {
+    cssClass?: string;
+    id: string;
+    tag: 'h2' | 'h3' | 'h4';
+    text: string;
+    style?: FormItemStyle[];
+}
+
+export function isFormHeader(element: FormElement) {
+    return (element as FormHeader).tag;
+}
+
+export function isFormItem(element: FormElement) {
+    return !(element as FormHeader).tag;
 }

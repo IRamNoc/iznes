@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { FormItem, FormItemType, FormItemStyle } from './DynamicForm';
+import { FormGroup } from '@angular/forms';
+import { FormItem, FormItemStyle, FormElement, isFormItem } from './DynamicForm';
 import { DynamicFormService } from './service';
 
 @Component({
@@ -12,8 +12,8 @@ import { DynamicFormService } from './service';
 
 export class DynamicFormComponent implements OnInit {
 
-    private formModel: { [key: string]: FormItem };
-    @Input() set model(model: { [key: string]: FormItem }) {
+    private formModel: { [key: string]: FormElement };
+    @Input() set model(model: { [key: string]: FormElement }) {
         this.formModel = model;
         this.generateForm();
     }
@@ -64,10 +64,14 @@ export class DynamicFormComponent implements OnInit {
      *
      * @return {boolean} - True if error, otherwise false.
      */
-    hasErrorMessage(formItem: FormItem): boolean {
-        if (formItem.control.errors !== null && typeof formItem.control.errors === 'object') {
-            return true;
+    hasErrorMessage(formItem: FormElement): boolean {
+        if (this.isElementFormItem(formItem)) {
+            if ((formItem as FormItem).control.errors !== null &&
+                typeof (formItem as FormItem).control.errors === 'object') {
+                return true;
+            }
         }
+
         return false;
     }
 
@@ -108,8 +112,8 @@ export class DynamicFormComponent implements OnInit {
     * @return {boolean} - True if hidden, otherwise false.
     */
     isHidden(item: string): boolean {
-        if (this.formModel[item].hidden !== undefined) {
-            return this.formModel[item].hidden();
+        if ((this.formModel[item] as FormItem).hidden !== undefined) {
+            return (this.formModel[item] as FormItem).hidden();
         }
         return false;
     }
@@ -135,5 +139,9 @@ export class DynamicFormComponent implements OnInit {
             return item.control.value;
         }
         return item.preset;
+    }
+
+    isElementFormItem(item: FormElement): boolean {
+        return isFormItem(item);
     }
 }
