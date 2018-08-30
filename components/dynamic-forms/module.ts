@@ -8,6 +8,7 @@ import { SelectModule } from '../ng2-select/select.module';
 import { FileDropModule } from '@setl/core-filedrop';
 import { FileViewerModule } from '@setl/core-fileviewer/fileviewer.module';
 import { DatePickerExtendedModule } from '../date-picker-extended/module';
+import { SetlPipesModule } from '../../pipes';
 
 import { DynamicFormComponent } from './component';
 import { DynamicFormService } from './service';
@@ -23,6 +24,7 @@ import { DynamicFormService } from './service';
         FileDropModule,
         FileViewerModule,
         DatePickerExtendedModule,
+        SetlPipesModule,
     ],
     declarations: [
         DynamicFormComponent,
