@@ -415,7 +415,11 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
             }
 
             // Mark message as read (if necessary)
-            if (!messages[index].isRead && messages[index].senderId != this.connectedWalletId) {
+            // comment out the senderId and connectedWalletId checkout to avoid could not able to mark
+            // message send from himself to read. But commented out might cause marking outgoing email to read,
+            // however, after a bit testing, it seem work ok.
+            // if (!messages[index].isRead && messages[index].senderId != this.connectedWalletId) {
+            if (!messages[index].isRead) {
                 this.mailHelper.markMessageAsRead(messages[index].recipientId, messages[index].mailId);
                 messages[index].isRead = true;
             }
