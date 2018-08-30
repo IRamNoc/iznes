@@ -95,6 +95,11 @@ export interface CreateUserRequest extends MemberNodeMessageBody {
     password: string;
 }
 
+export interface PostCreateUserRequest extends MemberNodeMessageBody {
+    token: string;
+    userID: number;
+}
+
 export interface InviteUserRequest extends MemberNodeMessageBody {
     token: string;
     userId: number;

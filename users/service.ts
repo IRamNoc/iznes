@@ -19,6 +19,7 @@ import { AccountAdminBaseService } from '../base/service';
 import {
     ReadUsersRequest,
     CreateUserRequest,
+    PostCreateUserRequest,
     UpdateUserDetailsRequest,
     DeleteUserRequest,
     ReadUsersAuditRequest,
@@ -95,7 +96,7 @@ export class UsersService extends AccountAdminBaseService {
             email,
             username: email,
             userType,
-            password: this.generatePassword(),
+            password: this.generatePassword(16),
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
@@ -113,17 +114,46 @@ export class UsersService extends AccountAdminBaseService {
                                      }
 
                                      this.updateUserDetails(
-                                         userId,
-                                         account,
-                                         firstName,
-                                         lastName,
-                                         email,
-                                         phoneNumber,
-                                         userType,
-                                         reference,
-                                         onSuccess,
-                                         onError,
+                                        userId,
+                                        account,
+                                        firstName,
+                                        lastName,
+                                        email,
+                                        phoneNumber,
+                                        userType,
+                                        reference,
+                                        () => {
+                                            this.postCreateUser(userId, onSuccess, onError);
+                                        },
+                                        onError,
                                     );
+                                 },
+                                 onError);
+    }
+
+    /**
+     * Post User Creation
+     *
+     * @param userId
+     * @param onSuccess
+     * @param onError
+     */
+    private postCreateUser(userId: number,
+                           onSuccess: RequestCallback,
+                           onError: RequestCallback): void {
+        const request: PostCreateUserRequest = {
+            RequestName: 'postcreateuser',
+            token: this.memberSocketService.token,
+            userID: userId,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
+
+        this.callAccountAdminAPI(asyncTaskPipe,
+                                 undefined,
+                                 undefined,
+                                 (data: AccountAdminResponse) => {
+                                     onSuccess(data);
                                  },
                                  onError);
     }
@@ -230,11 +260,6 @@ export class UsersService extends AccountAdminBaseService {
                                  onError);
     }
 
-    private generatePassword(): string {
-        // TODO: to be changed to a randon string generator
-        return 'changeme';
-    }
-
     /**
      * Delete User
      *
@@ -333,6 +358,15 @@ export class UsersService extends AccountAdminBaseService {
                                  SET_USER_TYPES,
                                  () => {},
                                  () => {});
+    }
+
+    private generatePassword(length: number) {
+        let text = '';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < length; i++) {
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        }
+        return text;
     }
 
 }
