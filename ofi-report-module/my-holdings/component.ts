@@ -1,14 +1,15 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-
-import {MultilingualService} from '@setl/multilingual';
-import {fromJS} from 'immutable';
+import { OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { MultilingualService } from '@setl/multilingual';
+import { fromJS, List } from 'immutable';
+import { Subject } from 'rxjs/Subject';
+import { filter, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
-
-import {MemberSocketService} from '@setl/websocket-service';
-import {OfiManagementCompanyService} from '../../ofi-req-services/ofi-product/management-company/management-company.service';
-import {OfiReportsService} from '../../ofi-req-services/ofi-reports/service';
+import { MemberSocketService } from '@setl/websocket-service';
+import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
+import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
+import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
 
 /* Types. */
 interface SelectedItem {
@@ -21,171 +22,226 @@ interface SelectedItem {
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
-
-    unknownValue = '???';
-
-    managementCompanyList: Array<any> = [];
-
-    selectedManagementCompany = 0;
-
-    holdingsList: Array<any> = [];
-
-    searchForm: FormGroup;
-
-    currencyList = [
-        {id: 0, text: 'EUR'},
-        {id: 1, text: 'USD'},
-        {id: 2, text: 'GBP'},
-        {id: 3, text: 'CHF'},
-        {id: 4, text: 'JPY'},
-        {id: 5, text: 'AUD'},
-        {id: 6, text: 'NOK'},
-        {id: 7, text: 'SEK'},
-        {id: 8, text: 'ZAR'},
-        {id: 9, text: 'RUB'},
-        {id: 10, text: 'SGD'},
-        {id: 11, text: 'AED'},
-        {id: 12, text: 'CNY'},
-        {id: 13, text: 'PLN'},
-    ];
-
-    private myDetails: any = {};
-    private appConfig: any = {};
-    private subscriptions: Array<any> = [];
-
+export class MyHoldingsComponent implements OnInit, OnDestroy {
     private connectedWalletId: any = 0;
 
-    /* Observables. */
-    @select(['user', 'siteSettings', 'language']) requestLanguageObj;
-    @select(['user', 'myDetail']) myDetailOb: any;
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb: any;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'invRequested']) requestedINVManagementCompanyListOb;
-    @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'investorManagementCompanyList', 'investorManagementCompanyList']) invManagementCompanyAccessListOb;
-    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedOfiInvHoldingsObj;
-    @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) ofiInvHoldingsListObj;
+    selectedManagementCompanyId = 0;
+    investorManagementCompanyList = [];
+    holdingsList = [];
+    searchForm: FormGroup;
+    currencyList = [];
+    unSubscribe: Subject<any> = new Subject();
+
+    @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
+    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedInvestorHolding$;
+    @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
+    @select([
+        'ofi',
+        'ofiProduct',
+        'ofiManagementCompany',
+        'investorManagementCompanyList',
+        'investorManagementCompanyList',
+    ]) investorManagementCompany$;
 
     constructor(
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
-        private _fb: FormBuilder,
-        private mcService: OfiManagementCompanyService,
+        private fb: FormBuilder,
+        private currenciesService: OfiCurrenciesService,
+        private managementCompanyService: OfiManagementCompanyService,
         private memberSocketService: MemberSocketService,
         private ofiReportsService: OfiReportsService,
         private _translate: MultilingualService,
     ) {
-        this.createsearchForm();
+        this.currenciesService.getCurrencyList();
+        this.managementCompanyService.fetchInvestorManagementCompanyList();
     }
 
-    ngAfterViewInit() {
-        this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-            /* Assign list to a property. */
-            this.connectedWalletId = connectedWalletId;
-
-            if (this.connectedWalletId !== 0) {
-                this.subscriptions.push(this.requestedINVManagementCompanyListOb.subscribe(invRequested => this.getINVManagementCompanyListRequested(invRequested)));
-                this.subscriptions.push(this.invManagementCompanyAccessListOb.subscribe(investorManagementCompanyList => this.getINVManagementCompanyListFromRedux(investorManagementCompanyList)));
-                this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
-                this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
-            }
+    ngOnInit(): void {
+        this.searchForm = this.fb.group({
+            search: [''],
         });
+
+        this.searchForm.valueChanges
+            .pipe(
+                filter(v => v.search.length),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                // if (d.search.length > 0) {
+                    this.selectedManagementCompanyId = d.search[0].id;
+
+                    const payload = {
+                        amCompanyID: d.search[0].id,
+                        walletID: this.connectedWalletId,
+                    };
+
+                    OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
+
+                    this.changeDetectorRef.markForCheck();
+                // }
+            });
+
+        this.connectedWallet$
+            .pipe(
+                filter(v => !!v),
+                takeUntil(this.unSubscribe)
+            )
+            .subscribe(d => this.connectedWalletId = d);
+
+        this.investorManagementCompany$
+            .pipe(
+                filter((v: List<any>) => v && v.size > 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const data = d.toJS();
+
+                this.investorManagementCompanyList = data.map(it => ({
+                    id: it.companyID,
+                    text: it.companyName,
+                }));
+
+                this.changeDetectorRef.markForCheck();
+            });
+
+        // this.requestedInvestorHolding$
+        //     .takeUntil(this.unSubscribe)
+        //     .subscribe((d) => {
+        //         console.log('d :', d);
+
+        //         if (this.connectedWalletId !== 0 && this.selectedManagementCompanyId !== 0) {
+        //             const payload = {
+        //                 amCompanyID: this.selectedManagementCompanyId,
+        //                 walletID: this.connectedWalletId,
+        //             };
+
+        //             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
+        //         }
+        //     });
+
+        this.investorHoldingList$
+            .pipe(
+                filter((v: List<any>) => {
+                    console.log('v :', v);
+                    return v && v.size > 0;
+                }),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe((d) => {
+                const listImu = fromJS(d);
+
+                console.log('listImu :', listImu);
+
+                this.holdingsList = listImu.map(it => ({
+                    amManagementCompanyID: it.amManagementCompanyID,
+                    companyName: it.companyName,
+                    shareID: it.shareID,
+                    fundShareName: it.fundShareName,
+                    isin: it.isin,
+                    shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
+                    latestNav: it.latestNav,
+                    portfolioAddr: it.portfolioAddr,
+                    portfolioLabel: it.portfolioLabel,
+                    quantity: it.quantity,
+                    amount: it.amount,
+                    ratio: it.ratio,
+                })) || [];
+
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
-    getINVManagementCompanyListRequested(requested): void {
-        // this.logService.log('requested', requested);
-        if (!requested) {
-            this.mcService.fetchManagementCompanyForInvestor(true);
+    // ngAfterViewInit() {
+    //     this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
+    //         this.connectedWalletId = connectedWalletId;
+
+    //         if (this.connectedWalletId !== 0) {
+    //             this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
+    //             this.subscriptions.push(this.invManagementCompanyAccessListOb.subscribe(investorManagementCompanyList => this.getINVManagementCompanyListFromRedux(investorManagementCompanyList)));
+    //             this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
+    //             this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
+    //         }
+    //     });
+    // }
+
+    ngOnDestroy() {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+        this.changeDetectorRef.detach();
+    }
+
+    /**
+     * Get the list of currencies from redux
+     *
+     * @param {Array} data
+     * @memberof OfiNavFundView
+     */
+    getCurrencyList(data) {
+        if (data) {
+            this.currencyList = data.toJS();
         }
     }
 
-    getINVManagementCompanyListFromRedux(managementCompanyList) {
-        const managementCompanyListImu = fromJS(managementCompanyList);
+    // getINVManagementCompanyListFromRedux(managementCompanyList) {
+    //     const managementCompanyListImu = fromJS(managementCompanyList);
 
-        this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
+    //     this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
+    //         result.push({
+    //             id: item.get('companyID', 0),
+    //             text: item.get('companyName', ''),
+    //         });
 
-            result.push({
-                id: item.get('companyID', 0),
-                text: item.get('companyName', ''),
-                // companyID: item.get('companyID', 0),
-                // companyName: item.get('companyName', ''),
-                // country: item.get('country', ''),
-                // addressPrefix: item.get('addressPrefix', ''),
-                // postalAddressLine1: item.get('postalAddressLine1', ''),
-                // postalAddressLine2: item.get('postalAddressLine2', ''),
-                // city: item.get('city', ''),
-                // stateArea: item.get('stateArea', ''),
-                // postalCode: item.get('postalCode', ''),
-                // taxResidence: item.get('taxResidence', ''),
-                // registrationNum: item.get('registrationNum', ''),
-                // supervisoryAuthority: item.get('supervisoryAuthority', ''),
-                // numSiretOrSiren: item.get('numSiretOrSiren', ''),
-                // creationDate: item.get('creationDate', ''),
-                // shareCapital: item.get('shareCapital', 0),
-                // commercialContact: item.get('commercialContact', ''),
-                // operationalContact: item.get('operationalContact', ''),
-                // directorContact: item.get('directorContact', ''),
-                // lei: item.get('lei', ''),
-                // bic: item.get('bic', ''),
-                // giinCode: item.get('giinCode', ''),
-                // logoName: item.get('logoName', ''),
-                // logoURL: item.get('logoURL', ''),
-            });
+    //         return result;
+    //     }, []);
 
-            return result;
-        }, []);
+    //     this.changeDetectorRef.markForCheck();
+    // }
 
-        this.changeDetectorRef.markForCheck();
-    }
+    // getInvHoldingsRequested(requested): void {
+    //     if (!requested) {
+    //         const payload = {
+    //             amCompanyID: this.selectedManagementCompany,
+    //             walletID: this.connectedWalletId,
+    //         };
 
-    getInvHoldingsRequested(requested): void {
-        // this.logService.log('requested', requested);
-        if (!requested) {
-            const payload = {amCompanyID: this.selectedManagementCompany, walletID: this.connectedWalletId};
-            OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
-        }
-    }
+    //         OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
+    //     }
+    // }
 
-    getInvHoldingsListFromRedux(list) {
-        const listImu = fromJS(list);
+    // getInvHoldingsListFromRedux(list) {
+    //     const listImu = fromJS(list);
 
-        this.holdingsList = listImu.reduce((result, item) => {
+    //     this.holdingsList = listImu.reduce((result, item) => {
 
-            result.push({
-                amManagementCompanyID: item.get('amManagementCompanyID', 0),
-                companyName: item.get('companyName', ''),
-                shareID: item.get('shareID', 0),
-                fundShareName: item.get('fundShareName', ''),
-                isin: item.get('isin', ''),
-                shareClassCurrency: this.showCurrency(item.get('shareClassCurrency', '')),
-                latestNav: item.get('latestNav', 0),
-                portfolioAddr: item.get('portfolioAddr', ''),
-                portfolioLabel: item.get('portfolioLabel', ''),
-                quantity: item.get('quantity', 0),
-                amount: item.get('amount', 0),
-                ratio: item.get('ratio', 0),
-            });
+    //         result.push({
+    //             amManagementCompanyID: item.get('amManagementCompanyID', 0),
+    //             companyName: item.get('companyName', ''),
+    //             shareID: item.get('shareID', 0),
+    //             fundShareName: item.get('fundShareName', ''),
+    //             isin: item.get('isin', ''),
+    //             shareClassCurrency: this.showCurrency(item.get('shareClassCurrency', '')),
+    //             latestNav: item.get('latestNav', 0),
+    //             portfolioAddr: item.get('portfolioAddr', ''),
+    //             portfolioLabel: item.get('portfolioLabel', ''),
+    //             quantity: item.get('quantity', 0),
+    //             amount: item.get('amount', 0),
+    //             ratio: item.get('ratio', 0),
+    //         });
 
-            return result;
-        }, []);
+    //         return result;
+    //     }, []);
 
-        this.changeDetectorRef.markForCheck();
-    }
+    //     this.changeDetectorRef.markForCheck();
+    // }
 
     requestSearch(form) {
         if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
-            this.selectedManagementCompany = this.searchForm.get('search').value[0].id;
-            const payload = {amCompanyID: this.selectedManagementCompany, walletID: this.connectedWalletId};
+            this.selectedManagementCompanyId = this.searchForm.get('search').value[0].id;
+            const payload = {amCompanyID: this.selectedManagementCompanyId, walletID: this.connectedWalletId};
             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
         }
-    }
-
-    createsearchForm() {
-        this.searchForm = this._fb.group({
-            search: [
-                '',
-            ],
-        });
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
     }
 
     showCurrency(currency) {
@@ -196,9 +252,14 @@ export class MyHoldingsComponent implements AfterViewInit, OnDestroy {
         return currency;
     }
 
-    ngOnDestroy() {
-        for (const subscription of this.subscriptions) {
-            subscription.unsubscribe();
-        }
+    /**
+     * Get the label of the currency (3 characters)
+     *
+     * @param {number} currencyId
+     * @returns {string}
+     * @memberof OfiNavFundView
+     */
+    getCurrencyString(currencyId: number): string {
+        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
     }
 }

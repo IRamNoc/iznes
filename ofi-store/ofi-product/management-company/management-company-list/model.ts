@@ -1,3 +1,5 @@
+import { List } from 'immutable';
+
 export interface ManagementCompanyDetail {
     companyID: string;
     entityID?: string;
@@ -33,8 +35,6 @@ export interface managementCompanyListState {
 }
 
 export interface invManagementCompanyListState {
-    investorManagementCompanyList: {
-        [key: string]: ManagementCompanyDetail;
-    };
+    investorManagementCompanyList: List<ManagementCompanyDetail>,
     invRequested: boolean;
 }

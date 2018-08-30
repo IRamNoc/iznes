@@ -18,7 +18,7 @@ export const SET_REQUESTED_MANAGEMENT_COMPANY = `${name}/SET_REQUESTED_MANAGEMEN
 export const setRequestedManagementCompany = kAction(SET_REQUESTED_MANAGEMENT_COMPANY);
 
 export const SET_REQUESTED_INV_MANAGEMENT_COMPANY = `${name}/SET_REQUESTED_INV_MANAGEMENT_COMPANY`;
-export const setRequestedINVManagementCompany = kAction(SET_REQUESTED_INV_MANAGEMENT_COMPANY);
+export const setRequestedInvestorManagementCompany = kAction(SET_REQUESTED_INV_MANAGEMENT_COMPANY);
 
 
 /**

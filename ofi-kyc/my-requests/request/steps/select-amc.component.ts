@@ -168,7 +168,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     getAssetManagementCompanies() {
-        this.ofiManagementCompanyService.fetchManagementCompanyForInvestor(true);
+        this.ofiManagementCompanyService.fetchInvestorManagementCompanyList(true);
     }
 
     onRegisteredChange() {
