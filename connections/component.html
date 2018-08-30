@@ -15,7 +15,7 @@
                 <section class="form-block">
                     <clr-datagrid>
                         <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'subportfolios'">Subportfolio</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'subportfolios'">Sub-portfolio</clr-dg-column>
                         <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                         <clr-dg-row *clrDgItems="let acceptedConnection of acceptedConnectionList">
@@ -238,7 +238,7 @@
 
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
-    <h3 class="modal-title">Select the subportfolio address you want to bind to this connection</h3>
+    <h3 class="modal-title">Select a sub-portfolio to use for this connection</h3>
     <div class="modal-body">
         <label class="control-label required-field" for="accept-subportfolio-addr-link" mltag="txt_subportfolio">Sub-portfolio</label>
         <ng-select
