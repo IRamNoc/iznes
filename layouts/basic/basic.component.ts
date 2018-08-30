@@ -168,7 +168,6 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
      * Handle Sidebar Fixing On Click
      * -------------------------------
      * Unfix the sidebar when a menu item expands to increase it's height to larger than the viewport, or fix if not
-     *
      */
     handleSidebarFixingOnClick() {
         // setTimeout to account for CSS transition time before calculating heights
