@@ -10,13 +10,13 @@
                             <ng-container *ngSwitchCase="false">
                                 <ng-container [ngSwitch]="model[item].tag">
                                     <ng-container *ngSwitchCase="'h2'">
-                                        <h2 class="dynamic-form-header">{{ model[item].text }}</h2>
+                                        <h2 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h2>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'h3'">
-                                        <h3 class="dynamic-form-header">{{ model[item].text }}</h3>
+                                        <h3 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h3>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="'h4'">
-                                        <h4 class="dynamic-form-header">{{ model[item].text }}</h4>
+                                        <h4 class="dynamic-form-header" id="{{ model[item].id }}">{{ model[item].text | translate }}</h4>
                                     </ng-container>
                                 </ng-container>
                             </ng-container>
