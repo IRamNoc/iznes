@@ -28,6 +28,6 @@ export class KycDetailsGridComponent {
     }
 
     split(value: string){
-        return value.split(' ');
+        return value.split('|');
     }
 }

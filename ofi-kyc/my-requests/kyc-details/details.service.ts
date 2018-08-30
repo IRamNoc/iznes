@@ -66,8 +66,7 @@ export class KycDetailsService {
     async getHashes(rows) {
         for (let row of rows) {
             if (requestsConfig.fileControls.indexOf(row.originalId) !== -1) {
-                await this.getFileByID(row.value).then(response =>
-                    {
+                await this.getFileByID(row.value).then(response => {
                         let document = getValue(response, [1, 'Data', 0]);
                         row.hash = document.hash;
                         row.name = document.name;
@@ -100,11 +99,11 @@ export class KycDetailsService {
             }
         }
         if (list) {
-            try {
-                return find(list, ['id', controlValue]).text;
-            } catch (e) {
-
-            }
+            return controlValue.split(' ').reduce((acc, cur) => {
+                let found = find(list, ['id', cur]);
+                found = found ? found.text : cur;
+                return acc ? [acc, found].join('|') : found;
+            }, '');
         }
 
         return controlValue;
