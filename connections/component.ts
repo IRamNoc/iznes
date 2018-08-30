@@ -1,23 +1,23 @@
 // Vendor
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {get as getValue} from 'lodash';
-import {ClrTabs} from '@clr/angular';
-import {Subscription} from 'rxjs/Subscription';
-import {NgRedux, select} from '@angular-redux/store';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { get as getValue } from 'lodash';
+import { ClrTabs } from '@clr/angular';
+import { Subscription } from 'rxjs/Subscription';
+import { NgRedux, select } from '@angular-redux/store';
 // Internal
 import {
     ConnectionService,
     InitialisationService,
     MyWalletsService,
     WalletNodeRequestService,
-    WalletnodeTxService
+    WalletnodeTxService,
 } from '@setl/core-req-services';
 
-import {setRequestedFromConnections, setRequestedToConnections, setRequestedWalletAddresses} from '@setl/core-store';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {SagaHelper} from '@setl/utils/index';
-import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
+import { setRequestedFromConnections, setRequestedToConnections, setRequestedWalletAddresses } from '@setl/core-store';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { SagaHelper } from '@setl/utils/index';
+import { MessageConnectionConfig, MessagesService } from '@setl/core-messages';
 
 @Component({
     selector: 'app-my-connections',
@@ -30,7 +30,7 @@ import {MessageConnectionConfig, MessagesService} from '@setl/core-messages';
             padding: 10px 5px;
         }
     `],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConnectionComponent implements OnInit, OnDestroy {
     formGroup: FormGroup;
@@ -53,7 +53,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     /* Rows Per Page datagrid size */
     public pageSize: number;
     // List of observable subscription
-    subscriptionsArray: Array<Subscription> = [];
+    subscriptionsArray: Subscription[] = [];
     // List of Redux observable.
     @select(['user', 'connected', 'connectedWallet']) connectedWalletObs;
     @select(['wallet', 'managedWallets', 'walletList']) walletListObs;
@@ -61,16 +61,16 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListObs;
     @select(['wallet', 'myWalletAddress', 'addressList']) subPortfolioAddressObs;
     @select(['wallet', 'myWalletAddress', 'requestedCompleteAddresses']) requestedCompleteAddressesObs;
-    @select(['connection', 'myConnection', 'requestedFromConnectionList']) requestedFromConnectionStateObs;
-    @select(['connection', 'myConnection', 'requestedToConnectionList']) requestedToConnectionStateObs;
-    @select(['connection', 'myConnection', 'fromConnectionList']) fromConnectionListObs;
-    @select(['connection', 'myConnection', 'toConnectionList']) toConnectionListObs;
+    @select(['connection', 'myConnections', 'requestedFromConnectionList']) requestedFromConnectionStateObs;
+    @select(['connection', 'myConnections', 'requestedToConnectionList']) requestedToConnectionStateObs;
+    @select(['connection', 'myConnections', 'fromConnectionList']) fromConnectionListObs;
+    @select(['connection', 'myConnections', 'toConnectionList']) toConnectionListObs;
 
     constructor(private ngRedux: NgRedux<any>,
                 private alertsService: AlertsService,
-                private _myWalletService: MyWalletsService,
-                private _walletnodeTxService: WalletnodeTxService,
-                private _walletNodeRequestService: WalletNodeRequestService,
+                private myWalletService: MyWalletsService,
+                private walletnodeTxService: WalletnodeTxService,
+                private walletNodeRequestService: WalletNodeRequestService,
                 private cd: ChangeDetectorRef,
                 private myWalletsService: MyWalletsService,
                 private connectionService: ConnectionService,
@@ -91,28 +91,45 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.initFormGroup();
 
         // Observables
-        this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => this.getConnectedWallet(connected)));
-        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => this.requestWalletLabel(requested)));
-        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => this.requestAddressList(requested)));
-        this.subscriptionsArray.push(
-            this.requestedFromConnectionStateObs.subscribe((requested) => this.requestFromConnectionList(requested))
-        );
-        this.subscriptionsArray.push(this.requestedToConnectionStateObs.subscribe((requested) => this.requestToConnectionList(requested)));
-
-        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => this.getWalletList(wallets)));
-        this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => this.getFromConnectionList(connections)));
-        this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => this.getToConnectionList(connections)));
-        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => this.getAddressList(addresses)));
+        this.subscriptionsArray.push(this.connectedWalletObs.subscribe((connected) => {
+            this.getConnectedWallet(connected);
+        }));
+        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe((requested) => {
+            this.requestWalletLabel(requested);
+        }));
+        this.subscriptionsArray.push(this.requestedAddressListObs.subscribe((requested) => {
+            this.requestAddressList(requested);
+        }));
+        this.subscriptionsArray.push(this.requestedFromConnectionStateObs.subscribe((requested) => {
+            this.requestFromConnectionList(requested);
+        }));
+        this.subscriptionsArray.push(this.requestedToConnectionStateObs.subscribe((requested) => {
+            this.requestToConnectionList(requested);
+        }));
+        this.subscriptionsArray.push(this.walletListObs.subscribe((wallets) => {
+            this.getWalletList(wallets);
+        }));
+        this.subscriptionsArray.push(this.fromConnectionListObs.subscribe((connections) => {
+            this.getFromConnectionList(connections);
+        }));
+        this.subscriptionsArray.push(this.toConnectionListObs.subscribe((connections) => {
+            this.getToConnectionList(connections);
+        }));
+        this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => {
+            this.getAddressList(addresses);
+        }));
     }
 
     ngOnDestroy() {
-        this.subscriptionsArray.forEach((subscription) => subscription.unsubscribe());
+        this.subscriptionsArray.forEach((subscription) => {
+            subscription.unsubscribe();
+        });
     }
 
     initFormGroup() {
         this.formGroup = new FormGroup({
-            'connection': new FormControl('', [Validators.required]),
-            'sub-portfolio': new FormControl('', [Validators.required])
+            connection: new FormControl('', [Validators.required]),
+            'sub-portfolio': new FormControl('', [Validators.required]),
         });
     }
 
@@ -130,7 +147,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     requestWalletLabel(requestedState: boolean) {
         if (!requestedState && this.connectedWalletId !== 0) {
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
@@ -138,7 +155,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         if (!requested && this.connectedWalletId !== 0) {
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-            InitialisationService.requestWalletAddresses(this.ngRedux, this._walletNodeRequestService, this.connectedWalletId);
+            InitialisationService.requestWalletAddresses(this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
         }
     }
 
@@ -158,8 +175,8 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         }
     }
 
-    getWalletList(wallets: Array<any>) {
-        let walletList = [];
+    getWalletList(wallets: any[]) {
+        const walletList = [];
 
         this.completeWalletList = wallets;
 
@@ -176,14 +193,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
     }
 
-    getAddressList(addresses: Array<any>) {
-        let addressList = [];
+    getAddressList(addresses: any[]) {
+        const addressList = [];
 
         Object.keys(addresses).map((key) => {
             if (typeof addresses[key].label !== 'undefined') {
                 addressList.push({
                     id: key,
-                    text: addresses[key].label
+                    text: addresses[key].label,
                 });
             }
         });
@@ -197,27 +214,27 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
     }
 
-    getFromConnectionList(fromConnections: Array<any>) {
+    getFromConnectionList(fromConnections: any[]) {
         this.fromConnectionList = fromConnections;
         this.refreshConnectionList();
 
         this.cd.markForCheck();
     }
 
-    getToConnectionList(toConnections: Array<any>) {
+    getToConnectionList(toConnections: any[]) {
         this.toConnectionList = toConnections;
         this.refreshConnectionList();
 
         this.cd.markForCheck();
     }
 
-    formatFromConnections(connections: Array<any>) {
+    formatFromConnections(connections: any[]) {
         const data = [];
 
         if (connections && connections.length > 0) {
             connections.map((connection) => {
-                const connectionName = this.walletList.filter((wallet) => wallet.id === connection.leiSender)[0].text;
-                const subPortfolioName = this.addressList.filter((address) => address.id === connection.keyDetail)[0].text;
+                const connectionName = this.walletList.filter(wallet => wallet.id === connection.leiSender)[0].text;
+                const subPortfolioName = this.addressList.filter(address => address.id === connection.keyDetail)[0].text;
 
                 data.push({
                     id: connection.connectionId,
@@ -226,19 +243,18 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     leiSender: connection.leiSender,
                 });
             });
-
         }
 
         return data;
     }
 
-    formatToConnections(connections: Array<any>) {
+    formatToConnections(connections: any[]) {
         const data = [];
 
         if (connections && connections.length > 0) {
             connections.map((connection) => {
                 const connectionName = this.walletList.filter(
-                    (wallet) => wallet.id === connection.leiId || wallet.id === connection.leiSender
+                    wallet => wallet.id === connection.leiId || wallet.id === connection.leiSender,
                 )[0].text;
 
                 data.push({
@@ -246,10 +262,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                     connection: connectionName,
                     leiId: connection.leiId,
                     leiSender: connection.leiSender,
-                    info: (connection.leiId === this.connectedWalletId) ? 'Outgoing' : 'Incoming'
+                    info: (connection.leiId === this.connectedWalletId) ? 'Outgoing' : 'Incoming',
                 });
             });
-
         }
 
         return data;
@@ -257,11 +272,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
     refreshConnectionList() {
         const combinedList = this.fromConnectionList.concat(this.toConnectionList);
-        const pendingList = combinedList.filter((connection) => connection.status === '1');
+        const pendingList = combinedList.filter(connection => connection.status === 1);
         const acceptedList = combinedList.filter((connection, pos, arr) => {
-            const count = arr.reduce((value, c) => {
-                return value + (c.connectionId === connection.connectionId && connection.status === '-1');
-            }, 0);
+            const count = arr.reduce(
+                (value, c) => {
+                    return value + (c.connectionId === connection.connectionId && connection.status === -1);
+                },
+                0);
 
             if (count > 0 && connection.leiId === this.connectedWalletId) {
                 return connection;
@@ -286,7 +303,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
                 address: this.formGroup.controls['sub-portfolio'].value[0].id,
                 connectionId: 0,
-                status: 1
+                status: 1,
             };
 
             asyncTaskPipe = this.connectionService.createConnection(data);
@@ -294,7 +311,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             data = {
                 leiId: this.connectedWalletId,
                 senderLei: this.formGroup.controls['connection'].value[0].id,
-                keyDetail: this.formGroup.controls['sub-portfolio'].value[0].id
+                keyDetail: this.formGroup.controls['sub-portfolio'].value[0].id,
             };
 
             asyncTaskPipe = this.connectionService.updateConnection(data);
@@ -315,7 +332,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             },
             () => {
                 this.showErrorMessage('This connection already exists');
-            })
+            }),
         );
 
         this.resetForm();
@@ -323,7 +340,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     handleEditButtonClick(connection) {
-        const selectedConnection = this.walletList.filter((wallet) => wallet.text === connection.connection)[0];
+        const selectedConnection = this.walletList.filter(wallet => wallet.text === connection.connection)[0];
         const selectedSubPortfolio = connection.subPortfolio;
         const connectionFormControl = this.formGroup.controls['connection'];
 
@@ -350,7 +367,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     handleRejectButtonClick(connection: any, message = 'This connection has successfully been rejected') {
         const data = {
             leiId: connection.leiId,
-            senderLei: connection.leiSender
+            senderLei: connection.leiSender,
         };
 
         const asyncTaskPipe = this.connectionService.deleteConnection(data);
@@ -364,14 +381,14 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             },
             (error) => {
                 console.error('error on reject connection: ', error);
-            })
+            }),
         );
     }
 
     handleCloseButtonClick() {
         this.formGroup.patchValue({
-            'connection': [],
-            'sub-portfolio': []
+            connection: [],
+            'sub-portfolio': [],
         });
 
         this.isEditTabDisplayed = false;
@@ -392,7 +409,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 senderLeiId: myConnection.leiId,
                 address: selectedAddress,
                 connectionId: myConnection.connectionId,
-                status: '-1'
+                status: -1,
             };
 
             const asyncTaskPipe = this.connectionService.createConnection(data);
@@ -406,7 +423,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 },
                 (error) => {
                     console.error('error on accept connection: ', error);
-                })
+                }),
             );
         }
 
@@ -420,13 +437,13 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             senderLeiId: response.LeiID,
             address: response.keyDetail,
             connectionId: response.connectionID,
-            status: '-1'
+            status: -1,
         };
 
         const rejectPayload = {
             topic: 'deleteconnection',
             leiId: response.LeiID,
-            senderLei: response.LeiSender
+            senderLei: response.LeiSender,
         };
 
         const actionConfig = new MessageConnectionConfig();
@@ -450,7 +467,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             [response.LeiSender],
             'Connection request',
             '',
-            actionConfig
+            actionConfig,
         ).then(() => {
             this.showSuccessResponse('The connection has successfully been created and an e-mail has been sent to the recipient');
         }).catch((e) => {
@@ -462,7 +479,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         if (isOk) {
             const data = {
                 leiId: this.connectedWalletId,
-                senderLei: this.connectionToDelete.leiSender
+                senderLei: this.connectionToDelete.leiSender,
             };
 
             const asyncTaskPipe = this.connectionService.deleteConnection(data);
@@ -476,7 +493,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 },
                 (error) => {
                     console.error('error: ', error);
-                })
+                }),
             );
         }
 
