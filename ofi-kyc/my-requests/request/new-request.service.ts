@@ -448,7 +448,7 @@ export class NewRequestService {
                     value: '',
                     disabled: true
                 },
-                Validators.required
+                this.getLengthValidator(255)
             ],
             clientNeeds: this.formBuilder.group(this.transformToForm(this.clientNeedsList), {
                 validator: (formGroup) => {

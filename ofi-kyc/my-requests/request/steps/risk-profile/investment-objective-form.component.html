@@ -13,18 +13,23 @@
 <div class="panel-body objective pl-1" [class.hidden]="!open" [formGroup]="form">
 
     <div class="row">
-        <div class="col-sm-6 p-0" formGroupName="performanceProfile">
+        <div class="col-sm-6 p-0">
             <div>
                 <label class="required-field">{{'Investment objective(s)? Performance profile' | translate}}</label>
             </div>
 
             <div class="mt-1">
                 <span class="checkbox-inline pr-1 pb-1" *ngFor="let performanceProfile of performanceProfileList">
-                    <input type="checkbox" id="{{performanceProfile.id}}-{{index}}" formControlName="{{performanceProfile.id}}">
+                    <input type="checkbox" id="{{performanceProfile.id}}-{{index}}" [formControl]="form.get(['performanceProfile', performanceProfile.id])">
                     <label for="{{performanceProfile.id}}-{{index}}">
                         {{performanceProfile.text | translate}}
                     </label>
                 </span>
+
+                <div class="form-group">
+                    <input *ngIf="!isDisabled('performanceProfileSpecification')" id="performanceProfileSpecification" type="text" formControlName="performanceProfileSpecification" placeholder="{{'Please specify' | translate}}">
+                    <span class="field-error" *ngIf="hasError('performanceProfileSpecification')">{{'Field is required' | translate}}</span>
+                </div>
             </div>
 
             <p class="txtRed" *ngIf="hasError('performanceProfile')">{{'Select at least one' | translate}}</p>
@@ -50,7 +55,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-1">
         <div class="form-group col-sm-6">
             <div>
                 <label>{{'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation :' | translate}}</label>

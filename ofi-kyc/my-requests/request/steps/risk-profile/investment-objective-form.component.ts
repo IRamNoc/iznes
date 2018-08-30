@@ -89,6 +89,15 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     }
 
     initFormCheck() {
+        this.form.get('performanceProfile').valueChanges
+            .pipe(
+                takeUntil(this.unsubscribe)
+            )
+            .subscribe(data => {
+                this.formCheckPerformanceProfile(data);
+            })
+        ;
+
         this.form.get('riskProfile').valueChanges
             .pipe(
                 takeUntil(this.unsubscribe)
@@ -108,6 +117,11 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
                 this.formCheckInvestmentHorizonWanted(value);
             })
         ;
+
+        // Form persist patchvalue comes in too early so we have to manually recheck the values
+        (this.form.get('performanceProfile') as FormControl).updateValueAndValidity();
+        (this.form.get('riskProfile') as FormControl).updateValueAndValidity();
+        (this.form.get('investmentHorizonWanted.specific') as FormControl).updateValueAndValidity();
     }
 
     formCheckInvestmentHorizonWanted(value) {
@@ -120,6 +134,17 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
         }
 
         this.refreshForm.emit();
+    }
+
+    formCheckPerformanceProfile(data){
+        let hasOther = data.others;
+        let performanceProfileSpecificationControl = this.form.get('performanceProfileSpecification');
+
+        if(hasOther){
+            performanceProfileSpecificationControl.enable();
+        } else{
+            performanceProfileSpecificationControl.disable();
+        }
     }
 
     formCheckRiskProfile(value) {

@@ -1021,7 +1021,7 @@ export const performanceProfileList = [
         "text": "Leverage effect"
     },
     {
-        "id": "Othersegliabilitysrelated",
+        "id": "others",
         "text": "Others (e.g. liability(s) related)"
     }
 ];
