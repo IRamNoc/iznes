@@ -38,7 +38,8 @@ export class KycDetailsService {
             'objectivesSameInvestmentCrossAm',
             'assetManagementCompanyID',
             'constraintsSameInvestmentCrossAm',
-            'companyBeneficiariesID'
+            'companyBeneficiariesID',
+            'custodianID'
         ])
         .pickBy()
         .toPairs()
