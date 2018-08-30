@@ -1,17 +1,17 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {MessageKycConfig} from './message-kyc.model';
-import {Router} from '@angular/router';
-import {kycMessages} from './message-kyc';
-import {LogService} from '@setl/utils';
+import { Component, Input, OnInit } from '@angular/core';
+import { MessageKycConfig } from './message-kyc.model';
+import { Router } from '@angular/router';
+import { kycMessages } from './message-kyc';
+import { LogService } from '@setl/utils';
 
 @Component({
     selector: 'setl-message-kyc',
     templateUrl: './message-kyc.component.html',
     styles: [
-            `.padding {
+        `.padding {
             padding: 5px 0;
-        }`
-    ]
+        }`,
+    ],
 })
 export class SetlMessageKycComponent implements OnInit {
     @Input() config: MessageKycConfig;
@@ -24,37 +24,37 @@ export class SetlMessageKycComponent implements OnInit {
 
     ngOnInit() {
         switch (this.config.type) {
-            case 'kycInvestorYes':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycInvestorYes.fr) :
-                    this.replaceMessageValue(kycMessages.kycInvestorYes.en);
-                break;
+        case 'kycInvestorYes':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycInvestorYes.fr) :
+                this.replaceMessageValue(kycMessages.kycInvestorYes.en);
+            break;
 
-            case 'kycInvestorNo':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycInvestorNo.fr) :
-                    this.replaceMessageValue(kycMessages.kycInvestorNo.en);
-                break;
-            case 'kycUserFinished':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycUserFinished.fr) :
-                    this.replaceMessageValue(kycMessages.kycUserFinished.en);
-                break;
-            case 'kycInvestorCompletion':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycInvestorCompletion.fr) :
-                    this.replaceMessageValue(kycMessages.kycInvestorCompletion.en);
-                break;
-            case 'kycContinuedFromRequest':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycContinuedFromRequest.fr) :
-                    this.replaceMessageValue(kycMessages.kycContinuedFromRequest.en);
-                break;
-            case 'kycContinuedFromAskMoreInfo':
-                this.messageBody = (this.config.lang === 'fr-Latn') ?
-                    this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.fr) :
-                    this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.en);
-                break;
+        case 'kycInvestorNo':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycInvestorNo.fr) :
+                this.replaceMessageValue(kycMessages.kycInvestorNo.en);
+            break;
+        case 'kycUserFinished':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycUserFinished.fr) :
+                this.replaceMessageValue(kycMessages.kycUserFinished.en);
+            break;
+        case 'kycInvestorCompletion':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycInvestorCompletion.fr) :
+                this.replaceMessageValue(kycMessages.kycInvestorCompletion.en);
+            break;
+        case 'kycContinuedFromRequest':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycContinuedFromRequest.fr) :
+                this.replaceMessageValue(kycMessages.kycContinuedFromRequest.en);
+            break;
+        case 'kycContinuedFromAskMoreInfo':
+            this.messageBody = (this.config.lang === 'fr-Latn') ?
+                this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.fr) :
+                this.replaceMessageValue(kycMessages.kycContinuedFromAskMoreInfo.en);
+            break;
         }
 
         this.logService.log('messageBody: ', this.messageBody);
@@ -64,7 +64,7 @@ export class SetlMessageKycComponent implements OnInit {
         const count = Object.keys(data).length;
         const message = Object.assign({}, data);
 
-        for (let i = 0; i < count; i++) {
+        for (let i = 0; i < count; i += 1) {
             const key = Object.keys(data)[i];
             const value = data[key].replace('{{amFirstName}}', this.config.amFirstName)
                                    .replace('{{amCompanyName}}', this.config.amCompanyName)
@@ -72,7 +72,6 @@ export class SetlMessageKycComponent implements OnInit {
                                    .replace('{{investorFirstName}}', this.config.investorFirstName)
                                    .replace('{{investorEmail}}', this.config.investorEmail)
                                    .replace('{{investorPhoneNumber}}', this.config.investorPhoneNumber);
-
 
             message[key] = value;
         }

@@ -13,13 +13,10 @@ export class SetlMessageWorkflowComponent implements OnInit {
     @Input() data;
     @Input() userId;
 
-
     constructor () {
-
     }
 
     ngOnInit () {
         console.log(this.data);
     }
-
 }

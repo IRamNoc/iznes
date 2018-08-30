@@ -1,7 +1,6 @@
 <div class="message-body">
     <!-- body gets printed automagically -->
 
-
     <div class="btn-group btn-primary">
         <div *ngIf="canShowButton('R')" (click)="sendXparam('R')" class="btn">Retry</div>
         <div *ngIf="canShowButton('I')" (click)="sendXparam('I')" class="btn">Ignore</div>

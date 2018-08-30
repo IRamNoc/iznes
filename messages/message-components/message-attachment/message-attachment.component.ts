@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 /**
  * SETL Message Attachment Component
  *
@@ -9,7 +9,7 @@ import {Component, Input} from '@angular/core';
 @Component({
     selector: 'setl-message-attachment',
     templateUrl: './message-attachment.component.html',
-    styleUrls: ['./message-attachment.component.css']
+    styleUrls: ['./message-attachment.component.css'],
 })
 export class SetlMessageAttachmentComponent {
     @Input() attachmentType: string = null;
