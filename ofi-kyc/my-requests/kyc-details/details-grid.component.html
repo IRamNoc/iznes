@@ -26,8 +26,8 @@
                 </span>
 
                 <ng-container *ngIf="isFromForm(row.originalId)">
-                    <span *ngFor="let value of split(row.value)">
-                        {{value | translate}}
+                    <span *ngFor="let value of split(row.value); last as last">
+                        {{value | translate}}<span *ngIf="!last">,</span>
                     </span>
                 </ng-container>
             </span>
