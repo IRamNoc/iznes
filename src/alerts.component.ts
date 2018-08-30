@@ -58,7 +58,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
                 else this.destroy();
             }
 
-            if (alert.close) return;
+            if (alert.close || alert.type === 'clear') return;
 
             const settingsFinalAsArray = [];
 
