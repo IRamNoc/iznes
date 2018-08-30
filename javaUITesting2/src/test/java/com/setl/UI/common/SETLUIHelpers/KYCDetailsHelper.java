@@ -9,9 +9,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static com.setl.UI.common.SETLUIHelpers.FundsDetailsHelper.openDropdownAndSelectOption;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.*;
 import static com.setl.UI.common.SETLUIHelpers.WalletsDetailsHelper.selectLEIFromLEISearch;
 import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.searchSelectTopOptionXpath;
@@ -37,17 +42,31 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String kycLastName = driver.findElement(By.id("kyc_additionnal_lastName")).getAttribute("value");
         assertTrue(kycLastName.equals("Miller" + testUserNo));
 
-        driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
-        openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
-        String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
-        assertTrue(disabled.equals("true"));
-        driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
-        driver.findElement(By.id("btnKycSubmit")).click();
-        try {
-            String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
-            assertTrue(header2.equals("My Information"));
-        }catch (Exception e){fail(e.getMessage());}
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
+        if(companyName.equals("")){
+            driver.findElement(By.id("btnKycSubmit")).click();
+            String disabled = driver.findElement(By.xpath("//*[@id=\"btnKycSubmit\"]")).getAttribute("disabled");
+            assertTrue(disabled.equals("true"));
+        }else{
+            if(phoneNumber.equals("")){
+                driver.findElement(By.id("btnKycSubmit")).click();
+                String disabled = driver.findElement(By.xpath("//*[@id=\"btnKycSubmit\"]")).getAttribute("disabled");
+                assertTrue(disabled.equals("true"));
+            }else {
+                driver.findElement(By.id("kyc_additionnal_companyName")).sendKeys(companyName);
+                openDropdownAndSelectOption("kyc_additionnal_phoneCode", 1);
+                String disabled = driver.findElement(By.id("btnKycSubmit")).getAttribute("disabled");
+                assertTrue(disabled.equals("true"));
+                driver.findElement(By.id("kyc_additionnal_phoneNumber")).sendKeys(phoneNumber);
+                driver.findElement(By.id("btnKycSubmit")).click();
+                try {
+                    String header2 = driver.findElement(By.className("jaspero__dialog-title")).getText();
+                    assertTrue(header2.equals("My Information"));
+                } catch (Exception e) {
+                    fail(e.getMessage());
+                }
+                driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button")).click();
+            }
+        }
     }
 
     public static void KYCProcessMakeNewRequest() throws SQLException, InterruptedException {
@@ -244,6 +263,56 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")));
         String pageHeading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ng-component/ng-component/div[1]/h1")).getText();
         assertTrue(pageHeading.equals("My requests"));
+    }
+
+    public static void KYCAcceptMostRecentRequest(String companyName, String No, String firstName, String lastName, String userNo, String phoneNo) throws SQLException, InterruptedException, IOException {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        DateFormat dateFormat = new SimpleDateFormat("dd / MM / yyyy");
+        Date date = new Date();
+
+        logout();
+        loginAndVerifySuccess("am", "alex01");
+        navigateToDropdown("top-menu-my-clients");
+        navigateToPageByID("top-menu-onboarding-management");
+        verifyCorrectPage("On-boarding Management");
+        String waitingCompanyName = driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).getText();
+        assertTrue(waitingCompanyName.equals(companyName));
+        System.out.println("Company name matches");
+        driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).click();
+        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
+        String KYCheading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-waiting-approval/div/h1/span")).getText();
+        assertTrue(KYCheading.contains(companyName));
+        System.out.println("KYC Heading contains the company name");
+        String generalInfoCompanyName = driver.findElement(By.id("companyName")).getAttribute("value");
+        assertTrue(generalInfoCompanyName.equals(companyName));
+        String generalInfoReference = driver.findElement(By.id("clientReference")).getAttribute("value");
+        assertTrue(generalInfoReference.equals(No));
+        String generalInfoFirstName = driver.findElement(By.id("firstName")).getAttribute("value");
+        assertTrue(generalInfoFirstName.equals(firstName + userNo));
+        String generalInfoLastName = driver.findElement(By.id("lastName")).getAttribute("value");
+        assertTrue(generalInfoLastName.equals(lastName + userNo));
+        String generalInfoEmail = driver.findElement(By.id("email")).getAttribute("value");
+        assertTrue(generalInfoEmail.equals("testops" + userNo + "@setl.io"));
+        String generalInfoDate = driver.findElement(By.id("approvalDateRequest")).getAttribute("value");
+        assertTrue(generalInfoDate.equals(dateFormat.format(date)));
+        String generalInfoPhone = driver.findElement(By.id("phoneNumber")).getAttribute("value");
+        assertTrue(generalInfoPhone.equals("+7 840 " + phoneNo));
+        driver.findElement(By.cssSelector("div.mb-1.ng-star-inserted > div.well > div.row.panel-header > div > a > h2")).click();
+        wait.until(invisibilityOfElementLocated(By.id("clientReference")));
+        scrollElementIntoViewById("backButton");
+        Thread.sleep(750);
+        wait.until(visibilityOfElementLocated(By.id("backButton")));
+        wait.until(elementToBeClickable(By.id("backButton")));
+        driver.findElement(By.id("checkbox")).click();
+        try {
+            driver.findElement(By.id("submitButton")).click();
+        }catch (Exception e){
+            fail(e.getMessage()); }
+//        try {
+//            wait.until(visibilityOfElementLocated(By.id("clr-tab-link-10")));
+//        }catch (Exception e){
+//            System.out.println("Client Referential page was not visible");
+//            fail(); }
     }
 
 
