@@ -16,7 +16,10 @@ export class FileDownloader {
     getFileDownloadBaseUrl(secure: boolean): string {
         const isProduction = this.appConfig.production;
 
-        if (secure) return `http://${window.location.hostname}:9788/aws`;
+        if (secure) {
+            return isProduction ? `https://${window.location.hostname}:mn/aws` :
+                `http://${window.location.hostname}:9788/aws`;
+        }
 
         return isProduction ? `https://${window.location.hostname}/mn/file` :
             `http://${window.location.hostname}:9788/file`;
