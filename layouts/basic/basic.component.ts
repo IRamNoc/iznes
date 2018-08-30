@@ -130,32 +130,55 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         // Check height of sidebar and if greater than window height remove fixed class
         this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
-        console.log('+++ this.sidebarHeight', this.sidebarHeight);
         if (this.sidebarHeight > window.innerHeight) this.fixSidebar = false;
 
     }
 
     @HostListener('window:resize', ['$event'])
-    onWindowResize() {
+    /**
+     * Handle Sidebar Fixing On Window Resize
+     * --------------------------------------
+     * Fix the sidebar when the viewport height is greater than it's height, or remove if not
+     */
+    handleSidebarFixingOnWindowResize() {
         this.fixSidebar = this.sidebarEl.nativeElement.clientHeight > window.innerHeight ? false : true;
     }
 
-    onScroll(event) {
-
+    /**
+     * Handle Sidebar Fixing On Scroll
+     * -------------------------------
+     * Fix the sidebar when it's bottom reaches the bottom of the page and remove when scrolled back above this
+     *
+     * @param event
+     */
+    handleSidebarFixingOnScroll(event) {
+        // Pass scroll information to content scroll area
         this.scrollTopPosition = event.target.scrollTop;
 
-        const sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
-
-        if (sidebarHeight > window.innerHeight) {
+        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+        if (this.sidebarHeight > window.innerHeight) {
             this.fixSidebarBottom =
-                (sidebarHeight - event.target.scrollTop) <= (window.innerHeight - 75) ? true : false;
+                (this.sidebarHeight - event.target.scrollTop) <= (window.innerHeight - 75) ? true : false;
         }
     }
 
-    sidebarWheel(event) {
+    /**
+     * Sidebar Scroll
+     * --------------
+     * Passes the delta information of the wheel event on the sidebar to set the scrollTop position of the content area
+     *
+     * @param event
+     */
+    sidebarScroll(event) {
         this.scrollTopPosition += event.deltaY;
     }
 
+    /** Get Language
+     * ------------
+     * Sets the current language public variable
+     *
+     * @param language
+     */
     getLanguage(language): void {
         this.currentLanguage = language;
         this.changeDetectorRef.markForCheck();
