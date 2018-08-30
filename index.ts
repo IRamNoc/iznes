@@ -43,6 +43,8 @@ export { AppConfig, MenuSpec, MenuItem } from './appConfig/appConfig.model';
 
 export {
     FormItem,
+    FormHeader,
+    FormElement,
     FormItemDropdown,
     FormItemStyle,
     FormItemType,
