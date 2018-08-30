@@ -164,15 +164,10 @@ ul.breadcrumb li a:hover {
 .main-container {
     .content-container {
         display: inline-block;
-        // -webkit-box-flex: inherit;
-        // -ms-flex: auto;
-        // flex: auto;
         min-height: inherit;
         float: left;
         width: 100%;
         background: #373a49;
-        // height: calc(100% - 75px);
-        //transform: translateX(-0px);
         transform: none;
         transition: width 100ms linear, transform 100ms linear;
 

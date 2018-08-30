@@ -51,8 +51,7 @@
 
         </ng-sidebar>
 
-        <div ng-sidebar-content #sidebarContainer class="main-container-sidebar-content"
-             [ngClass]="{'menuHideNav': menuShown === 0}">
+        <div ng-sidebar-content class="main-container-sidebar-content" [ngClass]="{'menuHideNav': menuShown === 0}">
 
             <!-- Navigation Topbar. -->
             <app-navigation-topbar (toggleSidebar)="toggleSidebar()"></app-navigation-topbar>
@@ -60,7 +59,7 @@
             <div class="content-container">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav" (wheel)="sidebarScroll($event)"
+                <nav class="sidenav" (wheel)="sidebarScroll($event)" (click)="handleSidebarFixingOnClick()"
                      [ngClass]="{'fixed' : fixSidebar, 'fixed-bottom' : fixSidebarBottom}">
                     <div #sidebar class="sidebar-wrapper">
                         <app-navigation-sidebar></app-navigation-sidebar>

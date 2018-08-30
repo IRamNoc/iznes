@@ -37,7 +37,6 @@ import { APP_CONFIG } from '@setl/utils/appConfig/appConfig';
 export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('main') mainEl: ElementRef;
     @ViewChild('sidebar') sidebarEl: ElementRef;
-    @ViewChild('sidebarContainer') sidebarContainerEl: ElementRef;
 
     private appConfig: AppConfig;
 
@@ -58,6 +57,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     public fixSidebarBottom: boolean = false;
     public sidebarHeight: number;
     public scrollTopPosition: number;
+    public topBarHeight: number = 75; // default topbar height
 
     /* Redux observables. */
     public _MODES: string[] = ['over', 'push', 'slide'];
@@ -141,7 +141,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
      * Fix the sidebar when the viewport height is greater than it's height, or remove if not
      */
     handleSidebarFixingOnWindowResize() {
-        this.fixSidebar = this.sidebarEl.nativeElement.clientHeight > window.innerHeight ? false : true;
+        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+        this.fixSidebar = this.sidebarHeight > (window.innerHeight - this.topBarHeight) ? false : true;
     }
 
     /**
@@ -154,12 +155,32 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     handleSidebarFixingOnScroll(event) {
         // Pass scroll information to content scroll area
         this.scrollTopPosition = event.target.scrollTop;
+        this.topBarHeight = window.innerHeight - event.target.clientHeight;
 
         this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
         if (this.sidebarHeight > window.innerHeight) {
             this.fixSidebarBottom =
-                (this.sidebarHeight - event.target.scrollTop) <= (window.innerHeight - 75) ? true : false;
+                (this.sidebarHeight - event.target.scrollTop) <= event.target.clientHeight ? true : false;
         }
+    }
+
+    /**
+     * Handle Sidebar Fixing On Click
+     * -------------------------------
+     * Unfix the sidebar when a menu item expands to increase it's height to larger than the viewport, or fix if not
+     *
+     */
+    handleSidebarFixingOnClick() {
+        // setTimeout to account for CSS transition time before calculating heights
+        setTimeout(
+            () => {
+                this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+                this.fixSidebar =
+                    this.sidebarHeight > (window.innerHeight - this.topBarHeight) ? false : true;
+                this.changeDetectorRef.detectChanges();
+            },
+            200,
+        );
     }
 
     /**
