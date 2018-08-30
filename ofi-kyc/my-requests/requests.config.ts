@@ -2,7 +2,10 @@ import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
 
 export const booleanControls = [
     'commercialDomiciliation',
-    'investorStatus'
+    'investorStatus',
+    'activitiesBenefitFromExperience',
+    'activityRegulated',
+    'companyListed'
 ];
 
 export const fileControls = [
@@ -1335,6 +1338,11 @@ export const controlToList = {
     riskProfile: 'riskProfileList',
     investmentHorizonWanted: 'investmentHorizonList',
     clientNeeds: 'clientNeedsList',
+
+    financialInstruments: 'financialInstrumentsList',
+    marketArea: 'geographicalAreaList',
+    natureTransactionPerYear: 'natureOfTransactionsList',
+    volumeTransactionPerYear: 'volumeOfTransactionsList',
 
     geographicalOrigin2: 'countries',
     registeredCompanyCountry: 'countries',
