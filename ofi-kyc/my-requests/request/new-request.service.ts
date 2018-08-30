@@ -14,7 +14,8 @@ import {
     isObject,
     forEach,
     find,
-    merge
+    merge,
+    isNil
 } from 'lodash';
 
 import { CustomValidators } from '@setl/utils/helper';
@@ -473,21 +474,28 @@ export class NewRequestService {
                 {
                     validator: (formGroup) => {
                         return ((formGroup) => {
-                            let riskAcceptanceLevel1 = formGroup.get('riskAcceptanceLevel1').value;
-                            let riskAcceptanceLevel2 = formGroup.get('riskAcceptanceLevel2').value;
-                            let riskAcceptanceLevel3 = formGroup.get('riskAcceptanceLevel3').value;
-                            let riskAcceptanceLevel4 = formGroup.get('riskAcceptanceLevel4').value;
+                            let level1 = formGroup.get('riskAcceptanceLevel1');
+                            let level2 = formGroup.get('riskAcceptanceLevel2');
+                            let level3 = formGroup.get('riskAcceptanceLevel3');
+                            let level4 = formGroup.get('riskAcceptanceLevel4');
+
+                            let riskAcceptanceLevel1 = level1.value;
+                            let riskAcceptanceLevel2 = level2.value;
+                            let riskAcceptanceLevel3 = level3.value;
+                            let riskAcceptanceLevel4 = level4.value;
 
                             let total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
+                            let valuesFilled = !isNil(riskAcceptanceLevel1) && !isNil(riskAcceptanceLevel2) && !isNil(riskAcceptanceLevel3) && !isNil(riskAcceptanceLevel4);
+                            let required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
 
                             if (total === 100) {
                                 return null;
                             }
 
                             return {
-                                riskAcceptance: {
-                                    valid: false
-                                }
+                                total: true,
+                                required,
+                                unfilled: !valuesFilled
                             };
                         })(formGroup);
                     }

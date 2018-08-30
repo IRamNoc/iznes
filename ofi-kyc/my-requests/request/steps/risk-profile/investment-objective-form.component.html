@@ -130,8 +130,11 @@
             </tbody>
         </table>
 
-        <p class="txtRed" *ngIf="hasError('riskAcceptance')">
+        <p class="txtRed" *ngIf="hasError('riskAcceptance', ['total']) && !hasError('riskAcceptance', ['unfilled'])">
             {{'Total of all risk acceptance fields must be equal to 100' | translate}}
+        </p>
+        <p class="txtRed" *ngIf="hasError('riskAcceptance', ['required'])">
+            {{'Please fill in all values' | translate}}
         </p>
     </div>
 

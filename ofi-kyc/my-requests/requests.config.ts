@@ -7,6 +7,19 @@ export const booleanControls = [
     'activityRegulated',
     'companyListed'
 ];
+export const currencyControls = [
+    'balanceSheetTotal',
+    'netRevenuesNetIncome',
+    'shareholderEquity'
+];
+
+export const percentageControls = [
+    'riskAcceptanceLevel1',
+    'riskAcceptanceLevel2',
+    'riskAcceptanceLevel3',
+    'riskAcceptanceLevel4',
+    'holdingPercentage'
+];
 
 export const fileControls = [
     'documentID',
@@ -1216,13 +1229,13 @@ export const controlToName = {
     commercialDomiciliation: 'Commercial domiciliation : Does the client have a commercial address (mailbox: P/O BOX)?',
     countryTaxResidence: 'Country of tax residence',
     sectorActivity: 'Sector of activity',
-    sectorActivityText: 'Sector of activity text',
+    sectorActivityText: 'Sector of activity specification',
     legalStatus: 'Legal status',
+    legalStatusListingOther: 'Legal status specification',
     legalStatusInsurerType: 'Insurer type',
     legalStatusPublicEstablishmentType: 'Public establishment type',
-    legalStatusPublicEstablishmentTypeOther: 'Public establishment type text',
+    legalStatusPublicEstablishmentTypeOther: 'Public establishment type specification',
     legalStatusListingMarkets: 'Listing market(s)',
-    legalStatusListingOther: 'Listing market(s) text',
 
     // Company
     activities: 'Activities',
@@ -1230,13 +1243,13 @@ export const controlToName = {
     investorOnBehalfThirdParties :'Managed third parties',
     investorOnBehalfList: 'Investor on behalf of third parties',
     geographicalAreaOfActivity: 'Geographical area of the activity',
-    geographicalAreaOfActivitySpecification: 'Geographical area of the activity text',
+    geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
     totalFinancialAssetsAlreadyInvested: 'Total Financial assets already invested',
     capitalNature: 'Nature and origin of the capital invested by the legal entity',
-    activityRegulated: 'Is the activity regulated ?',
+    activityRegulated: 'Is the activity regulated?',
     regulator: 'Regulator or a supervisory authority',
     approvalNumber: 'Approval number',
-    companyListed: 'Is the company listed ?',
+    companyListed: 'Is the company listed?',
     listingMarkets: 'Listing market(s)',
     bloombergCode: "Bloomberg code",
     isinCode: 'ISIN code of the listed share',
@@ -1274,19 +1287,19 @@ export const controlToName = {
     custodianCountry: 'Country',
 
     // Classification
-    investorStatus: 'Does investor have pro status?',
+    investorStatus: 'Does investor have pro status?', // @todo Change text with nature/size
     excludeProducts: 'Excluded category of products/services',
     changeProfessionalStatus: 'Opted for non professional status',
     jobPosition: 'Job position',
     numberYearsExperienceRelatedFunction: 'Number of years of experience in a function related to financial markets',
     numberYearsCurrentPosition: 'Number of years of experience in current position',
     financialInstruments: 'Financial instruments that have already been the subject of transactions by the said natural person in the professional environment',
-    financialInstrumentsSpecification: 'Financial instruments text',
+    financialInstrumentsSpecification: 'Financial instruments specification',
     marketArea: 'Market area(s) which have been the subject of transactions',
     natureTransactionPerYear: 'Nature of transactions per year (in €)',
     volumeTransactionPerYear: 'Volume of transactions per year (in €)',
     activitiesBenefitFromExperience: 'Activities/professions allow to benefit from experience in the financial field',
-    activitiesBenefitFromExperienceSpecification: 'Benefit text',
+    activitiesBenefitFromExperienceSpecification: 'Benefit specification',
 
     // Risk nature
     financialAssetManagementMethod: 'Financial asset management method',
@@ -1295,59 +1308,73 @@ export const controlToName = {
     mandateEntrustedToManagers: 'By mandate(s) entrusted to a manager(s)',
     frequencyFinancialTransactions: 'Frequency of financial transactions',
     investmentvehiclesAlreadyUsed: 'Investment vehicles already used',
+    investmentvehiclesAlreadyUsedSpecification: 'Investment vehicles already used specification',
 
     // Risk objective
     performanceProfile: 'Performance profile',
+    performanceProfileSpecification: 'Performance profile specification',
     clientNeeds: 'Client needs (purpose of the investment)',
     otherFinancialInformation: 'Other relevant financial information (optional) including periodic cash flows to be invested in cash management, asset allocation',
     investmentHorizonWanted: 'Investment horizons wanted',
-    investmentHorizonWantedSpecificPeriod: 'investmentHorizonWantedSpecificPeriod',
+    investmentHorizonWantedSpecificPeriod: 'Investment horizons wanted (specific period)',
     riskProfile: 'Risk profile: ability to incur losses',
-    riskProfileCapital: 'Risk profile capital',
-    riskAcceptanceLevel1: 'Risk acceptance Level 1',
-    riskAcceptanceLevel2: 'Risk acceptance Level 2',
-    riskAcceptanceLevel3: 'Risk acceptance Level 3',
-    riskAcceptanceLevel4: 'Risk acceptance Level 4',
+    riskProfileCapital: 'Capital loss limited to',
+    riskAcceptanceLevel1: 'Risk acceptance: Basic (SRRI = 1, SRI = 1)',
+    riskAcceptanceLevel2: 'Risk acceptance: Middleman (SRRI = 2/3, SRI = 2)',
+    riskAcceptanceLevel3: 'Risk acceptance: Advanced (SRRI = 4 to 6, SRI = 3 to 5)',
+    riskAcceptanceLevel4: 'Risk acceptance: Expert (SRRI = 6, SRI = 6/7)',
 
     // Risk constraints
     statutoryConstraints: 'Statutory constraints/special rules concerning eligible assets',
     taxConstraints: 'Tax constraints',
     otherConstraints: 'Others (including SRI, ESG, ...)',
     investmentDecisionsAdHocCommittee: 'Are investment decisions validated by an ad hoc committee?',
-    investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee text',
+    investmentDecisionsAdHocCommitteeSpecification: 'Ad hoc committee specification',
     otherPersonsAuthorised: 'Other persons authorised to take investment decisions and give instructions',
 };
 
 export const controlToList = {
+
+    // General
     legalForm: 'legalFormList',
+    registeredCompanyCountry: 'countries',
     sectorActivity: 'sectorActivityList',
     legalStatus: 'legalStatusList',
     legalStatusInsurerType: 'legalStatusInsurerTypeList',
     legalStatusPublicEstablishmentType: 'publicEstablishmentList',
+
+    // Company
     activities: 'companyActivitiesList',
     ownAccountinvestor: 'ownAccountInvestorList',
     investorOnBehalfThirdParties: 'investorOnBehalfList',
     geographicalAreaOfActivity: 'geographicalAreaList',
     geographicalOrigin1: 'geographicalOriginTypeList',
-    totalFinancialAssetsAlreadyInvested: 'financialAssetsInvestedList',
     capitalNature: 'capitalNatureList',
-    custodianHolderAccount: 'custodianHolderAccountList',
-    financialAssetManagementMethod: 'financialAssetManagementMethodList',
-    investmentvehiclesAlreadyUsed: 'investmentVehiclesList',
-    performanceProfile: 'performanceProfileList',
-    riskProfile: 'riskProfileList',
-    investmentHorizonWanted: 'investmentHorizonList',
-    clientNeeds: 'clientNeedsList',
+    geographicalOrigin2: 'countries',
+    totalFinancialAssetsAlreadyInvested: 'financialAssetsInvestedList',
+    countryOfBirth: 'countries',
 
+    // Banking
+    custodianHolderAccount: 'custodianHolderAccountList',
+    custodianCountry: 'countries',
+
+    // Classification
     financialInstruments: 'financialInstrumentsList',
     marketArea: 'geographicalAreaList',
     natureTransactionPerYear: 'natureOfTransactionsList',
     volumeTransactionPerYear: 'volumeOfTransactionsList',
 
-    geographicalOrigin2: 'countries',
-    registeredCompanyCountry: 'countries',
-    custodianCountry: 'countries',
+    // Risk nature
+    financialAssetManagementMethod: 'financialAssetManagementMethodList',
+    investmentvehiclesAlreadyUsed: 'investmentVehiclesList',
+    frequencyFinancialTransactions: 'frequencyList',
+
+    // Risk objectives
+    performanceProfile: 'performanceProfileList',
+    clientNeeds: 'clientNeedsList',
+    investmentHorizonWanted: 'investmentHorizonList',
+    riskProfile: 'riskProfileList',
+
     nationality: 'countries',
-    countryOfBirth: 'countries',
     countryTaxResidence: 'countries',
 };
