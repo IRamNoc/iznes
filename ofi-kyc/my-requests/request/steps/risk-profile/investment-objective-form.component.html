@@ -95,7 +95,7 @@
             <span class="field-error" *ngIf="hasError('riskProfile')">{{'Field is required' | translate}}</span>
 
             <div class="form-group mt-1" *ngIf="!isDisabled('riskProfileCapital')">
-                <input type="text" placeholder="{{'Please specify' | translate}}" formControlName="riskProfileCapital">
+                <input type="text" placeholder="{{'Capital loss limited to :' | translate}}" formControlName="riskProfileCapital">
                 <span class="field-error" *ngIf="hasError('riskProfileCapital')">{{'Field is required' | translate}}</span>
             </div>
         </div>
