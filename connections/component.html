@@ -15,7 +15,7 @@
                 <section class="form-block">
                     <clr-datagrid>
                         <clr-dg-column [clrDgField]="'connections'">Connection</clr-dg-column>
-                        <clr-dg-column [clrDgField]="'subportfolios'">Sub-portfolio</clr-dg-column>
+                        <clr-dg-column [clrDgField]="'subportfolios'">Address</clr-dg-column>
                         <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
                         <clr-dg-row *clrDgItems="let acceptedConnection of acceptedConnectionList">
@@ -109,12 +109,16 @@
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="add-connection-select"
-                                   mltag="txt_connection">Connection</label>
+
+                            <div class="tooltip left tooltip-sm">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">Select a wallet to connect to</span>        
+                                <label class="control-label required-field" for="add-connection-select" mltag="txt_connection">Connection</label>
+                            </div>
 
                             <ng-select
                                     id="add-connection-select"
-                                    placeholder="Select a connection"
+                                    placeholder="Select wallet"
                                     [items]="walletList"
                                     [allowClear]=true
                                     [formControl]="formGroup.controls['connection']">
@@ -127,15 +131,19 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <label class="control-label required-field" for="add-subportfolio-select"
-                                   mltag="txt_subportfolio">Sub-portfolio</label>
 
-                            <ng-select
-                                    id="add-subportfolio-select"
-                                    [items]="addressList"
-                                    [allowClear]=true
-                                    placeholder="Select a sub-portfolio"
-                                    [formControl]="formGroup.controls['sub-portfolio']">
+                            <div class="tooltip left tooltip-sm">
+                                <i class="fa fa-info-circle"></i>
+                                <span class="tooltip-content">Select an address to use for this connection</span>
+                                <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_address">Address</label>
+                            </div>
+
+                            <ng-select 
+                                id="add-subportfolio-select" 
+                                [items]="addressList" 
+                                [allowClear]=true 
+                                placeholder="Select address" 
+                                [formControl]="formGroup.controls['sub-portfolio']">
                             </ng-select>
 
                             <span *ngIf="formGroup.controls['sub-portfolio'].hasError('required') && formGroup.controls['sub-portfolio'].touched"
@@ -165,7 +173,8 @@
                 <form [formGroup]="formGroup" novalidate (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
                         <div class="row">
-                            <div class="form-group col-sm-6">
+                            <div class="form-group col-sm-6">                                
+
                                 <label class="control-label required-field" for="add-connection-select"
                                        mltag="txt_connection">Connection</label>
 
@@ -185,14 +194,17 @@
 
                         <div class="row">
                             <div class="form-group col-sm-6">
-                                <label class="control-label required-field" for="add-subportfolio-select"
-                                       mltag="txt_subportfolio">Sub-portfolio</label>
+                                <div class="tooltip left tooltip-sm">
+                                    <i class="fa fa-info-circle"></i>
+                                    <span class="tooltip-content">Select an address to use for this connection</span>
+                                    <label class="control-label required-field" for="add-subportfolio-select" mltag="txt_address">Address</label>
+                                </div>
 
                                 <ng-select
                                         id="edit-subportfolio-select"
                                         [items]="addressList"
                                         [allowClear]=true
-                                        placeholder="Select a sub-portfolio"
+                                        placeholder="Select address"
                                         [formControl]="formGroup.controls['sub-portfolio']">
                                 </ng-select>
 
