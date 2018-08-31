@@ -3,7 +3,7 @@ import {timer as observableTimer, Observable, Subscription} from 'rxjs';
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {MemberSocketService} from '@setl/websocket-service';
 import {SagaHelper, Common} from '@setl/utils';
-import {createMemberNodeSagaRequest} from '@setl/utils/common';
+import { createMemberNodeRequest, createMemberNodeSagaRequest } from '@setl/utils/common';
 import {
     LoginRequestMessageBody,
     UserDetailsRequestMessageBody,
@@ -239,6 +239,21 @@ export class MyUserService implements OnDestroy {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
+
+    /*
+     * Update default home page of a user
+     * @param: {string} homepage
+     */
+    updateHomePage(homepage: string): any {
+        const messageBody: SaveUserDetailsRequestBody =
+            {
+                RequestName: 'ud',
+                token: this.memberSocketService.token,
+                defaultHomePage: homepage,
+            };
+
+        return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
 }
