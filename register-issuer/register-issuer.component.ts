@@ -106,6 +106,9 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
 
     registerIssuer() {
         if (this.registerIssuerForm.valid) {
+            // Trigger loading alert
+            this.alertsService.create('loading');
+
             const issuerIdentifier = this.registerIssuerForm.value.issueIdentifier;
             const issuerAddressSelectedArr = this.registerIssuerForm.value.issuerAddress;
             const issuerAddress = issuerAddressSelectedArr[0].id;
@@ -122,7 +125,21 @@ export class RegisterIssuerComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsync(
                 [REGISTER_ISSUER_SUCCESS],
                 [REGISTER_ISSUER_FAIL],
-                asyncTaskPipe, {}));
+                asyncTaskPipe, {},
+                () => {
+                },
+                (data) => {
+                    console.error('fail', data);
+                    this.alertsService.create('error', `
+                      <table class="table grid">
+                          <tbody>
+                              <tr>
+                                  <td class="text-center text-danger">Failed to register issuer</td>
+                              </tr>
+                          </tbody>
+                      </table>`);
+                },
+            ));
         }
 
         return false;

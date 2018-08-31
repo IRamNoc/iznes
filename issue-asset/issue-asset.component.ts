@@ -159,10 +159,10 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     issueAsset() {
-        // Trigger loading alert
-        this.alertsService.create('loading');
-
         if (this.issueAssetForm.valid) {
+            // Trigger loading alert
+            this.alertsService.create('loading');
+
             const walletId = this.connectedWalletId;
             const address = this.issueAssetForm.value.recipient;
             const fullAssetId = _.get(this.issueAssetForm.value.asset, '[0].id', '');
