@@ -1,4 +1,4 @@
-import {MemberNodeRequest, MemberNodeMessageBody} from '@setl/utils/common';
+import {MemberNodeMessageBody} from '@setl/utils/common';
 
 export interface OfiMemberNodeBody extends MemberNodeMessageBody {
     token: string;
@@ -40,6 +40,10 @@ export interface OfiAmExportOrdersRequestBody extends OfiMemberNodeBody {
     filters: any;
 }
 
+export interface CancelOrderRequestData {
+    orderID: number;
+}
+
 export interface OfiCancelOrderRequestBody extends OfiMemberNodeBody {
     token: string;
     orderID: any;
@@ -58,10 +62,6 @@ export interface OfiGetContractByOrder extends OfiMemberNodeBody {
     walletId: string | number;
 }
 
-export interface OfiGetArrangementCollectiveArchive extends MemberNodeMessageBody {
-    token: string;
-}
-
 export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
     token: string;
     shareisin: string;
@@ -78,4 +78,23 @@ export interface IznesNewOrderRequestBody extends MemberNodeMessageBody {
 export interface IznesMarkOrderSettleRequestBody extends MemberNodeMessageBody {
     token: string;
     orderId: number;
+}
+
+export interface ManageOrdersRequestData {
+    fundName?: string;
+    shareName?: string;
+    status?: number;
+    orderType?: number;
+    isin?: any;
+    orderID?: number;
+    currency?: number;
+    quantity?: number;
+    amountWithCost?: number;
+    dateSearchField?: string;
+    fromDate?: string;
+    toDate?: string;
+    pageSize?: number;
+    rowOffSet?: number;
+    sortByField?: string;
+    sortOrder?: string;
 }
