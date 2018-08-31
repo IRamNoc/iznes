@@ -207,9 +207,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             (data) => {
                                 console.log('void asset success:', data);
 
-                                setTimeout(
-                                    () => {
-                                        if (this.deleteAsset) {
+                                if (this.deleteAsset) {
+                                    setTimeout(
+                                        () => {
                                             const deleteAssetAsyncTaskPipe = this.walletnodeTxService.deleteAsset({
                                                 walletId,
                                                 address,
@@ -262,13 +262,14 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                     this.showAlert('error', data[1].data.status);
                                                 },
                                             ));
-                                        } else {
-                                            /* Show success modal. */
-                                            this.showAlert('success', 'Asset issuance has been successfully voided.');
-                                            this.voidAssetForm.reset();
-                                        }
-                                    },
-                                    10000);
+                                        },
+                                        10000);
+                                } else {
+                                    /* Show success modal. */
+                                    this.showAlert('success', 'Asset issuance has been successfully voided.');
+                                    this.voidAssetForm.reset();
+                                }
+
                             },
                             (data) => {
                                 console.log('fail', data);
