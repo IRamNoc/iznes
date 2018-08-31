@@ -50,6 +50,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <app-core-admin-permissions
+                        [showTeamSelect]="false"
                         [entityId]="entityId"
                         [doUpdateOb]="doPermissionsUpdateOb"
                         (entitiesFn)="getTeamPermissions($event)"></app-core-admin-permissions>
