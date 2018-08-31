@@ -8,7 +8,6 @@ siteId=1
 
 # Set API endpoint
 apiEndpoint="http://10.0.2.72:8000/api/sites/$siteId/export-translations"
-# apiEndpoint="http://10.0.25.87:8000/api/sites/$siteId/export-translations"
 
 # Function that builds the new translations file
 function buildTranslationFile() {
