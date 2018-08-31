@@ -1575,6 +1575,22 @@ dp-date-picker div {
     padding: 2px 0 0 1px;
 }
 
+.tooltip.left {
+    width: initial;
+}
+
+.tooltip.left .tooltip-content {
+    left: 0;
+}
+
+.tooltip .tooltip-content {
+    background: #363a49;
+    &::before {
+        border-left: .25rem solid #363a49;
+        border-top: .208333rem solid #363a49;
+    }
+}
+
 .btnTourContainer {
     width: 100%;
     text-align: right;
