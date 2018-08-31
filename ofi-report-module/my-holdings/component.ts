@@ -1,21 +1,17 @@
-import { OnInit, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
-import { fromJS, List } from 'immutable';
+import { List } from 'immutable';
+import { combineLatest } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { filter, takeUntil } from 'rxjs/operators';
 import * as _ from 'lodash';
-import { MemberSocketService } from '@setl/websocket-service';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-import { OfiCurrenciesService } from '@ofi/ofi-main/ofi-req-services/ofi-currencies/service';
-
-/* Types. */
-interface SelectedItem {
-    id: any;
-    text: number | string;
-}
+import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
+import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
+import { CurrencyType } from '@ofi/ofi-main/ofi-store/ofi-currencies/model';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -23,9 +19,6 @@ interface SelectedItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyHoldingsComponent implements OnInit, OnDestroy {
-    private connectedWalletId: any = 0;
-
-    selectedManagementCompanyId = 0;
     investorManagementCompanyList = [];
     holdingsList = [];
     searchForm: FormGroup;
@@ -35,7 +28,7 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
     @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedInvestorHolding$;
     @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
-    @select(['ofi', 'ofiCurrencies', 'currencies']) currenciesObs;
+    @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
     @select([
         'ofi',
         'ofiProduct',
@@ -50,7 +43,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private fb: FormBuilder,
         private currenciesService: OfiCurrenciesService,
         private managementCompanyService: OfiManagementCompanyService,
-        private memberSocketService: MemberSocketService,
         private ofiReportsService: OfiReportsService,
         private _translate: MultilingualService,
     ) {
@@ -59,207 +51,104 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.initForm();
+        this.initSubscriptions();
+    }
+
+    ngOnDestroy(): void {
+        this.unSubscribe.next();
+        this.unSubscribe.complete();
+        this.changeDetectorRef.detach();
+    }
+
+    initForm() {
         this.searchForm = this.fb.group({
             search: [''],
         });
 
-        this.searchForm.valueChanges
+        this.changeDetectorRef.markForCheck();
+    }
+
+    initSubscriptions() {
+        this.currencyList$
             .pipe(
-                filter(v => v.search.length),
+                filter((v: List<CurrencyType>) => v && v.size > 0),
                 takeUntil(this.unSubscribe),
             )
-            .subscribe((d) => {
-                // if (d.search.length > 0) {
-                    this.selectedManagementCompanyId = d.search[0].id;
+            .subscribe(d => this.currencyList = d.toJS());
 
-                    const payload = {
-                        amCompanyID: d.search[0].id,
-                        walletID: this.connectedWalletId,
-                    };
+        combineLatest(
+            this.connectedWallet$,
+            this.searchForm.valueChanges,
+        ).pipe(
+            filter(([walletId, selectedItem]) => walletId && selectedItem.search.length),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(([selectedWalletId, selectedItem]) => {
+            const payload: InvestorHoldingRequestData = {
+                amCompanyID: selectedItem.search[0].id,
+                walletID: Number(selectedWalletId),
+            };
 
-                    OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
-
-                    this.changeDetectorRef.markForCheck();
-                // }
-            });
-
-        this.connectedWallet$
-            .pipe(
-                filter(v => !!v),
-                takeUntil(this.unSubscribe)
-            )
-            .subscribe(d => this.connectedWalletId = d);
+            this.ofiReportsService.fetchInvestorHoldingList(payload);
+        });
 
         this.investorManagementCompany$
             .pipe(
                 filter((v: List<any>) => v && v.size > 0),
                 takeUntil(this.unSubscribe),
             )
-            .subscribe((d) => {
-                const data = d.toJS();
-
-                this.investorManagementCompanyList = data.map(it => ({
-                    id: it.companyID,
-                    text: it.companyName,
-                }));
-
-                this.changeDetectorRef.markForCheck();
-            });
-
-        // this.requestedInvestorHolding$
-        //     .takeUntil(this.unSubscribe)
-        //     .subscribe((d) => {
-        //         console.log('d :', d);
-
-        //         if (this.connectedWalletId !== 0 && this.selectedManagementCompanyId !== 0) {
-        //             const payload = {
-        //                 amCompanyID: this.selectedManagementCompanyId,
-        //                 walletID: this.connectedWalletId,
-        //             };
-
-        //             OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
-        //         }
-        //     });
+            .subscribe((d) => this.formatManagementCompanyList(d));
 
         this.investorHoldingList$
             .pipe(
-                filter((v: List<any>) => {
-                    console.log('v :', v);
-                    return v && v.size > 0;
-                }),
+                filter((v: List<any>) => v && v.size > 0),
                 takeUntil(this.unSubscribe),
             )
             .subscribe((d) => {
-                const listImu = fromJS(d);
-
-                console.log('listImu :', listImu);
-
-                this.holdingsList = listImu.map(it => ({
-                    amManagementCompanyID: it.amManagementCompanyID,
-                    companyName: it.companyName,
-                    shareID: it.shareID,
-                    fundShareName: it.fundShareName,
-                    isin: it.isin,
-                    shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
-                    latestNav: it.latestNav,
-                    portfolioAddr: it.portfolioAddr,
-                    portfolioLabel: it.portfolioLabel,
-                    quantity: it.quantity,
-                    amount: it.amount,
-                    ratio: it.ratio,
-                })) || [];
-
-                this.changeDetectorRef.markForCheck();
+                this.formatInvestorHoldingList(d);
             });
     }
 
-    // ngAfterViewInit() {
-    //     this.subscriptions['my-connected'] = this.connectedWalletOb.subscribe((connectedWalletId) => {
-    //         this.connectedWalletId = connectedWalletId;
+    formatManagementCompanyList(d) {
+        const data = d.toJS();
 
-    //         if (this.connectedWalletId !== 0) {
-    //             this.subscriptions.push(this.currenciesObs.subscribe(c => this.getCurrencyList(c)));
-    //             this.subscriptions.push(this.invManagementCompanyAccessListOb.subscribe(investorManagementCompanyList => this.getINVManagementCompanyListFromRedux(investorManagementCompanyList)));
-    //             this.subscriptions.push(this.requestedOfiInvHoldingsObj.subscribe(requested => this.getInvHoldingsRequested(requested)));
-    //             this.subscriptions.push(this.ofiInvHoldingsListObj.subscribe(list => this.getInvHoldingsListFromRedux(list)));
-    //         }
-    //     });
-    // }
+        this.investorManagementCompanyList = data.map(it => ({
+            id: it.companyID,
+            text: it.companyName,
+        }));
 
-    ngOnDestroy() {
-        this.unSubscribe.next();
-        this.unSubscribe.complete();
-        this.changeDetectorRef.detach();
+        this.changeDetectorRef.markForCheck();
+    }
+
+    formatInvestorHoldingList(d) {
+        const data = d.toJS();
+
+        this.holdingsList = data.map(it => ({
+            amManagementCompanyID: it.amManagementCompanyID,
+            companyName: it.companyName,
+            shareID: it.shareID,
+            fundShareName: it.fundShareName,
+            isin: it.isin,
+            shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
+            latestNav: it.latestNav,
+            portfolioAddr: it.portfolioAddr,
+            portfolioLabel: it.portfolioLabel,
+            quantity: it.quantity,
+            amount: it.amount,
+            ratio: it.ratio,
+        })) || [];
+
+        this.changeDetectorRef.markForCheck();
     }
 
     /**
-     * Get the list of currencies from redux
-     *
-     * @param {Array} data
-     * @memberof OfiNavFundView
-     */
-    getCurrencyList(data) {
-        if (data) {
-            this.currencyList = data.toJS();
-        }
-    }
-
-    // getINVManagementCompanyListFromRedux(managementCompanyList) {
-    //     const managementCompanyListImu = fromJS(managementCompanyList);
-
-    //     this.managementCompanyList = managementCompanyListImu.reduce((result, item) => {
-    //         result.push({
-    //             id: item.get('companyID', 0),
-    //             text: item.get('companyName', ''),
-    //         });
-
-    //         return result;
-    //     }, []);
-
-    //     this.changeDetectorRef.markForCheck();
-    // }
-
-    // getInvHoldingsRequested(requested): void {
-    //     if (!requested) {
-    //         const payload = {
-    //             amCompanyID: this.selectedManagementCompany,
-    //             walletID: this.connectedWalletId,
-    //         };
-
-    //         OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
-    //     }
-    // }
-
-    // getInvHoldingsListFromRedux(list) {
-    //     const listImu = fromJS(list);
-
-    //     this.holdingsList = listImu.reduce((result, item) => {
-
-    //         result.push({
-    //             amManagementCompanyID: item.get('amManagementCompanyID', 0),
-    //             companyName: item.get('companyName', ''),
-    //             shareID: item.get('shareID', 0),
-    //             fundShareName: item.get('fundShareName', ''),
-    //             isin: item.get('isin', ''),
-    //             shareClassCurrency: this.showCurrency(item.get('shareClassCurrency', '')),
-    //             latestNav: item.get('latestNav', 0),
-    //             portfolioAddr: item.get('portfolioAddr', ''),
-    //             portfolioLabel: item.get('portfolioLabel', ''),
-    //             quantity: item.get('quantity', 0),
-    //             amount: item.get('amount', 0),
-    //             ratio: item.get('ratio', 0),
-    //         });
-
-    //         return result;
-    //     }, []);
-
-    //     this.changeDetectorRef.markForCheck();
-    // }
-
-    requestSearch(form) {
-        if (this.searchForm.get('search').value && this.searchForm.get('search').value[0] && this.searchForm.get('search').value[0].id) {
-            this.selectedManagementCompanyId = this.searchForm.get('search').value[0].id;
-            const payload = {amCompanyID: this.selectedManagementCompanyId, walletID: this.connectedWalletId};
-            OfiReportsService.defaultRequestInvHoldingsList(this.ofiReportsService, this.ngRedux, payload);
-        }
-    }
-
-    showCurrency(currency) {
-        const obj = this.currencyList.find(o => o.id === currency);
-        if (obj !== undefined) {
-            return obj.text;
-        }
-        return currency;
-    }
-
-    /**
-     * Get the label of the currency (3 characters)
+     * Get the code of the currency by its id
      *
      * @param {number} currencyId
      * @returns {string}
-     * @memberof OfiNavFundView
      */
     getCurrencyString(currencyId: number): string {
-        return this.currencyList.find(v => v.id === currencyId).text || 'N/A';
+        return this.currencyList.find(v => v.id === currencyId).text || '';
     }
 }
