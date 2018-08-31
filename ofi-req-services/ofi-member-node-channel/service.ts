@@ -7,16 +7,11 @@ import {
     clearRequestedFundAccessMy,
     clearRequestedNavFundsList,
     OFI_SET_COUPON_LIST,
-    ofiClearRequestedCentralisationHistoryReports,
     ofiClearRequestedIssuedAssets,
-    ofiClearRequestedManageOrder,
     setamkyclist,
-    ofiListOfFundsComponentActions,
     ofiManageOrderActions,
     FundAccessMyActions,
 } from '../../ofi-store';
-import { clearRequestedUmbrellaFund } from '../../ofi-store/ofi-product/umbrella-fund/umbrella-fund-list/actions';
-import { clearRequestedIznesFunds } from '../../ofi-store/ofi-product/fund/fund-list/actions';
 import { clearRequestedIznesShares } from '../../ofi-store/ofi-product/fund-share-list/actions';
 import {
     clearRequestedPrecentraFundsList,
@@ -114,7 +109,6 @@ export class OfiMemberNodeChannelService {
         case 'iznesupdateorder':
             this.logService.log(' | got the broadcast order', data);
             this.ngRedux.dispatch(ofiManageOrderActions.ofiUpdateOrder(data.Data));
-            this.ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
             this.ngRedux.dispatch(ofiClearRequestedAmHolders());
             this.ngRedux.dispatch(ofiClearHolderDetailRequested());
             this.ngRedux.dispatch(clearRequestedPrecentraFundsList());
