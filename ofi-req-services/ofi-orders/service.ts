@@ -1,60 +1,29 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
-import {select, NgRedux} from '@angular-redux/store';
+import {NgRedux} from '@angular-redux/store';
 
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeRequest, createMemberNodeSagaRequest} from '@setl/utils/common';
-import {SagaHelper, Common} from '@setl/utils';
+import {SagaHelper} from '@setl/utils';
 
 /* Import actions. */
 import {
     OFI_SET_MANAGE_ORDER_LIST,
     ofiSetRequestedManageOrder,
     ofiClearRequestedManageOrder,
-    setRequestedCollectiveArchive,
-    SET_COLLECTIVE_ARCHIVE
 } from '../../ofi-store/';
 
 /* Import interfaces for message bodies. */
 import {
     OfiMemberNodeBody,
     OfiAmOrdersRequestBody,
-    OfiAmExportOrdersRequestBody,
     OfiCancelOrderRequestBody,
-    OfiRequestArrangements,
-    OfiUpdateArrangement,
-    OfiGetContractByOrder,
-    OfiGetArrangementCollectiveArchive,
-    IznesNewOrderRequestBody, IznesMarkOrderSettleRequestBody
+    IznesNewOrderRequestBody,
+    IznesMarkOrderSettleRequestBody,
+    ManageOrdersRequestData,
+    CancelOrderRequestData,
 } from './model';
-
-interface ManageOrdersData {
-    fundName?: string;
-    shareName?: string;
-    status?: number;
-    orderType?: number;
-    isin?: any;
-    orderID?: number;
-    currency?: number;
-    quantity?: number;
-    amountWithCost?: number;
-    dateSearchField?: string;
-    fromDate?: string;
-    toDate?: string;
-    pageSize?: number;
-    rowOffSet?: number;
-    sortByField?: string;
-    sortOrder?: string;
-}
-
-interface ExportOrdersData {
-    filters: any;
-}
-
-interface CancelOrderData {
-    orderID: number;
-}
 
 @Injectable()
 export class OfiOrdersService {
@@ -63,28 +32,6 @@ export class OfiOrdersService {
     constructor(private memberSocketService: MemberSocketService,
                 private ngRedux: NgRedux<any>) {
         /* Stub. */
-    }
-
-    /**
-     * Default static call to get arrangement collective archive, and dispatch default actions, and other
-     * default task.
-     *
-     * @param ofiOrdersService
-     * @param ngRedux
-     */
-    static defaultGetArrangementCollectiveArchive(ofiOrdersService: OfiOrdersService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(setRequestedCollectiveArchive());
-
-        // Request the list.
-        const asyncTaskPipe = ofiOrdersService.getCollectiveArchive();
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_COLLECTIVE_ARCHIVE],
-            [],
-            asyncTaskPipe,
-            {}
-        ));
     }
 
     static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -186,7 +133,7 @@ export class OfiOrdersService {
 
     }
 
-    requestManageOrdersList(data: ManageOrdersData): any {
+    requestManageOrdersList(data: ManageOrdersRequestData): any {
 
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetamorders',
@@ -212,7 +159,7 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestInvestorOrdersList(data: ManageOrdersData): any {
+    requestInvestorOrdersList(data: ManageOrdersRequestData): any {
 
         const messageBody: OfiAmOrdersRequestBody = {
             RequestName: 'izngetinvestororders',
@@ -238,7 +185,7 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestCancelOrderByAM(data: CancelOrderData): any {
+    requestCancelOrderByAM(data: CancelOrderRequestData): any {
 
         const messageBody: OfiCancelOrderRequestBody = {
             RequestName: 'izncancelorderbyam',
@@ -249,7 +196,7 @@ export class OfiOrdersService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestCancelOrderByInvestor(data: CancelOrderData): any {
+    requestCancelOrderByInvestor(data: CancelOrderRequestData): any {
 
         const messageBody: OfiCancelOrderRequestBody = {
             RequestName: 'izncancelorderbyinvestor',
@@ -288,14 +235,5 @@ export class OfiOrdersService {
                 )
             );
         });
-    }
-
-    getCollectiveArchive(): any {
-        const messageBody: OfiGetArrangementCollectiveArchive = {
-            RequestName: 'getarrangementcollectivearchive',
-            token: this.memberSocketService.token,
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 }
