@@ -32,7 +32,9 @@ import { OfiManagementCompanyService } from '../ofi-product/management-company/m
 import { OfiUmbrellaFundService } from '../ofi-product/umbrella-fund/service';
 import { OfiFundService } from '../ofi-product/fund/fund.service';
 import { OfiFundShareFormService } from '../../ofi-product/fund-share/form/service';
-import { LogService } from '@setl/utils';
+import { LogService, SagaHelper } from '@setl/utils';
+import { MyUserService } from '@setl/core-req-services';
+import { SET_SITE_MENU } from '@setl//core-store';
 
 /* Service class. */
 @Injectable()
@@ -51,6 +53,7 @@ export class OfiMemberNodeChannelService {
         private umbrellaService: OfiUmbrellaFundService,
         private fundService: OfiFundService,
         private fundShareService: OfiFundShareFormService,
+        private myUserService: MyUserService,
     ) {
         this.connectedWallet$
         .subscribe(v => this.connectedWalletID = v);
@@ -131,6 +134,7 @@ export class OfiMemberNodeChannelService {
         case 'kycaccepted':
             //enable menu.
             this.ngRedux.dispatch(resetHomepage());
+            this.refetchMenu();
             break;
 
         case 'iznprekycupdate':
@@ -175,8 +179,21 @@ export class OfiMemberNodeChannelService {
             break;
         }
     }
+
+    /**
+     * Re-fetch user's menu spec.
+     */
+    refetchMenu() {
+        const asyncTaskPipes = this.myUserService.getSiteMenu(this.ngRedux);
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_SITE_MENU],
+            [],
+            asyncTaskPipes, {}
+        ));
+    }
 }
 
 function handleUpdateNav(ngRedux) {
     ngRedux.dispatch(ofiClearRequestedIssuedAssets());
 }
+
