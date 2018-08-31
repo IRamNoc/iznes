@@ -68,7 +68,10 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.persistService.watchForm(
             'newkycrequest/riskProfile',
             this.form,
-            this.newRequestService.context
+            this.newRequestService.context,
+            {
+                reset: false
+            }
         );
     }
 

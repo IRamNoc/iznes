@@ -49,7 +49,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.initData();
-        this.initSubscriptions();
         this.getCurrentFormData();
     }
 
@@ -85,7 +84,10 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
         this.persistService.watchForm(
             'newkycrequest/documents',
             this.form,
-            this.newRequestService.context
+            this.newRequestService.context,
+            {
+                reset : false
+            }
         );
     }
 
@@ -161,7 +163,6 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                                 let control = this.form.get([path, type]);
 
                                 if (type && shouldContinue && control) {
-                                    console.log('patching', type, control);
                                     control.patchValue(value);
                                 }
                             });
@@ -170,6 +171,8 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
 
                         this.form.updateValueAndValidity();
                         this.changeDetectorRef.markForCheck();
+
+                        this.initSubscriptions();
                     });
                 });
             })

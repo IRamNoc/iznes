@@ -33,23 +33,7 @@ export class IdentificationService {
 
             let formGroupCompany = form.get('companyInformation');
             let formGroupBeneficiaries = formGroupCompany.get('beneficiaries');
-            formGroupBeneficiaries.controls.forEach(formGroupBeneficiary => {
-                formGroupBeneficiary.get('kycID').setValue(kycID);
-
-                let kycDocumentID = formGroupBeneficiary.get('document.kycDocumentID').value;
-                let beneficiaryDocumentPromise;
-                if (kycDocumentID) {
-                    this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID)
-                } else {
-                    beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(formGroupBeneficiary.get('document').value, connectedWallet).then(data => {
-                        let kycDocumentID = getValue(data, 'kycDocumentID');
-
-                        this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
-                    });
-                }
-                promises.push(beneficiaryDocumentPromise);
-
-            });
+            promises.concat(this.handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet));
 
             formGroupCompany.get('kycID').setValue(kycID);
             let companyPromise = this.sendRequestCompany(formGroupCompany);
@@ -82,6 +66,29 @@ export class IdentificationService {
         });
 
         return Promise.all(promises);
+    }
+
+    handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet){
+        let promises = [];
+
+        formGroupBeneficiaries.controls.forEach(formGroupBeneficiary => {
+
+            let kycDocumentID = formGroupBeneficiary.get('document.kycDocumentID').value;
+            let beneficiaryDocumentPromise;
+            if (kycDocumentID) {
+                formGroupBeneficiary.get('kycID').setValue(kycID);
+                this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID)
+            } else {
+                beneficiaryDocumentPromise = this.documentsService.sendRequestDocumentControl(formGroupBeneficiary.get('document').value, connectedWallet).then(data => {
+                    formGroupBeneficiary.get('kycID').setValue(kycID);
+                    let kycDocumentID = getValue(data, 'kycDocumentID');
+                    this.sendRequestBeneficiary(formGroupBeneficiary, kycDocumentID);
+                });
+            }
+            promises.push(beneficiaryDocumentPromise);
+
+        });
+        return promises;
     }
 
     sendRequestUpdateCurrentStep(kycID, context) {

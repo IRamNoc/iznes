@@ -36,6 +36,7 @@
                             <input type="text" formControlName="custodianIban" placeholder="{{'Please fill in the custodian\'s IBAN'}}">
                             <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'], ['required'])">{{'Field is required' | translate}}</span>
                             <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'], ['maxlength'])">{{'Field is too long' | translate}}</span>
+                            <span class="field-error" *ngIf="hasError(['custodianHolderCustom',i,'custodianIban'], ['iban'])">{{'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate}}</span>
                         </div>
                     </div>
                     <p>

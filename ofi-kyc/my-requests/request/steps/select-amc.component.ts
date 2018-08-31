@@ -4,7 +4,7 @@ import {takeUntil, filter as rxFilter, tap, map} from 'rxjs/operators';
 import {FormGroup} from '@angular/forms';
 import {select, NgRedux} from '@angular-redux/store';
 import {ActivatedRoute} from '@angular/router';
-import {isEmpty, isNil, keyBy, filter, reduce} from 'lodash';
+import {isEmpty, isNil, keyBy, filter, reduce, find} from 'lodash';
 
 import {ClearMyKycListRequested} from '@ofi/ofi-main/ofi-store/ofi-kyc';
 import {OfiManagementCompanyService} from "@ofi/ofi-main/ofi-req-services/ofi-product/management-company/management-company.service";
@@ -102,13 +102,13 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
                 }),
                 tap(([managementCompanies, kycList]) => {
                     this.managementCompanies = keyBy(managementCompanies, 'companyID');
+                    this.kycList = kycList;
                 }),
                 takeUntil(this.unsubscribe)
             )
         ;
 
         companyCombination$.subscribe(([managementCompanies, kycList]) => {
-                this.kycList = kycList;
                 this.managementCompaniesExtract = this.requestsService
                     .extractManagementCompanyData(managementCompanies, kycList);
             })
@@ -137,9 +137,11 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     populateForm(kycs){
         let formValue = kycs.map(kyc => {
+            let alreadyCompleted = find(this.kycList, ['kycID', kyc.kycID]).alreadyCompleted;
             return {
                 id : kyc.amcID,
-                text : this.managementCompanies[kyc.amcID].companyName
+                text : this.managementCompanies[kyc.amcID].companyName,
+                registered : alreadyCompleted
             };
         });
 
