@@ -102,21 +102,6 @@ export class OfiReportsService {
         ));
     }
 
-    static defaultRequestInvHoldingsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, invHoldingsDetailRequestData: InvestorHoldingRequestData) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedInvHoldings());
-
-        // Request the list.
-        const asyncTaskPipe = ofiReportsService.requestInvestorHoldingList(invHoldingsDetailRequestData);
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_INV_HOLDINGS_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
-    }
-
     static defaultRequestHolderDetail(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, holderDetailRequestData: OfiHolderDetailRequestData) {
         ngRedux.dispatch(ofiSetHolderDetailRequested());
 
