@@ -1,6 +1,6 @@
 <div class="main-container">
 
-    <ng-sidebar-container>
+    <ng-sidebar-container (scroll)="handleSidebarFixingOnScroll($event)" [scrollTop]="scrollTopPosition">
 
         <ng-sidebar [(opened)]="opened" [mode]="_MODES[modeNum]" [keyClose]="keyClose" [position]="POSITIONS[positionNum]" [dock]="dock" [dockedSize]="'50px'" [autoCollapseHeight]="autoCollapseHeight" [autoCollapseWidth]="autoCollapseWidth" [closeOnClickOutside]="closeOnClickOutside" [closeOnClickBackdrop]="closeOnClickBackdrop" [showBackdrop]="showBackdrop" [animate]="animate" [trapFocus]="trapFocus" [autoFocus]="autoFocus" [sidebarClass]="'demo-sidebar'" [ariaLabel]="'My sidebar'">
 
@@ -36,14 +36,6 @@
                                 <input type="radio" name="gridRadios1" id="lang_eng" [checked]="isCurrentLanguage('en-Latn')">
                                 <label for="lang_eng">{{'English' | translate}}</label>
                             </div>
-                            <!--<div class="radio" (click)="changeLanguage('eng')">-->
-                            <!--<input type="radio" name="gridRadios1" id="lang_tch" [checked]="isCurrentLanguage('tch')">-->
-                            <!--<label for="lang_tch">繁體中文</label>-->
-                            <!--</div>-->
-                            <!--<div class="radio" (click)="changeLanguage('eng')">-->
-                            <!--<input type="radio" name="gridRadios1" id="lang_sch" [checked]="isCurrentLanguage('sch')">-->
-                            <!--<label for="lang_sch">中文</label>-->
-                            <!--</div>-->
                         </div>
                     </section>
 
@@ -67,11 +59,15 @@
             <div class="content-container">
 
                 <!-- Navigation Sidebar. -->
-                <nav class="sidenav">
-                    <app-navigation-sidebar></app-navigation-sidebar>
+                <nav class="sidenav" (wheel)="sidebarScroll($event)" (click)="handleSidebarFixingOnClick()"
+                     [ngClass]="{'fixed' : fixSidebar, 'fixed-bottom' : fixSidebarBottom}">
+                    <div #sidebar class="sidebar-wrapper">
+                        <app-navigation-sidebar></app-navigation-sidebar>
+                    </div>
                 </nav>
 
-                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}" [@routerTransition]="currentParentUrl">
+                <main #main class="content-area" appBackToTop [ngClass]="{'menuHideContent': menuShown === 0}"
+                      [@routerTransition]="currentParentUrl" [ngStyle]="{'min-height.px' : sidebarHeight}">
                     <!--
                         Basic Layout.
                         This layout wraps the navbar and the top bar around content.

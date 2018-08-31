@@ -163,16 +163,11 @@ ul.breadcrumb li a:hover {
 // contains text inside an area regardless if there isn't spaces
 .main-container {
     .content-container {
-        display: block;
-        -webkit-box-flex: inherit;
-        -ms-flex: auto;
-        flex: auto;
+        display: inline-block;
         min-height: inherit;
         float: left;
         width: 100%;
         background: #373a49;
-        height: calc(100% - 75px);
-        //transform: translateX(-0px);
         transform: none;
         transition: width 100ms linear, transform 100ms linear;
 
@@ -185,6 +180,7 @@ ul.breadcrumb li a:hover {
         .content-area {
             width: calc(100% - 230px);
             height: 100%;
+            float: right;
         }
     }
 
