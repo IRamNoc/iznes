@@ -1,20 +1,21 @@
-import {MemberNodeMessageBody} from '@setl/utils/common';
+import { MemberNodeMessageBody } from '@setl/utils/common';
 
-export interface OfiMemberNodeBody extends MemberNodeMessageBody {
+export interface MemberNodeMessageBody extends MemberNodeMessageBody {
     token: string;
 }
 
-export interface OfiCentralisationReportsRequestBody extends OfiMemberNodeBody {
+export interface OfiCentralisationReportsRequestBody extends MemberNodeMessageBody {
     token: string;
     search?: any;
 }
 
-export interface OfiBaseCentralisationHistoryRequestBody extends OfiMemberNodeBody {
+export interface OfiBaseCentralisationHistoryRequestBody
+  extends MemberNodeMessageBody {
     token: string;
     fundShareID: any;
 }
 
-export interface OfiCentralisationHistoryRequestBody extends OfiMemberNodeBody {
+export interface OfiCentralisationHistoryRequestBody extends MemberNodeMessageBody {
     token: string;
     fundShareID: any;
     dateFrom: any;
@@ -22,7 +23,7 @@ export interface OfiCentralisationHistoryRequestBody extends OfiMemberNodeBody {
     dateRange: any;
 }
 
-export interface OfiAmHoldersRequestBody extends OfiMemberNodeBody {
+export interface OfiAmHoldersRequestBody extends MemberNodeMessageBody {
     token: string;
 }
 
@@ -31,24 +32,25 @@ export interface OfiHolderDetailRequestData {
     selectedFilter: number;
 }
 
-export interface OfiHolderDetailRequestBody extends OfiMemberNodeBody {
+export interface OfiHolderDetailRequestBody extends MemberNodeMessageBody {
     token: string;
     shareId: number;
     selectedFilter: number;
 }
 
-export interface OfiInvHoldingsDetailRequestBody extends OfiMemberNodeBody {
+export interface InvestorHoldingRequestData {
+    walletID: number;
+    amCompanyID: number;
+}
+
+export interface InvestorHoldingRequestBody extends MemberNodeMessageBody {
     token: string;
     walletID: number;
     amCompanyID: number;
 }
 
-export interface OfiInvHoldingsDetailRequestData {
-    walletID: any;
-    amCompanyID: any;
-}
-
-export interface CentralisationRequestSharesBody extends OfiMemberNodeBody {
+/* PRECENTRALISATION */
+export interface PrecentralisationRequestSharesBody extends MemberNodeMessageBody {
     token: string;
     shareId: number;
     dateFrom: string;
@@ -56,7 +58,14 @@ export interface CentralisationRequestSharesBody extends OfiMemberNodeBody {
     mode: number;
 }
 
-export interface CentralisationRequestFundsBody extends OfiMemberNodeBody {
+export interface PrecentralisationSharesRequestData {
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+export interface PrecentralisationRequestFundsBody extends MemberNodeMessageBody {
     token: string;
     fundId: number;
     dateFrom: string;
@@ -64,7 +73,15 @@ export interface CentralisationRequestFundsBody extends OfiMemberNodeBody {
     mode: number;
 }
 
-export interface PrecentralisationRequestSharesBody extends OfiMemberNodeBody {
+export interface PrecentralisationFundsRequestData {
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+/* CENTRALISATION */
+export interface CentralisationRequestSharesBody extends MemberNodeMessageBody {
     token: string;
     shareId: number;
     dateFrom: string;
@@ -72,10 +89,35 @@ export interface PrecentralisationRequestSharesBody extends OfiMemberNodeBody {
     mode: number;
 }
 
-export interface PrecentralisationRequestFundsBody extends OfiMemberNodeBody {
+export interface CentralisationSharesRequestData {
+    shareId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+export interface CentralisationRequestFundsBody extends MemberNodeMessageBody {
     token: string;
     fundId: number;
     dateFrom: string;
     dateTo: string;
     mode: number;
+}
+
+export interface CentralisationFundsRequestData {
+    fundId: number;
+    dateFrom: string;
+    dateTo: string;
+    mode: number;
+}
+
+export interface CentralisationReportsRequestData {
+    search: string;
+}
+
+export interface CentralisationHistoryRequestData {
+    fundShareID: any;
+    dateFrom: any;
+    dateTo: any;
+    dateRange: any;
 }
