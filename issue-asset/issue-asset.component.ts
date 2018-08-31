@@ -159,6 +159,9 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
     }
 
     issueAsset() {
+        // Trigger loading alert
+        this.alertsService.create('loading');
+
         if (this.issueAssetForm.valid) {
             const walletId = this.connectedWalletId;
             const address = this.issueAssetForm.value.recipient;
@@ -186,7 +189,15 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
                     console.log('issue asset:', data);
                 },
                 (data) => {
-                    console.log('fail', data);
+                    console.error('fail', data);
+                    this.alertsService.create('error', `
+                      <table class="table grid">
+                          <tbody>
+                              <tr>
+                                  <td class="text-center text-danger">Failed to issue asset</td>
+                              </tr>
+                          </tbody>
+                      </table>`);
                 },
             ));
         }

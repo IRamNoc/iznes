@@ -11,7 +11,8 @@ import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subscription } from 'rxjs/Subscription';
 import { Unsubscribe } from 'redux';
-import { WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
+import {
+    WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
 } from '@setl/core-req-services';
 
 import {
@@ -159,10 +160,10 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         });
 
         this.encumberAssetsForm.controls.includeToDate.valueChanges
-            .subscribe((value: boolean) => {
-                this.toggleToDateRequired(value);
-                this.isEncumberEnd = value;
-            });
+        .subscribe((value: boolean) => {
+            this.toggleToDateRequired(value);
+            this.isEncumberEnd = value;
+        });
     }
 
     private toggleToDateRequired(value: boolean): void {
@@ -269,8 +270,11 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
             return;
         }
 
+        // Trigger loading alert
+        this.alertsService.create('loading');
+
         const startUTCSecs = new Date(formValues.fromDateUTC + ' ' + formValues.fromTimeUTC).getTime() / 1000;
-        const endUTCSecs = 
+        const endUTCSecs =
             (formValues.toDateUTC !== '' && formValues.toTimeUTC !== '') ?
                 new Date(formValues.toDateUTC + ' ' + formValues.toTimeUTC).getTime() / 1000 : 0;
 
@@ -298,48 +302,25 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.showSuccess('Encumber has successfully been created');
+                this.showAlert('success', 'Encumber has successfully been created');
                 this.encumberAssetsForm.reset();
             },
             (data) => {
-                this.showError(data[1].data.status);
+                console.error(data);
+                const message = !_.isEmpty(data[1].data.error) ? '. Reason:<br>' + data[1].data.error : '';
+                this.showAlert('error', 'Failed to encumber asset' + message);
             }),
         );
     }
 
-    showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
+    showAlert(type, message) {
+        const colour = type === 'error' ? 'danger' : type;
 
-    showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
+        this.alertsService.create(type, `
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-${colour}">${message}</td>
                       </tr>
                   </tbody>
               </table>
