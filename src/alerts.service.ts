@@ -9,7 +9,7 @@ export class AlertsService {
     alert$: Subject<AlertEmit> = new Subject();
     update$: Subject<UpdateEmit> = new Subject();
 
-    create(type: AlertType, message: string, settingsOverrides: AlertSettings = {},
+    create(type: AlertType, message: string = null, settingsOverrides: AlertSettings = {},
            titleMessage: string | boolean = false): Subject<any> {
         const create$ = new Subject();
         this.alert$.next({ type, message, titleMessage, override: settingsOverrides });
