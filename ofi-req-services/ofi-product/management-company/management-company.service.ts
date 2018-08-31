@@ -76,7 +76,7 @@ export class OfiManagementCompanyService {
     setAccountId(accountId: number) {
         this.accountId = accountId;
     }
-    
+
     getManagementCompanyList() {
         if (this.isManagementCompanyRequested) {
             return;
