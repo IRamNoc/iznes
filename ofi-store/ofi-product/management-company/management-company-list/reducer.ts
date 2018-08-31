@@ -40,12 +40,6 @@ export const invManagementCompanyListReducer = function (state: invManagementCom
     switch (action.type) {
         case ManagementCompanyActions.SET_INV_MANAGEMENT_COMPANY_LIST:
             return handleGetInvestorManagementCompanyList(state, action);
-            // const mcData2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-            // const investorManagementCompanyList = formatManagementCompanyDataResponse(mcData2);
-            // const newState2 = Object.assign({}, state, {
-            //     investorManagementCompanyList,
-            // });
-            // return newState2;
 
         case ManagementCompanyActions.SET_REQUESTED_INV_MANAGEMENT_COMPANY:
             return handleSetINVRequested(state, action);
@@ -161,16 +155,16 @@ function handleGetInvestorManagementCompanyList(state: invManagementCompanyListS
                 companyID: it.companyID,
                 companyName: it.companyName,
                 country: it.country,
-                addressPrefix: it.addrPrefix,  // addressPrefix to addrPrefix
+                addressPrefix: it.addrPrefix,
                 postalAddressLine1: it.postalAddressLine1,
                 postalAddressLine2: it.postalAddressLine2,
                 city: it.city,
                 stateArea: it.stateArea,
-                postalCode: it.postalcode, // postalCode to postalcode
+                postalCode: it.postalcode,
                 taxResidence: it.taxResidence,
                 registrationNum: it.registrationNum,
                 supervisoryAuthority: it.supervisoryAuthority,
-                numSiretOrSiren: it.numSIRETorSIREN,   // numSiretOrSiren to numSIRETorSIREN
+                numSiretOrSiren: it.numSIRETorSIREN,
                 creationDate: it.creationDate,
                 shareCapital: it.shareCapital,
                 commercialContact: it.commercialContact,
