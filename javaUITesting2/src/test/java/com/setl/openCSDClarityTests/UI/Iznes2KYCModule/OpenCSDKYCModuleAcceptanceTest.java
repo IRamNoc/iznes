@@ -60,7 +60,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @Rule
     public RepeatRule repeatRule = new RepeatRule();
     @Rule
-    public Timeout globalTimeout = new Timeout(95000);
+    public Timeout globalTimeout = new Timeout(105000);
     @Rule
     public TestMethodPrinterRule pr = new TestMethodPrinterRule(System.out);
 
@@ -74,6 +74,135 @@ public class OpenCSDKYCModuleAcceptanceTest {
     @After
     public void tearDown() throws Exception {
         setDBToProdOn();
+    }
+
+    @Test
+    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
+        String userNo = "001";
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "Yes", "False", "");
+    }
+
+    @Test
+    public void shouldCreateKYCRequest() throws IOException, InterruptedException, SQLException {
+        String userNo = "002";
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete();
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
+    }
+
+    @Test
+    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
+        String userNo = "003";
+        String managementCompEntered = "Management Company";
+        String managementComp2Entered = "am2";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "True", managementComp2Entered);
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete();
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "Yes", "am2", "Waiting approval");
+    }
+
+    @Test
+    public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
+        String userNo = "004";
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessClose();
+        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft", "No", "", "");
+    }
+
+    @Test
+    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
+        String No = "5";
+        String userNo = "00" + No;
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
+        KYCProcessMakeNewRequest();
+        KYCProcessStep1(managementCompEntered, "No", "False", "");
+        KYCProcessStep2();
+        KYCProcessStep3GeneralInfoComplete();
+        KYCProcessStep3CompanyInfoComplete();
+        KYCProcessStep3BankingInfoComplete();
+        KYCProcessStep4();
+        KYCProcessStep5();
+        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
+        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
+        KYCAcceptMostRecentRequest(companyName, No, firstName, lastName, userNo, phoneNo);
+
+//        String clientRefTitle = driver.findElement(By.xpath("//*[@id=\"ofi-client-referential\"]")).getText();
+//        System.out.println(clientRefTitle);
+//        System.out.println("Client Referential: " + companyName + "-" + No);
+//        assertTrue(clientRefTitle.equals("Client Referential: " + companyName + "-" + No));
+
+    }
+
+    @Test
+    public void shouldNotAllowSaveWithoutPhoneNumber() throws IOException, InterruptedException, SQLException {
+        String userNo = "006";
+        String companyName = "Jordan Corporation";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, companyName, "");
+    }
+
+    @Test
+    public void shouldNotAllowSaveWithoutCompanyName() throws IOException, InterruptedException, SQLException {
+        String userNo = "007";
+        String phoneNo = "07956701992";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, "", phoneNo);
+    }
+
+    @Test
+    public void shouldNotAllowSaveWithoutCompanyNameAndPhoneNumber() throws IOException, InterruptedException, SQLException {
+        String userNo = "008";
+
+        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
+        KYCProcessWelcomeToIZNES(userNo, "", "");
     }
 
     @Test
@@ -144,156 +273,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
         loginAndVerifySuccess("am", "alex01");
         navigateToInviteInvestorPage();
         inviteAnInvestorExpectingFailed("", "Jordan", "Miller");
-    }
-
-    @Test
-    public void shouldChangeKYCProcessIfAlreadyRegistered() throws IOException, InterruptedException, SQLException {
-        String userNo = "001";
-        String managementCompEntered = "Management Company";
-        String companyName = "Jordan Corporation";
-        String phoneNo = "07956701992";
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "Yes", "False", "");
-     }
-
-    @Test
-    public void shouldCreateKYCRequest() throws IOException, InterruptedException, SQLException {
-        String userNo = "002";
-        String managementCompEntered = "Management Company";
-        String companyName = "Jordan Corporation";
-        String phoneNo = "07956701992";
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
-        KYCProcessStep2();
-        KYCProcessStep3GeneralInfoComplete();
-        KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete();
-        KYCProcessStep4();
-        KYCProcessStep5();
-        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
-    }
-
-    @Test
-    public void shouldCreateKYCRequestWith2AMs() throws IOException, InterruptedException, SQLException {
-        String userNo = "003";
-        String managementCompEntered = "Management Company";
-        String managementComp2Entered = "am2";
-        String companyName = "Jordan Corporation";
-        String phoneNo = "07956701992";
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "True", managementComp2Entered);
-        KYCProcessStep2();
-        KYCProcessStep3GeneralInfoComplete();
-        KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete();
-        KYCProcessStep4();
-        KYCProcessStep5();
-        KYCProcessStep6("Jordan Miller", "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "Yes", "am2", "Waiting approval");
-    }
-
-    @Test
-    public void shouldSetKYCStatusToDraftIfClosed() throws IOException, InterruptedException, SQLException {
-        String userNo = "004";
-        String managementCompEntered = "Management Company";
-        String companyName = "Jordan Corporation";
-        String phoneNo = "07956701992";
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
-        KYCProcessStep2();
-        KYCProcessClose();
-        KYCProcessRequestListValidation("No","Success!", managementCompEntered, "Draft", "No", "", "");
-    }
-
-    @Test
-    public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String No = "2";
-        String userNo = "00" + No;
-        String managementCompEntered = "Management Company";
-        String companyName = "Jordan Corporation";
-        String firstName = "Jordan";
-        String lastName = "Miller";
-        String phoneNo = "07956701992";
-
-        DateFormat dateFormat = new SimpleDateFormat("dd / MM / yyyy");
-        Date date = new Date();
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
-
-        loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
-        KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
-        KYCProcessMakeNewRequest();
-        KYCProcessStep1(managementCompEntered, "No", "False", "");
-        KYCProcessStep2();
-        KYCProcessStep3GeneralInfoComplete();
-        KYCProcessStep3CompanyInfoComplete();
-        KYCProcessStep3BankingInfoComplete();
-        KYCProcessStep4();
-        KYCProcessStep5();
-        KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
-        KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
-
-        logout();
-        loginAndVerifySuccess("am", "alex01");
-        navigateToDropdown("top-menu-my-clients");
-        navigateToPageByID("top-menu-onboarding-management");
-        verifyCorrectPage("On-boarding Management");
-        String waitingCompanyName = driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).getText();
-        assertTrue(waitingCompanyName.equals(companyName));
-        System.out.println("Company name matches");
-        driver.findElement(By.xpath("//*[@id=\"KYC-grid-CompName-0 \"]/span")).click();
-        wait.until(visibilityOfElementLocated(By.id("waitingApprovalTab")));
-        String KYCheading = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/app-waiting-approval/div/h1/span")).getText();
-        assertTrue(KYCheading.contains(companyName));
-        System.out.println("KYC Heading contains the company name");
-
-        String generalInfoCompanyName = driver.findElement(By.id("companyName")).getAttribute("value");
-        assertTrue(generalInfoCompanyName.equals(companyName));
-        String generalInfoReference = driver.findElement(By.id("clientReference")).getAttribute("value");
-        assertTrue(generalInfoReference.equals(No));
-        String generalInfoFirstName = driver.findElement(By.id("firstName")).getAttribute("value");
-        assertTrue(generalInfoFirstName.equals(firstName + userNo));
-        String generalInfoLastName = driver.findElement(By.id("lastName")).getAttribute("value");
-        assertTrue(generalInfoLastName.equals(lastName + userNo));
-        String generalInfoEmail = driver.findElement(By.id("email")).getAttribute("value");
-        assertTrue(generalInfoEmail.equals("testops" + userNo + "@setl.io"));
-        String generalInfoDate = driver.findElement(By.id("approvalDateRequest")).getAttribute("value");
-        assertTrue(generalInfoDate.equals(dateFormat.format(date)));
-        String generalInfoPhone = driver.findElement(By.id("phoneNumber")).getAttribute("value");
-        assertTrue(generalInfoPhone.equals("+7 840 " + phoneNo));
-
-        driver.findElement(By.xpath("//*[@id=\"clr-tab-content-10\"]/div[1]/div[2]/div[1]/div/a/h2")).click();
-        wait.until(invisibilityOfElementLocated(By.id("clientReference")));
-    }
-
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldNotAllowSaveWithoutWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "");
-        verifySaveButtonIsDisabled();
-    }
-
-    @Test
-    @Ignore("KYC PROCESS BEING UPDATED")
-    public void shouldAllowSaveWithCompanyNameAndWorkPhoneNumber() throws IOException, InterruptedException {
-        loginAndVerifySuccessKYC("testops001@setl.io", "asdasd", "additionnal");
-        fillKYCTopFields("testops001@setl.io", "Test", "Investor");
-        fillKYCLowerFields("SETL Developments Ltd", "07956701992");
-        saveKYCAndVerifySuccessPageOne();
     }
 
     @Test
