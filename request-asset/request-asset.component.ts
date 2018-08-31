@@ -49,7 +49,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         /* send asset form */
         this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required)
+            amount: new FormControl('', Validators.required),
         });
 
         /* data subscriptions */
@@ -70,7 +70,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
                 this.changeDetectorRef.markForCheck();
             }),
-            this.connectedWalletOb.subscribe(connected => {
+            this.connectedWalletOb.subscribe((connected) => {
                 this.connectedWalletId = connected;
             }),
         );
@@ -93,6 +93,9 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     }
 
     requestAsset(): void {
+        // Trigger loading alert
+        this.alertsService.create('loading');
+
         const fullAssetId = _.get(this.requestAssetForm.value.asset, '[0].id', '');
         const fullAssetIdSplit = walletHelper.splitFullAssetId(fullAssetId);
         const namespace = fullAssetIdSplit.issuer;
@@ -148,7 +151,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             this.alertsService.create('success', `<table class="table grid">
                 <tbody>
                     <tr>
-                        <td>Transfer Request successfully sent</td>
+                        <td class="text-center text-success">Transfer Request successfully sent</td>
                     </tr>
                 </tbody>
             </table>`);
@@ -156,7 +159,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             this.alertsService.create('error', `<table class="table grid">
                 <tbody>
                     <tr>
-                        <td>Transfer Request could not be sent</td>
+                        <td class="text-center text-danger">Transfer Request could not be sent</td>
                     </tr>
                 </tbody>
             </table>`);
