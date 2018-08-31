@@ -2,17 +2,7 @@ import {combineReducers, Reducer} from 'redux';
 
 import {CentralisationReports, CentralisationReportsListReducer} from './centralisation-reports';
 import {PrecentralisationReports, PrecentralisationReportsListReducer} from './precentralisation-reports';
-import {CentralisationHistoryReports, OfiCentralisationHistoryReportsListReducer} from './centralisation-history-reports';
 import {OfiAmHoldersListReducer, OfiHolderState} from './holders';
-
-export {
-    OFI_SET_CENTRALIZATION_REPORTS_LIST,
-    OFI_SET_BASE_CENTRALIZATION_HISTORY,
-    OFI_SET_CENTRALIZATION_HISTORY,
-    ofiClearRequestedCentralisationHistoryReports,
-    ofiSetRequestedCentralisationHistoryReports,
-    ofiCentralisationHistoryReportsActions
-} from './centralisation-history-reports';
 
 export {
     SET_CENTRA_SHARES_DETAILS_LIST,
@@ -49,7 +39,6 @@ export {
 } from './holders';
 
 export interface OfiReportsState {
-    centralisationHistoryReports: CentralisationHistoryReports;
     centralisationReports: CentralisationReports;
     precentralisationReports: PrecentralisationReports;
     amHolders: OfiHolderState;
@@ -58,6 +47,5 @@ export interface OfiReportsState {
 export const OfiReportsReducer: Reducer<OfiReportsState> = combineReducers<OfiReportsState>({
     centralisationReports: CentralisationReportsListReducer,
     precentralisationReports: PrecentralisationReportsListReducer,
-    centralisationHistoryReports: OfiCentralisationHistoryReportsListReducer,
     amHolders: OfiAmHoldersListReducer,
 });
