@@ -95,7 +95,8 @@ public class OpenCSDTeamsSubModuleTest {
         searchTeam(teamReference[0], teamName[0], teamDescription[0]);
         selectTeamRow0();
         assertTeamName(teamName[0]);
-        selectDeleteTeam("No");
+        selectDeleteTeam("No",teamName[0]);
+        searchTeam(teamReference[0], teamName[0], teamDescription[0]);
     }
     @Test
     public void shouldDeleteTeamIfYes() throws InterruptedException {
@@ -111,6 +112,6 @@ public class OpenCSDTeamsSubModuleTest {
         searchTeam(teamReference[0], teamName[0], teamDescription[0]);
         selectTeamRow0();
         assertTeamName(teamName[0]);
-        selectDeleteTeam("Yes");
+        selectDeleteTeam("Yes",teamName[0]);
     }
 }
