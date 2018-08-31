@@ -157,7 +157,10 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         this.scrollTopPosition = event.target.scrollTop;
         this.topBarHeight = window.innerHeight - event.target.clientHeight;
 
-        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+        // Set sidebar height for min-height property on content area, plus 20px to avoid scroll bar issues
+        this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight + 20;
+
+        // If sidebar is greater than viewport height, fix sidebar when it reaches bottom of the screen or remove if not
         if (this.sidebarHeight > window.innerHeight) {
             this.fixSidebarBottom =
                 (this.sidebarHeight - event.target.scrollTop) <= event.target.clientHeight ? true : false;
@@ -173,7 +176,8 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         // setTimeout to account for CSS transition time before calculating heights
         setTimeout(
             () => {
-                this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight;
+                // Set sidebar height for min-height property on content area, plus 20px to avoid scroll bar issues
+                this.sidebarHeight = this.sidebarEl.nativeElement.clientHeight + 20;
                 this.fixSidebar =
                     this.sidebarHeight > (window.innerHeight - this.topBarHeight) ? false : true;
                 this.changeDetectorRef.detectChanges();
