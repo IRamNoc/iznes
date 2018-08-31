@@ -15,7 +15,8 @@ import {
     forEach,
     find,
     merge,
-    isNil
+    isNil,
+    every
 } from 'lodash';
 
 import { CustomValidators } from '@setl/utils/helper';
@@ -485,7 +486,9 @@ export class NewRequestService {
                             let riskAcceptanceLevel4 = level4.value;
 
                             let total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
-                            let valuesFilled = !isNil(riskAcceptanceLevel1) && !isNil(riskAcceptanceLevel2) && !isNil(riskAcceptanceLevel3) && !isNil(riskAcceptanceLevel4);
+                            let valuesFilled = every([riskAcceptanceLevel1, riskAcceptanceLevel2, riskAcceptanceLevel3, riskAcceptanceLevel4], risk => {
+                                return !isNil(risk) && risk !== "";
+                            });
                             let required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
 
                             if (total === 100) {
