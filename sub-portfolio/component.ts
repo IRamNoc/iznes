@@ -349,8 +349,6 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asynTaskPipe,
             (data) => {
-                console.log('Success dispatch');
-
                 const address = _.get(data, [1, 'data', 'address'], '');
 
                 /* Create an address label. */
@@ -366,8 +364,6 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                     (labelResponse) => {
                         this.ngRedux.dispatch(clearRequestedWalletLabel());
                         const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
-                        console.log('Success runAsyncCallback');
-
                         this.handleLabelResponse(message);
                         this.clearAddSubportfolioForm(tabId);
                     },
