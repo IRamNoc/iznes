@@ -427,8 +427,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             this.viewClient('list');
         } else {
             this.pageType = page;
-        }
 
+            if (page == 'audit') this.requestAuditSearch();
+        }
     }
 
     saveClientReference() {
