@@ -44,7 +44,8 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     private subscriptions: { [key: string]: any } = {};
 
     /* Constructor. */
-    constructor(private userAdminService: UserAdminService,
+    constructor(
+        private userAdminService: UserAdminService,
         private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private route: ActivatedRoute,
@@ -122,10 +123,10 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-    * Initialises the tabs.
-    *
-    * @return {void}
-    */
+     * Initialises the tabs.
+     *
+     * @return {void}
+     */
     setInitialTabs() {
         /* Get opened tabs from redux store. */
         const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['wallet', 'managedWallets', 'openedTabs']);
@@ -168,6 +169,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleNewWallet(tabId: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         /* Variables. */
         const thisTab = this.tabsControl[tabId];
         const formData = thisTab.formControl.value;
@@ -248,14 +252,14 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Send the creation request. */
         this.userAdminService.createNewWallet(newWallet)
-            .then(() => {
-                /* Handle response. */
-                this.showSuccess('Successfully created the new wallet.');
-            })
-            .catch(() => {
-                /* Show error if we failed to create the wallet. */
-                this.showError('Failed to create the new wallet.');
-            });
+        .then(() => {
+            /* Handle response. */
+            this.showSuccess('Successfully created the new wallet.');
+        })
+        .catch(() => {
+            /* Show error if we failed to create the wallet. */
+            this.showError('Failed to create the new wallet.');
+        });
 
         /* Clear new wallet form. */
         this.clearNewWallet(1, false);
@@ -269,6 +273,9 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleEditWallet(tabId: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         /* Variables. */
         const thisTab = this.tabsControl[tabId];
         const formData = thisTab.formControl.value;
@@ -377,7 +384,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Loop over each wallet... */
         for (i in this.walletList) {
             /* ..check if this is the one wanted... */
-            if (this.walletList[i].walletId == id) {
+            if (this.walletList[i].walletId === Number(id)) {
                 /* ...return if so. */
                 return this.walletList[i];
             }
@@ -404,7 +411,6 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
             '<span>Deleting a Wallet</span>',
             '<span class="text-warning">Are you sure you want to delete \'' +
             this.walletList[index].walletName + '\'?</span>',
-
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -441,7 +447,7 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     public handleEdit(index): void {
         /* Check if the tab is already open. */
         let i;
-        for (i = 0; i < this.tabsControl.length; i++) {
+        for (i = 0; i < this.tabsControl.length; i += 1) {
             if (this.tabsControl[i].walletId === this.walletList[index].walletId) {
                 /* Found the index for that tab, lets activate it... */
                 // this.setTabActive(i);
@@ -748,12 +754,12 @@ export class AdminWalletsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-    * Shows an success popup.
-    *
-    * @param {string} message - The string to be shown in the message.
-    *
-    * @return {void}
-    */
+     * Shows an success popup.
+     *
+     * @param {string} message - The string to be shown in the message.
+     *
+     * @return {void}
+     */
     showSuccess(message) {
         /* Show the message. */
         this.alertsService.create('success', `

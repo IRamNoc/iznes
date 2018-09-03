@@ -591,6 +591,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleNewUser(tabid: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         const thisTab = this.tabsControl[tabid];
         /* Sort the data structure out. */
         const newUser = thisTab.formControl.value;
@@ -707,6 +710,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * @return {void}
      */
     public handleEditUser(tabid: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         const thisTab = this.tabsControl[tabid];
 
         /* Sort the data structure out. */

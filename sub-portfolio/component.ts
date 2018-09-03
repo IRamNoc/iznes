@@ -258,12 +258,12 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
     }
 
     /**
-    * Clears the add sub-portfolio form.
-    *
-    * @param {number} tabid - The ID of the tab to clear.
-    *
-    * @return {void}
-    */
+     * Clears the add sub-portfolio form.
+     *
+     * @param {number} tabid - The ID of the tab to clear.
+     *
+     * @return {void}
+     */
     public clearAddSubportfolioForm(tabid): void {
         /* Let's set all the values in the form controls. */
         this.tabsControl[tabid].formControl.reset();
@@ -338,6 +338,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     addSubPortfolio(tabId: number) {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         const formData = this.tabsControl[tabId].formControl.value;
 
         /* Create an address. */
@@ -346,6 +349,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asynTaskPipe,
             (data) => {
+                console.log('Success dispatch');
+
                 const address = _.get(data, [1, 'data', 'address'], '');
 
                 /* Create an address label. */
@@ -361,6 +366,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                     (labelResponse) => {
                         this.ngRedux.dispatch(clearRequestedWalletLabel());
                         const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
+                        console.log('Success runAsyncCallback');
+
                         this.handleLabelResponse(message);
                         this.clearAddSubportfolioForm(tabId);
                     },
@@ -385,6 +392,9 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
      * @return {void}
      */
     updateSubPortfolio(tabId: number) {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         /* Get the form data using the tabId. */
         const formData = this.tabsControl[tabId].formControl.value;
 
