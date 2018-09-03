@@ -75,7 +75,10 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
         this.persistService.watchForm(
             'newkycrequest/validation',
             this.form,
-            this.newRequestService.context
+            this.newRequestService.context,
+            {
+                reset: false
+            }
         );
     }
 

@@ -1,8 +1,28 @@
-import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
+import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
+
+export enum investorStatusList {
+    nonPro,
+    proByNature,
+    proBySize
+}
+
+export const investorStatusTextList = [
+    {
+        id: '0',
+        text: 'Non professional',
+    },
+    {
+        id : '1',
+        text : 'Professional by nature'
+    },
+    {
+        id : '2',
+        text : 'Professional by size'
+    }
+];
 
 export const booleanControls = [
     'commercialDomiciliation',
-    'investorStatus',
     'activitiesBenefitFromExperience',
     'activityRegulated',
     'companyListed'
@@ -59,7 +79,6 @@ export const selectControls = [
     'sectorActivity',
     'legalStatus',
     'legalStatusInsurerType',
-    'legalStatusPublicEstablishmentType',
     'riskProfile'
 ];
 
@@ -330,56 +349,60 @@ export const sectorActivityList = [
 
 export const legalStatusList = [
     {
-        "id": "pensionOrMutualInsurance",
-        "text": "Pension fund/mutual insurance institution"
+        "id": "pensionMutual",
+        "text": "Pension Fund / Mutual Insurance Institution / Paid Holiday Fund and similar "
     },
     {
-        "id": "bankingInstitution",
-        "text": "Banking Institution"
+        "id": "creditInstitution",
+        "text": "Credit Institution"
     },
     {
         "id": "insurer",
         "text": "Insurer"
     },
     {
-        "id": "Localauthoritiesstates",
-        "text": "Local authorities/states"
-    },
-    {
-        "id": "PublicInstitution",
-        "text": "Public Institution"
-    },
-    {
-        "id": "publicEstablishment",
-        "text": "Public establishment"
-    },
-    {
         "id": "listedCompany",
         "text": "Listed Company"
     },
     {
-        "id": "Approvedorregulatedinstitutionalinvestors",
+        "id": "institutionalInvestors",
         "text": "Approved or regulated institutional investors"
     },
     {
-        "id": "Foundationassociation",
-        "text": "Foundation/association"
+        "id": "otherInvestors",
+        "text": "Other institutional investors whose main activity is to invest in financial instruments (investment companies, venture capital companies, innovation finance companies)"
     },
     {
-        "id": "Assetmanagementcompany",
-        "text": "Asset Management Company"
+        "id": "managementCompany",
+        "text": "Management company (including SICAV) / Financial Investment Advisor"
     },
     {
-        "id": "Supranationalorganization",
-        "text": "Supranational organization"
+        "id": "centralBank",
+        "text": "Central Bank"
     },
     {
-        "id": "SICAV",
-        "text": "SICAV"
+        "id": "nationalGovService",
+        "text": "National government or service, including public bodies responsible for public debt at national level"
     },
     {
-        "id": "autorisedRegulatedUnderEUorState",
-        "text": "Financial Institution authorised or regulated under EU or national law of a member state"
+        "id": "foundationAssoEIG",
+        "text": "Foundation / Association / Economic interest group"
+    },
+    {
+        "id": "holidayFund",
+        "text": "Paid holiday fund"
+    },
+    {
+        "id": "dealersCommodities",
+        "text": "Dealers for own account in commodities or commodity derivatives"
+    },
+    {
+        "id": "localCompanies",
+        "text": "Local Companies"
+    },
+    {
+        "id": "internationBodies",
+        "text": "Public international financial bodies to which France or any other OECD Member State adheres (IMF, EIB, World Bank...)"
     },
     {
         "id": "other",
@@ -1233,14 +1256,12 @@ export const controlToName = {
     legalStatus: 'Legal status',
     legalStatusListingOther: 'Legal status specification',
     legalStatusInsurerType: 'Insurer type',
-    legalStatusPublicEstablishmentType: 'Public establishment type',
-    legalStatusPublicEstablishmentTypeOther: 'Public establishment type specification',
     legalStatusListingMarkets: 'Listing market(s)',
 
     // Company
     activities: 'Activities',
     ownAccountinvestor: 'Own-account investor',
-    investorOnBehalfThirdParties :'Managed third parties',
+    investorOnBehalfThirdParties: 'Managed third parties',
     investorOnBehalfList: 'Investor on behalf of third parties',
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
@@ -1287,7 +1308,7 @@ export const controlToName = {
     custodianCountry: 'Country',
 
     // Classification
-    investorStatus: 'Does investor have pro status?', // @todo Change text with nature/size
+    investorStatus: 'Investor status',
     excludeProducts: 'Excluded category of products/services',
     changeProfessionalStatus: 'Opted for non professional status',
     jobPosition: 'Job position',
@@ -1341,7 +1362,6 @@ export const controlToList = {
     sectorActivity: 'sectorActivityList',
     legalStatus: 'legalStatusList',
     legalStatusInsurerType: 'legalStatusInsurerTypeList',
-    legalStatusPublicEstablishmentType: 'publicEstablishmentList',
 
     // Company
     activities: 'companyActivitiesList',
@@ -1359,6 +1379,7 @@ export const controlToList = {
     custodianCountry: 'countries',
 
     // Classification
+    investorStatus: 'investorStatusTextList',
     financialInstruments: 'financialInstrumentsList',
     marketArea: 'geographicalAreaList',
     natureTransactionPerYear: 'natureOfTransactionsList',

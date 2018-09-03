@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {select} from '@angular-redux/store';
-import {get as getValue, map, sort} from 'lodash';
+import {get as getValue, map, sort, remove} from 'lodash';
 import {Subject, combineLatest} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -33,16 +33,50 @@ export class NewKycRequestComponent implements OnInit {
     ) {
     }
 
-    get isListedCompany() {
-        let legalStatus = getValue(this.forms.get('identification.generalInformation.legalStatus').value, [0, 'id']);
-        return legalStatus === 'listedCompany';
+    get isPro() {
+        return this.investorType === 'proBySize' || this.investorType === 'proByNature';
+    }
+
+    get investorType() {
+        let legalStatusControl = this.forms.get('identification.generalInformation.legalStatus').value;
+        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
+        let possibleLegalStatusValues = [
+            'pensionMutual',
+            'creditInstitution',
+            'insurer',
+            'institutionalInvestors',
+            'otherInvestors',
+            'managementCompany',
+            'centralBank',
+            'nationalGovService',
+            'dealersCommodities',
+            'internationBodies'
+        ];
+
+        let balanceSheetTotalValue = this.forms.get('identification.companyInformation.balanceSheetTotal').value;
+        let netRevenuesNetIncomeValue = this.forms.get('identification.companyInformation.netRevenuesNetIncome').value;
+        let shareholderEquityValue = this.forms.get('identification.companyInformation.shareholderEquity').value;
+
+        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
+            return "proByNature";
+        }
+
+        let balanceSheetCondition = balanceSheetTotalValue >= 20000000;
+        let netRevenuesCondition = netRevenuesNetIncomeValue >= 40000000;
+        let equityCondition = shareholderEquityValue >= 2000000;
+        let trues = remove([balanceSheetCondition, netRevenuesCondition, equityCondition]);
+
+        if (trues.length >= 2) {
+            return "proBySize";
+        }
+
+        return "nonPro";
     }
 
     ngOnInit() {
         this.initForm();
         this.initSubscriptions();
     }
-
 
     initSubscriptions() {
         this.requests$
