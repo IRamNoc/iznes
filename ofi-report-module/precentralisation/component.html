@@ -14,7 +14,7 @@
                 <p>
                     {{'Please find below the precentralisation report at fund level.' | translate}}
                     <br>
-                    {{'If you want you can filter this report by a specific NAV Date / Order Date / Settlement Date or a range of date and/or by Fund.' | translate}}
+                    {{'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by Fund.' | translate}}
                 </p>
 
                 <form [formGroup]="filtersForm" id="precentra-funds-filters">
@@ -72,7 +72,7 @@
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
-                                    <div><label>{{'Total Redemptions' | translate}}</label></div>
+                                    <div><label>{{'Total Redemption' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
                                         {{fundsTotalRedemptionAmount | moneyValue: 2}}€
                                     </span>
@@ -120,11 +120,11 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'subscriptionAmount'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Subscriptions' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Subscription' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'redemptionAmount'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Redemptions' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Total Redemption' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'netAmount'" clrDgSortIcon>
@@ -187,7 +187,7 @@
                 <p>
                     {{'Please find below the precentralisation report at share level.' | translate}}
                     <br>
-                    {{'If you want you can filter this report by a specific NAV Date / Order Date / Settlement Date or a range of date and/or by share.' | translate}}
+                    {{'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by share.' | translate}}
                 </p>
 
                 <form [formGroup]="filtersForm" id="precentra-shares-filters">
@@ -245,7 +245,7 @@
                                     </span>
                                 </div>
                                 <div class="form-group col-lg-6">
-                                    <div><label>{{'Total Redemptions' | translate}}</label></div>
+                                    <div><label>{{'Total Redemption' | translate}}</label></div>
                                     <span class="readonly-field" style="width: 100%; background-color: #af2519; color: #e1e1e1;">
                                         {{sharesTotalRedemptionAmount | moneyValue: 2}}€
                                     </span>
@@ -286,7 +286,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISN' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISIN' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon>
@@ -336,7 +336,7 @@
                                                 <th>{{'Quantity' | translate}}</th>
                                                 <th>{{'Amount' | translate}}</th>
                                                 <th>{{'Cut-off Date' | translate}}</th>
-                                                <th>{{'Settlement' | translate}}</th>
+                                                <th>{{'Settlement Date' | translate}}</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -365,12 +365,10 @@
                     <clr-dg-footer>
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
-                            <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
-                            <!--<clr-dg-column-toggle-button clrType="selectAll">-->
-                            <!--<button type="button" class="btn btn-primary">-->
-                            <!--Select All-->
-                            <!--</button>-->
-                            <!--</clr-dg-column-toggle-button>-->
+                            <clr-dg-column-toggle-title>
+                                {{'Show/hide fields:' | translate}}
+                            </clr-dg-column-toggle-title>
+
                             <clr-dg-column-toggle-button clrType="ok">
                                 <button type="button" class="btn btn-primary" style="padding:0 20px">
                                     <clr-icon shape="check"></clr-icon>
