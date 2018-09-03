@@ -16,10 +16,10 @@ import { ConnectionService } from '@setl/core-req-services';
 
 @NgModule({
     declarations: [
-        ConnectionComponent
+        ConnectionComponent,
     ],
     exports: [
-        ConnectionComponent
+        ConnectionComponent,
     ],
     imports: [
         CommonModule,
@@ -28,11 +28,11 @@ import { ConnectionService } from '@setl/core-req-services';
         FormsModule,
         ClarityModule,
         SelectModule,
-        MultilingualModule
+        MultilingualModule,
     ],
     providers: [
-        ConnectionService
-    ]
+        ConnectionService,
+    ],
 })
 
 export class ConnectionsModule {
