@@ -228,7 +228,8 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 target: 'subportfolios-col-actions',
             },
         );
-        this.showUsertour = true;
+        // TODO: disabled as user tour needs additional work in V2.1/2.2
+        //this.showUsertour = true;
     }
 
     ngOnInit() {

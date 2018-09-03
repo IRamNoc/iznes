@@ -1,4 +1,4 @@
-import {fundItems} from '@ofi/ofi-main/ofi-product/productConfig';
+import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
 export enum investorStatusList {
     nonPro,
@@ -6,9 +6,23 @@ export enum investorStatusList {
     proBySize
 }
 
+export const investorStatusTextList = [
+    {
+        id: '0',
+        text: 'Non professional',
+    },
+    {
+        id : '1',
+        text : 'Professional by nature'
+    },
+    {
+        id : '2',
+        text : 'Professional by size'
+    }
+];
+
 export const booleanControls = [
     'commercialDomiciliation',
-    'investorStatus',
     'activitiesBenefitFromExperience',
     'activityRegulated',
     'companyListed'
@@ -1247,7 +1261,7 @@ export const controlToName = {
     // Company
     activities: 'Activities',
     ownAccountinvestor: 'Own-account investor',
-    investorOnBehalfThirdParties :'Managed third parties',
+    investorOnBehalfThirdParties: 'Managed third parties',
     investorOnBehalfList: 'Investor on behalf of third parties',
     geographicalAreaOfActivity: 'Geographical area of the activity',
     geographicalAreaOfActivitySpecification: 'Geographical area of the activity specification',
@@ -1365,6 +1379,7 @@ export const controlToList = {
     custodianCountry: 'countries',
 
     // Classification
+    investorStatus: 'investorStatusTextList',
     financialInstruments: 'financialInstrumentsList',
     marketArea: 'geographicalAreaList',
     natureTransactionPerYear: 'natureOfTransactionsList',
