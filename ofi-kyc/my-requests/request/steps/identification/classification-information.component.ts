@@ -1,6 +1,6 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
-import {get as getValue, isEmpty, castArray, find} from 'lodash';
+import {get as getValue, isEmpty, castArray, find, pick, omit} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
@@ -181,7 +181,12 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                 requests.forEach(request => {
                     this.identificationService.getCurrentFormClassificationData(request.kycID).then(formData => {
                         if (formData) {
-                            this.form.patchValue(formData);
+                            let common = pick(formData, ['kycID', 'investorStatus']);
+                            let pro = pick(formData, ['excludeProducts', 'changeProfessionalStatus']);
+                            let nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'changeProfessionalStatus']);
+                            this.form.patchValue(common);
+                            this.form.get('pro').patchValue(pro);
+                            this.form.get('nonPro').patchValue(nonPro);
                         }
                     });
                 });
