@@ -31,6 +31,8 @@ export class FileDropComponent implements OnInit {
 
     @Input() filePermission: FilePermission = FilePermission.Private;
 
+    @Input() disabled: boolean = false;
+
     /* Constructor */
     public constructor () {
         /* Stub */
