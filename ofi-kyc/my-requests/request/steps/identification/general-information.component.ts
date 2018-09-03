@@ -69,29 +69,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 this.formCheckSectorActivity(sectorActivityValue);
             })
         ;
-
-        this.form.get('legalStatusPublicEstablishmentType').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let legalStatusPublicEstablishmentTypeValue = getValue(data, [0, 'id']);
-
-                this.formCheckLegalStatusPublicEstablishmentType(legalStatusPublicEstablishmentTypeValue);
-            })
-        ;
-    }
-
-    formCheckLegalStatusPublicEstablishmentType(value) {
-        let legalStatusPublicEstablishmentOtherControl = this.form.get('legalStatusPublicEstablishmentTypeOther');
-
-        if (value === 'other') {
-            legalStatusPublicEstablishmentOtherControl.enable();
-        } else {
-            legalStatusPublicEstablishmentOtherControl.disable();
-        }
-
-        this.formPercent.refreshFormPercent();
     }
 
     formCheckSectorActivity(value) {
@@ -109,7 +86,7 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
 
     formCheckLegalStatus(value) {
         let form = this.form;
-        let controls = ['legalStatusListingMarkets', 'legalStatusInsurerType', 'legalStatusPublicEstablishmentType', 'legalStatusListingOther', 'legalStatusPublicEstablishmentTypeOther'];
+        let controls = ['legalStatusListingMarkets', 'legalStatusInsurerType', 'legalStatusListingOther'];
 
         for (const control of controls) {
             form.get(control).disable();
@@ -121,9 +98,6 @@ export class GeneralInformationComponent implements OnInit, OnDestroy {
                 break;
             case 'insurer':
                 form.get('legalStatusInsurerType').enable();
-                break;
-            case 'publicEstablishment' :
-                form.get('legalStatusPublicEstablishmentType').enable();
                 break;
             case 'other' :
                 form.get('legalStatusListingOther').enable();

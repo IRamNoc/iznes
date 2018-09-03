@@ -127,18 +127,6 @@
                     <span class="field-error" *ngIf="hasError('legalStatusInsurerType')">{{'Field is required' | translate}}</span>
                 </div>
 
-                <div *ngIf="!isDisabled('legalStatusPublicEstablishmentType')" class="form-group required-field col-md-4">
-                    <label class="control-label" for="legalStatusPublicEstablishmentType">{{'Public establishment type' | translate}}</label>
-                    <ng-select class="large-select" [items]="publicEstablishmentList" id="legalStatusPublicEstablishmentType" formControlName="legalStatusPublicEstablishmentType" placeholder="{{'Please fill in a public establishment type' | translate}}"></ng-select>
-                    <span class="field-error" *ngIf="hasError('legalStatusPublicEstablishmentType')">{{'Field is required' | translate}}</span>
-                </div>
-
-                <div *ngIf="!isDisabled('legalStatusPublicEstablishmentTypeOther')" class="form-group required-field col-md-4">
-                    <label class="control-label" for="legalStatusPublicEstablishmentTypeOther">{{'Public establishment type' | translate}}</label>
-                    <input type="text" id="legalStatusPublicEstablishmentTypeOther" formControlName="legalStatusPublicEstablishmentTypeOther" placeholder="{{'Please fill in a public establishment type' | translate}}">
-                    <span class="field-error" *ngIf="hasError('legalStatusPublicEstablishmentTypeOther')">{{'Field is required' | translate}}</span>
-                </div>
-
                 <div *ngIf="!isDisabled('legalStatusListingMarkets')" class="form-group required-field col-md-8">
                     <label class="control-label" for="legalStatusListingMarkets">{{'Listing market(s)' | translate}}</label>
                     <input type="text" id="legalStatusListingMarkets" formControlName="legalStatusListingMarkets" placeholder="{{'Please fill in your company listing markets' | translate}}">

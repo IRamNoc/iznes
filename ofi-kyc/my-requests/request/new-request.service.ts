@@ -211,14 +211,6 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required
             ],
-            legalStatusPublicEstablishmentType: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusPublicEstablishmentTypeOther: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
             legalStatusListingMarkets: [
                 { value: '', disabled: true },
                 Validators.required
