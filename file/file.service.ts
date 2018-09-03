@@ -29,7 +29,7 @@ export class FileService {
         this.getConnectedWallet.subscribe(
             (data) => {
                 this.connectedWallet = data;
-            }
+            },
         );
     }
 
@@ -38,7 +38,9 @@ export class FileService {
             RequestName: 'afh',
             token: this.memberSocketService.token,
             walletId: this.connectedWallet,
-            files: _.get(requestData, 'files', [])
+            files: _.get(requestData, 'files', []),
+            secure: _.get(requestData, 'secure', undefined),
+            path: _.get(requestData, 'path', undefined),
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -49,8 +51,8 @@ export class FileService {
             RequestName: 'historicalcsv',
             token: this.memberSocketService.token,
             walletId: this.connectedWallet,
-            dateFrom: dateFrom,
-            dateTo: dateTo
+            dateFrom,
+            dateTo,
 
         };
 

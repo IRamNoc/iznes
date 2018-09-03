@@ -4,6 +4,8 @@ export interface AddFileMessageBody extends MemberNodeMessageBody {
     token: string;
     walletId: string;
     files: string;
+    secure?: boolean;
+    path?: string;
 }
 
 export interface GetHistoricalCsvMessageBody extends MemberNodeMessageBody {
@@ -18,4 +20,3 @@ export interface ValidateFileMessageBody extends MemberNodeMessageBody {
     walletId: string;
     fileHash: string;
 }
-
