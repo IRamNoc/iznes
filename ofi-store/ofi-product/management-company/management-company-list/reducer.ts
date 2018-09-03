@@ -150,7 +150,7 @@ function handleGetInvestorManagementCompanyList(state: invManagementCompanyListS
     let investorManagementCompanyList = List<any>();
 
     if (response.length > 0) {
-        response.map((it) => {
+        response.forEach((it) => {
             const item = Map({
                 companyID: it.companyID,
                 companyName: it.companyName,
