@@ -142,8 +142,6 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         // Add account form.
         const addAccountForm = this.tabsControl[1].formControl;
 
-        console.log('+++ addAccountForm', addAccountForm);
-
         // Set default value
         if (this.managedMemberList.length > 0 && !_.isEmpty(addAccountForm.value.member)) {
             addAccountForm.controls.member.setValue([this.managedMemberList[0]]);
