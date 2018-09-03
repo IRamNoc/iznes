@@ -119,6 +119,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
     sendAsset(): void {
         if (this.sendAssetForm.valid) {
+            // Trigger loading alert
+            this.alertsService.create('loading');
+
             const walletId = this.connectedWalletId;
             const toAddress = this.sendAssetForm.value.recipient;
             const fullAssetId = _.get(this.sendAssetForm.value.asset, '[0].id', '');
@@ -147,9 +150,17 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                     console.log('send asset:', data);
                 },
                 (data) => {
-                    console.log('fail', data);
-
-                    this.showErrorModal(data);
+                    console.error('fail', data);
+                    const message = !_.isEmpty(data[1].data.error) ? 'Failed to send asset. Reason:<br>'
+                        + data[1].data.error : 'Failed to send asset';
+                    this.alertsService.create('error', `
+                      <table class="table grid">
+                          <tbody>
+                              <tr>
+                                  <td class="text-center text-danger">${message}</td>
+                              </tr>
+                          </tbody>
+                      </table>`);
                 },
             ));
         }
@@ -194,10 +205,6 @@ export class SendAssetComponent implements OnInit, OnDestroy {
 
             this.ngRedux.dispatch(finishSendAssetNotification());
         }
-    }
-
-    showErrorModal(data): void {
-        this.alertsService.create('error', `${data[1].status}`);
     }
 
     updateState(): void {

@@ -152,6 +152,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
      */
     voidAsset() {
         if (this.voidAssetForm.valid) {
+            // Trigger loading alert
+            this.alertsService.create('loading');
+
             const walletId = this.connectedWalletId;
             const address = this.walletIssuerDetail.walletIssuerAddress;
             const fullAssetId = _.get(this.voidAssetForm.value.asset, '[0].id', '');
@@ -204,9 +207,9 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                             (data) => {
                                 console.log('void asset success:', data);
 
-                                setTimeout(
-                                    () => {
-                                        if (this.deleteAsset) {
+                                if (this.deleteAsset) {
+                                    setTimeout(
+                                        () => {
                                             const deleteAssetAsyncTaskPipe = this.walletnodeTxService.deleteAsset({
                                                 walletId,
                                                 address,
@@ -251,29 +254,30 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                                                     //     },
                                                     //     5000);
 
-                                                    this.showSuccess('Asset issuance has been successfully voided and deleted.');
+                                                    this.showAlert('success', 'Asset issuance has been successfully voided and deleted.');
                                                     this.voidAssetForm.reset();
                                                 },
                                                 (data) => {
                                                     console.log('fail', data);
-                                                    this.showError(data[1].data.status);
+                                                    this.showAlert('error', data[1].data.status);
                                                 },
                                             ));
-                                        } else {
-                                            /* Show success modal. */
-                                            this.showSuccess('Asset issuance has been successfully voided.');
-                                            this.voidAssetForm.reset();
-                                        }
-                                    },
-                                    10000);
+                                        },
+                                        10000);
+                                } else {
+                                    /* Show success modal. */
+                                    this.showAlert('success', 'Asset issuance has been successfully voided.');
+                                    this.voidAssetForm.reset();
+                                }
+
                             },
                             (data) => {
                                 console.log('fail', data);
-                                this.showError(data[1].data.status);
+                                this.showAlert('error', data[1].data.status);
                             },
                         ));
                     } else {
-                        this.showError('There are no holders of this asset.');
+                        this.showAlert('error', 'There are no holders of this asset.');
                     }
                 },
                 (data) => {
@@ -283,26 +287,14 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
         }
     }
 
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
+    showAlert(type, message) {
+        const colour = type === 'error' ? 'danger' : type;
 
-    showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
+        this.alertsService.create(type, `
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-danger">${message}</td>
+                          <td class="text-center text-${colour}">${message}</td>
                       </tr>
                   </tbody>
               </table>

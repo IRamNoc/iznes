@@ -99,6 +99,9 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
 
     registerAsset() {
         if (this.registerAssetForm.valid) {
+            // Trigger loading alert
+            this.alertsService.create('loading');
+
             const walletId = this.connectedWalletId;
             const metaData = {};
             const address = this.walletIssuerDetail.walletIssuerAddress;
@@ -119,6 +122,19 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
                 [REGISTER_ASSET_FAIL],
                 asyncTaskPipe,
                 {},
+                () => {
+                },
+                (data) => {
+                    console.error('fail', data);
+                    this.alertsService.create('error', `
+                      <table class="table grid">
+                          <tbody>
+                              <tr>
+                                  <td class="text-center text-danger">Failed to register asset</td>
+                              </tr>
+                          </tbody>
+                      </table>`);
+                },
             ));
         }
     }

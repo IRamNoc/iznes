@@ -11,7 +11,8 @@ import * as _ from 'lodash';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Subscription } from 'rxjs/Subscription';
 import { Unsubscribe } from 'redux';
-import { WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
+import {
+    WalletnodeTxService, WalletNodeRequestService, MyWalletsService, InitialisationService,
 } from '@setl/core-req-services';
 
 import {
@@ -95,9 +96,9 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
             this.requestWalletInstruments(requestedState);
         }));
         this.subscriptionsArray.push(this.instrumentListOb.subscribe((instrumentList) => {
-            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList)
+            this.assetListOption = walletHelper.walletInstrumentListToSelectItem(instrumentList);
         }));
-        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe(requested => {
+        this.subscriptionsArray.push(this.requestedLabelListObs.subscribe((requested) => {
             this.requestWalletLabel(requested)
         }));
         this.subscriptionsArray.push(this.subPortfolioAddressObs.subscribe((addresses) => {
@@ -228,6 +229,8 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         if (!this.unencumberAssetsForm.valid) {
             return;
         }
+        // Trigger loading alert
+        this.alertsService.create('loading');
 
         const asyncTaskPipe = this.walletnodeTxService.unencumber(
             {
@@ -246,49 +249,26 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                this.showSuccess('Unencumber has successfully been created');
+                this.showAlert('success', 'Asset has successfully been unencumbered');
                 this.unencumberAssetsForm.reset();
             },
             (data) => {
-                console.log('+++ error data: ', data);
-                this.showError(data[1].data.status);
+                console.error('fail', data);
+                const message = !_.isEmpty(data[1].data.error) ? 'Failed to unencumber asset. Reason:<br>'
+                    + data[1].data.error : 'Failed to unencumber asset.';
+                this.showAlert('error', message);
             }),
         );
     }
 
-    showError(message) {
-        /* Show the error. */
-        this.alertsService.create('error', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
+    showAlert(type, message) {
+        const colour = type === 'error' ? 'danger' : type;
 
-    showWarning(message) {
-        /* Show the warning. */
-        this.alertsService.create('warning', `
+        this.alertsService.create(type, `
               <table class="table grid">
                   <tbody>
                       <tr>
-                          <td class="text-center text-warning">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    showSuccess(message) {
-        /* Show the message. */
-        this.alertsService.create('success', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-success">${message}</td>
+                          <td class="text-center text-${colour}">${message}</td>
                       </tr>
                   </tbody>
               </table>
