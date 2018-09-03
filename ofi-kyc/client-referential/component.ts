@@ -282,6 +282,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 });
             }
         } else if (tab == 3) {
+
+            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
+                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+
+                this.companyName = kyc.investorCompanyName;
+            }
+
             this._ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
                 this.holdingsTable = [];
                 if (data[1].Data.length > 0) {
