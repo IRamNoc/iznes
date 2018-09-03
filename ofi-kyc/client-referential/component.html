@@ -186,8 +186,8 @@
                     <clr-dg-column [clrDgField]="'isin'">{{'ISIN' | translate}}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'quantity'">{{'Quantity' | translate}}</clr-dg-column>
                     <clr-dg-column [clrDgField]="'latestNav'">{{'Latest NAV' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'amount'">{{'Amount' | translate}}</clr-dg-column>
-                    <clr-dg-column [clrDgField]="'ratio'">{{'Ratio' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'amount'">{{'AUI (Settled)' | translate}}</clr-dg-column>
+                    <clr-dg-column [clrDgField]="'ratio'">{{'Ratio (% AM)' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let item of holdingsTable">
                         <ng-container *ngIf="!item.shareName">
