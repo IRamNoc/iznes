@@ -3,6 +3,7 @@ import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {takeUntil, filter as rxFilter} from 'rxjs/operators';
 import {find, isEmpty} from 'lodash';
+import { List } from 'immutable';
 
 import {NewRequestService} from "../../new-request.service";
 import {RiskProfileService} from '../risk-profile.service';
@@ -58,14 +59,15 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     initData() {
         this.managementCompanyList$
             .pipe(
-                rxFilter((amcList: Array<any>) => !isEmpty(amcList)),
+                rxFilter((amcList: List<any>) => amcList && amcList.size > 0),
                 takeUntil(this.unsubscribe)
             )
             .subscribe(amcList => {
+                const managementCompanyList = amcList.toJS();
                 let amcID = this.form.get('assetManagementCompanyID').value;
 
                 if (amcID) {
-                    let found = find(amcList, ['companyID', amcID]);
+                    let found = find(managementCompanyList, ['companyID', amcID]);
 
                     if (found) {
                         this.amc = found;
