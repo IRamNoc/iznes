@@ -10,21 +10,21 @@
                 <!-- Account list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                            *ngTemplateOutlet="accountListTab"
+                        *ngTemplateOutlet="accountListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Account add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                            *ngTemplateOutlet="staticAccountAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="staticAccountAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Account edit tabs. -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -101,23 +101,21 @@
                                 <span class="ml_translated" mltag="txt_accountmember">Account Member</span>
                             </label>
                             <ng-select
-                                    [items]="managedMemberList"
-                                    [allowClear]="true"
-                                    placeholder="Select Member"
-                                    formControlName="member"
-                                    [disabled]="!isSymAdmin"
-                                    mltag="txt_selectmember"
+                                [items]="managedMemberList"
+                                [allowClear]="true"
+                                placeholder="Select Member"
+                                formControlName="member"
+                                [disabled]="!isSymAdmin"
+                                mltag="txt_selectmember"
                             >
                             </ng-select>
                         </div>
                     </div>
 
                     <div class="form-group button-group">
-                        <div class="col-sm-12">
-                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                            </button>
-                        </div>
+                        <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                        </button>
                     </div>
                 </div>
             </form>
@@ -178,11 +176,11 @@
                                 <span class="ml_translated" mltag="txt_wallet">Wallet</span>
                             </label>
                             <ng-select
-                                    [items]="managedWalletList"
-                                    [allowClear]="true"
-                                    placeholder="Select Wallet"
-                                    formControlName="wallet"
-                                    mltag="txt_selectwallet"
+                                [items]="managedWalletList"
+                                [allowClear]="true"
+                                placeholder="Select Wallet"
+                                formControlName="wallet"
+                                mltag="txt_selectwallet"
                             >
                             </ng-select>
                         </div>
@@ -192,13 +190,11 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group button-group">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                                </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
+                            </button>
                         </div>
                     </div>
                 </div>

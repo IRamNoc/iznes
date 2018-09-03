@@ -232,6 +232,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
      */
     handleAddWalletNodes(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
+            // Show loading modal
+            this.alertsService.create('loading');
+
             const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
             const walletNodeName = this.tabsControl[tabId]['formControl'].value.walletNodeName;
             const chainId = this.tabsControl[tabId]['formControl'].value.chainId[0].id;
@@ -276,6 +279,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
      */
     handleEditWalletNodes(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
+            // Show loading modal
+            this.alertsService.create('loading');
+
             const walletNodeId = this.tabsControl[tabId]['formControl'].value.walletNodeId;
             const walletNodeName = this.tabsControl[tabId]['formControl'].value.walletNodeName;
             const nodeAddress = this.tabsControl[tabId]['formControl'].value.nodeAddress;
@@ -303,7 +309,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     this.logService.log('Error: ', data);
-                    this.showAlert('error', JSON.stringify(data));
+                    this.showAlert('error', 'Failed to update Wallet Node');
                     this.changeDetectorRef.markForCheck();
                 },
             ));
@@ -324,6 +330,9 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
+                // Show loading modal
+                this.alertsService.create('loading');
+
                 const asyncTaskPipe = this.adminUsersService.deleteWalletNode(
                     {
                         walletNodeId: walletNode.walletNodeId,
@@ -339,7 +348,7 @@ export class ManageWalletNodesComponent implements OnInit, OnDestroy {
                     },
                     (data) => {
                         this.logService.log('error: ', data);
-                        this.showAlert('error', JSON.stringify(data));
+                        this.showAlert('error', 'Failed to delete Wallet Node');
                     },
                 ));
             }
