@@ -103,7 +103,7 @@ export class DropHandler implements AfterViewInit {
      * @return {boolean}
      */
     public handleDrop (event): boolean {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* Check if files were dropped... */
@@ -165,7 +165,7 @@ export class DropHandler implements AfterViewInit {
      */
     public handleClick(event): boolean {
         /* Cancel if we're just removing a file. */
-        if (this.removingFile || !this.disabled) {
+        if (this.removingFile || this.disabled) {
             return;
         }
 
@@ -194,7 +194,7 @@ export class DropHandler implements AfterViewInit {
      * @return {boolean}
      */
     public handleFileChange (event): boolean {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* Check. */
@@ -249,7 +249,7 @@ export class DropHandler implements AfterViewInit {
      * @return {void}
      */
     private addFiles (files): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
 
@@ -271,7 +271,7 @@ export class DropHandler implements AfterViewInit {
      * @return {void}
      */
     private handleConversion (): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* Process files. */
@@ -317,7 +317,7 @@ export class DropHandler implements AfterViewInit {
      * @param {event} object - An object of the event.
      */
     public onDragEnter (event): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* Change the hovering state. */
@@ -335,7 +335,7 @@ export class DropHandler implements AfterViewInit {
      * @param {event} object - An object of the event.
      */
     public onDragLeave (event): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* Change the hovering state. */
@@ -353,7 +353,7 @@ export class DropHandler implements AfterViewInit {
      * @param {index} number - The index of the file in the array to be removed.
      */
     public clearFiles(index): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         /* If we're not mutliple, then just reset the form. */
@@ -390,7 +390,7 @@ export class DropHandler implements AfterViewInit {
     }
 
     clearPreset(): void {
-        if (!this.disabled) {
+        if (this.disabled) {
             return;
         }
         this.preset = null;
