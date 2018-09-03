@@ -7,23 +7,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
-import * as SagaHelper from '@setl/utils/sagaHelper';
-
-/* Alert service. */
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-
-/* Clarity */
-import { ClrDatagridStateInterface } from '@clr/angular';
 
 /* Utils. */
-import { immutableHelper, NumberConverterService, FileDownloader } from '@setl/utils';
+import { FileDownloader } from '@setl/utils';
 
 /* services */
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 
-import { Subscription } from 'rxjs';
 import { APP_CONFIG, AppConfig } from "@setl/utils/index";
 import { MultilingualService } from '@setl/multilingual';
 
@@ -129,7 +121,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
-    private appConfig: any = {};
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -139,7 +130,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
 
     // fund details
-    // @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersRequested']) fundWithHoldersRequestedOb;
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersList']) fundWithHoldersListOb;
 
     // shares select list
@@ -151,10 +141,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _numberConverterService: NumberConverterService,
                 private _fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
@@ -164,7 +152,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private activatedRoute: ActivatedRoute,
                 @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
-        this.appConfig = appConfig;
         this.loadingDatagrid = false;
 
         this.isListLevel = (this.router.url.indexOf('/holders-list/list') !== -1) ? true : false;
@@ -204,13 +191,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.fundsByUserListOb.subscribe((list) => this.fundsByUserList(list)));
 
         // fund list
-        // this.subscriptions.push(this.fundWithHoldersRequestedOb.subscribe((requested) => this.fundWithHoldersRequested(requested)));
         this.subscriptions.push(this.fundWithHoldersListOb.subscribe((list) => this.fundWithHoldersList(list)));
 
         // valueChange
-        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch()));
 
         this.setInitialTabs();
 
@@ -472,7 +458,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     setInitialTabs() {
         // Get opened tabs from redux store.
         const openedTabs = [];
-        // const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
         if (openedTabs.length === 0) {
             /* Default tabs. */
@@ -506,7 +491,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
     }
 
-    requestSearch(form) {
+    requestSearch() {
 
         this.loadingDatagrid = true;
 
