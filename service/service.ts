@@ -63,15 +63,16 @@ export class PersistService {
 
             /* If we couldn't then clear the form values. */
             if (!recoveredData) {
-                if(options['reset'] !== false){
+                if (options['reset'] !== false) {
                     group.reset();
                 }
                 console.warn(' | Failed to read a previous state, maybe there isn\'t one?: ', data);
             } else {
-                /* If it was ok, we'll try set the value. */
+                /* If it was ok, so remove sensitive data and clear null values before patching */
+                const cleanedData = this.stripSensitiveData(recoveredData);
                 try {
                     /* Call set value. */
-                    group.patchValue(recoveredData);
+                    group.patchValue(cleanedData);
                 } catch (e) {
                     /* Else, we'll catch the error. */
                     console.warn(' | Failed to use a previous state: ', e);
@@ -158,7 +159,7 @@ export class PersistService {
      *
      * @return {boolean} - True.
      */
-    private subscribeToChanges (name: string, group: FormGroup, context: string = null): boolean {
+    private subscribeToChanges(name: string, group: FormGroup, context: string = null): boolean {
         /* Unsubscribe if already subscribed. */
         if (this.subscriptions[name]) {
             console.log(' | Unsubscribing from group.');
@@ -168,6 +169,7 @@ export class PersistService {
         /* Subscribe to the value changes. */
         console.log(' | Subscribing to group.');
         this.subscriptions[name] = group.valueChanges.subscribe((data) => {
+
             /* Set the form. */
             this.forms[name] = this.stripSensitiveData(data);
 
@@ -185,11 +187,11 @@ export class PersistService {
                         name,
                         JSON.stringify(this.forms[name]),
                         context).then((saveData) => {
-                            /* Stub. */
-                            console.log(' | Form state save reply: ', saveData);
-                        }).catch((error) => {
-                            console.warn(' | Failed to save this form\'s state: ', error);
-                        });
+                        /* Stub. */
+                        console.log(' | Form state save reply: ', saveData);
+                    }).catch((error) => {
+                        console.warn(' | Failed to save this form\'s state: ', error);
+                    });
                 },
                 1000 * this.inputBuffer);
         });
@@ -206,7 +208,7 @@ export class PersistService {
      * @param  {any} data - The form data.
      * @return {void}
      */
-    private stripSensitiveData (data: any): any {
+    private stripSensitiveData(data: any): any {
         /* Create a new object, with no references, before we mutate it. */
         const newData = Object.assign({}, data);
 
@@ -214,23 +216,24 @@ export class PersistService {
         return this.loopAndRemovePassword(newData);
     }
 
-    private loopAndRemovePassword (object) {
+    private loopAndRemovePassword(object) {
         /* Check if this is an object... */
-    	if (object && typeof object === 'object' && !object.length) {
-    		/* Loop over keys... */
-    		let key;
-    		for (key in object) {
-    			/* ...if the key contains password, delete it... */
-    			if (key.indexOf('password') !== -1) {
-    				delete object[key];
-    			} else {
+        if (object && typeof object === 'object' && !object.length) {
+            /* Loop over keys... */
+            let key;
+            for (key in object) {
+
+                /* ...if the key contains password or the value is null, delete it... */
+                if (key.indexOf('password') !== -1 || object[key] === null) {
+                    delete object[key];
+                } else {
                     /* ...otherwise, let's loop over this object too... */
-    				this.loopAndRemovePassword(object[key]);
-    			}
-    		}
-    	}
+                    this.loopAndRemovePassword(object[key]);
+                }
+            }
+        }
 
         /* ...finally, return the object. */
-    	return object;
+        return object;
     }
 }
