@@ -1,4 +1,4 @@
-import { Routes, UrlSegment, UrlMatchResult } from '@angular/router';
+import { Routes } from '@angular/router';
 /* Layouts. */
 import { BasicLayoutComponent, BlankLayoutComponent, FormElementsComponent, HomeComponent } from '@setl/core-layout';
 import {
@@ -23,11 +23,8 @@ import {
     ManageOrdersComponent,
     MyDashboardComponent,
     OfiAmDocumentsComponent,
-    OfiCollectiveArchiveComponent,
     CentralisationReportComponent,
     PrecentralisationReportComponent,
-    CentralisationSelectComponent,
-    OfiCentralisationHistoryComponent,
     OfiDocumentsComponent,
     OfiHomeComponent,
     OfiInvestorFundListComponent,
@@ -63,7 +60,6 @@ import {
     AdminUsersComponent,
     AdminWalletsComponent,
     AdminWizardComponent,
-    ManageSubPortfolioComponent,
 } from '@setl/core-useradmin';
 /* Account Admin Module. */
 import {
@@ -383,31 +379,6 @@ export const ROUTES: Routes = [
                 ],
             },
             {
-                path: 'ui-layouts',
-                children: [
-                    {
-                        path: 'translations',
-                        component: UiTranslationsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'tooltips',
-                        component: UiTooltipsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'formsteps',
-                        component: UiFormStepsComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                    {
-                        path: 'formpercent',
-                        component: UiFormPercentComponent,
-                        canActivate: [LoginGuardService],
-                    },
-                ],
-            },
-            {
                 path: 'reports',
                 children: [
                     {
@@ -477,11 +448,6 @@ export const ROUTES: Routes = [
                                 canActivate: [LoginGuardService],
                             },
                         ],
-                    },
-                    {
-                        path: 'select-centralisation',
-                        component: CentralisationSelectComponent,
-                        canActivate: [LoginGuardService],
                     },
                 ],
                 data: { state: 'reports' },
@@ -697,22 +663,6 @@ export const ROUTES: Routes = [
                         path: 'csv',
                         canActivate: [LoginGuardService],
                         component: OfiManageCsvComponent,
-                    },
-                ],
-            },
-            {
-                path: 'am-reports-section',
-                canActivate: [LoginGuardService],
-                children: [
-                    {
-                        path: 'collects-archive',
-                        canActivate: [LoginGuardService],
-                        component: OfiCollectiveArchiveComponent,
-                    },
-                    {
-                        path: 'centralisation-history/:tabid',
-                        canActivate: [LoginGuardService],
-                        component: OfiCentralisationHistoryComponent,
                     },
                 ],
             },
