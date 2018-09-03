@@ -78,10 +78,8 @@ export class UsersCreateUpdateComponent
         };
 
         this.userPermissionsTooltip = {
-            text: this.translate.translate(`User permissions allow you to set the rights
-                that users will have over IZNES. You can assign permissions in two ways;
-                either you can give permissions to a single user with the matrix below
-                or you can create teams with specific permissions and add users to them.`),
+            text: this.translate.translate(`User permissions allow you view the effective
+                permissions a user holds over multiple teams.`),
             size: 'small',
         };
 
