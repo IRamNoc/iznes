@@ -1308,7 +1308,7 @@ export const controlToName = {
     custodianCountry: 'Country',
 
     // Classification
-    investorStatus: 'Investor status', // @todo Change text with nature/size
+    investorStatus: 'Investor status',
     excludeProducts: 'Excluded category of products/services',
     changeProfessionalStatus: 'Opted for non professional status',
     jobPosition: 'Job position',
