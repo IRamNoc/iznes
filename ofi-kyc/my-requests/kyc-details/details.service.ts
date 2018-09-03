@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
-import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil } from 'lodash';
+import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, parseInt, isNil, toString } from 'lodash';
 
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
@@ -121,7 +121,8 @@ export class KycDetailsService {
             }
         }
         if (list) {
-            return controlValue.split(' ').reduce((acc, cur) => {
+            controlValue = toString(controlValue);
+            return (controlValue as string).split(' ').reduce((acc, cur) => {
                 let found = find(list, ['id', cur]);
                 found = found ? found.text : cur;
                 return acc ? [acc, found].join('|') : found;

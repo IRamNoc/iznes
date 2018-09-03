@@ -1,13 +1,13 @@
 import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
-import {get as getValue, isEmpty, castArray, find} from 'lodash';
+import {get as getValue, isEmpty, castArray, find, pick, omit} from 'lodash';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
 import {filter, map, takeUntil} from 'rxjs/operators';
 
 import {IdentificationService} from '../identification.service';
 import {NewRequestService} from '../../new-request.service';
-import {countries} from "../../../requests.config";
+import {countries, investorStatusList} from "../../../requests.config";
 import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 
 @Component({
@@ -46,14 +46,10 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     investorChanged(investorType){
-        let investorStatus = investorType === 'nonPro' ? 0 : 1;
+        let investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
         this.toggleForm(investorType);
-    }
-
-    get isPro() {
-        return this.investorType === 'proByNature' || this.investorType === 'proBySize';
     }
 
     ngOnInit() {
@@ -181,7 +177,12 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
                 requests.forEach(request => {
                     this.identificationService.getCurrentFormClassificationData(request.kycID).then(formData => {
                         if (formData) {
-                            this.form.patchValue(formData);
+                            let common = pick(formData, ['kycID', 'investorStatus']);
+                            let pro = pick(formData, ['excludeProducts', 'changeProfessionalStatus']);
+                            let nonPro = omit(formData, ['kycID', 'investorStatus', 'excludeProducts', 'changeProfessionalStatus']);
+                            this.form.patchValue(common);
+                            this.form.get('pro').patchValue(pro);
+                            this.form.get('nonPro').patchValue(nonPro);
                         }
                     });
                 });

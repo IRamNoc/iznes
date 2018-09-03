@@ -23,14 +23,14 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @Input() form: FormGroup;
 
-    @Input() set isListedCompany(isCompany) {
-        if (isCompany) {
+    @Input() set isPro(isPro) {
+        if (isPro) {
             (this.form.get('other') as FormGroup).disable();
-            (this.form.get('listedCompany') as FormGroup).enable();
+            (this.form.get('pro') as FormGroup).enable();
         }
         else {
             (this.form.get('other') as FormGroup).enable();
-            (this.form.get('listedCompany') as FormGroup).disable();
+            (this.form.get('pro') as FormGroup).disable();
         }
     };
 

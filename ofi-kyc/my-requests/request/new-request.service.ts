@@ -211,14 +211,6 @@ export class NewRequestService {
                 { value: '', disabled: true },
                 Validators.required
             ],
-            legalStatusPublicEstablishmentType: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
-            legalStatusPublicEstablishmentTypeOther: [
-                { value: '', disabled: true },
-                Validators.required
-            ],
             legalStatusListingMarkets: [
                 { value: '', disabled: true },
                 Validators.required
@@ -329,7 +321,7 @@ export class NewRequestService {
                 marketArea: ['', Validators.required],
                 natureTransactionPerYear: ['', Validators.required],
                 volumeTransactionPerYear: ['', Validators.required],
-                activitiesBenefitFromExperience: ['', Validators.required],
+                activitiesBenefitFromExperience: '',
                 activitiesBenefitFromExperienceSpecification: [
                     { value: '', disabled: true },
                     Validators.required
@@ -405,7 +397,7 @@ export class NewRequestService {
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
             }),
-            listedCompany: fb.group({
+            pro: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
                 kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),
