@@ -11,16 +11,7 @@ export const environment = {
     production: false,
     applyRestrictUrl: true,
     MEMBER_NODE_CONNECTION: {
-        // host: 'devnet.setl.io',
-        // host: 'uk-lon-li-006.opencsd.io',
-        // host: 'staging.iznes.io',
         host: window.location.hostname,
-        // host: 'frontend2.opencsd.io',
-        // host: '10.0.1.106', // Ming's Socket Server
-        // host: '10.0.1.163',  // Ollie's Socket Server
-        // host: '10.0.1.176', // Dan's Socket Server
-        // host: '10.0.1.175', // Mat's Socket Server
-        // host: '10.0.25.87', // David D. Socket Server
         port: 9788,
         path: 'db'
     },
