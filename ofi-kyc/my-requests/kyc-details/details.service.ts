@@ -5,6 +5,10 @@ import { get as getValue, toPairs, map, chain, value, omit, pickBy, pick, find, 
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import * as requestsConfig from '../requests.config';
 
+import {
+    clearkycdetailsall
+} from '@ofi/ofi-main/ofi-store/ofi-kyc/kyc-details';
+
 @Injectable({
     providedIn: 'root'
 })
@@ -14,6 +18,10 @@ export class KycDetailsService {
         private ofiKycService: OfiKycService,
         private ngRedux: NgRedux<any>
     ) {
+    }
+
+    clearData(){
+        this.ngRedux.dispatch(clearkycdetailsall());
     }
 
     getData(kycID) {

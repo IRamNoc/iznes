@@ -50,6 +50,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     }
 
     getData(kycID) {
+        this.kycDetailsService.clearData();
         this.kycDetailsService.getData(kycID);
     }
 

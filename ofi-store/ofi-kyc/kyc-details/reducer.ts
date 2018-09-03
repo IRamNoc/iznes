@@ -7,6 +7,7 @@ import {
     CLEAR_KYC_DETAILS_GENERAL_REQUESTED,
     CLEAR_KYC_DETAILS_RISKNATURE_REQUESTED,
     CLEAR_KYC_DETAILS_RISKOBJECTIVES_REQUESTED,
+    CLEAR_KYC_DETAILS_ALL,
 
     SET_KYC_DETAILS_BANKING,
     SET_KYC_DETAILS_BANKING_REQUESTED,
@@ -55,58 +56,62 @@ export function KycDetailsReducer(state: KycDetailsState = initialState, action:
         case SET_KYC_DETAILS_GENERAL:
             return handleDetailResponse(state, action, 'kycDetailsGeneral');
         case SET_KYC_DETAILS_GENERAL_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsGeneralRequested', true);
         case CLEAR_KYC_DETAILS_GENERAL_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsGeneralRequested', false);
 
         case SET_KYC_DETAILS_COMPANY:
             return handleDetailResponse(state, action, 'kycDetailsCompany');
         case SET_KYC_DETAILS_COMPANY_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsCompanyRequested', true);
         case CLEAR_KYC_DETAILS_COMPANY_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsCompanyRequested', false);
 
         case SET_KYC_DETAILS_COMPANYBENEFICIARIES:
             return handleDetailResponseMultiple(state, action, 'kycDetailsCompanyBeneficiaries');
         case SET_KYC_DETAILS_COMPANYBENEFICIARIES_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsCompanyBeneficiariesRequested', true);
         case CLEAR_KYC_DETAILS_COMPANYBENEFICIARIES_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsCompanyBeneficiariesRequested', false);
 
         case SET_KYC_DETAILS_BANKING:
             return handleDetailResponse(state, action, 'kycDetailsBanking');
         case SET_KYC_DETAILS_BANKING_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsBankingRequested', true);
         case CLEAR_KYC_DETAILS_BANKING_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsBankingRequested', false);
 
         case SET_KYC_DETAILS_CLASSIFICATION:
             return handleDetailResponse(state, action, 'kycDetailsClassification');
         case SET_KYC_DETAILS_CLASSIFICATION_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsClassificationRequested', true);
         case CLEAR_KYC_DETAILS_CLASSIFICATION_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsClassificationRequested', false);
 
         case SET_KYC_DETAILS_RISKNATURE:
             return handleDetailResponse(state, action, 'kycDetailsRiskNature');
         case SET_KYC_DETAILS_RISKNATURE_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsRiskNatureRequested', true);
         case CLEAR_KYC_DETAILS_RISKNATURE_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsRiskNatureRequested', false);
 
         case SET_KYC_DETAILS_RISKOBJECTIVES:
             return handleDetailResponse(state, action, 'kycDetailsRiskObjective');
         case SET_KYC_DETAILS_RISKOBJECTIVES_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsRiskObjectiveRequested', true);
         case CLEAR_KYC_DETAILS_RISKOBJECTIVES_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsRiskObjectiveRequested', false);
 
         case SET_KYC_DETAILS_DOCUMENTS:
             return handleDetailResponseMultiple(state, action, 'kycDetailsDocuments');
         case SET_KYC_DETAILS_DOCUMENTS_REQUESTED:
-            return toggleRequested(state, true);
+            return toggleRequested(state, 'kycDetailsDocumentsRequested', true);
         case CLEAR_KYC_DETAILS_DOCUMENTS_REQUESTED:
-            return toggleRequested(state, false);
+            return toggleRequested(state, 'kycDetailsDocumentsRequested', false);
+
+        case CLEAR_KYC_DETAILS_ALL:
+            console.log('*** IN REDUCER');
+            return initialState;
 
         default:
             return state;
@@ -137,8 +142,9 @@ function handleDetailResponseMultiple(state: KycDetailsState, action: Action, ty
     };
 }
 
-function toggleRequested(state: KycDetailsState, requested): KycDetailsState {
-    return Object.assign({}, state, {
-        requested
-    });
+function toggleRequested(state: KycDetailsState, key, requested): KycDetailsState {
+    let newObject = {};
+    newObject[key] = requested;
+
+    return Object.assign({}, state, newObject);
 }

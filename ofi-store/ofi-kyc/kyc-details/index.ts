@@ -29,6 +29,8 @@ export {
     clearkycdetailsrisknaturerequested,
     clearkycdetailsriskobjectivesrequested,
     clearkycdetailsdocumentsrequested,
+
+    clearkycdetailsall
 } from './actions';
 
 export {
