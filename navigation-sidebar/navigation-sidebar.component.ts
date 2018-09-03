@@ -5,6 +5,7 @@ import { APP_CONFIG, AppConfig, immutableHelper, LogService } from '@setl/utils'
 import { getMyDetail } from '@setl/core-store';
 import { MultilingualService } from '@setl/multilingual/multilingual.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
+import { get } from 'lodash';
 
 @Component({
     selector: 'app-navigation-sidebar',
@@ -17,6 +18,8 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
     menuJson: any;
     menuParent = [];
     menuParentOpen: string;
+    // all the menu that need to disabled.
+    private disabledMenus: string[] = [];
 
     private subscription: any;
 
@@ -65,6 +68,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             let menuSpec = this.appConfig.menuSpec;
             /* Translate the menu. */
             this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+            this.disabledMenus = menuSpec.disabled;
             if (!this.menuJson) {
                 console.warn('Navigation Render: No menu structure found!');
             }
@@ -75,6 +79,7 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
             this.menuSpecService.getMenuSpec().subscribe((menuSpec) => {
                 /* Translate the menu. */
                 this.menuJson = this.translateMenu(menuSpec.side[userTypeStr]);
+                this.disabledMenus = menuSpec.disabled;
                 if (!this.menuJson) {
                     console.warn('Navigation Render: No menu structure found!');
                 }
@@ -86,6 +91,15 @@ export class NavigationSidebarComponent implements OnInit, AfterViewInit {
 
         });
 
+    }
+
+    /**
+     * check if menu is disable.
+     * @param {string} url
+     * @return {boolean}
+     */
+    isMenuDisabled(url: string): boolean {
+        return this.disabledMenus.indexOf(url) !== -1;
     }
 
     ngAfterViewInit() {
