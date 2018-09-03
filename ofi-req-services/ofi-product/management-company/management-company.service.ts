@@ -14,12 +14,11 @@ import {
     DeleteManagementCompanyRequestData,
     DeleteManagementCompanyRequestBody,
 } from './management-company.service.model';
+
 import {
     setRequestedManagementCompany,
-    // clearRequestedManagementCompany,
     SET_MANAGEMENT_COMPANY_LIST,
     setRequestedInvestorManagementCompany,
-    // clearRequestedINVManagementCompany,
     SET_INV_MANAGEMENT_COMPANY_LIST,
 } from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
