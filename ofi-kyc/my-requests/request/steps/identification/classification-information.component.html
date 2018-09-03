@@ -121,14 +121,14 @@
                         <label for="natureTransactionPerYear">
                             {{'Nature of transactions per year (in €)' | translate}}
                         </label>
-                        <ng-select id="natureTransactionPerYear" placeholder="{{'Select' | translate}}" [items]="natureOfTransactionsList" [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])"></ng-select>
+                        <ng-select id="natureTransactionPerYear" placeholder="{{'Please select the nature of transactions' | translate}}" [items]="natureOfTransactionsList" [formControl]="form.get(['nonPro', 'natureTransactionPerYear'])"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'natureTransactionPerYear'])">{{'Field is required' | translate}}</span>
                     </div>
                     <div class="form-group required-field col-sm-6">
                         <label for="volumeTransactionPerYear">
                             {{'Volume of transactions per year (in €)' | translate}}
                         </label>
-                        <ng-select id="volumeTransactionPerYear" placeholder="{{'Select' | translate}}" [items]="volumeOfTransactionsList" [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])"></ng-select>
+                        <ng-select id="volumeTransactionPerYear" placeholder="{{'Please select the volume of transactions' | translate}}" [items]="volumeOfTransactionsList" [formControl]="form.get(['nonPro', 'volumeTransactionPerYear'])"></ng-select>
                         <span class="field-error" *ngIf="hasError(['nonPro', 'volumeTransactionPerYear'])">{{'Field is required' | translate}}</span>
                     </div>
                 </div>

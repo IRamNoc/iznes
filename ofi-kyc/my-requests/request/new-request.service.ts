@@ -14,7 +14,9 @@ import {
     isObject,
     forEach,
     find,
-    merge
+    merge,
+    isNil,
+    every
 } from 'lodash';
 
 import { CustomValidators } from '@setl/utils/helper';
@@ -271,8 +273,14 @@ export class NewRequestService {
             keyFinancialData: '',
             balanceSheetTotal: ['', Validators.required],
 
-            netRevenuesNetIncome: ['', Validators.required],
-            shareholderEquity: ['', Validators.required],
+            netRevenuesNetIncome: ['', [
+                Validators.required,
+                Validators.min(0)
+            ]],
+            shareholderEquity: ['', [
+                Validators.required,
+                Validators.min(0)
+            ]],
 
             beneficiaries: fb.array([this.createBeneficiary()]),
             capitalNature: fb.group({
@@ -280,6 +288,7 @@ export class NewRequestService {
                 generalAssets: '',
                 premiumsAndContributions: '',
                 saleGoodsServices: '',
+                exceptionalEvents: '',
                 treasury: '',
                 others: '',
                 othersText: [{ value: '', disabled: true }, Validators.required]
@@ -441,7 +450,7 @@ export class NewRequestService {
                     value: '',
                     disabled: true
                 },
-                Validators.required
+                this.getLengthValidator(255)
             ],
             clientNeeds: this.formBuilder.group(this.transformToForm(this.clientNeedsList), {
                 validator: (formGroup) => {
@@ -466,21 +475,30 @@ export class NewRequestService {
                 {
                     validator: (formGroup) => {
                         return ((formGroup) => {
-                            let riskAcceptanceLevel1 = formGroup.get('riskAcceptanceLevel1').value;
-                            let riskAcceptanceLevel2 = formGroup.get('riskAcceptanceLevel2').value;
-                            let riskAcceptanceLevel3 = formGroup.get('riskAcceptanceLevel3').value;
-                            let riskAcceptanceLevel4 = formGroup.get('riskAcceptanceLevel4').value;
+                            let level1 = formGroup.get('riskAcceptanceLevel1');
+                            let level2 = formGroup.get('riskAcceptanceLevel2');
+                            let level3 = formGroup.get('riskAcceptanceLevel3');
+                            let level4 = formGroup.get('riskAcceptanceLevel4');
+
+                            let riskAcceptanceLevel1 = level1.value;
+                            let riskAcceptanceLevel2 = level2.value;
+                            let riskAcceptanceLevel3 = level3.value;
+                            let riskAcceptanceLevel4 = level4.value;
 
                             let total = riskAcceptanceLevel1 + riskAcceptanceLevel2 + riskAcceptanceLevel3 + riskAcceptanceLevel4;
+                            let valuesFilled = every([riskAcceptanceLevel1, riskAcceptanceLevel2, riskAcceptanceLevel3, riskAcceptanceLevel4], risk => {
+                                return !isNil(risk) && risk !== "";
+                            });
+                            let required = level1.touched && level2.touched && level3.touched && level4.touched && !valuesFilled;
 
                             if (total === 100) {
                                 return null;
                             }
 
                             return {
-                                riskAcceptance: {
-                                    valid: false
-                                }
+                                total: true,
+                                required,
+                                unfilled: !valuesFilled
                             };
                         })(formGroup);
                     }
@@ -554,7 +572,7 @@ export class NewRequestService {
             custodianID: '',
             custodianHolderAccount: '',
             custodianName: ['', this.getLengthValidator()],
-            custodianIban: ['', this.getLengthValidator()],
+            custodianIban: ['', this.getLengthValidator().concat([CustomValidators.ibanValidator])],
             custodianAddressLine1: ['', this.getLengthValidator(255)],
             custodianAddressLine2: ['', Validators.maxLength(255)],
             custodianZipCode: ['', this.getLengthValidator(10)],
