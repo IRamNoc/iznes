@@ -5,7 +5,8 @@ import {NewRequestService, configDate} from "../../new-request.service";
 import {RiskProfileService} from '../risk-profile.service';
 import {get as getValue, find, pick} from 'lodash';
 import {Subject} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {filter as rxFilter, takeUntil} from 'rxjs/operators';
+import { List } from 'immutable';
 
 @Component({
     selector: 'investment-objective-form',
@@ -66,13 +67,15 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     initData() {
         this.managementCompanyList$
             .pipe(
-                takeUntil(this.unsubscribe)
+                rxFilter((managementCompanyList: List<any>) => managementCompanyList && managementCompanyList.size > 0),
+                takeUntil(this.unsubscribe),
             )
             .subscribe(amcList => {
+                const managementCompanyList = amcList.toJS();
                 let amcID = this.form.get('assetManagementCompanyID').value;
 
                 if (amcID) {
-                    let found = find(amcList, ['companyID', amcID]);
+                    let found = find(managementCompanyList, ['companyID', amcID]);
 
                     if (found) {
                         this.amc = found;
