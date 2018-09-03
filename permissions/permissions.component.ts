@@ -482,6 +482,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
      * @return {void}
      */
     public handleNewGroup(tabid: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         /*
          1. Create Group
          Let's sort the data structure for creating a new group.
@@ -527,6 +530,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             this.userAdminService[functionCall](permissionsData).then((response) => {
                 this.logService.log('Set new group permissions.', response);
             }).catch((error) => {
+                this.showError('Failed to create this permission group.');
                 this.logService.log('Failed to set new group permissions.', error);
             });
 
@@ -541,7 +545,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
             });
         }).catch((error) => {
             /* Implement an error message for failing to create the group. */
-            this.showError('Failed to update this permission group.');
+            this.showError('Failed to create this permission group.');
             this.logService.log('Failed to create new group.', error);
         });
 
@@ -556,6 +560,9 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
      * @return {void}
      */
     public handleEditGroup(tabid: number): void {
+        /* Show a loading alert */
+        this.alertsService.create('loading');
+
         /*
          1. Update Group
          Let's sort the data structure for the edit group call.
@@ -612,6 +619,7 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                 this.tabsControl[tabid].oldPermissions = newPermissions;
             }).catch((error) => {
                 console.warn('Failed to update the group permissions.', error);
+                this.showError('Failed to update this permission group');
             });
 
             /* Success message. */
@@ -736,26 +744,6 @@ export class AdminPermissionsComponent implements OnInit, AfterViewInit, OnDestr
                   <tbody>
                       <tr>
                           <td class="text-center text-danger">${message}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          `);
-    }
-
-    /**
-     * Shows a warning popup.
-     *
-     * @param  {string} message - The string to be shown in the message.
-     *
-     * @return {void}
-     */
-    showWarning(message) {
-        /* Show the error. */
-        this.alertsService.create('warning', `
-              <table class="table grid">
-                  <tbody>
-                      <tr>
-                          <td class="text-center text-warning">${message}</td>
                       </tr>
                   </tbody>
               </table>
