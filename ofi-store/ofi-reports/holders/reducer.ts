@@ -4,7 +4,7 @@ import {Action} from 'redux';
 import {AmHoldersDetails, InvestorHoldingItem, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
 import * as ofiAmHoldersActions from './actions';
 import {List} from 'immutable';
-import {fromJS, Map} from 'immutable';
+import {Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
@@ -101,29 +101,12 @@ const handleGetInvestorHoldingList = (state, action) => {
 
     if (response.length > 0) {
         response.forEach((it) => {
-            const item = Map({
-                amManagementCompanyID: it.amManagementCompanyID,
-                companyName: it.companyName,
-                shareID: it.shareID,
-                fundShareName: it.fundShareName,
-                isin: it.isin,
-                shareClassCurrency: it.shareClassCurrency,
-                latestNav: it.latestNav,
-                portfolioAddr: it.portfolioAddr,
-                portfolioLabel: it.portfolioLabel,
-                quantity: it.quantity,
-                amount: it.amount,
-                ratio: it.ratio,
-            });
-
+            const item = Map({ ...it });
             invHoldingsList = invHoldingsList.push(item);
         });
     }
 
-    return {
-        ...state,
-        invHoldingsList,
-    };
+    return { ...state, invHoldingsList };
 };
 
 function toggleRequestState(state: OfiHolderState, requested: boolean): OfiHolderState {
