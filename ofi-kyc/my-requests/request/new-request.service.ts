@@ -321,7 +321,7 @@ export class NewRequestService {
                 marketArea: ['', Validators.required],
                 natureTransactionPerYear: ['', Validators.required],
                 volumeTransactionPerYear: ['', Validators.required],
-                activitiesBenefitFromExperience: ['', Validators.required],
+                activitiesBenefitFromExperience: '',
                 activitiesBenefitFromExperienceSpecification: [
                     { value: '', disabled: true },
                     Validators.required
