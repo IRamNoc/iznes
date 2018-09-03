@@ -49,8 +49,6 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.getBeneficiaries();
     }
 
-    statutoryConstraints
-
     getData(kycID) {
         this.kycDetailsService.getData(kycID);
     }
