@@ -161,9 +161,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsGeneral(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailscompanyrequested,
-        });
+        ngRedux.dispatch(setkycdetailsgeneralrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycGeneral(kycID);
@@ -178,9 +176,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsCompany(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsgeneralrequested,
-        });
+        ngRedux.dispatch(setkycdetailscompanyrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycCompany(kycID);
@@ -195,9 +191,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsCompanyBeneficiaries(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailscompanybeneficiariesrequested,
-        });
+        ngRedux.dispatch(setkycdetailscompanybeneficiariesrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycCompanyBeneficiaries(kycID);
@@ -212,9 +206,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsBanking(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsbankingrequested,
-        });
+        ngRedux.dispatch(setkycdetailsbankingrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycBanking(kycID);
@@ -229,9 +221,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsClassification(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsclassificationrequested,
-        });
+        ngRedux.dispatch(setkycdetailsclassificationrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycClassification(kycID);
@@ -246,9 +236,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsRiskNature(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsrisknaturerequested,
-        });
+        ngRedux.dispatch(setkycdetailsrisknaturerequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycRiskNature(kycID);
@@ -263,9 +251,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsRiskObjectives(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsriskobjectivesrequested,
-        });
+        ngRedux.dispatch(setkycdetailsriskobjectivesrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycRiskObjective(kycID);
@@ -280,9 +266,7 @@ export class OfiKycService {
 
     static defaultRequestKycDetailsDocuments(ofiKycService: OfiKycService, ngRedux: NgRedux<any>, kycID) {
         // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch({
-            type: setkycdetailsdocumentsrequested,
-        });
+        ngRedux.dispatch(setkycdetailsdocumentsrequested());
 
         // Request the list.
         const asyncTaskPipe = ofiKycService.getKycDocument(kycID);

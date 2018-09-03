@@ -73,3 +73,5 @@ export const setkycdetailsdocumentsrequested = kAction(SET_KYC_DETAILS_DOCUMENTS
 export const CLEAR_KYC_DETAILS_DOCUMENTS_REQUESTED = `${name}/CLEAR_KYC_DETAILS_DOCUMENTS_REQUESTED`;
 export const clearkycdetailsdocumentsrequested = kAction(CLEAR_KYC_DETAILS_DOCUMENTS_REQUESTED);
 
+export const CLEAR_KYC_DETAILS_ALL = `${name}/CLEAR_KYC_DETAILS_ALL`;
+export const clearkycdetailsall = kAction(CLEAR_KYC_DETAILS_ALL);
