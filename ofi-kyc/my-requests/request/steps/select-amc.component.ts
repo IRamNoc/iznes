@@ -137,7 +137,9 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
 
     populateForm(kycs){
         let formValue = kycs.map(kyc => {
-            let alreadyCompleted = find(this.kycList, ['kycID', kyc.kycID]).alreadyCompleted;
+            let foundKyc = find(this.kycList, ['kycID', kyc.kycID]);
+            let alreadyCompleted = foundKyc ? foundKyc.alreadyCompleted : false;
+
             return {
                 id : kyc.amcID,
                 text : this.managementCompanies[kyc.amcID].companyName,

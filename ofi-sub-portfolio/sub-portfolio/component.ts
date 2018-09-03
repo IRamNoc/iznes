@@ -27,13 +27,14 @@ import {
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { SagaHelper, immutableHelper, LogService, ConfirmationService } from '@setl/utils';
 import { OfiSubPortfolioService } from '../../ofi-req-services/ofi-sub-portfolio/service';
-import { OfiUmbrellaFundService } from "../../ofi-req-services/ofi-product/umbrella-fund/service";
-import { OfiFundShareService } from "../../ofi-req-services/ofi-product/fund-share/service";
-import { OfiFundService } from "../../ofi-req-services/ofi-product/fund/fund.service";
+import { OfiUmbrellaFundService } from '../../ofi-req-services/ofi-product/umbrella-fund/service';
+import { OfiFundShareService } from '../../ofi-req-services/ofi-product/fund-share/service';
+import { OfiFundService } from '../../ofi-req-services/ofi-product/fund/fund.service';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { userToursEnums } from '@setl/core-req-services/usertour/config';
 import { UserTourService } from '@setl/core-req-services/usertour/service';
+import { MyUserService } from '@setl/core-req-services/my-user/my-user.service';
 
 @Component({
     selector: 'ofi-sub-portfolio',
@@ -81,6 +82,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 private toaster: ToasterService,
                 private logService: LogService,
                 private _userTourService: UserTourService,
+                private _myUserService: MyUserService,
                 private changeDetectorRef: ChangeDetectorRef) {
 
         /* tab meta */
@@ -345,6 +347,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                     if (message == 'All OK') {
                         this.newForm();
                         this.toggleAddModal();
+
+                        // update the default home page to '/home'
+                        if ( this.isFirstAddress() ) {
+                           this._myUserService.updateHomePage('/home');
+                        }
                     }
                 },
                 (labelResponse) => {
@@ -397,10 +404,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         const message = _.get(response, '[1].Data[0].Message', '');
 
         this.alertsService.create('error', `
-            <table class="table grid">
+            <table class='table grid'>
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">${message}</td>
+                        <td class='text-center text-danger'>${message}</td>
                     </tr>
                 </tbody>
             </table>
@@ -410,10 +417,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     showErrorMessage(message) {
 
         this.alertsService.create('error', `
-            <table class="table grid">
+            <table class='table grid'>
                 <tbody>
                     <tr>
-                        <td class="text-center text-danger">${message}</td>
+                        <td class='text-center text-danger'>${message}</td>
                     </tr>
                 </tbody>
             </table>
@@ -423,11 +430,11 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     showSuccessResponse(message) {
 
         this.alertsService.create('success', `
-                    <table class="table grid">
+                    <table class='table grid'>
 
                         <tbody>
                             <tr>
-                                <td class="text-center text-success">${message}</td>
+                                <td class='text-center text-success'>${message}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -437,14 +444,23 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     showWarningResponse(message) {
 
         this.alertsService.create('warning', `
-            <table class="table grid">
+            <table class='table grid'>
                 <tbody>
                     <tr>
-                        <td class="text-center text-warning">${message}</td>
+                        <td class='text-center text-warning'>${message}</td>
                     </tr>
                 </tbody>
             </table>
         `);
+    }
+
+    /**
+     * When we created a sub-portfolio, we check if the address we created was the first sub-portfolio, we do that by checking
+     * if there was no sub-portfolio in the cache.
+     * @return {boolean}
+     */
+    isFirstAddress(): boolean {
+      return this.addressList.length === 0;
     }
 
 }

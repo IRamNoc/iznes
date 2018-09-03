@@ -25,13 +25,13 @@
         <kyc-step-introduction></kyc-step-introduction>
     </section>
     <section order="3" *ngIf="fullForm">
-        <kyc-step-identification [form]="forms.get('identification')"></kyc-step-identification>
+        <kyc-step-identification [form]="forms.get('identification')" [investorType]="investorType"></kyc-step-identification>
     </section>
     <section order="4" *ngIf="fullForm">
         <kyc-step-risk-profile [form]="forms.get('riskProfile')"></kyc-step-risk-profile>
     </section>
     <section order="5" *ngIf="fullForm">
-        <kyc-step-documents [form]="forms.get('documents')" [isListedCompany]="isListedCompany"></kyc-step-documents>
+        <kyc-step-documents [form]="forms.get('documents')" [isPro]="isPro"></kyc-step-documents>
     </section>
     <section [attr.order]="fullForm ? 6 : 2">
         <kyc-step-validation [form]="forms.get('validation')"></kyc-step-validation>

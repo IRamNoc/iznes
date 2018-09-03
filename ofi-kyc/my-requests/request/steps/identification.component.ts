@@ -1,5 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
-import {get as getValue} from 'lodash';
+import {get as getValue, remove} from 'lodash';
 import {select} from '@angular-redux/store';
 import {PersistService} from '@setl/core-persist';
 
@@ -18,6 +18,7 @@ import {steps} from '../../requests.config';
 export class NewKycIdentificationComponent implements OnInit {
 
     @Input() form;
+    @Input() investorType;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
@@ -34,30 +35,6 @@ export class NewKycIdentificationComponent implements OnInit {
 
     ngOnInit() {
         this.initSubscriptions();
-    }
-
-    get investorType() {
-        let legalStatusControl = this.form.get('generalInformation.legalStatus').value;
-        let legalStatusValue = getValue(legalStatusControl, [0, 'id']);
-        let possibleLegalStatusValues = ['pensionOrMutualInsurance', 'bankingInstitution', 'insurer', 'listedCompany'];
-
-        let balanceSheetTotalValue = this.form.get('companyInformation.balanceSheetTotal').value;
-        let netRevenuesNetIncomeValue = this.form.get('companyInformation.netRevenuesNetIncome').value;
-        let shareholderEquityValue = this.form.get('companyInformation.shareholderEquity').value;
-
-        if (possibleLegalStatusValues.indexOf(legalStatusValue) !== -1) {
-            if (
-                balanceSheetTotalValue < 20000000 &&
-                netRevenuesNetIncomeValue < 40000000 &&
-                shareholderEquityValue < 2000000
-            ) {
-                return "proByNature";
-            } else {
-                return "proBySize";
-            }
-        } else {
-            return "nonPro";
-        }
     }
 
 
