@@ -150,6 +150,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
     handleAddMember(tabId: number): void {
         /* If the form is valid... */
         if (this.tabsControl[tabId].formControl.valid) {
+            /* Show loading modal */
+            this.alertsService.create('loading');
+
             if (!this.acceptedCharacters(this.tabsControl[tabId].formControl.value['memberName'])) {
                 return;
             }
@@ -195,6 +198,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
      */
     handleEditMember(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
+            /* Show loading modal */
+            this.alertsService.create('loading');
+
             this.allowedToSave[tabId] = false;
             const memberName = this.tabsControl[tabId].formControl.value.memberName;
             const memberId = this.tabsControl[tabId].memberId;
@@ -278,6 +284,9 @@ export class ManageMemberComponent implements OnInit, OnDestroy {
         ).subscribe((ans) => {
             /* ... they are so now send the delete request */
             if (ans.resolved) {
+                /* Show loading modal */
+                this.alertsService.create('loading');
+
                 // Check if the tab is already open.
                 // If yes, close the tab.
                 let i;

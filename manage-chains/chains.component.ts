@@ -135,6 +135,9 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     handleAddChain(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
+            // Show loading modal
+            this.alertsService.create('loading');
+
             const chainId = this.tabsControl[tabId]['formControl'].value.chainId;
             const chainName = this.tabsControl[tabId]['formControl'].value.chainName;
 
@@ -151,10 +154,11 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
-                    this.showSuccessResponse('Chain created');
+                    this.showAlert('success', 'Chain created successfully');
                 },
                 (data) => {
-                    this.showErrorResponse(data);
+                    const reason = !_.isEmpty(data[1].Data[0].Message) ? '. Reason:<br>' + data[1].Data[0].Message : '';
+                    this.showAlert('error', 'Failed to create chain' + reason);
                 },
             ));
         }
@@ -169,6 +173,9 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     handleEditChain(tabId: number): void {
         if (this.tabsControl[tabId]['formControl'].valid) {
+            // Show loading modal
+            this.alertsService.create('loading');
+
             const chainId = this.tabsControl[tabId]['formControl'].value.chainId;
             const chainName = this.tabsControl[tabId]['formControl'].value.chainName;
 
@@ -185,12 +192,13 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                 asyncTaskPipe,
                 (data) => {
                     ChainService.setRequested(false, this.ngRedux);
-                    this.showSuccessResponse('Chain updated');
+                    this.showAlert('success', 'Chain updated successfully');
 
                     this.tabsControl[tabId]['title'] = '<i class="fa fa-chain"></i> ' + chainName;
                 },
                 (data) => {
-                    this.showErrorResponse(data);
+                    const reason = !_.isEmpty(data[1].Data[0].Message) ? '. Reason:<br>' + data[1].Data[0].Message : '';
+                    this.showAlert('error', 'Failed to update chain' + reason);
                 },
             ));
         }
@@ -244,6 +252,9 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
         ).subscribe((ans) => {
             /* ...if they are, send the delete request... */
             if (ans.resolved) {
+                // Show loading modal
+                this.alertsService.create('loading');
+
                 const asyncTaskPipe = this.chainService.deleteChain(
                     {
                         chainId: chain.chainId,
@@ -255,10 +266,12 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
                     asyncTaskPipe,
                     () => {
                         ChainService.setRequested(false, this.ngRedux);
-                        this.showSuccessResponse('Chain deleted');
+                        this.showAlert('success', 'Chain deleted successfully');
                     },
                     (data) => {
-                        this.showErrorResponse(data);
+                        const reason = !_.isEmpty(data[1].Data[0].Message) ? '. Reason:<br>' +
+                            data[1].Data[0].Message : '';
+                        this.showAlert('error', 'Failed to delete chain' + reason);
                     },
                 ));
             }
@@ -297,30 +310,18 @@ export class ManageChainsComponent implements OnInit, AfterViewInit, OnDestroy {
         this.tabsControl = newTabControlImu.toJS();
     }
 
-    showErrorResponse(response) {
-        const message = _.get(response, '[1].Data[0].Message', '');
+    showAlert(type, message) {
+        const colour = type === 'error' ? 'danger' : type;
 
-        this.alertsService.create('error', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-danger">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
-    }
-
-    showSuccessResponse(message) {
-        this.alertsService.create('success', `
-                    <table class="table grid">
-                        <tbody>
-                            <tr>
-                                <td class="text-center text-success">${message}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    `);
+        this.alertsService.create(type, `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-${colour}">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 
     markForCheck() {

@@ -10,21 +10,21 @@
                 <!-- Member list tab. -->
                 <ng-container *ngIf="id === 0">
                     <ng-container
-                            *ngTemplateOutlet="staticMemberListTab"
+                        *ngTemplateOutlet="staticMemberListTab"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member add tab. -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                            *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
+                        *ngTemplateOutlet="staticMemberAddTab; context: {'formControl': tabdata.formControl, 'tabid': id, isSymAdmin: isSymAdmin}"
                     ></ng-container>
                 </ng-container>
 
                 <!-- Member edit tabs. -->
                 <ng-container *ngIf="id >= 2 && isSymAdmin">
                     <ng-container
-                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"
                     ></ng-container>
                 </ng-container>
             </clr-tab-content>
@@ -70,13 +70,13 @@
                                 <label class="control-label required-field" for="new-member-name">
                                     <span class="ml_translated" mltag="txt_membername">Member Name</span>
                                 </label>
-                                
+
                                 <input type="text" formControlName="memberName" placeholder="Member Name"
-                                        id="new-member-name" class="form-control mlp_translated"
-                                        mltag="txt_membername" maxlength="100"/>
+                                       id="new-member-name" class="form-control mlp_translated"
+                                       mltag="txt_membername" maxlength="100"/>
 
                                 <span *ngIf="formControl.controls.memberName.hasError('required') && formControl.controls.memberName.touched" class="field-error"
-                                    mltag="txt_fieldisrequired">Field is required</span>
+                                      mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
 
@@ -86,19 +86,18 @@
                                 <label class="control-label required-field" for="new-member-email">
                                     <span class="ml_translated" mltag="txt_adminemail">Admin Email</span>
                                 </label>
-                                
+
                                 <input type="email" formControlName="email" name="email" placeholder="Enter email..." class="form-control email mlp_translated" mltag="txt_enteremail" id="new-member-email"/>
 
                                 <span *ngIf="formControl.controls.email.hasError('required') && formControl.controls.email.touched" class="field-error"
-                                    mltag="txt_fieldisrequired">Field is required</span>
+                                      mltag="txt_fieldisrequired">Field is required</span>
                             </div>
                         </div>
                         <div class="form-group button-group">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary" [disabled]="formControl.invalid">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
-                                </button>
-                            </div>
+                            <button type="submit" class="btn btn-primary" [disabled]="formControl.invalid">
+                                <i class="fa fa-save"></i>
+                                <span class="ml_translated" mltag="txt_save" id="new-member-save">Save</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -128,13 +127,11 @@
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group button-group">
-                            <div class="col-sm-12">
-                                <button type="submit" [disabled]="!canSave(tabid)" class="btn btn-primary">
-                                    <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                                </button>
-                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
-                                </button>
-                            </div>
+                            <button type="submit" [disabled]="!canSave(tabid)" class="btn btn-primary">
+                                <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                            </button>
+                            <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">Close
+                            </button>
                         </div>
                     </div>
                 </div>

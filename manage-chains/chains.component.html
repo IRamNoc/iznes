@@ -18,13 +18,13 @@
                 <!-- Chain add tab -->
                 <ng-container *ngIf="id === 1">
                     <ng-container
-                            *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                        *ngTemplateOutlet="staticAddTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
                 </ng-container>
 
                 <!-- Chain edit tab -->
                 <ng-container *ngIf="id >= 2">
                     <ng-container
-                            *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
+                        *ngTemplateOutlet="dynamicEditTab; context: {'formControl': tabdata.formControl, 'tabid': id}"></ng-container>
                 </ng-container>
             </clr-tab-content>
         </clr-tab>
@@ -98,11 +98,9 @@
                 </div>
 
                 <div class="form-group button-group">
-                    <div class="col-sm-12">
-                        <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                            <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                        <i class="fa fa-save"></i> <span class="ml_translated" mltag="txt_save">Save</span>
+                    </button>
                 </div>
 
             </form>
@@ -142,15 +140,13 @@
                     <div class="form-horizontal">
                         <div class="row">
                             <div class="form-group button-group">
-                                <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
-                                        <i class="fa fa-save"></i> <span class="ml_translated"
-                                                                         mltag="txt_save">Save</span>
-                                    </button>
-                                    <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
-                                        Close
-                                    </button>
-                                </div>
+                                <button type="submit" class="btn btn-primary" [disabled]="!formControl.valid">
+                                    <i class="fa fa-save"></i> <span class="ml_translated"
+                                                                     mltag="txt_save">Save</span>
+                                </button>
+                                <button (click)="closeTab(tabid)" class="btn btn-secondary" mltag="txt_close">
+                                    Close
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -142,8 +142,10 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         // Add account form.
         const addAccountForm = this.tabsControl[1].formControl;
 
+        console.log('+++ addAccountForm', addAccountForm);
+
         // Set default value
-        if (this.managedMemberList.length > 0 && addAccountForm.value.member.length === 0) {
+        if (this.managedMemberList.length > 0 && !_.isEmpty(addAccountForm.value.member)) {
             addAccountForm.controls.member.setValue([this.managedMemberList[0]]);
         }
     }
@@ -229,6 +231,9 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      */
     handleAddAccount(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
+            /* Show loading modal */
+            this.alertsService.create('loading');
+
             this.logService.log(this.tabsControl[tabId].formControl.value);
 
             const formValue = this.tabsControl[tabId].formControl.value;
@@ -248,10 +253,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 () => {
-                    this.showAlert('success', 'Account is created');
+                    this.showAlert('success', 'Account has been created successfully');
                 },
                 (data) => {
-                    this.showAlert('error', data);
+                    console.error('fail', data);
+                    this.showAlert('error', 'Failed to create account');
                 },
             ));
         }
@@ -266,6 +272,9 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
      */
     handleEditAccount(tabId: number): void {
         if (this.tabsControl[tabId].formControl.valid) {
+            // Show loading modal
+            this.alertsService.create('loading');
+
             this.logService.log(this.tabsControl[tabId].formControl.value);
 
             const formValue = this.tabsControl[tabId].formControl.value;
@@ -287,11 +296,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
-                    this.showAlert('success', 'Account is updated');
+                    this.showAlert('success', 'Account has been updated successfully');
                     this.logService.log(data);
                 },
                 (data) => {
-                    this.showAlert('error', data);
+                    this.showAlert('error', 'Failed to update account');
                     this.logService.log(data);
                 },
             ));
@@ -352,6 +361,9 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
         .subscribe((ans) => {
             if (ans.resolved) {
                 // ... they are so send the delete request
+                // Show loading modal
+                this.alertsService.create('loading');
+
                 // Check if the tab is already open. If yes, close the tab.
                 let i;
                 const accountId = this.accountList[index].accountId;
@@ -371,11 +383,11 @@ export class ManageAccountComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
                     (data) => {
-                        this.showAlert('success', 'Account is deleted');
+                        this.showAlert('success', 'Account has been deleted successfully');
                         this.logService.log(data);
                     },
                     (data) => {
-                        this.showAlert('error', data);
+                        this.showAlert('error', 'Failed to delete to account');
                         this.logService.log(data);
                     },
                 ));
