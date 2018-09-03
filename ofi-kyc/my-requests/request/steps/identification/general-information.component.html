@@ -117,7 +117,7 @@
             <div class="row">
                 <div class="form-group required-field col-md-4">
                     <label class="control-label" for="legalStatus">{{'Legal status' | translate}}</label>
-                    <ng-select class="large-select" [items]="legalStatusList" id="legalStatusList" [formControl]="form.get('legalStatus')" placeholder="{{'Please fill in your company legal status' | translate}}"></ng-select>
+                    <ng-select class="large-select multiline" [items]="legalStatusList" id="legalStatusList" [formControl]="form.get('legalStatus')" placeholder="{{'Please fill in your company legal status' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('legalStatus')">{{'Field is required' | translate}}</span>
                 </div>
 

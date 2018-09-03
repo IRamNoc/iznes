@@ -7,7 +7,7 @@ import {filter, map, takeUntil} from 'rxjs/operators';
 
 import {IdentificationService} from '../identification.service';
 import {NewRequestService} from '../../new-request.service';
-import {countries} from "../../../requests.config";
+import {countries, investorStatusList} from "../../../requests.config";
 import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 
 @Component({
@@ -46,14 +46,10 @@ export class ClassificationInformationComponent implements OnInit, OnDestroy {
     }
 
     investorChanged(investorType){
-        let investorStatus = investorType === 'nonPro' ? 0 : 1;
+        let investorStatus = investorStatusList[investorType];
 
         this.form.get('investorStatus').patchValue(investorStatus);
         this.toggleForm(investorType);
-    }
-
-    get isPro() {
-        return this.investorType === 'proByNature' || this.investorType === 'proBySize';
     }
 
     ngOnInit() {

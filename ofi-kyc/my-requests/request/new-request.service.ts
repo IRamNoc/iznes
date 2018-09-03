@@ -397,7 +397,7 @@ export class NewRequestService {
                 kyctaxcertificationdoc: this.createDocumentFormGroup('kyctaxcertificationdoc', !this.isProduction),
                 kycw8benefatcadoc: this.createDocumentFormGroup('kycw8benefatcadoc', true),
             }),
-            listedCompany: fb.group({
+            pro: fb.group({
                 kycproofofapprovaldoc: this.createDocumentFormGroup('kycproofofapprovaldoc', true),
                 kycisincodedoc: this.createDocumentFormGroup('kycisincodedoc', true),
                 kycwolfsbergdoc: this.createDocumentFormGroup('kycwolfsbergdoc', !this.isProduction),

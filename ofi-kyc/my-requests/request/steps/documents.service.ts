@@ -13,9 +13,9 @@ export const documentFormPaths = {
     kyclistauthoriseddoc: 'common',
     kyctaxcertificationdoc: 'common',
     kycw8benefatcadoc: 'common',
-    kycproofofapprovaldoc: 'listedCompany',
-    kycisincodedoc: 'listedCompany',
-    kycwolfsbergdoc: 'listedCompany',
+    kycproofofapprovaldoc: 'pro',
+    kycisincodedoc: 'pro',
+    kycwolfsbergdoc: 'pro',
     kycstatuscertifieddoc: 'other',
     kyckbisdoc: 'other',
     kycannualreportdoc: 'other',
@@ -93,7 +93,7 @@ export class DocumentsService {
         let merged = merge(
             getValue(formValue, 'common'),
             getValue(formValue, 'other', {}),
-            getValue(formValue, 'listedCompany', {})
+            getValue(formValue, 'pro', {})
         );
 
         merged = filter(merged, 'hash');
