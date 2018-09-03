@@ -32,7 +32,7 @@
                                 class="form-control"
                                 [items]="investorTypes"
                                 [allowClear]="true"
-                                [placeholder]="_translate.translate('All Investors')"
+                                [placeholder]="_translate.translate('Select')"
                                 formControlName="investorType">
                             </ng-select>
                         </form>
@@ -85,7 +85,7 @@
     </clr-tabs>
 
     <clr-tabs *ngIf="kycId != ''">
-        <clr-tab *ngIf="!!clients[kycId]">
+        <clr-tab *ngIf="showTab">
             <button clrTabLink>{{'KYC Information' | translate}}</button>
             <clr-tab-content *clrIfActive="true">
 
@@ -165,7 +165,7 @@
                         <button class="btn btn-primary" (click)="changePage('audit')">{{'View Previous Updates' | translate}}</button>
                     </div>
                 </div>
-                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="kycId = ''" style="width: 100%"></access-table>
+                <access-table [otherData]="otherData" [tableDataArr]="tableData" (back)="changePage('list')" style="width: 100%"></access-table>
             </clr-tab-content>
         </clr-tab>
         <clr-tab>
@@ -176,7 +176,7 @@
                         <p>{{'Please find below @companyName@\'s holding details:' | translate: {'companyName': companyName} }}</p>
                     </div>
                     <div class="col-sm-6" align="right">
-                        <button class="btn btn-success" (click)="downloadSingleHoldingsCSVFile()">{{'Export Holdings' | translate}}</button>
+                        <button class="btn btn-primary" (click)="downloadSingleHoldingsCSVFile()">{{'Export Holdings' | translate}}</button>
                     </div>
                 </div>
                 <clr-datagrid #holdingDataGrid>

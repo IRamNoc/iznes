@@ -53,6 +53,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
     userId: string;
 
     investorTypes = [
+        { id: 0, text: 'All Investors' },
         { id: 45, text: 'Institutional Investor' },
         { id: 55, text: 'Retail Investor' },
     ];
@@ -76,6 +77,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     investorForm: FormGroup;
     currentInvestor: any = {};
+    showTab: boolean = false;
 
     @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
     @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
@@ -174,7 +176,12 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     this.clients[client.kycID] = client;
                 });
 
-                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 1) this.loadTab(2);
+                this.showTab = false;
+                if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
+                    this.showTab = true;
+                } else {
+                    this.loadTab(2);
+                }
 
                 Object.keys(amKycList).forEach((key) => {
                     this.amKycList.push(amKycList[key]);
@@ -275,6 +282,13 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                 });
             }
         } else if (tab == 3) {
+
+            if (this.amKycList.length > 0 && this.amKycList.findIndex((kyc) => kyc.kycID == this.kycId) !== -1) {
+                const kyc = this.amKycList.filter((kyc) => kyc.kycID == this.kycId)[0];
+
+                this.companyName = kyc.investorCompanyName;
+            }
+
             this._ofiFundShareService.requestInvestorHoldings(this.kycId).then((data) => {
                 this.holdingsTable = [];
                 if (data[1].Data.length > 0) {
@@ -420,8 +434,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             this.viewClient('list');
         } else {
             this.pageType = page;
-        }
 
+            if (page == 'audit') this.requestAuditSearch();
+        }
     }
 
     saveClientReference() {
