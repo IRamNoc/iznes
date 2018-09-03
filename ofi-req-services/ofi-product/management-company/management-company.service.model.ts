@@ -5,6 +5,33 @@ export interface ManagementCompanyRequestMessageBody extends MemberNodeMessageBo
     accountID: any;
 }
 
+export interface ManagementCompanyRequestData {
+    companyID: any;
+    companyName: any;
+    emailAddress: any;
+    country: any;
+    addressPrefix: any;
+    postalAddressLine1: any;
+    postalAddressLine2: any;
+    city: any;
+    stateArea: any;
+    postalCode: any;
+    taxResidence: any;
+    registrationNum: any;
+    supervisoryAuthority: any;
+    numSiretOrSiren: any;
+    creationDate: any;
+    shareCapital: any;
+    commercialContact: any;
+    operationalContact: any;
+    directorContact: any;
+    lei: any;
+    bic: any;
+    giinCode: any;
+    logoName: any;
+    logoURL: any;
+}
+
 export interface SaveManagementCompanyRequestBody extends MemberNodeMessageBody {
     token: any;
     entityId: any;
@@ -60,6 +87,10 @@ export interface UpdateManagementCompanyRequestBody extends MemberNodeMessageBod
     giinCode: any;
     logoName: any;
     logoURL: any;
+}
+
+export interface DeleteManagementCompanyRequestData {
+    companyID: any;
 }
 
 export interface DeleteManagementCompanyRequestBody extends MemberNodeMessageBody {

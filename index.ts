@@ -109,13 +109,10 @@ export { ShareHoldersComponent } from './ofi-am-dashboard/share-holders/componen
 export {
     OfiPnlReportComponent,
     OfiTaxReportComponent,
-    OfiCollectiveArchiveComponent,
-    OfiCentralisationHistoryComponent,
     OfiReportModule,
     OfiManageCsvComponent,
     CentralisationReportComponent,
     PrecentralisationReportComponent,
-    CentralisationSelectComponent,
     MyHoldingsComponent,
 } from './ofi-report-module';
 

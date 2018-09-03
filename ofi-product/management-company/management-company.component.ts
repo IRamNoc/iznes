@@ -391,11 +391,9 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
     deleteCompany(managementCompany: any) {
         // this.logService.log(managementCompany.companyID);
-        const asyncTaskPipe = this.mcService.deleteManagementCompany(
-            {
-                companyID: managementCompany.companyID
-            },
-            this.ngRedux);
+        const asyncTaskPipe = this.mcService.deleteManagementCompany({
+            companyID: managementCompany.companyID,
+        });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
@@ -424,34 +422,32 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
 
             // update
             if (this.editForm) {
-                const asyncTaskPipe = this.mcService.updateManagementCompany(
-                    {
-                        companyID: formValues.companyID,
-                        companyName: formValues.mc_name,
-                        emailAddress: formValues.mc_emailAddress,
-                        country: formValues.mc_country_select[0],
-                        addressPrefix: formValues.mc_addressPrefix,
-                        postalAddressLine1: formValues.mc_address1,
-                        postalAddressLine2: formValues.mc_address2,
-                        city: formValues.mc_address3,
-                        stateArea: formValues.mc_address4,
-                        postalCode: formValues.mc_postalCode,
-                        taxResidence: formValues.mc_tax_residence,
-                        registrationNum: formValues.mc_registration_number,
-                        supervisoryAuthority: formValues.mc_supervisory_authority,
-                        numSiretOrSiren: formValues.mc_siret_siren,
-                        creationDate: formValues.mc_creation_date,
-                        shareCapital: formValues.mc_share_capital,
-                        commercialContact: formValues.mc_commercial_contact,
-                        operationalContact: formValues.mc_operational_contact,
-                        directorContact: formValues.mc_director_contact,
-                        lei: formValues.mc_lei,
-                        bic: formValues.mc_bic,
-                        giinCode: formValues.mc_giin,
-                        logoName: formValues.mc_logo_name,
-                        logoURL: formValues.mc_logo
-                    },
-                    this.ngRedux);
+                const asyncTaskPipe = this.mcService.updateManagementCompany({
+                    companyID: formValues.companyID,
+                    companyName: formValues.mc_name,
+                    emailAddress: formValues.mc_emailAddress,
+                    country: formValues.mc_country_select[0],
+                    addressPrefix: formValues.mc_addressPrefix,
+                    postalAddressLine1: formValues.mc_address1,
+                    postalAddressLine2: formValues.mc_address2,
+                    city: formValues.mc_address3,
+                    stateArea: formValues.mc_address4,
+                    postalCode: formValues.mc_postalCode,
+                    taxResidence: formValues.mc_tax_residence,
+                    registrationNum: formValues.mc_registration_number,
+                    supervisoryAuthority: formValues.mc_supervisory_authority,
+                    numSiretOrSiren: formValues.mc_siret_siren,
+                    creationDate: formValues.mc_creation_date,
+                    shareCapital: formValues.mc_share_capital,
+                    commercialContact: formValues.mc_commercial_contact,
+                    operationalContact: formValues.mc_operational_contact,
+                    directorContact: formValues.mc_director_contact,
+                    lei: formValues.mc_lei,
+                    bic: formValues.mc_bic,
+                    giinCode: formValues.mc_giin,
+                    logoName: formValues.mc_logo_name,
+                    logoURL: formValues.mc_logo,
+                });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,
@@ -471,34 +467,32 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
                 );
             } else {
                 // insert
-                const asyncTaskPipe = this.mcService.saveManagementCompany(
-                    {
-                        companyID: formValues.companyID,
-                        companyName: formValues.mc_name,
-                        emailAddress: formValues.mc_emailAddress,
-                        country: formValues.mc_country_select[0].id,
-                        addressPrefix: formValues.mc_addressPrefix,
-                        postalAddressLine1: formValues.mc_address1,
-                        postalAddressLine2: formValues.mc_address2,
-                        city: formValues.mc_address3,
-                        stateArea: formValues.mc_address4,
-                        postalCode: formValues.mc_postalCode,
-                        taxResidence: formValues.mc_tax_residence,
-                        registrationNum: formValues.mc_registration_number,
-                        supervisoryAuthority: formValues.mc_supervisory_authority,
-                        numSiretOrSiren: formValues.mc_siret_siren,
-                        creationDate: formValues.mc_creation_date,
-                        shareCapital: formValues.mc_share_capital,
-                        commercialContact: formValues.mc_commercial_contact,
-                        operationalContact: formValues.mc_operational_contact,
-                        directorContact: formValues.mc_director_contact,
-                        lei: formValues.mc_lei,
-                        bic: formValues.mc_bic,
-                        giinCode: formValues.mc_giin,
-                        logoName: formValues.mc_logo_name,
-                        logoURL: formValues.mc_logo
-                    },
-                    this.ngRedux);
+                const asyncTaskPipe = this.mcService.saveManagementCompany({
+                    companyID: formValues.companyID,
+                    companyName: formValues.mc_name,
+                    emailAddress: formValues.mc_emailAddress,
+                    country: formValues.mc_country_select[0].id,
+                    addressPrefix: formValues.mc_addressPrefix,
+                    postalAddressLine1: formValues.mc_address1,
+                    postalAddressLine2: formValues.mc_address2,
+                    city: formValues.mc_address3,
+                    stateArea: formValues.mc_address4,
+                    postalCode: formValues.mc_postalCode,
+                    taxResidence: formValues.mc_tax_residence,
+                    registrationNum: formValues.mc_registration_number,
+                    supervisoryAuthority: formValues.mc_supervisory_authority,
+                    numSiretOrSiren: formValues.mc_siret_siren,
+                    creationDate: formValues.mc_creation_date,
+                    shareCapital: formValues.mc_share_capital,
+                    commercialContact: formValues.mc_commercial_contact,
+                    operationalContact: formValues.mc_operational_contact,
+                    directorContact: formValues.mc_director_contact,
+                    lei: formValues.mc_lei,
+                    bic: formValues.mc_bic,
+                    giinCode: formValues.mc_giin,
+                    logoName: formValues.mc_logo_name,
+                    logoURL: formValues.mc_logo
+                });
 
                 this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                     asyncTaskPipe,

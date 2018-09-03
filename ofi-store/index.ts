@@ -85,26 +85,13 @@ export {
 } from './ofi-corp-actions';
 
 export {
-    /* Manage orders */
-    // getOfiManageOrderList,
     OFI_SET_MANAGE_ORDER_LIST,
     ofiClearRequestedManageOrder,
     ofiSetRequestedManageOrder,
     ofiManageOrderActions,
-
-    // Collective report
-    setRequestedCollectiveArchive,
-    clearRequestedCollectiveArchive,
-    SET_COLLECTIVE_ARCHIVE,
 } from './ofi-orders';
 
 export {
-    OFI_SET_CENTRALIZATION_REPORTS_LIST,
-    OFI_SET_BASE_CENTRALIZATION_HISTORY,
-    OFI_SET_CENTRALIZATION_HISTORY,
-    ofiClearRequestedCentralisationHistoryReports,
-    ofiSetRequestedCentralisationHistoryReports,
-    ofiCentralisationHistoryReportsActions,
     OFI_SET_AM_HOLDERS_LIST,
     ofiClearRequestedAmHolders,
     ofiSetRequestedAmHolders,

@@ -9,7 +9,7 @@ const initialState: managementCompanyListState = {
     requested: false,
 };
 const invInitialState: invManagementCompanyListState = {
-    investorManagementCompanyList: {},
+    investorManagementCompanyList: List<ManagementCompanyDetail>(),
     invRequested: false,
 };
 
@@ -39,12 +39,7 @@ export const invManagementCompanyListReducer = function (state: invManagementCom
 
     switch (action.type) {
         case ManagementCompanyActions.SET_INV_MANAGEMENT_COMPANY_LIST:
-            const mcData2 = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-            const investorManagementCompanyList = formatManagementCompanyDataResponse(mcData2);
-            const newState2 = Object.assign({}, state, {
-                investorManagementCompanyList,
-            });
-            return newState2;
+            return handleGetInvestorManagementCompanyList(state, action);
 
         case ManagementCompanyActions.SET_REQUESTED_INV_MANAGEMENT_COMPANY:
             return handleSetINVRequested(state, action);
@@ -148,4 +143,43 @@ function handleClearINVRequested(state: invManagementCompanyListState, action: A
     return Object.assign({}, state, {
         invRequested,
     });
+}
+
+function handleGetInvestorManagementCompanyList(state: invManagementCompanyListState, action) : invManagementCompanyListState {
+    const response = action.payload[1].Data;
+    let investorManagementCompanyList = List<any>();
+
+    if (response.length > 0) {
+        response.forEach((it) => {
+            const item = Map({
+                companyID: it.companyID,
+                companyName: it.companyName,
+                country: it.country,
+                addressPrefix: it.addrPrefix,
+                postalAddressLine1: it.postalAddressLine1,
+                postalAddressLine2: it.postalAddressLine2,
+                city: it.city,
+                stateArea: it.stateArea,
+                postalCode: it.postalcode,
+                taxResidence: it.taxResidence,
+                registrationNum: it.registrationNum,
+                supervisoryAuthority: it.supervisoryAuthority,
+                numSiretOrSiren: it.numSIRETorSIREN,
+                creationDate: it.creationDate,
+                shareCapital: it.shareCapital,
+                commercialContact: it.commercialContact,
+                operationalContact: it.operationalContact,
+                directorContact: it.directorContact,
+                lei: it.lei,
+                bic: it.bic,
+                giinCode: it.giinCode,
+                logoName: it.logoName,
+                logoURL: it.logoURL,
+            });
+
+            investorManagementCompanyList = investorManagementCompanyList.push(item);
+        });
+    }
+
+    return { ...state, investorManagementCompanyList };
 }

@@ -1,6 +1,6 @@
 /* Core/Angular imports. */
 import {Injectable} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
+import {NgRedux} from '@angular-redux/store';
 /* Membersocket and nodeSagaRequest import. */
 import {MemberSocketService} from '@setl/websocket-service';
 import {createMemberNodeSagaRequest} from '@setl/utils/common';
@@ -9,15 +9,10 @@ import {SagaHelper} from '@setl/utils';
 import {
     OFI_SET_AM_HOLDERS_LIST,
     OFI_SET_INV_HOLDINGS_LIST,
-    OFI_SET_BASE_CENTRALIZATION_HISTORY,
-    OFI_SET_CENTRALIZATION_HISTORY,
-    OFI_SET_CENTRALIZATION_REPORTS_LIST,
     ofiClearRequestedAmHolders,
-    ofiClearRequestedCentralisationHistoryReports,
     ofiSetRequestedAmHolders,
     ofiSetRequestedInvHoldings,
     ofiClearRequestedInvHoldings,
-    ofiSetRequestedCentralisationHistoryReports,
     ofiSetHolderDetailRequested,
     ofiClearHolderDetailRequested,
     OFI_GET_SHARE_HOLDER_DETAIL,
@@ -41,100 +36,29 @@ import {
 
 /* Import interfaces for message bodies. */
 import {
-    OfiMemberNodeBody,
+    MemberNodeMessageBody,
     OfiAmHoldersRequestBody,
-    OfiBaseCentralisationHistoryRequestBody,
-    OfiCentralisationHistoryRequestBody,
     OfiCentralisationReportsRequestBody,
     OfiHolderDetailRequestBody,
     OfiHolderDetailRequestData,
-    OfiInvHoldingsDetailRequestData,
-    OfiInvHoldingsDetailRequestBody,
-    CentralisationRequestSharesBody,
-    CentralisationRequestFundsBody,
+    InvestorHoldingRequestData,
+    InvestorHoldingRequestBody,
     PrecentralisationRequestSharesBody,
     PrecentralisationRequestFundsBody,
+    PrecentralisationFundsRequestData,
+    PrecentralisationSharesRequestData,
+    CentralisationReportsRequestData,
+    CentralisationRequestSharesBody,
+    CentralisationRequestFundsBody,
+    CentralisationFundsRequestData,
+    CentralisationSharesRequestData,
 } from './model';
-
-import {LogService} from '@setl/utils';
-
-interface CentralisationReportsData {
-    search: string;
-}
-
-interface CentralisationHistoryData {
-    fundShareID: any;
-    dateFrom: any;
-    dateTo: any;
-    dateRange: any;
-}
-
-interface CentralisationSharesData {
-    shareId: number;
-    dateFrom: string;
-    dateTo: string;
-    mode: number;
-}
-
-interface CentralisationFundsData {
-    fundId: number;
-    dateFrom: string;
-    dateTo: string;
-    mode: number;
-}
-
-interface PrecentralisationSharesData {
-    shareId: number;
-    dateFrom: string;
-    dateTo: string;
-    mode: number;
-}
-
-interface PrecentralisationFundsData {
-    fundId: number;
-    dateFrom: string;
-    dateTo: string;
-    mode: number;
-}
-
-interface InvHoldingsData {
-    walletID: any;
-    amCompanyID: any;
-}
 
 @Injectable()
 export class OfiReportsService {
 
     /* Constructor. */
-    constructor(private memberSocketService: MemberSocketService,
-                private logService: LogService,
-                private ngRedux: NgRedux<any>) {
-    }
-
-    static setRequestedCentralisationReportsList(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(ofiClearRequestedCentralisationHistoryReports());
-        } else {
-            ngRedux.dispatch(ofiSetRequestedCentralisationHistoryReports());
-        }
-    }
-
-    static defaultRequestCentralisationReportsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedCentralisationHistoryReports());
-
-        // Request the list.
-        const asyncTaskPipe = ofiReportsService.requestCentralisationReportsList({
-            search: '',
-        });
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_CENTRALIZATION_REPORTS_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
+    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
     }
 
     static setRequestedAmHoldersList(boolValue: boolean, ngRedux: NgRedux<any>) {
@@ -172,21 +96,6 @@ export class OfiReportsService {
 
         ngRedux.dispatch(SagaHelper.runAsync(
             [OFI_SET_AM_HOLDERS_LIST],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
-    }
-
-    static defaultRequestInvHoldingsList(ofiReportsService: OfiReportsService, ngRedux: NgRedux<any>, invHoldingsDetailRequestData: OfiInvHoldingsDetailRequestData) {
-        // Set the state flag to true. so we do not request it again.
-        ngRedux.dispatch(ofiSetRequestedInvHoldings());
-
-        // Request the list.
-        const asyncTaskPipe = ofiReportsService.requestInvHoldings(invHoldingsDetailRequestData);
-
-        ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_INV_HOLDINGS_LIST],
             [],
             asyncTaskPipe,
             {},
@@ -307,11 +216,24 @@ export class OfiReportsService {
         ));
     }
 
-    /* CENTRALISATION FUNDS */
+    fetchInvestorHoldingList(data) {
+        const asyncTaskPipe = this.requestInvestorHoldingList(data);
 
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [OFI_SET_INV_HOLDINGS_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+            () => {
+                this.ngRedux.dispatch(ofiSetRequestedInvHoldings());
+            },
+        ));
+    }
+
+    /* CENTRALISATION FUNDS */
     requestCentralisationReportsFundsList(): any {
 
-        const messageBody: OfiMemberNodeBody = {
+        const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimplefunds',
             token: this.memberSocketService.token,
         };
@@ -319,7 +241,7 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestCentralisationReportsFundsDetailsList(data: CentralisationFundsData): any {
+    requestCentralisationReportsFundsDetailsList(data: CentralisationFundsRequestData): any {
         const messageBody: CentralisationRequestFundsBody = {
             RequestName: 'izncentralisationgetfunds',
             token: this.memberSocketService.token,
@@ -341,7 +263,7 @@ export class OfiReportsService {
 
     requestCentralisationReportsSharesList(): any {
 
-        const messageBody: OfiMemberNodeBody = {
+        const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimpleshares',
             token: this.memberSocketService.token,
         };
@@ -349,7 +271,7 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestCentralisationReportsSharesDetailsList(data: CentralisationSharesData): any {
+    requestCentralisationReportsSharesDetailsList(data: CentralisationSharesRequestData): any {
         const messageBody: CentralisationRequestSharesBody = {
             RequestName: 'izncentralisationgetshares',
             token: this.memberSocketService.token,
@@ -371,7 +293,7 @@ export class OfiReportsService {
 
     requestPrecentralisationReportsFundsList(): any {
 
-        const messageBody: OfiMemberNodeBody = {
+        const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimplefunds',
             token: this.memberSocketService.token,
         };
@@ -379,7 +301,7 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestPrecentralisationReportsFundsDetailsList(data: PrecentralisationFundsData): any {
+    requestPrecentralisationReportsFundsDetailsList(data: PrecentralisationFundsRequestData): any {
         const messageBody: PrecentralisationRequestFundsBody = {
             RequestName: 'iznprecentralisationgetfunds',
             token: this.memberSocketService.token,
@@ -401,7 +323,7 @@ export class OfiReportsService {
 
     requestPrecentralisationReportsSharesList(): any {
 
-        const messageBody: OfiMemberNodeBody = {
+        const messageBody: MemberNodeMessageBody = {
             RequestName: 'izngetsimpleshares',
             token: this.memberSocketService.token,
         };
@@ -409,7 +331,7 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestPrecentralisationReportsSharesDetailsList(data: PrecentralisationSharesData): any {
+    requestPrecentralisationReportsSharesDetailsList(data: PrecentralisationSharesRequestData): any {
         const messageBody: PrecentralisationRequestSharesBody = {
             RequestName: 'iznprecentralisationgetshares',
             token: this.memberSocketService.token,
@@ -429,7 +351,7 @@ export class OfiReportsService {
 
     /* END CENTRA + PRECENTRA */
 
-    requestCentralisationReportsList(data: CentralisationReportsData): any {
+    requestCentralisationReportsList(data: CentralisationReportsRequestData): any {
 
         const messageBody: OfiCentralisationReportsRequestBody = {
             RequestName: 'getallshareinfo',
@@ -438,41 +360,6 @@ export class OfiReportsService {
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    requestBaseCentralisationHistory(fundShareID: any): any {
-
-        const messageBody: OfiBaseCentralisationHistoryRequestBody = {
-            RequestName: 'getSingleShareBaseInfo',
-            token: this.memberSocketService.token,
-            fundShareID: fundShareID,
-        };
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_BASE_CENTRALIZATION_HISTORY],
-            [],
-            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            {},
-        ));
-    }
-
-    requestCentralisationHistory(data: CentralisationHistoryData): any {
-
-        const messageBody: OfiCentralisationHistoryRequestBody = {
-            RequestName: 'getSingleShareInfo',
-            token: this.memberSocketService.token,
-            fundShareID: data.fundShareID,
-            dateFrom: data.dateFrom,
-            dateTo: data.dateTo,
-            dateRange: data.dateRange,
-        };
-
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [OFI_SET_CENTRALIZATION_HISTORY],
-            [],
-            createMemberNodeSagaRequest(this.memberSocketService, messageBody),
-            {},
-        ));
     }
 
     requestAmHoldersList(): any {
@@ -485,13 +372,12 @@ export class OfiReportsService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    requestInvHoldings(data: InvHoldingsData): any {
-
-        const messageBody: OfiInvHoldingsDetailRequestBody = {
+    requestInvestorHoldingList(requestData: InvestorHoldingRequestData): any {
+        const messageBody: InvestorHoldingRequestBody = {
             RequestName: 'izngetinvestorholding',
             token: this.memberSocketService.token,
-            walletID: data.walletID,
-            amCompanyID: data.amCompanyID,
+            walletID: requestData.walletID,
+            amCompanyID: requestData.amCompanyID,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);

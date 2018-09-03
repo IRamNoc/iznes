@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MemberSocketService } from '@setl/websocket-service';
-import { SagaHelper, Common } from '@setl/utils';
+import { SagaHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 import { Subject } from 'rxjs/Subject';
@@ -8,66 +8,40 @@ import { takeUntil } from 'rxjs/operators';
 
 import {
     ManagementCompanyRequestMessageBody,
+    ManagementCompanyRequestData,
     SaveManagementCompanyRequestBody,
     UpdateManagementCompanyRequestBody,
+    DeleteManagementCompanyRequestData,
     DeleteManagementCompanyRequestBody,
 } from './management-company.service.model';
+
 import {
     setRequestedManagementCompany,
-    clearRequestedManagementCompany,
     SET_MANAGEMENT_COMPANY_LIST,
-    setRequestedINVManagementCompany,
-    clearRequestedINVManagementCompany,
+    setRequestedInvestorManagementCompany,
     SET_INV_MANAGEMENT_COMPANY_LIST,
 } from '../../../ofi-store/ofi-product/management-company/management-company-list/actions';
 
-interface ManagementCompanyData {
-    companyID: any;
-    companyName: any;
-    emailAddress: any;
-    country: any;
-    addressPrefix: any;
-    postalAddressLine1: any;
-    postalAddressLine2: any;
-    city: any;
-    stateArea: any;
-    postalCode: any;
-    taxResidence: any;
-    registrationNum: any;
-    supervisoryAuthority: any;
-    numSiretOrSiren: any;
-    creationDate: any;
-    shareCapital: any;
-    commercialContact: any;
-    operationalContact: any;
-    directorContact: any;
-    lei: any;
-    bic: any;
-    giinCode: any;
-    logoName: any;
-    logoURL: any;
-}
-
-interface DeleteManagementCompany {
-    companyID: any;
-}
-
 @Injectable()
 export class OfiManagementCompanyService {
-
-    accountID = 0;
+    accountId = 0;
     isManagementCompanyRequested: boolean;
+    isInvestorManagementCompanyRequested: boolean;
 
     unSubscribe: Subject<any> = new Subject();
 
+    @select(['user', 'authentication', 'isLogin']) isLogin$;
     @select(['user', 'myDetail', 'accountId']) getMyAccountId;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'requested']) reqManagementCompany$;
-    @select(['user', 'authentication', 'isLogin']) isLogin$;
+    @select([
+        'ofi',
+        'ofiProduct',
+        'ofiManagementCompany',
+        'investorManagementCompanyList',
+        'invRequest',
+    ]) reqInvestorManagementCompany$;
 
-    constructor(
-        private memberSocketService: MemberSocketService,
-        private ngRedux: NgRedux<any>,
-    ) {
+    constructor(private memberSocketService: MemberSocketService, private ngRedux: NgRedux<any>) {
         this.isLogin$.subscribe((isLogin) => {
             if (isLogin) {
                 this.initSubscribers();
@@ -83,26 +57,23 @@ export class OfiManagementCompanyService {
         .pipe(
             takeUntil(this.unSubscribe),
         )
-        .subscribe(getMyAccountId => this.myAccountId(getMyAccountId));
+        .subscribe(getMyAccountId => this.setAccountId(getMyAccountId));
 
         this.reqManagementCompany$
         .pipe(
             takeUntil(this.unSubscribe),
         )
         .subscribe(v => this.isManagementCompanyRequested = v);
+
+        this.reqInvestorManagementCompany$
+        .pipe(
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(v => this.isInvestorManagementCompanyRequested = v);
     }
 
-    myAccountId(accountId) {
-        this.accountID = accountId;
-    }
-
-    static setRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(clearRequestedManagementCompany());
-        } else {
-            ngRedux.dispatch(setRequestedManagementCompany());
-        }
+    setAccountId(accountId: number) {
+        this.accountId = accountId;
     }
 
     getManagementCompanyList() {
@@ -126,17 +97,8 @@ export class OfiManagementCompanyService {
         ));
     }
 
-    static setINVRequested(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(clearRequestedINVManagementCompany());
-        } else {
-            ngRedux.dispatch(setRequestedINVManagementCompany());
-        }
-    }
-
-    fetchManagementCompanyForInvestor(requestAll = false) {
-        const asyncTaskPipe = this.requestINVManagementCompanyList(requestAll);
+    fetchInvestorManagementCompanyList(requestAll: boolean = false) {
+        const asyncTaskPipe = this.requestInvestorManagementCompanyList(requestAll);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_INV_MANAGEMENT_COMPANY_LIST],
@@ -144,16 +106,16 @@ export class OfiManagementCompanyService {
             asyncTaskPipe,
             {},
             () => {
-                this.ngRedux.dispatch(setRequestedINVManagementCompany());
+                this.ngRedux.dispatch(setRequestedInvestorManagementCompany());
             },
         ));
     }
 
-    requestINVManagementCompanyList(requestAll): any {
+    requestInvestorManagementCompanyList(requestAll: boolean): any {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'izngetmanagementcompanylistforinvestor',
             token: this.memberSocketService.token,
-            accountID: requestAll ? 0 : this.accountID,
+            accountID: requestAll ? 0 : this.accountId,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
@@ -163,18 +125,17 @@ export class OfiManagementCompanyService {
         const messageBody: ManagementCompanyRequestMessageBody = {
             RequestName: 'getManagementCompanyList',
             token: this.memberSocketService.token,
-            accountID: this.accountID,
+            accountID: this.accountId,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    saveManagementCompany(mcData: ManagementCompanyData, ngRedux: NgRedux<any>): any {
-
+    saveManagementCompany(mcData: ManagementCompanyRequestData): any {
         const messageBody: SaveManagementCompanyRequestBody = {
             RequestName: 'newmanagementcompany',
             token: this.memberSocketService.token,
-            entityId: this.accountID,   // entityId = accountID (name just changed)
+            entityId: this.accountId,   // entityId = accountID (name just changed)
             companyName: mcData.companyName,
             emailAddress: mcData.emailAddress,
             country: mcData.country,
@@ -203,23 +164,11 @@ export class OfiManagementCompanyService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
-    deleteManagementCompany(mcData: DeleteManagementCompany, ngRedux: NgRedux<any>): any {
-
-        const messageBody: DeleteManagementCompanyRequestBody = {
-            RequestName: 'deletemanagementcompany',
-            token: this.memberSocketService.token,
-            companyID: mcData.companyID
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    updateManagementCompany(mcData: ManagementCompanyData, ngRedux: NgRedux<any>): any {
-
-        const messageBody: UpdateManagementCompanyRequestBody = {       // where is the companyID ?
+    updateManagementCompany(mcData: ManagementCompanyRequestData): any {
+        const messageBody: UpdateManagementCompanyRequestBody = {
             RequestName: 'updatemanagementcompany',
             token: this.memberSocketService.token,
-            entityId: this.accountID,   // entityId = accountID (name just changed)
+            entityId: this.accountId,
             companyID: mcData.companyID,
             companyName: mcData.companyName,
             emailAddress: mcData.emailAddress,
@@ -249,4 +198,13 @@ export class OfiManagementCompanyService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    deleteManagementCompany(mcData: DeleteManagementCompanyRequestData): any {
+        const messageBody: DeleteManagementCompanyRequestBody = {
+            RequestName: 'deletemanagementcompany',
+            token: this.memberSocketService.token,
+            companyID: mcData.companyID,
+        };
+
+        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+    }
 }

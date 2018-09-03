@@ -96,11 +96,13 @@ export class NewKycValidationComponent implements OnInit, OnDestroy {
             this.managementCompanyList$
         )
             .pipe(
-                takeUntil(this.unsubscribe)
+                takeUntil(this.unsubscribe),
             )
             .subscribe(([requests, managementCompanyList]) => {
-                if (!isEmpty(requests) && !isEmpty(managementCompanyList)) {
-                    this.getCompanyNames(requests, managementCompanyList);
+                const managementCompanies = managementCompanyList.toJS();
+
+                if (!isEmpty(requests) && !isEmpty(managementCompanies)) {
+                    this.getCompanyNames(requests, managementCompanies);
                 }
             })
         ;

@@ -1,17 +1,17 @@
 /* Core/Redux imports. */
 import {Action} from 'redux';
 /* Local types. */
-import {AmHoldersDetails, InvHoldingsDetails, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
+import {AmHoldersDetails, InvestorHoldingItem, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
 import * as ofiAmHoldersActions from './actions';
 import {List} from 'immutable';
-import {fromJS, Map} from 'immutable';
+import {Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
 const initialState: OfiHolderState = {
     amHoldersList: List<AmHoldersDetails>(),
     requested: false,
-    invHoldingsList: List<InvHoldingsDetails>(),
+    invHoldingsList: List<InvestorHoldingItem>(),
     invRequested: false,
     holderDetailRequested: false,
     shareHolderDetail: null,
@@ -39,7 +39,7 @@ export const OfiAmHoldersListReducer = (state: OfiHolderState = initialState, ac
             return handleGetShareHolderDetail(state, action);
 
         case ofiAmHoldersActions.OFI_SET_INV_HOLDINGS_LIST:
-            return handleGetInvHoldings(state, action);
+            return handleGetInvestorHoldingList(state, action);
 
         case ofiAmHoldersActions.OFI_SET_REQUESTED_INV_HOLDINGS:
             return toggleInvRequestState(state, true);
@@ -95,39 +95,18 @@ const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDet
     return response;
 }
 
-const handleGetInvHoldings = (state, action) => {
-    const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-    const invHoldingsList = formatDataResponseInv(data);
+const handleGetInvestorHoldingList = (state, action) => {
+    const response = action.payload[1].Data;
+    let invHoldingsList = List();
 
-    return Object.assign({}, state, {
-        invHoldingsList,
-    });
-};
+    if (response.length > 0) {
+        response.forEach((it) => {
+            const item = Map({ ...it });
+            invHoldingsList = invHoldingsList.push(item);
+        });
+    }
 
-const formatDataResponseInv = (rawData: Array<AmHoldersDetails>): List<AmHoldersDetails> => {
-    const response = fromJS(rawData);
-
-    const invHoldingsList = Map(response.reduce(
-        function (result, item, idx) {
-            result[idx] = {
-                amManagementCompanyID: item.get('amManagementCompanyID', 0),
-                companyName: item.get('companyName', ''),
-                shareID: item.get('shareID', 0),
-                fundShareName: item.get('fundShareName', ''),
-                isin: item.get('isin', ''),
-                shareClassCurrency: item.get('shareClassCurrency', ''),
-                latestNav: item.get('latestNav', 0),
-                portfolioAddr: item.get('portfolioAddr', ''),
-                portfolioLabel: item.get('portfolioLabel', ''),
-                quantity: item.get('quantity', 0),
-                amount: item.get('amount', 0),
-                ratio: item.get('ratio', 0),
-            };
-            return result;
-        },
-        {}));
-
-    return invHoldingsList.toJS();
+    return { ...state, invHoldingsList };
 };
 
 function toggleRequestState(state: OfiHolderState, requested: boolean): OfiHolderState {

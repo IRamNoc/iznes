@@ -24,7 +24,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     private kycList;
     private managementCompaniesExtract;
 
-    managementCompanies;
+    managementCompanies: Array<any> = [];
     connectedWallet;
 
     preselectedManagementCompany: any = {};
@@ -98,10 +98,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         let companyCombination$ = combineLatest(this.managementCompanyList$, this.myKycList$)
             .pipe(
                 rxFilter(([managementCompanies, kycList]) => {
-                    return !isEmpty(managementCompanies);
+                    return managementCompanies && managementCompanies.size > 0;
                 }),
                 tap(([managementCompanies, kycList]) => {
-                    this.managementCompanies = keyBy(managementCompanies, 'companyID');
+                    this.managementCompanies = keyBy(managementCompanies.toJS(), 'companyID');
                     this.kycList = kycList;
                 }),
                 takeUntil(this.unsubscribe)
@@ -109,8 +109,10 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
         ;
 
         companyCombination$.subscribe(([managementCompanies, kycList]) => {
+                const managementCompanyList = managementCompanies.toJS();
+
                 this.managementCompaniesExtract = this.requestsService
-                    .extractManagementCompanyData(managementCompanies, kycList);
+                    .extractManagementCompanyData(managementCompanyList, kycList);
             })
         ;
 
@@ -172,7 +174,7 @@ export class NewKycSelectAmcComponent implements OnInit, OnDestroy {
     }
 
     getAssetManagementCompanies() {
-        this.ofiManagementCompanyService.fetchManagementCompanyForInvestor(true);
+        this.ofiManagementCompanyService.fetchInvestorManagementCompanyList(true);
     }
 
     onRegisteredChange() {
