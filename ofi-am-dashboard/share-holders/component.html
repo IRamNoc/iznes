@@ -142,10 +142,10 @@
                 <clr-dg-column>{{'Number of units' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column>{{'AUM' | translate}}
+                <clr-dg-column>{{'AUI (Settled)' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}
 
                 </clr-dg-column>
                 <clr-dg-column>{{'Number of holders' | translate}}
@@ -271,7 +271,7 @@
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>
-                                    <b>{{'Fund AUM' | translate}}</b>
+                                    <b>{{'Fund AUI' | translate}}</b>
                                 </label>
                                 <div>
                                     <span class="readonly-field">{{fundsAUM | moneyValue:2}}</span>
@@ -299,15 +299,13 @@
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'AUI (Settled)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of holdersFundData">
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.portfolio}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.quantity | moneyValue:5}}</clr-dg-cell>
                     <clr-dg-cell>{{item.amount | moneyValue:2}}</clr-dg-cell>
                     <clr-dg-cell>{{item.fundRatio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>
@@ -363,7 +361,7 @@
                         </div>
                         <div class="form-group col-lg-3">
                             <label>
-                                <b>{{'Share AUM' | translate}}</b>
+                                <b>{{'Share AUI' | translate}}</b>
                             </label>
                             <div>
                                 <span class="readonly-field">{{sharesAUM | moneyValue:2}}</span>
@@ -404,8 +402,8 @@
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'AUI (Settled)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of holdersShareData">
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
