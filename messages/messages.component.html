@@ -111,12 +111,12 @@
                 </setl-message-attachment>
             </p>
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'formAction'">
-                <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
+                <setl-message-form-action [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId">
                 </setl-message-form-action>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'connection'">
-                <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="currentWalletId" [mailId]="currentMessage.mailId">
+                <setl-message-connection [config]="currentMessage.action" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId">
                 </setl-message-connection>
             </p>
 
@@ -134,7 +134,7 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'poaRequest'">
-                <setl-message-poa [data]="currentMessage.action.data" [isActed]="currentMessage.isActed" [walletId]="connectedWalletId" [mailId]="currentMessage.mailId"></setl-message-poa>
+                <setl-message-poa [data]="currentMessage.action.data" [isActed]="currentMessage.isActed" [walletId]="walletId" [mailId]="currentMessage.mailId"></setl-message-poa>
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
@@ -146,7 +146,7 @@
         </div>
 
         <div class="message_view_menu">
-            <button *ngIf="currentMessage.senderId != connectedWalletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
+            <button *ngIf="currentMessage.senderId != walletId && currentMessage.senderId != -1" id="messagesReply" (click)="replyMessage()">
                 <i class="fa fa-reply"></i> <span mltag="txt_reply">Reply</span></button>
             <button id="messagesClose" (click)="closeMessage()"><i class="fa fa-times"></i>
                 <span mltag="txt_close">Close</span></button>

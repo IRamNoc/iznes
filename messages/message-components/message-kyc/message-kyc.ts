@@ -17,7 +17,7 @@ export const kycMessages = {
             buttonLabel: 'Accéder à la page "Valider / Rejeter / Demander plus d\'informations"',
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
-        }
+        },
     },
     kycInvestorNo: {
         en: {
@@ -43,7 +43,7 @@ export const kycMessages = {
             buttonLabel: 'Accéder à la page "Valider/ Rejeter / Demander plus d\'informations"',
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
-        }
+        },
     },
     kycUserFinished: {
         en: {
@@ -79,7 +79,7 @@ export const kycMessages = {
             buttonLabel: 'Cliquez ici pour compléter votre demande KYC sur IZNES',
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
-        }
+        },
     },
     kycContinuedFromRequest: {
         en: {
@@ -97,7 +97,7 @@ export const kycMessages = {
             buttonLabel: 'Gérer la demande',
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
-        }
+        },
     },
     kycContinuedFromAskMoreInfo: {
         en: {
@@ -115,6 +115,6 @@ export const kycMessages = {
             buttonLabel: 'Gérer la demande',
             thanks: 'Merci,',
             signature: 'L\'équipe IZNES.',
-        }
-    }
+        },
+    },
 };

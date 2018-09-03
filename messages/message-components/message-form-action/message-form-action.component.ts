@@ -1,13 +1,12 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {Observable} from 'rxjs';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {Common, SagaHelper} from '@setl/utils';
-import {WalletNodeSocketService} from '@setl/websocket-service';
-
-import {MessagesService} from '../../../messages.service';
-import {MessageAction, MessageActionsConfig} from './message-form-action.model';
-import {SetlMessageFormActionService} from './message-form-action.service';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { NgRedux, select } from '@angular-redux/store';
+import { Observable } from 'rxjs/Observable';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { Common, SagaHelper } from '@setl/utils';
+import { WalletNodeSocketService } from '@setl/websocket-service';
+import { MessagesService } from '../../../messages.service';
+import { MessageAction, MessageActionsConfig } from './message-form-action.model';
+import { SetlMessageFormActionService } from './message-form-action.service';
 /**
  * SETL Message Action Component
  *
@@ -18,10 +17,9 @@ import {SetlMessageFormActionService} from './message-form-action.service';
 @Component({
     selector: 'setl-message-form-action',
     templateUrl: './message-form-action.component.html',
-    styleUrls: ['./message-form-action.component.css']
+    styleUrls: ['./message-form-action.component.css'],
 })
 export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
-    
     @Input() config: MessageActionsConfig;
     @Input() isActed: boolean;
     @Input() walletId: number;
@@ -36,5 +34,4 @@ export class SetlMessageFormActionComponent implements OnInit, OnDestroy {
     onActionClick(action: MessageAction): void {
         this.service.doAction(action, this.walletId, this.mailId);
     }
-
 }
