@@ -513,6 +513,9 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     changePass(formValues) {
+        // Show loading alert
+        this.alertsService.create('loading');
+
         const asyncTaskPipe = this.myUserService.saveNewPassword({
             oldPassword: formValues.oldPassword,
             newPassword: formValues.password,
@@ -527,21 +530,20 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
                 {},
                 (data) => {
                     this.changePassForm.reset();
-                    this.alertsService.create('success', `
+                    this.showAlert('success', `
                         Your password has been successfully changed!
                     `);
                     const token = _.get(data, '[1].Data[0].Token', '');
                     this.memberSocketService.token = token;
                 },
                 (data) => {
-                    this.alertsService.create('error', `
+                    console.error('error: ', data);
+                    this.showAlert('error', `
                         Password could not be changed. Please check and try again.
                     `);
                 }, // fail
             ),
-        )
-        ;
-
+        );
     }
 
     updateState() {
@@ -549,13 +551,6 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         const newWalletId = getConnectedWallet(newState);
 
         const myDetails = getMyDetail(newState);
-
-        // console.log(newWalletId);
-        // console.log(myDetails);
-    }
-
-    myFirstName(firstName) {
-        // console.log(firstName);
     }
 
     myUserDetails(userDetails) {
@@ -583,8 +578,8 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
     }
 
     submitDetails(formValues) {
-        console.log(formValues);
-        console.log(JSON.stringify(formValues.country));
+        // Show loading alert
+        this.alertsService.create('loading');
 
         const asyncTaskPipe = this.myUserService.saveMyUserDetails({
             displayName: formValues.displayName,
@@ -607,13 +602,12 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
             asyncTaskPipe,
             (data) => {
-                // console.log('success: ', data);
-                this.alertsService.create('success', `Your form has been saved successfully!`);
+                this.showAlert('success', `User details have been successfully updated`);
 
             },
             (data) => {
-                // console.log('error: ', data);
-                this.alertsService.create('error', JSON.stringify(data));
+                console.error('error: ', data);
+                this.showAlert('error', 'Failed to update user details');
             }),
         );
     }
@@ -653,5 +647,19 @@ export class SetlMyAccountComponent implements OnDestroy, OnInit {
         const formControl: AbstractControl = this.changePassForm.get(path);
 
         return formControl.touched;
+    }
+
+    showAlert(type, message) {
+        const colour = type === 'error' ? 'danger' : type;
+
+        this.alertsService.create(type, `
+              <table class="table grid">
+                  <tbody>
+                      <tr>
+                          <td class="text-center text-${colour}">${message}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          `);
     }
 }
