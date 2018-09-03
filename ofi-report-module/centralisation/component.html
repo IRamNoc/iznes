@@ -14,7 +14,7 @@
                 <p>
                     {{'Please find below the centralisation report at fund level.' | translate}}
                     <br>
-                    {{'If you want you can filter this report by a specific NAV Date / Order Date / Settlement Date or a range of date and/or by Fund.' | translate}}
+                    {{'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by Fund.' | translate}}
                 </p>
 
                 <form [formGroup]="filtersForm" id="centra-funds-filters">
@@ -85,7 +85,6 @@
                                 [scheme]="colorScheme"
                                 [results]="pieChartDatas">
                             </ngx-charts-pie-chart>
-                            <!--[labels]="true"-->
                         </div>
                     </div>
                 </form>
@@ -116,7 +115,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'fundAum'" clrDgSortIcon clrDgSortNoSearch>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUM' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUI (Traded)' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'subscriptionAmount'" clrDgSortIcon>
@@ -132,7 +131,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'netAmountRatio'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount' | translate}}(%)
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (% AUI)' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
@@ -157,11 +156,7 @@
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
                             <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
-                            <!--<clr-dg-column-toggle-button clrType="selectAll">-->
-                            <!--<button type="button" class="btn btn-primary">-->
-                            <!--Select All-->
-                            <!--</button>-->
-                            <!--</clr-dg-column-toggle-button>-->
+
                             <clr-dg-column-toggle-button clrType="ok">
                                 <button type="button" class="btn btn-primary" style="padding:0 20px">
                                     <clr-icon shape="check"></clr-icon>
@@ -185,7 +180,7 @@
                 <p>
                     {{'Please find below the centralisation report at share level.' | translate}}
                     <br>
-                    {{'If you want you can filter this report by a specific NAV Date / Order Date / Settlement Date or a range of date and/or by share.' | translate}}
+                    {{'If you want you can filter this report by a specific NAV Date / Settlement Date or a range of date and/or by share.' | translate}}
                 </p>
 
                 <form [formGroup]="filtersForm" id="centra-shares-filters">
@@ -257,7 +252,6 @@
                                 [customColors]="customColors"
                                 [results]="pieChartDatas">
                             </ngx-charts-pie-chart>
-                            <!--[labels]="true"-->
                         </div>
                     </div>
                 </form>
@@ -284,7 +278,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'isin'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISN' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'ISIN' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareCurrency'" clrDgSortIcon>
@@ -296,7 +290,7 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareAum'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUM' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'AUI (Traded)' | translate}}
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'amount'" clrDgSortIcon>
@@ -304,13 +298,10 @@
                         </ng-container>
                     </clr-dg-column>
                     <clr-dg-column [clrDgField]="'shareRatio'" clrDgSortIcon>
-                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amout (%)' | translate}}
+                        <ng-container *clrDgHideableColumn="{hidden: false}">{{'Net Amount (% AUI)' | translate}}
                         </ng-container>
                     </clr-dg-column>
-                    <!--<clr-dg-column [clrDgField]="'orderStatus'" clrDgSortIcon>-->
-                    <!--<ng-container *clrDgHideableColumn="{hidden: false}">{{'Status' | translate}}-->
-                    <!--</ng-container>-->
-                    <!--</clr-dg-column>-->
+
                     <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
 
                     <clr-dg-row *clrDgItems="let data of sharesDetails.shares" [clrDgItem]="data">
@@ -324,12 +315,6 @@
                         <clr-dg-cell>{{data.shareAum | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
-                        <!--<clr-dg-cell>-->
-                        <!--<span *ngIf="data.orderStatus === 'Waiting NAV'" class="label label-info">{{'Waiting NAV' | translate}}</span>-->
-                        <!--<span *ngIf="data.orderStatus === 'Settled'" class="label label-info">{{'Settled' | translate}}</span>-->
-                        <!--<span *ngIf="data.orderStatus === 'Cancelled'" class="label label-info">{{'Cancelled' | translate}}</span>-->
-                        <!--<span *ngIf="data.orderStatus === 'Unsettled'" class="label label-info">{{'Unsettled' | translate}}</span>-->
-                        <!--</clr-dg-cell>-->
                         <clr-dg-cell>
                             <button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button>
                         </clr-dg-cell>
@@ -374,11 +359,7 @@
                         <!-- Optional customization of hide/show columns toggle -->
                         <clr-dg-column-toggle>
                             <clr-dg-column-toggle-title>{{'Show/hide fields:' | translate}}</clr-dg-column-toggle-title>
-                            <!--<clr-dg-column-toggle-button clrType="selectAll">-->
-                            <!--<button type="button" class="btn btn-primary">-->
-                            <!--Select All-->
-                            <!--</button>-->
-                            <!--</clr-dg-column-toggle-button>-->
+
                             <clr-dg-column-toggle-button clrType="ok">
                                 <button type="button" class="btn btn-primary" style="padding:0 20px">
                                     <clr-icon shape="check"></clr-icon>
