@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ContractsComponent } from '@setl/core-contracts/contracts.component';
 import { ContractsDvpComponent } from '@setl/core-contracts/dvp/dvp.component';
 import { ClarityModule } from '@clr/angular';
-import { SelectModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
+import { SelectModule, SetlPipesModule, SetlComponentsModule, SetlDirectivesModule } from '@setl/utils';
 import {
     FormsModule,
     ReactiveFormsModule,
@@ -20,6 +20,7 @@ import { DVPContractService } from './dvp/dvp.service';
         ClarityModule.forRoot(),
         SetlPipesModule,
         SetlComponentsModule,
+        SetlDirectivesModule,
     ],
     declarations: [
         ContractsComponent,

@@ -29,7 +29,8 @@
             <clr-dg-column mltag="txt_status" clrDgSortIcon>Status</clr-dg-column>
             <clr-dg-column class="right" mltag="txt_actions" clrDgSortIcon>Actions</clr-dg-column>
             <clr-dg-row *clrDgItems="let contract of contracts; let i = index">
-                <clr-dg-cell><span id="contract-{{contract.index}}"><span mltag="txt_contract">Contract</span> {{contract.name}}</span></clr-dg-cell>
+                <clr-dg-cell><span id="contract-{{contract.index}}"><span mltag="txt_contract">Contract</span> {{contract.name}}</span>
+                </clr-dg-cell>
                 <clr-dg-cell>{{contract.issuingaddress_label}}</clr-dg-cell>
                 <clr-dg-cell>{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</clr-dg-cell>
                 <clr-dg-cell>
@@ -77,24 +78,28 @@
                             </div>
                             <div class="col-sm-6">
                                 <label for="issuer" mltag="txt_issuer">Issuer</label>
-                                <input type="text" id="issuer"size="45" disabled [value]="contract.issuingaddress">
+                                <input type="text" id="issuer" size="45" disabled [value]="contract.issuingaddress">
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="expiryDate" mltag="txt_expirydate">Expiry Date</label>
-                                <input type="text" id="startDate" size="45" disabled value="{{contract.startdate * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+                                <input type="text" id="startDate" size="45" disabled value="{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-6" *ngIf="contract.startdate">
                                 <label for="startDate" mltag="txt_startdate">Start Date</label>
-                                <input type="text" id="expiryDate"size="45" disabled value="{{contract.expiry * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
+                                <input type="text" id="expiryDate" size="45" disabled value="{{contract.startdate * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}">
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-sm-6">
                                 <label for="useEncumbrance" mltag="txt_useencumbrance">Use Encumbrance</label>
-                                <div *ngIf="contract.encumbrance.use"><span class="label label-success" style="padding: 10px; margin-top: 10px !important;"><i class="fa fa-check" style="margin-right: 5px;"></i> Reference: {{contract.encumbrance.reference}}</span></div>
-                                <div *ngIf="!contract.encumbrance.use"><span class="label label-danger" style="padding: 10px; margin-right: 5px; margin-top: 10px !important;"><i class="fa fa-times" style="margin-right: 5px;"></i> No Encumbrance</span></div>
+                                <div *ngIf="contract.encumbrance.use">
+                                    <span class="label label-success" style="padding: 10px; margin-top: 10px !important;"><i class="fa fa-check" style="margin-right: 5px;"></i> Reference: {{contract.encumbrance.reference}}</span>
+                                </div>
+                                <div *ngIf="!contract.encumbrance.use">
+                                    <span class="label label-danger" style="padding: 10px; margin-right: 5px; margin-top: 10px !important;"><i class="fa fa-times" style="margin-right: 5px;"></i> No Encumbrance</span>
+                                </div>
                             </div>
                             <div class="col-sm-6">
                                 <label for="useEncumbrance" mltag="txt_metadata">Metadata</label>
@@ -111,7 +116,9 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <h4 class="card-title"><i class="fa fa-user"></i> {{party.partyIdentifier}}</h4>
-                                <p class="card-text"><span class="label">{{party.sigAddress}}<span *ngIf="party.sigAddress_label != party.sigAddress">&nbsp;| {{party.sigAddress_label}}</span></span></p>
+                                <p class="card-text">
+                                    <span class="label">{{party.sigAddress}}<span *ngIf="party.sigAddress_label != party.sigAddress">&nbsp;| {{party.sigAddress_label}}</span></span>
+                                </p>
                             </div>
                             <div class="col-sm-6">
                                 <div class="pull-right">
@@ -222,16 +229,19 @@
                     <div class="card-block">
                         <div class="row">
                             <div class="col-xs-6">
-                                <h4 class="card-title"><i class="fa fa-bank" style="margin-right: 5px"></i> Encumbrance {{idx+1}}</h4>
+                                <h4 class="card-title">
+                                    <i class="fa fa-bank" style="margin-right: 5px"></i> Encumbrance {{idx+1}}</h4>
                             </div>
                             <div class="col-xs-6 text-right">
-                                <p class="card-text"><span class="label label-success">Reference {{encumbrance.reference}}</span></p>
+                                <p class="card-text">
+                                    <span class="label label-success">Reference {{encumbrance.reference}}</span></p>
                             </div>
                         </div>
                         <div class="row" style="margin-top: 10px">
                             <div class="col-xs-12">
                                 <p class="card-text">
-                                    <span class="label">{{encumbrance.fullAssetId}}</span> x <span style="font-family: monospace">{{encumbrance.amount|moneyValue}}</span>
+                                    <span class="label">{{encumbrance.fullAssetId}}</span> x
+                                    <span style="font-family: monospace">{{encumbrance.amount|moneyValue}}</span>
                                 </p>
                             </div>
                         </div>
@@ -250,16 +260,24 @@
                             <div class="row">
                                 <div class="col-xs-2"><span class="label label-success">beneficiary</span></div>
                                 <div class="col-xs-4"><span class="label">{{item.address}}</span></div>
-                                <div class="col-xs-3"><span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span></div>
-                                <div class="col-xs-3"><span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span></div>
+                                <div class="col-xs-3">
+                                    <span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span>
+                                </div>
                             </div>
                         </div>
                         <div class="list-group-item" *ngFor="let item of encumbrance.administrators">
                             <div class="row">
                                 <div class="col-xs-2"><span class="label label-info">administrator</span></div>
                                 <div class="col-xs-4"><span class="label">{{item.address}}</span></div>
-                                <div class="col-xs-3"><span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span></div>
-                                <div class="col-xs-3"><span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span></div>
+                                <div class="col-xs-3">
+                                    <span *ngIf="item.startUTC">{{item.startUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.startUTC">No Start</span>
+                                </div>
+                                <div class="col-xs-3">
+                                    <span *ngIf="item.endUTC">{{item.endUTC * 1000 | datex:'DD MMM YYYY HH:mm:ss'}}</span><span *ngIf="!item.endUTC">No End</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -290,7 +308,8 @@
         </div>
 
         <div class="form-group tx-view-header">
-            <button type="button" class="btn btn-primary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;Close</button>
+            <button type="button" class="btn btn-primary" (click)="closeTab(id)"><i class="fa fa-times"></i>&nbsp;Close
+            </button>
         </div>
     </div>
 </ng-template>

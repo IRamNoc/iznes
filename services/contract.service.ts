@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
 import { PartyService } from '../services/party.service';
 import { AuthorisationService } from '../services/authorisation.service';
-import { AuthorisationModel, ParameterItemModel, PayListItemModel, ReceiveListItemModel, EncumbranceModel, UseEncumbranceModel, PartyModel, ContractModel } from '../models';
+import {
+    AuthorisationModel,
+    ParameterItemModel,
+    PayListItemModel,
+    ReceiveListItemModel,
+    EncumbranceModel,
+    UseEncumbranceModel,
+    PartyModel,
+    ContractModel
+} from '../models';
 import { ParameterItemService } from '../services/parameterItem.service';
 import { EncumbranceService } from '../services/encumbrance.service';
 import { SagaHelper } from '@setl/utils';
@@ -95,7 +104,7 @@ export class ContractService {
                         _.each(contract.parties[partyIndex].receiveList, (receiveListItem) => {
                             if (typeof receiveListItem.quantity !== 'undefined') {
                                 contract.payees[partyIndex] += (+receiveListItem.quantity)
-                                .toFixed(2) +
+                                    .toFixed(2) +
                                     ` ${receiveListItem.assetId} | ${receiveListItem.namespace}`;
                             }
                         });
@@ -200,9 +209,6 @@ export class ContractService {
         contractJsonObject.contractdata.metadata = '{}';
 
         delete contractJsonObject.events;
-
-        // TODO: Fix this in DVP Component!
-        contractJsonObject.contractdata.parameters['nav'][2] = 0;
 
         return JSON.stringify(contractJsonObject);
     }

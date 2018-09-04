@@ -191,9 +191,9 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         this.toggleReturnAsset(false);
 
         this.createContractForm.controls[partyB].get('return_asset').valueChanges
-            .subscribe((value: boolean) => {
-                this.toggleReturnAsset(value);
-            });
+        .subscribe((value: boolean) => {
+            this.toggleReturnAsset(value);
+        });
     }
 
     private addPartiesToForm(): void {
@@ -207,7 +207,7 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             asset: new FormControl('', Validators.required),
             address: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
-            return_asset: new FormControl(false, Validators.required),
+            return_asset: new FormControl(false),
         });
     }
 
@@ -220,12 +220,12 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         if (value) {
             this.createContractForm
                 .controls[partyB]
-                .get('asset')
-                .setValidators(Validators.required);
+            .get('asset')
+            .setValidators(Validators.required);
             this.createContractForm
                 .controls[partyB]
-                .get('amount')
-                .setValidators(Validators.required);
+            .get('amount')
+            .setValidators(Validators.required);
         } else {
             this.createContractForm.controls[partyB].get('asset').clearValidators();
             this.createContractForm.controls[partyB].get('amount').clearValidators();
@@ -239,49 +239,12 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         return this.createContractForm.valid;
     }
 
-    getError(): { mltag: string, text: string }|false {
-        switch (true) {
-        case this.fieldHasError('creator'):
-            return {
-                mltag: 'txt_contracterror_creator',
-                text: 'Creator Address is Required',
-            };
-        case this.fieldHasError('expireDate'):
-            return {
-                mltag: 'txt_contracterror_expiredate',
-                text: 'Expire Date is Required',
-            };
-        case this.fieldHasError('expireTime'):
-            return {
-                mltag: 'txt_contracterror_expiretime',
-                text: 'Expire Time is Required',
-            };
-        case this.fieldHasError(partyA):
-            return {
-                mltag: 'txt_contracterror_partya',
-                text: 'Party A is invalid',
-            };
-        case this.fieldHasError(partyB):
-            return {
-                mltag: 'txt_contracterror_partyb',
-                text: 'Party B is invalid',
-            };
-        }
-
-        return false;
-    }
-
-    fieldHasError(field: string): boolean {
-        return !this.createContractForm.controls[field].valid &&
-            this.createContractForm.controls[field].touched;
-    }
-
     /**
      * Create Contract
      */
     createContract(): void {
-        if (!this.isFormValid()) {
-            console.log('Invalid form!');
+        if (this.createContractForm.invalid) {
+            this.showErrorModal('Please complete all details on the form correctly');
             return;
         }
 
@@ -290,12 +253,15 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             this.createContractForm.value,
             this.connectedWalletId,
             res => this.showResponseModal(res),
-            res => this.showErrorModal(res),
+            (res) => {
+                console.error('Fail', res);
+                this.showErrorModal('Failed to create contract');
+            },
         );
     }
 
     showResponseModal(createContractResponse) {
-        const expiryDate = 'Broken, Check Code';
+        const contractData = this.createContractForm.controls;
 
         this.alertsService.create('success', `
             <table class="table grid">
@@ -306,24 +272,30 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
                     </tr>
                     <tr>
                         <td class="left"><b>Creator Address:</b></td>
-                        <td><!-- createContractResponse.contractdata.issuingaddress --></td>
+                        <td>${contractData.creator.value[0].id}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Contract Expires:</b></td>
-                        <td>${expiryDate}</td>
+                        <td>${contractData.expireDate.value} ${contractData.expireTime.value}</td>
                     </tr>
                     <tr>
                         <td class="left"><b>Tx hash:</b></td>
-                        <td><!--  createContractResponse.hash.substring(0, 10)}...  --></td>
+                        <td>${createContractResponse.hash.substring(0, 10)}...</td>
                     </tr>
                 </tbody>
             </table>
         `);
     }
 
-    showErrorModal(data): void {
-        this.alertsService.create('error',
-                                  `${data[1].status}`);
+    showErrorModal(message): void {
+        this.alertsService.create('error', `
+        <table class="table grid">
+                <tbody>
+                    <tr>
+                        <td class="text-center text-danger">${message}</td>
+                    </tr>
+                </tbody>
+            </table>`);
     }
 
     ngOnDestroy() {
