@@ -8,7 +8,8 @@ export interface OfiAddSubPortfolioRequestBody extends OfiMemberNodeBody {
     token: string;
     walletId: number,
     name: string,
-    iban: string
+    iban: string,
+    type: string,
 }
 
 export interface OfiDeleteSubPortfolioRequestBody extends OfiMemberNodeBody {
