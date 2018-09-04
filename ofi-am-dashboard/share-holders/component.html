@@ -92,7 +92,6 @@
                     <ng-container *ngTemplateOutlet="staticAll"></ng-container>
                 </ng-container>
 
-
                 <!--Holders funds -->
                 <ng-container *ngIf="tabdata.type === 'funds'">
                     <ng-container *ngTemplateOutlet="staticFunds"></ng-container>
@@ -142,10 +141,10 @@
                 <clr-dg-column>{{'Number of units' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column>{{'AUM' | translate}}
+                <clr-dg-column>{{'AUI (Settled)' | translate}}
 
                 </clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}
 
                 </clr-dg-column>
                 <clr-dg-column>{{'Number of holders' | translate}}
@@ -228,14 +227,13 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
-                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}-->
-                    </clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
     </ng-template>
 
+    <!-- Fund level -->
     <ng-template #staticFunds>
         <div class="panel-body">
             <form [formGroup]="filtersForm" id="filters-funds-orders-form">
@@ -271,7 +269,7 @@
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>
-                                    <b>{{'Fund AUM' | translate}}</b>
+                                    <b>{{'Fund AUI' | translate}}</b>
                                 </label>
                                 <div>
                                     <span class="readonly-field">{{fundsAUM | moneyValue:2}}</span>
@@ -279,7 +277,7 @@
                             </div>
                             <div class="form-group col-lg-4">
                                 <label>
-                                    <b>{{'CCY' | translate}}</b>
+                                    <b>{{'Currency' | translate}}</b>
                                 </label>
                                 <div>
                                     <span class="readonly-field">{{fundsCCY}}</span>
@@ -299,37 +297,30 @@
                 <clr-dg-column>{{'Ranking' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'AUI (Settled)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of holdersFundData">
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
                     <clr-dg-cell>{{item.investorName}}</clr-dg-cell>
                     <clr-dg-cell>{{item.portfolio}}</clr-dg-cell>
-                    <clr-dg-cell>{{item.quantity | moneyValue:5}}</clr-dg-cell>
                     <clr-dg-cell>{{item.amount | moneyValue:2}}</clr-dg-cell>
                     <clr-dg-cell>{{item.fundRatio | moneyValue:2}}{{'%' | translate}}</clr-dg-cell>
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
-                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}-->
-                    </clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
     </ng-template>
 
+    <!-- Share level -->
     <ng-template #staticShares>
         <div class="panel-body">
             <form [formGroup]="filtersForm" id="filters-shares-orders-form">
                 <div class="form-horizontal">
                     <div class="row ">
-                        <!--<div class="col-lg-8">-->
-                        <!--<div class="row">-->
-                        <!---->
-                        <!--</div>-->
                         <div class="form-group col-lg-4">
                             <label>
                                 <b>{{'Top holders of this share:' | translate}}</b>
@@ -363,7 +354,7 @@
                         </div>
                         <div class="form-group col-lg-3">
                             <label>
-                                <b>{{'Share AUM' | translate}}</b>
+                                <b>{{'Share AUI' | translate}}</b>
                             </label>
                             <div>
                                 <span class="readonly-field">{{sharesAUM | moneyValue:2}}</span>
@@ -387,7 +378,7 @@
                         </div>
                         <div class="form-group col-lg-2">
                             <label>
-                                <b>{{'CCY' | translate}}</b>
+                                <b>{{'Currency' | translate}}</b>
                             </label>
                             <div>
                                 <span class="readonly-field">{{sharesCCY}}</span>
@@ -404,8 +395,8 @@
                 <clr-dg-column>{{'Investor' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Portfolio' | translate}}</clr-dg-column>
                 <clr-dg-column>{{'Quantity' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Asset (Fund CCY)' | translate}}</clr-dg-column>
-                <clr-dg-column>{{'Ratio (%)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'AUI (Settled)' | translate}}</clr-dg-column>
+                <clr-dg-column>{{'Ratio (% AUI)' | translate}}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let item of holdersShareData">
                     <clr-dg-cell>{{item.ranking}}</clr-dg-cell>
@@ -417,36 +408,10 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    <clr-dg-pagination #pagination [clrDgPageSize]="10">
-                        <!--{{pagination.firstItem + 1}} - {{pagination.lastItem + 1}} of {{pagination.totalItems}}-->
-                    </clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="10"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
     </ng-template>
 
 </section>
-
-<!-- NAV upload modal -->
-<clr-modal [(clrModalOpen)]="showModal" [clrModalClosable]="true">
-    <!--*ngIf="isFundLevel"-->
-    <h3 class="modal-title">
-        {{'Export Recorkeeping with share details?' | translate}}
-    </h3>
-
-    <div class="modal-body text-center">
-        <p *ngIf="gotDataToExport">
-            {{'Do you want to export the record keeping at funds level only,' | translate}}
-            <br>
-            {{'or do you want shares details too?' | translate}}
-        </p>
-        <p *ngIf="!gotDataToExport">
-            {{'You must first select a fund.' | translate}}
-        </p>
-    </div>
-
-    <div class="modal-footer">
-        <button id='exportFundOnly' type="button" class="btn btn-primary mr-1" [disabled]="!gotDataToExport" (click)="exportFile('funds', 0)">{{'Export at funds level only' | translate}}</button>
-        <button id='exportFundShares' type="button" class="btn btn-primary" [disabled]="!gotDataToExport" (click)="exportFile('shares', 0)">{{'Export with shares details' | translate}}</button>
-    </div>
-</clr-modal>
