@@ -16,7 +16,7 @@ import { ToasterModule, ToasterService } from 'angular2-toaster';
 
 import { ClarityModule } from '@clr/angular';
 import { MultilingualModule } from '@setl/multilingual';
-import { SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
+import { SetlDirectivesModule, SetlPipesModule, SetlComponentsModule } from '@setl/utils';
 
 @NgModule({
     declarations: [
@@ -33,6 +33,7 @@ import { SetlDirectivesModule, SetlPipesModule } from '@setl/utils';
         MultilingualModule,
         SetlDirectivesModule,
         SetlPipesModule,
+        SetlComponentsModule
     ],
     exports: [
         SetlLoginComponent,

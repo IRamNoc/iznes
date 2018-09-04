@@ -9,53 +9,74 @@
         <p class="login-subpara text-grey">{{ 'Please choose a password.' | translate }}</p>
 
         <form [formGroup]="signupForm" (ngSubmit)="signup(signupForm.value)" [class.error]="!signupForm.valid && signupForm.touched">
+
+            <!-- Username -->
             <div class="form-group">
+                <label for="su-username-field">
+                    {{'Username' | translate}}
+                </label>
                 <input id="su-username-field" class="form-control" type="text" name="username" disabled
                     [placeholder]="translate.translate('User name')"
                     formControlName="username"
-                    [class.error]="showFieldError(signupForm.controls['username'])">
+                    [class.error]="hasError('username', 'required')">
             </div>
 
+            <!-- Password -->
             <div class="form-group">
                 <div>
-                    <input id="su-password-field" class="form-control" name="password"
-                        [type]="(showPassword) ? 'text' : 'password'"
-                        [placeholder]="translate.translate('Password')"
-                        formControlName="password"
-                        [class.error]="showFieldError(signupForm.controls['password'])">
+                    <label for="su-password-field">
+                        {{'Password' | translate}}
+                        <app-password-tooltip></app-password-tooltip>
+                    </label>
+                    <div class="toggle-parent">
+                        <input id="su-password-field" class="form-control" name="password"
+                            [type]="(showPassword) ? 'text' : 'password'"
+                            [placeholder]="translate.translate('Password')"
+                            formControlName="password"
+                            [class.error]="hasError('password', 'required')">
 
-                    <span class="toggle-password-visible" (click)="toggleShowPasswords()" title="Show/hide passwords">
-                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                    </span>
+                        <span class="toggle-password" (click)="toggleShowPasswords()" title="Show/hide passwords">
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        </span>
+                    </div>
                 </div>
 
-                <span *ngIf="showPasswordRequiredError(signupForm.controls['password'])" class="error-msg text-danger">{{ 'Password is required' | translate }}</span>
-                <span *ngIf="showPasswordLengthError(signupForm.controls['password'])" class="error-msg text-danger">{{ 'Your password must be at least 6 characters' | translate }}</span>
+                <span *ngIf="hasError('password', 'required')" class="text-danger">
+                    {{'Password is required' | translate}}
+                </span>
+                <span *ngIf="hasError('password', 'rules')" class="text-danger">
+                    {{'Your password doesn\'t meet the security criteria' | translate}}
+                </span>
             </div>
+
+            <!-- Password confirm -->
             <div class="form-group">
                 <div>
-                    <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
-                        [type]="(showConfirmPassword) ? 'text' : 'password'"
-                        [placeholder]="translate.translate('Retype password')"
-                        formControlName="passwordConfirm"
-                        [class.error]="showFieldError(signupForm.controls['passwordConfirm'])">
+                    <label for="su-passwordConfirm-field">
+                        {{'Password confirmation' | translate}}
+                    </label>
 
-                    <span class="toggle-password-visible" (click)="toggleShowPasswords(true)" title="Show/hide passwords">
-                        <i class="fa fa-eye-slash" aria-hidden="true"></i>
-                    </span>
+                    <div class="toggle-parent">
+                        <input id="su-passwordConfirm-field" class="form-control" name="passwordConfirm"
+                            [type]="(showConfirmPassword) ? 'text' : 'password'"
+                            [placeholder]="translate.translate('Retype password')"
+                            formControlName="passwordConfirm"
+                            [class.error]="hasError('passwordConfirm', 'rules')">
+
+                        <span class="toggle-password" (click)="toggleShowPasswords(true)" title="Show/hide passwords">
+                            <i class="fa fa-eye-slash" aria-hidden="true"></i>
+                        </span>
+                    </div>
                 </div>
 
-                <span *ngIf="showPasswordRequiredError(signupForm.controls['passwordConfirm'])" class="error-msg text-danger">
+                <span *ngIf="hasError('passwordConfirm', 'required'); else checkMatch" class="text-danger">
                     {{ 'Confirmation is required' | translate }}
                 </span>
-
-                <span *ngIf="showPasswordLengthError(signupForm.controls['passwordConfirm'])" class="error-msg text-danger">
-                    {{ 'Your password must be at least 6 characters' | translate }}
-                </span>
-
-                <span *ngIf="showPasswordMismatchError()" class="error-msg text-danger">
-                    {{ 'Passwords do not match' | translate }}
-                </span>
+                <ng-template #checkMatch>
+                    <span *ngIf="hasError('', 'mismatch') && isTouched('password') && isTouched('passwordConfirm')" class="text-danger">
+                        {{ 'Passwords do not match' | translate }}
+                    </span>
+                </ng-template>
             </div>
 
             <div class="form-group">

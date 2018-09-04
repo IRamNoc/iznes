@@ -1,5 +1,5 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Pipe, PipeTransform} from '@angular/core';
+import {Pipe, PipeTransform, Component} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
 import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
 import {ToasterModule, ToasterService} from 'angular2-toaster';
@@ -59,6 +59,12 @@ const ActivatedRouteStub = {
     },
 };
 
+@Component({
+    selector: 'app-password-tooltip',
+    template: '<p>Mock Password tooltip</p>'
+})
+class MockPasswordTooltip {}
+
 // Stub for translate
 @Pipe({name: 'translate'})
 export class TranslatePipe implements PipeTransform {
@@ -87,6 +93,7 @@ describe('SetlLoginComComponent', () => {
             declarations: [
                 SetlLoginComponent,
                 TranslatePipe,
+                MockPasswordTooltip
             ],
             providers: [
                 {provide: MyUserService, useValue: myUserServiceMock},
