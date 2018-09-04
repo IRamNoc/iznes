@@ -26,7 +26,6 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     fundList: any;
