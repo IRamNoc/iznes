@@ -5,9 +5,14 @@ import { first, filter, tap, distinctUntilChanged } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { NgRedux } from '@angular-redux/store';
 import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
-import { isEmpty, isArray, some } from 'lodash';
-import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
-import { SagaHelper, WalletTxHelper, LogService } from '@setl/utils';
+import { isEmpty, get } from 'lodash';
+import {
+    InitialisationService,
+    WalletNodeRequestService,
+    MyWalletsService,
+    ReportingService as TxReportingService,
+} from '@setl/core-req-services';
+import { SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService } from '@setl/utils';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
@@ -18,8 +23,25 @@ import {
     SET_ADDRESS_DIRECTORY,
 } from '@setl/core-store';
 import { WalletIssuerDetail } from '@setl/core-store/assets/my-issuers';
-import { Transaction } from '@setl/core-store/wallet/transactions/model';
-import { TransactionsByAsset } from '@setl/core-store/wallet/transactions';
+import {
+    Transaction,
+    TransactionList,
+    TransactionListByAsset,
+} from '@setl/core-store/wallet/transactions/model';
+import {
+    incrementAllCurrentPage,
+    incrementAllRequestedPage,
+    decrementAllCurrentPage,
+    decrementAllRequestedPage,
+    incrementAssetCurrentPage,
+    incrementAssetRequestedPage,
+    decrementAssetCurrentPage,
+    decrementAssetRequestedPage,
+    resetAllTransactions,
+    resetAssetTransactions,
+    setAllLoading,
+    setAssetLoading,
+} from '@setl/core-store/wallet/transactions/actions';
 import { MemberSocketService } from '@setl/websocket-service';
 import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
@@ -41,8 +63,8 @@ export class ReportingService {
     connectedWalletId: number;
     connectedChainId: number;
     myChainAccess: any;
-    allTransactions$: Observable<Transaction[]>;
-    transactionsByAsset$: Observable<TransactionsByAsset>;
+    private readonly allTransactions$: Observable<TransactionList>;
+    private readonly transactionsByAsset$: Observable<TransactionListByAsset>;
     walletInfo = { walletName: '' };
     addressList = [];
     addressDirectory = [];
@@ -72,6 +94,7 @@ export class ReportingService {
 
     constructor(private ngRedux: NgRedux<any>,
                 private walletNodeRequestService: WalletNodeRequestService,
+                private reportingService: TxReportingService,
                 private logService: LogService,
                 private myWalletService: MyWalletsService,
                 private memberSocketService: MemberSocketService,
@@ -149,7 +172,7 @@ export class ReportingService {
             filter(init => !!init),
             first(),
         ).subscribe(() => {
-            this.getTransactionsFromWalletNode();
+            this.getTransactionsFromReportingNode();
             this.initRefetchData();
             this.initSubscriptions();
         });
@@ -232,7 +255,7 @@ export class ReportingService {
     }
 
     private refreshDataSources() {
-        this.getTransactionsFromWalletNode();
+        this.getTransactionsFromReportingNode();
         this.requestWalletHolding();
     }
 
@@ -328,31 +351,46 @@ export class ReportingService {
         });
     }
 
-    public getTransactions(): Observable<Transaction[]> {
-        this.initialised$.pipe(filter(init => !!init), first()).subscribe(() => this.getTransactionsFromWalletNode());
+    public getTransactions(): Observable<TransactionList> {
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => this.getTransactionsFromReportingNode());
 
-        return new Observable<Transaction[]>((observer) => {
+        return new Observable<TransactionList>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs));
             return () => sub.unsubscribe();
         });
     }
 
     public getTransaction(hash): Observable<Transaction> {
-        this.initialised$.pipe(filter(init => !!init), first()).subscribe(() => this.getTransactionsFromWalletNode());
+        this.initialised$.pipe(
+            filter(init => !!init),
+            first(),
+        ).subscribe(() => this.getTransactionsFromReportingNode());
 
         return new Observable<Transaction>((observer) => {
-            const sub = this.allTransactions$.subscribe(txs => observer.next(txs.find(tx => tx.hash === hash)));
+            const sub = this.allTransactions$.subscribe((txs) => {
+                txs.pages.find((page) => {
+                    const tx = page.transactions.find(tx => tx.hash === hash);
+                    if (!tx) {
+                        return false;
+                    }
+                    observer.next(tx);
+                    return true;
+                });
+            });
             return () => sub.unsubscribe();
         });
     }
 
-    public getTransactionsForAsset(asset) {
+    public getTransactionsForAsset(asset): Observable<TransactionList> {
         this.initialised$.pipe(
             filter(init => !!init),
             first(),
-        ).subscribe(() => this.getTransactionsFromWalletNode(asset));
+        ).subscribe(() => this.getTransactionsFromReportingNode(asset));
 
-        return new Observable<Transaction[]>((observer) => {
+        return new Observable<TransactionList>((observer) => {
             const sub = this.transactionsByAsset$.subscribe((txs) => {
                 if (txs.hasOwnProperty(asset)) {
                     observer.next(txs[asset]);
@@ -362,58 +400,87 @@ export class ReportingService {
         });
     }
 
-    private getTransactionsFromWalletNode(asset?: string): void {
-        const payload = {
-            walletIds: [this.connectedWalletId],
-            chainId: this.connectedChainId,
-        };
-        if (asset) {
-            payload['asset'] = asset.split('|')[1];
+    historyPaginationAll(direction: 'prev' | 'next'): void {
+        switch (direction) {
+        case 'prev':
+            this.ngRedux.dispatch(decrementAllCurrentPage());
+            this.ngRedux.dispatch(decrementAllRequestedPage());
+            break;
+        case 'next':
+            this.ngRedux.dispatch(incrementAllRequestedPage());
+            const state = this.ngRedux.getState().wallet.transactions.all;
+            if (!(state.requestedPage in state.pages)) {
+                this.ngRedux.dispatch(setAllLoading());
+                this.reloadAllTransactionsFromReportingNode();
+            } else {
+                this.ngRedux.dispatch(incrementAllCurrentPage());
+            }
+            break;
         }
-        const req = this.walletNodeRequestService.requestTransactionHistory(payload, 100, 0);
+    }
 
+    historyResetAll() {
+        this.ngRedux.dispatch(resetAllTransactions());
+        this.reloadAllTransactionsFromReportingNode();
+    }
+
+    historyPaginationByAsset(asset: string, direction: 'prev' | 'next'): void {
+        switch (direction) {
+        case 'prev':
+            this.ngRedux.dispatch(decrementAssetCurrentPage(asset));
+            this.ngRedux.dispatch(decrementAssetRequestedPage(asset));
+            break;
+        case 'next':
+            this.ngRedux.dispatch(incrementAssetRequestedPage(asset));
+            const state = this.ngRedux.getState().wallet.transactions.byAsset[asset];
+            if (!(state.requestedPage in state.pages)) {
+                this.ngRedux.dispatch(setAssetLoading(asset));
+                this.reloadTransactionsByAssetFromReportingNode(asset);
+            } else {
+                this.ngRedux.dispatch(incrementAssetCurrentPage(asset));
+            }
+            break;
+        }
+    }
+
+    historyResetByAsset(asset: string) {
+        this.ngRedux.dispatch(resetAssetTransactions(asset));
+        this.reloadTransactionsByAssetFromReportingNode(asset);
+    }
+
+    private getTransactionsFromReportingNode(asset?: string): void {
+        if (asset) {
+            console.warn('getTransactionFromReportingNode', asset);
+            return this.reloadTransactionsByAssetFromReportingNode(asset);
+        }
+        return this.reloadAllTransactionsFromReportingNode();
+    }
+
+    private reloadTransactionsByAssetFromReportingNode(asset: string): void {
+        const [namespace, classId] = asset.split('|');
+        const state = get(this.ngRedux.getState().wallet.transactions.byAsset, asset, null);
+        let before = null;
+        if (state && state.requestedPage > 0) {
+            before = state.pages[state.requestedPage - 1].next;
+        }
         this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ASSET_TRANSACTIONS],
             [],
-            [],
-            req,
-            {},
-            (data) => {
-                this.getTransactionsFromReportingNode(data, { ...payload, asset });
-            },
-            (data) => {
-                this.logService.log('get transaction history error:', data);
-            },
+            this.reportingService.getTransactionsByAsset(this.connectedWalletId, namespace, classId, before),
         ));
     }
 
-    private getTransactionsFromReportingNode(data: any, payload: any): void {
-        const msgsig: string = (data[1]) ? data[1].data.msgsig : null;
-
-        if (msgsig) {
-            this.walletNodeRequestService.requestTransactionHistoryFromReportingNode(
-                msgsig,
-                this.connectedChainId,
-                this.myChainAccess.nodeAddress,
-            ).subscribe(
-                (res) => {
-                    const transactions = WalletTxHelper.WalletTxHelper.convertTransactions(res.json().data);
-                    if (payload.asset) {
-                        const action: any = {
-                            type: SET_ASSET_TRANSACTIONS,
-                            payload: { asset: payload.asset, items: transactions },
-                        };
-                        this.ngRedux.dispatch(action);
-                    } else {
-                        const action: any = { type: SET_ALL_TRANSACTIONS, payload: { items: transactions } };
-                        this.ngRedux.dispatch(action);
-                    }
-                },
-                (e) => {
-                    this.logService.log('reporting node error', e);
-                });
-        } else {
-            this.logService.log('invalid signature request');
+    private reloadAllTransactionsFromReportingNode(): void {
+        const state = this.ngRedux.getState().wallet.transactions.all;
+        let before = null;
+        if (state.requestedPage > 0) {
+            before = state.pages[state.requestedPage - 1].next;
         }
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_ALL_TRANSACTIONS],
+            [],
+            this.reportingService.getTransactions(this.connectedWalletId, before),
+        ));
     }
 
     private requestWalletHolding() {

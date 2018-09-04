@@ -123,7 +123,7 @@
         <div *ngIf="template === 'history'">
             <h2 class="ml" mltag="txt_transactiondetails">Transaction History</h2>
 
-            <clr-datagrid #myDataGrid>
+            <clr-datagrid #myDataGrid [clrDgLoading]="(transactions | async)?.loading">
                 <clr-dg-column mltag="txt_action">Action</clr-dg-column>
                 <clr-dg-column mltag="txt_tx_id">Tx ID</clr-dg-column>
                 <clr-dg-column mltag="txt_asset">Assset</clr-dg-column>
@@ -131,7 +131,7 @@
                 <clr-dg-column mltag="txt_time">Time (UTC)</clr-dg-column>
                 <clr-dg-column mltag="txt_type">Type</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let transaction of transactions | async">
+                <clr-dg-row *clrDgItems="let transaction of (transactions | async)?.pages[(transactions | async)?.currentPage]?.transactions">
                     <clr-dg-cell>
                         <button (click)="handleViewTransaction(transaction)" class="btn btn-sm"><i
                             class="fa fa-search"></i>View
@@ -147,10 +147,39 @@
                     <clr-dg-cell><span class="label label-success">{{transaction.txType}}</span></clr-dg-cell>
                 </clr-dg-row>
 
-                <clr-dg-footer>
+                <!-- <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
                     <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                </clr-dg-footer> -->
+                <clr-dg-footer>
+                    <div style="width: 100%; text-align: left">
+                        <!-- <span>Page size&nbsp;</span>
+                        <select (change)="pageSize = $event.target.value">
+                            <option *ngFor="let size of [10, 25, 50, 100]" [value]="size">{{size}}</option>
+                        </select> -->
+
+                        <div class="btn-group btn-pagination">
+                            <button class="btn btn-sm" (click)="reportingService.historyResetByAsset(asset.asset)"><clr-icon shape="refresh"></clr-icon></button>
+                        </div>
+
+                        <div class="btn-group btn-pagination">
+                            <button
+                                class="btn btn-sm"
+                                [disabled]="(transactions | async)?.currentPage === 0"
+                                (click)="reportingService.historyPaginationByAsset(asset.asset, 'prev')"
+                            ><clr-icon shape="caret left"></clr-icon></button>
+                            <button
+                                class="btn btn-sm"
+                                [disabled]="(transactions | async)?.pages.length <= (transactions | async)?.currentPage - 1 || (transactions | async)?.pages[(transactions | async)?.currentPage]?.next === null"
+                                (click)="reportingService.historyPaginationByAsset(asset.asset, 'next')"
+                            ><clr-icon shape="caret right"></clr-icon></button>
+                        </div>
+
+                        <div class="btn-group btn-pagination">
+                            Page: {{(transactions | async)?.currentPage + 1}}
+                        </div>
+                    </div>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
@@ -170,7 +199,7 @@
                         <ng-container *ngFor="let field of transactionFields">
                             <div class="form-group" *ngIf="transaction[field.field]">
                                 <label class="col-sm-3 control-label">
-                                    <span class="ml" mltag="txt_">{{field.displayName}}</span>
+                                    <span>{{field.displayName | translate}}</span>
                                 </label>
                                 <div class="col-sm-9">
                                     <input type="text" class="form-control" readonly=""
@@ -184,7 +213,7 @@
         </div>
 
         <div class="form-group tx-view-header">
-            <button type="button" class="btn btn-primary" (click)="tabControl.close(id)">Close</button>
+            <button type="button" class="btn btn-primary" (click)="handleClose(id, asset)">Close</button>
         </div>
     </div>
 </ng-template>

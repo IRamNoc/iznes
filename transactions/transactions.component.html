@@ -26,7 +26,7 @@
 
 <ng-template #staticTransactionsList>
     <div class="panel-body">
-        <clr-datagrid #myDataGrid>
+        <clr-datagrid #myDataGrid [clrDgLoading]="dataLoading">
             <clr-dg-column class="col-actions" mltag="txt_actions">Actions</clr-dg-column>
             <clr-dg-column class="col-txid" mltag="txt_txid">Tx ID</clr-dg-column>
             <clr-dg-column class="col-identifier" mltag="txt_identifier">Identifier</clr-dg-column>
@@ -35,7 +35,7 @@
             <clr-dg-column class="col-type" mltag="txt_type">Type</clr-dg-column>
 
             <!-- <clr-dg-row *clrDgItems="let transaction of transactions"> -->
-            <clr-dg-row *clrDgItems="let transaction of transactions$ | async">
+            <clr-dg-row *clrDgItems="let transaction of transactions">
                 <clr-dg-cell class="col-actions">
                     <div class="btn-group btn-sm">
                         <button (click)="handleViewTransaction(transaction.hash)" class="btn">
@@ -47,15 +47,31 @@
                 <clr-dg-cell class="col-identifier"></clr-dg-cell>
                 <clr-dg-cell class="col-asset">{{transaction.issuer}}<span class="asset"> | </span>{{transaction.instrument}}
                 </clr-dg-cell>
-                <clr-dg-cell class="col-utc">{{transaction.utc}}</clr-dg-cell>
+                <clr-dg-cell class="col-utc">{{transaction.utc | date}}</clr-dg-cell>
                 <clr-dg-cell class="col-type"><span class="label label-success">{{transaction.txType}}</span>
                 </clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>
-                <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
-                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                <div style="width: 100%; text-align: left">
+                    <!-- <span>Page size&nbsp;</span>
+                    <select (change)="pageSize = $event.target.value">
+                        <option *ngFor="let size of [10, 25, 50, 100]" [value]="size">{{size}}</option>
+                    </select> -->
+
+                    <div class="btn-group btn-pagination">
+                        <button class="btn btn-sm" (click)="this.reportingService.historyResetAll()"><clr-icon shape="refresh"></clr-icon></button>
+                    </div>
+
+                    <div class="btn-group btn-pagination">
+                        <button class="btn btn-sm" [disabled]="previousDisabled" (click)="reportingService.historyPaginationAll('prev')"><clr-icon shape="caret left"></clr-icon></button>
+                        <button class="btn btn-sm" [disabled]="nextDisabled" (click)="reportingService.historyPaginationAll('next')"><clr-icon shape="caret right"></clr-icon></button>
+                    </div>
+
+                    <div class="btn-group btn-pagination">
+                        Page: {{(currentPage$ | async) + 1}}
+                    </div>
+                </div>
             </clr-dg-footer>
         </clr-datagrid>
     </div>
