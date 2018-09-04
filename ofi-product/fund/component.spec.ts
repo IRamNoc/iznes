@@ -359,7 +359,7 @@ describe('FundComponent', () => {
             const selectEls = fixture.debugElement.queryAllNodes(By.css('ng-select'));
             expect(selectEls.length).toEqual(2);
 
-            const anchorEl = fixture.debugElement.queryAllNodes(By.css('a.btn'))[0];
+            const anchorEl = fixture.debugElement.queryAllNodes(By.css('#fund-add-new-umbrella-btn'))[0];
             expect(anchorEl.nativeNode.innerText).toEqual('Add a new Umbrella Fund');
 
             const buttonEls = fixture.debugElement.queryAllNodes(By.css('button'));
