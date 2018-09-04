@@ -422,7 +422,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             },
             (err) => {
                 this.toaster.pop('error', 'An error occured.');
-                this.router.navigateByUrl(`product-module/product`);
+                this.router.navigateByUrl('product-module/product');
             },
             () => {
                 if (this.prefill) {
@@ -541,7 +541,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
             this.model.fundID = getOfiFundShareSelectedFund(this.redux.getState());
 
             if (!this.model.fundID && !this.prefill) {
-                this.router.navigateByUrl(`product-module/product/fund-share/new`);
+                this.router.navigateByUrl('product-module/product/fund-share/new');
             }
         }
     }
@@ -762,7 +762,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.toaster.pop('success', data.fundShareName + (draft == 1 ? ' draft' : '') +
             ' has been successfully created');
 
-        this.router.navigateByUrl(`product-module/product`);
+        this.router.navigateByUrl('product-module/product');
     }
 
     private onCreateError(e, draft: number): void {
@@ -799,7 +799,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
         this.toaster.pop('success', this.model.keyFacts.mandatory.fundShareName.value() +
             (draft == 1 ? ' draft' : '') + ' has been successfully updated');
 
-        this.router.navigateByUrl(`product-module/product`);
+        this.router.navigateByUrl('product-module/product');
     }
 
     private onUpdateError(draft: number): void {

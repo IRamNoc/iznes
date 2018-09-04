@@ -27,8 +27,11 @@
                     <button *ngIf="param" class="btn btn-primary" id="duplicateButton" (click)="duplicate(param)">
                         {{'Duplicate Fund' | translate}}
                     </button>
-                    <ng-select *ngIf="!param" id="fund-prefill-select" [items]="fundListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Fund')"
-                               [formControl]="fundControl">
+                    <ng-select *ngIf="!param" id="fund-prefill-select"
+                        [items]="fundListItems"
+                        [allowClear]="true"
+                        [placeholder]="_translate.translate('Duplicate from an existing Fund')"
+                        [formControl]="fundControl">
                     </ng-select>
                 </div>
             </div>
@@ -40,39 +43,30 @@
                     <section class="form-block">
                         <div class="row">
                             <div class="form-group required-field col-sm-3">
-                                <label class="control-label" for="fund-umbrellaControl-select-1">{{'Is this Fund part of an Umbrella Fund?' | translate}}
-
-                                </label>
-                                <ng-select id="fund-umbrellaControl-select-1" [containerWidth]="'100%'" [items]="umbrellaItems" [allowClear]="false" [placeholder]="_translate.translate('Select or type an Umbrella Fund name')"
-                                           [formControl]="umbrellaControl">
-
-
+                                <label class="control-label" for="fund-umbrellaControl-select-1">{{'Is this Fund part of an Umbrella Fund?' | translate}}</label>
+                                <ng-select id="fund-umbrellaControl-select-1"
+                                    [containerWidth]="'100%'"
+                                    [items]="umbrellaItems"
+                                    [allowClear]="false"
+                                    [placeholder]="_translate.translate('Select or type an Umbrella Fund name')"
+                                    [formControl]="umbrellaControl">
                                 </ng-select>
                             </div>
+                            
                             <div class="form-group col-sm-3 btn-container">
-                                <p>{{'or' | translate}}</p>
-                                <a id="fund-add-new-umbrella-btn" class="btn btn-default" [routerLink]="['/product-module/product/umbrella-fund/new']" [queryParams]="{fromFund: 'true', umbrella : null}"
-                                   queryParamsHandling="merge">Add a new Umbrella Fund
-
-
-                                </a>
-                                <p>{{'or' | translate}}</p>
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label class="control-label" for="fund-prefill-select">&nbsp;</label>
-                                <ng-select id="fund-prefill-select" [containerWidth]="'100%'" [items]="fundListItems" [allowClear]="true" [placeholder]="_translate.translate('Duplicate from an existing Fund')"
-                                           [formControl]="fundControl">
-                                </ng-select>
+                                <p>
+                                    {{'or' | translate}}
+                                    <a id="fund-add-new-umbrella-btn" [routerLink]="['/product-module/product/umbrella-fund/new']" [queryParams]="{fromFund: 'true', umbrella : null}"
+                                   queryParamsHandling="merge">Add a new Umbrella Fund</a>
+                                </p>
                             </div>
                         </div>
 
                         <div class="row" *ngIf="selectedUmbrella == 0">
-
                             <div class="col-sm-12">
                                 <p>{{'The fund is not part of an Umbrella Fund.' | translate}}</p>
                             </div>
                         </div>
-
 
                         <section class="form-block" *ngIf="selectedUmbrella > 0">
                             <div class="row">
@@ -90,6 +84,23 @@
                                 </div>
                             </div>
                         </section>
+
+                        <div class="row">
+                            <p><strong>- {{'or' | translate}} -</strong></p>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label class="control-label" for="fund-prefill-select">{{ 'Duplicate an existing fund' | translate }}</label>
+                                <ng-select id="fund-prefill-select"
+                                    [containerWidth]="'100%'"
+                                    [items]="fundListItems"
+                                    [allowClear]="true"
+                                    [placeholder]="_translate.translate('Duplicate from an existing Fund')"
+                                    [formControl]="fundControl">
+                                </ng-select>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="form-group col-sm-12 submit-container">
