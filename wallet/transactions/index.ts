@@ -1,5 +1,5 @@
 export { name } from './__init__';
-export { Transactions, TransactionList, TransactionsByAsset } from './model';
+export { Transactions, TransactionList, TransactionListByAsset } from './model';
 export {
     SET_ALL_TRANSACTIONS,
     SET_ASSET_TRANSACTIONS

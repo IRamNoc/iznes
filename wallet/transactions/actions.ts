@@ -1,4 +1,31 @@
-import {name} from './__init__';
+import { name } from './__init__';
 
 export const SET_ASSET_TRANSACTIONS = `${name}/SET_ASSET_TRANSACTIONS`;
 export const SET_ALL_TRANSACTIONS = `${name}/SET_ALL_TRANSACTIONS`;
+export const INCREMENT_ALL_REQUESTED_PAGE = `${name}/INCREMENT_ALL_REQUESTED_PAGE`;
+export const DECREMENT_ALL_REQUESTED_PAGE = `${name}/DECREMENT_ALL_REQUESTED_PAGE`;
+export const INCREMENT_ASSET_REQUESTED_PAGE = `${name}/INCREMENT_ASSET_REQUESTED_PAGE`;
+export const DECREMENT_ASSET_REQUESTED_PAGE = `${name}/DECREMENT_ASSET_REQUESTED_PAGE`;
+export const INCREMENT_ALL_CURRENT_PAGE = `${name}/INCREMENT_ALL_CURRENT_PAGE`;
+export const DECREMENT_ALL_CURRENT_PAGE = `${name}/DECREMENT_ALL_CURRENT_PAGE`;
+export const INCREMENT_ASSET_CURRENT_PAGE = `${name}/INCREMENT_ASSET_CURRENT_PAGE`;
+export const DECREMENT_ASSET_CURRENT_PAGE = `${name}/DECREMENT_ASSET_CURRENT_PAGE`;
+export const RESET_ALL_TRANSACTIONS = `${name}/RESET_ALL_TRANSACTIONS`;
+export const RESET_ASSET_TRANSACTIONS = `${name}/RESET_ASSET_TRANSACTIONS`;
+export const SET_ALL_LOADING = `${name}/SET_ALL_LOADING`;
+export const SET_ASSET_LOADING = `${name}/SET_ASSET_LOADING`;
+
+export const setAssetTransactions = payload => ({ type: SET_ASSET_TRANSACTIONS, payload });
+export const setAllTransactions = payload => ({ type: SET_ALL_TRANSACTIONS, payload });
+export const incrementAllRequestedPage = () => ({ type: INCREMENT_ALL_REQUESTED_PAGE, payload: {} });
+export const decrementAllRequestedPage = () => ({ type: DECREMENT_ALL_REQUESTED_PAGE, payload: {} });
+export const incrementAssetRequestedPage = asset => ({ type: INCREMENT_ASSET_REQUESTED_PAGE, payload: { asset } });
+export const decrementAssetRequestedPage = asset => ({ type: DECREMENT_ASSET_REQUESTED_PAGE, payload: { asset } });
+export const incrementAllCurrentPage = () => ({ type: INCREMENT_ALL_CURRENT_PAGE, payload: {} });
+export const decrementAllCurrentPage = () => ({ type: DECREMENT_ALL_CURRENT_PAGE, payload: {} });
+export const incrementAssetCurrentPage = asset => ({ type: INCREMENT_ASSET_CURRENT_PAGE, payload: { asset } });
+export const decrementAssetCurrentPage = asset => ({ type: DECREMENT_ASSET_CURRENT_PAGE, payload: { asset } });
+export const resetAllTransactions = () => ({ type: RESET_ALL_TRANSACTIONS, payload: {} });
+export const resetAssetTransactions = asset => ({ type: RESET_ASSET_TRANSACTIONS, payload: { asset } });
+export const setAllLoading = () => ({ type: SET_ALL_LOADING, payload: {} });
+export const setAssetLoading = asset => ({ type: SET_ASSET_LOADING, payload: { asset } });
