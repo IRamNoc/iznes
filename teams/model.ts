@@ -4,7 +4,7 @@ import { MemberNodeMessageBody } from '@setl/utils/common';
 export class AccountAdminTeam {
     userTeamID?: number;
     accountId: number;
-    status: boolean;
+    status: number;
     name: string;
     reference: string;
     description: string;
