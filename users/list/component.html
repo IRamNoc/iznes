@@ -63,6 +63,7 @@
                     </clr-dg-cell>
                     <clr-dg-cell id="{{'accountAdminTeamCellStatus' + idx}}" (click)="navigateToEntity(user.userID)">
                         <ng-container [ngSwitch]="user.userStatus">
+                            <span *ngSwitchCase="'2'" class="label label-info">{{ 'Pending' | translate }}</span>
                             <span *ngSwitchCase="'1'" class="label label-success">{{ 'Active' | translate }}</span>
                             <span *ngSwitchCase="'0'" class="label label-danger">{{ 'Disabled' | translate }}</span>
                         </ng-container>

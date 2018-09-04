@@ -17,6 +17,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
     private textEnable: string = '';
     private textDisable: string = '';
+    private textPending: string = '';
 
     constructor(private toaster: ToasterService,
                 private translate: MultilingualService,
@@ -24,14 +25,18 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
         this.textEnable = this.translate.translate('Enable');
         this.textDisable = this.translate.translate('Disable');
+        this.textPending = this.translate.translate('Pending');
     }
 
     ngOnInit() {}
 
     updateStatus(): void {
+        if (this.isStatusPending()) return;
+
         const title = `${this.status ? this.textDisable : this.textEnable} ${this.translate.translate(this.noun)}`;
         const message = this.translate.translate(`Are you sure you want to ### this ${this.noun}?<br />
-            If you disable this ${this.noun}, then you will not be able to<br />assign them to other entities.`)
+            If you ${this.status ? this.textDisable : this.textEnable} this ${this.noun},
+            then you will not be able to<br />assign them to other entities.`)
             .replace('###', this.status ? this.textDisable : this.textEnable);
 
         this.confirmation.create(title, message).subscribe((ans) => {
@@ -45,6 +50,31 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
     onUpdateStatus(): void {
         console.error('method not implemented');
+    }
+
+    isStatusEnabled(): boolean {
+        return this.status === 1;
+    }
+
+    isStatusDisabled(): boolean {
+        return this.status === 0;
+    }
+
+    isStatusPending(): boolean {
+        return this.status === 2;
+    }
+
+    getStatusText(): string {
+        switch (this.status) {
+        case 0:
+            return this.textDisable;
+        case 1:
+            return this.textEnable;
+        case 2:
+            return this.textPending;
+        default:
+            return '';
+        }
     }
 
     protected onStatusUpdateSuccess(): void {
