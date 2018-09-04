@@ -158,31 +158,6 @@ export class WalletNodeRequestService {
         return createWalletNodeSagaRequest(this.walletNodeSocketService, 'tx', messageBody);
     }
 
-    /**
-     * Requests Transaction History
-     *
-     * @param {object} requestData {walletIds, chainid}
-     *
-     * @returns {any}
-     */
-    requestTransactionHistory(requestData: any, pageSize: number = 10, pageNum: number = 0): any {
-        const messageBody: RequestTransactionHistoryBody = {
-            topic: 'txhist',
-            walletids: requestData.walletIds,
-            chainid: requestData.chainId,
-            pagesize: pageSize,
-            classid: requestData.asset || '',
-            pagenum: pageNum,
-        };
-
-        return createWalletNodeSagaRequest(this.walletNodeSocketService, 'signreq', messageBody);
-    }
-
-    requestTransactionHistoryFromReportingNode(
-        msgId: string, connectedChainId: number, nodePath: string): Observable<any> {
-        return this.http.post(this.appConfig.reportingNodeUrl, { request: msgId });
-    }
-
     requestWalletNodeInitialSnapshot() {
         const messageBody = {
             topic: 'state',
