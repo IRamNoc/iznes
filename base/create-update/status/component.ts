@@ -35,7 +35,8 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
         const title = `${this.status ? this.textDisable : this.textEnable} ${this.translate.translate(this.noun)}`;
         const message = this.translate.translate(`Are you sure you want to ### this ${this.noun}?<br />
-            If you disable this ${this.noun}, then you will not be able to<br />assign them to other entities.`)
+            If you ${this.status ? this.textDisable : this.textEnable} this ${this.noun},
+            then you will not be able to<br />assign them to other entities.`)
             .replace('###', this.status ? this.textDisable : this.textEnable);
 
         this.confirmation.create(title, message).subscribe((ans) => {
