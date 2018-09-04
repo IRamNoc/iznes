@@ -47,6 +47,8 @@ export class DropHandler implements AfterViewInit {
 
     @Input() filePermission: FilePermission = FilePermission.Private;
 
+    @Input() disabled: boolean = false;
+
     /* Inputs and forms. */
     @ViewChild('fileInput') public fileInput: ElementRef;
     @ViewChild('dropFileForm') public formElem: ElementRef;
@@ -101,6 +103,9 @@ export class DropHandler implements AfterViewInit {
      * @return {boolean}
      */
     public handleDrop (event): boolean {
+        if (!this.disabled) {
+            return;
+        }
         /* Check if files were dropped... */
         if ( event.dataTransfer && event.dataTransfer.files ) {
             const invalidFileNames = [];
@@ -160,7 +165,7 @@ export class DropHandler implements AfterViewInit {
      */
     public handleClick(event): boolean {
         /* Cancel if we're just removing a file. */
-        if ( this.removingFile ) {
+        if (this.removingFile || !this.disabled) {
             return;
         }
 
@@ -189,6 +194,9 @@ export class DropHandler implements AfterViewInit {
      * @return {boolean}
      */
     public handleFileChange (event): boolean {
+        if (!this.disabled) {
+            return;
+        }
         /* Check. */
         if ( event.target && event.target.files ) {
             const invalidFileNames = [];
@@ -241,6 +249,9 @@ export class DropHandler implements AfterViewInit {
      * @return {void}
      */
     private addFiles (files): void {
+        if (!this.disabled) {
+            return;
+        }
 
         /* Loop over each... */
         for (const file of files) {
@@ -260,6 +271,9 @@ export class DropHandler implements AfterViewInit {
      * @return {void}
      */
     private handleConversion (): void {
+        if (!this.disabled) {
+            return;
+        }
         /* Process files. */
         this.encodedFiles = this.uploadedFiles;
         this.base64Files(this.uploadedFiles, (processedFiles) => {
@@ -303,6 +317,9 @@ export class DropHandler implements AfterViewInit {
      * @param {event} object - An object of the event.
      */
     public onDragEnter (event): void {
+        if (!this.disabled) {
+            return;
+        }
         /* Change the hovering state. */
         this.isHovering = true;
 
@@ -318,6 +335,9 @@ export class DropHandler implements AfterViewInit {
      * @param {event} object - An object of the event.
      */
     public onDragLeave (event): void {
+        if (!this.disabled) {
+            return;
+        }
         /* Change the hovering state. */
         this.isHovering = false;
 
@@ -333,6 +353,9 @@ export class DropHandler implements AfterViewInit {
      * @param {index} number - The index of the file in the array to be removed.
      */
     public clearFiles(index): void {
+        if (!this.disabled) {
+            return;
+        }
         /* If we're not mutliple, then just reset the form. */
         if ( ! this.multiple ) {
             this.formElem.nativeElement.reset();
@@ -367,6 +390,9 @@ export class DropHandler implements AfterViewInit {
     }
 
     clearPreset(): void {
+        if (!this.disabled) {
+            return;
+        }
         this.preset = null;
         this.formControl.patchValue(null);
     }
