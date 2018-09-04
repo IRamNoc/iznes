@@ -11,7 +11,7 @@ import {
 } from '@setl/utils';
 import { ClarityModule } from '@clr/angular';
 import { MultilingualService } from '@setl/multilingual';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
     ProductCharacteristicsService,
@@ -54,6 +54,10 @@ const locationStub = {
     back: jasmine.createSpy('back'),
 };
 
+const routerStub = {
+    navigateByUrl: jasmine.createSpy('navigateByUrl').and.returnValue(null),
+}
+
 const productCharacteristicsServiceStub = {
     getProductCharacteristics: jasmine.createSpy('getProductCharacteristics'),
     fetchProductCharacteristics: jasmine.createSpy('fetchProductCharacteristics'),
@@ -91,6 +95,7 @@ describe('ProductCharacteristicComponent', () => {
                 { provide: APP_CONFIG, useValue: { numberDivider: 1 } },
                 { provide: MultilingualService, useValue: multilingualServiceStub },
                 { provide: 'product-config', useValue: productConfig },
+                { provide: Router, useValue: routerStub },
             ],
         }).compileComponents();
         TestBed.resetTestingModule = () => TestBed;
@@ -132,6 +137,7 @@ describe('ProductCharacteristicComponent', () => {
     afterEach(() => {
         productCharacteristicsServiceStub.getProductCharacteristics.calls.reset();
         locationStub.back.calls.reset();
+        routerStub.navigateByUrl.calls.reset();
     });
 
     describe('structure', () => {
@@ -190,6 +196,11 @@ describe('ProductCharacteristicComponent', () => {
             expect(datagridColumns3[0].nativeElement.textContent).toContain('Information');
             expect(datagridColumns3[1].nativeElement.textContent).toContain('Value');
         });
+
+        it('should have a button with wording "More details"', () => {
+            const closeBtn = fixture.debugElement.query(By.css('#more-details-btn'));
+            expect(closeBtn.nativeElement.textContent).toContain('More details');
+        });
     });
 
     describe('behaviour', () => {
@@ -202,6 +213,13 @@ describe('ProductCharacteristicComponent', () => {
 
         it('should call the getProductCharacteristics method of productCharacteristicsService', () => {
             expect(productCharacteristicsServiceStub.getProductCharacteristics).toHaveBeenCalledTimes(1);
+        });
+
+        it('should redirect to the share details location', () => {
+            expect(routerStub.navigateByUrl).toHaveBeenCalledTimes(0);
+            const closeBtn = fixture.debugElement.query(By.css('#more-details-btn'));
+            closeBtn.triggerEventHandler('click', null);
+            expect(routerStub.navigateByUrl).toHaveBeenCalledTimes(1);
         });
     });
 });

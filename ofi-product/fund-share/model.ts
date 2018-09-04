@@ -223,6 +223,7 @@ export class FundShare {
     }
 
     setFundShare(fundShare: OfiFundShare, isPrefill = false): void {
+
         this.fundID = fundShare.fundID;
         this.keyFacts.mandatory.fundShareName.preset = isPrefill ? null : fundShare.fundShareName;
         this.keyFacts.mandatory.isin.preset = isPrefill ? null : fundShare.isin;
@@ -303,11 +304,13 @@ export class FundShare {
         this.applyOptionalData((this.solvency.optional as any), JSON.parse(fundShare.solvencyIIOptionalData));
         this.applyOptionalData((this.representation.optional as any), JSON.parse(fundShare.representationOptionalData));
 
-        this.fundID = fundShare.fundID;
     }
 
     updateFundShare(fundShare: OfiFundShare, isPrefill = false): void {
+
+        this.fundShareId = fundShare.fundShareID;
         this.fundID = fundShare.fundID;
+
         this.keyFacts.mandatory.fundShareName.control.setValue(isPrefill ? null : fundShare.fundShareName);
         this.keyFacts.mandatory.isin.control.setValue(isPrefill ? null : fundShare.isin);
         this.keyFacts.mandatory.shareClassCode.control.setValue(fundShare.shareClassCode);
@@ -386,7 +389,6 @@ export class FundShare {
 
         this.setRedemptionTradeCycleData(fundShare);
         this.setSubscriptionTradeCycleData(fundShare);
-        this.fundID = fundShare.fundID;
     }
 
     setSubscriptionTradeCycleData(fundShare: OfiFundShare): void {
@@ -399,7 +401,6 @@ export class FundShare {
         this.setListItemPreset(this.calendar.mandatory.navPeriodForSubscription, fundShare.navPeriodForSubscription);
         (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod =
             fundShare.subscriptionTradeCyclePeriod;
-
     }
 
     setRedemptionTradeCycleData(fundShare: OfiFundShare): void {
@@ -440,6 +441,7 @@ export class FundShare {
     }
 
     setFundShareDocs(fundShareDocs: OfiFundShareDocuments): void {
+
         this.setDocumentItem(this.documents.mandatory.prospectus, fundShareDocs.prospectus);
         this.setDocumentItem(this.documents.mandatory.kiid, fundShareDocs.kiid);
 
@@ -564,9 +566,10 @@ export class FundShare {
 
     }
 
-    updateFund(fund: any, umbrella: any): void {
+    updateFund(fund: any, umbrella: any = false): void {
         this.umbrellaFundID = fund.umbrellaFundID;
         this.fundID = fund.fundID;
+
         this.fund.name.control.setValue(fund.fundName);
         this.fund.aumFund.control.setValue(fund.fundName);
         this.fund.aumFundDate.control.setValue(fund.fundName);
@@ -840,9 +843,53 @@ export class FundShare {
         const rawValue = formItem.value();
         return (rawValue != undefined) && rawValue.length ? rawValue[0].id : null;
     }
+
+    disableAllShareFields() {
+        // NOTE: this.calendar.subscriptionTradeCycle and this.calendar.redemptionTradeCycle models
+        // are generated in FundShareTradeCycleComponent and processed in FundShareComponent
+        // so there are weird dependencies between models and components
+        // this is why these two are not disabled here
+        // 🙏 please forgive me 🙏
+        const shareKeys = [
+            this.keyFacts,
+            this.characteristic,
+            this.fees,
+            this.listing,
+            this.priip,
+            this.profile,
+            this.representation,
+            this.solvency,
+            this.taxation,
+            this.documents,
+        ];
+
+        shareKeys.forEach((shareKey) => {
+            Object.keys(shareKey).forEach((subKey) => {
+                Object.keys(shareKey[subKey]).forEach((field) => {
+                    shareKey[subKey][field].disabled = true;
+                    shareKey[subKey][field].required = false;
+                });
+            });
+        });
+
+        Object.keys(this.calendar.mandatory).forEach((field) => {
+            this.calendar.mandatory[field].disabled = true;
+            this.calendar.mandatory[field].required = false;
+        });
+    }
+
+    isReady() {
+        return !!_.get(this.keyFacts.mandatory.isin, ['control', 'setValue'], false);
+    }
 }
 
 export enum FundShareMode {
     Create,
+    Read,
     Update,
+}
+
+export enum userTypeEnum {
+    INVESTOR = 46,
+    AM = 36,
 }

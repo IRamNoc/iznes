@@ -75,6 +75,18 @@ export class FundShareTradeCycleModel {
         this.form.reset();
     }
 
+    public disable() {
+        this.form.disable();
+    }
+
+    public clearAllValidators() {
+        this.form.clearValidators();
+        const controls = Object.keys(this.form.controls);
+        controls.forEach((control) => {
+            this.form.controls[control].clearValidators();
+        });
+    }
+
     private clearValidators(c): void {
         _.forEach((c as any).controls, (control => control.clearValidators()));
     }
@@ -257,7 +269,7 @@ export class FundShareTradeCycleModel {
     }
 
     isValid(): boolean {
-        return this.form.valid;
+        return this.form.disabled || this.form.valid;
     }
 }
 

@@ -11,8 +11,11 @@
         </button>
 
         <clr-tab-content *clrIfActive>
-            <p>{{'Please find below the main information regarding @currentProduct.fundShareName@' | translate: {'currentProduct.fundShareName':
-                currentProduct.fundShareName} }}</p>
+            <div class="tab-header">
+                <p>{{'Please find below the main information regarding @currentProduct.fundShareName@' | translate: {'currentProduct.fundShareName':
+                    currentProduct.fundShareName} }}</p>
+                <button id="more-details-btn" class="btn btn-default" (click)="onClickMoreDetails()">{{'More details' | translate}}</button>
+            </div>
 
             <div class="well">
                 <!-- Panel header -->

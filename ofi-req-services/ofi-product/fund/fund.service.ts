@@ -184,4 +184,20 @@ export class OfiFundService {
         ));
     }
 
+    fetchFundByID(fundId: number) {
+        const messageBody = {
+            RequestName: 'izngetfundbyid',
+            token: this.memberSocketService.token,
+            fundId,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [GET_IZN_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
 }
