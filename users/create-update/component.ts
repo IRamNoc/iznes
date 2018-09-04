@@ -179,6 +179,8 @@ export class UsersCreateUpdateComponent
         this.form.reference.preset = user.reference;
 
         this.status = user.userStatus;
+
+        this.form.emailAddress.disabled = true;
     }
 
     private initCreateTooltip(): void {
