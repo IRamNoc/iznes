@@ -93,7 +93,10 @@ export class UsersCreateUpdateComponent
 
     private initForm(userTypeId: string): void {
         this.form = this.generateForm(userTypeId);
-        this.forms.push(_.clone(this.form));
+
+        if (this.forms.length === 0) {
+            this.forms.push(_.clone(this.form));
+        }
     }
 
     private generateForm(userTypeId: string): Model.AccountAdminUserForm {
