@@ -335,7 +335,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             walletId: this.connectedWalletId,
             name: name,
             iban: iban,
-            type: type
+            type: type,
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
