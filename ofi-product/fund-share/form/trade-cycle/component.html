@@ -5,7 +5,7 @@
                 Cycle Period' | translate: {'typeCapitilised': typeCapitilised} }}</label>
 
             <ng-select id="{{typeLowercase}}TradeCyclePeriod" [items]="model.dropdownItems.tradeCyclePeriodItems" [active]="model.form.value.tradeCyclePeriod"
-                placeholder="" [formControl]="model.form.controls['tradeCyclePeriod']" [disabled]="model.form.controls['tradeCyclePeriod'].disabled">
+                placeholder="" [formControl]="model.form.controls['tradeCyclePeriod']" [disabled]="model.form.controls['tradeCyclePeriod']['disabled']">
             </ng-select>
         </div>
     </div>
@@ -16,7 +16,7 @@
                 Dealing Days' | translate: {'typeCapitilised': typeCapitilised} }}</label>
 
             <ng-select id="{{typeLowercase}}WeeklyDealingDays" [items]="model.dropdownItems.weeklyItems" [active]="model.form.value.weeklyDealingDays"
-                [multiple]="true" placeholder="" [formControl]="model.form.controls['weeklyDealingDays']" [disabled]="model.form.controls['weeklyDealingDays'].disabled">
+                [multiple]="true" placeholder="" [formControl]="model.form.controls['weeklyDealingDays']" [disabled]="model.form.controls['weeklyDealingDays']['disabled']">
             </ng-select>
         </div>
     </div>
@@ -27,7 +27,7 @@
                 <label [ngClass]="{'control-label': true, 'required-field': control.controls.termA.required}" for="{{typeLowercase}}MonthlyDealingDaysTermA">{{'Number' | translate}}</label>
 
                 <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" placeholder="" [formControl]="control.controls.termA"
-                    [disabled]="control.controls.termA.disabled">
+                    [disabled]="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
@@ -35,7 +35,7 @@
                 <label [ngClass]="{'control-label': true, 'required-field': control.controls.termB.required}" for="{{typeLowercase}}MonthlyDealingDaysTermB">{{'Day' | translate}}</label>
 
                 <ng-select id="{{typeLowercase}}MonthlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" placeholder="" [formControl]="control.controls.termB"
-                    [disabled]="control.controls.termB.disabled">
+                    [disabled]="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
@@ -59,7 +59,7 @@
                 <label [ngClass]="{'control-label': true, 'required-field': control.controls.termA.required}" for="{{typeLowercase}}YearlyDealingDaysTermA">{{'Number' | translate}}</label>
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermA" [items]="model.dropdownItems.numberItems" placeholder="" [formControl]="control.controls.termA"
-                    disabled="control.controls.termA.disabled">
+                    disabled="control.controls.termA['disabled']">
                 </ng-select>
             </div>
 
@@ -67,7 +67,7 @@
                 <label [ngClass]="{'control-label': true, 'required-field': control.controls.termB.required}" for="{{typeLowercase}}YearlyDealingDaysTermB">{{'Day' | translate}}</label>
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermB" [items]="model.dropdownItems.dayItems" placeholder="" [formControl]="control.controls.termB"
-                    disabled="control.controls.termB.disabled">
+                    disabled="control.controls.termB['disabled']">
                 </ng-select>
             </div>
 
@@ -75,7 +75,7 @@
                 <label [ngClass]="{'control-label': true, 'required-field': control.controls.termC.required}" for="{{typeLowercase}}YearlyDealingDaysTermC">{{'Month' | translate}}</label>
 
                 <ng-select id="{{typeLowercase}}YearlyDealingDaysTermC" [items]="model.dropdownItems.monthItems" placeholder="" [formControl]="control.controls.termC"
-                    disabled="control.controls.termC.disabled">
+                    disabled="control.controls.termC['disabled']">
                 </ng-select>
             </div>
 
