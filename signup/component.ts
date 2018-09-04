@@ -59,6 +59,7 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     constructor(private redux: NgRedux<any>,
                 private activatedRoute: ActivatedRoute,
+                private router: Router,
                 public translate: MultilingualService,
                 private alertsService: AlertsService,
                 private myUserService: MyUserService,
@@ -177,6 +178,10 @@ export class SignupComponent implements OnDestroy, OnInit {
                 this.chainService,
                 this.initialisationService,
             );
+
+            const redirect: any = auth.defaultHomePage ? auth.defaultHomePage : '/home';
+
+            this.router.navigateByUrl(redirect);
         }
     }
 
