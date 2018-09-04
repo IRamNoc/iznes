@@ -1,8 +1,8 @@
-import {Action} from 'redux';
+import { Action } from 'redux';
 import * as ManagementCompanyActions from './actions';
-import {ManagementCompanyDetail, managementCompanyListState, invManagementCompanyListState} from './model';
+import { ManagementCompanyDetail, managementCompanyListState, invManagementCompanyListState } from './model';
 import * as _ from 'lodash';
-import {List, fromJS, Map} from 'immutable';
+import { List, fromJS, Map } from 'immutable';
 
 const initialState: managementCompanyListState = {
     managementCompanyList: {},
@@ -16,39 +16,39 @@ const invInitialState: invManagementCompanyListState = {
 export const managementCompanyListReducer = function (state: managementCompanyListState = initialState, action: Action) {
 
     switch (action.type) {
-        case ManagementCompanyActions.SET_MANAGEMENT_COMPANY_LIST:
-            const mcData = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
-            const managementCompanyList = formatManagementCompanyDataResponse(mcData);
-            const newState = Object.assign({}, state, {
-                managementCompanyList,
-            });
-            return newState;
+    case ManagementCompanyActions.SET_MANAGEMENT_COMPANY_LIST:
+        const mcData = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
+        const managementCompanyList = formatManagementCompanyDataResponse(mcData);
+        const newState = Object.assign({}, state, {
+            managementCompanyList,
+        });
+        return newState;
 
-        case ManagementCompanyActions.SET_REQUESTED_MANAGEMENT_COMPANY:
-            return handleSetRequested(state, action);
+    case ManagementCompanyActions.SET_REQUESTED_MANAGEMENT_COMPANY:
+        return handleSetRequested(state, action);
 
-        case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
-            return handleClearRequested(state, action);
+    case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
+        return handleClearRequested(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
 export const invManagementCompanyListReducer = function (state: invManagementCompanyListState = invInitialState, action: Action) {
 
     switch (action.type) {
-        case ManagementCompanyActions.SET_INV_MANAGEMENT_COMPANY_LIST:
-            return handleGetInvestorManagementCompanyList(state, action);
+    case ManagementCompanyActions.SET_INV_MANAGEMENT_COMPANY_LIST:
+        return handleGetInvestorManagementCompanyList(state, action);
 
-        case ManagementCompanyActions.SET_REQUESTED_INV_MANAGEMENT_COMPANY:
-            return handleSetINVRequested(state, action);
+    case ManagementCompanyActions.SET_REQUESTED_INV_MANAGEMENT_COMPANY:
+        return handleSetINVRequested(state, action);
 
-        case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
-            return handleClearINVRequested(state, action);
+    case ManagementCompanyActions.CLEAR_REQUESTED_MANAGEMENT_COMPANY:
+        return handleClearINVRequested(state, action);
 
-        default:
-            return state;
+    default:
+        return state;
     }
 };
 
@@ -60,6 +60,7 @@ function formatManagementCompanyDataResponse(rawCompanyData: Array<any>): Array<
             result[item.get('companyID')] = {
                 companyID: item.get('companyID'),
                 companyName: item.get('companyName'),
+                emailAddress: item.get('emailAddress'),
                 country: item.get('country'),
                 addressPrefix: item.get('addrPrefix'),  // addressPrefix to addrPrefix
                 postalAddressLine1: item.get('postalAddressLine1'),
@@ -145,7 +146,7 @@ function handleClearINVRequested(state: invManagementCompanyListState, action: A
     });
 }
 
-function handleGetInvestorManagementCompanyList(state: invManagementCompanyListState, action) : invManagementCompanyListState {
+function handleGetInvestorManagementCompanyList(state: invManagementCompanyListState, action): invManagementCompanyListState {
     const response = action.payload[1].Data;
     let investorManagementCompanyList = List<any>();
 

@@ -267,6 +267,7 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
             result.push({
                 companyID: item.get('companyID', 0),
                 companyName: item.get('companyName', ''),
+                emailAddress: item.get('emailAddress', ''),
                 country: item.get('country', ''),
                 addressPrefix: item.get('addressPrefix', ''),
                 postalAddressLine1: item.get('postalAddressLine1', ''),
