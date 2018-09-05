@@ -38,7 +38,7 @@
                 {{ entity[col.dataIndex] }}
             </ng-container>
             <ng-container *ngIf="col.dataIndex === 'status'" [ngSwitch]="entity.status">
-                <span *ngSwitchCase="'2'" class="label label-success">{{ 'Pending' | translate }}</span>
+                <span *ngSwitchCase="'2'" class="label label-info">{{ 'Pending' | translate }}</span>
                 <span *ngSwitchCase="'1'" class="label label-success">{{ 'Active' | translate }}</span>
                 <span *ngSwitchCase="'0'" class="label label-danger">{{ 'Disabled' | translate }}</span>
             </ng-container>
