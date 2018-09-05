@@ -89,11 +89,11 @@ export class UserTeamsAuditComponent
                     styleClass: 'previous',
                     title: 'Previous value',
                     valueDecorator: function (entity) {
-                        if (entity.field === 'status') {
-                            if (entity.oldValue === '0') entity.oldValue = 'Off';
-                            if (entity.oldValue === '1') entity.oldValue = 'On';
-                            if (entity.newValue === '0') entity.newValue = 'Off';
-                            if (entity.newValue === '1') entity.newValue = 'On';
+                        if (entity.field === 'Status') {
+                            if (entity.oldValue === '0') entity.oldValue = 'Disabled';
+                            if (entity.oldValue === '1') entity.oldValue = 'Enabled';
+                            if (entity.newValue === '0') entity.newValue = 'Disabled';
+                            if (entity.newValue === '1') entity.newValue = 'Enabled';
                         }
 
                         return entity;
@@ -125,7 +125,7 @@ export class UserTeamsAuditComponent
         this.baseService.getCSVExport(
             this.fileDownloader,
             this.csvRequest,
-            `exportTeamsAuditCSV`,
+            'exportTeamsAuditCSV',
             this.token,
             this.userId,
             this.username,
