@@ -10,6 +10,7 @@ import { MultilingualService } from '@setl/multilingual';
 
 import {
     setRequestedUserTypes,
+    clearRequestedUserTypes,
 } from '@setl/core-store';
 import * as Model from '../model';
 import { UsersService } from '../service';
@@ -78,10 +79,8 @@ export class UsersCreateUpdateComponent
         };
 
         this.userPermissionsTooltip = {
-            text: this.translate.translate(`User permissions allow you to set the rights
-                that users will have over IZNES. You can assign permissions in two ways;
-                either you can give permissions to a single user with the matrix below
-                or you can create teams with specific permissions and add users to them.`),
+            text: this.translate.translate(`User permissions allow you view the effective
+                permissions a user holds over multiple teams.`),
             size: 'small',
         };
 
@@ -93,12 +92,11 @@ export class UsersCreateUpdateComponent
     }
 
     private initForm(userTypeId: string): void {
-        const userType = _.filter(this.userTypes, (userType: any) => {
-            return userType = userTypeId;
-        });
-
         this.form = this.generateForm(userTypeId);
-        this.forms.push(_.clone(this.form));
+
+        if (this.forms.length === 0) {
+            this.forms.push(_.clone(this.form));
+        }
     }
 
     private generateForm(userTypeId: string): Model.AccountAdminUserForm {
@@ -110,6 +108,12 @@ export class UsersCreateUpdateComponent
     }
 
     private initUsersSubscriptions(): void {
+        const myDetailsSub = this.myDetailsOb.subscribe((details) => {
+            this.myDetails = details;
+
+            this.requestUserTypes(false);
+        });
+
         const userTypesSub = this.userTypesOb.subscribe((userTypes: any) => {
             if (userTypes !== undefined && userTypes.length > 0) {
                 this.userTypes = this.processUserTypes(userTypes);
@@ -120,22 +124,13 @@ export class UsersCreateUpdateComponent
             }
         });
 
-        const userTypesReqSub = this.userTypesReqOb.subscribe((requested: boolean) => {
-            this.requestUserTypes(requested);
-        });
-
-        const myDetailsSub = this.myDetailsOb.subscribe((details) => {
-            this.myDetails = details;
-        });
-
         const siteSettingsSub = this.siteSettingsOb.subscribe((settings) => {
             this.siteSettings = settings;
         });
 
         this.subscriptions.push(
-            userTypesSub,
-            userTypesReqSub,
             myDetailsSub,
+            userTypesSub,
             siteSettingsSub,
         );
     }
@@ -150,6 +145,8 @@ export class UsersCreateUpdateComponent
         const items = [];
 
         _.forEach(userTypes, (userType: any) => {
+            if (userType.typeID !== this.myDetails.userType) return;
+
             items.push({
                 id: userType.typeID,
                 text: userType.type,
@@ -167,7 +164,7 @@ export class UsersCreateUpdateComponent
                 (data: any) => this.onReadUserSuccess(data),
                 (e: any) => this.onReadEntityError());
         } else {
-            this.initForm(this.userTypes[0]);
+            this.initForm(this.myDetails.userType);
         }
     }
 
@@ -184,7 +181,9 @@ export class UsersCreateUpdateComponent
         this.form.phoneNumber.preset = user.phoneNumber;
         this.form.reference.preset = user.reference;
 
-        this.status = user.userStatus === 1 ? true : false;
+        this.status = user.userStatus;
+
+        this.form.emailAddress.disabled = true;
     }
 
     private initCreateTooltip(): void {
@@ -221,6 +220,10 @@ export class UsersCreateUpdateComponent
         });
 
         return valid;
+    }
+
+    isUserStatusPending(): boolean {
+        return (this.user) && this.user.userStatus === 0 && !!this.user.invitationToken;
     }
 
     save(invite: boolean = false): void {

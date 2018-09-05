@@ -1,23 +1,18 @@
 import { FormItem, FormItemType, FormItemStyle } from '@setl/utils';
 import { MemberNodeMessageBody } from '@setl/utils/common';
+import { DynamicFormsValidator } from '@setl/utils';
 
 export class AccountAdminTeam {
     userTeamID?: number;
     accountId: number;
-    status: boolean;
+    status: number;
     name: string;
     reference: string;
     description: string;
     isActivated?: boolean;
 }
 
-export class AccountAdminTeamForm {
-//     status: FormItem = {
-//         label: 'Status',
-//         type: FormItemType.boolean,
-//         required: true,
-//         style: [FormItemStyle.BreakOnAfter],
-//     };
+export class AccountAdminTeamForm extends DynamicFormsValidator {
     name: FormItem = {
         label: 'Team name',
         type: FormItemType.text,

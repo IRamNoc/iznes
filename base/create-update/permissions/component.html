@@ -1,6 +1,6 @@
-<div class="row teams-dropdown">
+<div class="row teams-dropdown" *ngIf="teamsList && showTeamSelect">
     <div class="col-sm-3">
-        <ng-select id="permissionTeamsSelect" *ngIf="teamsList"
+        <ng-select id="permissionTeamsSelect"
             [items]="teamsList"
             [formControl]="teamsControl">
         </ng-select>

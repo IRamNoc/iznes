@@ -101,13 +101,13 @@
                 </div>
                 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
+                    <button class="btn btn-primary" (click)="save(isCreateMode())" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create User(s)' :
                         'Update User Details'
                         | translate }}
                     </button>
-                    <button class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
+                    <button *ngIf="isUpdateMode() && isUserStatusPending()" class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create &amp; Send Invitation(s)' :
                         'Update &amp; Send Invitation'

@@ -3,18 +3,17 @@
         <h3>{{ noun + ' Status' | translate }}</h3>
 
         <p>Current status: <span class="status"
-            [class.enabled]="status"
-            [class.disabled]="!status">
-            {{ status ? 'Enabled' : 'Disabled' | translate }}</span>
-            <span class="status-pending" [hidden]="status != 2">
-                {{ 'Pending: please add users and permissions' | translate }}
-            </span>
+            [class.enabled]="isStatusEnabled()"
+            [class.disabled]="isStatusDisabled()"
+            [class.pending]="isStatusPending()">
+            {{ getStatusText() }}</span>
         </p>
 
         <button class="btn btn-warning"
             (click)="updateStatus()"
-            [class.btn-success]="!status"
-            [class.btn-warning]="status">{{ status ? 'Disable' : 'Enable' | translate }}
+            [disabled]="isStatusPending()"
+            [class.btn-success]="isStatusDisabled()"
+            [class.btn-warning]="isStatusEnabled()">{{ status ? textDisable : textEnable  }}
         </button>
     </div>
 </div>

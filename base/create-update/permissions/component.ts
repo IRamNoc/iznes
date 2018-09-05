@@ -26,6 +26,7 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
     @Input() entityId: number;
     @Output() entitiesFn: EventEmitter<PermissionsModel.AccountAdminPermission[]> = new EventEmitter();
     @Input() isUser: boolean = false;
+    @Input() showTeamSelect: boolean = true;
 
     permissions: PermissionsModel.AccountAdminPermission[];
     teamsControl: FormControl = new FormControl();
@@ -77,11 +78,11 @@ export class AccountAdminPermissionsComponentBase implements OnInit, OnDestroy {
         }
 
         const teamsSub = this.teamsOb.subscribe((teams: TeamsModel.AccountAdminTeam[]) => {
-            this.processTeams(teams);
+            if (this.showTeamSelect) this.processTeams(teams);
         });
 
         const teamsReqSub = this.teamsReqOb.subscribe((requested: boolean) => {
-            this.requestTeams(requested);
+            if (this.showTeamSelect) this.requestTeams(requested);
         });
 
         this.subscriptions.push(this.teamsControl.valueChanges.subscribe(() => {
