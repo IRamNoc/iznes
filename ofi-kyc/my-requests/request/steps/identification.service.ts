@@ -103,6 +103,16 @@ export class IdentificationService {
         return promises;
     }
 
+    deleteBeneficiary(kycID, id) {
+        const messageBody = {
+            RequestName: 'deletekyccompanybeneficiaries',
+            kycID: kycID,
+            id: id,
+        };
+
+        return this.requestsService.sendRequest(messageBody);
+    }
+
     sendRequestUpdateCurrentStep(kycID, context) {
         const messageBody = {
             RequestName: 'iznesupdatecurrentstep',
