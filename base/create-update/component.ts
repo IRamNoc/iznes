@@ -103,7 +103,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
         console.error('Method not implemented');
     }
 
-    protected onSaveSuccess(entityName: string, entityId: number): void {
+    protected onSaveSuccess(entityName: string, entityId: number, redirect = true): void {
         this.entityId = entityId;
 
         let message = `${entityName} successfully `;
@@ -116,7 +116,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
         this.toaster.pop('success', message);
 
-        this.router.navigateByUrl(this.getBackUrl());
+        if (redirect) this.router.navigateByUrl(this.getBackUrl());
     }
 
     protected onSaveError(entityName: string, error: AccountAdminErrorResponse): void {
