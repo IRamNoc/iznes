@@ -9,10 +9,9 @@ import { AccountsService, MemberService } from '@setl/core-req-services';
 import { SET_ACCOUNT_LIST, SET_MANAGE_MEMBER_LIST, setRequestedAccountList, setRequestedManageMemberList }
     from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { SagaHelper, LogService } from '@setl/utils';
+import { SagaHelper, LogService, ConfirmationService } from '@setl/utils';
 import * as _ from 'lodash';
 import { PersistService } from '@setl/core-persist';
-import { ConfirmationService } from '../../utils';
 
 export function getManageMember(state) {
     const myMemberId = state.user.myDetail.memberId;
