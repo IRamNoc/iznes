@@ -5,8 +5,10 @@ import { ContractService } from '../services';
 import { WalletnodeTxService } from '@setl/core-req-services';
 import { SagaHelper, mDateHelper } from '@setl/utils';
 
-import { ContractModel, ParameterItemModel,
-    PartyModel, PayListItemModel, ReceiveListItemModel } from '../models';
+import {
+    ContractModel, ParameterItemModel,
+    PartyModel, PayListItemModel, ReceiveListItemModel
+} from '../models';
 import { DvpParty, DvpForm, DvpFormParty, partyA, partyB } from './dvp.model';
 import * as moment from 'moment';
 import { error } from 'selenium-webdriver';
@@ -16,7 +18,8 @@ export class DVPContractService {
 
     constructor(private contractService: ContractService,
                 private walletnodeTxService: WalletnodeTxService,
-                private ngRedux: NgRedux<any>) {}
+                private ngRedux: NgRedux<any>) {
+    }
 
     create(parties: [DvpParty, DvpParty],
            values: DvpForm,
@@ -31,13 +34,11 @@ export class DVPContractService {
         model.function = 'dvp_uk';
         model.issuingaddress = values.creator[0].id;
         model.protocol = 'dvp';
-        model.startdate = moment().add(1, 'hour').unix();
 
         const isExchangeContract = parties[1].toggleAssetReturn &&
             values[parties[1].id].return_asset;
 
         this.addPartiesToContract(model, values, isExchangeContract);
-        this.addParametersToContract(model, values);
 
         const contractData = JSON.parse(this.contractService.toJSON(model));
 
@@ -168,20 +169,6 @@ export class DVPContractService {
             splitAsset[1],
             amount,
         ];
-    }
-
-    private addParametersToContract(model: ContractModel, values: DvpForm): void {
-        const parameter = new ParameterItemModel();
-
-        parameter.key = 'nav';
-        parameter.address = values[partyA].address;
-        parameter.value = '';
-        parameter.calculatedIndex = '0';
-        parameter.contractSpecific = 0;
-        parameter.calculationOnly = 0;
-        parameter.signature = '';
-
-        model.parameters.push(parameter);
     }
 
 }

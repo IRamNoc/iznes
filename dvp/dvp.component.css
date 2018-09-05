@@ -4,10 +4,21 @@
     width: 360px;
 }
 
-:host form .form-group input[type=checkbox] { width: auto; }
+:host form .form-group .field-error {
+    width: 360px;
+}
 
-:host various-address-select { margin-bottom: -10px; }
-:host .form-block { margin-bottom: 1.5em; }
+:host form .form-group input[type=checkbox] {
+    width: auto;
+}
+
+:host various-address-select {
+    margin-bottom: -10px;
+}
+
+:host .form-block {
+    margin-bottom: 1.5em;
+}
 
 :host .contract-party {
     border-top: 1px dotted #CCC;
@@ -27,29 +38,31 @@
 :host .contract-party-container {
     border: 1px solid #DDD;
     border-radius: 3px;
-    min-height: 440px;
-    margin-bottom: 1em;
+    min-height: 400px;
+    margin: 2em 0 1em 0;
     position: relative;
 }
-:host .contract-party-container .toggle-asset { margin-bottom: 0; }
-:host .contract-party-container .toggle-asset input { margin-right: 4px; }
+
+:host .contract-party-container .toggle-asset {
+    margin-bottom: 0;
+}
+
+:host .contract-party-container .toggle-asset input {
+    margin-right: 4px;
+}
+
 :host .contract-party-container .contract-party {
     border-top: none;
     padding: 1em 1.5em 0;
 }
-:host .contract-party-container .fa {
-    font-size: 3em;
-    left: 50%;
-    margin-top: 0.75em;
-    position: absolute;
-    top: 360px;
-}
-:host /deep/ .contract-party-container .ui-select-container.dropdown { background: #FFF; }
 
-@media (min-width: 768px) {
-    :host .contract-party-container .fa {
-        margin-left: -2em;
-        margin-top: -0.75em;
-        top: 50%;
-    }
+:host .icon-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 3em;
+}
+
+:host /deep/ .contract-party-container .ui-select-container.dropdown {
+    background: #FFF;
 }
