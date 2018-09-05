@@ -162,10 +162,10 @@ export class UsersCreateUpdateComponent
     private requestUser(): void {
         if (this.isUpdateMode()) {
             this.service.readUsers(this.entityId,
-                                   this.accountId,
-                                   null,
-                                   (data: any) => this.onReadUserSuccess(data),
-                                   (e: any) => this.onReadEntityError());
+                this.accountId,
+                null,
+                (data: any) => this.onReadUserSuccess(data),
+                (e: any) => this.onReadEntityError());
         } else {
             this.initForm(this.userTypes[0]);
         }
@@ -189,8 +189,7 @@ export class UsersCreateUpdateComponent
 
     private initCreateTooltip(): void {
         this.createUserTooltip = {
-            text: this.translate.translate(`Create a new user on the platform. You maybe also send them
-                and invitation to use the platform.`),
+            text: this.translate.translate(`Create a new user on the platform or you may also create and invite the user to use the platform`),
             size: 'small',
         };
 
