@@ -132,7 +132,7 @@ export const calculateFigures = (
 export function calFee(amount: number | string, feePercent: number | string): number {
     amount = Number(amount);
     feePercent = Number(feePercent) / NumberMultiplier;
-    return fixToDecimal((amount * (feePercent / 100)), BlockchainNumberDecimal, 'floor');
+    return fixToDecimal((amount * (feePercent)), BlockchainNumberDecimal, 'floor');
 }
 
 
