@@ -74,7 +74,7 @@ export class UsersAuditComponent
                     id: 'User',
                     dataIndex: 'userName',
                     styleClass: 'name',
-                    title: 'Team',
+                    title: 'User',
                 },
                 {
                     id: 'Field',
@@ -106,7 +106,7 @@ export class UsersAuditComponent
                 },
                 {
                     id: 'ModifiedBy',
-                    dataIndex: 'userName',
+                    dataIndex: 'modifiedBy',
                     styleClass: 'modifiedby',
                     title: 'Modified by',
                 },
@@ -124,7 +124,7 @@ export class UsersAuditComponent
         this.baseService.getCSVExport(
             this.fileDownloader,
             this.csvRequest,
-            `exportUsersAuditCSV`,
+            'exportUsersAuditCSV',
             this.token,
             this.userId,
             this.username,
