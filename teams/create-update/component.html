@@ -63,7 +63,7 @@
                 </div>
                 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save()">{{
+                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create ' + noun :
                         'Update ' + noun

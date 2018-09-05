@@ -15,9 +15,9 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     @Input() entityId: number;
     @Input() status: number = 0;
 
-    private textEnable: string = '';
-    private textDisable: string = '';
-    private textPending: string = '';
+    textEnable: string = '';
+    textDisable: string = '';
+    textPending: string = '';
 
     constructor(private toaster: ToasterService,
                 private translate: MultilingualService,
