@@ -71,6 +71,7 @@ export class SetlMessagePOAComponent implements OnInit {
         conew: 'Create Contract',
         conot: 'Notify Contract',
         istra: 'Issuer transfer',
+        istfm: 'Cancel Asset',
         nsreg: 'Register Namespace',
         nstra: 'Transfer Namespace',
         txnul: 'Null transaction',
