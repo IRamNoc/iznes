@@ -1,5 +1,5 @@
 // Vendor
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -7,23 +7,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
-import * as SagaHelper from '@setl/utils/sagaHelper';
 
 /* Alert service. */
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
-/* Clarity */
-import { ClrDatagridStateInterface } from '@clr/angular';
 
 /* Utils. */
-import { immutableHelper, NumberConverterService, FileDownloader } from '@setl/utils';
+import { NumberConverterService, FileDownloader } from '@setl/utils';
 
 /* services */
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 
-import { Subscription } from 'rxjs';
 import { APP_CONFIG, AppConfig } from "@setl/utils/index";
 import { MultilingualService } from '@setl/multilingual';
 
@@ -60,7 +56,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     selectedTopHolders = 0;
 
     // modal data
-    showModal = false;
     exportType = '';
 
     isListLevel = true;
@@ -71,8 +66,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     total: number;
     itemPerPage = 10;
     lastPage: number;
-    // loading = true;
-    loading = false; // debug
 
     // Locale
     language = 'fr';
@@ -121,15 +114,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     holdersFundData: any = [];
     holdersShareData: any = [];
 
-    gotDataToExport = false;
-
     loadingDatagrid: boolean = false;
     setLoadingDatagrid: boolean = false;
 
     /* Private Properties. */
     private myDetails: any = {};
     private subscriptions: Array<any> = [];
-    private appConfig: any = {};
 
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['user', 'myDetail']) myDetailOb: any;
@@ -139,7 +129,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundsByUserList']) fundsByUserListOb;
 
     // fund details
-    // @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersRequested']) fundWithHoldersRequestedOb;
     @select(['ofi', 'ofiAmDashboard', 'shareHolders', 'fundWithHoldersList']) fundWithHoldersListOb;
 
     // shares select list
@@ -151,10 +140,8 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
-                private alertsService: AlertsService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private _numberConverterService: NumberConverterService,
                 private _fb: FormBuilder,
                 private memberSocketService: MemberSocketService,
                 private ofiReportsService: OfiReportsService,
@@ -162,14 +149,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 private _fileDownloader: FileDownloader,
                 public _translate: MultilingualService,
                 private activatedRoute: ActivatedRoute,
-                @Inject(APP_CONFIG) appConfig: AppConfig
     ) {
-        this.appConfig = appConfig;
         this.loadingDatagrid = false;
 
-        this.isListLevel = (this.router.url.indexOf('/holders-list/list') !== -1) ? true : false;
-        this.isFundLevel = (this.router.url.indexOf('/funds/') !== -1) ? true : false;
-        this.isShareLevel = (this.router.url.indexOf('/shares/') !== -1) ? true : false;
+        this.isListLevel = this.router.url.indexOf('/holders-list/list') !== -1;
+        this.isFundLevel = this.router.url.indexOf('/funds/') !== -1;
+        this.isShareLevel = this.router.url.indexOf('/shares/') !== -1;
 
         this.subscriptions.push(this.requestLanguageObj.subscribe((requested) => this.getLanguage(requested)));
         this.subscriptions.push(this.myDetailOb.subscribe((myDetails) => this.getUserDetails(myDetails)));
@@ -204,13 +189,12 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.fundsByUserListOb.subscribe((list) => this.fundsByUserList(list)));
 
         // fund list
-        // this.subscriptions.push(this.fundWithHoldersRequestedOb.subscribe((requested) => this.fundWithHoldersRequested(requested)));
         this.subscriptions.push(this.fundWithHoldersListOb.subscribe((list) => this.fundWithHoldersList(list)));
 
         // valueChange
-        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch(form)));
-        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch(form)));
+        this.subscriptions.push(this.listSearchForm.valueChanges.subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.searchForm.valueChanges.subscribe((form) => this.requestSearch()));
+        this.subscriptions.push(this.filtersForm.valueChanges.subscribe((form) => this.requestSearch()));
 
         this.setInitialTabs();
 
@@ -291,14 +275,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         // handle showing data grid loading
         this.activatedRoute.url.subscribe((url) => {
-            console.log(url);
-
             if (url && url[0].path == 'list') {
                 this.setLoadingDatagrid = false;
             } else {
                 this.setLoadingDatagrid = true;
             }
-
         });
     }
 
@@ -371,7 +352,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
         if (list.length > 0) {
             if (!!list[0].Message) {
-                this.gotDataToExport = false;
                 let id = this.fundList.findIndex((r) => r.id == this.selectedFundId)
                 this.tabTitle = (id > -1 ? this.fundList[id].text : '');
             } else {
@@ -392,7 +372,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
 
                 let lei = (typeof this.fundsData[0].fundLei !== 'undefined') ? ' - ' + this.fundsData[0].fundLei : '';
                 this.tabTitle = `${this.fundsData[0].fundName}${lei}`;
-                this.gotDataToExport = true;
 
                 this.fundSettlementDate = this.fundsData[0].lastSettlementDate;
                 this.fundsNbHolders = this.fundsData[0].fundHolderNumber;
@@ -472,7 +451,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     setInitialTabs() {
         // Get opened tabs from redux store.
         const openedTabs = [];
-        // const openedTabs = immutableHelper.get(this.ngRedux.getState(), ['ofi', 'ofiOrders', 'manageOrders', 'openedTabs']);
 
         if (openedTabs.length === 0) {
             /* Default tabs. */
@@ -490,8 +468,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             ];
             return true;
         }
-
-        // this.tabsControl = openedTabs;
     }
 
     handleClickShare(data) {
@@ -506,7 +482,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         }
     }
 
-    requestSearch(form) {
+    requestSearch() {
 
         this.loadingDatagrid = true;
 
@@ -539,7 +515,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 this.fundsAUM = 0;
                 this.fundsCCY = 'EUR';
                 this.fundSettlementDate = '';
-                this.gotDataToExport = false;
                 this.router.navigateByUrl('/reports/holders-list/list');
             }
         }
@@ -565,7 +540,6 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
                 this.shareSettlementDate = '';
                 this.sharesAUM = 0;
                 this.sharesCCY = '';
-                this.gotDataToExport = false;
                 this.router.navigateByUrl('/reports/holders-list/list');
             }
         }
