@@ -10,6 +10,7 @@ export const nonMenuLink = {
         '\/product-module\/product-characteristic\/[^\/]*',
         '\/my-requests\/[^\/]*',
         '\/kyc-audit-trail',
+        '\/product-module\/product\/fund-share\/*',
     ],
     system_admin: [...commonMenuLink],
     am: [
