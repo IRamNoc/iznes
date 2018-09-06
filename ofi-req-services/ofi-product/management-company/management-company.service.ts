@@ -123,7 +123,7 @@ export class OfiManagementCompanyService {
 
     requestManagementCompanyList(): any {
         const messageBody: ManagementCompanyRequestMessageBody = {
-            RequestName: 'getManagementCompanyList',
+            RequestName: 'getmanagementcompanylist',
             token: this.memberSocketService.token,
             accountID: this.accountId,
         };

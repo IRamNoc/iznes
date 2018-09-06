@@ -505,7 +505,14 @@ export class FundShareComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.unSubscribe),
             )
-            .subscribe(production => this.model.isProduction = production);
+            .subscribe((production) => {
+                this.model.isProduction = production;
+
+                if (!this.model.isProduction) {
+                    this.model.documents.mandatory.kiid.required = false;
+                    this.model.documents.mandatory.prospectus.required = false;
+                }
+            });
 
         this.ofiFundShareFormService.subscribeToSteps((step) => {
             const stepObj = (this.errorHelper.steps(step.Step) as ShareCreationStep);
