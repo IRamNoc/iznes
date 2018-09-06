@@ -296,14 +296,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(clearRequestedWalletLabel());
 
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
-                this.handleLabelResponse(message);
+                this.handleLabelResponse(message, 'updated', address);
             }, (labelResponse) => {
                 this.showErrorResponse(labelResponse);
             }));
 
     }
 
-    handleLabelResponse(message) {
+    handleLabelResponse(message, type, address) {
         switch (message) {
         case 'Duplicate Label':
             this.toaster.pop('error', 'Sub-portfolio name already exists');
@@ -318,7 +318,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             break;
 
         default:
-            this.toaster.pop('success', 'Your sub-portfolio ' + this.tabDetail[0]['formControl'].value.subPortfolioName + ' has been successfully created. This may take a moment to update.');
+            this.toaster.pop('success', 'Your sub-portfolio ' + this.tabDetail[0]['formControl'].value.subPortfolioName + ' has been successfully ' + type + '. This may take a moment to update.');
             break;
         }
     }
@@ -338,13 +338,15 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             type: type,
         });
 
+        this.createError = 0;
+
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
             (labelResponse) => {
                 this.ngRedux.dispatch(clearRequestedWalletLabel());
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
 
                 if (message == 'All OK' && type == 1) {
-                    this.handleLabelResponse(message);
+                    this.handleLabelResponse(message, 'created', '');
                     this.closeAddModal();
 
                     // update the default home page to '/home'
