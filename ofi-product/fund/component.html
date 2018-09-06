@@ -52,7 +52,7 @@
                                     [formControl]="umbrellaControl">
                                 </ng-select>
                             </div>
-                            
+
                             <div class="form-group col-sm-3 btn-container">
                                 <p>
                                     {{'or' | translate}}
@@ -270,14 +270,9 @@
                                             </div>
                                         </div>
                                         <div class="form-group col-sm-6">
-                                            <label for="uf_investmentAdvisor">{{'Investment Advisor' | translate}}
-
-                                            </label>
-                                            <div>
-                                                <ng-select id="uf_investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [multiple]="true" [disabled]="umbrellaEditForm.controls['investmentAdvisorID'].disabled"
-                                                           [placeholder]="_translate.translate('Select')" [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
-                                                </ng-select>
-                                            </div>
+                                            <label class="control-label" for="uf_investmentAdvisor">{{'Investment Advisor' | translate}}</label>
+                                            <input type="text" name="uf_investmentAdvisor" id="uf_investmentAdvisor" [formControl]="umbrellaEditForm.controls['investmentAdvisorID']">
+                                            <span class="field-error" *ngIf="umbrellaEditForm.controls['investmentAdvisorID'].hasError('required') && umbrellaEditForm.controls['investmentAdvisorID'].touched">{{'Incorrect entry' | translate}}</span>
                                         </div>
                                         <div class="form-group col-sm-6">
                                             <label for="uf_payingAgent">{{'Paying Agent' | translate}}
@@ -842,11 +837,8 @@
 
                                             <div class="form-group col-sm-6">
                                                 <label class="control-label" for="investmentAdvisor">{{'Investment Advisor' | translate}}</label>
-                                                <ng-select id="investmentAdvisor" [items]="investmentAdvisorItems" [allowClear]="true" [multiple]="true" [placeholder]="_translate.translate('Select')"
-                                                           [formControl]="fundForm.controls['investmentAdvisorID']">
-
-
-                                                </ng-select>
+                                                <input type="text" name="investmentAdvisor" id="investmentAdvisor" [formControl]="fundForm.controls['investmentAdvisorID']">
+                                                <span class="field-error" *ngIf="fundForm.controls['investmentAdvisorID'].hasError('required') && fundForm.controls['investmentAdvisorID'].touched">{{'Incorrect entry' | translate}}</span>
                                             </div>
 
                                             <div class="form-group col-sm-6">
