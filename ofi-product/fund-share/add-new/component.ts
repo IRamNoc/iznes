@@ -11,11 +11,6 @@ import {
     setRequestedIznesFunds,
     clearRequestedIznesFunds,
 } from '@ofi/ofi-main/ofi-store/ofi-product/fund/fund-list';
-import {
-    getOfiFundShareSelectedFund,
-    ofiSetCurrentFundShareSelectedFund,
-    ofiClearCurrentFundShareSelectedFund,
-} from '@ofi/ofi-main/ofi-store/ofi-product/fund-share-sf';
 
 import { OfiFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund/fund.service';
 import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/fund-share/service';
@@ -26,7 +21,6 @@ import { OfiFundShareService } from '@ofi/ofi-main/ofi-req-services/ofi-product/
     templateUrl: './component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class AddNewFundShareComponent implements OnInit, OnDestroy {
 
     fundList: any;
@@ -41,13 +35,15 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
     @select(['ofi', 'ofiProduct', 'ofiFund', 'fundList', 'iznFundList']) fundListOb: Observable<any>;
     @select(['ofi', 'ofiProduct', 'ofiFundShareList', 'iznShareList']) shareListOb: Observable<any>;
 
-    constructor(private redux: NgRedux<any>,
-                private changeDetectorRef: ChangeDetectorRef,
-                private router: Router,
-                private ofiFundService: OfiFundService,
-                private ofiFundShareService: OfiFundShareService,
-                private route: ActivatedRoute,
-                private location: Location) {
+    constructor(
+        private redux: NgRedux<any>,
+        private changeDetectorRef: ChangeDetectorRef,
+        private router: Router,
+        private ofiFundService: OfiFundService,
+        private ofiFundShareService: OfiFundShareService,
+        private route: ActivatedRoute,
+        private location: Location,
+    ) {
     }
 
     ngOnInit() {
@@ -56,8 +52,6 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         this.initForms();
         this.initSubscriptions();
         this.checkIfFromFund();
-
-        this.redux.dispatch(ofiClearCurrentFundShareSelectedFund());
     }
 
     checkIfFromFund() {
@@ -208,13 +202,12 @@ export class AddNewFundShareComponent implements OnInit, OnDestroy {
         if (!this.isValid) return;
 
         const selectedFundId = _.get(this.newFundShareForm.value.fund, [0, 'id'], false);
-        if (selectedFundId) {
-            this.redux.dispatch(ofiSetCurrentFundShareSelectedFund(selectedFundId));
-        }
 
-        const url = `product-module/product/fund-share${
-            this.newFundShareForm.value.share.length ? `?prefill=${this.newFundShareForm.value.share[0].id}` : ''
-            }`;
+        const params = this.newFundShareForm.value.share.length
+            ? `?prefill=${this.newFundShareForm.value.share[0].id}`
+            : `?fund=${selectedFundId}`;
+
+        const url = `product-module/product/fund-share${params}`;
 
         this.router.navigateByUrl(url);
     }

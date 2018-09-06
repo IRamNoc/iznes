@@ -170,4 +170,21 @@ export class OfiUmbrellaFundService {
             {},
         ));
     }
+
+    fetchUmbrellaByID(umbrellaFundID: number) {
+        const messageBody = {
+            RequestName: 'izngetumbrellabyid',
+            token: this.memberSocketService.token,
+            umbrellaFundID,
+        };
+
+        const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, messageBody);
+
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [SET_UMBRELLA_FUND_LIST],
+            [],
+            asyncTaskPipe,
+            {},
+        ));
+    }
 }

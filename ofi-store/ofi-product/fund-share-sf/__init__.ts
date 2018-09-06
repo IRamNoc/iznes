@@ -1,1 +1,0 @@
-export const name = 'ofi-product-fund-share-selected-fund';

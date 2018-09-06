@@ -1,12 +1,24 @@
-import {Injectable} from '@angular/core';
-import {FormArray} from '@angular/forms';
-import {MemberSocketService} from '@setl/websocket-service';
+import { Injectable } from '@angular/core';
+import { FormArray } from '@angular/forms';
+import { MemberSocketService } from '@setl/websocket-service';
 
-import {mapValues, isArray, isObject, reduce, pickBy, get as getValue, merge, omit, flatten, pick, isNil} from 'lodash';
+import {
+    mapValues,
+    isArray,
+    isObject,
+    reduce,
+    pickBy,
+    get as getValue,
+    merge,
+    omit,
+    flatten,
+    pick,
+    isNil
+} from 'lodash';
 
-import {NewRequestService} from '../new-request.service';
-import {RequestsService} from '../../requests.service';
-import {DocumentsService} from './documents.service';
+import { NewRequestService } from '../new-request.service';
+import { RequestsService } from '../../requests.service';
+import { DocumentsService } from './documents.service';
 
 @Injectable()
 export class IdentificationService {
@@ -68,7 +80,7 @@ export class IdentificationService {
         return Promise.all(promises);
     }
 
-    handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet){
+    handleBeneficiaries(formGroupBeneficiaries, kycID, connectedWallet) {
         let promises = [];
 
         formGroupBeneficiaries.controls.forEach(formGroupBeneficiary => {
@@ -89,6 +101,16 @@ export class IdentificationService {
 
         });
         return promises;
+    }
+
+    deleteBeneficiary(kycID, id) {
+        const messageBody = {
+            RequestName: 'deletekyccompanybeneficiaries',
+            kycID: kycID,
+            id: id,
+        };
+
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestUpdateCurrentStep(kycID, context) {
@@ -132,7 +154,11 @@ export class IdentificationService {
             RequestName: 'updatekyccompanybeneficiaries',
             ...extracted
         };
-        return this.requestsService.sendRequest(messageBody);
+        return this.requestsService.sendRequest(messageBody).then((data) => {
+            if (!!data[1].Data[0].companyBeneficiariesID) {
+                formGroupBeneficiary.controls['companyBeneficiariesID'].setValue(data[1].Data[0].companyBeneficiariesID);
+            }
+        });
     }
 
     sendRequestBanking(formGroupBankingValue) {
@@ -144,6 +170,15 @@ export class IdentificationService {
         };
 
         return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));
+    }
+
+    deleteHolder(custodianID) {
+        const messageBody = {
+            RequestName: 'deletekycbanking',
+            custodianID: custodianID
+        };
+
+        return this.requestsService.sendRequest(messageBody);
     }
 
     sendRequestClassification(formGroupClassification) {

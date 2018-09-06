@@ -92,6 +92,22 @@ export class OfiFundShareService {
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
 
+    fetchIznesShareList() {
+        const asyncTaskPipe = this.requestIznesShareList();
+
+        this.ngRedux.dispatch(
+            SagaHelper.runAsync(
+                [SET_FUND_SHARE],
+                [],
+                asyncTaskPipe,
+                {},
+                () => {
+                    this.ngRedux.dispatch(setRequestedIznesShares());
+                },
+            ),
+        );
+    }
+
     requestIznesShareList() {
         const messageBody: IznesShareListRequestMessageBody = {
             RequestName: 'izngetfundsharelist',
@@ -417,8 +433,8 @@ export class OfiFundShareService {
         return createMemberNodeRequest(this.memberSocketService, messageBody);
     }
 
-    getInvestorShareByID(shareID: number) {
-        const asyncTaskPipe = this.fetchInvestorShareByID(shareID);
+    fetchInvestorShareByID(shareID: number) {
+        const asyncTaskPipe = this.requestInvestorShareByID(shareID);
 
         this.ngRedux.dispatch(SagaHelper.runAsync(
             [SET_FUND_SHARE],
@@ -427,7 +443,7 @@ export class OfiFundShareService {
         ));
     }
 
-    fetchInvestorShareByID(shareID: number) {
+    requestInvestorShareByID(shareID: number) {
         const messageBody = {
             RequestName: 'iznesgetinvestorsharebyid',
             token: this.memberSocketService.token,
@@ -436,5 +452,4 @@ export class OfiFundShareService {
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
     }
-
 }

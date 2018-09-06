@@ -1,6 +1,6 @@
 import { takeUntil } from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { select } from '@angular-redux/store';
 import { Location } from '@angular/common';
 import { Subject, combineLatest } from 'rxjs';
@@ -59,6 +59,7 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
+        private router: Router,
         private location: Location,
         private productCharacteristicsService: ProductCharacteristicsService,
         private currenciesService: OfiCurrenciesService,
@@ -71,8 +72,10 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.route.params.pipe(
-            takeUntil(this.unSubscribe))
+        this.route.params
+        .pipe(
+            takeUntil(this.unSubscribe)
+        )
         .subscribe((params) => {
             if (params.isin) {
                 this.productCharacteristicsService.getProductCharacteristics(params.isin);
@@ -80,8 +83,10 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
             }
         });
 
-        combineLatest(this.currencies$, this.productCharacteristics$).pipe(
-            takeUntil(this.unSubscribe))
+        combineLatest(this.currencies$, this.productCharacteristics$)
+        .pipe(
+            takeUntil(this.unSubscribe)
+        )
         .subscribe(([c, p]) => {
             const currencies = c.toJS();
             if (!currencies.length || !p.get(this.isin)) {
@@ -150,5 +155,10 @@ export class ProductCharacteristicComponent implements OnInit, OnDestroy {
 
     onClickBack() {
         this.location.back();
+    }
+
+    onClickMoreDetails() {
+        const url = `product-module/product/fund-share/${this.currentProduct['fundShareID']}`;
+        this.router.navigateByUrl(url);
     }
 }

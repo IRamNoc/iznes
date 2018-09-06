@@ -4,6 +4,7 @@ export interface ManagementCompanyDetail {
     companyID: string;
     entityID?: string;
     companyName: string;
+    emailAddress: string;
     country: string;
     addressPrefix: string;
     postalAddressLine1: string;

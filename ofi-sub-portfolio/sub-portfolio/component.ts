@@ -63,6 +63,8 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     showAddress = {};
 
+    createError: number = 0;
+
     // List of Redux observable.
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
@@ -294,14 +296,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 this.ngRedux.dispatch(clearRequestedWalletLabel());
 
                 const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
-                this.handleLabelResponse(message);
+                this.handleLabelResponse(message, 'updated', address);
             }, (labelResponse) => {
                 this.showErrorResponse(labelResponse);
             }));
 
     }
 
-    handleLabelResponse(message) {
+    handleLabelResponse(message, type, address) {
         switch (message) {
         case 'Duplicate Label':
             this.toaster.pop('error', 'Sub-portfolio name already exists');
@@ -316,7 +318,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             break;
 
         default:
-            this.toaster.pop('success', 'Your sub-portfolio ' + this.tabDetail[0]['formControl'].value.subPortfolioName + ' has been successfully created. This may take a moment to update.');
+            this.toaster.pop('success', 'Your sub-portfolio ' + this.tabDetail[0]['formControl'].value.subPortfolioName + ' has been successfully ' + type + '. This may take a moment to update.');
             break;
         }
     }
@@ -325,44 +327,47 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.showAddModal = !this.showAddModal;
     }
 
-    closeAddModal(type) {
-        if (type == 1) {
-            //go save!
+    saveSubPortfolio(type) {
+        let name = this.tabDetail[0]['formControl'].value.subPortfolioName;
+        let iban = this.tabDetail[0]['formControl'].value.subPortfolioIban;
 
-            let name = this.tabDetail[0]['formControl'].value.subPortfolioName;
-            let iban = this.tabDetail[0]['formControl'].value.subPortfolioIban;
+        const asyncTaskPipe = this._ofiSubPortfolioService.saveNewSubPortfolio({
+            walletId: this.connectedWalletId,
+            name: name,
+            iban: iban,
+            type: type,
+        });
 
-            const asyncTaskPipe = this._ofiSubPortfolioService.saveNewSubPortfolio({
-                walletId: this.connectedWalletId,
-                name: name,
-                iban: iban
-            });
+        this.createError = 0;
 
-            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-                (labelResponse) => {
-                    this.ngRedux.dispatch(clearRequestedWalletLabel());
-                    const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
-                    this.handleLabelResponse(message);
+        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
+            (labelResponse) => {
+                this.ngRedux.dispatch(clearRequestedWalletLabel());
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
 
-                    if (message == 'All OK') {
-                        this.newForm();
-                        this.toggleAddModal();
+                if (message == 'All OK' && type == 1) {
+                    this.handleLabelResponse(message, 'created', '');
+                    this.closeAddModal();
 
-                        // update the default home page to '/home'
-                        if ( this.isFirstAddress() ) {
-                           this._myUserService.updateHomePage('/home');
-                        }
+                    // update the default home page to '/home'
+                    if (this.isFirstAddress()) {
+                        this._myUserService.updateHomePage('/home');
                     }
-                },
-                (labelResponse) => {
-                    this.showErrorMessage('<span mltag="txt_sub_fail">' +
-                        'Error creating subportfolio' +
-                        '</span>');
-                }));
-        } else {
-            this.newForm();
-            this.toggleAddModal();
-        }
+                }
+
+                if (message != 'All OK') this.createError = message;
+            },
+            (labelResponse) => {
+                this.showErrorMessage('<span mltag="txt_sub_fail">' +
+                    'Error creating subportfolio' +
+                    '</span>');
+            }));
+    }
+
+    closeAddModal() {
+        this.newForm();
+        this.createError = 0;
+        this.toggleAddModal();
     }
 
     handleDelete(address) {
@@ -460,7 +465,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
      * @return {boolean}
      */
     isFirstAddress(): boolean {
-      return this.addressList.length === 0;
+        return this.addressList.length === 0;
     }
 
 }

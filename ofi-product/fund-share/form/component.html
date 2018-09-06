@@ -11,7 +11,7 @@
 
         </button>
         <clr-tab-content class="outer">
-            <div class="row tab-header-container">
+            <div *ngIf="!isRead()" class="row tab-header-container">
                 <div class="col-sm-6">
                     <p>{{(isCreate() || currDraft == 1 ? 'Please fill in the following information to create a new Share.': 'Ammend the following information to update this share.') | translate}}</p>
                 </div>
@@ -80,7 +80,7 @@
                 </div>
                 <div class="row panel-body" [class.hidden]="!isPanelOpen(panels['fund']['root'])">
                     <!-- fund selector -->
-                    <div class="well">
+                    <div *ngIf="!isRead()" class="well selectFundFormContainer">
                         <div class="row panel-header">
                             <div class="col-sm-12">
                                 <a href="#" (click)="openPanel(panels['fund']['select'], $event)">
@@ -507,13 +507,15 @@
 
             <div class="form-group row actions bottom">
                 <div class="col-sm-12">
-                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">{{'Cancel' | translate}}</button>
+                    <button (click)="cancelFundShare()" class="btn btn-default action-button cancel" id="cancelFundShareBottom">
+                        {{isRead() ? 'Back' : 'Cancel' | translate}}
+                    </button>
 
                     <button *ngIf="isCreate() || currDraft == 1" id="saveDraftFundShareBottom" type="button" class="btn btn-primary" (click)="saveDraft()">
                         <i class="fa fa-save"></i> {{(isCreate() ? 'Save Draft' : 'Update Draft') | translate}}
                     </button>
 
-                    <button type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
+                    <button *ngIf="!isRead()" type="button" class="btn btn-primary action-button save" id="saveFundShareBottom" (click)="saveFundShare()" [disabled]="!model.isValid()">
                         <i class="fa fa-save"></i>
                         {{(isCreate() || currDraft == 1 ? 'Add new Share' : 'Update Share') | translate}}
                     </button>

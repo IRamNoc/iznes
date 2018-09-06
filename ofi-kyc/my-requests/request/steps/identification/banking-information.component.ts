@@ -1,14 +1,14 @@
-import {Component, OnInit, Input, OnDestroy, ViewChild} from '@angular/core';
-import {FormArray, FormControl} from '@angular/forms';
-import {get as getValue, isEmpty, castArray} from 'lodash';
-import {Subject} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
-import {select} from '@angular-redux/store';
+import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
+import { get as getValue, isEmpty, castArray } from 'lodash';
+import { Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
+import { select } from '@angular-redux/store';
 
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {IdentificationService} from '../identification.service';
-import {NewRequestService} from '../../new-request.service';
-import {countries} from "../../../requests.config";
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { IdentificationService } from '../identification.service';
+import { NewRequestService } from '../../new-request.service';
+import { countries } from "../../../requests.config";
 
 @Component({
     selector: 'banking-information',
@@ -52,19 +52,19 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         holderCustom.disable();
 
         this.form.get('custodianHolderAccount').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let value = getValue(data, [0, 'id']);
-                if (value === 'other') {
-                    holderCustom.enable();
-                } else {
-                    holderCustom.disable();
-                }
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            let value = getValue(data, [0, 'id']);
+            if (value === 'other') {
+                holderCustom.enable();
+            } else {
+                holderCustom.disable();
+            }
 
-                this.formPercent.refreshFormPercent();
-            })
+            this.formPercent.refreshFormPercent();
+        })
         ;
     }
 
@@ -81,42 +81,49 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
 
     removeHolder(i) {
         let control = this.form.get('custodianHolderCustom') as FormArray;
+
+        if (control.at(i).value.custodianID !== '') {
+            this.identificationService.deleteHolder(
+                control.at(i).value.custodianID
+            );
+        }
+
         control.removeAt(i);
     }
 
     getCurrentFormData() {
         this.requests$
-            .pipe(
-                filter(requests => !isEmpty(requests)),
-                map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.identificationService.getCurrentFormBankingData(request.kycID).then(formData => {
-                        if (formData) {
-                            this.form.patchValue(formData);
+        .pipe(
+            filter(requests => !isEmpty(requests)),
+            map(requests => castArray(requests[0])),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(requests => {
+            requests.forEach(request => {
+                this.identificationService.getCurrentFormBankingData(request.kycID).then(formData => {
+                    if (formData) {
+                        this.form.patchValue(formData);
 
-                            if(formData.length){
-                                let bankingAccounts = (this.form.get('custodianHolderCustom') as FormArray).controls;
-                                bankingAccounts.splice(0);
+                        if (formData.length) {
+                            let bankingAccounts = (this.form.get('custodianHolderCustom') as FormArray).controls;
+                            bankingAccounts.splice(0);
 
-                                let account = getValue(formData, [0, 'custodianHolderAccount']);
-                                let custodianHolderAccount : FormControl = this.form.get('custodianHolderAccount');
-                                custodianHolderAccount.patchValue(account);
-                                custodianHolderAccount.updateValueAndValidity();
+                            let account = getValue(formData, [0, 'custodianHolderAccount']);
+                            let custodianHolderAccount: FormControl = this.form.get('custodianHolderAccount');
+                            custodianHolderAccount.patchValue(account);
+                            custodianHolderAccount.updateValueAndValidity();
 
-                                formData.forEach(controlValue => {
-                                    let control = this.newRequestService.createHolderCustom();
+                            formData.forEach(controlValue => {
+                                let control = this.newRequestService.createHolderCustom();
 
-                                    control.patchValue(controlValue);
-                                    bankingAccounts.push(control);
-                                });
-                            }
+                                control.patchValue(controlValue);
+                                bankingAccounts.push(control);
+                            });
                         }
-                    });
+                    }
                 });
-            })
+            });
+        })
         ;
     }
 

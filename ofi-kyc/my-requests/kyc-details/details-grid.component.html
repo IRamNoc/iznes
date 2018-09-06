@@ -21,8 +21,12 @@
         </td>
         <td class="left px-1">
             <span *ngIf="!row.hash">
-                <span *ngIf="!isFromForm(row.originalId)">
+                <span *ngIf="!isFromForm(row.originalId) && row.value != ''">
                     {{row.value}}
+                </span>
+
+                <span *ngIf="!isFromForm(row.originalId) && row.value == ''" class="empty">
+                    [empty]
                 </span>
 
                 <ng-container *ngIf="isFromForm(row.originalId)">

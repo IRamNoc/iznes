@@ -85,7 +85,7 @@
     </clr-tabs>
 
     <clr-tabs *ngIf="kycId != ''">
-        <clr-tab *ngIf="showTab">
+        <clr-tab>
             <button clrTabLink>{{'KYC Information' | translate}}</button>
             <clr-tab-content *clrIfActive="true">
 
@@ -141,14 +141,18 @@
                         </div>
                     </div>
                 </form>
-                <div class="hr-line-dashed"></div>
 
-                <div class="row">
-                    <div class="col-sm-12" style="margin-top: 0.5rem">
-                        <p>{{'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
+                <ng-container *ngIf="showInfo">
+                    <div class="hr-line-dashed"></div>
+
+                    <div class="row">
+                        <div class="col-sm-12" style="margin-top: 0.5rem">
+                            <p>{{'Please find below the information and documents provided by @companyName@ during the KYC application to your company.' | translate: {'companyName': companyName} }}</p>
+                        </div>
                     </div>
-                </div>
-                <kyc-details [kycID]="kycId"></kyc-details>
+                    <kyc-details [kycID]="kycId"></kyc-details>
+                </ng-container>
+
                 <div align="middle" style="margin-top: 20px;">
                     <button class="btn btn-info" (click)="changePage('list')">{{'Back' | translate}}</button>
                 </div>
