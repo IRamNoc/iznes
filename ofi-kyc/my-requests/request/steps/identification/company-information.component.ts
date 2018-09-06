@@ -243,10 +243,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
     removeBeneficiary(i) {
         let control = this.form.get('beneficiaries') as FormArray;
 
-        this.identificationService.deleteBeneficiary(
-            control.at(i).value.kycID,
-            control.at(i).value.companyBeneficiariesID
-        );
+        if (control.at(i).value.companyBeneficiariesID !== '') {
+            this.identificationService.deleteBeneficiary(
+                control.at(i).value.kycID,
+                control.at(i).value.companyBeneficiariesID
+            );
+        }
 
         control.removeAt(i);
 

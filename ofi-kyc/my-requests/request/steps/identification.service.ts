@@ -172,6 +172,15 @@ export class IdentificationService {
         return this.requestsService.sendRequest(messageBody).then(response => getValue(response, [1, 'Data', 0]));
     }
 
+    deleteHolder(custodianID) {
+        const messageBody = {
+            RequestName: 'deletekycbanking',
+            custodianID: custodianID
+        };
+
+        return this.requestsService.sendRequest(messageBody);
+    }
+
     sendRequestClassification(formGroupClassification) {
         let formGroupClassificationValue = omit(formGroupClassification.value, ['nonPro', 'pro']);
         formGroupClassificationValue = merge(
