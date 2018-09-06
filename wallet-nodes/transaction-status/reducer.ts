@@ -25,7 +25,7 @@ function addWalletNodeTXStatus(actionType, action, state) {
     const time = moment.unix(rawData.creation).utc().format('YYYY-MM-DD HH:mm:ss');
 
     return Object.assign({}, state, {
-        [rawData.hash]: { success: false, txtype: rawData.txtype, lastUpdated: time },
+        [rawData.hash]: { success: false, txtype: rawData.txtype, dateRequested: time },
     });
 
 }
@@ -38,7 +38,7 @@ function updateWalletNodeTXStatus(actionType, action, state) {
     for (const tx of rawData) {
         if (newState[tx[3]] !== undefined) {
             newState[tx[3]].success = true;
-            newState[tx[3]].lastUpdated = moment.unix(tx[8]).utc().format('YYYY-MM-DD HH:mm:ss');
+            newState[tx[3]].dateRequested = moment.unix(tx[8]).utc().format('YYYY-MM-DD HH:mm:ss');
         }
     }
 

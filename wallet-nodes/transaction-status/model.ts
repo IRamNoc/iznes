@@ -1,7 +1,7 @@
 export interface TransactionsDetail {
     complete: string;
     txtype?: string;
-    lastUpdated: string;
+    dateRequested: string;
 }
 
 export interface WalletNodeTransactionStatusState {
