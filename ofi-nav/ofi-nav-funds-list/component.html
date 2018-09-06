@@ -46,12 +46,9 @@
                             </ng-select>
                         </div>
                         <div class="form-group col-sm-4">
-                            <label class="control-label">{{'&nbsp;' | translate}}</label>
-                            <div class="input-group date-pick-wrapper">
+                            <div class="input-group date-pick-wrapper no-label">
                                 <span class="fa fa-calendar"></span>
                                 <input id="Date-filter" name="searchDate" [placeholder]="_translate.translate('Choose a date')" formControlName="date" [dpDayPicker]="dateConfig" mode="day" theme="dp-material">
-
-
                             </div>
                         </div>
                     </div>
