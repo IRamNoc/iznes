@@ -1,8 +1,15 @@
-#blockchain-status-tracker {
+:host {
     @media only screen and (min-width: 1700px) {
         position: absolute;
         left: 30%;
     }
+    .sm-col {
+        max-width: 200px;
+    }
+}
+
+#blockchain-status-tracker {
+    cursor: pointer;
     .pending, .success {
         background: #ffffff;
         box-sizing: border-box;
@@ -44,7 +51,7 @@
             border: 0 solid transparent;
             animation-duration: 1s;
             animation-name: spinRotate;
-            animation-iteration-count: infinite;
+            animation-iteration-count: 5;
             animation-direction: normal;
         }
     }
