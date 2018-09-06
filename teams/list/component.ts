@@ -34,6 +34,7 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         this.csvRequest = {
             userTeamID: null,
             textSearch: null,
+            isCSVRequest: true,
         };
     }
 
@@ -61,7 +62,7 @@ export class UserTeamsListComponent extends AccountAdminListBase implements OnIn
         this.baseService.getCSVExport(
             this.fileDownloader,
             this.csvRequest,
-            `exportTeamsCSV`,
+            'exportTeamsCSV',
             this.token,
             this.userId,
             this.username,
