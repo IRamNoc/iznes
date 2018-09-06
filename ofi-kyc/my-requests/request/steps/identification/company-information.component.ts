@@ -1,17 +1,17 @@
-import {Component, Input, OnInit, OnDestroy, ViewChild} from '@angular/core';
-import {FormGroup, FormArray} from '@angular/forms';
-import {get as getValue, filter, isEmpty, castArray} from 'lodash';
-import {select} from '@angular-redux/store';
-import {Subject} from 'rxjs';
-import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
+import { Component, Input, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { FormGroup, FormArray } from '@angular/forms';
+import { get as getValue, filter, isEmpty, castArray } from 'lodash';
+import { select } from '@angular-redux/store';
+import { Subject } from 'rxjs';
+import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 
-import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
-import {RequestsService} from '../../../requests.service';
-import {IdentificationService} from '../identification.service';
-import {DocumentsService} from '../documents.service';
+import { FormPercentDirective } from '@setl/utils/directives/form-percent/formpercent';
+import { RequestsService } from '../../../requests.service';
+import { IdentificationService } from '../identification.service';
+import { DocumentsService } from '../documents.service';
 
-import {NewRequestService, configDate} from '../../new-request.service';
-import {countries} from "../../../requests.config";
+import { NewRequestService, configDate } from '../../new-request.service';
+import { countries } from "../../../requests.config";
 
 @Component({
     selector: 'company-information',
@@ -61,63 +61,63 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     initFormCheck() {
         this.form.get('activities').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let activitiesValue = getValue(data, [0, 'id']);
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            let activitiesValue = getValue(data, [0, 'id']);
 
-                this.formCheckActivity(activitiesValue);
-            })
+            this.formCheckActivity(activitiesValue);
+        })
         ;
 
         this.form.get('geographicalAreaOfActivity').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let activityGeographicalAreaValue = getValue(data, [0, 'id']);
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            let activityGeographicalAreaValue = getValue(data, [0, 'id']);
 
-                this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
-            })
+            this.formCheckActivityGeographicalArea(activityGeographicalAreaValue);
+        })
         ;
 
         this.form.get('activityRegulated').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(isActivityRegulatedValue => {
-                this.formCheckActivityRegulated(isActivityRegulatedValue);
-            })
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(isActivityRegulatedValue => {
+            this.formCheckActivityRegulated(isActivityRegulatedValue);
+        })
         ;
 
         this.form.get('companyListed').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(isCompanyListedValue => {
-                this.formCheckCompanyListed(isCompanyListedValue);
-            })
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(isCompanyListedValue => {
+            this.formCheckCompanyListed(isCompanyListedValue);
+        })
         ;
 
         this.form.get('capitalNature.others').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                this.formCheckNatureAndOrigin(data);
-            })
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            this.formCheckNatureAndOrigin(data);
+        })
         ;
 
         this.form.get('geographicalOrigin1').valueChanges
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(data => {
-                let geographicalOriginTypeValue = getValue(data, [0, 'id']);
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(data => {
+            let geographicalOriginTypeValue = getValue(data, [0, 'id']);
 
-                this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
-            })
+            this.formCheckGeographicalOrigin(geographicalOriginTypeValue);
+        })
         ;
     }
 
@@ -138,12 +138,12 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
         investorOnBehalfControl.disable();
 
         switch (value) {
-            case 'ownAccount':
-                ownAccountControl.enable();
-                break;
-            case 'onBehalfOfThirdParties':
-                investorOnBehalfControl.enable();
-                break;
+        case 'ownAccount':
+            ownAccountControl.enable();
+            break;
+        case 'onBehalfOfThirdParties':
+            investorOnBehalfControl.enable();
+            break;
         }
 
         this.formPercent.refreshFormPercent();
@@ -242,6 +242,14 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     removeBeneficiary(i) {
         let control = this.form.get('beneficiaries') as FormArray;
+
+        if (control.at(i).value.companyBeneficiariesID !== '') {
+            this.identificationService.deleteBeneficiary(
+                control.at(i).value.kycID,
+                control.at(i).value.companyBeneficiariesID
+            );
+        }
+
         control.removeAt(i);
 
         this.formPercent.refreshFormPercent();
@@ -255,44 +263,46 @@ export class CompanyInformationComponent implements OnInit, OnDestroy {
 
     getCurrentFormData() {
         this.requests$
-            .pipe(
-                rxFilter(requests => !isEmpty(requests)),
-                map(requests => castArray(requests[0])),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.identificationService.getCurrentFormCompanyData(request.kycID).then(formData => {
-                        if (formData) {
-                            this.form.patchValue(formData);
-                            this.formPercent.refreshFormPercent();
-                        }
-                    });
-                    this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then(formData => {
-                        if(!isEmpty(formData)){
-                            let beneficiaries = (this.form.get('beneficiaries') as FormArray).controls;
-                            beneficiaries.splice(0);
-
-                            let promises = formData.map((controlValue) => {
-                                let control = this.newRequestService.createBeneficiary();
-                                return this.documentsService.getDocument(controlValue.documentID).then(document => {
-                                    controlValue.document = {
-                                        name : document.name,
-                                        hash : document.hash,
-                                        kycDocumentID : document.kycDocumentID
-                                    };
-                                    control.patchValue(controlValue);
-                                    beneficiaries.push(control);
-                                });
-                            });
-
-                            Promise.all(promises).then(() => {
-                                this.formPercent.refreshFormPercent();
-                            });
-                        }
-                    })
+        .pipe(
+            rxFilter(requests => !isEmpty(requests)),
+            map(requests => castArray(requests[0])),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(requests => {
+            requests.forEach(request => {
+                this.identificationService.getCurrentFormCompanyData(request.kycID).then(formData => {
+                    if (formData) {
+                        this.form.patchValue(formData);
+                        this.formPercent.refreshFormPercent();
+                    }
                 });
-            })
+                this.identificationService.getCurrentFormCompanyBeneficiariesData(request.kycID).then(formData => {
+                    if (!isEmpty(formData)) {
+                        let beneficiaries = (this.form.get('beneficiaries') as FormArray).controls;
+                        beneficiaries.splice(0);
+
+                        let promises = formData.map((controlValue) => {
+                            let control = this.newRequestService.createBeneficiary();
+                            return this.documentsService.getDocument(controlValue.documentID).then(document => {
+                                if (!!document) {
+                                    controlValue.document = {
+                                        name: document.name,
+                                        hash: document.hash,
+                                        kycDocumentID: document.kycDocumentID
+                                    };
+                                }
+                                control.patchValue(controlValue);
+                                beneficiaries.push(control);
+                            });
+                        });
+
+                        Promise.all(promises).then(() => {
+                            this.formPercent.refreshFormPercent();
+                        });
+                    }
+                })
+            });
+        })
         ;
     }
 
