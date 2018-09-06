@@ -4,11 +4,6 @@ export interface MemberNodeMessageBody extends MemberNodeMessageBody {
     token: string;
 }
 
-export interface OfiCentralisationReportsRequestBody extends MemberNodeMessageBody {
-    token: string;
-    search?: any;
-}
-
 export interface OfiBaseCentralisationHistoryRequestBody
   extends MemberNodeMessageBody {
     token: string;
@@ -109,10 +104,6 @@ export interface CentralisationFundsRequestData {
     dateFrom: string;
     dateTo: string;
     mode: number;
-}
-
-export interface CentralisationReportsRequestData {
-    search: string;
 }
 
 export interface CentralisationHistoryRequestData {
