@@ -1,19 +1,27 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, SecurityContext, ViewChild} from '@angular/core';
-import {Location} from '@angular/common';
-import {DomSanitizer} from '@angular/platform-browser';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {ActivatedRoute, Router} from '@angular/router';
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {MessageKycConfig, MessagesService} from '@setl/core-messages';
-import {mDateHelper, SagaHelper} from '@setl/utils';
-import {InvestorModel} from './model';
-import {ToasterService} from 'angular2-toaster';
-import {InitialisationService, MyWalletsService} from "@setl/core-req-services";
-import {CLEAR_REQUESTED} from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
-import {ConfirmationService, LogService} from '@setl/utils';
-import {MultilingualService} from '@setl/multilingual';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    SecurityContext,
+    ViewChild
+} from '@angular/core';
+import { Location } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { MessageKycConfig, MessagesService } from '@setl/core-messages';
+import { mDateHelper, SagaHelper } from '@setl/utils';
+import { InvestorModel } from './model';
+import { ToasterService } from 'angular2-toaster';
+import { InitialisationService, MyWalletsService } from "@setl/core-req-services";
+import { CLEAR_REQUESTED } from '@ofi/ofi-main/ofi-store/ofi-kyc/ofi-am-kyc-list';
+import { ConfirmationService, LogService } from '@setl/utils';
+import { MultilingualService } from '@setl/multilingual';
 
 enum Statuses {
     waitingApproval = 1,
@@ -133,7 +141,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
     }
 
     initStatuses(): void {
-        if (this.initialStatusId == -2){
+        if (this.initialStatusId == -2) {
             this.statuses = [
                 {
                     id: 'askForMoreInfo',
@@ -146,7 +154,7 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
                     value: Statuses.approved
                 }
             ];
-        }else{
+        } else {
             this.statuses = [
                 {
                     id: 'reject',
@@ -242,22 +250,22 @@ export class OfiWaitingApprovalComponent implements OnInit, OnDestroy {
         const status = this.waitingApprovalFormGroup.controls['status'].value;
 
         switch (status) {
-            case Statuses.rejected:
-                //this.isRejectModalDisplayed = true;
-                this.rejectConfirmation();
-                break;
+        case Statuses.rejected:
+            //this.isRejectModalDisplayed = true;
+            this.rejectConfirmation();
+            break;
 
-            case Statuses.askMoreInfo:
-                this.askInfoConfirmation();
-                break;
+        case Statuses.askMoreInfo:
+            this.askInfoConfirmation();
+            break;
 
-            case Statuses.approved:
-                this.onApproveKyc();
-                break;
+        case Statuses.approved:
+            this.onApproveKyc();
+            break;
         }
     }
 
-    rejectConfirmation(){
+    rejectConfirmation() {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
@@ -272,14 +280,18 @@ You can also ask for more information to this client in the previous page.
         this.confirmationService.create(
             'Confirm Rejection',
             (safeMessage as string),
-            {confirmText: 'Reject the client\'s application', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
-            if (ans.resolved){
+            {
+                confirmText: 'Reject the client\'s application',
+                declineText: 'Back to the approval page',
+                btnClass: 'error'
+            }).subscribe((ans) => {
+            if (ans.resolved) {
                 this.handleRejectButtonClick();
             }
         });
     }
 
-    askInfoConfirmation(){
+    askInfoConfirmation() {
         let additionalText = this.waitingApprovalFormGroup.controls['additionalText'].value.trim();
         additionalText = this.domSanitizer.sanitize(SecurityContext.HTML, additionalText);
 
@@ -292,8 +304,12 @@ Here is the message that will be sent to the investor:<br />
         this.confirmationService.create(
             'Ask for more information',
             (safeMessage as string),
-            {confirmText: 'Ask for more information', declineText: 'Back to the approval page', btnClass: 'error'}).subscribe((ans) => {
-            if (ans.resolved){
+            {
+                confirmText: 'Ask for more information',
+                declineText: 'Back to the approval page',
+                btnClass: 'error'
+            }).subscribe((ans) => {
+            if (ans.resolved) {
                 this.onAskMoreInfoKyc();
             }
         });
@@ -354,10 +370,12 @@ Here is the message that will be sent to the investor:<br />
         }).then((walletId) => {
             /* Send action message to investor */
             // this.sendActionMessageToInvestor(walletId);
-            this.setAmKycListRequested(true);
+            this.setAmKycListRequested(false);
 
-            /* Redirect to fund access page when the kyc is being approved */
-            this._router.navigate(['client-referential', this.kycId]);
+            setTimeout(() => {
+                /* Redirect to fund access page when the kyc is being approved */
+                this._router.navigate(['client-referential', this.kycId]);
+            }, 1000);
         }).catch((error) => {
             const data = error[1].Data[0];
 
@@ -367,11 +385,11 @@ Here is the message that will be sent to the investor:<br />
         });
     }
 
-    openCompleteKycModal(){
+    openCompleteKycModal() {
         this.completeKycModal = true;
     }
 
-    saveCompleteKycModal(message){
+    saveCompleteKycModal(message) {
         this.kycService.notifyKycCompletion(this.investorID, message, this.kycId).then(() => {
             let message = this._translate.translate('The investor has been notified.');
             this.toast.pop('success', message);
@@ -384,15 +402,17 @@ Here is the message that will be sent to the investor:<br />
         });
     }
 
-    updateWallets(walletId){
-        return new Promise((resolve, reject)=>{
+    updateWallets(walletId) {
+        return new Promise((resolve, reject) => {
             const asyncTaskPipes = this.walletsService.requestWalletDirectory();
             this.redux.dispatch(SagaHelper.runAsync(
                 [],
                 [],
                 asyncTaskPipes,
                 {},
-                ()=>{resolve(walletId);}
+                () => {
+                    resolve(walletId);
+                }
             ));
         })
     }
