@@ -36,9 +36,9 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
     }
 
     public static String[] generateRandomISIN() {
-        String n = randomNumeric(6);
-        String a = randomAlphabetic(2);
-        String randomISIN = a + "1661" + n;
+        String n = randomNumeric(10);
+        String b = "JM";
+        String randomISIN = b + n;
         return new String[]{randomISIN};
     }
 
