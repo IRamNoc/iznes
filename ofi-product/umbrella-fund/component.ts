@@ -83,7 +83,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
 
     fundAdminOptions = [];
     custodianBankOptions = [];
-    investmentAdvisorOptions = [];
     payingagentOptions = [];
     auditorOptions = [];
     taxAuditorOptions = [];
@@ -142,7 +141,6 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
         this.countries = productConfig.fundItems.domicileItems;
         this.fundAdminOptions = productConfig.fundItems.fundAdministratorItems;
         this.custodianBankOptions = productConfig.fundItems.custodianBankItems;
-        this.investmentAdvisorOptions = productConfig.fundItems.investmentAdvisorItems;
         this.payingagentOptions = productConfig.fundItems.payingAgentItems;
         this.auditorOptions = productConfig.fundItems.auditorItems;
         this.taxAuditorOptions = productConfig.fundItems.taxAuditorItems;
@@ -229,7 +227,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 ]),
             ],
             investmentAdvisorID: [
-                [],
+                '',
             ],
             payingAgentID: [
                 [],
@@ -450,10 +448,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 custodianBankID: UmbrellaFundComponent.getListItem(u.custodianBankID, this.custodianBankOptions),
 
                 // optional on save
-                investmentAdvisorID: this.getListItems(
-                    investmentAdvisorID,
-                    this.investmentAdvisorOptions,
-                ),
+                investmentAdvisorID,
                 payingAgentID: this.getListItems(
                     u.payingAgentID,
                     this.payingagentOptions,
@@ -540,7 +535,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
             managementCompanyID: formValues.managementCompanyID[0].id,
             fundAdministratorID: formValues.fundAdministratorID[0].id,
             custodianBankID: formValues.custodianBankID[0].id,
-            investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
+            investmentAdvisorID: formValues.investmentAdvisorID,
             payingAgentID: this.getIdsFromList(formValues.payingAgentID),
             transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
             centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),
@@ -655,7 +650,7 @@ export class UmbrellaFundComponent implements OnInit, AfterViewInit, OnDestroy {
                 managementCompanyID: (formValues.managementCompanyID.length > 0) ? formValues.managementCompanyID[0].id : null,
                 fundAdministratorID: (formValues.fundAdministratorID.length > 0) ? formValues.fundAdministratorID[0].id : null,
                 custodianBankID: (formValues.custodianBankID.length > 0) ? formValues.custodianBankID[0].id : null,
-                investmentAdvisorID: this.getIdsFromList(formValues.investmentAdvisorID),
+                investmentAdvisorID: formValues.investmentAdvisorID,
                 payingAgentID: this.getIdsFromList(formValues.payingAgentID),
                 transferAgentID: _.get(formValues.transferAgent, ['0', 'id'], null),
                 centralisingAgentID: _.get(formValues.centralisingAgentID, ['0', 'id'], null),

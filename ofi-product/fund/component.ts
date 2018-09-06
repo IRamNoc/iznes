@@ -90,7 +90,6 @@ export class FundComponent implements OnInit, OnDestroy {
     homeCountryLegalTypeItems = [];
     fundCurrencyItems = [];
     portfolioCurrencyHedgeItems = [];
-    investmentAdvisorItems = [];
     auditorItems = [];
     taxAuditorItems = [];
     legalAdvisorItems = [];
@@ -187,7 +186,6 @@ export class FundComponent implements OnInit, OnDestroy {
         this.UcitsVersionItems = this.fundItems.UCITSVersionItems;
         this.legalFormItems = this.fundItems.fundLegalFormItems;
         this.portfolioCurrencyHedgeItems = this.fundItems.portfolioCurrencyHedgeItems;
-        this.investmentAdvisorItems = this.fundItems.investmentAdvisorItems;
         this.auditorItems = this.fundItems.auditorItems;
         this.taxAuditorItems = this.fundItems.taxAuditorItems;
         this.legalAdvisorItems = this.fundItems.legalAdvisorItems;
@@ -285,7 +283,7 @@ export class FundComponent implements OnInit, OnDestroy {
 
             globalItermediaryIdentification: [null, this.validators.giin],
             delegatedManagementCompany: [[]],
-            investmentAdvisorID: [[]],
+            investmentAdvisorID: [null],
             auditorID: [[]],
             taxAuditorID: [[]],
             legalAdvisorID: [[]],
@@ -366,7 +364,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.umbrellaEditForm.controls['giin']
                 .setValue(newUmbrella.giin);
                 this.umbrellaEditForm.controls['investmentAdvisorID']
-                .setValue(this.getListItems(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
+                .setValue(newUmbrella.investmentAdvisorID);
                 this.umbrellaEditForm.controls['legalAdvisorID']
                 .setValue(FundComponent.getListItemText(newUmbrella.legalAdvisorID, this.legalAdvisorItems));
                 this.umbrellaEditForm.controls['legalEntityIdentifier']
@@ -407,7 +405,7 @@ export class FundComponent implements OnInit, OnDestroy {
                 this.fundForm.controls['custodianBankID']
                 .setValue(FundComponent.getListItem(newUmbrella.custodianBankID, this.custodianBankItems));
                 this.fundForm.controls['investmentAdvisorID']
-                .setValue(this.getListItems(newUmbrella.investmentAdvisorID, this.investmentAdvisorItems));
+                .setValue(newUmbrella.investmentAdvisorID);
                 this.fundForm.controls['payingAgentID']
                 .setValue(this.getListItems(newUmbrella.payingAgentID, this.payingAgentItems));
                 this.fundForm.controls['delegatedManagementCompany']
@@ -648,7 +646,6 @@ export class FundComponent implements OnInit, OnDestroy {
             homeCountryLegalType: _.get(this.fundForm.controls['homeCountryLegalType'].value, ['0', 'id'], null),
             fundCurrency: _.get(this.fundForm.controls['fundCurrency'].value, ['0', 'id'], null),
             portfolioCurrencyHedge: _.get(this.fundForm.controls['portfolioCurrencyHedge'].value, ['0', 'id'], null),
-            investmentAdvisorID: this.getIdsFromList(this.fundForm.controls['investmentAdvisorID'].value),
             auditorID: _.get(this.fundForm.controls['auditorID'].value, ['0', 'id'], null),
             taxAuditorID: _.get(this.fundForm.controls['taxAuditorID'].value, ['0', 'id'], null),
             legalAdvisorID: _.get(this.fundForm.controls['legalAdvisorID'].value, ['0', 'id'], null),
@@ -852,7 +849,7 @@ export class FundComponent implements OnInit, OnDestroy {
                     fund.portfolioCurrencyHedge,
                     this.portfolioCurrencyHedgeItems,
                 ),
-                investmentAdvisorID: this.getListItems(fund.investmentAdvisorID, this.investmentAdvisorItems),
+                investmentAdvisorID: fund.investmentAdvisorID,
                 auditorID: FundComponent.getListItem(fund.auditorID, this.auditorItems),
                 taxAuditorID: FundComponent.getListItem(fund.taxAuditorID, this.taxAuditorItems),
                 legalAdvisorID: FundComponent.getListItem(fund.legalAdvisorID, this.legalAdvisorItems),
