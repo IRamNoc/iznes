@@ -128,7 +128,8 @@
                     <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid && this.tabDetail[0]['formControl'].controls['subPortfolioName'].touched" class="field-error">
                         {{'This field is required' | translate }}
                     </div>
-                    <div *ngIf="createError == 1 || createError == 3" class="pseudo-field-error">
+                    <div *ngIf="!(!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid) &&
+                    (createError == 1 || createError == 3)" class="pseudo-field-error">
                         {{'Duplicate Sub-portfolio Name' | translate }}
                     </div>
                 </div>
@@ -144,7 +145,9 @@
                     <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
                         {{'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}
                     </div>
-                    <div *ngIf="createError == 2 || createError == 3" class="pseudo-field-error">
+                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
+                    !this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') &&
+                    (createError == 2 || createError == 3)" class="pseudo-field-error">
                         {{'Duplicate Sub-portfolio IBAN' | translate }}
                     </div>
                 </div>
