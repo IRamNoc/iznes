@@ -10,7 +10,7 @@
         <clr-datagrid #myDataGrid>
             <clr-dg-column class="sm-col">Status</clr-dg-column>
             <clr-dg-column>TX Hash</clr-dg-column>
-            <clr-dg-column class="sm-col">Date</clr-dg-column>
+            <clr-dg-column class="sm-col">Date Requested</clr-dg-column>
 
             <clr-dg-row *clrDgItems="let tx of objectKeys(txList)">
                 <clr-dg-cell class="sm-col">
@@ -18,7 +18,7 @@
                     <span *ngIf="!txList[tx].success" class="label label-warning">Pending</span>
                 </clr-dg-cell>
                 <clr-dg-cell>{{ tx }}</clr-dg-cell>
-                <clr-dg-cell class="sm-col">{{ txList[tx].lastUpdated }}</clr-dg-cell>
+                <clr-dg-cell class="sm-col">{{ txList[tx].dateRequested }}</clr-dg-cell>
             </clr-dg-row>
 
             <clr-dg-footer>

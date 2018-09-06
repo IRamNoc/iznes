@@ -26,6 +26,9 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
         private changeDetectorRef: ChangeDetectorRef,
     ) {
         this.subscriptions.push(this.transactionStatus.subscribe((transaction) => {
+            // Ensure transaction volume is less than 10,000
+            if (Object.keys(transaction).length > 9999) return;
+
             // Got new data, so set txList, reset counts and update CSS classes
             this.txList = transaction;
             const oldPendingCount = this.pendingCount = 0;
