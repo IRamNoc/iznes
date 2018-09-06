@@ -147,12 +147,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             sortable: true,
         },
         draftType: {
-            label: 'Type',
+            label: 'Product Type',
             dataSource: 'draftType',
             sortable: true,
         },
         draftName: {
-            label: 'Name',
+            label: 'Product Name',
             dataSource: 'draftName',
             sortable: true,
         },
