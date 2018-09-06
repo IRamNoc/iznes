@@ -366,6 +366,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
     closeAddModal() {
         this.newForm();
+        this.createError = 0;
         this.toggleAddModal();
     }
 
