@@ -46,6 +46,7 @@ export class UserTeamsService extends AccountAdminBaseService {
             token: this.memberSocketService.token,
             userTeamID: userTeamId,
             textSearch,
+            isCSVRequest: false,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);

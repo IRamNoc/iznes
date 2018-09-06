@@ -55,6 +55,7 @@ export class UsersService extends AccountAdminBaseService {
             userID: userId,
             accountID: accountId,
             textSearch,
+            isCSVRequest: false,
         };
 
         const asyncTaskPipe = createMemberNodeSagaRequest(this.memberSocketService, request);
