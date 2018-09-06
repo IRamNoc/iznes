@@ -77,7 +77,7 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
     investorForm: FormGroup;
     currentInvestor: any = {};
-    showTab: boolean = false;
+    showInfo: boolean = false;
 
     @select(['ofi', 'ofiKyc', 'clientReferential', 'requested']) requestedOb;
     @select(['ofi', 'ofiKyc', 'clientReferential', 'clientReferential']) readonly clientReferentialOb: Observable<any[]>;
@@ -176,11 +176,9 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
                     this.clients[client.kycID] = client;
                 });
 
-                this.showTab = false;
+                this.showInfo = false;
                 if (!!this.clients[this.kycId] && this.clients[this.kycId].alreadyCompleted == 0) {
-                    this.showTab = true;
-                } else {
-                    this.loadTab(2);
+                    this.showInfo = true;
                 }
 
                 Object.keys(amKycList).forEach((key) => {
