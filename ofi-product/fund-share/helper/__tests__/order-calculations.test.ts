@@ -11,7 +11,7 @@ import {
 describe('calFee', () => {
     it('Calculated the platform fee', () => {
         const amt = 100_00000;
-        const fee = 6_00000;
+        const fee = 0_06000;
 
         const result = calFee(amt, fee);
 
@@ -79,7 +79,7 @@ describe('getAmountTwoDecimal', () => {
 
 describe('calculateFigures', () => {
     const defaultOrder = {
-        feePercentage: 60_000, // .6%
+        feePercentage: 0_600, // .6%
         nav: 10_00000,
         orderBy: 2,   // amt
         orderType: 3, // sub

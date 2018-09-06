@@ -416,7 +416,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             const amountWithCost = this.subEstimated(order, 'amountWithCost', 'estimatedAmountWithCost');
             const quantity = this.subEstimated(order, 'quantity', 'estimatedQuantity');
             const fee = amountWithCost - amount;
-            const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage);
+            const feePercentage = this.numberConverter.toFrontEnd(order.feePercentage) * 100;
             return {
                 ...list[orderId],
                 price,
