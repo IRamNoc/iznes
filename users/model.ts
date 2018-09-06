@@ -13,6 +13,7 @@ export class AccountAdminUser {
     userType: string;
     invitationToken: string;
     invitationEmail: string;
+    invitationComplete: string;
     invitationDate: string;
     userStatus: number;
     isActivated?: boolean;
@@ -84,6 +85,7 @@ export interface ReadUsersRequest extends MemberNodeMessageBody {
     userID: number;
     accountID: number;
     textSearch: string;
+    isCSVRequest: boolean;
 }
 
 export interface CreateUserRequest extends MemberNodeMessageBody {
