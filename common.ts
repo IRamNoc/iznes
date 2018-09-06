@@ -16,6 +16,7 @@ export const kPayloadAction = (type, payload) => k({ type, payload });
  */
 export interface MemberNodeMessageBody {
     RequestName: string;
+
     [key: string]: any;
 }
 
@@ -138,6 +139,12 @@ export function createWalletNodeSagaRequest(thisConnection, messageType: string,
         });
 
         const result = await response;
+
+        /* Save Hash to redux if messagetype is TX */
+        if (result[1].messagetype === 'tx') {
+            console.log('+++ WN TX result', result);
+            const hash = result[1].data.hash;
+        }
 
         return result;
     });
