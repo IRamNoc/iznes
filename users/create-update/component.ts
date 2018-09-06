@@ -55,12 +55,12 @@ export class UsersCreateUpdateComponent
                 private redux: NgRedux<any>,
                 route: ActivatedRoute,
                 protected router: Router,
-                alerts: AlertsService,
+                protected alerts: AlertsService,
                 protected toaster: ToasterService,
                 protected confirmations: ConfirmationService,
-                private translate: MultilingualService,
+                protected translate: MultilingualService,
                 private userMgmtService: UserManagementServiceBase) {
-        super(route, router, alerts, toaster, confirmations);
+        super(route, router, alerts, toaster, confirmations, translate);
         this.noun = AccountAdminNouns.User;
     }
 
@@ -159,10 +159,10 @@ export class UsersCreateUpdateComponent
     private requestUser(): void {
         if (this.isUpdateMode()) {
             this.service.readUsers(this.entityId,
-                this.accountId,
-                null,
-                (data: any) => this.onReadUserSuccess(data),
-                (e: any) => this.onReadEntityError());
+                                   this.accountId,
+                                   null,
+                                   (data: any) => this.onReadUserSuccess(data),
+                                   (e: any) => this.onReadEntityError());
         } else {
             this.initForm(this.myDetails.userType);
         }
@@ -188,11 +188,12 @@ export class UsersCreateUpdateComponent
 
     private initCreateTooltip(): void {
         this.createUserTooltip = {
-            text: this.translate.translate(`Create a new user on the platform or you may also create and invite the user to use the platform`),
+            text: this.translate.translate(`Create a new user on the platform or you
+                may also create and invite the user to use the platform`),
             size: 'small',
         };
 
-        if (this.user.invitationToken) {
+        if (!this.user.invitationComplete) {
             this.createUserTooltip.text +=
                 `<br /><br />Last invite: ${this.user.invitationDate} (${this.user.invitationEmail})`;
         }
@@ -211,6 +212,10 @@ export class UsersCreateUpdateComponent
     }
 
     isValid(): boolean {
+        return this.isFormValid() && this.isUserTeamsValid();
+    }
+
+    private isFormValid(): boolean {
         let valid: boolean = true;
 
         _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
@@ -222,8 +227,25 @@ export class UsersCreateUpdateComponent
         return valid;
     }
 
+    private isUserTeamsValid(): boolean {
+        if (!this.userTeamsSelected) return false;
+
+        let valid = false;
+
+        _.forEach(this.userTeamsSelected, (userTeam) => {
+            if (userTeam.isActivated === true) valid = true;
+        });
+
+        return valid;
+    }
+
+    showNoTeamsMessage(): boolean {
+        return this.isFormValid() && !this.isUserTeamsValid();
+    }
+
     isUserStatusPending(): boolean {
-        return (this.user) && this.user.userStatus === 0 && !!this.user.invitationToken;
+        return (this.user) && this.user.userStatus === 0 &&
+            !!this.user.invitationToken;
     }
 
     save(invite: boolean = false): void {
@@ -281,65 +303,75 @@ export class UsersCreateUpdateComponent
     }
 
     private createUsers(invite: boolean): void {
-        _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
-            this.service.createUser(
-                this.accountId,
-                form.firstName.value(),
-                form.lastName.value(),
-                form.emailAddress.value(),
-                form.phoneNumber.value(),
-                form.userType.value()[0].id,
-                form.reference.value(),
-                (data: AccountAdminSuccessResponse) => {
-                    this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
+        this.confirmations.create(this.alertCreateTitle, this.alertCreateMessage)
+            .subscribe((res) => {
+                if (res.resolved) {
+                    _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
+                        this.service.createUser(
+                            this.accountId,
+                            form.firstName.value(),
+                            form.lastName.value(),
+                            form.emailAddress.value(),
+                            form.phoneNumber.value(),
+                            form.userType.value()[0].id,
+                            form.reference.value(),
+                            (data: AccountAdminSuccessResponse) => {
+                                this.doUserManagementUpdateOb.next(data[1].Data[0].userID);
 
-                    this.onSaveSuccess(
-                        `${form.firstName.value()} ${form.lastName.value()}`,
-                        data[1].Data[0].userID,
-                        false,
-                    );
+                                this.onSaveSuccess(
+                                    `${form.firstName.value()} ${form.lastName.value()}`,
+                                    data[1].Data[0].userID,
+                                    false,
+                                );
 
-                    _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
-                        if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
+                                _.forEach(this.forms, (form: Model.AccountAdminUserForm) => {
+                                    if (invite) this.inviteUser(data[1].Data[0].userID, form, false);
+                                });
+
+                                if (this.forms.length === index + 1) {
+                                    this.router.navigateByUrl(this.getBackUrl());
+                                }
+                            },
+                            (e: AccountAdminErrorResponse) => this.onSaveError(
+                                `${form.firstName.value()} ${form.lastName.value()}`,
+                                e,
+                            ),
+                        );
                     });
-
-                    if (this.forms.length === index + 1) {
-                        this.router.navigateByUrl(this.getBackUrl());
-                    }
-                },
-                (e: AccountAdminErrorResponse) => this.onSaveError(
-                    `${form.firstName.value()} ${form.lastName.value()}`,
-                    e,
-                ),
-            );
-        });
+                }
+            });
     }
 
     private updateUser(invite: boolean): void {
-        this.service.updateUser(
-            this.entityId,
-            this.accountId,
-            this.form.firstName.value(),
-            this.form.lastName.value(),
-            this.form.emailAddress.value(),
-            this.form.phoneNumber.value(),
-            this.form.userType.value()[0].id,
-            this.form.reference.value(),
-            () => {
-                this.doUserManagementUpdateOb.next();
+        this.confirmations.create(this.alertUpdateTitle, this.alertUpdateMessage)
+            .subscribe((res) => {
+                if (res.resolved) {
+                    this.service.updateUser(
+                        this.entityId,
+                        this.accountId,
+                        this.form.firstName.value(),
+                        this.form.lastName.value(),
+                        this.form.emailAddress.value(),
+                        this.form.phoneNumber.value(),
+                        this.form.userType.value()[0].id,
+                        this.form.reference.value(),
+                        () => {
+                            this.doUserManagementUpdateOb.next();
 
-                this.onSaveSuccess(
-                    `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                    this.entityId,
-                );
+                            this.onSaveSuccess(
+                                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                                this.entityId,
+                            );
 
-                if (invite) this.inviteUser(this.entityId, this.form, false);
-            },
-            (e: AccountAdminErrorResponse) => this.onSaveError(
-                `${this.form.firstName.value()} ${this.form.lastName.value()}`,
-                e,
-            ),
-        );
+                            if (invite) this.inviteUser(this.entityId, this.form, false);
+                        },
+                        (e: AccountAdminErrorResponse) => this.onSaveError(
+                            `${this.form.firstName.value()} ${this.form.lastName.value()}`,
+                            e,
+                        ),
+                    );
+                }
+            });
     }
 
     private inviteUser(userId: number, form: Model.AccountAdminUserForm, showToaster: boolean = true): void {

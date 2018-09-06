@@ -7,6 +7,7 @@ import { Subscription, Subject } from 'rxjs';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { ConfirmationService } from '@setl/utils';
 import { ToasterService } from 'angular2-toaster';
+import { MultilingualService } from '@setl/multilingual';
 
 import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 
@@ -16,6 +17,10 @@ import { AccountAdminErrorResponse, AccountAdminNouns } from '../model';
 })
 export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
+    alertCreateTitle: string;
+    alertUpdateTitle: string;
+    alertCreateMessage: string;
+    alertUpdateMessage: string;
     doPermissionsUpdateOb: Subject<any> = new Subject();
     doUserManagementUpdateOb: Subject<any> = new Subject();
     entityId: number;
@@ -44,14 +49,20 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
      */
     constructor(private route: ActivatedRoute,
                 protected router: Router,
-                private alerts: AlertsService,
+                protected alerts: AlertsService,
                 protected toaster: ToasterService,
-                protected confirmations: ConfirmationService) {}
+                protected confirmations: ConfirmationService,
+                protected translate: MultilingualService) {}
 
     ngOnInit() {
         this.processParams();
         this.initSubscriptions();
         this.initPermissions();
+
+        this.alertCreateTitle = this.translate.translate(`Create ${this.noun}`);
+        this.alertUpdateTitle = this.translate.translate(`Update ${this.noun}`);
+        this.alertCreateMessage = this.translate.translate(`Are you sure you wish to create this ${this.noun}`);
+        this.alertUpdateMessage = this.translate.translate(`Are you sure you wish to update this ${this.noun}`);
     }
 
     private processParams(): void {
