@@ -8,7 +8,7 @@ import {
 } from '@setl/core-req-services';
 import {
     finishIssueAssetNotification, ISSUE_ASSET_FAIL, ISSUE_ASSET_SUCCESS, setRequestedWalletAddresses,
-    setRequestedWalletInstrument, setRequestedWalletToRelationship,
+    setRequestedWalletInstrument, setRequestedWalletToRelationship, ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as _ from 'lodash';
@@ -181,7 +181,7 @@ export class IssueAssetComponent implements OnInit, OnDestroy {
             });
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
-                [ISSUE_ASSET_SUCCESS],
+                [ISSUE_ASSET_SUCCESS, ADD_WALLETNODE_TX_STATUS],
                 [ISSUE_ASSET_FAIL],
                 asyncTaskPipe,
                 {},

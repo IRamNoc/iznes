@@ -21,6 +21,7 @@ import {
     getWalletAddressList,
     setRequestedWalletAddresses,
     setRequestedWalletInstrument,
+    ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 
 @Component({
@@ -246,8 +247,11 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
                 metadata: '',
             });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [ADD_WALLETNODE_TX_STATUS],
+            [],
             asyncTaskPipe,
+            {},
             (data) => {
                 this.showAlert('success', 'Asset has successfully been unencumbered');
                 this.unencumberAssetsForm.reset();
