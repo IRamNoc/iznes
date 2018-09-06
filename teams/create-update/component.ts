@@ -33,8 +33,8 @@ export class UserTeamsCreateUpdateComponent
                 alerts: AlertsService,
                 toaster: ToasterService,
                 confirmations: ConfirmationService,
-                private translate: MultilingualService) {
-        super(route, router, alerts, toaster, confirmations);
+                protected translate: MultilingualService) {
+        super(route, router, alerts, toaster, confirmations, translate);
         this.noun = AccountAdminNouns.Team;
     }
 
@@ -100,42 +100,55 @@ export class UserTeamsCreateUpdateComponent
     }
 
     private createTeam(): void {
-        this.service.createUserTeam(
-            this.accountId,
-            this.form.name.value(),
-            this.form.reference.value(),
-            this.form.description.value(),
-            (data: AccountAdminSuccessResponse) => {
-                const teamId: number = data[1].Data[0].userTeamID;
+        this.confirmations.create(this.alertCreateTitle, this.alertCreateMessage)
+            .subscribe((res) => {
+                if (res.resolved) {
+                    this.service.createUserTeam(
+                        this.accountId,
+                        this.form.name.value(),
+                        this.form.reference.value(),
+                        this.form.description.value(),
+                        (data: AccountAdminSuccessResponse) => {
+                            const teamId: number = data[1].Data[0].userTeamID;
 
-                this.doUserManagementUpdateOb.next(teamId);
-                this.doPermissionsUpdateOb.next(teamId);
+                            this.doUserManagementUpdateOb.next(teamId);
+                            this.doPermissionsUpdateOb.next(teamId);
 
-                this.onSaveSuccess(
-                    this.form.name.value(),
-                    data[1].Data[0].userTeamID,
-                );
+                            this.onSaveSuccess(
+                                this.form.name.value(),
+                                data[1].Data[0].userTeamID,
+                            );
 
-                this.router.navigateByUrl(this.getBackUrl());
-            },
-            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
-        );
+                            this.router.navigateByUrl(this.getBackUrl());
+                        },
+                        (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
+                    );
+                }
+            });
     }
 
     private updateTeam(): void {
-        this.service.updateUserTeam(
-            this.entityId,
-            this.form.name.value(),
-            this.form.reference.value(),
-            this.form.description.value(),
-            () => {
-                this.doUserManagementUpdateOb.next();
-                this.doPermissionsUpdateOb.next();
+        this.confirmations.create(this.alertUpdateTitle, this.alertUpdateMessage)
+            .subscribe((res) => {
+                if (res.resolved) {
+                    this.service.updateUserTeam(
+                        this.entityId,
+                        this.form.name.value(),
+                        this.form.reference.value(),
+                        this.form.description.value(),
+                        () => {
+                            this.doUserManagementUpdateOb.next();
+                            this.doPermissionsUpdateOb.next();
 
-                this.onSaveSuccess(this.form.name.value(), this.entityId);
-            },
-            (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
-        );
+                            this.onSaveSuccess(
+                                this.form.name.value(),
+                                this.entityId,
+                            );
+                        },
+                        (e: AccountAdminErrorResponse) => this.onSaveError(this.form.name.value(), e),
+                    );
+                }
+            });
     }
 
     private deleteTeam(): void {

@@ -101,24 +101,28 @@
                 </div>
                 
                 <div class="col">
-                    <button class="btn btn-primary" (click)="save(isCreateMode())" [disabled]="!isValid()">{{
+                    <button class="btn btn-primary" (click)="save()" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create User(s)' :
                         'Update User Details'
                         | translate }}
                     </button>
-                    <button *ngIf="isUpdateMode() && isUserStatusPending()" class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
+
+                    <button class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create &amp; Send Invitation(s)' :
                         'Update &amp; Send Invitation'
                         | translate }}
                     </button>
-                    <i class="tooltip fa fa-question-circle" *ngIf="createUserTooltip" [tooltip]="createUserTooltip"></i>
+
+                    <i class="tooltip fa fa-question-circle" *ngIf="createUserTooltip" [tooltip]="createUserTooltip"></i>      
+
+                    <span class="no-teams" [hidden]="!showNoTeamsMessage()">Please assign user(s) to at least one team in order to continue.</span>
                 </div>
 
-                <div class="col justify-end" *ngIf="isUpdateMode()">
+                <!-- <div class="col justify-end" *ngIf="isUpdateMode()">
                     <button class="btn btn-danger" (click)="delete()">{{ 'Delete user' | translate }}</button>
-                </div>
+                </div> -->
             </div>
         </clr-tab-content>
     </clr-tab>

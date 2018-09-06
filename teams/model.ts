@@ -45,6 +45,7 @@ export class AccountAdminTeamAuditEntry {
 export interface ReadUserTeamsRequest extends MemberNodeMessageBody {
     token: string;
     userTeamID?: number;
+    isCSVRequest: boolean;
 }
 
 export interface CreateUserTeamRequest extends MemberNodeMessageBody {
