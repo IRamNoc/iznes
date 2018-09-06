@@ -9,7 +9,7 @@ import {
     OnInit,
     OnDestroy,
     Renderer2,
-    AfterViewInit
+    AfterViewInit,
 } from '@angular/core';
 import { fromJS } from 'immutable';
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ import { SET_USERTOUR_INPROGRESS } from '@setl/core-store/usertour/inprogress/ac
 import { SET_USER_TOURS } from '@setl/core-store/usertour/usertour/actions';
 import { Router } from '@angular/router';
 
-import {UserTourService} from '@setl/core-req-services/usertour/service';
+import { UserTourService } from '@setl/core-req-services/usertour/service';
 
 @Directive({
     selector: '[tooltip]',
@@ -83,7 +83,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         this.UserTourService = this.injector.get(UserTourService);
 
         this.parentDiv = document.getElementsByClassName('content-area')[0];
-        if(!this.parentDiv){
+        if (!this.parentDiv) {
             this.parentDiv = document.getElementsByClassName('router-container')[0];
         }
     }
@@ -131,7 +131,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             this.clonedConfig.autoshow = !this.clonedConfig.autoshow;
             setTimeout(() => {
                 this.autoshowTooltip();
-            }, 350);
+            },         350);
         }
     }
 
@@ -140,7 +140,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
         if (this.parentDiv) {
             this.scrollListener = this.parentDiv.addEventListener('scroll', (event) => {
                 this.getScroll(event);
-            }, false);
+            },                                                    false);
             this.scrollTop = this.parentDiv.scrollTop;
         }
         if (this.clonedConfig.autoshow === undefined || this.clonedConfig.autoshow === false) {
@@ -213,7 +213,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                     walletID: item.walletID,
                 });
                 return result;
-            }, []);
+            },                                  []);
 
             if (this.userTourName !== '') {
                 if (this.userTourDatas.length === 0 && !this.userTourInProgress) {
@@ -258,7 +258,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     initTour() {
-        this._ngRedux.dispatch({type: SET_USERTOUR_INPROGRESS, data: true});
+        this._ngRedux.dispatch({ type: SET_USERTOUR_INPROGRESS, data: true });
 
         // add black bglayer
         this.divBackgroundTour = document.createElement('div');
@@ -286,7 +286,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             if (this.parentDiv) {
                 this.parentDiv.addEventListener('scroll', (event) => {
                     this.getScroll(event);
-                }, false);
+                },                              false);
                 this.scrollTop = this.parentDiv.scrollTop;
             }
             this.showTooltip();
@@ -506,7 +506,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                             this._router.navigate([this.clonedConfig.redirect]);
                         }
                     }
-                }, this.clonedConfig.duration);
+                },                                this.clonedConfig.duration);
             }
         }
     }
@@ -524,7 +524,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                         this.renderer.setStyle(this.divTooltipTimer, 'width', '100%');
                     }
                 }
-            }, 50);
+            },         50);
         }
     }
 
@@ -853,7 +853,7 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
             if (this.clonedConfig.autoshow === undefined || this.clonedConfig.autoshow === false || this.tourConfig.length > 0) {
                 setTimeout(() => {
                     this.cleanAll(false);
-                }, 300);
+                },         300);
             }
         }
     }
@@ -868,9 +868,11 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
     }
 
     cleanAll(forced): void {
-        this.parentDiv.removeEventListener('scroll', (event) => {
-            this.getScroll(event);
-        }, true);
+        if (this.parentDiv) {
+            this.parentDiv.removeEventListener('scroll', (event) => {
+                this.getScroll(event);
+            },                                 true);
+        }
         // remove div tooltip
         if (this.divTooltip !== null && this.divTooltip !== undefined) {
             this.divTooltip.remove();
@@ -885,8 +887,8 @@ export class TooltipDirective implements OnInit, OnDestroy, AfterViewInit {
                 this.isAutoNext = false;
                 this.hideTooltip();
                 if (this.divBackgroundTour) this.divBackgroundTour.remove();
-                this._ngRedux.dispatch({type: SET_USERTOUR_INPROGRESS, data: false}); // reset highlight
-                this._ngRedux.dispatch({type: SET_USER_TOURS, data: null}); // reset usertour datas
+                this._ngRedux.dispatch({ type: SET_USERTOUR_INPROGRESS, data: false }); // reset highlight
+                this._ngRedux.dispatch({ type: SET_USER_TOURS, data: null }); // reset usertour datas
                 // this.isTour = false;
                 // this.userTourName = '';
                 // this.clonedConfig = [];
