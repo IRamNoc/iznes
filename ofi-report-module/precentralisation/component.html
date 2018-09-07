@@ -137,7 +137,7 @@
                     </clr-dg-column>
                     <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let data of fundsDetails.funds" [clrDgItem]="data">
+                    <clr-dg-row *clrDgItems="let data of fundsDetails.funds; let id = index" [clrDgItem]="data">
                         <clr-dg-cell *ngIf="isSettlementSelected">{{data.settlementDate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!isSettlementSelected">{{data.navDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.cutoffDate}}</clr-dg-cell>
@@ -151,7 +151,7 @@
                         <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <button (click)="onClickViewCorrespondingOrders(data.fundName)" class="btn btn-info btn-sm">View</button>
+                            <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">View</button>
                         </clr-dg-cell>
                     </clr-dg-row>
 
@@ -311,7 +311,7 @@
                     </clr-dg-column>
                     <clr-dg-column>{{'View Orders' | translate}}</clr-dg-column>
 
-                    <clr-dg-row *clrDgItems="let data of sharesDetails.shares" [clrDgItem]="data">
+                    <clr-dg-row *clrDgItems="let data of sharesDetails.shares; let id = index" [clrDgItem]="data">
                         <clr-dg-cell *ngIf="isSettlementSelected">{{data.subscriptionSettlementDate}}</clr-dg-cell>
                         <clr-dg-cell *ngIf="!isSettlementSelected">{{data.navDate}}</clr-dg-cell>
                         <clr-dg-cell>{{data.fundName}}</clr-dg-cell>
@@ -323,7 +323,7 @@
                         <clr-dg-cell>{{data.netAmount | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>{{data.netAmountRatio | moneyValue:2}}</clr-dg-cell>
                         <clr-dg-cell>
-                            <button (click)="onClickViewCorrespondingOrders(data.shareId)" class="btn btn-info btn-sm">View</button>
+                            <button (click)="onClickViewCorrespondingOrders(id)" class="btn btn-info btn-sm">View</button>
                         </clr-dg-cell>
                         <clr-dg-row-detail *clrIfExpanded>
                             <div class="additionalInfos">
