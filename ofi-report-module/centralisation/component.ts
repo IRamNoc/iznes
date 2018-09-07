@@ -22,6 +22,7 @@ import { ofiManageOrderActions } from '@ofi/ofi-main/ofi-store';
 import { APP_CONFIG, AppConfig, FileDownloader } from "@setl/utils/index";
 import * as moment from 'moment';
 import { MultilingualService } from '@setl/multilingual';
+import { get } from 'lodash';
 
 import { mDateHelper } from '@setl/utils';
 
@@ -548,44 +549,36 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
     }
 
     onClickViewCorrespondingOrders(id) {
+
+        let fundname;
+        let sharename;
+        let searchDate;
+
+        const searchDateType = this.getSearchDateType();
+
+        // build the filter depending we on the fund-level page or share-level page.
         if (this.isShareLevel) {
-            const obj = this.sharesDetails.shares.find(o => o.shareId === id);
-            if (obj !== undefined) {
-                const orderFilters = {
-                    filters: {
-                        isin: obj.isin,
-                        sharename: obj.shareName,
-                        status: { id: -3 },
-                        type: { id: 0 },
-                        dateType: { id: 'navDate' },
-                        fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
-                        toDate: moment(obj.navDate).format('YYYY-MM-DD')
-                    }
-                };
-
-                this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
-                this.router.navigateByUrl('manage-orders/list');
-            }
+            sharename = get(this.sharesDetails, ['shares', id, 'shareName'], '');
+            searchDate = get(this.sharesDetails, ['shares', id, searchDateType], '');
         }
-        if (this.isFundLevel) {
-            const obj = this.fundsDetails.funds.find(o => o.fundName === id);
-            if (obj !== undefined) {
-                const orderFilters = {
-                    filters: {
-                        isin: obj.isin,
-                        fundname: obj.fundName,
-                        status: { id: -3 },
-                        type: { id: 0 },
-                        dateType: { id: 'navDate' },
-                        fromDate: moment(obj.navDate).format('YYYY-MM-DD'),
-                        toDate: moment(obj.navDate).format('YYYY-MM-DD')
-                    }
-                };
-
-                this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
-                this.router.navigateByUrl('manage-orders/list');
-            }
+        // fund level
+        else  {
+            fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
+            searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
         }
+
+        const orderFilters = {
+            sharename,
+            fundname,
+            status: { id: -3 },
+            type: { id: 0 },
+            dateType: [{ id: this.getSearchDateType() }],
+            fromDate: searchDate,
+            toDate: searchDate,
+        };
+
+        this.ngRedux.dispatch({ type: ofiManageOrderActions.OFI_SET_ORDERS_FILTERS, filters: orderFilters });
+        this.router.navigateByUrl('manage-orders/list');
     }
 
     exportCentralisationReport() {
@@ -615,6 +608,22 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
                 }
             }
         }
+    }
+
+    /**
+     * Get whether the search date type is "navDate" or "settlementDate", base on the search date dropdown
+     * @return {'navDate' | 'settlementDate'}
+     */
+    getSearchDateType(): 'navDate' | 'settlementDate' {
+
+        // get date filter value
+        const curDateFilterVal = get(this.filtersForm.controls['specificDate'].value, '[0].id');
+        // 0 or 2 is navDate
+        if (curDateFilterVal === 0 || curDateFilterVal === 2) {
+           return 'navDate';
+        }
+
+        return 'settlementDate';
     }
 
     ngOnDestroy() {
