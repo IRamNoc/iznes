@@ -70,15 +70,6 @@ export class OfiReportsService {
         }
     }
 
-    static setRequestedInvHoldingsList(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(ofiClearRequestedInvHoldings());
-        } else {
-            ngRedux.dispatch(ofiSetRequestedInvHoldings());
-        }
-    }
-
     static setRequestedHolderDetail(boolValue: boolean, ngRedux: NgRedux<any>) {
         if (!boolValue) {
             ngRedux.dispatch(ofiSetHolderDetailRequested());
@@ -214,6 +205,10 @@ export class OfiReportsService {
             asyncTaskPipe,
             {},
         ));
+    }
+
+    clearInvestorHoldingList() {
+        this.ngRedux.dispatch(ofiClearRequestedInvHoldings());
     }
 
     fetchInvestorHoldingList(data) {
