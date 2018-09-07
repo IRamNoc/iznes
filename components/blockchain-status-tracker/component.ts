@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
+import { ClrDatagridSortOrder } from '@clr/angular';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -17,10 +18,10 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public pendingCount: number = 0;
     public successCount: number = 0;
     public showStatusModal: boolean = false;
-    public txList: {};
+    public txList: {}[];
     subscriptions: Subscription[] = [];
     public pageSize: number;
-    objectKeys = Object.keys;
+    public descSort = ClrDatagridSortOrder.DESC;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -29,8 +30,8 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
             // Ensure transaction volume is less than 10,000
             if (Object.keys(transaction).length > 9999) return;
 
-            // Got new data, so set txList, reset counts and update CSS classes
-            this.txList = transaction;
+            // Got new data so clear txList, reset counts and update CSS classes
+            this.txList = [];
             const oldPendingCount = this.pendingCount = 0;
             const oldSuccessCount = this.successCount = 0;
             this.pendingUpdate = false;
@@ -45,6 +46,7 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
                     // TX Success
                     this.successCount += 1;
                 }
+                this.txList.push({ hash, success: transaction[hash].success, date: transaction[hash].dateRequested });
             }
 
             // Apply update CSS class if new TXs
