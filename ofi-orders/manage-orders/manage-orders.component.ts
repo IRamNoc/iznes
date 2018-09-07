@@ -216,6 +216,7 @@ export class ManageOrdersComponent implements OnInit, AfterViewInit, OnDestroy {
             this.getOrdersList();
             this.detectChanges();
         });
+        this.datagridParams.setSearchFilters(this.searchFilters);
         this.searchFilters.optionalFilters.subscribe(show => this.isOptionalFilters = show);
         this.searchForm = this.searchFilters.getForm();
         this.setInitialTabs();
