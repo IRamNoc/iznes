@@ -58,6 +58,7 @@ export class OfiSignUpComponent implements OnInit, OnDestroy {
 
         this.configuration = {
             doLoginAfterCallback: true,
+            doLoginRedirect: false,
             title,
             description,
             buttonText,
