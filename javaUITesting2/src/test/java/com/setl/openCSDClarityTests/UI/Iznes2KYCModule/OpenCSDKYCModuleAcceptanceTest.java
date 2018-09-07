@@ -150,7 +150,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String No = "5";
+        String No = "9";
         String userNo = "00" + No;
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
@@ -391,7 +391,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
         searchSelectTopOptionXpath("Cosmetics", "//*[@id=\"sectorActivity\"]/div", "//*[@id=\"sectorActivity\"]/div/div[3]/div/input", "//*[@id=\"sectorActivity\"]/div/div[3]/ul/li[1]/div/a");
         String percent7 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent7.equals("80%"));
-        searchSelectTopOptionXpath("Pension fund/mutual insurance institution", "//*[@id=\"legalStatusList\"]/div", "//*[@id=\"legalStatusList\"]/div/div[3]/div/input", "//*[@id=\"legalStatusList\"]/div/div[3]/ul/li[1]/div/a");
+        searchSelectTopOptionXpath("Credit Institution", "//*[@id=\"legalStatusList\"]/div", "//*[@id=\"legalStatusList\"]/div/div[3]/div/input", "//*[@id=\"legalStatusList\"]/div/div[3]/ul/li[1]/div/a");
         String percent8 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent8.equals("90%"));
         String percentBarColourPre = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/general-information/div/div[1]/div[2]/div/div[1]/div/div/div")).getCssValue("background-color");

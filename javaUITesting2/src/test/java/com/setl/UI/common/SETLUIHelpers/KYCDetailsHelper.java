@@ -286,6 +286,8 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
         String generalInfoCompanyName = driver.findElement(By.id("companyName")).getAttribute("value");
         assertTrue(generalInfoCompanyName.equals(companyName));
         String generalInfoReference = driver.findElement(By.id("clientReference")).getAttribute("value");
+        System.out.println(generalInfoReference);
+        System.out.println(No);
         assertTrue(generalInfoReference.equals(No));
         String generalInfoFirstName = driver.findElement(By.id("firstName")).getAttribute("value");
         assertTrue(generalInfoFirstName.equals(firstName + userNo));
