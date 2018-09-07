@@ -532,12 +532,14 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             this._router.navigateByUrl('/product-module/product/' + temp[dataType] + '/' + id);
         } else if (btnType == 'delete') {
 
+
             this._confirmationService.create('Draft Delete', 'Are you sure you want to delete this ' + dataType + ' draft?', {
                 confirmText: 'Confirm Delete',
                 declineText: 'Cancel',
                 btnClass: 'error'
             }).subscribe((ans) => {
                 if (ans.resolved) {
+                    this.draftList.splice(this.draftList.findIndex((draft) => draft.draftID == id && draft.draftType == dataType), 1);
                     if (dataType == 'Umbrella Fund') {
                         this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
                         this._ofiUmbrellaFundService.fetchUmbrellaList();
