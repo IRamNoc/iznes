@@ -380,7 +380,7 @@ export class UsersCreateUpdateComponent
             form.firstName.value(),
             form.emailAddress.value(),
             this.siteSettings.language,
-            this.myDetails.displayName,
+            this.myDetails.displayName ? this.myDetails.displayName : this.myDetails.username,
             () => this.onInviteSuccess(
                 `${form.firstName.value()} ${form.lastName.value()}`,
                 showToaster,
