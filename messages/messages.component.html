@@ -138,10 +138,16 @@
             </p>
 
             <p *ngIf="currentMessage.action && currentMessage.action.type === 'alert'">
-                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="connectedWalletId"></setl-message-alert>
+                <setl-message-alert [data]="currentMessage.action.data" [userId]="userId" [isActed]="currentMessage.isActed" [mailId]="currentMessage.mailId" [walletId]="walletId"></setl-message-alert>
             </p>
 
-            <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'" [data]="currentMessage.action.data" [userId]="userId"></setl-message-workflow>
+            <setl-message-workflow *ngIf="currentMessage.action && currentMessage.action.type === 'wflMessage'"
+                                   [data]="currentMessage.action.data"
+                                   [userId]="userId"
+                                   [isActed]="currentMessage.isActed"
+                                   [walletId]="walletId"
+                                   [mailId]="currentMessage.mailId">
+            </setl-message-workflow>
 
         </div>
 
