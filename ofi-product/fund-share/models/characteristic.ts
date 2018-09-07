@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import {FormItem, FormItemType, FormItemStyle, DynamicFormsValidator} from '@setl/utils';
+import { FormItem, FormItemType, FormItemStyle, DynamicFormsValidator } from '@setl/utils';
 import * as E from '../FundShareEnum';
 import { Validators } from '@angular/forms';
 
@@ -36,7 +36,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         style: [FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_subcurrency'
     }
@@ -46,7 +46,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubinshare',
         isBlockchainValue: true
@@ -57,7 +57,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubinamount',
         isBlockchainValue: true
@@ -68,7 +68,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubsubinshare',
         isBlockchainValue: true
@@ -79,7 +79,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.subscriptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubsubinamount',
         isBlockchainValue: true
@@ -104,7 +104,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         style: [FormItemStyle.BreakOnBefore, FormItemStyle.BreakOnAfter],
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_redcurrency'
     }
@@ -114,7 +114,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Shares, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubredinshare',
         isBlockchainValue: true
@@ -125,7 +125,7 @@ export class ShareCharacteristicMandatory extends DynamicFormsValidator {
         required: true,
         hidden: () => {
             const val = (this.redemptionCategory.value() as any);
-            return (val == undefined) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
+            return (val == undefined) || (val.length == 0) || [E.SubscriptionCategoryEnum.Amount, E.SubscriptionCategoryEnum.Both].indexOf(val[0].id) == -1;
         },
         mltag: 'txt_fundshare_minsubredinamount',
         isBlockchainValue: true
