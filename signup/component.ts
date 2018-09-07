@@ -1,8 +1,8 @@
-import {Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnDestroy, Inject, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {FormGroup, Validators, FormControl, AbstractControl} from '@angular/forms';
+import { FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 
 import {
@@ -19,10 +19,10 @@ import {
     SET_AUTH_LOGIN_DETAIL, RESET_AUTH_LOGIN_DETAIL,
     SET_PRODUCTION, setLanguage, SET_SITE_MENU,
 } from '@setl/core-store';
-import {MultilingualService} from '@setl/multilingual';
-import {SagaHelper, APP_CONFIG, AppConfig} from '@setl/utils';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
+import { MultilingualService } from '@setl/multilingual';
+import { SagaHelper, APP_CONFIG, AppConfig } from '@setl/utils';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 
 import * as Model from './model';
 import { MemberSocketService } from '@setl/websocket-service';
@@ -93,13 +93,11 @@ export class SignupComponent implements OnDestroy, OnInit {
             this.updateState(auth);
         }));
 
-
         window.onbeforeunload = null;
     }
 
-
     private initSignupForm(): void {
-        let validator = this.appConfig.production ? passwordValidator : null;
+        const validator = this.appConfig.production ? passwordValidator : null;
 
         this.signupForm = new FormGroup({
             username: new FormControl(
@@ -110,16 +108,16 @@ export class SignupComponent implements OnDestroy, OnInit {
                 '',
                 Validators.compose([
                     Validators.required,
-                    validator
+                    validator,
                 ]),
             ),
             passwordConfirm: new FormControl(
                 '',
                 Validators.compose([
-                    Validators.required
+                    Validators.required,
                 ]),
             ),
-        }, this.mismatchValidator);
+        },                              this.mismatchValidator);
     }
 
     private getQueryParams() {
@@ -152,7 +150,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     private mismatchValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : {mismatch: true};
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { mismatch: true };
     }
 
     get title(): string {
@@ -185,7 +183,11 @@ export class SignupComponent implements OnDestroy, OnInit {
 
             const redirect: any = auth.defaultHomePage ? auth.defaultHomePage : '/home';
 
-            this.router.navigateByUrl(redirect);
+            if (this.configuration.doLoginRedirect === true ||
+                this.configuration.doLoginRedirect === undefined) {
+
+                this.router.navigateByUrl(redirect);
+            }
         }
     }
 
@@ -229,31 +231,31 @@ export class SignupComponent implements OnDestroy, OnInit {
         const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
 
         switch (responseStatus) {
-            case 'fail':
-                this.showLoginErrorMessage(
+        case 'fail':
+            this.showLoginErrorMessage(
                     'warning',
                     '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
                 );
-                break;
-            case 'locked':
-                this.showLoginErrorMessage(
+            break;
+        case 'locked':
+            this.showLoginErrorMessage(
                     'info',
                     '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
                     'Please contact Setl support.</span>',
                 );
-                break;
-            default:
-                this.showLoginErrorMessage(
+            break;
+        default:
+            this.showLoginErrorMessage(
                     'error',
                     '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, ' +
                     'please try again.</span>',
                 );
-                break;
+            break;
         }
     }
 
     private showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, {buttonMessage: 'Please try logging in again'});
+        this.alertsService.create(type, msg, { buttonMessage: 'Please try logging in again' });
     }
 
     toggleShowPasswords(isConfirm: boolean = false) {
@@ -273,9 +275,9 @@ export class SignupComponent implements OnDestroy, OnInit {
 
     hasError(path, error?) {
         if (this.signupForm) {
-            let formControl: AbstractControl = path ? this.signupForm.get(path) : this.signupForm;
+            const formControl: AbstractControl = path ? this.signupForm.get(path) : this.signupForm;
 
-            if(!error){
+            if (!error) {
                 return formControl.touched && formControl.errors;
             }
             if (error !== 'required' && formControl.hasError('required')) {
@@ -286,7 +288,7 @@ export class SignupComponent implements OnDestroy, OnInit {
     }
 
     isTouched(path) {
-        let formControl: AbstractControl = this.signupForm.get(path);
+        const formControl: AbstractControl = this.signupForm.get(path);
 
         return formControl.touched;
     }

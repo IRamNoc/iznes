@@ -2,6 +2,7 @@ export interface ISignupConfiguration {
     doLoginAfterCallback: boolean;
     buttonText?: string;
     description?: string;
+    doLoginRedirect?: boolean;
     redirectURL?: string;
     username?: string;
     title?: string;
