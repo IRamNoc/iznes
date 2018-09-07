@@ -20,25 +20,38 @@ export const walletNodeTransactionStatusReducer = function (state: WalletNodeTra
 };
 
 function addWalletNodeTXStatus(actionType, action, state) {
-
     const rawData = _.get(action, 'payload[1].data', []);
     const time = moment.unix(rawData.creation).utc().format('YYYY-MM-DD HH:mm:ss');
 
+    console.log('+++ ADD action', action);
+
     return Object.assign({}, state, {
-        [rawData.hash]: { success: false, txtype: rawData.txtype, dateRequested: time },
+        [rawData.hash]: { success: false, fail: false, request: rawData, dateRequested: time },
     });
 
 }
 
 function updateWalletNodeTXStatus(actionType, action, state) {
+    console.log('+++ UPDATE action', action);
 
-    const rawData = _.get(action, 'data.Transactions', []);
+    const rawData = _.get(action, 'data.transactions', []);
     const newState = Object.assign({}, state);
 
     for (const tx of rawData) {
-        if (newState[tx[3]] !== undefined) {
-            newState[tx[3]].success = true;
-            newState[tx[3]].dateRequested = moment.unix(tx[8]).utc().format('YYYY-MM-DD HH:mm:ss');
+        if (!_.isEmpty(newState[tx.hash])) {
+            console.log('+++ GUI TRANSACTION');
+            newState[tx.hash].success = tx.updated;
+            newState[tx.hash].fail = !tx.updated;
+        } else {
+            console.log('+++ API TRANSACTION');
+            const time = moment.unix(tx.timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
+            newState[tx.hash] = {
+                success: tx.updated,
+                fail: !tx.updated,
+                request: tx,
+                dateRequested: time,
+            };
+
         }
     }
 

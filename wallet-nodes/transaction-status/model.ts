@@ -1,6 +1,7 @@
 export interface TransactionsDetail {
-    complete: string;
-    txtype?: string;
+    success: boolean;
+    fail: boolean;
+    request?: {};
     dateRequested: string;
 }
 
