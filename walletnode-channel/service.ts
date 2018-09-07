@@ -27,8 +27,12 @@ export class WalletnodeChannelService {
 
 
         const updateType = _.get(message, 'MessageType', '');
-
+        console.log('+++ updateType', updateType);
         switch (updateType) {
+        case 'applied':
+            this.handleAppliedTXUpdate(message);
+            break;
+
         case 'block':
             this.handleBlockUpdate(message);
             break;
@@ -43,6 +47,11 @@ export class WalletnodeChannelService {
         }
     }
 
+    handleAppliedTXUpdate(data) {
+        console.log('+++ applied tx update', data);
+        InitialisationService.updatedWalletNodeTxStatus(this.ngRedux, data);
+    }
+
     handleBlockUpdate(data) {
         /**
          * Contain following data:
@@ -54,7 +63,6 @@ export class WalletnodeChannelService {
         this.logService.log('---handle block update---');
         InitialisationService.updatedWalletNodeTxStateWithBlock(this.ngRedux, data);
     }
-
 
     handleStateViewUpdate(data) {
         this.logService.log('---handle state view update---');

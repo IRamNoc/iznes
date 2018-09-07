@@ -403,6 +403,22 @@ export class InitialisationService {
      * @param ngRedux
      * @param data
      */
+    static updatedWalletNodeTxStatus(ngRedux: NgRedux<any>, data) {
+        const txData = _.get(data, 'Data');
+
+        // Update the walletnode TX status
+        ngRedux.dispatch(updateWalletnodeTxStatus(txData));
+    }
+
+    /**
+     * Using 'block' update from wallet node.
+     *
+     * Update tx that made to wallet node from frontend, waiting block come in an update
+     * status. for example set inBlockchain flag to true, and set needHandle flag to true.
+     *
+     * @param ngRedux
+     * @param data
+     */
     static updatedWalletNodeTxStateWithBlock(ngRedux: NgRedux<any>, data) {
         const txList = _.get(data, 'Data.Transactions', []);
 
@@ -420,7 +436,7 @@ export class InitialisationService {
         ngRedux.dispatch(addWalletNodeSnapshot(snapshot));
 
         // Update the walletnode TX status
-        ngRedux.dispatch(updateWalletnodeTxStatus(snapshot));
+        // ngRedux.dispatch(updateWalletnodeTxStatus(snapshot));
     }
 
     /**
