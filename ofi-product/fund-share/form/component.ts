@@ -775,6 +775,7 @@ export class FundShareComponent implements OnInit, OnDestroy {
     }
 
     private onCreateSuccess(data, draft: number): void {
+        data = data[0];
         if (data.Status === 'Fail') {
             this.onCreateError(data, draft);
             return;
