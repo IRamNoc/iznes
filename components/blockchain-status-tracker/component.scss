@@ -6,11 +6,23 @@
     .sm-col {
         max-width: 200px;
     }
+    .additionalInfos {
+        .item {
+            float: left;
+            width: 30%;
+            margin: 0 3% 0 0;
+            overflow: hidden;
+            b {
+                width: 38%;
+                display: inline-block;
+            }
+        }
+    }
 }
 
 #blockchain-status-tracker {
     cursor: pointer;
-    .pending, .success {
+    .pending, .success, .fail {
         background: #ffffff;
         box-sizing: border-box;
         font-size: inherit;
@@ -53,6 +65,16 @@
             animation-name: spinRotate;
             animation-iteration-count: 5;
             animation-direction: normal;
+        }
+    }
+
+    .fail {
+        color: #ce553e;
+        border: solid 1px rgba(206, 85, 62, 0.4);
+        &::before {
+            border-top-color: #ce553e;
+            border-right-color: #ce553e;
+            border-bottom-color: #ce553e;
         }
     }
 
