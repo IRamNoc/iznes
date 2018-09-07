@@ -577,28 +577,28 @@ export class PrecentralisationReportComponent implements OnInit, OnDestroy {
     onClickViewCorrespondingOrders(id) {
 
         let fundname;
-        let shareName;
+        let sharename;
         let searchDate;
 
         const searchDateType = this.getSearchDateType();
 
         // build the filter depending we on the fund-level page or share-level page.
         if (this.isShareLevel) {
-            shareName = get(this.sharesDetails, 'shares[0].shareName', '');
-            searchDate = get(this.sharesDetails, ['shares', '0', searchDateType], '');
+            sharename = get(this.sharesDetails, ['shares', id, 'shareName'], '');
+            searchDate = get(this.sharesDetails, ['shares', id, searchDateType], '');
         }
         // fund level
         else  {
-           fundname = get(this.fundsDetails, 'funds[0].fundName', '');
-           searchDate = get(this.fundsDetails, ['funds', '0', searchDateType], '');
+           fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
+           searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
         }
 
         const orderFilters = {
-            shareName,
+            sharename,
             fundname,
             status: { id: -3 },
             type: { id: 0 },
-            dateType: { id: this.getSearchDateType() },
+            dateType: [{ id: this.getSearchDateType() }],
             fromDate: searchDate,
             toDate: searchDate,
         };
