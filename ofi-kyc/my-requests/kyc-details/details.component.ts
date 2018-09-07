@@ -146,7 +146,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getClassification() {
         let classification = {
-            title: 'Classification Information',
+            title: 'Classification Confirmation',
             data: ''
         };
 
@@ -198,7 +198,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskNature() {
         let riskNature = {
-            title: 'Risk nature',
+            title: 'Investment\'s Nature',
             data: ''
         };
 
@@ -218,7 +218,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         let riskObjectives = {
-            title: 'Risk objectives',
+            title: 'Investment\'s Ojectives',
             data: ''
         };
 
@@ -252,7 +252,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskConstraint() {
         let riskContraints = {
-            title: 'Risk constraints',
+            title: 'Investment\'s Constraints',
             data: ''
         };
 
