@@ -138,9 +138,9 @@ export class FundShare {
             mifiidServicesCosts: this.fees.mandatory.mifiidServicesCosts.value(),
             mifiidIncidentalCosts: this.fees.mandatory.mifiidIncidentalCosts.value(),
             subscriptionTradeCyclePeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleSubscriptionsWithinPeriod:
-                (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklySubscriptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -151,9 +151,9 @@ export class FundShare {
                 this.convertArrayToJSON(
                     (this.calendar.subscriptionTradeCycle as FundShareTradeCycleModel).yearlyDealingDays),
             redemptionTradeCyclePeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).tradeCyclePeriod,
             numberOfPossibleRedemptionsWithinPeriod:
-                (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
+            (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).numberOfPossibleWithinPeriod,
             weeklyRedemptionDealingDays:
                 this.convertArrayToJSON(
                     (this.calendar.redemptionTradeCycle as FundShareTradeCycleModel).weeklyDealingDays),
@@ -790,14 +790,14 @@ export class FundShare {
             return;
         }
         const newValue = value
-            .map((id: number) => {
-                const newItem = _.find(field.listItems, { id });
-                if (!newItem) {
-                    return null;
-                }
-                return newItem;
-            })
-            .filter(d => d !== null);
+        .map((id: number) => {
+            const newItem = _.find(field.listItems, { id });
+            if (!newItem) {
+                return null;
+            }
+            return newItem;
+        })
+        .filter(d => d !== null);
         field.control.setValue(newValue);
     }
 
@@ -826,13 +826,13 @@ export class FundShare {
     }
 
     private isStatusMaster(): boolean {
-        if (!this.keyFacts.mandatory.status.value()) return null;
+        if (!this.keyFacts.mandatory.status.value() || this.keyFacts.mandatory.status.value().length === 0) return null;
 
         return parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Master;
     }
 
     private getStatusFeederValue(): number {
-        if (!!this.keyFacts.mandatory.status.value() && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
+        if (!!this.keyFacts.mandatory.status.value() && this.keyFacts.mandatory.status.value().length > 0 && parseInt(this.keyFacts.mandatory.status.value()[0].id) === FundShareEnum.StatusEnum.Feeder) {
             return this.keyFacts.mandatory.feeder.value()[0].id;
         } else {
             return 0;
