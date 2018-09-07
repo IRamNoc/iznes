@@ -253,7 +253,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             buttons: [
                 {
                     text: 'Edit Draft',
-                    class: 'btn btn-success btn-sm',
+                    class: 'btn btn-success btn-sm no-margin',
                     click: 'edit',
                     iconClass: 'fa fa-edit',
                 },
