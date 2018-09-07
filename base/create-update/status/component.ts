@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { ToasterService } from 'angular2-toaster';
 import { MultilingualService } from '@setl/multilingual';
 import { ConfirmationService } from '@setl/utils';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-core-admin-status',
@@ -21,7 +22,8 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
 
     constructor(private toaster: ToasterService,
                 private translate: MultilingualService,
-                private confirmation: ConfirmationService) {
+                private confirmation: ConfirmationService,
+                private router: Router) {
 
         this.textEnable = this.translate.translate('Enable');
         this.textDisable = this.translate.translate('Disable');
@@ -79,6 +81,8 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         this.toaster.pop('success', this.translate.translate(
             `${this.noun} successfully ${this.status ? 'enabled' : 'disabled'}`,
         ));
+
+        this.router.navigateByUrl(this.getBackURL());
     }
 
     protected onStatusUpdateError(): void {
@@ -87,6 +91,10 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         this.toaster.pop('error', this.translate.translate(
             `${this.noun} could not be ${this.status ? 'enabled' : 'disabled'}`,
         ));
+    }
+
+    private getBackURL(): string {
+        return `/account-admin/${this.noun.toLowerCase()}s`;
     }
 
     ngOnDestroy() { }

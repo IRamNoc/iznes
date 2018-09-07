@@ -6,6 +6,7 @@ import { ConfirmationService } from '@setl/utils';
 
 import { AccountAdminStatusComponentBase } from '../../../base/create-update/status/component';
 import { UsersService } from '../../service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-core-admin-users-status',
@@ -17,8 +18,9 @@ export class UsersStatusComponent extends AccountAdminStatusComponentBase<null> 
     constructor(toaster: ToasterService,
                 translate: MultilingualService,
                 confirmation: ConfirmationService,
-                private service: UsersService) {
-        super(toaster, translate, confirmation);
+                private service: UsersService,
+                router: Router) {
+        super(toaster, translate, confirmation, router);
     }
 
     onUpdateStatus(): void {
