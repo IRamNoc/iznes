@@ -66,9 +66,10 @@ export class LoginGuardService implements CanActivate {
                     this.myUserService.defaultRefreshToken(this.ngRedux);
 
                     if (this.isMenuDisabled(state['url'])) {
-                        this.toasterService.pop(
-                            'warning',
-                            'This page is not available in the current version.');
+                        // 01/09/2018 commented out, as using the disable status to disable the menu in rendering.
+                        // this.toasterService.pop(
+                        //     'warning',
+                        //     'This page is not available in the current version.');
 
                         resolve(false);
                     }
