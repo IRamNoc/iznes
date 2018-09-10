@@ -37,7 +37,6 @@
 
         <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'"></blockchain-status-tracker>
 
-
         <div class="wallet">
             <div class="decalWallet">
                 <ng-select [allowClear]="false" [items]="walletSelectItems" (selected)="selected($event)" (removed)="removed($event)" [placeholder]="translate.translate('No wallet selected')" [formControl]="selectedWalletId" [multiple]="false" inlineLabel="Wallet" inlineLabelMlTag="txt_wallet">
