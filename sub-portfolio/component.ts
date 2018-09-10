@@ -375,8 +375,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                     }));
             },
             (data) => {
-                const message = _.get(data, [1, 'data', 'address'], '');
-                this.showMessage('error', message);
+                console.error('Fail', data);
+                this.showMessage('error', 'Failed to create sub-portfolio');
             }));
     }
 
@@ -412,8 +412,8 @@ export class ManageSubPortfolioComponent implements OnInit, OnDestroy {
                 this.handleLabelResponse((message === 'All OK') ? 'Updated' : message);
             },
             (labelResponse) => {
-                const message = _.get(labelResponse, '[1].Data[0].Message', '');
-                this.showMessage('error', message);
+                console.error('Fail', labelResponse);
+                this.showMessage('error', 'Failed to update sub-portfolio');
             }));
 
         /* Update the tab with updated data. */
