@@ -108,7 +108,7 @@
                         | translate }}
                     </button>
 
-                    <button class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
+                    <button [hidden]="isUpdateMode() && isUserInvitationComplete()" class="btn btn-primary" (click)="save(true)" [disabled]="!isValid()">{{
                         (isCreateMode()) ?
                         'Create &amp; Send Invitation(s)' :
                         'Update &amp; Send Invitation'
