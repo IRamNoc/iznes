@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { ClrDatagridSortOrder } from '@clr/angular';
+import { isEmpty } from 'lodash';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -20,55 +21,94 @@ export class BlockchainStatusTracker implements OnInit, OnDestroy {
     public successCount: number = 0;
     public failCount: number = 0;
     public showStatusModal: boolean = false;
+    public maxTransactions: boolean = false;
     public txList: {}[];
-    subscriptions: Subscription[] = [];
     public descSort = ClrDatagridSortOrder.DESC;
     public objectKeys = Object.keys;
+
+    private subscriptions: Subscription[] = [];
+    private pendingTimeout: any;
+    private successTimeout: any;
+    private failTimeout: any;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
     ) {
-        this.subscriptions.push(this.transactionStatus.subscribe((transaction) => {
-            // Ensure transaction volume is less than 10,000
-            if (Object.keys(transaction).length > 9999) return;
-
-            // Got new data so clear txList, reset counts and update CSS classes
-            this.txList = [];
-            const oldFailCount = this.failCount = 0;
-            const oldPendingCount = this.pendingCount = 0;
-            const oldSuccessCount = this.successCount = 0;
-            this.failUpdate = false;
-            this.pendingUpdate = false;
-            this.successUpdate = false;
-
-            // Loop over transactions and count pending and successful
-            for (const hash in transaction) {
-                if (!transaction[hash].success && !transaction[hash].fail) this.pendingCount += 1; // TX Pending
-                if (transaction[hash].success) this.successCount += 1; // TX Success
-                if (transaction[hash].fail) this.failCount += 1; // TX Fail
-
-                // Tidy request obj
-                delete transaction[hash].request.updated;
-                delete transaction[hash].request.height;
-
-                // Push to the txList
-                this.txList.push({
-                    hash,
-                    success: transaction[hash].success,
-                    fail: transaction[hash].fail,
-                    request: transaction[hash].request,
-                    date: transaction[hash].dateRequested,
-                });
-            }
-
-            // Apply update CSS class if new TXs
-            if (this.failCount > oldFailCount) this.failUpdate = true;
-            if (this.pendingCount > oldPendingCount) this.pendingUpdate = true;
-            if (this.successCount > oldSuccessCount) this.successUpdate = true;
-        }));
     }
 
     ngOnInit() {
+        this.subscriptions.push(this.transactionStatus.subscribe(
+            (transaction) => {
+                // Ensure transaction volume is less than 10,000 to keep UI tidy
+                if (Object.keys(transaction).length > 9999) {
+                    this.maxTransactions = true;
+                    return;
+                }
+
+                // Got new data so clear txList, save old counts for diffs and reset counters
+                this.txList = [];
+                const oldFailCount = this.failCount;
+                const oldPendingCount = this.pendingCount;
+                const oldSuccessCount = this.successCount;
+                this.failCount = 0;
+                this.pendingCount = 0;
+                this.successCount = 0;
+
+                // Loop over transactions and count pending and successful
+                for (const hash in transaction) {
+
+                    // Work out counts
+                    if (!transaction[hash].success && !transaction[hash].fail) this.pendingCount += 1; // TX Pending
+                    if (transaction[hash].success) this.successCount += 1; // TX Success
+                    if (transaction[hash].fail) this.failCount += 1; // TX Fail
+
+                    // Tidy request obj
+                    delete transaction[hash].request.updated;
+                    delete transaction[hash].request.height;
+
+                    // Push to the txList
+                    this.txList.push({
+                        hash,
+                        success: transaction[hash].success,
+                        fail: transaction[hash].fail,
+                        request: transaction[hash].request,
+                        date: transaction[hash].dateRequested,
+                    });
+                }
+
+                // Apply update CSS class if new TXs detected and set 5sec timeout to remove
+                if (this.failCount > oldFailCount) {
+                    this.failUpdate = true;
+                    clearTimeout(this.failTimeout);
+                    this.failTimeout = setTimeout(
+                        () => {
+                            this.failUpdate = false;
+                        },
+                        5000,
+                    );
+                }
+                if (this.pendingCount > oldPendingCount) {
+                    this.pendingUpdate = true;
+                    clearTimeout(this.pendingTimeout);
+                    this.pendingTimeout = setTimeout(
+                        () => {
+                            this.pendingUpdate = false;
+                        },
+                        5000,
+                    );
+                }
+                if (this.successCount > oldSuccessCount) {
+                    this.successUpdate = true;
+                    clearTimeout(this.successTimeout);
+                    this.successTimeout = setTimeout(
+                        () => {
+                            this.successUpdate = false;
+                        },
+                        5000,
+                    );
+                }
+            },
+        ));
     }
 
     formatText(text) {

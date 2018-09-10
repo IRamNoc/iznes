@@ -6,15 +6,18 @@
     .sm-col {
         max-width: 200px;
     }
-    .additionalInfos {
-        .item {
-            float: left;
-            width: 30%;
-            margin: 0 3% 0 0;
-            overflow: hidden;
-            b {
-                width: 38%;
-                display: inline-block;
+    .modal-body clr-datagrid {
+        max-height: 64vh;
+        .additionalInfos {
+            .item {
+                float: left;
+                width: 30%;
+                margin: 0 3% 0 0;
+                overflow: hidden;
+                b {
+                    width: 38%;
+                    display: inline-block;
+                }
             }
         }
     }
@@ -63,7 +66,7 @@
             border: 0 solid transparent;
             animation-duration: 1s;
             animation-name: spinRotate;
-            animation-iteration-count: 5;
+            animation-iteration-count: infinite;
             animation-direction: normal;
         }
     }
