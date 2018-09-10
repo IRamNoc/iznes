@@ -27,7 +27,7 @@
                     <div class="form-group col-sm-4">
                         <label class="control-label">{{'Currency' | translate}}</label>
                         <input type="text" id="Currency-nav-btn" name="navCurrency" value="{{getCurrencyString(share.currency)}} ({{currencySymbols[getCurrencyString(share.currency)]}})"
-                            readonly>
+                               readonly>
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
 
                         <input type='text' id="Date-nav-btn" name="navDate" [placeholder]="_translate.translate('Select date')" formControlName="navDate"
-                            [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker />
+                               [dpDayPicker]="navDateConfig" mode="day" theme="dp-material" #navDatePicker/>
 
                         <span *ngIf="navForm.controls['navDate'].touched && navForm.controls['navDate'].hasError('pattern')" class='field-error'>
                             {{'Incorrect date format' | translate}}
@@ -71,8 +71,8 @@
                         <span class="fa fa-calendar" [class.disabled]="isEditMode() || isDeleteMode()"></span>
 
                         <input type='text' id="PublicationDate-nav-btn" name="navPublishDate" [placeholder]="_translate.translate('Select date')"
-                            formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material"
-                            #navPublishDatePicker />
+                               formControlName="navPubDate" [dpDayPicker]="navPublishDateConfig" mode="day" theme="dp-material"
+                               #navPublishDatePicker/>
 
                         <span *ngIf="navForm.controls['navPubDate'].touched && navForm.controls['navPubDate'].hasError('pattern')" class="field-error">
                             {{'Incorrect date format' | translate}}
@@ -83,7 +83,7 @@
                 <div class="form-group col-sm-12">
                     <label class="control-label" for="Status-nav-btn">{{'Status' | translate}}</label>
                     <ng-select id="Status-nav-btn" class="fluid-width" [disabled]="navForm.controls['status'].disabled" [items]="statusItems"
-                        formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
+                               formControlName="status" [allowClear]="false" [placeholder]="_translate.translate('Select status')">
                     </ng-select>
                 </div>
 
@@ -95,7 +95,7 @@
 
     </div>
     <div class="modal-footer">
-        <button id="Cancel-nav-btn" class="btn btn-secondary" (click)="close()">
+        <button id="Cancel-nav-btn" class="btn btn-secondary" style="margin-right: 5px;" (click)="close()">
             {{'Cancel' | translate}}
         </button>
 
