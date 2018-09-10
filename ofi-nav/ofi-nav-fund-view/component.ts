@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } fr
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable , Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import * as moment from 'moment';
 
@@ -350,7 +350,10 @@ export class OfiNavFundView implements OnInit, OnDestroy {
         }));
 
         this.subscriptionsArray.push(this.navHistoryForm.valueChanges.subscribe(() => {
-            this.clearRequestedHistory();
+            if (this.navHistoryForm.value.navDateFrom.match('([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))') &&
+                this.navHistoryForm.value.navDateTo.match('([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))')) {
+                this.clearRequestedHistory();
+            }
         }));
     }
 
