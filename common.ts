@@ -16,7 +16,6 @@ export const kPayloadAction = (type, payload) => k({ type, payload });
  */
 export interface MemberNodeMessageBody {
     RequestName: string;
-
     [key: string]: any;
 }
 
