@@ -38,7 +38,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
         this.initData();
         this.getCurrentFormData();
 
-        (this.form.get('objectivesSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
+        this.updateCrossAM();
     }
 
     getCurrentFormData() {
@@ -62,8 +62,13 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
             )
             .subscribe(requestedKycs => {
                 this.amcs = values(requestedKycs);
+                this.updateCrossAM();
             })
         ;
+    }
+
+    updateCrossAM(){
+        (this.form.get('objectivesSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
     }
 
     initFormCheck() {

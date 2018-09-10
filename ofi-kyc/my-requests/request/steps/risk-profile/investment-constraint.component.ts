@@ -39,7 +39,7 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
         this.initData();
         this.getCurrentFormData();
 
-        (this.form.get('constraintsSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
+        this.updateCrossAM();
     }
 
     getCurrentFormData() {
@@ -63,8 +63,13 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
             )
             .subscribe(requestedKycs => {
                 this.amcs = values(requestedKycs);
+                this.updateCrossAM();
             })
         ;
+    }
+
+    updateCrossAM(){
+        (this.form.get('constraintsSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
     }
 
     initFormCheck() {
