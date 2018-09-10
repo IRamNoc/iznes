@@ -27,7 +27,6 @@ export class WalletnodeChannelService {
 
 
         const updateType = _.get(message, 'MessageType', '');
-        console.log('+++ updateType', updateType);
         switch (updateType) {
         case 'applied':
             this.handleAppliedTXUpdate(message);
@@ -48,7 +47,6 @@ export class WalletnodeChannelService {
     }
 
     handleAppliedTXUpdate(data) {
-        console.log('+++ applied tx update', data);
         InitialisationService.updatedWalletNodeTxStatus(this.ngRedux, data);
     }
 
