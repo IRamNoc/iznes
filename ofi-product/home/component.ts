@@ -475,10 +475,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data1.length > 0) {
             data1.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('umbrellaFundName', '');
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
                         draftType: 'Umbrella Fund',
-                        draftName: item.get('umbrellaFundName', '[unnamed umbrella fund]'),
+                        draftName: (name != '' ? name : '[unnamed umbrella fund]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
@@ -490,10 +491,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data2.length > 0) {
             data2.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('fundName', '');
                     this.draftList.push({
                         draftID: item.get('fundID', 0),
                         draftType: 'Fund',
-                        draftName: item.get('fundName', '[unnamed fund]'),
+                        draftName: (name != '' ? name : '[unnamed fund]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
@@ -505,10 +507,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data3.length > 0) {
             data3.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('fundShareName', '');
                     this.draftList.push({
                         draftID: item.get('fundShareID', 0),
-                        draftType: 'Fund Share',
-                        draftName: item.get('fundShareName', '[unnamed fund share]'),
+                        draftType: 'Share',
+                        draftName: (name != '' ? name : '[unnamed share]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
