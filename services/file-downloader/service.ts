@@ -17,7 +17,7 @@ export class FileDownloader {
         const isProduction = this.appConfig.production;
 
         if (secure) {
-            return isProduction ? `https://${window.location.hostname}:mn/aws` :
+            return isProduction ? `https://${window.location.hostname}/mn/aws` :
                 `http://${window.location.hostname}:9788/aws`;
         }
 
