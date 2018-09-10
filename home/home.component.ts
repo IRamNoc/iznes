@@ -4,12 +4,14 @@ import { tap, map, filter } from 'rxjs/operators';
  * This software is released under MIT license.
  * The full license information can be found in LICENSE in the root directory of this project.
  */
+import { get } from 'lodash';
 import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { select } from '@angular-redux/store';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { ReportingService } from '@setl/core-balances';
 import { MultilingualService } from '@setl/multilingual';
+import { Transaction } from '@setl/core-store/wallet/transactions/model';
 
 interface Asset {
     total: number;
@@ -27,7 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     username: string;
     lastLogin: string;
     holdingByAsset: any;
-    transactions$: Observable<any[]>;
+    transactions: Transaction[] = [];
 
     // Rows Per Page datagrid size
     pageSize: any;
@@ -66,7 +68,13 @@ export class HomeComponent implements OnInit, OnDestroy {
             { total: 0, asset: '' },
         ];
 
-        this.transactions$ = this.reportingService.getTransactions().pipe(map(txs => txs.slice(0, 5)));
+        this.reportingService.getTransactions().subscribe((transactions) => {
+            const page = get(transactions, ['pages', 0], null);
+            if (!page) {
+                return;
+            }
+            this.transactions = page.transactions;
+        });
 
         this.holdingByAsset$ = this.reportingService.getBalances();
 

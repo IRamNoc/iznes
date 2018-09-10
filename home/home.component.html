@@ -31,7 +31,7 @@
                 <app-basic-tile name="asset2" color="orange">
                     <ng-container *ngTemplateOutlet="assetTile; context: {'asset': assetTiles[1]}"></ng-container>
                 </app-basic-tile>
-                
+
                 <app-basic-tile name="search" color="blue" data-span="2">
                     <h1 class="tile-heading">{{'Search' | translate}}</h1>
                     <div class="input-group">
@@ -116,7 +116,7 @@
                     <clr-dg-column>{{'Type' | translate}}</clr-dg-column>
 
 
-                    <clr-dg-row *clrDgItems="let transaction of transactions$ | async;">
+                    <clr-dg-row *clrDgItems="let transaction of transactions">
                         <clr-dg-cell class="col-actions">
                             <div class="btn-group btn-sm">
                                 <a class="btn" routerLink="/reports/transactions/{{transaction.hash}}">
