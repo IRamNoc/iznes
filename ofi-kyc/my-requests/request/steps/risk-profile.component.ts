@@ -38,11 +38,11 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
                 rxFilter((kyc: any) => {
-                    return kyc && kyc.completedStep
+                return kyc && kyc.amcID;
                 })
             )
             .subscribe(kyc => {
-                if(steps[kyc.completedStep] < steps.riskProfile){
+            if (!kyc.completedStep || (steps[kyc.completedStep] < steps.riskProfile)) {
                     this.persistForm();
                 }
             })

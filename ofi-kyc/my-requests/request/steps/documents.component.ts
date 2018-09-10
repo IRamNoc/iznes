@@ -59,11 +59,11 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
                 rxFilter((kyc: any) => {
-                    return kyc && kyc.completedStep
-                })
-            )
-            .subscribe(kyc => {
-                if (steps[kyc.completedStep] < steps.documents) {
+                return kyc && kyc.amcID;
+            }),
+        )
+        .subscribe((kyc) => {
+            if (!kyc.completedStep || (steps[kyc.completedStep] < steps.documents)) {
                     this.persistForm();
                 }
             })
