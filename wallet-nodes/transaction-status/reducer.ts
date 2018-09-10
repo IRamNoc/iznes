@@ -19,11 +19,17 @@ export const walletNodeTransactionStatusReducer = function (state: WalletNodeTra
     }
 };
 
+/**
+ * addWalletNodeTXStatus
+ * ---------------------
+ * Save a walletnode TX request to Redux, along with formatted time and request payload
+ * @param actionType
+ * @param action
+ * @param state
+ */
 function addWalletNodeTXStatus(actionType, action, state) {
     const rawData = _.get(action, 'payload[1].data', []);
     const time = moment.unix(rawData.creation).utc().format('YYYY-MM-DD HH:mm:ss');
-
-    console.log('+++ ADD rawData', rawData);
 
     return Object.assign({}, state, {
         [rawData.hash]: { success: false, fail: false, request: rawData, dateRequested: time },
@@ -31,11 +37,17 @@ function addWalletNodeTXStatus(actionType, action, state) {
 
 }
 
+/**
+ * updateWalletNodeTXStatus
+ * ------------------------
+ * Save a walletnode TX response after a broadcast. Update where a matching hash exists or add to Redux if it is new.
+ * @param actionType
+ * @param action
+ * @param state
+ */
 function updateWalletNodeTXStatus(actionType, action, state) {
     const rawData = _.get(action, 'data.transactions', []);
     const newState = Object.assign({}, state);
-
-    console.log('+++ UPDATE rawData', rawData);
 
     for (const tx of rawData) {
         if (!_.isEmpty(newState[tx.hash])) {
