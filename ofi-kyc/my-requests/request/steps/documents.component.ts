@@ -32,6 +32,7 @@ export class NewKycDocumentsComponent implements OnInit, OnDestroy {
             (this.form.get('other') as FormGroup).enable();
             (this.form.get('pro') as FormGroup).disable();
         }
+        this.formPercent.refreshFormPercent();
     };
 
     open;
