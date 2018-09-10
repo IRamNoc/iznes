@@ -12,15 +12,13 @@ node {
 
             stage('Build & Unit Test') {
 
-                sh '''rm -f yarn.lock &&
-                        yarn install &&
-                        yarn upgrade &&
+                sh '''yarn install &&
                         cd src &&
                         sass styles.scss:styles.css &&
                         cd ../ '''
 
                 stage('Build Prod') {
-                    sh 'yarn build-prod -op iznes_release_dist; cp ./VERSION ./iznes_release_dist/'
+                    sh 'yarn build-prod --output-path iznes_release_dist; cp ./VERSION ./iznes_release_dist/'
                 }
 
                 stage('Copy code to deployment folder') {
