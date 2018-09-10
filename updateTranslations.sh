@@ -3,11 +3,13 @@
 # Set the translations filename which is going to be used by the multilingual module
 filename='translations.ts'
 
-# Define site id (IZNES = 1)
-siteId=1
+# Define constants
+iznesSiteId=1
+apiUrl="http://10.0.2.72"
+apiPort="8000"
 
 # Set API endpoint
-apiEndpoint="http://10.0.2.72:8000/api/sites/$siteId/export-translations"
+apiEndpoint="$apiUrl:$apiPort/api/sites/$iznesSiteId/export-translations"
 
 # Function that builds the new translations file
 function buildTranslationFile() {
