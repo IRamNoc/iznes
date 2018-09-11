@@ -528,13 +528,12 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         let temp = {
             'Umbrella Fund': 'umbrella-fund',
             'Fund': 'fund',
-            'Fund Share': 'fund-share',
+            'Share': 'fund-share',
         };
 
         if (btnType == 'edit') {
             this._router.navigateByUrl('/product-module/product/' + temp[dataType] + '/' + id);
         } else if (btnType == 'delete') {
-
 
             this._confirmationService.create('Draft Delete', 'Are you sure you want to delete this ' + dataType + ' draft?', {
                 confirmText: 'Confirm Delete',
@@ -551,7 +550,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
                         this._ofiFundService.fetchFundList();
                     }
-                    if (dataType == 'Fund Share') {
+                    if (dataType == 'Share') {
                         this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
                         OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
                     }

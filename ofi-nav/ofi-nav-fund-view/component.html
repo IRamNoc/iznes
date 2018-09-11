@@ -80,7 +80,7 @@
             <div class="hr-line-dashed"></div>
             <span class="text-badge">{{'NAV History' | translate}}</span>
 
-            <form [formGroup]="navHistoryForm">
+            <form [formGroup]="navHistoryForm" (keydown.enter)="$event.preventDefault()">
                 <div class="form-horizontal">
                     <div class="row">
                         <div class="form-group col-sm-2">
