@@ -239,6 +239,10 @@ export class UsersCreateUpdateComponent
         return valid;
     }
 
+    isUserInvitationComplete(): boolean {
+        return (this.user) && this.user.invitationComplete === 1;
+    }
+
     showNoTeamsMessage(): boolean {
         return this.isFormValid() && !this.isUserTeamsValid();
     }

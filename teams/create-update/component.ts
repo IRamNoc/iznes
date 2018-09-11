@@ -71,6 +71,10 @@ export class UserTeamsCreateUpdateComponent
         return this.form.isValid();
     }
 
+    isTeamDisabled(): boolean {
+        return this.status === 0;
+    }
+
     save(): void {
         if (this.isCreateMode()) {
             this.checkUserForNoPermissions(() => this.createTeam());

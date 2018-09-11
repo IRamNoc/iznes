@@ -21,6 +21,7 @@ import { AccountAdminErrorResponse, DataGridConfig } from '../../../base/model';
 export class AccountAdminUsersMgmtComponentBase<Type> implements OnInit, OnDestroy {
 
     @Input() entityId: number;
+    @Input() disabled: boolean = false;
     @Input() noun: string;
     @Input() doUpdateOb: Subject<number>;
     @Input() doUpdate: boolean = true;

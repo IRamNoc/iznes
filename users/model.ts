@@ -13,7 +13,7 @@ export class AccountAdminUser {
     userType: string;
     invitationToken: string;
     invitationEmail: string;
-    invitationComplete: string;
+    invitationComplete: number;
     invitationDate: string;
     userStatus: number;
     isActivated?: boolean;
