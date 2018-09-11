@@ -35,6 +35,7 @@
             </div>
         </clr-dropdown>
 
+        <blockchain-status-tracker *ngIf="appConfig.platform === 'OpenCSD'"></blockchain-status-tracker>
 
         <div class="wallet">
             <div class="decalWallet">
