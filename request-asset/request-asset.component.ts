@@ -6,7 +6,7 @@ import { MessageActionsConfig, MessagesService } from '@setl/core-messages';
 import {
     InitialisationService, WalletNodeRequestService,
 } from '@setl/core-req-services';
-import { TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS } from '@setl/core-store';
+import { TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS, ADD_WALLETNODE_TX_STATUS } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';

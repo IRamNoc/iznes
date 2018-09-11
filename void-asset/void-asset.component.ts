@@ -7,7 +7,7 @@ import {
     WalletnodeTxService,
 } from '@setl/core-req-services';
 import {
-    setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail,
+    setRequestedWalletAddresses, setRequestedWalletInstrument, getWalletIssuerDetail, ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
@@ -200,7 +200,7 @@ export class VoidAssetComponent implements OnInit, OnDestroy {
                         });
 
                         this.ngRedux.dispatch(SagaHelper.runAsync(
-                            [],
+                            [ADD_WALLETNODE_TX_STATUS],
                             [],
                             voidAssetAsyncTaskPipe,
                             {},
