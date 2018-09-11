@@ -329,7 +329,8 @@
                                                 <th>{{'Quantity' | translate}}</th>
                                                 <th>{{'Amount' | translate}}</th>
                                                 <th>{{'Cut-off Date' | translate}}</th>
-                                                <th>{{'Settlement' | translate}}</th>
+                                                <th *ngIf="!isSettlementSelected">{{'Settlement' | translate}}</th>
+                                                <th *ngIf="isSettlementSelected">{{'Valuation' | translate}}</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -338,14 +339,16 @@
                                                 <td>{{data.subscriptionQuantity | moneyValue: 5 }}</td>
                                                 <td>{{data.subscriptionAmount | moneyValue: 2 }}</td>
                                                 <td>{{data.subscriptionCutoffDate}}</td>
-                                                <td>{{data.subscriptionSettlementDate}}</td>
+                                                <td *ngIf="!isSettlementSelected">{{data.subscriptionSettlementDate}}</td>
+                                                <td *ngIf="isSettlementSelected">{{data.navDate}}</td>
                                             </tr>
                                             <tr>
                                                 <td><b>{{'Redemptions' | translate}}</b></td>
                                                 <td>{{data.redemptionQuantity | moneyValue: 5 }}</td>
                                                 <td>{{data.redemptionAmount | moneyValue: 2 }}</td>
                                                 <td>{{data.redemptionCutoffDate}}</td>
-                                                <td>{{data.redemptionSettlementDate}}</td>
+                                                <td *ngIf="!isSettlementSelected">{{data.redemptionSettlementDate}}</td>
+                                                <td *ngIf="isSettlementSelected">{{data.navDate}}</td>
                                             </tr>
                                             </tbody>
                                         </table>
