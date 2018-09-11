@@ -146,7 +146,7 @@ export class WalletNodeSocketService {
                     requestName: '',
                     // Subscribe less topics.
                     // topic: ['block', 'balanceview', 'proposal', 'transaction', 'serverstatus', 'stateview', 'blockchanges']
-                    topic: ['block', 'stateview', 'blockchanges']
+                    topic: ['block', 'stateview', 'blockchanges', 'applied']
                 },
                 requestID: messageID
             };
