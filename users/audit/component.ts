@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
+import * as moment from 'moment';
 
 import { MultilingualService } from '@setl/multilingual';
 import {
     clearRequestedAccountAdminUsersAudit,
 } from '@setl/core-store';
-import { FileDownloader } from '@setl/utils';
+import { FileDownloader, immutableHelper } from '@setl/utils';
 
 import { AccountAdminBaseService } from '../../base/service';
 import { AccountAdminAuditBase } from '../../base/audit/component';
@@ -40,7 +41,7 @@ export class UsersAuditComponent
         }));
 
         this.subscriptions.push(this.usersOb.subscribe((audit: Model.AccountAdminUserAuditEntry[]) => {
-            this.audit = audit;
+            this.audit = immutableHelper.copy(audit);
         }));
     }
 
@@ -68,7 +69,7 @@ export class UsersAuditComponent
                     id: 'Ref',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Ref',
+                    title: 'Reference',
                 },
                 {
                     id: 'User',
@@ -80,7 +81,7 @@ export class UsersAuditComponent
                     id: 'Field',
                     dataIndex: 'field',
                     styleClass: 'field',
-                    title: 'field',
+                    title: 'Information',
                 },
                 {
                     id: 'Previous',
@@ -120,6 +121,15 @@ export class UsersAuditComponent
                     dataIndex: 'dateModified',
                     styleClass: 'date',
                     title: 'Date',
+                    valueDecorator: function (entity) {
+                        if (!entity._originalDateModified) {
+                            entity._originalDateModified = entity.dateModified;
+                            const utcDate = moment.utc(entity.dateModified).toDate();
+                            entity.dateModified = moment(utcDate).format('YYYY-MM-DD HH:mm:ss');
+                        }
+
+                        return entity;
+                    },
                 },
             ],
         };
