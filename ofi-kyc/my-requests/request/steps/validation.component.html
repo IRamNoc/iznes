@@ -63,7 +63,7 @@
 
                             <div class="input-group date-pick-wrapper">
                                 <span class="fa fa-calendar" aria-hidden="true"></span>
-                                <input readonly autocomplete="off" [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
+                                <input disabled="true" autocomplete="off" [dpDayPicker]="configDate" id="doneDate" formControlName="doneDate" placeholder="{{configDate.format}}" mode="day" theme="dp-material">
                             </div>
 
                             <span class="field-error" *ngIf="hasError('doneDate')">{{'Field is required' | translate}}</span>

@@ -253,7 +253,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
             buttons: [
                 {
                     text: 'Edit Draft',
-                    class: 'btn btn-success btn-sm',
+                    class: 'btn btn-success btn-sm no-margin',
                     click: 'edit',
                     iconClass: 'fa fa-edit',
                 },
@@ -475,10 +475,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data1.length > 0) {
             data1.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('umbrellaFundName', '');
                     this.draftList.push({
                         draftID: item.get('umbrellaFundID', 0),
                         draftType: 'Umbrella Fund',
-                        draftName: item.get('umbrellaFundName', '[unnamed umbrella fund]'),
+                        draftName: (name != '' ? name : '[unnamed umbrella fund]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
@@ -490,10 +491,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data2.length > 0) {
             data2.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('fundName', '');
                     this.draftList.push({
                         draftID: item.get('fundID', 0),
                         draftType: 'Fund',
-                        draftName: item.get('fundName', '[unnamed fund]'),
+                        draftName: (name != '' ? name : '[unnamed fund]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
@@ -505,10 +507,11 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         if (data3.length > 0) {
             data3.map((item) => {
                 if (item.get('draft') == 1) {
+                    let name = item.get('fundShareName', '');
                     this.draftList.push({
                         draftID: item.get('fundShareID', 0),
-                        draftType: 'Fund Share',
-                        draftName: item.get('fundShareName', '[unnamed fund share]'),
+                        draftType: 'Share',
+                        draftName: (name != '' ? name : '[unnamed share]'),
                         draftCreated: item.get('draftUser', ''),
                         draftDate: item.get('draftDate', '')
                     });
@@ -525,7 +528,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         let temp = {
             'Umbrella Fund': 'umbrella-fund',
             'Fund': 'fund',
-            'Fund Share': 'fund-share',
+            'Share': 'fund-share',
         };
 
         if (btnType == 'edit') {
@@ -538,6 +541,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                 btnClass: 'error'
             }).subscribe((ans) => {
                 if (ans.resolved) {
+                    this.draftList.splice(this.draftList.findIndex((draft) => draft.draftID == id && draft.draftType == dataType), 1);
                     if (dataType == 'Umbrella Fund') {
                         this._ofiUmbrellaFundService.iznDeleteUmbrellaDraft(this._ofiUmbrellaFundService, this._ngRedux, id);
                         this._ofiUmbrellaFundService.fetchUmbrellaList();
@@ -546,7 +550,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
                         this._ofiFundService.iznDeleteFundDraft(this._ofiFundService, this._ngRedux, id);
                         this._ofiFundService.fetchFundList();
                     }
-                    if (dataType == 'Fund Share') {
+                    if (dataType == 'Share') {
                         this._ofiFundShareService.iznDeleteShareDraft(this._ofiFundShareService, this._ngRedux, id);
                         OfiFundShareService.defaultRequestIznesShareList(this._ofiFundShareService, this._ngRedux);
                     }

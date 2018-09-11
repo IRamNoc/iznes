@@ -201,8 +201,8 @@
                             <clr-dg-cell></clr-dg-cell>
                             <clr-dg-cell></clr-dg-cell>
                             <clr-dg-cell></clr-dg-cell>
-                            <clr-dg-cell>{{item.amount}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.ratio}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.amount.toFixed(2)}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.ratio.toFixed(2) + '%'}}</clr-dg-cell>
                         </ng-container>
                         <ng-container *ngIf="!!item.shareName">
                             <clr-dg-cell></clr-dg-cell>
@@ -210,9 +210,9 @@
                             <clr-dg-cell>{{item.fundCurrency}}</clr-dg-cell>
                             <clr-dg-cell>{{item.isin}}</clr-dg-cell>
                             <clr-dg-cell>{{item.quantity}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.latestNav}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.amount}}</clr-dg-cell>
-                            <clr-dg-cell>{{item.ratio}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.latestNav.toFixed(2)}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.amount.toFixed(2)}}</clr-dg-cell>
+                            <clr-dg-cell>{{item.ratio.toFixed(2) + '%'}}</clr-dg-cell>
                         </ng-container>
 
                     </clr-dg-row>

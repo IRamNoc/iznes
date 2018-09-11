@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit, ViewChild } fr
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgRedux, select } from '@angular-redux/store';
-import { Observable ,  Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -288,7 +288,9 @@ export class OfiNavFundsList implements OnInit, OnDestroy {
 
         // this.subscriptionsArray.push(this.searchForm.valueChanges.debounceTime(1000).subscribe(() => {
         this.subscriptionsArray.push(this.searchForm.valueChanges.subscribe(() => {
-            this.clearRequestedList();
+            if (this.searchForm.value.date.match('([12]\\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01]))')) {
+                this.clearRequestedList();
+            }
         }));
     }
 
