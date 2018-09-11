@@ -254,7 +254,7 @@ export class UsersCreateUpdateComponent
 
     save(invite: boolean = false): void {
         if (this.isCreateMode()) {
-            this.checkUserForNoTeams(() => this.onSaveCheckInvites(invite));
+            this.checkUserForNoTeams(() => this.createUsers(invite));
         } else if (this.isUpdateMode()) {
             this.checkUserForNoTeams(() => this.updateUser(invite));
         }
@@ -277,22 +277,6 @@ export class UsersCreateUpdateComponent
             });
         } else {
             callback();
-        }
-    }
-
-    private onSaveCheckInvites(invite: boolean): void {
-        if (invite) {
-            this.confirmations.create(
-                'Invite Users',
-                `Are you sure you want to invite the following users;<br /><br />${this.generateInviteList()}`,
-            ).subscribe((value) => {
-                if (value.resolved) {
-                    this.createUsers(invite);
-                    return;
-                }
-            });
-        } else {
-            this.createUsers(invite);
         }
     }
 
