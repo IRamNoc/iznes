@@ -302,6 +302,9 @@ export {
     addWalletNodeInitialSnapshot,
     WalletNodeReducer,
     WalletNodeState,
+    ADD_WALLETNODE_TX_STATUS,
+    UPDATE_WALLETNODE_TX_STATUS,
+    updateWalletnodeTxStatus,
 } from './wallet-nodes/';
 
 export {
