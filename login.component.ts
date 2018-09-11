@@ -1,12 +1,21 @@
 // Vendors
-import {AfterViewInit, Component, Inject, OnDestroy, OnInit, ElementRef, ViewChild, ChangeDetectorRef} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
-import {NgRedux, select} from '@angular-redux/store';
-import {LoginGuardService} from "./login-guard.service";
+import {
+    AfterViewInit,
+    Component,
+    Inject,
+    OnDestroy,
+    OnInit,
+    ElementRef,
+    ViewChild,
+    ChangeDetectorRef
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { LoginGuardService } from "./login-guard.service";
 import * as _ from 'lodash';
 // Internals
-import {APP_CONFIG, AppConfig, SagaHelper, LogService} from '@setl/utils';
+import { APP_CONFIG, AppConfig, SagaHelper, LogService } from '@setl/utils';
 import {
     AccountsService,
     ChainService,
@@ -27,13 +36,13 @@ import {
     SET_NEW_PASSWORD,
     setLanguage,
 } from '@setl/core-store';
-import {MemberSocketService} from '@setl/websocket-service';
-import {ToasterService} from 'angular2-toaster';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
-import {combineLatest} from 'rxjs';
-import {Subscription} from 'rxjs/Subscription';
-import {MultilingualService} from '@setl/multilingual';
-import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
+import { MemberSocketService } from '@setl/websocket-service';
+import { ToasterService } from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
+import { combineLatest } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
+import { MultilingualService } from '@setl/multilingual';
+import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
 
 /* Dectorator. */
 @Component({
@@ -64,15 +73,15 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
 
     changePasswordForm: FormGroup;
     showPasswords = {
-        change1 : false,
-        change2 : false,
-        resetold : false,
-        reset1 : false,
-        reset2 : false
+        change1: false,
+        change2: false,
+        resetold: false,
+        reset1: false,
+        reset2: false
     };
 
     resetPasswordForm: FormGroup;
-    resetPassword : boolean = false;
+    resetPassword: boolean = false;
 
     changedPassword = false;
 
@@ -86,6 +95,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     resetToken = '';
     isTokenExpired = false;
     changePassword = false;
+    validation = 3;
 
     private queryParams: any;
 
@@ -164,7 +174,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         this.resetPasswordForm = new FormGroup(controls, [
             formGroup => {
                 return formGroup.get('oldPassword').value !== formGroup.get('password').value ? null : {
-                    same : true
+                    same: true
                 }
             },
             this.passwordValidator
@@ -190,7 +200,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         };
     }
 
-    hasError(formControl : AbstractControl, error) {
+    hasError(formControl: AbstractControl, error) {
         if (error !== 'required' && formControl.hasError('required')) {
             return false;
         }
@@ -388,7 +398,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     passwordValidator(g: FormGroup) {
-        return (g.get('password').value === g.get('passwordConfirm').value) ? null : {'mismatch': true};
+        return (g.get('password').value === g.get('passwordConfirm').value) ? null : { 'mismatch': true };
     }
 
     toggleShowPasswords(key) {
@@ -464,39 +474,52 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     saveNewPassword(formValues) {
-        const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
-            {
-                token: this.resetToken,
-                password: formValues.password,
-                lang: this.language
-            });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
-            asyncTaskPipe,
-            (data) => {
-                if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
-                    this.changedPassword = true;
-                    this.closeFPModal();
+        this.validation = 0;
 
-                    this.toasterService.pop('success', 'Your password has been changed!');
-                } else {
-                    this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+        if (formValues.password.length > 7) {
+            this.validation += (formValues.password.match(/[A-Z]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[a-z]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[0-9]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[\u0020-\u002F|\u003A-\u0040|\u005B-\u0060|\u007B-\u007F]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[\u00A0-\uFFFF]/) ? 1 : 0);
+        }
+
+        if (this.validation > 2) {
+            const asyncTaskPipe = this.myUserService.setNewPasswordFromToken(
+                {
+                    token: this.resetToken,
+                    password: formValues.password,
+                    lang: this.language
+                });
+
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+                asyncTaskPipe,
+                (data) => {
+                    if (data && data[1] && data[1].Data && data[1].Data[0].Status && data[1].Data[0].Status === 'OK') {
+                        this.changedPassword = true;
+                        this.closeFPModal();
+
+                        this.toasterService.pop('success', 'Your password has been changed!');
+                    } else {
+                        this.alertsService.create('error', '<span class="text-warning">' + data[1].Data[0].Message + '</span>');
+                        this.closeFPModal();
+                    }
+                },
+                (data) => {
+                    this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
                     this.closeFPModal();
-                }
-            },
-            (data) => {
-                this.alertsService.create('error', '<span class="text-warning">Sorry, something went wrong.<br>Please try again later!</span>');
-                this.closeFPModal();
-            })
-        );
+                })
+            );
+        }
     }
 
-    resetUserPassword(values, $event : Event){
+    resetUserPassword(values, $event: Event) {
         $event.preventDefault();
 
         const asyncTaskPipe = this.myUserService.saveNewPassword({
-            oldPassword : values.oldPassword,
-            newPassword : values.password,
+            oldPassword: values.oldPassword,
+            newPassword: values.password,
         });
         const saga = SagaHelper.runAsync(
             [SET_NEW_PASSWORD],
@@ -541,27 +564,27 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         const responseStatus = _.get(data, '[1].Data[0].Status', 'other').toLowerCase();
 
         switch (responseStatus) {
-            case 'fail':
-                this.showLoginErrorMessage('warning',
-                    '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
-                );
-                break;
-            case 'locked':
-                this.showLoginErrorMessage('info',
-                    '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                    'Please contact Setl support.</span>'
-                );
-                break;
-            default:
-                this.showLoginErrorMessage('error',
-                    '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
-                );
-                break;
+        case 'fail':
+            this.showLoginErrorMessage('warning',
+                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
+            );
+            break;
+        case 'locked':
+            this.showLoginErrorMessage('info',
+                '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
+                'Please contact Setl support.</span>'
+            );
+            break;
+        default:
+            this.showLoginErrorMessage('error',
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+            );
+            break;
         }
     }
 
     showLoginErrorMessage(type, msg) {
-        this.alertsService.create(type, msg, {buttonMessage: 'Please try again to log in'});
+        this.alertsService.create(type, msg, { buttonMessage: 'Please try again to log in' });
     }
 
     updateLang(lang: string) {

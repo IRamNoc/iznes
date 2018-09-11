@@ -16,14 +16,14 @@
             <form [formGroup]="loginForm" (ngSubmit)="login(loginForm.value)" [class.error]="!loginForm.valid && loginForm.touched">
                 <div class="form-group">
                     <input
-                            id="username-field"
-                            type="text"
-                            name="username"
-                            [placeholder]="_translate.translate('Username')"
-                            class="form-control"
-                            formControlName="username"
-                            [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
-                            #usernameInput
+                        id="username-field"
+                        type="text"
+                        name="username"
+                        [placeholder]="_translate.translate('Username')"
+                        class="form-control"
+                        formControlName="username"
+                        [class.error]="!loginForm.controls['username'].valid && loginForm.controls['username'].touched"
+                        #usernameInput
                     >
                     <div *ngIf="!loginForm.controls['username'].valid && loginForm.controls['username'].touched" class="field-error">
                         {{'Username is required' | translate}}
@@ -32,14 +32,14 @@
 
                 <div class="form-group">
                     <input
-                            id="password-field"
-                            name="password"
-                            type="password"
-                            class="form-control"
-                            [placeholder]="_translate.translate('Password')"
-                            formControlName="password"
-                            [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
-                            #passwordInput
+                        id="password-field"
+                        name="password"
+                        type="password"
+                        class="form-control"
+                        [placeholder]="_translate.translate('Password')"
+                        formControlName="password"
+                        [class.error]="!loginForm.controls['password'].valid && loginForm.controls['password'].touched"
+                        #passwordInput
                     >
                     <div *ngIf="!loginForm.controls['password'].valid && loginForm.controls['password'].touched" class="field-error">
                         {{'Password is required' | translate}}
@@ -168,6 +168,7 @@
                                    formControlName="password"
                                    size="45"
                                    [placeholder]="_translate.translate('New password')"
+                                   (focus)="validation = 3"
                             >
                             <span class="toggle-password" (click)="toggleShowPasswords('change1')" [title]="_translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
@@ -178,7 +179,7 @@
                         <div *ngIf="hasError(changePasswordForm.get('password'), 'required')" class="text-danger">
                             {{'Password is required' | translate}}
                         </div>
-                        <div *ngIf="hasError(changePasswordForm.get('password'), 'rules')" class="text-danger">
+                        <div *ngIf="hasError(changePasswordForm.get('password'), 'rules') || validation < 3" class="text-danger">
                             {{'Your password doesn\'t meet the security criteria' | translate}}
                         </div>
                     </div>
@@ -195,7 +196,9 @@
                                    [type]="(showPasswords.change2 === true) ? 'text' : 'password'"
                                    class="form-control"
                                    formControlName="passwordConfirm"
-                                   [placeholder]="_translate.translate('Password confirmation')">
+                                   [placeholder]="_translate.translate('Password confirmation')"
+                                   (focus)="validation = 3"
+                            >
                             <span class="toggle-password" (click)="toggleShowPasswords('change2')" [title]="_translate.translate('Show/hide passwords')">
                                 <i class="fa fa-eye-slash" aria-hidden="true"></i>
                             </span>
@@ -278,7 +281,7 @@
                             </span>
                         </div>
                     </div>
-                    
+
                     <span *ngIf="hasError(resetPasswordForm.get('password'), 'required')" class="text-danger">
                         {{'Password is required' | translate}}
                     </span>
@@ -308,7 +311,7 @@
                             </span>
                         </div>
                     </div>
-                    
+
                     <span *ngIf="hasError(resetPasswordForm.get('passwordConfirm'), 'required')" class="text-danger">
                         {{'Password confirmation is required' | translate}}
                     </span>
