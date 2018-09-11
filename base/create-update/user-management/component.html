@@ -46,7 +46,7 @@
         <clr-dg-cell id="{{'userMgmtCellActions' + idx}}" class="col-actions">
             <label class="switch">
                 <input class="form-control" id="{{'userMgmtCellAction' + idx}}" type="checkbox"
-                    [disabled]="isProcessing()"
+                    [disabled]="isProcessing() || disabled"
                     [(ngModel)]="entity.isActivated">
                 <span class="slider round"></span>
             </label>
