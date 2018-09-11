@@ -74,7 +74,6 @@ export class OfiUmbrellaFundService {
         const messageBody: SaveUmbrellaFundRequestBody = {
             RequestName: 'izncreateumbrellafund',
             token: this.memberSocketService.token,
-            walletID: this.walletID,
             draft: ufData.draft,
             umbrellaFundName: ufData.umbrellaFundName,
             registerOffice: ufData.registerOffice,
