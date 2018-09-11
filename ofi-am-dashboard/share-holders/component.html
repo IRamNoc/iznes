@@ -21,7 +21,8 @@
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-list-funds-search-field" [items]="fundList" [allowClear]="true" [placeholder]="_translate.translate('Type a Fund name or a LEI code')"
+                                    <ng-select id="holders-list-funds-search-field" [items]="fundList" [allowClear]="true"
+                                        [placeholder]="_translate.translate('Type a Fund name or a LEI code')"
                                         [formControl]="listSearchForm.controls['searchFunds']">
                                     </ng-select>
                                 </div>
@@ -32,7 +33,8 @@
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-list-shares-search-field" [items]="sharesList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share name or an ISIN code')"
+                                    <ng-select id="holders-list-shares-search-field" [items]="sharesList" [allowClear]="true"
+                                        [placeholder]="_translate.translate('Type a Share name or an ISIN code')"
                                         [formControl]="listSearchForm.controls['searchShares']">
                                     </ng-select>
                                 </div>
@@ -50,7 +52,8 @@
                         <div class="row ">
                             <div class="form-group col-lg-8">
                                 <p>
-                                    {{'Please select the fund on which you want to see the recordkeeping or export recordkeeping for all funds by clicking on
+                                    {{'Please select the fund on which you want to see the recordkeeping or export
+                                    recordkeeping for all funds by clicking on
                                     the top right button.' | translate}}
                                 </p>
 
@@ -59,14 +62,15 @@
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-funds-search-field" [items]="fundList" [allowClear]="true" [placeholder]="_translate.translate('Type a Fund Name')"
-                                        [formControl]="searchForm.controls['search']">
+                                    <ng-select id="holders-funds-search-field" [items]="fundList" [allowClear]="true"
+                                        [placeholder]="_translate.translate('Type a Fund Name')" [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
-                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 0)">
+                                <button id="holders-funds-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
+                                    (click)="exportFile('funds', 0)">
                                     {{'Export Recordkeeping for all funds' | translate}}
                                 </button>
                             </div>
@@ -79,21 +83,24 @@
                     <div class="form-horizontal">
                         <div class="row ">
                             <div class="form-group col-lg-8">
-                                <p>{{'Please select the share on which you want to see the recordkeeping.' | translate}}</p>
+                                <p>{{'Please select the share on which you want to see the recordkeeping.' |
+                                    translate}}</p>
 
                                 <div style="margin: 10px 0;">
                                     <b><span>{{'Share Name or ISIN:' | translate}}</span></b>
                                 </div>
 
                                 <div class="input-button-group">
-                                    <ng-select id="holders-shares-search-field" [items]="sharesList" [allowClear]="true" [placeholder]="_translate.translate('Type a Share Name or an ISIN code')"
+                                    <ng-select id="holders-shares-search-field" [items]="sharesList" [allowClear]="true"
+                                        [placeholder]="_translate.translate('Type a Share Name or an ISIN code')"
                                         [formControl]="searchForm.controls['search']">
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 text-right">
-                                <button id="holders-shares-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportFile('shares', 0)">
+                                <button id="holders-shares-all-export-btn" type="button" class="btn btn-success" style="max-width: none !important"
+                                    (click)="exportFile('shares', 0)">
                                     {{'Export Recordkeeping for all shares' | translate}}
                                 </button>
                             </div>
@@ -127,16 +134,19 @@
             <div class="row ">
                 <div class="col-lg-8">
                     <h3 style="margin-bottom: 3px;">{{'Please find a list of all your products below:' | translate}}</h3>
-                    {{'You can access the recordkeeping for a specific Fund or Share by clicking on the corresponding line in the datagrid below.'
+                    {{'You can access the recordkeeping for a specific Fund or Share by clicking on the corresponding
+                    line in the datagrid below.'
                     | translate}}
                 </div>
 
                 <div class="col-lg-4 text-right">
-                    <button id="holders-export-list-btn1" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 0)">
+                    <button id="holders-export-list-btn1" type="button" class="btn btn-success" style="max-width: none !important"
+                        (click)="exportFile('funds', 0)">
                         {{'Export recordkeeping for all Funds' | translate}}
                     </button>
                     <br>
-                    <button id="holders-export-list-btn2" type="button" class="btn btn-success" style="max-width: none !important" (click)="exportFile('shares', 0)">
+                    <button id="holders-export-list-btn2" type="button" class="btn btn-success" style="max-width: none !important"
+                        (click)="exportFile('shares', 0)">
                         {{'Exportrecordkeeping for all Shares' | translate}}
                     </button>
                 </div>
@@ -155,61 +165,65 @@
                 <clr-dg-column>{{ 'Number of holders' | translate }}</clr-dg-column>
 
                 <clr-dg-row *clrDgItems="let data of allList" (click)="handleClickShare(data)" clrDgRowClickable>
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="true">{{data.fundName}}</p>
-                            <p *ngSwitchDefault></p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.fundName}}</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell></clr-dg-cell>
+                    </ng-container>
 
                     <clr-dg-cell>{{data.shareName}}</clr-dg-cell>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="true">{{data.fundCurrency}}</p>
-                            <p *ngSwitchCase="false">{{data.shareCurrency}}</p>
-                            <p *ngSwitchDefault>{{data.fundCurrency}}</p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.fundCurrency}}</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareCurrency}}</clr-dg-cell>
+                    </ng-container>
 
                     <clr-dg-cell>{{data.shareIsin}}</clr-dg-cell>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="false">{{data.shareNav | moneyValue: 2}}</p>
-                            <p *ngSwitchDefault></p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell></clr-dg-cell>
+                    </ng-container>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="false">{{data.shareUnitNumber | moneyValue: 5}}</p>
-                            <p *ngSwitchDefault></p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareNav | moneyValue: 2}}</clr-dg-cell>
+                    </ng-container>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="true">{{data.fundAum | moneyValue:2}}</p>
-                            <p *ngSwitchCase="false">{{data.shareAum | moneyValue:2}}</p>
-                            <p *ngSwitchDefault>{{data.fundAum | moneyValue:2}}</p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell></clr-dg-cell>
+                    </ng-container>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="false">{{data.shareRatio | moneyValue:2}}{{'%' | translate}}</p>
-                            <p *ngSwitchDefault></p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareUnitNumber | moneyValue: 5}}</clr-dg-cell>
+                    </ng-container>
 
-                    <clr-dg-cell>
-                        <span [ngSwitch]="data.shareId === 0">
-                            <p *ngSwitchCase="true">{{data.fundHolderNumber}}</p>
-                            <p *ngSwitchCase="false">{{data.shareHolderNumber}}</p>
-                            <p *ngSwitchDefault>{{data.fundHolderNumber}}</p>
-                        </span>
-                    </clr-dg-cell>
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.fundAum | moneyValue:2}}</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareAum | moneyValue:2}}</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell></clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareRatio | moneyValue:2}}%</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId === 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.fundHolderNumber}}</clr-dg-cell>
+                    </ng-container>
+
+                    <ng-container *ngIf="data.shareId !== 0" ngProjectAs="clr-dg-cell">
+                        <clr-dg-cell>{{data.shareHolderNumber}}</clr-dg-cell>
+                    </ng-container>
                 </clr-dg-row>
 
                 <clr-dg-footer>
@@ -230,8 +244,8 @@
                                 <b>{{'Top holders of this fund:' | translate}}</b>
                             </label>
                             <div class="input-button-group">
-                                <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this fund')"
-                                    [formControl]="filtersForm.controls['topholders']">
+                                <ng-select id="holders-fund-filter-top" [items]="holderFilters" [allowClear]="true"
+                                    [placeholder]="_translate.translate('Top holders of this fund')" [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -272,8 +286,9 @@
                             </div>
                         </div>
                         <div class="col-lg-4 text-right">
-                            <button *ngIf="holdersFundData.length > 0" id="holders-funds-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important"
-                                (click)="exportFile('funds', 1)">{{'Export @tabTitle@ Recordkeeping'
+                            <button *ngIf="holdersFundData.length > 0" id="holders-funds-export-btn" type="button"
+                                class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('funds', 1)">{{'Export
+                                @tabTitle@ Recordkeeping'
                                 | translate: {'tabTitle': tabTitle} }}</button>
                         </div>
                     </div>
@@ -315,8 +330,8 @@
                                 <b>{{'Top holders of this share:' | translate}}</b>
                             </label>
                             <div class="input-button-group">
-                                <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true" [placeholder]="_translate.translate('Top holders of this share')"
-                                    [formControl]="filtersForm.controls['topholders']">
+                                <ng-select id="holders-shares-filter-top" [items]="holderFilters" [allowClear]="true"
+                                    [placeholder]="_translate.translate('Top holders of this share')" [formControl]="filtersForm.controls['topholders']">
                                 </ng-select>
                             </div>
                         </div>
@@ -330,7 +345,8 @@
                         </div>
                         <!--</div>-->
                         <div class="col-lg-4 text-right">
-                            <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important" (click)="exportFile('shares', 1)">{{'Export
+                            <button id="holders-shares-export-btn" type="button" class="mt-1 btn btn-success" style="max-width: none !important"
+                                (click)="exportFile('shares', 1)">{{'Export
                                 @tabTitle@ Recordkeeping' | translate: {'tabTitle': tabTitle} }}</button>
                         </div>
                     </div>
