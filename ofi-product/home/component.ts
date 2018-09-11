@@ -528,7 +528,7 @@ export class ProductHomeComponent implements OnInit, OnDestroy {
         let temp = {
             'Umbrella Fund': 'umbrella-fund',
             'Fund': 'fund',
-            'Fund Share': 'fund-share',
+            'Share': 'fund-share',
         };
 
         if (btnType == 'edit') {
