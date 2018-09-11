@@ -77,6 +77,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
     addHolder() {
         let control = this.form.get('custodianHolderCustom') as FormArray;
         control.push(this.newRequestService.createHolderCustom());
+        this.formPercent.refreshFormPercent();
     }
 
     removeHolder(i) {
@@ -89,6 +90,7 @@ export class BankingInformationComponent implements OnInit, OnDestroy {
         }
 
         control.removeAt(i);
+        this.formPercent.refreshFormPercent();
     }
 
     getCurrentFormData() {
