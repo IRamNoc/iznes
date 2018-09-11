@@ -70,9 +70,9 @@
                         | translate }}</button>
                 </div>
 
-                <!-- <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete ' + noun | translate }}</button>
-                </div> -->
+                <div class="col justify-end" *ngIf="isUpdateMode()">
+                    <button class="btn btn-danger" (click)="doDeleteTeam()">{{ 'Delete ' + noun | translate }}</button>
+                </div>
             </div>
         </clr-tab-content>
     </clr-tab>
