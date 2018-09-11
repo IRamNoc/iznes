@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgRedux, select } from '@angular-redux/store';
+import * as moment from 'moment';
 
 import {
     clearRequestedAccountAdminTeamsAudit,
@@ -120,6 +121,15 @@ export class UserTeamsAuditComponent
                     dataIndex: 'userName',
                     styleClass: 'modifiedby',
                     title: 'Modified by',
+                    valueDecorator: function (entity) {
+                        if (!entity._originalDateModified) {
+                            entity._originalDateModified = entity.dateModified;
+                            const utcDate = moment.utc(entity.dateModified).toDate();
+                            entity.dateModified = moment(utcDate).format('YYYY-MM-DD HH:mm:ss');
+                        }
+
+                        return entity;
+                    },
                 },
                 {
                     id: 'Date',
