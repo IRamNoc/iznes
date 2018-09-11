@@ -1,12 +1,12 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { get as getValue, remove } from 'lodash';
 import { select } from '@angular-redux/store';
-import { PersistService } from '@setl/core-persist';
-
 import { Subject } from 'rxjs';
 import { map, take, takeUntil, filter as rxFilter } from 'rxjs/operators';
 
 import { PersistRequestService } from '@setl/core-req-services';
+import { PersistService } from '@setl/core-persist';
+import { formHelper } from '@setl/utils/helper';
 
 import { NewRequestService } from '../new-request.service';
 import { IdentificationService } from './identification.service';
@@ -21,6 +21,9 @@ export class NewKycIdentificationComponent implements OnInit {
 
     @Input() form;
     @Input() investorType;
+
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
 
@@ -138,8 +141,8 @@ export class NewKycIdentificationComponent implements OnInit {
 
     handleSubmit(e) {
         e.preventDefault();
-
         if (!this.form.valid) {
+            formHelper.dirty(this.form);
             return;
         }
 
@@ -148,10 +151,20 @@ export class NewKycIdentificationComponent implements OnInit {
                 take(1),
             )
             .subscribe((requests) => {
-                this.identificationService.sendRequest(this.form, requests, this.connectedWallet).then(() => {
+            this
+                .identificationService
+                .sendRequest(this.form, requests, this.connectedWallet)
+                .then(() => {
+                    this.submitEvent.emit({
+                        completed: true,
+                    });
                     this.clearPersistForm();
-                });
-            })
+                })
+                .catch(() => {
+                    this.newRequestService.errorPop();
+                })
+            ;
+        })
         ;
     }
 

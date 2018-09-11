@@ -1,34 +1,53 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
-import {select} from '@angular-redux/store';
-import {get as getValue, map, sort, remove} from 'lodash';
-import {Subject, combineLatest} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { select } from '@angular-redux/store';
+import { get as getValue, map, sort, remove, partial, invert } from 'lodash';
+import { Subject, combineLatest } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import {FormStepsDirective} from '@setl/utils/directives/form-steps/formsteps';
-import {NewRequestService} from './new-request.service';
-import {steps} from '../requests.config';
+import { steps, formStepsLight, formStepsFull } from '../requests.config';
+import { NewRequestService } from './new-request.service';
+
+import { FormstepsComponent } from '@setl/utils/components/formsteps/formsteps.component';
 
 @Component({
     templateUrl: './new-request.component.html',
-    styleUrls : ['./new-request.component.scss']
+    styleUrls: ['./new-request.component.scss'],
+    animations: [
+        trigger('toggle', [
+            state('false', style({
+                opacity: 1,
+            })),
+            state('true', style({
+                opacity: 0,
+            })),
+            transition('* => *', animate(250)),
+        ]),
+    ],
 })
-export class NewKycRequestComponent implements OnInit {
+export class NewKycRequestComponent implements OnInit, AfterViewInit {
 
-    @ViewChild(FormStepsDirective) formSteps;
+    @ViewChild(FormstepsComponent) formSteps;
+
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
 
     unsubscribe: Subject<any> = new Subject();
     stepsConfig: any;
     forms: any = {};
 
+    animating: Boolean;
     fullForm = true;
+    applyFullForm = () => {
+    };
+
     currentCompletedStep;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
+        private router: Router,
         private newRequestService: NewRequestService
     ) {
     }
@@ -48,6 +67,7 @@ export class NewKycRequestComponent implements OnInit {
             'otherInvestors',
             'managementCompany',
             'centralBank',
+            'localCompanies',
             'nationalGovService',
             'dealersCommodities',
             'internationBodies'
@@ -78,19 +98,26 @@ export class NewKycRequestComponent implements OnInit {
         this.initSubscriptions();
     }
 
+    ngAfterViewInit() {
+        if (this.currentCompletedStep) {
+            const nextStep = this.getNextStep(this.currentCompletedStep);
+            this.goToStep(nextStep);
+        }
+    }
+
     initSubscriptions() {
         this.requests$
-            .pipe(
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(amcs => {
-                this.newRequestService.getContext(amcs);
-            })
+        .pipe(
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(amcs => {
+            this.newRequestService.getContext(amcs);
+        })
         ;
 
         this.route.queryParamMap.subscribe(params => {
-            let step = params.get('step');
-            let completed = params.get('completed');
+            const step = params.get('step');
+            const completed = params.get('completed');
 
             this.fullForm = !(completed === 'true');
 
@@ -104,52 +131,80 @@ export class NewKycRequestComponent implements OnInit {
 
     initFormSteps(completedStep) {
         this.currentCompletedStep = completedStep;
-        let extraSteps = [];
+
         if (this.fullForm) {
-            extraSteps = [
-                {
-                    title: 'Introduction',
-                    startHere: completedStep === 'amcSelection',
-                },
-                {
-                    title: 'Identification',
-                    id: 'step-identification',
-                    form: this.forms.get('identification'),
-                    startHere: completedStep === 'introduction'
-                },
-                {
-                    title: 'Risk profile',
-                    id: 'step-risk-profile',
-                    form: this.forms.get('riskProfile'),
-                    startHere: completedStep === 'identification'
-                },
-                {
-                    title: 'Documents',
-                    id: 'step-documents',
-                    form: this.forms.get('documents'),
-                    startHere: completedStep === 'riskProfile'
-                }
-            ];
+            this.stepsConfig = formStepsFull;
+        } else {
+            this.stepsConfig = formStepsLight;
+        }
+    }
+
+    goToStep(currentStep) {
+        const stepLevel = steps[currentStep];
+        this.formSteps.go(stepLevel);
+    }
+
+    getNextStep(step) {
+        const stepLevel = steps[step];
+        const nextStep = invert(steps)[stepLevel + 1];
+
+        if (nextStep) {
+            return nextStep;
+        }
+    }
+
+    handleAction(event) {
+        const type = event.type;
+
+        if (type === 'previous') {
+            this.formSteps.previous();
         }
 
-        this.stepsConfig = [
-            {
-                title: 'Selection',
-                form: this.forms.get('selection'),
-                id: 'step-selection'
-            },
-            ...extraSteps,
-            {
-                title: 'Validation',
-                id: 'step-validation',
-                form: this.forms.get('validation'),
-                startHere: this.fullForm ? completedStep === 'documents' : completedStep === 'amcSelection'
+        if (type === 'next') {
+            const noHandler = this.submitCurrentStepComponent();
+            if (noHandler) {
+                this.formSteps.next();
             }
-        ];
+        }
+
+        if (type === 'close') {
+            this.router.navigateByUrl('/my-requests/list');
+        }
+    }
+
+    isBeginning() {
+        if (this.formSteps) {
+            return this.formSteps.position === 0;
+        }
+    }
+
+    handleSubmit(event) {
+        if (event.completed) {
+            this.formSteps.next();
+        }
+    }
+
+    submitCurrentStepComponent() {
+        const position = this.formSteps.position;
+        const component = this.formSteps.steps[position];
+
+        if (!component.handleSubmit) {
+            return true;
+        }
+        if (!component.form) {
+            component.handleSubmit();
+        }
     }
 
     registered(isRegistered) {
-        this.fullForm = !isRegistered;
+        this.applyFullForm = partial(this.animationDone, !isRegistered);
+        this.animating = true;
+    }
+
+    animationDone(fullFormValue) {
+        this.animating = false;
+
+        this.fullForm = fullFormValue;
         this.initFormSteps(this.currentCompletedStep);
     }
 

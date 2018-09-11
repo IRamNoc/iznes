@@ -197,7 +197,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
     getRiskProfile() {
         return {
             id: 'request-details-identification',
-            title: 'Risk Profile',
+            title: 'Investments\' Profile',
             open: true,
             children: [
                 this.getRiskNature(),
@@ -209,7 +209,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskNature() {
         let riskNature = {
-            title: 'Investment\'s Nature',
+            title: 'Investments\' Nature',
             data: ''
         };
 
@@ -229,7 +229,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskObjective() {
         let riskObjectives = {
-            title: 'Investment\'s Objectives',
+            title: 'Investments\' Objectives',
             data: ''
         };
 
@@ -263,7 +263,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getRiskConstraint() {
         let riskContraints = {
-            title: 'Investment\'s Constraints',
+            title: 'Investments\' Constraints',
             data: ''
         };
 

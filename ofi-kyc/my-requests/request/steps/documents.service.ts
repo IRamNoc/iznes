@@ -45,7 +45,7 @@ export class DocumentsService {
                     let kycDocumentID = getValue(data, 'kycDocumentID');
 
                     if(kycDocumentID){
-                        this.sendRequestDocumentPermission(kycID, kycDocumentID);
+                        return this.sendRequestDocumentPermission(kycID, kycDocumentID);
                     }
                 });
 

@@ -3,6 +3,7 @@ import { select } from '@angular-redux/store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MultilingualService } from '@setl/multilingual';
 import { NgRedux } from '@angular-redux/store';
+import { ToasterService } from 'angular2-toaster';
 import {
     map,
     get as getValue,
@@ -18,7 +19,6 @@ import {
     isNil,
     every
 } from 'lodash';
-
 import { CustomValidators } from '@setl/utils/helper';
 import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 import { MyKycSetRequestedKycs } from '@ofi/ofi-main/ofi-store/ofi-kyc';
@@ -95,6 +95,7 @@ export class NewRequestService {
         private requestsService: RequestsService,
         private ngRedux: NgRedux<any>,
         private ofiKycService: OfiKycService,
+        private toasterService: ToasterService
     ) {
         this.subscriptions.push(this.productionOb.subscribe((production) => {
             this.isProduction = production;
@@ -679,6 +680,11 @@ export class NewRequestService {
             kycStatus: 0,
             alreadyCompleted: choice.registered ? 1 : 0
         });
+    }
+
+    errorPop() {
+        const translation = this.multilingualService.translate('The server returned an error. Please try again later.');
+        this.toasterService.pop('error', translation);
     }
 
     /**

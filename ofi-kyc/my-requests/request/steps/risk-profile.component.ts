@@ -1,22 +1,25 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
-import {select} from '@angular-redux/store';
-import {PersistService} from '@setl/core-persist';
-import {isEmpty, castArray} from 'lodash';
-import {Subject} from 'rxjs';
-import {filter as rxFilter, map, take, takeUntil, tap} from 'rxjs/operators';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { select } from '@angular-redux/store';
+import { isEmpty, castArray } from 'lodash';
+import { Subject } from 'rxjs';
+import { filter as rxFilter, map, take, takeUntil } from 'rxjs/operators';
 
-import {NewRequestService} from '../new-request.service';
-import {RiskProfileService} from './risk-profile.service';
-import {steps} from "../../requests.config";
+import { PersistService } from '@setl/core-persist';
+import { formHelper } from '@setl/utils/helper';
+
+import { NewRequestService } from '../new-request.service';
+import { RiskProfileService } from './risk-profile.service';
+import { steps } from '../../requests.config';
 
 @Component({
     selector: 'kyc-step-risk-profile',
-    templateUrl: './risk-profile.component.html'
+    templateUrl: './risk-profile.component.html',
 })
 export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
 
     @Input() form;
     @select(['ofi', 'ofiKyc', 'myKycRequested', 'kycs']) requests$;
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
 
     unsubscribe: Subject<any> = new Subject();
     formWatch: Subject<boolean> = new Subject<boolean>();
@@ -34,20 +37,20 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.initSubscriptions();
     }
 
-    initSubscriptions(){
+    initSubscriptions() {
         this.requests$
-            .pipe(
-                map(kycs => kycs[0]),
-                rxFilter((kyc: any) => {
+        .pipe(
+            map(kycs => kycs[0]),
+            rxFilter((kyc: any) => {
                     return kyc && kyc.amcID;
                 }),
                 take(1),
-            )
+        )
             .subscribe((kyc) => {
                 if (this.shouldPersist(kyc)) {
-                    this.persistForm();
-                }
-            })
+                this.persistForm();
+            }
+        })
         ;
     }
 
@@ -60,15 +63,15 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
 
     getCurrentFormData() {
         this.requests$
-            .pipe(
-                rxFilter(requests => !isEmpty(requests)),
-                takeUntil(this.unsubscribe)
-            )
-            .subscribe(requests => {
-                requests.forEach(request => {
-                    this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
-                });
-            })
+        .pipe(
+            rxFilter(requests => !isEmpty(requests)),
+            takeUntil(this.unsubscribe)
+        )
+        .subscribe(requests => {
+            requests.forEach(request => {
+                this.riskProfileService.getCurrentFormObjectiveData(request.kycID);
+            });
+        })
         ;
     }
 
@@ -98,18 +101,27 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         e.preventDefault();
 
         if (!this.form.valid) {
+            formHelper.dirty(this.form);
             return;
         }
 
         this.requests$
-            .pipe(
-                take(1)
-            )
-            .subscribe(requests => {
-                this.riskProfileService.sendRequest(this.form, requests).then(() => {
+        .pipe(
+            take(1)
+        )
+        .subscribe(requests => {
+            this.riskProfileService.sendRequest(this.form, requests)
+                .then(() => {
                     this.clearPersistForm();
-                });
-            });
+                    this.submitEvent.emit({
+                        completed: true,
+                    });
+                })
+                .catch(() => {
+                    this.newRequestService.errorPop();
+                })
+            ;
+        });
     }
 
     ngOnDestroy() {

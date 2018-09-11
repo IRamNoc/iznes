@@ -17,28 +17,28 @@
     </clr-alert>
 </div>
 
-<div [formsteps]="stepsConfig">
-    <section order="1">
-        <kyc-step-select-amc [form]="forms.get('selection')" (registered)="registered($event)" [disabled]="currentCompletedStep"></kyc-step-select-amc>
-    </section>
-    <section order="2" *ngIf="fullForm">
-        <kyc-step-introduction></kyc-step-introduction>
-    </section>
-    <section order="3" *ngIf="fullForm">
-        <kyc-step-identification [form]="forms.get('identification')" [investorType]="investorType"></kyc-step-identification>
-    </section>
-    <section order="4" *ngIf="fullForm">
-        <kyc-step-risk-profile [form]="forms.get('riskProfile')"></kyc-step-risk-profile>
-    </section>
-    <section order="5" *ngIf="fullForm">
-        <kyc-step-documents [form]="forms.get('documents')" [isPro]="isPro"></kyc-step-documents>
-    </section>
-    <section [attr.order]="fullForm ? 6 : 2">
-        <kyc-step-validation [form]="forms.get('validation')"></kyc-step-validation>
-    </section>
-</div>
+<form-steps *ngIf="stepsConfig" [stepsConfig]="stepsConfig" (action)="handleAction($event)" [@toggle]="animating" (@toggle.done)="applyFullForm()">
+    <form-step>
+        <kyc-step-select-amc #step [form]="forms.get('selection')" [alreadyRegistered]="!fullForm" (registered)="registered($event)" [disabled]="currentCompletedStep" (submitEvent)="handleSubmit($event)"></kyc-step-select-amc>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-introduction #step (submitEvent)="handleSubmit($event)"></kyc-step-introduction>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-identification #step [form]="forms.get('identification')" [investorType]="investorType" (submitEvent)="handleSubmit($event)"></kyc-step-identification>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-risk-profile #step [form]="forms.get('riskProfile')" (submitEvent)="handleSubmit($event)"></kyc-step-risk-profile>
+    </form-step>
+    <form-step *ngIf="fullForm">
+        <kyc-step-documents #step [form]="forms.get('documents')" [isPro]="isPro" (submitEvent)="handleSubmit($event)"></kyc-step-documents>
+    </form-step>
+    <form-step>
+        <kyc-step-validation #step [form]="forms.get('validation')" (submitEvent)="handleSubmit($event)"></kyc-step-validation>
+    </form-step>
+</form-steps>
 
-<div class="info" *ngIf="formSteps.currentStep === 0">
+<div class="info" *ngIf="isBeginning()">
     <clr-icon shape="info-circle" class="is-info" size="24"></clr-icon>
     <span>
         {{'Be aware that once you click on "Next", this KYC will be saved as a Draft in the module "My Requests". You will then be able to finalize the request and send it to the Asset Management Company later on.' | translate}}

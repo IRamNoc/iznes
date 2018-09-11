@@ -1,5 +1,41 @@
 import { fundItems } from '@ofi/ofi-main/ofi-product/productConfig';
 
+export const formStepsFull = [
+    {
+        title: 'Selection',
+        id: 'step-selection',
+    },
+    {
+        title: 'Introduction',
+    },
+    {
+        title: 'Identification',
+        id: 'step-identification',
+    },
+    {
+        title: 'Risk profile',
+        id: 'step-risk-profile',
+    },
+    {
+        title: 'Documents',
+        id: 'step-documents',
+    },
+    {
+        title: 'Validation',
+        id: 'step-validation',
+    },
+];
+export const formStepsLight = [
+    {
+        title: 'Selection',
+        id: 'step-selection',
+    },
+    {
+        title: 'Validation',
+        id: 'step-validation',
+    },
+];
+
 export enum investorStatusList {
     nonPro,
     proByNature,
@@ -86,12 +122,12 @@ export const selectControls = [
 ];
 
 export const steps = {
-    amcSelection: 1,
-    introduction: 2,
-    identification: 3,
-    riskProfile: 4,
-    documents: 5,
-    validation: 6,
+    amcSelection: 0,
+    introduction: 1,
+    identification: 2,
+    riskProfile: 3,
+    documents: 4,
+    validation: 5,
 };
 
 export const countries = fundItems.domicileItems;

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 
 @Component({
     selector : 'kyc-step-introduction',
@@ -8,10 +8,16 @@ import {Component, OnInit} from '@angular/core';
 export class NewKycIntroductionComponent implements OnInit{
 
     constructor(){}
+    @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+
 
     ngOnInit(){
 
     }
 
-
+    handleSubmit(){
+        this.submitEvent.emit({
+            completed : true
+        });
+    }
 }

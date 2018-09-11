@@ -1,4 +1,4 @@
-<form [formGroup]="form" id="step-selection" (ngSubmit)="handleFormSubmit($event)" class="well p-1">
+<form [formGroup]="form" id="step-selection" (ngSubmit)="handleSubmit($event)" class="well p-1">
 
     <div class="row" [class.mb-1]="isTableDisplayed">
         <div class="col-sm-6">
@@ -13,6 +13,10 @@
                        class="form-control"
                        [disabled]="submitted"
             ></ng-select>
+
+            <p *ngIf="hasError('managementCompanies', ['required'])" class="txtRed">
+                {{'Please select a value' | translate}}
+            </p>
         </div>
     </div>
 
