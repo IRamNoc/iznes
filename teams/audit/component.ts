@@ -81,7 +81,7 @@ export class UserTeamsAuditComponent
                     id: 'Field',
                     dataIndex: 'field',
                     styleClass: 'field',
-                    title: 'field',
+                    title: 'Field',
                 },
                 {
                     id: 'Previous',
@@ -94,6 +94,16 @@ export class UserTeamsAuditComponent
                             if (entity.oldValue === '1') entity.oldValue = 'Enabled';
                             if (entity.newValue === '0') entity.newValue = 'Disabled';
                             if (entity.newValue === '1') entity.newValue = 'Enabled';
+                        }
+
+                        if (entity.field === 'Users') {
+                            if (entity.newValue === '0') entity.newValue = 'Removed from Team';
+                            if (entity.newValue === '1') entity.newValue = 'Added to Team';
+                        }
+
+                        if (entity.field === 'Permissions') {
+                            if (entity.newValue === '0') entity.newValue = 'Permission Removed';
+                            if (entity.newValue === '1') entity.newValue = 'Permission Added';
                         }
 
                         return entity;

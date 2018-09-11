@@ -95,6 +95,11 @@ export class UsersAuditComponent
                             if (entity.newValue === '1') entity.newValue = 'Disabled';
                         }
 
+                        if (entity.field === 'Teams') {
+                            if (entity.newValue === '0') entity.newValue = 'Removed from Team';
+                            if (entity.newValue === '1') entity.newValue = 'Added to Team';
+                        }
+
                         return entity;
                     },
                 },
