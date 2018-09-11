@@ -1,5 +1,6 @@
 export function passwordValidator(formControl) {
     const password = formControl.value;
+    if (password === undefined || password === null) return null;
 
     const minLength = 8;
     const validLength = password.length >= minLength;
@@ -21,9 +22,9 @@ export function passwordValidator(formControl) {
             hasLowercase,
             hasNumber,
             hasSymbol,
-            hasUnicode
+            hasUnicode,
         ]
-            .filter(v => v)
+        .filter(v => v)
             .length
     ;
     const validValidators = valid >= 3;
@@ -36,10 +37,10 @@ export function passwordValidator(formControl) {
         valid: false,
         rules: !validValidators,
         length: !validLength,
-        uppercase : !hasUppercase,
-        lowercase : !hasLowercase,
-        number : !hasNumber,
-        symbol : !hasSymbol,
-        unicode : !hasUnicode
+        uppercase: !hasUppercase,
+        lowercase: !hasLowercase,
+        number: !hasNumber,
+        symbol: !hasSymbol,
+        unicode: !hasUnicode,
     };
 }
