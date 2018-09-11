@@ -15,7 +15,6 @@ import { FileDownloader } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-
 import { MultilingualService } from '@setl/multilingual';
 
 /* Types. */
