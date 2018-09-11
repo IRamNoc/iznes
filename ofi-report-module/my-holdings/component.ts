@@ -46,7 +46,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private ofiReportsService: OfiReportsService,
         private _translate: MultilingualService,
     ) {
-        // this.currenciesService.getCurrencyList();
     }
 
     ngOnInit(): void {
