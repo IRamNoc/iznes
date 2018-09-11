@@ -248,8 +248,7 @@ export class UsersCreateUpdateComponent
     }
 
     isUserStatusPending(): boolean {
-        return (this.user) && this.user.userStatus === 0 &&
-            !!this.user.invitationToken;
+        return (this.user) && this.user.userStatus === 2;
     }
 
     save(invite: boolean = false): void {
@@ -278,16 +277,6 @@ export class UsersCreateUpdateComponent
         } else {
             callback();
         }
-    }
-
-    private generateInviteList(): string {
-        let invites: string = '';
-
-        _.forEach(this.forms, (form: Model.AccountAdminUserForm, index: number) => {
-            invites += `${form.emailAddress.value()}<br />`;
-        });
-
-        return invites;
     }
 
     private createUsers(invite: boolean): void {
@@ -395,6 +384,12 @@ export class UsersCreateUpdateComponent
         this.toaster.pop('error', message);
 
         this.router.navigateByUrl(this.getBackUrl());
+    }
+
+    doDeleteTeam(): void {
+        let str = `${this.user.emailAddress}`;
+        str = this.user.reference ? `${str} - ${this.user.reference}` : str;
+        this.delete(str);
     }
 
     protected onDeleteConfirm(): void {

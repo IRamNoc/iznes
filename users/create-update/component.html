@@ -120,8 +120,8 @@
                     <span class="no-teams" [hidden]="!showNoTeamsMessage()">Please assign user(s) to at least one team in order to continue.</span>
                 </div>
 
-                <!-- <div class="col justify-end" *ngIf="isUpdateMode()">
-                    <button class="btn btn-danger" (click)="delete()">{{ 'Delete user' | translate }}</button>
+                <!-- <div class="col justify-end" *ngIf="isUpdateMode() && isUserStatusPending()">
+                    <button class="btn btn-danger" (click)="doDeleteTeam()">{{ 'Delete user' | translate }}</button>
                 </div> -->
             </div>
         </clr-tab-content>

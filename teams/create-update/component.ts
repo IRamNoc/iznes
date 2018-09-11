@@ -155,6 +155,12 @@ export class UserTeamsCreateUpdateComponent
             });
     }
 
+    doDeleteTeam(): void {
+        let str = `${this.form.name.value()}`;
+        str = this.form.reference.value() ? `${str} - ${this.form.reference.value()}` : str;
+        this.delete(str);
+    }
+
     private deleteTeam(): void {
         this.service.deleteUserTeam(
             this.entityId,
