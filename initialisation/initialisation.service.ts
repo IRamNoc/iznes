@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {NgRedux} from '@angular-redux/store';
+import { Injectable } from '@angular/core';
+import { NgRedux } from '@angular-redux/store';
 import {
     AccountsService, ChainService, ChannelService, MyUserService, MyWalletsService, PermissionGroupService,
     WalletNodeRequestService
@@ -33,12 +33,13 @@ import {
     updateLastCreatedContractDetail,
     updateLastCreatedRegisterIssuerDetail,
     SET_LANGUAGE,
-    addWalletNodeSnapshot
+    addWalletNodeSnapshot,
+    updateWalletnodeTxStatus,
 } from '@setl/core-store';
 import * as _ from 'lodash';
 
-import {SagaHelper, LogService} from '@setl/utils';
-import {MemberSocketService} from '@setl/websocket-service';
+import { SagaHelper, LogService } from '@setl/utils';
+import { MemberSocketService } from '@setl/websocket-service';
 
 @Injectable()
 export class InitialisationService {
@@ -219,7 +220,7 @@ export class InitialisationService {
                            myUserService: MyUserService, userID) {
 
         // Create a saga pipe.
-        const asyncTaskPipes = myUserService.getLanguage({userID: userID});
+        const asyncTaskPipes = myUserService.getLanguage({ userID: userID });
 
         // Send a saga action.
         // Actions to dispatch, when request success:  LOGIN_SUCCESS.
@@ -402,6 +403,22 @@ export class InitialisationService {
      * @param ngRedux
      * @param data
      */
+    static updatedWalletNodeTxStatus(ngRedux: NgRedux<any>, data) {
+        const txData = _.get(data, 'Data');
+
+        // Update the walletnode TX status
+        ngRedux.dispatch(updateWalletnodeTxStatus(txData));
+    }
+
+    /**
+     * Using 'block' update from wallet node.
+     *
+     * Update tx that made to wallet node from frontend, waiting block come in an update
+     * status. for example set inBlockchain flag to true, and set needHandle flag to true.
+     *
+     * @param ngRedux
+     * @param data
+     */
     static updatedWalletNodeTxStateWithBlock(ngRedux: NgRedux<any>, data) {
         const txList = _.get(data, 'Data.Transactions', []);
 
@@ -417,6 +434,9 @@ export class InitialisationService {
         // Update the walletnode snapshot list
         let snapshot = _.get(data, 'Data');
         ngRedux.dispatch(addWalletNodeSnapshot(snapshot));
+
+        // Update the walletnode TX status
+        // ngRedux.dispatch(updateWalletnodeTxStatus(snapshot));
     }
 
     /**
