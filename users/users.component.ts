@@ -34,6 +34,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     /* User data. */
     public usersList: any;
+    public paginatedUsersList: any;
 
     /* Tabs control */
     public tabsControl: any = [];
@@ -70,10 +71,17 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
 
+    @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
+
     private manageWalletList: any;
 
     /* Rows Per Page datagrid size */
     public pageSize: number;
+    public totalRecords: number;
+
+    private initPageList: boolean = false;
+    private dgPageFrom: number = 0;
+    private dgPageSize: number = 10;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -131,6 +139,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit() {
+        /* Get totalRecords to build datagrid pagination */
+        this.subscriptions['totalRecords'] = this.totalRecordsOb.subscribe((totalRecords) => {
+            this.totalRecords = totalRecords;
+        });
+
         /* Get Account Types. */
         this.accountTypes = this.userAdminService.getAccountTypes();
 
@@ -141,6 +154,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscriptions['userListSubscription'] =
             this.userAdminService.getUserListSubject().subscribe((list) => {
                 this.usersList = this.convertToArray(list);
+
+                console.log('+++ this.usersList', this.usersList);
+
+                if (this.usersList.length) {
+                    this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+                    console.log('+++ this.dgPageFrom, this.dgPageSize', this.dgPageFrom, this.dgPageSize);
+                    console.log('+++ this.paginatedUsersList', this.paginatedUsersList);
+                }
 
                 /* Override the changes. */
                 this.changeDetectorRef.detectChanges();
@@ -266,7 +287,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
     refresh(dataGridState: ClrDatagridStateInterface) {
-        console.log('+++ dataGridState', dataGridState);
+        this.dgPageFrom = dataGridState.page.from;
+        this.dgPageSize = dataGridState.page.size;
+        this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
+        //console.log('+++ this.usersList', this.usersList);
+        //console.log('+++ this.paginatedUsersList', this.paginatedUsersList);
     }
 
     /**

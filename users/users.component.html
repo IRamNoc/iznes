@@ -40,14 +40,14 @@
     <ng-template #staticUserListTab>
         <div class="panel-body">
 
-            <clr-datagrid #usersDataGrid  (clrDgRefresh)="refresh($event)">
+            <clr-datagrid #usersDataGrid (clrDgRefresh)="refresh($event)">
                 <clr-dg-column mltag="txt_username">Username</clr-dg-column>
                 <clr-dg-column mltag="txt_email">Email</clr-dg-column>
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>
                 <clr-dg-column mltag="txt_status">Status</clr-dg-column>
                 <clr-dg-column class="right" mltag="txt_actions">Actions</clr-dg-column>
 
-                <clr-dg-row *clrDgItems="let user of usersList; let i = index">
+                <clr-dg-row *ngFor="let user of paginatedUsersList; let i = index">
                     <clr-dg-cell><span id="username-{{user.index}}">{{user.userName}}</span></clr-dg-cell>
                     <clr-dg-cell>{{user.emailAddress}}</clr-dg-cell>
                     <clr-dg-cell>{{user.accountName}}</clr-dg-cell>
@@ -74,7 +74,7 @@
                 <clr-dg-footer>
                     <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>
