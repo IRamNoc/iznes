@@ -310,6 +310,7 @@ public class KYCDetailsHelper extends LoginAndNavigationHelper {
             driver.findElement(By.id("submitButton")).click();
         }catch (Exception e){
             fail(e.getMessage()); }
+        Thread.sleep(1000);
 //        try {
 //            wait.until(visibilityOfElementLocated(By.id("clr-tab-link-10")));
 //        }catch (Exception e){

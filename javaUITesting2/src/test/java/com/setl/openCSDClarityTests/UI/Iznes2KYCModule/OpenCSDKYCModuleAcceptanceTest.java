@@ -150,7 +150,7 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
     @Test
     public void shouldCompleteFullKYCProcess() throws IOException, InterruptedException, SQLException {
-        String No = "9";
+        String No = "8";
         String userNo = "00" + No;
         String managementCompEntered = "Management Company";
         String companyName = "Jordan Corporation";
@@ -171,13 +171,41 @@ public class OpenCSDKYCModuleAcceptanceTest {
         KYCProcessStep6(firstName + " " + lastName, "SETL Developments LTD", "Ipswich", "Head");
         KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
         KYCAcceptMostRecentRequest(companyName, No, firstName, lastName, userNo, phoneNo);
-
-//        String clientRefTitle = driver.findElement(By.xpath("//*[@id=\"ofi-client-referential\"]")).getText();
-//        System.out.println(clientRefTitle);
-//        System.out.println("Client Referential: " + companyName + "-" + No);
-//        assertTrue(clientRefTitle.equals("Client Referential: " + companyName + "-" + No));
-
     }
+
+    public static void validateClientReferentialAndGrantFundAccess(String companyName, String No, String isin) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
+        String clientRefTitle = driver.findElement(By.xpath("//*[@id=\"ofi-client-referential\"]")).getText();
+
+        System.out.println(clientRefTitle);
+        System.out.println("Client Referential: " + companyName + " - " + No);
+        assertTrue(clientRefTitle.equals("Client Referential: " + companyName + " - " + No));
+
+        driver.findElement(By.id("clr-tab-link-3")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        Thread.sleep(250);
+        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(isin);
+        Thread.sleep(250);
+        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+
+        driver.findElement(By.xpath("//*[@id=\"access_slider_row_0\"]/div/label/span")).click();
+
+        scrollElementIntoViewById("client_folder_validate");
+        driver.findElement(By.id("client_folder_validate")).click();
+
+        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
+        String jaspTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
+        assertTrue(jaspTitle.equals("Confirm Fund Share Access:"));
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+
+        wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
+        wait.until(elementToBeClickable(By.id("invite-investors-btn")));
+        logout();
+    }
+
 
     @Test
     public void shouldNotAllowSaveWithoutPhoneNumber() throws IOException, InterruptedException, SQLException {
@@ -416,11 +444,6 @@ public class OpenCSDKYCModuleAcceptanceTest {
 
         driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[1]/a/h2")).click();
         wait.until(visibilityOfElementLocated(By.id("activities")));
-
-        ///////
-
-
-        //////
 
         String percent0 = driver.findElement(By.xpath("//*[@id=\"step-identification\"]/company-information/form/div[1]/div[2]/div/div[1]/div/div/div/span")).getText();
         assertTrue(percent0.equals("0%"));

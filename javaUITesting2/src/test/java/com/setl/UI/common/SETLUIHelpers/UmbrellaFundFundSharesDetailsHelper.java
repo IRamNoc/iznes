@@ -275,7 +275,7 @@ public class UmbrellaFundFundSharesDetailsHelper {
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
         String popupSubheading = driver.findElement(By.className("jaspero__dialog-title")).getText();
         assertTrue(popupSubheading.equals("Info!"));
-        Thread.sleep(15000);
+        Thread.sleep(17500);
         wait.until(invisibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-alerts/jaspero-alert/div[2]/div[1]")));
     }
 

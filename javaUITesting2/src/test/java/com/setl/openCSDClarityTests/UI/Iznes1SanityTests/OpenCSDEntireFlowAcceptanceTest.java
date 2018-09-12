@@ -1,5 +1,6 @@
 package com.setl.openCSDClarityTests.UI.Iznes1SanityTests;
 
+import com.setl.UI.common.SETLUtils.Repeat;
 import com.setl.UI.common.SETLUtils.RepeatRule;
 import com.setl.UI.common.SETLUtils.ScreenshotRule;
 import com.setl.UI.common.SETLUtils.TestMethodPrinterRule;
@@ -9,11 +10,16 @@ import org.junit.rules.Timeout;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.IOException;
+import java.security.Key;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOff;
 import static SETLAPIHelpers.DatabaseHelper.setDBToProdOn;
@@ -28,15 +34,16 @@ import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep5;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessStep6;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCProcessRequestListValidation;
 import static com.setl.UI.common.SETLUIHelpers.KYCDetailsHelper.KYCAcceptMostRecentRequest;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByCss;
 import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewById;
+import static com.setl.UI.common.SETLUIHelpers.MemberDetailsHelper.scrollElementIntoViewByXpath;
+import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPage;
 import static com.setl.UI.common.SETLUIHelpers.PageHelper.verifyCorrectPageContains;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.driver;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.testSetUp;
 import static com.setl.UI.common.SETLUIHelpers.SetUp.timeoutInSeconds;
 import static com.setl.UI.common.SETLUIHelpers.UmbrellaFundFundSharesDetailsHelper.*;
-import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.KYCProcessStep3BankingInfoComplete;
-import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.KYCProcessStep3CompanyInfoComplete;
-import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.KYCProcessStep3GeneralInfoComplete;
+import static com.setl.openCSDClarityTests.UI.Iznes2KYCModule.OpenCSDKYCModuleAcceptanceTest.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -91,6 +98,20 @@ public class OpenCSDEntireFlowAcceptanceTest {
         String[] uIsin = generateRandomISIN();
         String umbLei = "16616758475934857598";
         String fundLei = "16616758475934857522";
+        String shareCurrency = "EUR";
+        int latestNav = 14;
+
+        String No = "6";
+        String userNo = "00" + No;
+        String managementCompEntered = "Management Company";
+        String companyName = "Jordan Corporation";
+        String firstName = "Jordan";
+        String lastName = "Miller";
+        String phoneNo = "07956701992";
+
+        String[] uSubNameDetails = generateRandomSubPortfolioName();
+        String[] uSubIBANDetails = generateRandomSubPortfolioIBAN();
+        String[] uAmount = generateRandomAmount();
 
         loginAndVerifySuccess("am", "alex01");
         waitForHomePageToLoad();
@@ -110,17 +131,9 @@ public class OpenCSDEntireFlowAcceptanceTest {
         getFundTableRow(0, uFundDetails[0], fundLei, "EUR", "Management Company", "Afghanistan", "Contractual Fund", umbFundDetails[0]);
         createShare(uFundDetails[0], uShareDetails[0], uIsin[0]);
         searchSharesTable(uShareDetails[0]);
-        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], "EUR", "Management Company", "", "share class", "Open");
+        getShareTableRow(0, uShareDetails[0], uIsin[0], uFundDetails[0], shareCurrency, "Management Company", "", "share class", "Open");
 
-        setSharesNAVandValidate(uShareDetails[0], 14);
-
-        String No = "10";
-        String userNo = "0" + No;
-        String managementCompEntered = "Management Company";
-        String companyName = "Jordan Corporation";
-        String firstName = "Jordan";
-        String lastName = "Miller";
-        String phoneNo = "07956701992";
+        setSharesNAVandValidate(uShareDetails[0], latestNav);
 
         loginAndVerifySuccessKYC("testops" + userNo + "@setl.io", "asdasd", "additionnal");
         KYCProcessWelcomeToIZNES(userNo, companyName, phoneNo);
@@ -136,68 +149,196 @@ public class OpenCSDEntireFlowAcceptanceTest {
         KYCProcessRequestListValidation("Yes","Success!", managementCompEntered, "Waiting approval", "No", "", "");
         KYCAcceptMostRecentRequest(companyName, No, firstName, lastName, userNo, phoneNo);
 
-        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        validateClientReferentialAndGrantFundAccess(companyName, No, uIsin[0]);
 
-        String clientRefTitle = driver.findElement(By.xpath("//*[@id=\"ofi-client-referential\"]")).getText();
-        System.out.println(clientRefTitle);
-        System.out.println("Client Referential: " + companyName + "-" + No);
-        assertTrue(clientRefTitle.equals("Client Referential: " + companyName + "-" + No));
+        loginAndVerifySuccess("testops" + userNo + "@setl.io", "asdasd");
+        createSubPortfolio(uSubNameDetails[0], uSubIBANDetails[0]);
 
-        driver.findElement(By.id("clr-tab-link-10")).click();
+        navigateToDropdown("menu-order-module");
+        navigateToPageByID("menu-list-of-fund");
+        verifyCorrectPage("Place an Order");
+        Thread.sleep(1000);
 
-        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
-        Thread.sleep(250);
-        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/div/input")).sendKeys(uIsin[0]);
-        Thread.sleep(250);
-        driver.findElement(By.xpath("//*[@id=\"client_folder_isin_number\"]/div/clr-dg-string-filter/clr-dg-filter/button")).click();
+        String orderGridISIN = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(1) > button")).getText();
+        assertTrue(orderGridISIN.equals(uIsin[0]));
 
-        driver.findElement(By.id("access_slider_0")).click();
+        String orderGridShareName = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(2) > button")).getText();
+        assertTrue(orderGridShareName.equals(uShareDetails[0]));
 
-        scrollElementIntoViewById("client_folder_validate");
-        driver.findElement(By.id("client_folder_validate")).click();
+        String orderGridAssetManager = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(4)")).getText();
+        assertTrue(orderGridAssetManager.equals(managementCompEntered));
 
-        wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]")));
-        String jaspTitle = driver.findElement(By.className("jaspero__dialog-title")).getText();
-        assertTrue(jaspTitle.equals("Confirm Fund Share Access:"));
+        String orderGridShareCurrency = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(7)")).getText();
+        assertTrue(orderGridShareCurrency.equals(shareCurrency));
+
+        String orderGridNAV = driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(8)")).getText();
+        assertTrue(orderGridNAV.equals(latestNav + ".00"));
+
+        driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell.actions.datagrid-cell.ng-star-inserted > div > button.btn.btn-success.btn-sm")).click();
+
+        Thread.sleep(1000);
+
+        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div")).click();
+        //Thread.sleep(750);
+        //driver.findElement(By.cssSelector("#subportfolio > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys(uSubNameDetails[0]);
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div/div[3]/ul/li/div/a")).click();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String date1= dateFormat.format(date);
+
+        DateFormat dateFormat1 = new SimpleDateFormat("HH");
+        Date dates = new Date();
+        String hours= dateFormat1.format(dates);
+
+        DateFormat dateFormat2 = new SimpleDateFormat("mm");
+        Date dates2 = new Date();
+        String date3= dateFormat2.format(dates2);
+
+        int timeHoursInt = Integer.parseInt(hours);
+        int timeMinsInt = Integer.parseInt(date3);
+        int timeMinsAfter = timeMinsInt + 2;
+        String time = timeHoursInt + ":" + timeMinsAfter;
+
+        String orderDate = date1 + " " + time + ";" + date1 + " " + time + ";" + date1 + " " + time + ";";
+
+        System.out.println(orderDate);
+
+        scrollElementIntoViewById("quantity");
+
+        Thread.sleep(750);
+
+        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+        Thread.sleep(750);
+        driver.findElement(By.id("settlementdate")).sendKeys(orderDate);
+
+        driver.findElement(By.id("quantity")).clear();
+        driver.findElement(By.id("quantity")).sendKeys(uAmount[0]);
+
+        scrollElementIntoViewByCss("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted");
+
+        Thread.sleep(750);
+
+        driver.findElement(By.id("checkbox")).click();
+
+        driver.findElement(By.cssSelector("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted")).click();
+
+        Thread.sleep(1000);
+
+        String modalTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
+        assertTrue(modalTitle.equals("Order Confirmation"));
 
         driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
 
-        wait.until(visibilityOfElementLocated(By.id("invite-investors-btn")));
-        wait.until(elementToBeClickable(By.id("invite-investors-btn")));
-        logout();
+        Thread.sleep(1000);
 
-        loginAndVerifySuccess("testops" + userNo + "@setl.io", "asdasd");
+    }
+
+    @Test
+    @Repeat
+    public void shouldTestEntireFundFlow8() throws InterruptedException, SQLException, IOException {
+
+        String[] uAmount = generateRandomAmount();
+
+        loginAndVerifySuccess("testops" + "003" + "@setl.io", "asdasd");
+
+        navigateToDropdown("menu-order-module");
+        navigateToPageByID("menu-list-of-fund");
+        verifyCorrectPage("Place an Order");
+        Thread.sleep(1000);
+
+        driver.findElement(By.cssSelector("div > div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell.actions.datagrid-cell.ng-star-inserted > div > button.btn.btn-success.btn-sm")).click();
+
+        Thread.sleep(1000);
+
+        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div")).click();
+        //Thread.sleep(750);
+        //driver.findElement(By.cssSelector("#subportfolio > div > div.option-wrapper.ui-select-choices.dropdown-menu.ng-star-inserted > div > input")).sendKeys(uSubNameDetails[0]);
+        Thread.sleep(750);
+        driver.findElement(By.xpath("//*[@id=\"subportfolio\"]/div/div[3]/ul/li/div/a")).click();
+
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date();
+        String date1= dateFormat.format(date);
+
+        DateFormat dateFormat1 = new SimpleDateFormat("HH");
+        Date dates = new Date();
+        String hours= dateFormat1.format(dates);
+
+        DateFormat dateFormat2 = new SimpleDateFormat("mm");
+        Date dates2 = new Date();
+        String date3= dateFormat2.format(dates2);
+
+        int timeHoursInt = Integer.parseInt(hours);
+        int timeMinsInt = Integer.parseInt(date3);
+        int timeMinsAfter = timeMinsInt + 2;
+        String time = "0" + timeHoursInt + ":" + timeMinsAfter;
+
+        String orderDate = date1 + " " + time + ";" + date1 + " " + time + ";" + date1 + " " + time + ";";
+
+        System.out.println(orderDate);
+
+        scrollElementIntoViewById("quantity");
+
+        Thread.sleep(750);
+
+        driver.findElement(By.id("cutoffdate")).sendKeys(orderDate);
+        driver.findElement(By.id("valuationdate")).sendKeys(orderDate);
+        driver.findElement(By.id("settlementdate")).sendKeys(orderDate);
+
+        driver.findElement(By.id("quantity")).clear();
+        System.out.println(uAmount[0]);
+        driver.findElement(By.id("quantity")).sendKeys(uAmount[0]);
+
+        scrollElementIntoViewByCss("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted");
+
+        Thread.sleep(750);
+
+        driver.findElement(By.id("checkbox")).click();
+
+        driver.findElement(By.cssSelector("app-invest-fund > form > div > div.row > div > div > button.btn.btn-primary.ng-star-inserted")).click();
+
+        Thread.sleep(1000);
+
+        String modalTitle = driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[1]/span")).getText();
+        assertTrue(modalTitle.equals("Order Confirmation"));
+
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/jaspero-confirmations/jaspero-confirmation/div[2]/div[4]/button[2]")).click();
+
+        Thread.sleep(1000);
+    }
+
+    public static void createSubPortfolio(String subName, String subIBAN) throws IOException, InterruptedException{
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+
         navigateToPageByID("menu-sub-portfolio");
-        verifyCorrectPageContains("sub-portfolio");
+        verifyCorrectPageContains("Sub-portfolio");
 
         driver.findElement(By.id("btn-add-new-subportfolio")).click();
         wait.until(visibilityOfElementLocated(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div")));
         String modalTitleSubPortfolio = driver.findElement(By.id("override_header")).getText();
-        assertTrue(modalTitleSubPortfolio.equals("Create a new sub-portfolio"));
-
+        Thread.sleep(750);
+        assertTrue(modalTitleSubPortfolio.equals("Create A New Sub-portfolio"));
         String disabledCreateBtn = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
         assertTrue(disabledCreateBtn.equals("true"));
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[1]/div/input")).sendKeys("Jordans Sub-Portfolio");
-
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[1]/div/input")).sendKeys(subName);
         String disabledCreateBtn2 = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
         assertTrue(disabledCreateBtn2.equals("true"));
-
-        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[2]/div/input")).sendKeys("AA1238476362635433");
-
-        String disabledCreateBtn3 = driver.findElement(By.xpath("//*[@id=\"override_save\"]")).getAttribute("disabled");
-        assertFalse(disabledCreateBtn3.equals("true"));
-
+        driver.findElement(By.xpath("//*[@id=\"iznes\"]/app-root/app-basic-layout/div/ng-sidebar-container/div/div/div/main/div/div/ofi-sub-portfolio/clr-modal[1]/div/div[1]/div/div[1]/div/div[2]/form/div[2]/div/input")).sendKeys(subIBAN);
         driver.findElement(By.xpath("//*[@id=\"override_save\"]")).click();
-
         Thread.sleep(2500);
 
-        String subPortfolioNameDataGrid = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-9\"]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[1]/span")).getText();
-        assertTrue(subPortfolioNameDataGrid.equals("Jordans Sub-Portfolio"));
-
-        String subPortfolioIBANDataGrid = driver.findElement(By.xpath("//*[@id=\"clr-tab-content-9\"]/div/clr-datagrid/div/div/div/clr-dg-table-wrapper/div[2]/clr-dg-row/div/clr-dg-cell[2]/span")).getText();
-        assertTrue(subPortfolioIBANDataGrid.equals("AA1238476362635433"));
-
+        String subPortfolioNameDataGrid = driver.findElement(By.cssSelector("clr-dg-row > div > clr-dg-cell:nth-child(1) > span")).getText();
+        System.out.println(subPortfolioNameDataGrid);
+        System.out.println(subName);
+        assertTrue(subPortfolioNameDataGrid.equals(subName));
+        String subPortfolioIBANDataGrid = driver.findElement(By.cssSelector("div > clr-datagrid > div > div > div > clr-dg-table-wrapper > div.datagrid-body > clr-dg-row > div > clr-dg-cell:nth-child(2) > span")).getText();
+        System.out.println(subPortfolioIBANDataGrid);
+        System.out.println(subIBAN);
+        assertTrue(subPortfolioIBANDataGrid.equals(subIBAN));
     }
 
     @Test
