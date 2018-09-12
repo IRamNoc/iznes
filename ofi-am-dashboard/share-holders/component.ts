@@ -8,19 +8,13 @@ import { NgRedux, select } from '@angular-redux/store';
 import { fromJS } from 'immutable';
 import * as _ from 'lodash';
 
-/* Alert service. */
-import { AlertsService } from '@setl/jaspero-ng2-alerts';
-
-
 /* Utils. */
-import { NumberConverterService, FileDownloader } from '@setl/utils';
+import { FileDownloader } from '@setl/utils';
 
 /* services */
 import { MemberSocketService } from '@setl/websocket-service';
 import { OfiAmDashboardService } from '../../ofi-req-services/ofi-am-dashboard/service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
-
-import { APP_CONFIG, AppConfig } from "@setl/utils/index";
 import { MultilingualService } from '@setl/multilingual';
 
 /* Types. */
@@ -320,10 +314,11 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     fundsByUserList(list) {
         const listImu = fromJS(list);
         this.fundList = listImu.reduce((result, item) => {
-            let lei = (typeof item.lei !== 'undefined') ? ' (' + item.lei + ')' : '';
+            let text = item.fundLei !== '' ? `${item.fundName} (${item.fundLei})` : item.fundName;
+
             result.push({
                 id: item.fundId,
-                text: item.fundName + lei,
+                text,
             });
             return result;
         }, []);
@@ -418,7 +413,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
         if (holderList) {
             this.allList = holderList.toJS() || [];
 
-            this.sharesList = this.allList.filter(it => !it.isFund).map((holder) => {
+            this.sharesList = this.allList.filter(it => it.shareId !== 0).map((holder) => {
                 return {
                     id: holder.shareId,
                     text: holder.fundName + ' - ' + holder.shareName + ' (' + holder.shareIsin + ')',
@@ -432,11 +427,13 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     /**
      * Get detail of holders for a given share id
      *
-     * @param data
+     * @param res
      */
-    getHolderDetail(data) {
-        if (data) {
-            this.holdersShareData = data.holders.toJS() || [];
+    getHolderDetail(res) {
+        if (res && res.size > 0) {
+            const data = res.toJS();
+
+            this.holdersShareData = data.holders;
             this.sharesNbHolders = data.holderNumber;
             this.sharesAUM = data.aum;
             this.sharesNbUnits = data.unitNumber;
@@ -444,6 +441,7 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
             this.sharesCCY = data.currency;
             this.shareSettlementDate = data.lastSettlementDate;
         }
+
         this.changeDetectorRef.markForCheck();
         this.loadingDatagrid = false;
     }
@@ -471,15 +469,9 @@ export class ShareHoldersComponent implements OnInit, OnDestroy {
     }
 
     handleClickShare(data) {
-        if (data.isFund) {
-            if (data.fundId && data.fundId > 0) {
-                this.router.navigateByUrl('/reports/holders-list/funds/' + data.fundId);
-            }
-        } else {
-            if (data.shareId && data.shareId > 0) {
-                this.router.navigateByUrl('/reports/holders-list/shares/' + data.shareId);
-            }
-        }
+        const isFund = data.shareId === 0;
+        const route = isFund ? `/reports/holders-list/funds/${data.fundId}` : `/reports/holders-list/shares/${data.shareId}`;
+        this.router.navigateByUrl(route);
     }
 
     requestSearch() {

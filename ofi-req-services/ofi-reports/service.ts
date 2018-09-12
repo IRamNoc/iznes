@@ -38,7 +38,6 @@ import {
 import {
     MemberNodeMessageBody,
     OfiAmHoldersRequestBody,
-    OfiCentralisationReportsRequestBody,
     OfiHolderDetailRequestBody,
     OfiHolderDetailRequestData,
     InvestorHoldingRequestData,
@@ -47,7 +46,6 @@ import {
     PrecentralisationRequestFundsBody,
     PrecentralisationFundsRequestData,
     PrecentralisationSharesRequestData,
-    CentralisationReportsRequestData,
     CentralisationRequestSharesBody,
     CentralisationRequestFundsBody,
     CentralisationFundsRequestData,
@@ -67,15 +65,6 @@ export class OfiReportsService {
             ngRedux.dispatch(ofiClearRequestedAmHolders());
         } else {
             ngRedux.dispatch(ofiSetRequestedAmHolders());
-        }
-    }
-
-    static setRequestedInvHoldingsList(boolValue: boolean, ngRedux: NgRedux<any>) {
-        // false = doRequest | true = already requested
-        if (!boolValue) {
-            ngRedux.dispatch(ofiClearRequestedInvHoldings());
-        } else {
-            ngRedux.dispatch(ofiSetRequestedInvHoldings());
         }
     }
 
@@ -216,6 +205,10 @@ export class OfiReportsService {
         ));
     }
 
+    clearInvestorHoldingList() {
+        this.ngRedux.dispatch(ofiClearRequestedInvHoldings());
+    }
+
     fetchInvestorHoldingList(data) {
         const asyncTaskPipe = this.requestInvestorHoldingList(data);
 
@@ -351,21 +344,9 @@ export class OfiReportsService {
 
     /* END CENTRA + PRECENTRA */
 
-    requestCentralisationReportsList(data: CentralisationReportsRequestData): any {
-
-        const messageBody: OfiCentralisationReportsRequestBody = {
-            RequestName: 'getallshareinfo',
-            token: this.memberSocketService.token,
-            search: data.search,
-        };
-
-        return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
     requestAmHoldersList(): any {
-
         const messageBody: OfiAmHoldersRequestBody = {
-            RequestName: 'izngetamholders',
+            RequestName: 'iznrecordkeepinggetall',
             token: this.memberSocketService.token,
         };
 
@@ -385,42 +366,12 @@ export class OfiReportsService {
 
     requestShareHolderDetail(requestData: OfiHolderDetailRequestData): any {
         const messageBody: OfiHolderDetailRequestBody = {
-            RequestName: 'izngetamholderdetail',
+            RequestName: 'iznrecordkeepinggetshare',
             token: this.memberSocketService.token,
             shareId: requestData.shareId,
             selectedFilter: requestData.selectedFilter,
         };
 
         return createMemberNodeSagaRequest(this.memberSocketService, messageBody);
-    }
-
-    /**
-     * Build Request
-     * -------------
-     * Builds a request and sends it, responsing when it completes.
-     *
-     * @param {options} Object - and object of options.
-     *
-     * @return {Promise<any>} [description]
-     */
-    public buildRequest(options): Promise<any> {
-        /* Check for taskPipe,  */
-        return new Promise((resolve, reject) => {
-            /* Dispatch the request. */
-            this.ngRedux.dispatch(
-                SagaHelper.runAsync(
-                    options.successActions || [],
-                    options.failActions || [],
-                    options.taskPipe,
-                    {},
-                    (response) => {
-                        resolve(response);
-                    },
-                    (error) => {
-                        reject(error);
-                    }
-                )
-            );
-        });
     }
 }
