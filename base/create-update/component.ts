@@ -149,7 +149,7 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
     delete(title: string): void {
         this.confirmations.create(
-            `${this.translate.translate('Delete')} ${title}?`,
+            `${this.translate.translate('Delete')} ${title}`,
             this.translate.translate(`Are you sure you wish to delete this ${this.noun.toLowerCase()}?`),
         ).subscribe((value) => {
             if (value.resolved) {
