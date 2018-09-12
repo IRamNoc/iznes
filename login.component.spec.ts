@@ -110,7 +110,7 @@ describe('SetlLoginComComponent', () => {
                 { provide: Router, useValue: RouterMock },
                 { provide: ActivatedRoute, useValue: ActivatedRouteStub },
                 { provide: MultilingualService, useValue: MultilingualServiceSpy },
-                { provide: ConfirmationService, useValue: ConfirmationService },
+                ConfirmationService,
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
@@ -138,10 +138,10 @@ describe('SetlLoginComComponent', () => {
 
     it('should has the correct input fields', async(() => {
         fixture.whenStable().then(() => {
-                expect(element.querySelector('#username-field')).toBeTruthy();
-                expect(element.querySelector('#password-field')).toBeTruthy();
-                expect(element.querySelector('#login-submit')).toBeTruthy();
-            });
+            expect(element.querySelector('#username-field')).toBeTruthy();
+            expect(element.querySelector('#password-field')).toBeTruthy();
+            expect(element.querySelector('#login-submit')).toBeTruthy();
+        });
     }),
     );
 
@@ -208,8 +208,8 @@ describe('SetlLoginComComponent', () => {
 
             // status: fail
            let response = [
-                '', { Data: [{ Status: 'fail' }] },
-            ];
+               '', { Data: [{ Status: 'fail' }] },
+           ];
 
            spyOn(component, 'showLoginErrorMessage');
            component.handleLoginFailMessage(response);
@@ -220,8 +220,8 @@ describe('SetlLoginComComponent', () => {
 
             // status: locked
            response = [
-                '', { Data: [{ Status: 'locked' }] },
-            ];
+               '', { Data: [{ Status: 'locked' }] },
+           ];
 
            component.handleLoginFailMessage(response);
            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
@@ -232,8 +232,8 @@ describe('SetlLoginComComponent', () => {
 
             // status:
            response = [
-                '', { Data: [{ Status: 'random' }] },
-            ];
+               '', { Data: [{ Status: 'random' }] },
+           ];
 
            component.handleLoginFailMessage(response);
            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
