@@ -20,6 +20,9 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
     textDisable: string = '';
     textPending: string = '';
 
+    protected enableMessage: string;
+    protected disableMessage: string;
+
     constructor(private toaster: ToasterService,
                 private translate: MultilingualService,
                 private confirmation: ConfirmationService,
@@ -36,8 +39,7 @@ export class AccountAdminStatusComponentBase<Type> implements OnInit, OnDestroy 
         if (this.isStatusPending()) return;
 
         const title = `${this.status ? this.textDisable : this.textEnable} ${this.translate.translate(this.noun)}`;
-        const message = this.translate.translate(`Are you sure you want to ### this ${this.noun}?`)
-            .replace('###', this.status ? this.textDisable : this.textEnable);
+        const message = this.status ? this.disableMessage : this.enableMessage;
 
         this.confirmation.create(title, message).subscribe((ans) => {
             if (ans.resolved) {

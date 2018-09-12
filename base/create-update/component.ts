@@ -61,8 +61,8 @@ export class AccountAdminCreateUpdateBase<Type> implements OnInit, OnDestroy {
 
         this.alertCreateTitle = this.translate.translate(`Create ${this.noun}`);
         this.alertUpdateTitle = this.translate.translate(`Update ${this.noun}`);
-        this.alertCreateMessage = this.translate.translate(`Are you sure you wish to create this ${this.noun}`);
-        this.alertUpdateMessage = this.translate.translate(`Are you sure you wish to update this ${this.noun}`);
+        this.alertCreateMessage = this.translate.translate(`Are you sure you wish to create this ${this.noun}?`);
+        this.alertUpdateMessage = this.translate.translate(`Are you sure you wish to update this ${this.noun}?`);
     }
 
     private processParams(): void {

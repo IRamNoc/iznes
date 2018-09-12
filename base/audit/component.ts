@@ -88,6 +88,7 @@ export class AccountAdminAuditBase<Type> implements OnInit, OnDestroy {
             search: this.searchForm.value.entitySearch,
             dateFrom: moment(this.searchForm.value.dateFrom).format('YYYY-MM-DD 00:00:00'),
             dateTo: moment(this.searchForm.value.dateTo).format('YYYY-MM-DD 23:59:59'),
+            isCSVRequest: true,
         };
     }
 

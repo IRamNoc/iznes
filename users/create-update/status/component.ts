@@ -21,6 +21,11 @@ export class UsersStatusComponent extends AccountAdminStatusComponentBase<null> 
                 private service: UsersService,
                 router: Router) {
         super(toaster, translate, confirmation, router);
+
+        this.enableMessage = translate.translate('Are you sure you want to enable this user?');
+        this.disableMessage = translate.translate(`Are you sure you want to disable this user?
+            If you disable this user, then you will not be able to add this user in a team.
+            You will need to activate the user in order to assign him to a team`);
     }
 
     onUpdateStatus(): void {
