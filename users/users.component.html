@@ -40,7 +40,7 @@
     <ng-template #staticUserListTab>
         <div class="panel-body">
 
-            <clr-datagrid #usersDataGrid>
+            <clr-datagrid #usersDataGrid  (clrDgRefresh)="refresh($event)">
                 <clr-dg-column mltag="txt_username">Username</clr-dg-column>
                 <clr-dg-column mltag="txt_email">Email</clr-dg-column>
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>

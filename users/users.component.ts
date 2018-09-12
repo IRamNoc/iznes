@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PersistService } from '@setl/core-persist';
 import { userAdminActions } from '@setl/core-store';
 import { LogService } from '@setl/utils';
+import { ClrDatagridStateInterface } from "@clr/angular";
 
 /* Decorator. */
 @Component({
@@ -261,6 +262,11 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Ask for update from the service above. */
         this.userAdminService.updateState();
+    }
+
+
+    refresh(dataGridState: ClrDatagridStateInterface) {
+        console.log('+++ dataGridState', dataGridState);
     }
 
     /**
