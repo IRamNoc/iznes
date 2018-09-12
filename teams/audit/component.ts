@@ -70,7 +70,7 @@ export class UserTeamsAuditComponent
                     id: 'Ref',
                     dataIndex: 'reference',
                     styleClass: 'ref',
-                    title: 'Ref',
+                    title: 'Reference',
                 },
                 {
                     id: 'Team',
@@ -82,7 +82,7 @@ export class UserTeamsAuditComponent
                     id: 'Field',
                     dataIndex: 'field',
                     styleClass: 'field',
-                    title: 'Field',
+                    title: 'Information',
                 },
                 {
                     id: 'Previous',

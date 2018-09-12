@@ -140,6 +140,7 @@ export interface ReadUsersAuditRequest extends MemberNodeMessageBody {
     search: string;
     dateFrom: string;
     dateTo: string;
+    isCSVRequest: boolean;
 }
 
 export interface ReadUserPermissionsRequest extends MemberNodeMessageBody {
