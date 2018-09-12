@@ -6,7 +6,7 @@ node {
                         sh 'ssh -t root@172.104.147.135 rm -f flyway \\&&'
                         sh 'ssh -t root@172.104.147.135 ln -s /usr/local/bin/flyway-4.2.0/flyway /usr/local/bin/flyway \\&&'
                         sh 'ssh -t root@172.104.147.135 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db \\&&'
-                        sh 'rsync -avhm --stats /var/lib/jenkins/Deploy/membership-db/* root@172.104.147.135:/var/membership-db'
+                        sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io membership-db release'
                         sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/ ./updatedb iznes\''
 
             }
@@ -16,7 +16,7 @@ node {
 
                 sh '''
                         ssh root@172.104.147.135 rsync -avzhm --stats /var/www_setltestnet/ /var/ofi_backups/www_setltestnet &&
-                        rsync -avhm --stats /var/lib/jenkins/Deploy/dist/*  root@172.104.147.135:/var/www_setltestnet'''
+                        php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io opencsd-iznes release'''
 
             }
 
@@ -24,7 +24,7 @@ node {
 
                 sh '''
                         ssh root@172.104.147.135  rsync -avzhm --stats --exclude 'node_modules' /var/phpapps/backend/ /var/ofi_backups/backend &&
-                        rsync -avhm --stats --exclude 'config.json' /var/lib/jenkins/Deploy/backend/*  root@172.104.147.135:/var/phpapps/backend'''
+                        php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io membernode release'''
             }
 
 
@@ -32,33 +32,13 @@ node {
 
                 sh '''
                             ssh root@172.104.147.135 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
-                            rsync -avhm --stats --exclude \'.env\' /var/lib/jenkins/Deploy/daemon-node/* root@172.104.147.135:/var/phpapps/daemon-node
-                            ssh -t root@172.104.147.135 \'cd /var/phpapps/daemon-node ; bash && npm install \'                            
-                            ssh -t root@172.104.147.135 \'cd /var/phpapps/daemon-node ; bash && npm run build \'          
-                            '''
+                            php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io daemonnode release'''
             }
-
-
-        stage('Update Dependencies') {
-            sh 'ssh -t root@172.104.147.135 \'cd /var/phpapps/backend/ ; bash && npm install\''
-        }
-
-        stage('Update database') {
-            sh 'ssh -tt root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./updatedb iznes \''
-        }
-
 
         stage('Deploy Blockchain jars to Test Environment') {
 
                 sh '''
-                        rsync -avhmp --stats /var/lib/jenkins/Deploy/blockchain/scripts/*  root@172.104.147.135: &&
-                        ssh -t root@172.104.147.135 \'cd /root ; bash &&  ./stop_blockchain.sh \'
-                        ssh -t root@172.104.147.135 rm -f /usr/local/jar/*.jar &&
-                        ssh -t root@172.104.147.135 rm -f /usr/local/jar/cmdtools &&
-                        ssh -t root@172.104.147.135 rm -f /usr/local/jar/wallnode &&
-                        ssh -t root@172.104.147.135 rm -f /usr/local/jar/valnode &&
-                        rsync -avhm --stats /var/lib/jenkins/Deploy/blockchain/*.jar  root@172.104.147.135:/usr/local/jar &&
-                        ssh -t root@172.104.147.135 \'cd /root ; bash && ./relink_dev.sh \' &&
+                        php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io blockchain release
                         ssh -t root@172.104.147.135 \'cd /root ; bash && ./start_blockchain.sh \''''
 
             }
@@ -73,5 +53,3 @@ node {
         }
     }
 }
-
-
