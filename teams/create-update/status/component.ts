@@ -21,6 +21,9 @@ export class UserTeamsStatusComponent extends AccountAdminStatusComponentBase<nu
                 private service: UserTeamsService,
                 router: Router) {
         super(toaster, translate, confirmation, router);
+
+        this.enableMessage = translate.translate('Are you sure you want to enable this team?');
+        this.disableMessage = translate.translate('Are you sure you want to disable this team?');
     }
 
     onUpdateStatus(): void {
