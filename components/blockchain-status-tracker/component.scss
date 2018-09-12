@@ -1,0 +1,112 @@
+:host {
+    @media only screen and (min-width: 1700px) {
+        position: absolute;
+        left: 30%;
+    }
+    .sm-col {
+        max-width: 200px;
+    }
+    .modal-body clr-datagrid {
+        max-height: 64vh;
+        .additionalInfos {
+            .item {
+                float: left;
+                width: 30%;
+                margin: 0 3% 0 0;
+                overflow: hidden;
+                b {
+                    width: 38%;
+                    display: inline-block;
+                }
+            }
+        }
+    }
+}
+
+#blockchain-status-tracker {
+    cursor: pointer;
+    .pending, .success, .fail {
+        background: #ffffff;
+        box-sizing: border-box;
+        font-size: inherit;
+        font-weight: 600;
+        position: relative;
+        vertical-align: middle;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        width: 45px;
+        height: 45px;
+        margin: 15px 0 0 -5px;
+        padding: 0;
+        border-radius: 100%;
+        box-shadow: none;
+        float: left;
+        transition: all 0.5s linear;
+
+        &::before,
+        &::after {
+            box-sizing: inherit;
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            border-radius: 100%;
+        }
+
+        &::before {
+            transition: border-top-color 0.15s linear,
+            border-right-color 0.15s linear 0.10s,
+            border-bottom-color 0.15s linear 0.20s;
+        }
+        &.update::after {
+            border: 0 solid transparent;
+            animation-duration: 1s;
+            animation-name: spinRotate;
+            animation-iteration-count: infinite;
+            animation-direction: normal;
+        }
+    }
+
+    .fail {
+        color: #ce553e;
+        border: solid 1px rgba(206, 85, 62, 0.4);
+        &::before {
+            border-top-color: #ce553e;
+            border-right-color: #ce553e;
+            border-bottom-color: #ce553e;
+        }
+    }
+
+    .pending {
+        color: #e8a02e;
+        border: solid 1px rgba(232, 160, 46, 0.4);
+        &::before {
+            border-top-color: #e8a02e;
+            border-right-color: #e8a02e;
+            border-bottom-color: #e8a02e;
+        }
+    }
+
+    .success {
+        color: #49a45f;
+        border: solid 1px rgba(73, 164, 95, 0.4);
+        &::before {
+            border-top-color: #49a45f;
+            border-right-color: #49a45f;
+            border-bottom-color: #49a45f;
+        }
+    }
+
+    @keyframes spinRotate {
+        0% {
+            border-top: 4px solid;
+            border-left-width: 5px;
+            border-right-width: 5px;
+            transform: rotate(360deg);
+        }
+    }
+}

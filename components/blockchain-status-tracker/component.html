@@ -1,0 +1,60 @@
+<div id="blockchain-status-tracker" (click)="showStatusModal = true">
+    <div class="fail" [class.update]="failUpdate">{{ failCount }}</div>
+    <div class="pending" [class.update]="pendingUpdate">{{ pendingCount }}</div>
+    <div class="success" [class.update]="successUpdate">{{ successCount }}</div>
+</div>
+
+<clr-modal [(clrModalOpen)]="showStatusModal" [clrModalSize]="'lg'">
+    <h3 class=" modal-title">Blockchain transaction status</h3>
+    <div class="modal-body">
+        <div class="alert alert-danger" *ngIf="maxTransactions">
+            <div class="alert-items">
+                <div class="alert-item static">
+                    <div class="alert-icon-wrapper">
+                        <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                    </div>
+                    <span class="alert-text">Unable to display new transactions as the limit has been reached</span>
+                </div>
+            </div>
+        </div>
+        <clr-datagrid #myDataGrid *ngIf="showStatusModal">
+            <clr-dg-column class="sm-col">
+                <ng-container *clrDgHideableColumn="{hidden: false}">Status</ng-container>
+            </clr-dg-column>
+            <clr-dg-column>
+                <ng-container *clrDgHideableColumn="{hidden: false}">TX Hash</ng-container>
+            </clr-dg-column>
+            <clr-dg-column [clrDgField]="'date'" [clrDgSortOrder]="descSort" class="sm-col">
+                <ng-container *clrDgHideableColumn="{hidden: false}">Date Requested</ng-container>
+            </clr-dg-column>
+
+            <clr-dg-row *clrDgItems="let tx of txList">
+                <clr-dg-cell class="sm-col">
+                    <span *ngIf="tx.success" class="label label-success">Success</span>
+                    <span *ngIf="!tx.success && !tx.fail" class="label label-warning">Pending</span>
+                    <span *ngIf="tx.fail" class="label label-danger">Fail</span>
+                </clr-dg-cell>
+                <clr-dg-cell>{{ tx.hash }}</clr-dg-cell>
+                <clr-dg-cell class="sm-col">{{ tx.date }}</clr-dg-cell>
+
+                <clr-dg-row-detail *clrIfExpanded>
+                    <div class="additionalInfos">
+                        <ng-container *ngFor="let item of objectKeys(tx.request)">
+                            <div class="item" *ngIf="tx.request[item] !== ''">
+                                <b>{{ item }}:</b> {{ formatText(tx.request[item]) }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </clr-dg-row-detail>
+            </clr-dg-row>
+
+            <clr-dg-footer>
+                {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+                <clr-dg-pagination #pagination [clrDgPageSize]="5"></clr-dg-pagination>
+            </clr-dg-footer>
+        </clr-datagrid>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="showStatusModal = false">OK</button>
+    </div>
+</clr-modal>
