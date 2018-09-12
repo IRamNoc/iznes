@@ -1,11 +1,11 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {Pipe, PipeTransform, Component} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
-import {NgReduxTestingModule, MockNgRedux} from '@angular-redux/store/testing';
-import {ToasterModule, ToasterService} from 'angular2-toaster';
-import {AlertsService} from '@setl/jaspero-ng2-alerts';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgReduxTestingModule, MockNgRedux } from '@angular-redux/store/testing';
+import { ToasterModule, ToasterService } from 'angular2-toaster';
+import { AlertsService } from '@setl/jaspero-ng2-alerts';
 
-import {SetlLoginComponent} from './login.component';
+import { SetlLoginComponent } from './login.component';
 import {
     CoreTestUtilModule,
     MyUserServiceMock,
@@ -18,9 +18,9 @@ import {
     InitialisationServiceMock,
     MyWalletsServiceMock,
     PermissionGroupServiceMock,
-    RouterMock
+    RouterMock,
 } from '@setl/core-test-util';
-import {APP_CONFIG, LogServiceMock, LogService} from '@setl/utils';
+import { APP_CONFIG, LogServiceMock, LogService, ConfirmationService } from '@setl/utils';
 import {
     MyUserService,
     MyWalletsService,
@@ -28,45 +28,45 @@ import {
     AccountsService,
     PermissionGroupService,
     ChainService,
-    InitialisationService
+    InitialisationService,
 } from '@setl/core-req-services';
-import {MemberSocketService} from '@setl/websocket-service';
-import {Subject} from 'rxjs/Subject';
-import {Router, ActivatedRoute} from '@angular/router';
+import { MemberSocketService } from '@setl/websocket-service';
+import { Subject } from 'rxjs/Subject';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
-import {ClarityModule} from '@clr/angular';
-import {Observable} from 'rxjs/Observable';
+import { ClarityModule } from '@clr/angular';
+import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
-import {LoginGuardService} from './login-guard.service';
+import { LoginGuardService } from './login-guard.service';
 import { MenuSpecService } from '@setl/utils/services/menuSpec/service';
 
-import {MultilingualService} from '@setl/multilingual';
+import { MultilingualService } from '@setl/multilingual';
 const MultilingualServiceSpy = jasmine.createSpyObj('MultilingualService', ['translate']);
 
 const environment = {
     logoID: '',
     logoUrl: '',
-    platform: ''
+    platform: '',
 };
 
 const ActivatedRouteStub = {
-    params: Observable.of({token: ''}),
-    queryParams: Observable.of({email: '', error: ''}),
+    params: Observable.of({ token: '' }),
+    queryParams: Observable.of({ email: '', error: '' }),
     snapshot: {
         params: {
-            email: ''
+            email: '',
         },
     },
 };
 
 @Component({
     selector: 'app-password-tooltip',
-    template: '<p>Mock Password tooltip</p>'
+    template: '<p>Mock Password tooltip</p>',
 })
 class MockPasswordTooltip {}
 
 // Stub for translate
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 export class TranslatePipe implements PipeTransform {
     transform(value: any): any {
         return value;
@@ -93,31 +93,32 @@ describe('SetlLoginComComponent', () => {
             declarations: [
                 SetlLoginComponent,
                 TranslatePipe,
-                MockPasswordTooltip
+                MockPasswordTooltip,
             ],
             providers: [
-                {provide: MyUserService, useValue: myUserServiceMock},
-                {provide: MemberSocketService, useValue: memberSocketService},
-                {provide: MyWalletsService, useClass: MyWalletsServiceMock},
-                {provide: ChannelService, useClass: ChannelServiceMock},
-                {provide: AccountsService, useClass: AccountsServiceMock},
-                {provide: PermissionGroupService, useClass: PermissionGroupServiceMock},
-                {provide: ChainService, useClass: ChainServiceMock},
-                {provide: InitialisationService, useClass: InitialisationServiceMock},
-                {provide: MemberSocketService, useClass: MemberSocketServiceMock},
-                {provide: ToasterService, useClass: ToasterServiceMock},
-                {provide: AlertsService, useValue: alertServiceMock},
-                {provide: Router, useValue: RouterMock},
-                {provide: ActivatedRoute, useValue: ActivatedRouteStub},
-                {provide: MultilingualService, useValue: MultilingualServiceSpy},
+                { provide: MyUserService, useValue: myUserServiceMock },
+                { provide: MemberSocketService, useValue: memberSocketService },
+                { provide: MyWalletsService, useClass: MyWalletsServiceMock },
+                { provide: ChannelService, useClass: ChannelServiceMock },
+                { provide: AccountsService, useClass: AccountsServiceMock },
+                { provide: PermissionGroupService, useClass: PermissionGroupServiceMock },
+                { provide: ChainService, useClass: ChainServiceMock },
+                { provide: InitialisationService, useClass: InitialisationServiceMock },
+                { provide: MemberSocketService, useClass: MemberSocketServiceMock },
+                { provide: ToasterService, useClass: ToasterServiceMock },
+                { provide: AlertsService, useValue: alertServiceMock },
+                { provide: Router, useValue: RouterMock },
+                { provide: ActivatedRoute, useValue: ActivatedRouteStub },
+                { provide: MultilingualService, useValue: MultilingualServiceSpy },
+                { provide: ConfirmationService, useValue: ConfirmationService },
                 {
                     provide: APP_CONFIG,
                     useValue: environment,
                 },
                 LoginGuardService,
-                {provide: LogService, useClass: LogServiceMock},
+                { provide: LogService, useClass: LogServiceMock },
                 MenuSpecService,
-            ]
+            ],
         })
             .compileComponents();
 
@@ -136,18 +137,18 @@ describe('SetlLoginComComponent', () => {
     });
 
     it('should has the correct input fields', async(() => {
-            fixture.whenStable().then(() => {
+        fixture.whenStable().then(() => {
                 expect(element.querySelector('#username-field')).toBeTruthy();
                 expect(element.querySelector('#password-field')).toBeTruthy();
                 expect(element.querySelector('#login-submit')).toBeTruthy();
             });
-        })
+    }),
     );
 
     it('update method should be called, when authentication changed', async(() => {
         spyOn(component, 'updateState');
         const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
-        authenticationStub.next({isLogin: true});
+        authenticationStub.next({ isLogin: true });
         expect(component.updateState).toHaveBeenCalled();
     }));
 
@@ -155,7 +156,7 @@ describe('SetlLoginComComponent', () => {
         component.isLogin = false;
         const authenticationStub: Subject<any> = MockNgRedux.getSelectorStub<any, any>(['user', 'authentication']);
         spyOn(InitialisationService, 'membernodeInitialisation');
-        authenticationStub.next({isLogin: true, token: 'token'});
+        authenticationStub.next({ isLogin: true, token: 'token' });
 
         expect(InitialisationService.membernodeInitialisation).toHaveBeenCalled();
     }));
@@ -203,50 +204,50 @@ describe('SetlLoginComComponent', () => {
     }));
 
     it('handleLoginFailMessage should handle response correctly',
-        async(() => {
+       async(() => {
 
             // status: fail
-            let response = [
-                '', {Data: [{Status: 'fail'}]}
+           let response = [
+                '', { Data: [{ Status: 'fail' }] },
             ];
 
-            spyOn(component, 'showLoginErrorMessage');
-            component.handleLoginFailMessage(response);
-            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+           spyOn(component, 'showLoginErrorMessage');
+           component.handleLoginFailMessage(response);
+           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'warning',
-                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>'
+                '<span mltag="txt_loginerror" class="text-warning">Invalid email address or password!</span>',
             );
 
             // status: locked
-            response = [
-                '', {Data: [{Status: 'locked'}]}
+           response = [
+                '', { Data: [{ Status: 'locked' }] },
             ];
 
-            component.handleLoginFailMessage(response);
-            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+           component.handleLoginFailMessage(response);
+           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'info',
                 '<span mltag="txt_accountlocked" class="text-warning">Sorry, your account has been locked. ' +
-                'Please contact Setl support.</span>'
+                'Please contact Setl support.</span>',
             );
 
             // status:
-            response = [
-                '', {Data: [{Status: 'random'}]}
+           response = [
+                '', { Data: [{ Status: 'random' }] },
             ];
 
-            component.handleLoginFailMessage(response);
-            expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
+           component.handleLoginFailMessage(response);
+           expect(component.showLoginErrorMessage).toHaveBeenCalledWith(
                 'error',
-                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>'
+                '<span mltag="txt_loginproblem" class="text-warning">Sorry, there was a problem logging in, please try again.</span>',
             );
-        })
+       }),
     );
 
     it('AlertsService should called with error type', () => {
         spyOn(alertServiceMock, 'create');
 
         const response = [
-            '', {Data: [{Status: 'fail'}]}
+            '', { Data: [{ Status: 'fail' }] },
         ];
 
         component.showLoginErrorMessage('error', response);
@@ -254,7 +255,7 @@ describe('SetlLoginComComponent', () => {
         expect(alertServiceMock.create).toHaveBeenCalledWith(
             'error',
             response,
-            {buttonMessage: 'Please try again to log in'}
+            { buttonMessage: 'Please try again to log in' },
         );
 
     });
@@ -264,7 +265,7 @@ describe('SetlLoginComComponent', () => {
 
         const formValue = {
             username: 'user name',
-            password: 'user password'
+            password: 'user password',
         };
 
         component.loginForm.controls['username'].setValue(formValue.username);
@@ -272,7 +273,7 @@ describe('SetlLoginComComponent', () => {
         component.login(formValue);
         expect(myUserServiceMock.loginRequest).toHaveBeenCalledWith({
             username: 'user name',
-            password: 'user password'
+            password: 'user password',
         });
     });
 
@@ -281,7 +282,7 @@ describe('SetlLoginComComponent', () => {
 
         const formValue = {
             username: 'user name',
-            password: ''
+            password: '',
         };
 
         component.loginForm.controls['username'].setValue(formValue.username);
@@ -294,8 +295,8 @@ describe('SetlLoginComComponent', () => {
         const errorElements = [{
             parentNode: {
                 removeChild: (el) => {
-                }
-            }
+                },
+            },
         }];
 
         spyOn(document, 'getElementsByClassName').and.returnValue(errorElements);
@@ -304,7 +305,7 @@ describe('SetlLoginComComponent', () => {
 
         const formValue = {
             username: 'user name',
-            password: 'user password'
+            password: 'user password',
         };
 
         component.loginForm.controls['username'].setValue(formValue.username);
