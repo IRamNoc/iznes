@@ -43,6 +43,7 @@ import { combineLatest } from 'rxjs';
 import { Subscription } from 'rxjs/Subscription';
 import { MultilingualService } from '@setl/multilingual';
 import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
+import { ConfirmationService } from "@setl/utils";
 
 /* Dectorator. */
 @Component({
@@ -129,6 +130,7 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
                 private logService: LogService,
                 public _translate: MultilingualService,
                 private changeDetectorRef: ChangeDetectorRef,
+                private confirmationService: ConfirmationService,
                 @Inject(APP_CONFIG) appConfig: AppConfig) {
 
         this.appConfig = appConfig;
@@ -269,16 +271,16 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
         if (!this.loginForm.valid) {
             return false;
         }
-
+        
         // if the alert popup exists.
-        if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
-            // remove the popup and return false.
-            const elements = document.getElementsByClassName('error');
-            if (elements.length > 0) {
-                elements[0].parentNode.removeChild(elements[0]);
-            }
-            return false;
-        }
+        // if (document.getElementsByClassName('jaspero__dialog-icon').length > 0) {
+        //     // remove the popup and return false.
+        //     const elements = document.getElementsByClassName('error');
+        //     if (elements.length > 0) {
+        //         elements[0].parentNode.removeChild(elements[0]);
+        //     }
+        //     return false;
+        // }
 
         // Dispatch a login request action.
         // this.ngRedux.dispatch({type: 'my-detail/LOGIN_REQUEST'});
@@ -527,14 +529,20 @@ export class SetlLoginComponent implements OnDestroy, OnInit, AfterViewInit {
             asyncTaskPipe,
             {},
             () => {
-                let message = this._translate.translate('Your password has been successfully changed!');
-                this.toasterService.pop('success', message);
                 this.resetPassword = false;
-                this.loginForm.get('password').patchValue(values.password);
-                this.resetPasswordForm.reset();
-                this.login(this.loginForm.value);
+                this.confirmationService.create(
+                    'Success!',
+                    'Your password has been reset<br><br>A confirmation email will be sent to you.',
+                    { confirmText: 'Continue to IZNES', declineText: '', btnClass: 'success' }
+                ).subscribe((ans) => {
+                    if (ans.resolved) {
+                        this.loginForm.get('password').patchValue(values.password);
+                        this.resetPasswordForm.reset();
+                        this.login(this.loginForm.value);
 
-                this.changeDetectorRef.detectChanges();
+                        this.changeDetectorRef.detectChanges();
+                    }
+                });
             },
             () => {
                 let message = this._translate.translate('An error has occurred, please make sure the data you entered is correct.');
