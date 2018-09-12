@@ -220,7 +220,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             messageType: 'tx',
             payload: {
                 topic: 'astra',
-                walletid: this.connectedWalletId,
+                walletid: this.walletFrom,
                 toaddress: this.addressTo,
                 namespace,
                 instrument,
