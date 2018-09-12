@@ -65,13 +65,13 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private messagesService: MessagesService,
                 private connectionService: ConnectionService) {
 
-        /* Send asset form */
+        /* Request asset form */
         this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
         });
 
-        /* data subscriptions */
+        /* Data subscriptions */
         this.initAssetSubscriptions();
     }
 
