@@ -60,13 +60,13 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
             type: new FormControl('', Validators.required),
             fromRelationship: new FormControl('', Validators.required),
             walletFrom: new FormControl('', Validators.required),
-            addressTo: new FormControl('', Validators.required)
+            addressTo: new FormControl('', Validators.required),
         });
 
         this.initWalletIdSubscription();
-        this.initWalletRelationshipsSubscriptions();
         this.initWalletDirectorySubscriptions();
         this.initMyWalletSubscriptions();
+        this.initWalletRelationshipsSubscriptions();
     }
 
     ngOnInit() {
@@ -76,6 +76,11 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
         this.subscriptionsArray.push(
             this.walletIdOb.subscribe((walletId: number) => {
                 this.connectedWalletId = walletId;
+                // Reset form
+                this.requestTypeForm.reset();
+                // Refresh toRelationships
+                InitialisationService.requestToRelationship(
+                    this.ngRedux, this.myWalletService, this.connectedWalletId);
             }),
         );
     }
@@ -89,7 +94,7 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
                 }
             }),
             this.walletRelationshipListOb.subscribe((walletList) => {
-                if (Object.keys(walletList).length !== 0) {
+                if (Object.keys(walletList).length) {
                     this.walletRelationships = walletHelper.walletToRelationshipToSelectItem(
                         walletList, this.walletDirectoryList);
                 }
@@ -132,7 +137,13 @@ export class RequestTypeSelectComponent implements OnInit, OnDestroy {
     }
 
     onRelationshipSelect($event): void {
-        this.fromRelationship.emit($event.id);
+        const walletName = $event.text;
+
+        Object.keys(this.walletDirectoryListRaw).forEach((item) => {
+            if (this.walletDirectoryListRaw[item].walletName === walletName) {
+                this.fromRelationship.emit(this.walletDirectoryListRaw[item].walletID);
+            }
+        });
     }
 
     onWalletSelect($event): void {
