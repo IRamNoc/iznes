@@ -54,11 +54,11 @@ export class SetlMessageWorkflowComponent implements OnInit {
     }
 
     ngOnInit () {
-        if (this.data) {
+        if (this.data && this.data['Data']) {
             try {
                 this.decodedData = JSON.parse(this.data['Data']);
             } catch (e) {
-                console.warn('warning, unable to decode message data', e);
+                console.warn('warning, unable to decode message data', e, this.data);
             }
             if (!this.decodedData) {
                 return;
