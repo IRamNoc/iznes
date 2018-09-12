@@ -54,18 +54,18 @@ export class SetlMessageWorkflowComponent implements OnInit {
     }
 
     ngOnInit () {
-        if (this.data) {
+        if (this.data && this.data['Data']) {
             try {
                 this.decodedData = JSON.parse(this.data['Data']);
             } catch (e) {
-                console.warn('warning, unable to decode message data', e);
+                console.warn('warning, unable to decode message data', e, this.data);
             }
             if (!this.decodedData) {
                 return;
             }
             // this.transferTemplate.asset = this.decodedData['asset'];
             this.transferTemplate['namespace'] = this.decodedData['asset'].split('|')[0];
-            this.transferTemplate['insttument'] = this.decodedData['asset'].split('|')[1];
+            this.transferTemplate['instrument'] = this.decodedData['asset'].split('|')[1];
         }
         this.transferTemplate['walletid'] = this.walletId;
     }
