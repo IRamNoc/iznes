@@ -111,7 +111,7 @@ export class BasicLayoutComponent implements OnInit, OnDestroy, AfterViewInit {
         /* Subscribe to the language flag in redux. */
         this.subscriptionsArray.push(this.requestLanguageObj.subscribe(language => this.getLanguage(language)));
 
-        this.subscriptionsArray.push(router.events.subscribe((event) => {
+        this.subscriptionsArray.push(router.events.debounceTime(500).subscribe((event) => {
             if (event instanceof ActivationStart) {
                 // update current ParentUrl, but we excluding the parameter
                 this.currentParentUrl = get(event, 'snapshot.routeConfig.path', this.currentParentUrl);
