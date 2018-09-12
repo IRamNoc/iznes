@@ -4,8 +4,7 @@ node {
         stage('Deploy Membership-db to Test Environment') {
 
             sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io membership-db master'
-            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes \''
-        }
+
 
         stage('Deploy Frontend to Test Environment') {
 
@@ -21,27 +20,23 @@ node {
 
             sh '''
                             ssh root@139.162.213.130 rsync -avzhm --stats /var/phpapps/daemon-node /var/ofi_backups/daemon-node &&
-                            rsync -avhm --stats --exclude \'.env\' /var/lib/jenkins/Deploy/daemon-node/* root@139.162.213.130:/var/phpapps/daemon-node
-                            ssh -t root@139.162.213.130 \'cd /var/phpapps/daemon-node ; bash && sudo npm install \'
-                            ssh -t root@139.162.213.130 \'cd /var/phpapps/daemon-node ; bash && sudo npm run build \'
+                            php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io daemonnode master
                             '''
         }
 
-        stage('Update Dependencies') {
-            sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && sudo npm install\''
-        }
+
 
         stage('Deploy Blockchain jars to Test Environment') {
-            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io blockchain 1.0.39'
+            sh 'php /var/lib/jenkins/build/tools/deploy-code.php uk-lon-li-006.opencsd.io blockchain master'
         }
 
-        stage('Restart All Services') {
-            sh 'ssh -t root@139.162.213.130 \'sudo supervisorctl restart all\''
-        }
+
 
         stage('Check node server is running') {
+            sh 'ssh -tt root@139.162.213.130 \'cd /var/membership-db/deploy/ && ./cleanblockchain iznes \''
             sh 'ssh -t root@139.162.213.130 \'cd /var/phpapps/backend/ ; bash && node checkServer.js\''
-        }
 
+            }
+        }
     }
 }
