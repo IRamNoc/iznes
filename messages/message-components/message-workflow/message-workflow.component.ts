@@ -65,7 +65,7 @@ export class SetlMessageWorkflowComponent implements OnInit {
             }
             // this.transferTemplate.asset = this.decodedData['asset'];
             this.transferTemplate['namespace'] = this.decodedData['asset'].split('|')[0];
-            this.transferTemplate['insttument'] = this.decodedData['asset'].split('|')[1];
+            this.transferTemplate['instrument'] = this.decodedData['asset'].split('|')[1];
         }
         this.transferTemplate['walletid'] = this.walletId;
     }
