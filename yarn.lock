@@ -254,9 +254,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.0":
+"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.1":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#6d0e872a27c35673c38390870b63bc05b18c6c34"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#5dc25a5993c13e444b5bbd4da88f44a17b576a2f"
 
 "@schematics/angular@0.8.1":
   version "0.8.1"
@@ -279,11 +279,11 @@
 
 "@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#c4ec31504753312a4979ed4244fe0dc4608ad1af"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#88c700b32119edf8c89f30ab784c012bb256874a"
 
 "@setl/core-account-admin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account-admin.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account-admin.git#4845d6769212f232e586c2bd3567751a0c744997"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account-admin.git#7bb9bd68220fdd2598f69064e6856cafdf1467d4"
 
 "@setl/core-account@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git":
   version "1.0.0"
@@ -317,11 +317,11 @@
 
 "@setl/core-layout@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#07048b147281dcf836c0df41ace4309b7a1a7064"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#82ff14080fa69505d515f8d209dbd774ae9a4fec"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#d3a355fe44ba0b151ffd8f8f87d0f4de34b501a5"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#a2aef9f4f52fdb5aa86ee63975274f2e7c468d9a"
 
 "@setl/core-manage-member@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git":
   version "1.0.0"
@@ -329,7 +329,7 @@
 
 "@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#8920288a9fb32b41ce7be860e9d39ba9645e5ff3"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#7cb373ae7424da62f12bd93d7decb940630d422f"
 
 "@setl/core-persist@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-persist.git":
   version "1.0.0"
@@ -337,11 +337,11 @@
 
 "@setl/core-req-services@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#d774f85c40541e492f15e549040730652290f533"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/core-req-services.git#21cc212005138e41c53afabc69410e1accb7d0d9"
 
 "@setl/core-store@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#88fe8fdaf82626299039bb08b8abbbac81c4f9ef"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/core-redux-store.git#30a2c1dd6dae2f527162cb7b6a00948e3a74d57b"
   dependencies:
     lodash "^4.17.4"
     reselect "^3.0.1"
@@ -352,7 +352,7 @@
 
 "@setl/core-useradmin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git":
   version "1.0.8"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#875d9a50f175b8e42adb66e8ee1138b3367c2969"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-useradmin.git#c209830e66ccb8fea8b78ca0c87674d7eb58b07b"
 
 "@setl/jaspero-ng2-alerts@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_components/jaspero-ng2-alerts.git":
   version "0.0.6"
@@ -378,7 +378,7 @@
 
 "@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git":
   version "1.0.3"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#83fe0f85e5d5341b0f7fe3453fb07b168e80e5f6"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#3c8a92d0bfac4ad724925d3254894e3275269daf"
   dependencies:
     moment-timezone "^0.5.17"
     ramda "^0.24.1"
@@ -394,7 +394,7 @@
 
 "@setl/websocket-service@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git":
   version "1.0.4"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#ee202d5113e07302db4fdbd4542a8bbb33a23052"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular_services/websocket-service.git#265d35397402d028b036939a22001aadcfe2e850"
   dependencies:
     "@setl/socketcluster-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/socketcluster-wrapper.git"
     "@setl/vanilla-websocket-wrapper" "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/vanilla_websocket_wrapper.git"
@@ -1198,7 +1198,7 @@ brorand@^1.0.1:
 
 browserify-aes@^1.0.0, browserify-aes@^1.0.4:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/browserify-aes/-/browserify-aes-1.2.0.tgz#326734642f403dabc3003209853bb70ad428ef48"
+  resolved "http://registry.npmjs.org/browserify-aes/-/browserify-aes-1.2.0.tgz#326734642f403dabc3003209853bb70ad428ef48"
   dependencies:
     buffer-xor "^1.0.3"
     cipher-base "^1.0.0"
@@ -1226,7 +1226,7 @@ browserify-des@^1.0.0:
 
 browserify-rsa@^4.0.0:
   version "4.0.1"
-  resolved "https://registry.yarnpkg.com/browserify-rsa/-/browserify-rsa-4.0.1.tgz#21e0abfaf6f2029cf2fafb133567a701d4135524"
+  resolved "http://registry.npmjs.org/browserify-rsa/-/browserify-rsa-4.0.1.tgz#21e0abfaf6f2029cf2fafb133567a701d4135524"
   dependencies:
     bn.js "^4.1.0"
     randombytes "^2.0.1"
@@ -1857,7 +1857,7 @@ create-ecdh@^4.0.0:
 
 create-hash@^1.1.0, create-hash@^1.1.2:
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/create-hash/-/create-hash-1.2.0.tgz#889078af11a63756bcfb59bd221996be3a9ef196"
+  resolved "http://registry.npmjs.org/create-hash/-/create-hash-1.2.0.tgz#889078af11a63756bcfb59bd221996be3a9ef196"
   dependencies:
     cipher-base "^1.0.1"
     inherits "^2.0.1"
@@ -1867,7 +1867,7 @@ create-hash@^1.1.0, create-hash@^1.1.2:
 
 create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
   version "1.1.7"
-  resolved "https://registry.yarnpkg.com/create-hmac/-/create-hmac-1.1.7.tgz#69170c78b3ab957147b2b8b04572e47ead2243ff"
+  resolved "http://registry.npmjs.org/create-hmac/-/create-hmac-1.1.7.tgz#69170c78b3ab957147b2b8b04572e47ead2243ff"
   dependencies:
     cipher-base "^1.0.3"
     create-hash "^1.1.0"
@@ -2144,11 +2144,11 @@ dateformat@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-2.2.0.tgz#4065e2013cf9fb916ddfd82efb506ad4c6769062"
 
-debug@*, debug@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+debug@*:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-4.0.1.tgz#f9bb36d439b8d1f0dd52d8fb6b46e4ebb8c1cd5b"
   dependencies:
-    ms "2.0.0"
+    ms "^2.1.1"
 
 debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, debug@^2.6.6, debug@^2.6.8:
   version "2.6.9"
@@ -2158,15 +2158,27 @@ debug@2, debug@2.6.9, debug@^2.1.2, debug@^2.1.3, debug@^2.2.0, debug@^2.3.3, de
 
 debug@2.2.0:
   version "2.2.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
+  resolved "http://registry.npmjs.org/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
   dependencies:
     ms "0.7.1"
 
 debug@2.3.3:
   version "2.3.3"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
+  resolved "http://registry.npmjs.org/debug/-/debug-2.3.3.tgz#40c453e67e6e13c901ddec317af8986cda9eff8c"
   dependencies:
     ms "0.7.2"
+
+debug@=3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
+  dependencies:
+    ms "2.0.0"
+
+debug@^3.1.0:
+  version "3.2.5"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.5.tgz#c2418fbfd7a29f4d4f70ff4cea604d4b64c46407"
+  dependencies:
+    ms "^2.1.1"
 
 decamelize@^1.1.1, decamelize@^1.1.2:
   version "1.2.0"
@@ -2324,7 +2336,7 @@ diff@^3.1.0, diff@^3.2.0:
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
-  resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
+  resolved "http://registry.npmjs.org/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
   dependencies:
     bn.js "^4.1.0"
     miller-rabin "^4.0.0"
@@ -2363,7 +2375,7 @@ doctrine@0.7.2:
 
 dom-converter@~0.1:
   version "0.1.4"
-  resolved "https://registry.yarnpkg.com/dom-converter/-/dom-converter-0.1.4.tgz#a45ef5727b890c9bffe6d7c876e7b19cb0e17f3b"
+  resolved "http://registry.npmjs.org/dom-converter/-/dom-converter-0.1.4.tgz#a45ef5727b890c9bffe6d7c876e7b19cb0e17f3b"
   dependencies:
     utila "~0.3"
 
@@ -2456,8 +2468,8 @@ ejs@^2.5.7:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 electron-to-chromium@^1.3.47:
-  version "1.3.64"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.64.tgz#39f5a93bf84ab7e10cfbb7522ccfc3f1feb756cf"
+  version "1.3.66"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.66.tgz#1410d8f8768a14dcd09d96222990f43c969af270"
 
 elliptic@^6.0.0:
   version "6.4.1"
@@ -3003,10 +3015,10 @@ flush-write-stream@^1.0.0:
     readable-stream "^2.0.4"
 
 follow-redirects@^1.0.0:
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.7.tgz#a39e4804dacb90202bca76a9e2ac10433ca6a69a"
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.5.8.tgz#1dbfe13e45ad969f813e86c00e5296f525c885a1"
   dependencies:
-    debug "^3.1.0"
+    debug "=3.1.0"
 
 for-in@^0.1.3:
   version "0.1.8"
@@ -5204,6 +5216,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+ms@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
+
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/multicast-dns-service-types/-/multicast-dns-service-types-1.1.0.tgz#899f11d9686e5e05cb91b35d5f0e63b773cfc901"
@@ -5246,12 +5262,12 @@ nanomatch@^1.2.9:
     to-regex "^3.0.1"
 
 natives@^1.1.0:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/natives/-/natives-1.1.4.tgz#2f0f224fc9a7dd53407c7667c84cf8dbe773de58"
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/natives/-/natives-1.1.5.tgz#3bdbdb4104023e5dd239b56fc7ef3d9a17acc6aa"
 
 needle@^2.2.1:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.2.tgz#1120ca4c41f2fcc6976fd28a8968afe239929418"
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/needle/-/needle-2.2.3.tgz#c1b04da378cd634d8befe2de965dc2cfb0fd65ca"
   dependencies:
     debug "^2.1.2"
     iconv-lite "^0.4.4"
@@ -5801,7 +5817,7 @@ parchment@^1.1.4:
 
 parse-asn1@^5.0.0:
   version "5.1.1"
-  resolved "https://registry.yarnpkg.com/parse-asn1/-/parse-asn1-5.1.1.tgz#f6bf293818332bd0dab54efb16087724745e6ca8"
+  resolved "http://registry.npmjs.org/parse-asn1/-/parse-asn1-5.1.1.tgz#f6bf293818332bd0dab54efb16087724745e6ca8"
   dependencies:
     asn1.js "^4.0.0"
     browserify-aes "^1.0.0"
@@ -6131,7 +6147,7 @@ psl@^1.1.24:
 
 public-encrypt@^4.0.0:
   version "4.0.2"
-  resolved "https://registry.yarnpkg.com/public-encrypt/-/public-encrypt-4.0.2.tgz#46eb9107206bf73489f8b85b69d91334c6610994"
+  resolved "http://registry.npmjs.org/public-encrypt/-/public-encrypt-4.0.2.tgz#46eb9107206bf73489f8b85b69d91334c6610994"
   dependencies:
     bn.js "^4.1.0"
     browserify-rsa "^4.0.0"
@@ -6300,7 +6316,7 @@ read-pkg@^1.0.0:
 
 "readable-stream@1 || 2", readable-stream@^2.0.0, readable-stream@^2.0.1, readable-stream@^2.0.2, readable-stream@^2.0.4, readable-stream@^2.0.6, readable-stream@^2.1.5, readable-stream@^2.2.2, readable-stream@^2.2.9, readable-stream@^2.3.3, readable-stream@^2.3.6:
   version "2.3.6"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
+  resolved "http://registry.npmjs.org/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.3"
@@ -6312,7 +6328,7 @@ read-pkg@^1.0.0:
 
 readable-stream@1.0, "readable-stream@>=1.0.33-1 <1.1.0-0", readable-stream@~1.0.2:
   version "1.0.34"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.0.34.tgz#125820e34bc842d2f2aaafafe4c2916ee32c157c"
+  resolved "http://registry.npmjs.org/readable-stream/-/readable-stream-1.0.34.tgz#125820e34bc842d2f2aaafafe4c2916ee32c157c"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.1"
@@ -6321,7 +6337,7 @@ readable-stream@1.0, "readable-stream@>=1.0.33-1 <1.1.0-0", readable-stream@~1.0
 
 readable-stream@~1.1.9:
   version "1.1.14"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
+  resolved "http://registry.npmjs.org/readable-stream/-/readable-stream-1.1.14.tgz#7cf4c54ef648e3813084c636dd2079e166c081d9"
   dependencies:
     core-util-is "~1.0.0"
     inherits "~2.0.1"
@@ -6881,7 +6897,7 @@ setprototypeof@1.1.0:
 
 sha.js@^2.4.0, sha.js@^2.4.8:
   version "2.4.11"
-  resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.4.11.tgz#37a5cf0b81ecbc6943de109ba2960d1b26584ae7"
+  resolved "http://registry.npmjs.org/sha.js/-/sha.js-2.4.11.tgz#37a5cf0b81ecbc6943de109ba2960d1b26584ae7"
   dependencies:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
@@ -7394,8 +7410,8 @@ symbol-observable@^1.2.0:
   resolved "https://registry.yarnpkg.com/symbol-observable/-/symbol-observable-1.2.0.tgz#c22688aed4eab3cdc2dfeacbb561660560a00804"
 
 tapable@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.0.0.tgz#cbb639d9002eed9c6b5975eb20598d7936f1f9f2"
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.1.0.tgz#0d076a172e3d9ba088fd2272b2668fb8d194b78c"
 
 tar@^2.0.0:
   version "2.2.1"
@@ -7440,7 +7456,7 @@ through2@^2.0.0:
 
 through@X.X.X:
   version "2.3.8"
-  resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
+  resolved "http://registry.npmjs.org/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
 thunky@^1.0.2:
   version "1.0.2"
@@ -8032,7 +8048,7 @@ webpack-core@^0.6.8:
     source-list-map "~0.1.7"
     source-map "~0.4.1"
 
-webpack-dev-middleware@3.2.0, webpack-dev-middleware@^3.1.3:
+webpack-dev-middleware@3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-3.2.0.tgz#a20ceef194873710052da678f3c6ee0aeed92552"
   dependencies:
@@ -8040,6 +8056,17 @@ webpack-dev-middleware@3.2.0, webpack-dev-middleware@^3.1.3:
     memory-fs "~0.4.1"
     mime "^2.3.1"
     path-is-absolute "^1.0.0"
+    range-parser "^1.0.3"
+    url-join "^4.0.0"
+    webpack-log "^2.0.0"
+
+webpack-dev-middleware@^3.1.3:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/webpack-dev-middleware/-/webpack-dev-middleware-3.3.0.tgz#8104daf4d4f65defe06ee2eaaeea612a7c541462"
+  dependencies:
+    loud-rejection "^1.6.0"
+    memory-fs "~0.4.1"
+    mime "^2.3.1"
     range-parser "^1.0.3"
     url-join "^4.0.0"
     webpack-log "^2.0.0"
