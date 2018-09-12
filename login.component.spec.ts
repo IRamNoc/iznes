@@ -291,27 +291,27 @@ describe('SetlLoginComComponent', () => {
         expect(myUserServiceMock.loginRequest).not.toHaveBeenCalled();
     });
 
-    it('login method: if there is alert popup present, the the popup should be remove, and login request should not be called', () => {
-        const errorElements = [{
-            parentNode: {
-                removeChild: (el) => {
-                },
-            },
-        }];
+    // it('login method: if there is alert popup present, the the popup should be remove, and login request should not be called', () => {
+    //     const errorElements = [{
+    //         parentNode: {
+    //             removeChild: (el) => {
+    //             },
+    //         },
+    //     }];
 
-        spyOn(document, 'getElementsByClassName').and.returnValue(errorElements);
-        spyOn(errorElements[0].parentNode, 'removeChild');
-        spyOn(myUserServiceMock, 'loginRequest');
+    //     spyOn(document, 'getElementsByClassName').and.returnValue(errorElements);
+    //     spyOn(errorElements[0].parentNode, 'removeChild');
+    //     spyOn(myUserServiceMock, 'loginRequest');
 
-        const formValue = {
-            username: 'user name',
-            password: 'user password',
-        };
+    //     const formValue = {
+    //         username: 'user name',
+    //         password: 'user password',
+    //     };
 
-        component.loginForm.controls['username'].setValue(formValue.username);
-        component.loginForm.controls['password'].setValue(formValue.password);
-        component.login(formValue);
-        expect(myUserServiceMock.loginRequest).not.toHaveBeenCalled();
-        expect(errorElements[0].parentNode.removeChild).toHaveBeenCalled();
-    });
+    //     component.loginForm.controls['username'].setValue(formValue.username);
+    //     component.loginForm.controls['password'].setValue(formValue.password);
+    //     component.login(formValue);
+    //     expect(myUserServiceMock.loginRequest).not.toHaveBeenCalled();
+    //     expect(errorElements[0].parentNode.removeChild).toHaveBeenCalled();
+    // });
 });
