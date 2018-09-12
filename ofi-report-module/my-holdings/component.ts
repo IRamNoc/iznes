@@ -1,17 +1,16 @@
 import { OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { NgRedux, select } from '@angular-redux/store';
+import { select } from '@angular-redux/store';
 import { MultilingualService } from '@setl/multilingual';
 import { List } from 'immutable';
 import { combineLatest } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, takeUntil, switchMap } from 'rxjs/operators';
 import * as _ from 'lodash';
 import { OfiManagementCompanyService } from '../../ofi-req-services/ofi-product/management-company/management-company.service';
 import { OfiReportsService } from '../../ofi-req-services/ofi-reports/service';
 import { OfiCurrenciesService } from '../../ofi-req-services/ofi-currencies/service';
 import { InvestorHoldingRequestData } from '@ofi/ofi-main/ofi-req-services/ofi-reports/model';
-import { CurrencyType } from '@ofi/ofi-main/ofi-store/ofi-currencies/model';
 
 @Component({
     styleUrls: ['./component.scss'],
@@ -19,16 +18,18 @@ import { CurrencyType } from '@ofi/ofi-main/ofi-store/ofi-currencies/model';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MyHoldingsComponent implements OnInit, OnDestroy {
-    investorManagementCompanyList = [];
-    holdingsList = [];
-    searchForm: FormGroup;
     currencyList = [];
+    investorManagementCompanyList = [];
+    holdingList: Array<any>;
+    searchForm: FormGroup;
     unSubscribe: Subject<any> = new Subject();
 
     @select(['user', 'connected', 'connectedWallet']) connectedWallet$;
-    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) requestedInvestorHolding$;
-    @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
+    @select(['user', 'myDetail', 'accountId']) accountId$;
+    @select(['ofi', 'ofiCurrencies', 'loaded']) loaded$;
     @select(['ofi', 'ofiCurrencies', 'currencies']) currencyList$;
+    @select(['ofi', 'ofiReports', 'amHolders', 'invRequested']) investorHoldingRequested;
+    @select(['ofi', 'ofiReports', 'amHolders', 'invHoldingsList']) investorHoldingList$;
     @select([
         'ofi',
         'ofiProduct',
@@ -38,7 +39,6 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     ]) investorManagementCompany$;
 
     constructor(
-        private ngRedux: NgRedux<any>,
         private changeDetectorRef: ChangeDetectorRef,
         private fb: FormBuilder,
         private currenciesService: OfiCurrenciesService,
@@ -46,22 +46,26 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         private ofiReportsService: OfiReportsService,
         private _translate: MultilingualService,
     ) {
-        this.currenciesService.getCurrencyList();
-        this.managementCompanyService.fetchInvestorManagementCompanyList();
     }
 
     ngOnInit(): void {
         this.initForm();
         this.initSubscriptions();
+        this.managementCompanyService.fetchInvestorManagementCompanyList();
     }
 
     ngOnDestroy(): void {
+        this.searchForm.get('search').patchValue(['']);
+        this.holdingList.splice(0, this.holdingList.length);
+        this.ofiReportsService.clearInvestorHoldingList();
+
         this.unSubscribe.next();
         this.unSubscribe.complete();
         this.changeDetectorRef.detach();
     }
 
     initForm() {
+        this.holdingList = [];
         this.searchForm = this.fb.group({
             search: [''],
         });
@@ -72,10 +76,22 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
     initSubscriptions() {
         this.currencyList$
             .pipe(
-                filter((v: List<CurrencyType>) => v && v.size > 0),
+                switchMap(() => this.loaded$),
+                filter((loaded) => !loaded),
                 takeUntil(this.unSubscribe),
             )
-            .subscribe(d => this.currencyList = d.toJS());
+            .subscribe(() => this.currenciesService.getCurrencyList());
+
+        this.currencyList$
+            .pipe(filter((v: List<any>) => v && v.size > 0), takeUntil(this.unSubscribe))
+            .subscribe((d) => this.currencyList = d.toJS());
+
+        this.accountId$
+            .pipe(
+                filter(accountId => accountId && accountId !== 0),
+                takeUntil(this.unSubscribe),
+            )
+            .subscribe(accountId => this.managementCompanyService.setAccountId(accountId));
 
         combineLatest(
             this.connectedWallet$,
@@ -98,18 +114,24 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
                 filter((v: List<any>) => v && v.size > 0),
                 takeUntil(this.unSubscribe),
             )
-            .subscribe((d) => this.formatManagementCompanyList(d));
+            .subscribe(d => this.formatManagementCompanyList(d));
 
-        this.investorHoldingList$
-            .pipe(
-                filter((v: List<any>) => v && v.size > 0),
-                takeUntil(this.unSubscribe),
-            )
-            .subscribe((d) => {
-                this.formatInvestorHoldingList(d);
-            });
+        combineLatest(
+            this.investorHoldingRequested,
+            this.investorHoldingList$,
+        ).pipe(
+            filter(([requested, v]) => requested && v && v.size > 0),
+            takeUntil(this.unSubscribe),
+        )
+        .subscribe(([requested, d]) => this.formatInvestorHoldingList(d));
     }
 
+    /**
+     * Format the list of management company of the investor
+     *
+     * @param {List} d
+     * @memberof MyHoldingsComponent
+     */
     formatManagementCompanyList(d) {
         const data = d.toJS();
 
@@ -121,25 +143,33 @@ export class MyHoldingsComponent implements OnInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     }
 
+    /**
+     * Format the list of holdings of the investor
+     *
+     * @param {List} d
+     * @memberof MyHoldingsComponent
+     */
     formatInvestorHoldingList(d) {
         const data = d.toJS();
 
-        this.holdingsList = data.map(it => ({
-            amManagementCompanyID: it.amManagementCompanyID,
-            companyName: it.companyName,
-            shareID: it.shareID,
-            fundShareName: it.fundShareName,
-            isin: it.isin,
-            shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
-            latestNav: it.latestNav,
-            portfolioAddr: it.portfolioAddr,
-            portfolioLabel: it.portfolioLabel,
-            quantity: it.quantity,
-            amount: it.amount,
-            ratio: it.ratio,
-        })) || [];
+        if (data && data.length > 0) {
+            this.holdingList = data.map(it => ({
+                amManagementCompanyID: it.amManagementCompanyID,
+                companyName: it.companyName,
+                shareID: it.shareID,
+                fundShareName: it.fundShareName,
+                isin: it.isin,
+                shareClassCurrency: this.getCurrencyString(it.shareClassCurrency),
+                latestNav: it.latestNav,
+                portfolioAddr: it.portfolioAddr,
+                portfolioLabel: it.portfolioLabel,
+                quantity: it.quantity,
+                amount: it.amount,
+                ratio: it.ratio,
+            }));
 
-        this.changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
+        }
     }
 
     /**

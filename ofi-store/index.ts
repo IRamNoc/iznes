@@ -2,7 +2,7 @@ import { combineReducers, Reducer } from 'redux';
 /*
  Ofi Invest
  */
-import { OfiFundInvestReducer, OfiFundInvestState, FundAccessMyActions } from './ofi-fund-invest';
+import { OfiFundInvestReducer, OfiFundInvestState } from './ofi-fund-invest';
 /*
  Ofi AM Dashboard
  */
@@ -11,11 +11,8 @@ import { OfiAmDashboardsReducer, OfiAmDashboardsState } from './ofi-am-dashboard
  Ofi client tx
  */
 import {
-    clearRequestedClientTxList,
     OfiClientTxReducer,
     OfiClientTxState,
-    SET_CLIENT_TX_LIST,
-    setRequestedClientTxList,
 } from './ofi-client-txs';
 /*
  Ofi Corp Actions
@@ -25,10 +22,8 @@ import { OfiCorpActionsReducer, OfiCorpActionsState } from './ofi-corp-actions';
  Ofi Product
  */
 import {
-    OfiFundShare,
     OfiProductReducer,
     OfiProductState,
-    SET_FUND_SHARE,
     SET_MANAGEMENT_COMPANY_LIST,
     SET_SICAV_LIST,
 } from './ofi-product';
@@ -43,10 +38,10 @@ import { OfiReportsReducer, OfiReportsState } from './ofi-reports';
 /*
  Ofi My Informations
  */
-import { clearrequested, KycReducer, KycState, setamkyclist, setrequested } from './ofi-kyc';
+import { KycReducer, KycState } from './ofi-kyc';
 
 /* Currencies */
-import { CurrencyState, CurrencyActions, CurrencyReducer } from './ofi-currencies';
+import { CurrencyState, CurrencyReducer } from './ofi-currencies';
 
 export {
     SET_FUND_ACCESS_MY,

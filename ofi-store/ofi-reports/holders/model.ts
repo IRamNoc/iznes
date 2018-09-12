@@ -1,7 +1,6 @@
-import {List} from 'immutable';
+import { List, Map } from 'immutable';
 
 export interface AmHoldersDetails {
-    isFund: boolean;
     fundId: number;
     fundName: string;
     fundLei: string;
@@ -34,24 +33,10 @@ export interface InvestorHoldingItem {
     ratio: number;
 }
 
-export interface HolderDetailStructure {
-    id: number;
-    name: string;
-    currency: string;
-    isin: string;
-    nav: number;
-    unitNumber: number;
-    aum: number;
-    holderNumber: number;
-    ratio: number;
-    lastSettlementDate: string;
-    holders: List<ShareHolderItem>;
-}
-
 export interface ShareHolderItem {
     ranking: number;
     investorName: string;
-    companyName: string;
+    portfolio: string;
     quantity: number;
     amount: number;
     ratio: number;
@@ -61,7 +46,7 @@ export interface OfiHolderState {
     amHoldersList: List<AmHoldersDetails>;
     requested: boolean;
     holderDetailRequested: boolean;
-    shareHolderDetail: HolderDetailStructure;
+    shareHolderDetail: Map<any, any>;
     invHoldingsList: List<InvestorHoldingItem>;
     invRequested: boolean;
 }
