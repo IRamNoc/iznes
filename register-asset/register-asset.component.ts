@@ -6,7 +6,7 @@ import { SagaHelper } from '@setl/utils';
 import {
     finishRegisterInstrumentNotification, getConnectedWallet, getNewInstrumentRequest, getRequestedIssuerState,
     getWalletIssuerDetail, REGISTER_ASSET_FAIL, REGISTER_ASSET_SUCCESS, SET_WALLET_ISSUER_LIST,
-    setRequestedWalletIssuer,
+    setRequestedWalletIssuer, ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
@@ -118,7 +118,7 @@ export class RegisterAssetComponent implements OnInit, OnDestroy {
             });
 
             this.ngRedux.dispatch(SagaHelper.runAsync(
-                [REGISTER_ASSET_SUCCESS],
+                [REGISTER_ASSET_SUCCESS, ADD_WALLETNODE_TX_STATUS],
                 [REGISTER_ASSET_FAIL],
                 asyncTaskPipe,
                 {},

@@ -21,6 +21,7 @@ import {
     getWalletAddressList,
     setRequestedWalletAddresses,
     setRequestedWalletInstrument,
+    ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 
 @Component({
@@ -299,8 +300,11 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
                 iscumulative: false,
             });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
+        this.ngRedux.dispatch(SagaHelper.runAsync(
+            [ADD_WALLETNODE_TX_STATUS],
+            [],
             asyncTaskPipe,
+            {},
             (data) => {
                 this.showAlert('success', 'Encumber has successfully been created');
                 this.encumberAssetsForm.reset();
