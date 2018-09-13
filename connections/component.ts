@@ -497,7 +497,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
 
         this.walletList.forEach((item) => {
             if (item.id === response.LeiSender) {
-                messageBody = `${item.text} has sent you a connection request`;
+                messageBody = `${item.text} has sent you a connection request.`;
             }
         });
 
