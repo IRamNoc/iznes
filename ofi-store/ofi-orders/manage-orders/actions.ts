@@ -51,6 +51,6 @@ export const setAllTabs: ActionCreator<SetAllTab> = (tabs: Array<OrderTab>) => (
 );
 
 export const OFI_SET_ORDERS_FILTERS = `${name}/OFI_SET_ORDERS_FILTERS`;
-export const OFI_CLEAR_ORDERS_FILTERS = `${name}/OFI_SET_ORDERS_FILTERS`;
+export const OFI_CLEAR_ORDERS_FILTERS = `${name}/OFI_CLEAR_ORDERS_FILTERS`;
 export const ofiSetOrdersFilters = kAction(OFI_SET_ORDERS_FILTERS);
-export const ofiClearOrdersFilters = kAction(OFI_SET_ORDERS_FILTERS);
+export const ofiClearOrdersFilters = kAction(OFI_CLEAR_ORDERS_FILTERS);
