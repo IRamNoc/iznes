@@ -114,11 +114,6 @@ describe('KycStatusAuditTrailComponent', () => {
             expect(headerEl.innerText).toContain('Request Status Audit Trail');
         });
 
-        it('should have a subtitle with wording: "Please find below the audit trail regarding the status of your request:"', () => {
-            const pEl = fixture.debugElement.query(By.css('p')).nativeElement;
-            expect(pEl.innerText).toContain('Please find below the audit trail regarding the status of your request:');
-        });
-
         it('should have a datagrid with the columns: Old Status, New Status, Modified By, Date', () => {
             const datagridEl = fixture.debugElement.queryAll(By.css('clr-datagrid'));
             expect(datagridEl.length).toEqual(1);
