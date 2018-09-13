@@ -4,9 +4,15 @@ import { walletHelper } from '@setl/utils';
 import { NgRedux, select } from '@angular-redux/store';
 import { MessageActionsConfig, MessagesService } from '@setl/core-messages';
 import {
-    InitialisationService, WalletNodeRequestService,
+    InitialisationService, WalletNodeRequestService, ConnectionService,
 } from '@setl/core-req-services';
-import { TRANSFER_ASSET_FAIL, TRANSFER_ASSET_SUCCESS, ADD_WALLETNODE_TX_STATUS } from '@setl/core-store';
+import {
+    TRANSFER_ASSET_FAIL,
+    TRANSFER_ASSET_SUCCESS,
+    ADD_WALLETNODE_TX_STATUS,
+    setRequestedFromConnections,
+    setRequestedToConnections,
+} from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
@@ -27,32 +33,45 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     walletAddressList: any[];
     walletRelationshipType: any[];
     requestType: number;
-    fromRelationship: number;
     walletFrom: number;
     addressTo: string;
+    fromConnectionList = [];
+    toConnectionList = [];
+    toRelationshipList = [];
 
-    // Asset
+    /* Asset */
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb: Observable<boolean>;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb: Observable<any>;
 
+    /* Connection */
+    @select(['connection', 'myConnections', 'requestedFromConnectionList']) requestedFromConnectionStateObs;
+    @select(['connection', 'myConnections', 'requestedToConnectionList']) requestedToConnectionStateObs;
+    @select(['connection', 'myConnections', 'fromConnectionList']) fromConnectionListObs;
+    @select(['connection', 'myConnections', 'toConnectionList']) toConnectionListObs;
+
+    /* Wallet relationships */
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) toRelationshipListOb;
+
+    /* User */
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
-    // Redux unsubscription
+    /* Redux unsubscription */
     reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
                 private alertsService: AlertsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private messagesService: MessagesService) {
+                private messagesService: MessagesService,
+                private connectionService: ConnectionService) {
 
-        /* send asset form */
+        /* Request asset form */
         this.requestAssetForm = new FormGroup({
             asset: new FormControl('', Validators.required),
             amount: new FormControl('', Validators.required),
         });
 
-        /* data subscriptions */
+        /* Data subscriptions */
         this.initAssetSubscriptions();
     }
 
@@ -71,17 +90,75 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 this.changeDetectorRef.markForCheck();
             }),
             this.connectedWalletOb.subscribe((connected) => {
-                this.connectedWalletId = connected;
+                this.requestAssetForm.reset();
+                this.getConnectedWallet(connected);
+            }),
+            this.toRelationshipListOb.subscribe((toRelationshipList) => {
+                this.toRelationshipList = toRelationshipList;
+                this.changeDetectorRef.markForCheck();
+            }),
+            this.fromConnectionListObs.subscribe((connections) => {
+                this.getFromConnectionList(connections);
+            }),
+            this.toConnectionListObs.subscribe((connections) => {
+                this.getToConnectionList(connections);
+            }),
+            this.requestedFromConnectionStateObs.subscribe((requested) => {
+                this.requestFromConnectionList(requested);
+            }),
+            this.requestedToConnectionStateObs.subscribe((requested) => {
+                this.requestToConnectionList(requested);
             }),
         );
+    }
+
+    getConnectedWallet(walletId: number) {
+        this.connectedWalletId = walletId;
+
+        ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+        ConnectionService.setRequestedToConnections(false, this.ngRedux);
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getFromConnectionList(fromConnections: any[]) {
+        this.fromConnectionList = fromConnections;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getToConnectionList(toConnections: any[]) {
+        this.toConnectionList = toConnections;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    requestFromConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId) {
+            this.ngRedux.dispatch(setRequestedFromConnections());
+
+            ConnectionService.requestFromConnectionList(
+                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
+    }
+
+    requestToConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId) {
+            this.ngRedux.dispatch(setRequestedToConnections());
+
+            ConnectionService.requestToConnectionList(
+                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
     }
 
     requestTypeOb(id: number): void {
         this.requestType = id;
     }
 
+    /* Request asset from selected wallet in Connection menu */
     fromRelationshipOb(id: number): void {
-        this.fromRelationship = id;
+        /* Request the asset from the wallet */
+        this.walletFrom = id;
+        /* Set addressTo using Connection */
+        this.setAddressToUsingConnection();
     }
 
     walletFromOb(id: number): void {
@@ -92,8 +169,38 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         this.addressTo = id;
     }
 
+    /**
+     * Sets addressTo using Connection
+     *
+     * @returns {void}
+     */
+    setAddressToUsingConnection(): void {
+        if (this.walletFrom) {
+            if (this.toRelationshipList[this.walletFrom] &&
+                this.toRelationshipList[this.walletFrom].toWalletId === this.walletFrom) {
+
+                const connectedWalletAddress = this.toRelationshipList[this.walletFrom].keyDetail;
+                let connectionId = 0;
+
+                this.toConnectionList.forEach((item) => {
+                    if ((item.keyDetail === connectedWalletAddress) && (item.leiId === this.walletFrom)) {
+                        connectionId = item.connectionId;
+                    }
+                });
+
+                if (connectionId) {
+                    this.fromConnectionList.forEach((item) => {
+                        if (item.connectionId === connectionId) {
+                            this.addressTo = item.keyDetail;
+                        }
+                    });
+                }
+            }
+        }
+    }
+
     requestAsset(): void {
-        // Trigger loading alert
+        /* Trigger loading alert */
         this.alertsService.create('loading');
 
         const fullAssetId = _.get(this.requestAssetForm.value.asset, '[0].id', '');
@@ -105,7 +212,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         const actionConfig: MessageActionsConfig = new MessageActionsConfig();
         actionConfig.completeText = 'Transfer of Asset Complete';
 
-        // Add the action button that will apear on the email
+        /* Add the action button that will apear on the email */
         actionConfig.actions.push({
             text: 'Transfer Asset',
             text_mltag: 'txt_transferasset',
@@ -113,7 +220,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             messageType: 'tx',
             payload: {
                 topic: 'astra',
-                walletid: this.connectedWalletId,
+                walletid: this.walletFrom,
                 toaddress: this.addressTo,
                 namespace,
                 instrument,
@@ -123,7 +230,7 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             failureType: TRANSFER_ASSET_FAIL,
         });
 
-        // Add the data regarding the asset transfer to the email
+        /* Add the data regarding the asset transfer to the email */
         actionConfig.content.push(
             {
                 name: 'Asset',
