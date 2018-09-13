@@ -1,10 +1,9 @@
 /* Core/Redux imports. */
 import {Action} from 'redux';
 /* Local types. */
-import {AmHoldersDetails, InvestorHoldingItem, HolderDetailStructure, OfiHolderState, ShareHolderItem} from './model';
+import {AmHoldersDetails, InvestorHoldingItem, OfiHolderState} from './model';
 import * as ofiAmHoldersActions from './actions';
-import {List} from 'immutable';
-import {Map} from 'immutable';
+import {List, Map} from 'immutable';
 import * as _ from 'lodash';
 
 /* Initial state. */
@@ -14,7 +13,7 @@ const initialState: OfiHolderState = {
     invHoldingsList: List<InvestorHoldingItem>(),
     invRequested: false,
     holderDetailRequested: false,
-    shareHolderDetail: null,
+    shareHolderDetail: Map(),
 };
 
 /* Reducer. */
@@ -56,7 +55,6 @@ const handleGetAmHolders = (state, action) => {
     const data = _.get(action, 'payload[1].Data', []);    // use [] not {} for list and Data not Data[0]
 
     if (data.Status !== 'Fail' && data.Message !== 'No holders found') {
-
         const amHoldersList = formatDataResponse(data);
 
         return Object.assign({}, state, {
@@ -69,10 +67,10 @@ const handleGetAmHolders = (state, action) => {
 
 const formatDataResponse = (rawData: Array<AmHoldersDetails>): List<AmHoldersDetails> => {
     let response: List<AmHoldersDetails> = List();
+
     if (rawData.length > 0) {
         rawData.forEach((iteratee) => {
             const holderItem = {
-                isFund: iteratee.isFund,
                 fundId: iteratee.fundId,
                 fundName: iteratee.fundName,
                 fundLei: iteratee.fundLei,
@@ -126,38 +124,36 @@ const handleGetShareHolderDetail = (state: OfiHolderState, action: Action): OfiH
     const response = _.get(action, 'payload[1].Data', []);
 
     if (response.Status !== 'Fail' && response.Message !== 'No holder\'s detail found') {
-        let holders: List<ShareHolderItem> = List();
+        let holders = List();
 
-        // Share holders
-        response.holders.forEach((holder) => {
-            const holderItem: ShareHolderItem = {
-                ranking: holder.ranking,
-                investorName: holder.investorName,
-                companyName: holder.companyName,
-                quantity: holder.quantity,
-                amount: holder.amount,
-                ratio: holder.ratio,
-            };
+        response.holders.forEach((it) => {
+            const holderItem = Map({
+                ranking: it.ranking,
+                investorName: it.investorName,
+                portfolio: it.portfolio,
+                quantity: it.quantity,
+                amount: it.amount,
+                ratio: it.shareRatio,
+            });
 
             holders = holders.push(holderItem);
         });
 
-        // Share info
-        const shareHolderDetail: HolderDetailStructure = {
-            id: response.id,
-            name: response.name,
-            currency: response.currency,
-            isin: response.isin,
-            nav: response.nav,
-            unitNumber: response.unitNumber,
-            aum: response.aum,
-            holderNumber: response.holderNumber,
-            ratio: response.ratio,
+        const shareHolderDetail = Map({
+            id: response.shareId,
+            name: response.shareName,
+            currency: response.shareCurrency,
+            isin: response.shareIsin,
+            nav: response.latestNav,
+            unitNumber: response.shareUnitNumber,
+            aum: response.shareAum,
+            holderNumber: response.shareHolderNumber,
+            ratio: response.shareRatio,
             lastSettlementDate: response.lastSettlementDate,
             holders,
-        };
+        });
 
-        return Object.assign({}, state, {shareHolderDetail});
+        return { ...state, shareHolderDetail };
     }
 
     return state;
