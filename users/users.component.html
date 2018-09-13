@@ -40,7 +40,7 @@
     <ng-template #staticUserListTab>
         <div class="panel-body">
 
-            <clr-datagrid #usersDataGrid (clrDgRefresh)="refresh($event)">
+            <clr-datagrid #usersDataGrid (clrDgRefresh)="datagridRefresh($event)">
                 <clr-dg-column mltag="txt_username">Username</clr-dg-column>
                 <clr-dg-column mltag="txt_email">Email</clr-dg-column>
                 <clr-dg-column mltag="txt_account">Account</clr-dg-column>
@@ -72,9 +72,9 @@
                 </clr-dg-row>
 
                 <clr-dg-footer>
-                    <div rowsPerPage="10" (rowsUpdate)="pageSize = $event"></div>
+                    <div rowsPerPage="10" (rowsUpdate)="dgPageSize = $event; dgPageFrom = 0; setPaginatedUsersList(); requestPaginatedUsersList()"></div>
                     {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
-                    <clr-dg-pagination #pagination [clrDgPageSize]="pageSize" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
+                    <clr-dg-pagination #pagination [clrDgPageSize]="dgPageSize" [clrDgTotalItems]="totalRecords"></clr-dg-pagination>
                 </clr-dg-footer>
             </clr-datagrid>
         </div>

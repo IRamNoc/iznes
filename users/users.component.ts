@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { PersistService } from '@setl/core-persist';
 import { userAdminActions } from '@setl/core-store';
 import { LogService } from '@setl/utils';
-import { ClrDatagridStateInterface } from "@clr/angular";
+import { ClrDatagridStateInterface } from '@clr/angular';
 
 /* Decorator. */
 @Component({
@@ -33,7 +33,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('usersDataGrid') usersDataGrid;
 
     /* User data. */
-    public usersList: any;
+    public usersList: any = [];
     public paginatedUsersList: any;
 
     /* Tabs control */
@@ -71,17 +71,14 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
 
+    @select(['userAdmin', 'users', 'usersList']) usersListOb;
     @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
 
     private manageWalletList: any;
 
-    /* Rows Per Page datagrid size */
-    public pageSize: number;
-    public totalRecords: number;
-
-    private initPageList: boolean = false;
-    private dgPageFrom: number = 0;
-    private dgPageSize: number = 10;
+    public totalRecords: number = 0;
+    public dgPageFrom: number = 0;
+    public dgPageSize: number = 10;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -93,7 +90,6 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private persistService: PersistService,
                 private logService: LogService,
                 private confirmationService: ConfirmationService) {
-        /* Stub. */
     }
 
     setInitialTabs() {
@@ -142,6 +138,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Get totalRecords to build datagrid pagination */
         this.subscriptions['totalRecords'] = this.totalRecordsOb.subscribe((totalRecords) => {
             this.totalRecords = totalRecords;
+            this.requestPaginatedUsersList();
         });
 
         /* Get Account Types. */
@@ -151,21 +148,16 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userTypes = this.userAdminService.getUserTypes();
 
         /* Subscribe to the admin user list observable. */
-        this.subscriptions['userListSubscription'] =
-            this.userAdminService.getUserListSubject().subscribe((list) => {
-                this.usersList = this.convertToArray(list);
+        this.subscriptions['userListSubscription'] = this.usersListOb.subscribe((list) => {
+            this.usersList = this.convertToArray(list);
 
-                console.log('+++ this.usersList', this.usersList);
+            if (this.usersList.length) {
+                this.setPaginatedUsersList();
+            }
 
-                if (this.usersList.length) {
-                    this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
-                    console.log('+++ this.dgPageFrom, this.dgPageSize', this.dgPageFrom, this.dgPageSize);
-                    console.log('+++ this.paginatedUsersList', this.paginatedUsersList);
-                }
-
-                /* Override the changes. */
-                this.changeDetectorRef.detectChanges();
-            });
+            /* Override the changes. */
+            this.changeDetectorRef.detectChanges();
+        });
 
         /* Subscribe to the admin group list observable. */
         this.subscriptions['allGroupList'] = this.userAdminService.getGroupListSubject().subscribe((list) => {
@@ -285,13 +277,39 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userAdminService.updateState();
     }
 
-
-    refresh(dataGridState: ClrDatagridStateInterface) {
+    /**
+     * Datagrid Refresh
+     * ----------------
+     * Set the dgPageFrom and dgPageSize variables needed to set the pagninatedUsersList and request the next page of
+     * user data if we don't have it
+     *
+     * @param dataGridState
+     */
+    datagridRefresh(dataGridState: ClrDatagridStateInterface) {
         this.dgPageFrom = dataGridState.page.from;
         this.dgPageSize = dataGridState.page.size;
-        this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
-        //console.log('+++ this.usersList', this.usersList);
-        //console.log('+++ this.paginatedUsersList', this.paginatedUsersList);
+        this.requestPaginatedUsersList();
+        this.setPaginatedUsersList();
+        this.changeDetectorRef.detectChanges();
+    }
+
+    /**
+     * Get Paginated Users List
+     * ------------------------
+     *  Set the paginatedUsersList based on the current page of the datagrid
+     *
+     * @param dataGridState
+     */
+    setPaginatedUsersList() {
+        this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
+    }
+
+    requestPaginatedUsersList() {
+        if (this.usersList.length < this.totalRecords) { // make sure we don't already have all the data
+            if (this.usersList.length < (this.dgPageFrom + this.dgPageSize)) {
+                this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
+            }
+        }
     }
 
     /**
