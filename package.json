@@ -32,7 +32,7 @@
     "@clr/icons": "0.12.1",
     "@clr/ui": "0.12.1",
     "@ng-bootstrap/ng-bootstrap": "^1.0.0",
-    "@ofi/ofi-main": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.1",
+    "@ofi/ofi-main": "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.2",
     "@setl/asset-servicing": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git",
     "@setl/core-account": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account.git",
     "@setl/core-account-admin": "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account-admin.git",
