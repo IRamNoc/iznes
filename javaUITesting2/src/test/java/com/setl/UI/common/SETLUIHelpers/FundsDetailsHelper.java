@@ -42,6 +42,25 @@ public class FundsDetailsHelper extends LoginAndNavigationHelper {
         return new String[]{randomISIN};
     }
 
+    public static String[] generateRandomSubPortfolioName() {
+        String str = randomAlphabetic(7);
+        String b = "JM Portfolio | ";
+        String randomISIN = b + str;
+        return new String[]{randomISIN};
+    }
+
+    public static String[] generateRandomAmount() {
+        String str = randomNumeric(3);
+        return new String[]{str};
+    }
+
+    public static String[] generateRandomSubPortfolioIBAN() {
+        String n = randomNumeric(14);
+        String b = "JM";
+        String randomISIN = b + n;
+        return new String[]{randomISIN};
+    }
+
     public static String[] generateRandomDetails(){
         String str = randomAlphabetic(5);
         String random = str;
