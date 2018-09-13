@@ -228,26 +228,6 @@
     </clr-tab>
 </clr-tabs>
 
-<!-- Delete confirmation modal -->
-<clr-modal [(clrModalOpen)]="isDeleteModalDisplayed">
-    <h3 class="modal-title">Delete a connection</h3>
-    <div class="modal-body">
-        <p mltag="txt_areyousure">Are you sure you want to delete:<br/>
-            <strong>{{connectionToDelete && connectionToDelete.connection}}</strong>
-        </p>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline" id="del-confirm-modal-no-btn"
-                (click)="onDeleteConnection(false)"
-                mltag="txt_no">No
-        </button>
-        <button type="button" class="btn btn-primary" id="del-confirm-modal-yes-btn"
-                (click)="onDeleteConnection(true)"
-                mltag="txt_yes">Yes
-        </button>
-    </div>
-</clr-modal>
-
 <!-- Accept connection modal -->
 <clr-modal [(clrModalOpen)]="isAcceptModalDisplayed">
     <h3 class="modal-title">Select a sub-portfolio to use for this connection</h3>
