@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, OnDestroy, Output, EventEmitter} from '@angular/core';
 import {select} from '@angular-redux/store';
 import {Subject} from 'rxjs';
-import {takeUntil, filter as rxFilter} from 'rxjs/operators';
+import {takeUntil, filter as rxFilter, take} from 'rxjs/operators';
 import {find, isEmpty} from 'lodash';
 import { List } from 'immutable';
 
@@ -43,15 +43,17 @@ export class InvestmentConstraintFormComponent implements OnInit, OnDestroy {
     getCurrentFormData() {
         this.riskProfileService.currentServerData.riskobjective
             .pipe(
-                takeUntil(this.unsubscribe)
+                rxFilter((data: any) => !isEmpty(data)),
+                rxFilter((data: any) => {
+                    const currentAMCId = this.form.get('assetManagementCompanyID').value;
+                    const dataAMCId = data.assetManagementCompanyID;
+
+                    return !this.multiple || (dataAMCId === currentAMCId);
+                }),
+                take(1),
             )
             .subscribe((data: any) => {
-                let currentAMCId = this.form.get('assetManagementCompanyID').value;
-                let dataAMCId = data.assetManagementCompanyID;
-
-                if (!this.multiple || (dataAMCId === currentAMCId)) {
-                    this.form.patchValue(data);
-                }
+                this.form.patchValue(data);
             })
         ;
     }

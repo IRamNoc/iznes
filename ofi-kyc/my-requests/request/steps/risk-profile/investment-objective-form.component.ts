@@ -3,9 +3,9 @@ import {FormControl} from '@angular/forms';
 import {select} from '@angular-redux/store';
 import {NewRequestService, configDate} from "../../new-request.service";
 import {RiskProfileService} from '../risk-profile.service';
-import {get as getValue, find, pick} from 'lodash';
+import {get as getValue, find, pick, isEmpty} from 'lodash';
 import {Subject} from 'rxjs';
-import {filter as rxFilter, takeUntil} from 'rxjs/operators';
+import {filter as rxFilter, takeUntil, take} from 'rxjs/operators';
 import { List } from 'immutable';
 
 @Component({
@@ -51,15 +51,17 @@ export class InvestmentObjectiveFormComponent implements OnInit, OnDestroy {
     getCurrentFormData() {
         this.riskProfileService.currentServerData.riskobjective
             .pipe(
-                takeUntil(this.unsubscribe)
+                rxFilter((data: any) => !isEmpty(data)),
+                rxFilter((data: any) => {
+                    let currentAMCId = this.form.get('assetManagementCompanyID').value;
+                    let dataAMCId = data.assetManagementCompanyID;
+                    return !this.multiple || (dataAMCId === currentAMCId);
+                }),
+                take(1)
             )
             .subscribe((data: any) => {
-                let currentAMCId = this.form.get('assetManagementCompanyID').value;
-                let dataAMCId = data.assetManagementCompanyID;
-                if (!this.multiple || (dataAMCId === currentAMCId)) {
-                    data.riskAcceptance = pick(data, ['riskAcceptanceLevel1', 'riskAcceptanceLevel2', 'riskAcceptanceLevel3', 'riskAcceptanceLevel4']);
-                    this.form.patchValue(data);
-                }
+                data.riskAcceptance = pick(data, ['riskAcceptanceLevel1', 'riskAcceptanceLevel2', 'riskAcceptanceLevel3', 'riskAcceptanceLevel4']);
+                this.form.patchValue(data);
             })
         ;
     }

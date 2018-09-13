@@ -2,7 +2,7 @@ import {Component, OnInit, OnDestroy, Input, ViewChild} from '@angular/core';
 import {Subject} from 'rxjs';
 import {select} from '@angular-redux/store';
 import {FormControl} from '@angular/forms';
-import {isEmpty, values, map} from 'lodash';
+import {isEmpty, values, map, toNumber} from 'lodash';
 import {filter, takeUntil} from 'rxjs/operators';
 
 import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
@@ -48,8 +48,10 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe)
             )
             .subscribe((data: any) => {
-                if(data.constraintsSameInvestmentCrossAm){
-                    this.form.get('constraintsSameInvestmentCrossAm').patchValue(data.constraintsSameInvestmentCrossAm, {emitEvent: false});
+                const cross = toNumber(data.constraintsSameInvestmentCrossAm);
+                if(cross){
+                    this.form.get('constraintsSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
+                    this.formCheckSameInvestmentCrossAm(cross);
                 }
             })
         ;
@@ -69,11 +71,14 @@ export class InvestmentConstraintComponent implements OnInit, OnDestroy {
     }
 
     updateCrossAM(){
-        (this.form.get('constraintsSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
+        const value = this.form.get('constraintsSameInvestmentCrossAm').value;
+
+        this.formCheckSameInvestmentCrossAm(value);
     }
 
     initFormCheck() {
         this.form.get('constraintsSameInvestmentCrossAm').valueChanges.takeUntil(this.unsubscribe).subscribe(value => {
+            this.riskProfileService.currentServerData.riskobjective.next('');
             this.formCheckSameInvestmentCrossAm(value);
         });
     }

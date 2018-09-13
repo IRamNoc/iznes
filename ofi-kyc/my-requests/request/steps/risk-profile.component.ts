@@ -3,7 +3,7 @@ import {select} from '@angular-redux/store';
 import {PersistService} from '@setl/core-persist';
 import {isEmpty, castArray} from 'lodash';
 import {Subject} from 'rxjs';
-import {filter as rxFilter, map, take, takeUntil} from 'rxjs/operators';
+import {filter as rxFilter, map, take, takeUntil, tap} from 'rxjs/operators';
 
 import {NewRequestService} from '../new-request.service';
 import {RiskProfileService} from './risk-profile.service';
@@ -28,6 +28,7 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        this.riskProfileService.currentServerData.riskobjective.next('');
         this.getCurrentFormData();
         this.initSubscriptions();
     }
@@ -35,14 +36,14 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
     initSubscriptions(){
         this.requests$
             .pipe(
-                takeUntil(this.unsubscribe),
                 map(kycs => kycs[0]),
                 rxFilter((kyc: any) => {
-                return kyc && kyc.amcID;
-                })
+                    return kyc && kyc.amcID;
+                }),
+                take(1),
             )
             .subscribe(kyc => {
-            if (!kyc.completedStep || (steps[kyc.completedStep] < steps.riskProfile)) {
+                if (!kyc.completedStep || (steps[kyc.completedStep] < steps.riskProfile)) {
                     this.persistForm();
                 }
             })
@@ -53,7 +54,6 @@ export class NewKycRiskProfileComponent implements OnInit, OnDestroy {
         this.requests$
             .pipe(
                 rxFilter(requests => !isEmpty(requests)),
-                map(requests => castArray(requests[0])),
                 takeUntil(this.unsubscribe)
             )
             .subscribe(requests => {
