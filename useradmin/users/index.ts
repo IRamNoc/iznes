@@ -1,20 +1,18 @@
 /* Name. */
-export {name} from './__init__';
+export { name } from './__init__';
 
 /* Reducer. */
-export {UsersReducer} from './reducer';
+export { usersReducer } from './reducer';
 
 /* State. */
-export {UsersState} from './model';
+export { UsersState } from './model';
 
 /* Actions. */
-export {
-    SET_ADMIN_USERLIST,
-} from './actions';
+export { SET_ADMIN_USERLIST, UPDATE_ADMIN_USERLIST, DELETE_FROM_ADMIN_USERLIST } from './actions';
 
 import * as userAdminActions from './actions';
 
-export {userAdminActions};
+export { userAdminActions };
 
 /* Selectors. */
-export {getUsersList} from './selectors';
+export { getUsersList } from './selectors';
