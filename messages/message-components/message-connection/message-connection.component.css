@@ -28,3 +28,7 @@
     font-size: x-large;
     padding: 10px 5px;
 }
+
+:host .message-action {
+    float: left;
+}
