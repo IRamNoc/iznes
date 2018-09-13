@@ -16,6 +16,7 @@ export class ManageOrdersService implements IFilterStore {
     resetOrderList() {
         this.redux.dispatch(ofiManageOrderActions.setCurrentPage(1));
         this.redux.dispatch(ofiManageOrderActions.resetTotalResults());
+        this.redux.dispatch(ofiManageOrderActions.ofiClearOrdersFilters());
     }
 
     setTotalResults(results: number) {

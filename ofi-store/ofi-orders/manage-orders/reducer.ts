@@ -77,6 +77,9 @@ export const OfiManageOrderListReducer = function (
         const filters = get(action, 'filters', []);    // use [] not {} for list and Data not Data[0]
         return { ...state, filters };
 
+    case ofiManageOrdersActions.OFI_CLEAR_ORDERS_FILTERS:
+        return { ...state, ...{ filters: {} } };
+
     case ofiManageOrdersActions.OFI_UPDATE_ORDER:
         switch (action.payload.event) {
         case 'create':
