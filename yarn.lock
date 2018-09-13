@@ -254,9 +254,9 @@
     tree-kill "^1.0.0"
     webpack-sources "^1.1.0"
 
-"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.1":
+"@ofi/ofi-main@git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#2.0.2":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#5dc25a5993c13e444b5bbd4da88f44a17b576a2f"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:OFI_Modules/ofi-main.git#9b618823d1fd425dd6557893dffe9c34fa28d673"
 
 "@schematics/angular@0.8.1":
   version "0.8.1"
@@ -279,7 +279,7 @@
 
 "@setl/asset-servicing@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git":
   version "1.0.1"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#88c700b32119edf8c89f30ab784c012bb256874a"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Angular-Module.git#fcc46b6052da60d17f219dd83d89b4c38ea16b2b"
 
 "@setl/core-account-admin@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-account-admin.git":
   version "1.0.0"
@@ -317,11 +317,11 @@
 
 "@setl/core-layout@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git":
   version "1.0.0"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#82ff14080fa69505d515f8d209dbd774ae9a4fec"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-layout.git#d6da318ab24fd02cf59d3088193169c156a434c0"
 
 "@setl/core-login@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git":
   version "1.0.9"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#a2aef9f4f52fdb5aa86ee63975274f2e7c468d9a"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/login.git#7edaeadf509c7068f32770948b4c5fbecd7f4c6d"
 
 "@setl/core-manage-member@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-manage-member.git":
   version "1.0.0"
@@ -329,7 +329,7 @@
 
 "@setl/core-messages@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git":
   version "1.0.2"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#7cb373ae7424da62f12bd93d7decb940630d422f"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-messages.git#3f70d6451a5efa354dad5fd9ee1a479eb428c705"
 
 "@setl/core-persist@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/core-persist.git":
   version "1.0.0"
@@ -378,7 +378,7 @@
 
 "@setl/utils@git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git":
   version "1.0.3"
-  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#3c8a92d0bfac4ad724925d3254894e3275269daf"
+  resolved "git+ssh://git@si-nexus01.dev.setl.io:SETL_Modules/Generic_modules/utils.git#997154e9b92ee9437b5431194a60228a1cda8eb3"
   dependencies:
     moment-timezone "^0.5.17"
     ramda "^0.24.1"
@@ -2468,8 +2468,8 @@ ejs@^2.5.7:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 electron-to-chromium@^1.3.47:
-  version "1.3.66"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.66.tgz#1410d8f8768a14dcd09d96222990f43c969af270"
+  version "1.3.67"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.67.tgz#5e8f3ffac89b4b0402c7e1a565be06f3a109abbc"
 
 elliptic@^6.0.0:
   version "6.4.1"
@@ -4833,8 +4833,8 @@ lodash@^3.8.0:
   resolved "http://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
 lodash@^4.0.0, lodash@^4.11.1, lodash@^4.17.10, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.5.0, lodash@~4.17.10:
-  version "4.17.10"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 lodash@~1.0.1:
   version "1.0.2"
@@ -8125,8 +8125,8 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0:
     source-map "~0.6.1"
 
 webpack-subresource-integrity@^1.1.0-rc.4:
-  version "1.1.0-rc.5"
-  resolved "https://registry.yarnpkg.com/webpack-subresource-integrity/-/webpack-subresource-integrity-1.1.0-rc.5.tgz#00e82648821175733b9af549127372ae71ff33ce"
+  version "1.1.0-rc.6"
+  resolved "https://registry.yarnpkg.com/webpack-subresource-integrity/-/webpack-subresource-integrity-1.1.0-rc.6.tgz#37f6f1264e1eb378e41465a98da80fad76ab8886"
   dependencies:
     webpack-core "^0.6.8"
 
