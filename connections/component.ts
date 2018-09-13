@@ -478,7 +478,6 @@ export class ConnectionComponent implements OnInit, OnDestroy {
         };
 
         const actionConfig = new MessageConnectionConfig();
-        actionConfig.completeText = 'Connection accepted';
 
         actionConfig.actions.push({
             text: 'Accept',
@@ -494,13 +493,21 @@ export class ConnectionComponent implements OnInit, OnDestroy {
             payload: rejectPayload,
         });
 
+        let messageBody = '';
+
+        this.walletList.forEach((item) => {
+            if (item.id === response.LeiSender) {
+                messageBody = `${item.text} has sent you a connection request`;
+            }
+        });
+
         this.messagesService.sendMessage(
             [response.LeiSender],
             'Connection request',
-            '',
+            messageBody,
             actionConfig,
         ).then(() => {
-            this.showSuccessResponse('A connection request has been e-mailed to the recipient');
+            this.showSuccessResponse('A connection request has been sent');
         }).catch((e) => {
             console.log('connection request email fail: ', e);
         });
