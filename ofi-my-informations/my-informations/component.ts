@@ -136,9 +136,9 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
         this.additionnalForm.controls['phoneNumber'].setValue(userInfo.phoneNumber);
 
         // needs to be asset management company name, this handles investor
-        if (this.type === 46) {
-            this.additionnalForm.controls['companyName'].setValue(userInfo.companyName);
-        }
+        // if (this.type === 46) {
+        this.additionnalForm.controls['companyName'].setValue(userInfo.companyName);
+        // }
     }
 
     isPopUpMode() {
@@ -160,7 +160,7 @@ export class OfiMyInformationsComponent implements OnInit, OnDestroy {
                 break;
             case 'en-Latn':
                 this.additionnalForm.controls['phoneCode']
-                    .patchValue([{ id: '+44', text: 'United Kingdom (+44)' }]);
+                .patchValue([{ id: '+44', text: 'United Kingdom (+44)' }]);
                 break;
             default:
                 this.additionnalForm.controls['phoneCode'].patchValue([{ id: '+33', text: 'France (+33)' }]);
