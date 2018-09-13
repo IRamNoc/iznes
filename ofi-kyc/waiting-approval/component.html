@@ -26,7 +26,7 @@
                     <strong>
                         {{'If this is not the case or you wish to have the KYC information on IZNES regarding this client anyway, then you can ask the investor to fill in his information by clicking on:' | translate}}
                     </strong>
-                    <button class="btn btn-primary baseline" (click)="openCompleteKycModal()">
+                    <button class="btn btn-primary baseline" style="margin-left: 10px;" (click)="openCompleteKycModal()">
                         {{'Complete KYC on IZNES' | translate}}
                     </button>
                 </p>
@@ -36,7 +36,6 @@
 
                 <div class="hr-line-dashed"></div>
             </div>
-
 
 
             <div *ngIf="!alreadyCompleted" class="mb-1">
@@ -73,7 +72,9 @@
                 <h2>{{'KYC Documents Confirmation' | translate}}</h2>
                 <form [formGroup]="waitingApprovalFormGroup" (ngSubmit)="handleSubmitButtonClick()">
                     <section class="form-block">
-                        <p><strong>{{'Please confirm that you validate your client\'s KYC documents:' | translate}}</strong></p>
+                        <p>
+                            <strong>{{'Please confirm that you validate your client\'s KYC documents:' | translate}}</strong>
+                        </p>
 
                         <!-- Radio buttons -->
                         <div class="statuses col-sm-12">
