@@ -361,6 +361,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     }
 
     handleDeleteButtonClick(connectionToDelete) {
+        this.confirmationService.create(
             '<span>Delete a connection</span>',
             `<span class="text-warning">
                 Are you sure you want to delete the connection with ${connectionToDelete.connection}?</span>`,
