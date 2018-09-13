@@ -3,11 +3,8 @@ node {
 
         stage('Deploy Membership-db to Test Environment') {
 
-                        sh 'ssh -t root@172.104.147.135 rm -f flyway \\&&'
-                        sh 'ssh -t root@172.104.147.135 ln -s /usr/local/bin/flyway-4.2.0/flyway /usr/local/bin/flyway \\&&'
-                        sh 'ssh -t root@172.104.147.135 rsync -avzh --stats /var/membership-db /var/ofi_backups/membership-db \\&&'
                         sh 'php /var/lib/jenkins/build/tools/deploy-code.php staging.iznes.io membership-db release'
-                        sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/ ./updatedb iznes\''
+                        sh 'ssh -t root@172.104.147.135 \'cd /var/membership-db/deploy/ && ./updatedb iznes\''
 
             }
 
