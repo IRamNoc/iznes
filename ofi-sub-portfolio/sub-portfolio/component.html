@@ -139,10 +139,13 @@
                     <label class="control-label required-field">{{'Sub-portfolio IBAN' | translate }}</label>
                     <input type="text" #portfolioIban [placeholder]="_translate.translate('Sub-portfolio IBAN')"
                            class="form-control mlp_translated" formControlName="subPortfolioIban" maxlength="34" (blur)="saveSubPortfolio(0);">
-                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
+                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
+                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
                         {{'This field is required.' | translate }}
                     </div>
-                    <div *ngIf="this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') && this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
+                    <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
+                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') &&
+                    this.tabDetail[0]['formControl'].controls['subPortfolioIban'].touched" class="field-error">
                         {{'IBAN must be 14 to 34 characters long with 2 letters at the beginning.' | translate }}
                     </div>
                     <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
