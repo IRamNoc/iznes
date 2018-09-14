@@ -17,9 +17,15 @@
         </div>
     </div>
 
-    <div class="message-state" *ngIf="isActed">
-        <i class="fa fa-check"></i>
-        <span>{{config.completeText}}</span>
+    <div class="alert alert-warning" *ngIf="isActed">
+        <div class="alert-items">
+            <div class="alert-item static">
+                <div class="alert-icon-wrapper">
+                    <clr-icon class="alert-icon" shape="exclamation-triangle"></clr-icon>
+                </div>
+                <span class="alert-text">{{config.completeText}}</span>
+            </div>
+        </div>
     </div>
 </ng-container>
 

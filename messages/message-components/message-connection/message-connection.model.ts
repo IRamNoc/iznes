@@ -3,7 +3,7 @@ export class MessageConnectionConfig {
     messageBody? = '';
     actions: MessageConnection[] = [];
     content: MessageField[] = [];
-    completeText = 'Complete';
+    completeText = 'Connection request has been actioned';
 }
 
 export class MessageConnection {
