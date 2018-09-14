@@ -114,11 +114,6 @@ describe('KycInformationAuditTrailComponent', () => {
             expect(headerEl.innerText).toContain('Request Information Audit Trail');
         });
 
-        it('should have a subtitle with wording: "Please find below the audit trail regarding the status of your request:"', () => {
-            const pEl = fixture.debugElement.query(By.css('p')).nativeElement;
-            expect(pEl.innerText).toContain('Please find below the audit trail regarding the status of your request:');
-        });
-
         it('should have a searchField "Search a section or subsection"', () => {
             const inputEl = fixture.debugElement.query(By.css('#searchForm > div > div:nth-child(1)')).nativeElement;
             expect(inputEl.innerText).toContain('Search a section or subsection');
