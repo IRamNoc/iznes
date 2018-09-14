@@ -1,52 +1,47 @@
 <div class="form-group">
-  <label class="control-label required-field">
-    Recipient Type
-  </label>
-  <ng-select
-    [items]="addressTypes"
-    [allowClear]="true"
-    placeholder="Select Address Type"
-    [formControl]="addressTypeSelect"
-    (selected)="setSelectedAddressType($event)"
-  >
-  </ng-select>
+    <label class="control-label required-field">Recipient Type</label>
+    <ng-select
+        [items]="addressTypes"
+        [allowClear]="true" 
+        placeholder="Select Address Type"
+        [formControl]="addressTypeSelect"
+        (selected)="setSelectedAddressType($event)">
+    </ng-select>
 </div>
 
 <div [ngSwitch]="selectedAddressType">
-  <div class="form-group" *ngSwitchCase="1">
-    <label class="control-label" [class.required-field]="required">Connection</label>
-    <ng-select
-      [items]="relationshipArray"
-      [allowClear]="true"
-      placeholder="Select Connection"
-      (selected)="writeValue($event.id)"
-      (blur)="onBlur()"
-      (removed)="onClearValue()"
-      [formControl]="relationshipSelect"
-    >
-    </ng-select>
-  </div>
+    <div class="form-group" *ngSwitchCase="1">
+        <label class="control-label" [class.required-field]="required">Connection</label>
+        <ng-select
+            [items]="relationshipArray"
+            [allowClear]="true"
+            placeholder="Select Connection"
+            (selected)="writeValue($event.id)"
+            (blur)="onBlur()"
+            (removed)="onClearValue()"
+            [formControl]="relationshipSelect">
+        </ng-select>
+    </div>
 
-  <div class="form-group" *ngSwitchCase="2">
-    <label class="control-label" [class.required-field]="required">Owned Address</label>
-    <ng-select
-      [items]="ownWalletAddressArray"
-      [allowClear]="true"
-      placeholder="Select Owned Address"
-      (selected)="writeValue($event.id)"
-      (blur)="onBlur()"
-      (removed)="onClearValue()"
-      (change)="writeValue($event.target.value)"
-      (blur)="onBlur()"
-      [formControl]="owndAddressSelect"
-    >
-    </ng-select>
-  </div>
+    <div class="form-group" *ngSwitchCase="2">
+        <label class="control-label" [class.required-field]="required">Owned Address</label>
+        <ng-select
+            [items]="ownWalletAddressArray"
+            [allowClear]="true"
+            placeholder="Select Owned Address"
+            (selected)="writeValue($event.id)"
+            (blur)="onBlur()"
+            (removed)="onClearValue()"
+            (change)="writeValue($event.target.value)"
+            (blur)="onBlur()"
+            [formControl]="owndAddressSelect">
+        </ng-select>
+    </div>
 
-  <div class="form-group col-sm-6" *ngSwitchCase="3">
-    <label class="control-label" [class.required-field]="required">Other Address</label>
-    <input type="text" placehoder="Enter address" (change)="writeValue($event.target.value)"
-           (blur)="onBlur()"
-           [formControl]="otherAddress"/>
-  </div>
+    <div class="form-group col-sm-6" *ngSwitchCase="3">
+        <label class="control-label" [class.required-field]="required">Other Address</label>
+        <input type="text" placehoder="Enter address" (change)="writeValue($event.target.value)"
+            (blur)="onBlur()"
+            [formControl]="otherAddress"/>
+    </div>
 </div>
