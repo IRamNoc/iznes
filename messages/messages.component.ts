@@ -141,7 +141,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
                 this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.walletId);
 
-                /* Close message when the wallet is changed. */
+                /* Close message when the wallet is switched. */
                 if (this.messageView) this.closeMessage();
             }),
         );
