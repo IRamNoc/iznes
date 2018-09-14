@@ -153,7 +153,7 @@ export class AdminUsersService {
      User Functions.
      ===============
      */
-    public requestMyUsersList(pageFrom = 0, pageSize = 0) {
+    public requestMyUsersList(pageFrom: number = 0, pageSize: number = 0) {
         /* Setup the message body. */
         const messageBody: RequestAdminUsersMessageBody = {
             RequestName: 'um_lu',
