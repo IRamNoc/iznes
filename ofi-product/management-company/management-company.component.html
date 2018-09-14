@@ -41,7 +41,7 @@
             </section>
         </clr-tab-content>
     </clr-tab>
-    <clr-tab *ngIf="allowAddMc">
+    <clr-tab>
         <div *ngIf="!editForm; else editMcFTemplate">
             <button id="mcTabAddNewMc" clrTabLink (click)="resetForm()"><i class="fa fa-plus"></i>
                 <span mltag="txt_newmanagementcompany">New Management company</span>

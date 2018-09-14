@@ -62,10 +62,6 @@ export class OfiManagementCompanyComponent implements OnInit, OnDestroy {
     // production or not
     production: boolean;
 
-    get allowAddMc(): boolean {
-        return !this.production;
-    }
-
     // List of redux observable.
     @select(['user', 'siteSettings', 'language']) requestLanguageObj;
     @select(['ofi', 'ofiProduct', 'ofiManagementCompany', 'managementCompanyList', 'managementCompanyList']) managementCompanyAccessListOb;
