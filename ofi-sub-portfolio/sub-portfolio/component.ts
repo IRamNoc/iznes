@@ -105,21 +105,21 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
 
             this.subscriptionsArray
             .push(this.addressListOb
-                .subscribe((addressList: any) => {
-                    this.updateAddressList(addressList);
-                }));
+            .subscribe((addressList: any) => {
+                this.updateAddressList(addressList);
+            }));
 
             this.subscriptionsArray
             .push(this.requestedAddressListOb
-                .subscribe((requested: boolean) => {
-                    this.requestAddressList(requested);
-                }));
+            .subscribe((requested: boolean) => {
+                this.requestAddressList(requested);
+            }));
 
             this.subscriptionsArray
             .push(this.requestedLabelListOb
-                .subscribe((requested: boolean) => {
-                    this.requestWalletLabel(requested);
-                }));
+            .subscribe((requested: boolean) => {
+                this.requestWalletLabel(requested);
+            }));
         }));
 
         this.subscriptionsArray.push(this.defaultHomePageOb.subscribe(defaultHomePage => {
@@ -133,9 +133,9 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.tabDetail[0]['formControl'] = new FormGroup(
             {
                 subPortfolioName: new FormControl('', [Validators.required]),
-                subPortfolioIban: new FormControl('', [validateIBAN]),
+                subPortfolioIban: new FormControl('', [Validators.required, validateIBAN]),
             },
-            );
+        );
     }
 
     ngOnDestroy() {
@@ -147,7 +147,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     updateAddressList(addressList) {
         this.logService.log('addressList: ', addressList);
         this.addressObject = addressList;
-            // const
+        // const
 
         this.addressList = immutableHelper.reduce(addressList, (result, item) => {
 
@@ -163,7 +163,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
             }
 
             return result;
-        },                                        []);
+        }, []);
 
         this.changeDetectorRef.markForCheck();
     }
@@ -172,12 +172,12 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         this.requestedWalletAddress = requestedState;
         this.logService.log('requested wallet address', this.requestedWalletAddress);
 
-            // If the state is false, that means we need to request the list.
+        // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
-                // Set the state flag to true. so we do not request it again.
+            // Set the state flag to true. so we do not request it again.
             this.ngRedux.dispatch(setRequestedWalletAddresses());
 
-                // Request the list.
+            // Request the list.
             InitialisationService.requestWalletAddresses(this.ngRedux, this._walletNodeRequestService, this.connectedWalletId);
         }
     }
@@ -185,7 +185,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
     requestWalletLabel(requestedState) {
 
         this.logService.log('checking requested', this.requestedWalletAddress);
-            // If the state is false, that means we need to request the list.
+        // If the state is false, that means we need to request the list.
         if (!requestedState && this.connectedWalletId !== 0) {
 
             MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this._myWalletService, this.connectedWalletId);
@@ -216,7 +216,7 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                         console.log('Error save userTour failed: ', response);
                     },
                 });
-            },         200);
+            }, 200);
         }
     }
 
@@ -239,33 +239,33 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                 text: this._translate.translate('Once you have created your sub-porfolios, from this column "Actions", you will be able to edit or delete your sub-portfolios.'),
                 target: 'subportfolios-col-actions',
             },
-            );
-            // TODO: disabled as user tour needs additional work in V2.1/2.2
-            //this.showUsertour = true;
+        );
+        // TODO: disabled as user tour needs additional work in V2.1/2.2
+        //this.showUsertour = true;
     }
 
     ngOnInit() {
 
-            //if home = subport then launch tour!
+        //if home = subport then launch tour!
 
-            //on save make home blank.
+        //on save make home blank.
 
     }
 
-        /**
-         * Handle Add new profile click.
-         *
-         */
+    /**
+     * Handle Add new profile click.
+     *
+     */
     handleAddProfile(): void {
     }
 
     handleEditSubPortfolio(address): void {
     }
 
-        /**
-         * Handle edit button is clicked.
-         * @param index
-         */
+    /**
+     * Handle edit button is clicked.
+     * @param index
+     */
     handleEdit(address): void {
         this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
             if (addressEntry.get('address', '') === address) {
@@ -276,10 +276,10 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         });
     }
 
-        /**
-         * Handle cancel button is clicked.
-         * @param address
-         */
+    /**
+     * Handle cancel button is clicked.
+     * @param address
+     */
     handleCancelEdit(address): void {
         this.addressList = immutableHelper.map(this.addressList, (addressEntry) => {
             if (addressEntry.get('address', '') === address) {
@@ -300,14 +300,14 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         });
 
         this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-                                                          (labelResponse) => {
-                                                              this.ngRedux.dispatch(clearRequestedWalletLabel());
+            (labelResponse) => {
+                this.ngRedux.dispatch(clearRequestedWalletLabel());
 
-                                                              const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
-                                                              this.handleLabelResponse(message, 'updated', address);
-                                                          },(labelResponse) => {
-                                                            this.showErrorResponse(labelResponse);
-                                                        }));
+                const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
+                this.handleLabelResponse(message, 'updated', address);
+            }, (labelResponse) => {
+                this.showErrorResponse(labelResponse);
+            }));
 
     }
 
@@ -339,37 +339,40 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
         const name = this.tabDetail[0]['formControl'].value.subPortfolioName;
         const iban = this.tabDetail[0]['formControl'].value.subPortfolioIban;
 
-        const asyncTaskPipe = this._ofiSubPortfolioService.saveNewSubPortfolio({
-            walletId: this.connectedWalletId,
-            name,
-            iban,
-            type,
-        });
+        if ((name != '' && iban != '' && type == 1) || type == 0) {
 
-        this.createError = 0;
+            const asyncTaskPipe = this._ofiSubPortfolioService.saveNewSubPortfolio({
+                walletId: this.connectedWalletId,
+                name,
+                iban,
+                type,
+            });
 
-        this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-                                                          (labelResponse) => {
-                                                              this.ngRedux.dispatch(clearRequestedWalletLabel());
-                                                              const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
+            this.createError = 0;
+            
+            this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
+                (labelResponse) => {
+                    this.ngRedux.dispatch(clearRequestedWalletLabel());
+                    const message = _.get(labelResponse, '[1].Data[0].Message', 'All OK');
 
-                                                              if (message == 'All OK' && type == 1) {
-                                                                this.handleLabelResponse(message, 'created', '');
-                                                                this.closeAddModal();
+                    if (message == 'All OK' && type == 1) {
+                        this.handleLabelResponse(message, 'created', '');
+                        this.closeAddModal();
 
                         // update the default home page to '/home'
-                                                                if (this.isFirstAddress()) {
-                                                                    this._myUserService.updateHomePage('/home');
-                                                                }
-                                                            }
+                        if (this.isFirstAddress()) {
+                            this._myUserService.updateHomePage('/home');
+                        }
+                    }
 
-                                                              if (message != 'All OK') this.createError = message;
-                                                          },
-                                                          (labelResponse) => {
-                                                              this.showErrorMessage('<span mltag="txt_sub_fail">' +
+                    if (message != 'All OK') this.createError = message;
+                },
+                (labelResponse) => {
+                    this.showErrorMessage('<span mltag="txt_sub_fail">' +
                         'Error creating subportfolio' +
                         '</span>');
-                                                          }));
+                }));
+        }
     }
 
     closeAddModal() {
@@ -394,19 +397,19 @@ export class OfiSubPortfolioComponent implements OnInit, OnDestroy {
                     });
 
                     this.ngRedux.dispatch(SagaHelper.runAsyncCallback(asyncTaskPipe,
-                                                                      (response) => {
-                                                                          if (response[1].Data == '0') {
-                                                                                this.ngRedux.dispatch(clearRequestedWalletLabel());
-                                                                                this.toaster.pop('success', 'Your sub-portfolio ' + this.addressList[index].label + ' has been successfully deleted.  This may take a moment to update.');
-                                                                            } else {
-                                                                                this.showWarningResponse('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio');
-                                                                            }
-                                                                      },
-                                                                      (labelResponse) => {
-                                                                          this.toaster.pop('error', '<span mltag="txt_sub_fail">' +
-                                    'Error deleting subportfolio' +
-                                    '</span>');
-                                                                      }));
+                        (response) => {
+                            if (response[1].Data == '0') {
+                                this.ngRedux.dispatch(clearRequestedWalletLabel());
+                                this.toaster.pop('success', 'Your sub-portfolio ' + this.addressList[index].label + ' has been successfully deleted.  This may take a moment to update.');
+                            } else {
+                                this.showWarningResponse('You are not able to delete this sub-portfolio because it is not empty. If you want to delete it, you need to redeem all of your shares from this sub-portfolio');
+                            }
+                        },
+                        (labelResponse) => {
+                            this.toaster.pop('error', '<span mltag="txt_sub_fail">' +
+                                'Error deleting subportfolio' +
+                                '</span>');
+                        }));
                 }
             });
         }
