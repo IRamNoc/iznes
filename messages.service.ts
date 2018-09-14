@@ -15,6 +15,7 @@ import {
     MessageConnectionConfig,
     MessageKycConfig,
 } from '@setl/core-messages';
+import { MessageWithLinksConfig } from "./messages/message-components/message-with-links/message-with-links.model";
 
 /* Service Class. */
 @Injectable()
@@ -59,7 +60,7 @@ export class MessagesService {
      * @param {string} action
      * @returns {Promise<any>}
      */
-    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | IssueAssetActionModel | MessageCancelOrderConfig = null) {
+    public sendMessage(recipientsArr, subjectStr, bodyStr, action: MessageActionsConfig | MessageConnectionConfig | MessageKycConfig | IssueAssetActionModel | MessageCancelOrderConfig | MessageWithLinksConfig = null) {
         const bodyObj = {
             general: commonHelper.b64EncodeUnicode(bodyStr),
             action: JSON.stringify(action),
