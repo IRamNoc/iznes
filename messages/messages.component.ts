@@ -140,6 +140,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 this.walletDirectoryList = walletDirectoryList;
                 this.walletWithCommuPub = this.walletListToSelectItem(walletDirectoryList);
                 this.items = this.walletWithCommuPub.filter(wallet => wallet.id.walletId !== this.walletId);
+
+                /* Close message when the wallet is switched. */
+                if (this.messageView) this.closeMessage();
             }),
         );
 
@@ -278,7 +281,6 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                 // this.currentBoxCount = this.mailCounts['inboxUnread'];
                 this.unreadMessages = this.mailCounts['inboxUnread'];
             }
-
         }
         this.changeDetectorRef.markForCheck();
     }
