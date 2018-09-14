@@ -302,8 +302,9 @@ export class ConnectionComponent implements OnInit, OnDestroy {
     handleSubmitButtonClick() {
         let data = null;
         let asyncTaskPipe = null;
+        const isUpdateConnection = this.isEditTabDisplayed;
 
-        if (!this.isEditTabDisplayed) {
+        if (!isUpdateConnection) {
             data = {
                 leiId: this.connectedWalletId.toString(),
                 senderLeiId: this.formGroup.controls['connection'].value[0].id.toString(),
@@ -329,7 +330,7 @@ export class ConnectionComponent implements OnInit, OnDestroy {
                 ConnectionService.setRequestedFromConnections(false, this.ngRedux);
                 ConnectionService.setRequestedToConnections(false, this.ngRedux);
 
-                if (!this.isEditTabDisplayed) {
+                if (!isUpdateConnection) {
                     this.onSendConnectionMessage(response[1].Data[0]);
                 } else {
                     this.showSuccessResponse('The connection has been updated');
