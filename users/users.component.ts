@@ -279,8 +279,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     /**
      * Datagrid Refresh
      * ----------------
-     * Set the dgPageFrom and dgPageSize variables needed to set the pagninatedUsersList and request the next page of
-     * user data if we don't have it
+     * Set the dgPageFrom and dgPageSize variables needed to set the pagninatedUsersList
      *
      * @param dataGridState
      */
@@ -296,15 +295,18 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
      * Get Paginated Users List
      * ------------------------
      *  Set the paginatedUsersList based on the current page of the datagrid
-     *
-     * @param dataGridState
      */
     setPaginatedUsersList() {
         this.paginatedUsersList = this.usersList.slice(this.dgPageFrom, this.dgPageFrom + this.dgPageSize);
     }
 
+    /**
+     * Request Paginated Users List
+     * ----------------------------
+     * Request the next page of user data if we don't already have it
+     */
     requestPaginatedUsersList() {
-        if (this.usersList.length < this.totalRecords) { // make sure we don't already have all the data
+        if (this.usersList.length < this.totalRecords) {
             if (this.usersList.length < (this.dgPageFrom + this.dgPageSize)) {
                 this.userAdminService.updateUsersStore(this.dgPageFrom, this.dgPageSize);
             }
