@@ -40,13 +40,14 @@ export class SetlMessageConnectionService {
 
     private onActionSuccess(data, walletId: number, mailId: number): void {
         this.messageService.markMessageAsActed(walletId, mailId, '').then((res) => {
-            this.alertsService.create('success', 'The connection has been accepted');
+            const message = (data[1].Request === 'deleteConnection') ? 'rejected' : 'accepted';
+            this.alertsService.create('success', `The connection request has been ${message}`);
         }).catch((e) => {
             this.logService.log('mark mail as acted error', e);
         });
     }
 
     private onActionError(data): void {
-        this.alertsService.create('error', 'The connection has been rejected');
+        this.alertsService.create('error', 'The connection request has been rejected');
     }
 }

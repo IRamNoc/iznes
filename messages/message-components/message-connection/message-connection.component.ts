@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
@@ -31,7 +31,8 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
     constructor(private ngRedux: NgRedux<any>,
                 private myWalletService: MyWalletsService,
                 private walletNodeRequestService: WalletNodeRequestService,
-                private service: SetlMessageConnectionService) {
+                private service: SetlMessageConnectionService,
+                private changeDetectorRef: ChangeDetectorRef) {
         this.isModalDisplayed = false;
         this.initFormGroup();
     }
@@ -96,6 +97,7 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
             break;
         case 'Reject':
             this.service.doAction(action, this.walletId, this.mailId);
+            this.showConnectionRequestActioned();
             break;
         }
     }
@@ -104,6 +106,7 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
         if (isAccepted) {
             this.currentAction.payload.address = this.formGroup.controls['selectedAddress'].value[0].id;
             this.service.doAction(this.currentAction, this.walletId, this.mailId);
+            this.showConnectionRequestActioned();
         }
 
         this.resetForm();
@@ -114,5 +117,10 @@ export class SetlMessageConnectionComponent implements OnInit, OnDestroy {
         this.isModalDisplayed = false;
         this.formGroup.controls['selectedAddress'].setValue(['']);
         this.formGroup.reset();
+    }
+
+    showConnectionRequestActioned() {
+        this.isActed = true;
+        this.changeDetectorRef.detectChanges();
     }
 }
