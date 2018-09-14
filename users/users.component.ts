@@ -35,6 +35,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     /* User data. */
     public usersList: any = [];
     public paginatedUsersList: any;
+    public myDetail: any;
 
     /* Tabs control */
     public tabsControl: any = [];
@@ -57,28 +58,25 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
     public filteredTxGroupsList = [];
     public filteredMenuGroupsList = [];
 
-    @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
+    /* Chain and Wallet Lists  */
     public chainList: { [chainId: number]: { chainId: number | string, chainName: string } } = {};
     public filteredChainList: { id: number | string, text: string }[] = [];
     public selectedChainItem: any = [];
-
-    @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
-
-    @select(['user', 'myDetail']) myDetailOb;
-    public myDetail: any;
-
-    @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
-
-    @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
-
-    @select(['userAdmin', 'users', 'usersList']) usersListOb;
-    @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
-
     private manageWalletList: any;
 
+    /* Datagrid and pagination */
     public totalRecords: number = 0;
     public dgPageFrom: number = 0;
     public dgPageSize: number = 10;
+
+    /* Redux observables */
+    @select(['userAdmin', 'chains', 'chainList']) chainListObservable;
+    @select(['userAdmin', 'chain', 'requestedChainList']) requestedChainListOb;
+    @select(['user', 'myDetail']) myDetailOb;
+    @select(['wallet', 'managedWallets', 'walletList']) manageWalletsListOb;
+    @select(['userAdmin', 'users', 'openedTabs']) openTabsOb;
+    @select(['userAdmin', 'users', 'usersList']) usersListOb;
+    @select(['userAdmin', 'users', 'totalRecords']) totalRecordsOb;
 
     /* Constructor. */
     constructor(private userAdminService: UserAdminService,
@@ -90,6 +88,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                 private persistService: PersistService,
                 private logService: LogService,
                 private confirmationService: ConfirmationService) {
+        /* Stub. */
     }
 
     setInitialTabs() {
@@ -458,9 +457,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['walletsFull'].value[i].text +
-                                        '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Full access</b>.');
+                                        `You changed access to '${controls['walletsFull'].value[i].text}'
+                                         <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
+                                         <b>Full access</b>.`);
                                 } else {
                                     delete controls['walletsFull'].value[i];
                                     controls['walletsFull'].patchValue(
@@ -469,9 +468,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['walletsRead'].value[j].text +
-                                        '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Read access</b>.');
+                                        `You changed access to '${controls['walletsRead'].value[j].text}'<br><br>
+                                        <b>Full access</b> <i class="fa fa-arrow-right"></i> <b>Read access</b>.`);
                                 }
                             }
                         }
@@ -515,9 +513,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
                                     );
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['groupWalletsFull'].value[i].text
-                                        + '\'<br /><br /><b>Read access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Full access</b>.');
+                                        `You changed access to '${controls['groupWalletsFull'].value[i].text}'
+                                        <br><br><b>Read access</b> <i class="fa fa-arrow-right"></i>
+                                        <b>Full access</b>.`);
                                 } else {
                                     delete controls['groupWalletsFull'].value[i];
                                     controls['groupWalletsFull'].patchValue(
@@ -526,9 +524,9 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
                                     this.showAlert(
                                         'warning',
-                                        'You changed access to \'' + controls['groupWalletsRead'].value[j].text
-                                        + '\'<br /><br /><b>Full access</b> <i class="fa fa-arrow-right"></i>' +
-                                        '<b>Read access</b>.');
+                                        `You changed access to '${controls['groupWalletsRead'].value[j].text}'
+                                        <br><br><b>Full access</b> <i class="fa fa-arrow-right"></i>
+                                        <b>Read access</b>.`);
                                 }
                             }
                         }
@@ -1097,8 +1095,8 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
         /* Let's now ask the user if they're sure... */
         this.confirmationService.create(
             '<span>Deleting a User</span>',
-            '<span class="text-warning">Are you sure you want to delete \'' +
-            this.usersList[userIndex].userName + '\'?</span>',
+            `<span class="text-warning">Are you sure you want to delete
+            '${this.usersList[userIndex].userName}'?</span>`,
         ).subscribe((ans) => {
             /* ...if they are... */
             if (ans.resolved) {
@@ -1148,7 +1146,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
             if (this.tabsControl[i].userId === this.usersList[userIndex].userID) {
                 /* Found the index for that tab, lets activate it... */
                 // this.setTabActive(i);
-                this.router.navigateByUrl('/user-administration/users/' + i);
+                this.router.navigateByUrl(`/user-administration/users/${i}`);
 
                 /* And return. */
                 return;
@@ -1381,7 +1379,7 @@ export class AdminUsersComponent implements OnInit, AfterViewInit, OnDestroy {
 
         /* Activate the new tab. */
         // this.setTabActive(this.tabsControl.length - 1);
-        this.router.navigateByUrl('/user-administration/users/' + newTabId);
+        this.router.navigateByUrl(`/user-administration/users/${newTabId}`);
 
         /* Return. */
         return;

@@ -382,7 +382,7 @@ export class UserAdminService {
      *
      * @return {void}
      */
-    public updateUsersStore(pageFrom = 0, pageSize = 0): void {
+    public updateUsersStore(pageFrom: number = 0, pageSize: number = 0): void {
         this.adminUsersService.buildRequest({
             ngRedux: this.ngRedux,
             taskPipe: this.adminUsersService.requestMyUsersList(pageFrom, pageSize),
