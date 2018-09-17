@@ -253,25 +253,27 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
 
                     this.tableData = [];
                     Object.keys(this.shareData).forEach((key) => {
-                        this.tableData.push({
-                            id: this.shareData[key]['fundShareID'],
-                            kycId: this.kycId,
-                            investorWalletID: kyc.investorWalletID,
-                            accessChanged: false,
-                            fundName: this.shareData[key]['fundName'],
-                            shareName: this.shareData[key]['fundShareName'],
-                            isin: this.shareData[key]['isin'],
-                            max: ((1 + Math.min(this.shareData[key]['maxRedemptionFee'], this.shareData[key]['maxSubscriptionFee'])) * 100 - 100).toFixed(5),
-                            minInvestment: this.shareData[key]['minSubsequentSubscriptionInAmount'],
-                            access: !!investorWalletData[this.shareData[key]['fundShareID']],
-                            entry: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['entryFee'] : 0)),
-                            exit: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['exitFee'] : 0)),
-                            override: (!!investorWalletData[this.shareData[key]['fundShareID']] ? (investorWalletData[this.shareData[key]['fundShareID']]['minInvestOverride'] == 1 ? 1 : 0) : false),
-                            overrideAmount: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestVal'] : 0) / 100000,
-                            overrideDocument: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestDocument'] : ''),
-                            overrideDocumentTitle: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['fileTitle'] : ''),
-                            newOverride: false,
-                        });
+                        if (this.shareData[key].draft == 0) {
+                            this.tableData.push({
+                                id: this.shareData[key]['fundShareID'],
+                                kycId: this.kycId,
+                                investorWalletID: kyc.investorWalletID,
+                                accessChanged: false,
+                                fundName: this.shareData[key]['fundName'],
+                                shareName: this.shareData[key]['fundShareName'],
+                                isin: this.shareData[key]['isin'],
+                                max: ((1 + Math.min(this.shareData[key]['maxRedemptionFee'], this.shareData[key]['maxSubscriptionFee'])) * 100 - 100).toFixed(5),
+                                minInvestment: this.shareData[key]['minSubsequentSubscriptionInAmount'],
+                                access: !!investorWalletData[this.shareData[key]['fundShareID']],
+                                entry: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['entryFee'] : 0)),
+                                exit: this.toFrontEndPercent((!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['exitFee'] : 0)),
+                                override: (!!investorWalletData[this.shareData[key]['fundShareID']] ? (investorWalletData[this.shareData[key]['fundShareID']]['minInvestOverride'] == 1 ? 1 : 0) : false),
+                                overrideAmount: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestVal'] : 0) / 100000,
+                                overrideDocument: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['minInvestDocument'] : ''),
+                                overrideDocumentTitle: (!!investorWalletData[this.shareData[key]['fundShareID']] ? investorWalletData[this.shareData[key]['fundShareID']]['fileTitle'] : ''),
+                                newOverride: false,
+                            });
+                        }
                     });
 
                     this._changeDetectorRef.markForCheck();
