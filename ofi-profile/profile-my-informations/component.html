@@ -15,9 +15,6 @@
             <app-my-informations [userInfo]="userInfoExtended" [viewMode]="'POPUP'" [type]="userType" (onSubmit)="saveUserInformations($event)" (onClose)="closeUserInformations()">
 
 
-
-
-
             </app-my-informations>
 
             <div class="hr-line-dashed"></div>
@@ -50,14 +47,14 @@
                                 <app-password-tooltip></app-password-tooltip>
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45">
+                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPassword" [formControl]="password" size="45" (focus)="validation = 3">
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('password', 'required')" class="text-danger">{{'Password is required' | translate}}</div>
-                            <div *ngIf="hasError('password', 'rules') && isTouched('password')" class="text-danger">
+                            <div *ngIf="(hasError('password', 'rules') && isTouched('password'))  || validation < 3" class="text-danger">
                                 {{'Your password doesn\'t meet the security critera' | translate}}
                             </div>
-                            <div *ngIf="!hasError('password', 'rules') && hasError('', 'oldNew') && isTouched('password') && isTouched('oldPassword') && !hasError('password', 'required')" class="text-danger">
+                            <div *ngIf="!hasError('password', 'rules') && hasError('', 'oldNew') && isTouched('password') && isTouched('oldPassword') && !hasError('password', 'required') && validation > 2" class="text-danger">
                                 {{'The new password should not be the same as the old' | translate}}
                             </div>
                         </div>
@@ -70,7 +67,7 @@
 
                             </label>
                             <div class="password-container">
-                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45">
+                                <input [type]="(showPasswords === true) ? 'text' : 'password'" id="cpPasswordConfirm" [formControl]="passwordConfirm" size="45" (focus)="validation = 3">
                                 <span (click)="toggleShowPasswords()" title="Show/hide passwords"><i class="fa fa-eye-slash" aria-hidden="true"></i></span>
                             </div>
                             <div *ngIf="hasError('passwordConfirm', 'required')" class="text-danger">{{'Confirmation is required' | translate}}</div>
@@ -78,7 +75,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <button type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid"><i class="fa fa-save"></i> {{'Update' | translate}}</button>
+                        <button type="submit" class="btn btn-primary" [disabled]="!changePassForm.valid">
+                            <i class="fa fa-save"></i> {{'Update' | translate}}
+                        </button>
                     </div>
                 </section>
             </form>
