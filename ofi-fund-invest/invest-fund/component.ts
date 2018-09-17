@@ -976,10 +976,23 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         const subject = `Warning - Soft Limit amount exceeded on ${params.orderTypeLabel} order ${params.orderRef}`;
         const body = `<p>Hello,<br /><br />
 Please be aware that the ${params.orderTypeLabel} order ${params.orderRef} has exceeded the limit of 15 million.<br />
-<a href="/#/manage-orders/list?orderID=${params.orderID}" class="btn btn-secondary">Go to this order</a><br /><br />
+%@link@%<br /><br />
 The IZNES Team.</p>`;
 
-        this._messagesService.sendMessage([amWalletID], subject, body, null);
+        const action = {
+            type: 'messageWithLink',
+            data: {
+                links: [
+                    {
+                        link: '/#/manage-orders/list?orderID=${params.orderID}"',
+                        anchorCss: 'btn btn-secondary',
+                        anchorText: 'Go to this order',
+                    }
+                ],
+            },
+        };
+
+        this._messagesService.sendMessage([amWalletID], subject, body, action);
     }
 
     subscribeForChange(type: string): void {

@@ -236,12 +236,26 @@ export class OfiFundAccessTable {
                 // success call back
                 this.toasterService.pop('success', this.investorData['companyName'] + '\'s shares authorisation has been successfully updated');
 
-                let recipientsArr = [this.investorData['investorWalletID']];
-                let subjectStr = this.amCompany + ' has updated your access';
+                const recipientsArr = [this.investorData['investorWalletID']];
+                const subjectStr = this.amCompany + ' has updated your access';
 
                 let bodyStr = 'Hello ' + this.investorData['firstName'] + ',<br><br>' + this.amCompany + ' has made updates on your access list.';
-                bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br><a class="btn" href="/#/list-of-funds/0">Start Trading</a><br><br>Thank you,<br><br>The IZNES team.';
-                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr);
+                bodyStr += '<br><br>Click on the button below to go to the Funds shares page to see all changes and begin trading on IZNES<br><br>%@link@%<br><br>Thank you,<br><br>The IZNES team.';
+
+                const action = {
+                    type: 'messageWithLink',
+                    data: {
+                        links: [
+                                {
+                                    link: '/#/list-of-funds/0',
+                                    anchorCss: 'btn',
+                                    anchorText: 'Start Trading',
+                                }
+                            ],
+                    },
+                };
+
+                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action);
 
                 this.backBtn();
             }, () => {
