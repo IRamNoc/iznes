@@ -25,6 +25,7 @@ import { SetlMessageConnectionComponent } from './messages/message-components/me
 import { SetlMessageConnectionService } from './messages/message-components/message-connection/message-connection.service';
 import { SetlMessageKycComponent } from './messages/message-components/message-kyc/message-kyc.component';
 import { SetlMessageAmCancelOrderComponent } from './messages/message-components/message-cancel-order/message-cancel-order.component';
+import { SetlMessageWithLinksComponent } from './messages/message-components/message-with-links/message-with-links.component';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
@@ -54,6 +55,7 @@ import { RouterModule } from '@angular/router';
         SetlMessageKycComponent,
         SetlMessageAmCancelOrderComponent,
         SetlIssueAssetActionComponent,
+        SetlMessageWithLinksComponent,
     ],
     exports: [
         SetlMessagesComponent,
