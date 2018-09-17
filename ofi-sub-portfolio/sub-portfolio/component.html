@@ -130,7 +130,7 @@
                     </div>
                     <div *ngIf="!(!this.tabDetail[0]['formControl'].controls['subPortfolioName'].valid) &&
                     (createError == 1 || createError == 3)" class="pseudo-field-error">
-                        {{'Duplicate Sub-portfolio Name' | translate }}
+                        {{'This subportfolio name is already used. Please choose another one.' | translate }}
                     </div>
                 </div>
             </div>
@@ -151,7 +151,7 @@
                     <div *ngIf="!this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('required') &&
                     !this.tabDetail[0]['formControl'].controls['subPortfolioIban'].hasError('ibanFail') &&
                     (createError == 2 || createError == 3)" class="pseudo-field-error">
-                        {{'Duplicate Sub-portfolio IBAN' | translate }}
+                        {{'The subportfolio IBAN is already used. Please choose another one.' | translate }}
                     </div>
                 </div>
             </div>
