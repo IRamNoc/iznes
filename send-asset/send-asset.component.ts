@@ -7,11 +7,10 @@ import {
     WalletnodeTxService,
 } from '@setl/core-req-services';
 import {
-    finishSendAssetNotification, getConnectedWallet, getWalletDirectoryList, getWalletToRelationshipList,
-    SEND_ASSET_FAIL, SEND_ASSET_SUCCESS, setRequestedWalletAddresses, ADD_WALLETNODE_TX_STATUS,
+    finishSendAssetNotification, SEND_ASSET_FAIL, SEND_ASSET_SUCCESS, setRequestedWalletAddresses,
+    ADD_WALLETNODE_TX_STATUS,
 } from '@setl/core-store';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
-import { Unsubscribe } from 'redux';
 import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -25,24 +24,22 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     subscriptionsArray: Subscription[] = [];
     connectedWalletId: number;
     allInstrumentList: any[];
-    addressList: any;
-    toRelationshipSelectItems: any[];
     noInstrumentsAlert: boolean = false;
+    walletInstrumentsSelectItems: any[];
+    walletAddressSelectItems: any;
+    walletDirectoryList = {};
+    walletDirectoryListRaw: any[];
+    walletRelationships: any[];
 
-    // Asset
-    @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
-
-    // Asset Address
-    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
-    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
-
-    // Send Asset
+    @select(['wallet', 'myWalletHolding', 'holdingByAsset']) holdingByAssetOb;
+    @select(['wallet', 'myWalletAddress', 'requested']) addressListRequestedStateOb;
+    @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
+    @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedAddressListLabelOb;
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb;
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedWalletRelationshipListOb;
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb;
     @select(['asset', 'myInstruments', 'newSendAssetRequest']) newSendAssetRequest;
-
-    // Redux unsubscription
-    reduxUnsubscribe: Unsubscribe;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -51,12 +48,9 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 private walletnodeTxService: WalletnodeTxService,
                 private myWalletService: MyWalletsService) {
 
-        this.reduxUnsubscribe = ngRedux.subscribe(() => this.updateState());
-        this.updateState();
-
-        /* Subscribe to get the connected Wallet ID and setup/clear form group on change */
-        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connected) => {
-            this.connectedWalletId = connected;
+        /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
+        this.subscriptionsArray.push(this.connectedWalletOb.subscribe((connectedWalletId) => {
+            this.connectedWalletId = connectedWalletId;
             this.setFormGroup();
         }));
 
@@ -81,24 +75,36 @@ export class SendAssetComponent implements OnInit, OnDestroy {
             }
         }));
 
-        /* Subscribe to get the wallet list and set the select items */
-        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
-            this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
-            this.changeDetectorRef.markForCheck();
-        }));
-
-        /* Request address list if flag is not set */
-        this.subscriptionsArray.push(this.requestedAddressListOb.subscribe((requested) => {
-            this.requestAddressList(requested);
-            this.changeDetectorRef.markForCheck();
-        }));
-
-        /* Request label list if flag is not set */
-        this.subscriptionsArray.push(this.requestedLabelListOb.subscribe((requested) => {
+        this.subscriptionsArray.push(this.requestedAddressListLabelOb.subscribe((requested) => {
             this.requestWalletLabel(requested);
         }));
-
-        /* Subscribe to get the response from the Send Asset Request and show a modal */
+        this.subscriptionsArray.push(this.addressListRequestedStateOb.subscribe((requested) => {
+            this.requestWalletAddressList(requested);
+        }));
+        this.subscriptionsArray.push(this.addressListOb.subscribe((addressList) => {
+            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(addressList, 'label');
+            this.changeDetectorRef.markForCheck();
+        }));
+        this.subscriptionsArray.push(
+            this.walletDirectoryListOb.subscribe((walletList) => {
+                this.walletDirectoryListRaw = walletList;
+                this.walletDirectoryList = walletHelper.walletAddressListToSelectItem(walletList, 'walletName');
+            }),
+        );
+        this.subscriptionsArray.push(
+            this.requestedWalletRelationshipListOb.subscribe((requested) => {
+                if (!requested) {
+                    InitialisationService.requestToRelationship(
+                        this.ngRedux, this.myWalletService, this.connectedWalletId);
+                }
+            }),
+            this.walletRelationshipListOb.subscribe((walletList) => {
+                if (Object.keys(walletList).length) {
+                    this.walletRelationships = walletHelper.walletToRelationshipToSelectItem(
+                        walletList, this.walletDirectoryList);
+                }
+            }),
+        );
         this.subscriptionsArray.push(this.newSendAssetRequest.subscribe((newSendAssetRequest) => {
             this.showResponseModal(newSendAssetRequest);
         }));
@@ -107,16 +113,11 @@ export class SendAssetComponent implements OnInit, OnDestroy {
     ngOnInit() {
     }
 
-    setFormGroup(): void {
-        /* Create a formGroup for sendAssetForm. */
-        this.sendAssetForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            assetAddress: new FormControl('', Validators.required),
-            recipient: new FormControl('', Validators.required),
-            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
-        });
-    }
-
+    /**
+     * Sends a sendAsset request.
+     *
+     * @return {void}
+     */
     sendAsset(): void {
         if (this.sendAssetForm.valid) {
             // Trigger loading alert
@@ -151,8 +152,8 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                 },
                 (data) => {
                     console.error('fail', data);
-                    const message = !_.isEmpty(data[1].data.error) ? 'Failed to send asset. Reason:<br>'
-                        + data[1].data.error : 'Failed to send asset';
+                    const message = !_.isEmpty(data[1].data.error) ? `Failed to send asset. Reason:<br>
+                        ${data[1].data.error}` : 'Failed to send asset';
                     this.alertsService.create('error', `
                       <table class="table grid">
                           <tbody>
@@ -163,6 +164,48 @@ export class SendAssetComponent implements OnInit, OnDestroy {
                       </table>`);
                 },
             ));
+        }
+    }
+
+    /**
+     * Creates a sendAssetForm.
+     *
+     * @return {void}
+     */
+    setFormGroup(): void {
+        this.sendAssetForm = new FormGroup({
+            asset: new FormControl('', Validators.required),
+            assetAddress: new FormControl('', Validators.required),
+            recipient: new FormControl('', Validators.required),
+            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+        });
+    }
+
+    /**
+     * Requests wallet address list.
+     *
+     * @param {boolean} requestedState
+     */
+    requestWalletAddressList(requestedState: boolean) {
+        // If the state is false, that means we need to request the list.
+        if (!requestedState && this.connectedWalletId) {
+            // Set the state flag to true. so we do not request it again.
+            this.ngRedux.dispatch(setRequestedWalletAddresses());
+
+            InitialisationService.requestWalletAddresses(
+                this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
+        }
+    }
+
+    /**
+     * Requests wallet address labels.
+     *
+     * @param {boolean} requestedState
+     */
+    requestWalletLabel(requested: boolean): void {
+        // If the state is false, that means we need to request the list.
+        if (!requested && this.connectedWalletId) {
+            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
         }
     }
 
@@ -207,55 +250,7 @@ export class SendAssetComponent implements OnInit, OnDestroy {
         }
     }
 
-    updateState(): void {
-        const newState = this.ngRedux.getState();
-
-        // Set connected WalletId
-        this.connectedWalletId = getConnectedWallet(newState);
-
-        const walletToRelationship = getWalletToRelationshipList(newState);
-        const walletDirectoryList = getWalletDirectoryList(newState);
-
-        this.toRelationshipSelectItems =
-            walletHelper.walletToRelationshipToSelectItem(walletToRelationship, walletDirectoryList);
-    }
-
-    requestAddressList(requested: boolean): void {
-        // If the state is false, that means we need to request the list.
-        if (!requested && this.connectedWalletId !== 0) {
-            // Set the state flag to true. so we do not request it again.
-            this.ngRedux.dispatch(setRequestedWalletAddresses());
-
-            // Request the list.
-            InitialisationService.requestWalletAddresses(
-                this.ngRedux, this.walletNodeRequestService, this.connectedWalletId);
-        }
-    }
-
-    requestWalletLabel(requested: boolean): void {
-        // If the state is false, that means we need to request the list.
-        if (!requested && this.connectedWalletId !== 0) {
-            MyWalletsService.defaultRequestWalletLabel(this.ngRedux, this.myWalletService, this.connectedWalletId);
-        }
-    }
-
-    convertAddressItemsForDropdown(items: any[]): any[] {
-        // Creates an array of data suitable for ng-select
-        const dropdownItems = [];
-
-        _.forEach(items, (item) => {
-            dropdownItems.push({
-                id: item.addr,
-                text: (item.label) ? item.label : item.addr,
-            });
-        });
-
-        return dropdownItems;
-    }
-
     ngOnDestroy() {
-        this.reduxUnsubscribe();
-
         for (const subscription of this.subscriptionsArray) {
             subscription.unsubscribe();
         }

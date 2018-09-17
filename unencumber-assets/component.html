@@ -9,7 +9,7 @@
         </button>
 
         <clr-tab-content *clrIfActive="">
-            <form [formGroup]="unencumberAssetsForm" novalidate (ngSubmit)="save(unencumberAssetsForm.value)">
+            <form [formGroup]="unencumberAssetsForm" novalidate (ngSubmit)="unencumberAsset(unencumberAssetsForm.value)">
                 <section class="form-block">
                     <div class="row">
                         <div class="form-group col-sm-6">
@@ -30,7 +30,7 @@
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="fromAddress" mltag="txt_asset">From Address</label>
                             <ng-select id="fromAddress"
-                                       [items]="fromAddressListOption"
+                                       [items]="walletAddressSelectItems"
                                        [allowClear]="true"
                                        formControlName="fromAddress"
                                        placeholder="Select"
@@ -42,13 +42,13 @@
 
                     <div class="row">
                         <div class="form-group">
-                            <various-address-select [formControl]="unencumberAssetsForm.controls['toAddress']"
-                                                    [relationshipArray]="toRelationshipSelectItems"
-                                                    [ownWalletAddressArray]="fromAddressListOption"
-                                                    [class.error]="!unencumberAssetsForm.controls['toAddress'].valid && unencumberAssetsForm.controls['toAddress'].touched"
+                            <various-address-select [formControl]="unencumberAssetsForm.controls['recipient']"
+                                                    [relationshipArray]="walletRelationships"
+                                                    [ownWalletAddressArray]="walletAddressSelectItems"
+                                                    [class.error]="!unencumberAssetsForm.controls['recipient'].valid && unencumberAssetsForm.controls['recipient'].touched"
                                                     [required]="true">
                             </various-address-select>
-                            <span *ngIf="unencumberAssetsForm.controls.toAddress.hasError('required') && !unencumberAssetsForm.controls.toAddress.pristine"
+                            <span *ngIf="unencumberAssetsForm.controls.recipient.hasError('required') && !unencumberAssetsForm.controls.recipient.pristine"
                                   class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
                     </div>

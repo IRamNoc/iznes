@@ -41,8 +41,12 @@
                     <div class="row">
                         <div class="form-group col-sm-6">
                             <label class="control-label required-field" for="fromAddress" mltag="txt_asset">From Address</label>
-                            <ng-select id="fromAddress" [items]="fromAddressListOption" [allowClear]="true" formControlName="fromAddress" placeholder="Select"
-                                       mltag="txt_select">
+                            <ng-select id="fromAddress" 
+                                        [items]="walletAddressSelectItems" 
+                                        [allowClear]="true" 
+                                        formControlName="fromAddress" 
+                                        placeholder="Select"
+                                        mltag="txt_select">
                             </ng-select>
                             <span *ngIf="encumberAssetsForm.controls.fromAddress.hasError('required') && encumberAssetsForm.controls.fromAddress.touched"
                                   class="field-error" mltag="txt_fieldisrequired">Field is required</span>
@@ -69,13 +73,13 @@
 
                     <div class="row">
                         <div class="form-group col-sm-6">
-                            <various-address-select [formControl]="encumberAssetsForm.controls['toAddress']"
-                                                    [relationshipArray]="toRelationshipSelectItems"
-                                                    [ownWalletAddressArray]="fromAddressListOption"
-                                                    [class.error]="!encumberAssetsForm.controls['toAddress'].valid && encumberAssetsForm.controls['toAddress'].touched"
+                            <various-address-select [formControl]="encumberAssetsForm.controls['recipient']"
+                                                    [relationshipArray]="walletRelationships"
+                                                    [ownWalletAddressArray]="walletAddressSelectItems"
+                                                    [class.error]="!encumberAssetsForm.controls['recipient'].valid && encumberAssetsForm.controls['recipient'].touched"
                                                     [required]="true">
                             </various-address-select>
-                            <span *ngIf="encumberAssetsForm.controls.toAddress.hasError('required') && !encumberAssetsForm.controls.toAddress.pristine"
+                            <span *ngIf="encumberAssetsForm.controls.recipient.hasError('required') && !encumberAssetsForm.controls.recipient.pristine"
                                   class="field-error" mltag="txt_fieldisrequired">Field is required</span>
                         </div>
 

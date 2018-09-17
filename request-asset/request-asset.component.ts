@@ -9,7 +9,6 @@ import {
 import {
     TRANSFER_ASSET_FAIL,
     TRANSFER_ASSET_SUCCESS,
-    ADD_WALLETNODE_TX_STATUS,
     setRequestedFromConnections,
     setRequestedToConnections,
 } from '@setl/core-store';
@@ -26,7 +25,6 @@ import { Observable } from 'rxjs/Observable';
 })
 export class RequestAssetComponent implements OnInit, OnDestroy {
     subscriptionsArray: Subscription[] = [];
-
     connectedWalletId: number;
     requestAssetForm: FormGroup;
     allInstrumentList: any[];
@@ -39,20 +37,13 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
     toConnectionList = [];
     toRelationshipList = [];
 
-    /* Asset */
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb: Observable<boolean>;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb: Observable<any>;
-
-    /* Connection */
     @select(['connection', 'myConnections', 'requestedFromConnectionList']) requestedFromConnectionStateObs;
     @select(['connection', 'myConnections', 'requestedToConnectionList']) requestedToConnectionStateObs;
     @select(['connection', 'myConnections', 'fromConnectionList']) fromConnectionListObs;
     @select(['connection', 'myConnections', 'toConnectionList']) toConnectionListObs;
-
-    /* Wallet relationships */
     @select(['wallet', 'walletRelationship', 'toRelationshipList']) toRelationshipListOb;
-
-    /* User */
     @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
 
     /* Redux unsubscription */
@@ -65,12 +56,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
                 private messagesService: MessagesService,
                 private connectionService: ConnectionService) {
 
-        /* Request asset form */
-        this.requestAssetForm = new FormGroup({
-            asset: new FormControl('', Validators.required),
-            amount: new FormControl('', Validators.required),
-        });
-
         /* Data subscriptions */
         this.initAssetSubscriptions();
     }
@@ -80,6 +65,11 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
 
     private initAssetSubscriptions(): void {
         this.subscriptionsArray.push(
+            /* Subscribe to the connectedWalletId and setup (or clear) the form group on wallet change */
+            this.connectedWalletOb.subscribe((connectedWalletId) => {
+                this.getConnectedWallet(connectedWalletId);
+                this.setFormGroup();
+            }),
             this.requestedAllInstrumentOb.subscribe((requested) => {
                 if (!requested) {
                     InitialisationService.requestAllInstruments(this.ngRedux, this.walletNodeRequestService);
@@ -88,10 +78,6 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             this.allInstrumentOb.subscribe((instrumentList) => {
                 this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
                 this.changeDetectorRef.markForCheck();
-            }),
-            this.connectedWalletOb.subscribe((connected) => {
-                this.requestAssetForm.reset();
-                this.getConnectedWallet(connected);
             }),
             this.toRelationshipListOb.subscribe((toRelationshipList) => {
                 this.toRelationshipList = toRelationshipList;
@@ -112,93 +98,23 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
         );
     }
 
-    getConnectedWallet(walletId: number) {
-        this.connectedWalletId = walletId;
-
-        ConnectionService.setRequestedFromConnections(false, this.ngRedux);
-        ConnectionService.setRequestedToConnections(false, this.ngRedux);
-
-        this.changeDetectorRef.markForCheck();
-    }
-
-    getFromConnectionList(fromConnections: any[]) {
-        this.fromConnectionList = fromConnections;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    getToConnectionList(toConnections: any[]) {
-        this.toConnectionList = toConnections;
-        this.changeDetectorRef.markForCheck();
-    }
-
-    requestFromConnectionList(requestedState: boolean) {
-        if (!requestedState && this.connectedWalletId) {
-            this.ngRedux.dispatch(setRequestedFromConnections());
-
-            ConnectionService.requestFromConnectionList(
-                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
-        }
-    }
-
-    requestToConnectionList(requestedState: boolean) {
-        if (!requestedState && this.connectedWalletId) {
-            this.ngRedux.dispatch(setRequestedToConnections());
-
-            ConnectionService.requestToConnectionList(
-                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
-        }
-    }
-
-    requestTypeOb(id: number): void {
-        this.requestType = id;
-    }
-
-    /* Request asset from selected wallet in Connection menu */
-    fromRelationshipOb(id: number): void {
-        /* Request the asset from the wallet */
-        this.walletFrom = id;
-        /* Set addressTo using Connection */
-        this.setAddressToUsingConnection();
-    }
-
-    walletFromOb(id: number): void {
-        this.walletFrom = id;
-    }
-
-    addressToOb(id: string): void {
-        this.addressTo = id;
+    /**
+     * Creates a requestAssetForm.
+     *
+     * @return {void}
+     */
+    setFormGroup(): void {
+        this.requestAssetForm = new FormGroup({
+            asset: new FormControl('', Validators.required),
+            amount: new FormControl('', [Validators.required, Validators.pattern('^((?!(0))[0-9]+)$')]),
+        });
     }
 
     /**
-     * Sets addressTo using Connection
+     * Sends a requestAsset request.
      *
      * @returns {void}
      */
-    setAddressToUsingConnection(): void {
-        if (this.walletFrom) {
-            if (this.toRelationshipList[this.walletFrom] &&
-                this.toRelationshipList[this.walletFrom].toWalletId === this.walletFrom) {
-
-                const connectedWalletAddress = this.toRelationshipList[this.walletFrom].keyDetail;
-                let connectionId = 0;
-
-                this.toConnectionList.forEach((item) => {
-                    if ((item.keyDetail === connectedWalletAddress) && (item.leiId === this.walletFrom)) {
-                        connectionId = item.connectionId;
-                    }
-                });
-
-                if (connectionId) {
-                    this.fromConnectionList.forEach((item) => {
-                        if (item.connectionId === connectionId) {
-                            this.addressTo = item.keyDetail;
-                        }
-                    });
-                }
-            }
-        }
-    }
-
     requestAsset(): void {
         /* Trigger loading alert */
         this.alertsService.create('loading');
@@ -272,6 +188,93 @@ export class RequestAssetComponent implements OnInit, OnDestroy {
             </table>`);
             console.log('transfer request email failed', e);
         });
+    }
+
+    /**
+     * Sets addressTo using Connection.
+     *
+     * @returns {void}
+     */
+    setAddressToUsingConnection(): void {
+        if (this.walletFrom) {
+            if (this.toRelationshipList[this.walletFrom] &&
+                this.toRelationshipList[this.walletFrom].toWalletId === this.walletFrom) {
+
+                const connectedWalletAddress = this.toRelationshipList[this.walletFrom].keyDetail;
+                let connectionId = 0;
+
+                this.toConnectionList.forEach((item) => {
+                    if ((item.keyDetail === connectedWalletAddress) && (item.leiId === this.walletFrom)) {
+                        connectionId = item.connectionId;
+                    }
+                });
+
+                if (connectionId) {
+                    this.fromConnectionList.forEach((item) => {
+                        if (item.connectionId === connectionId) {
+                            this.addressTo = item.keyDetail;
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    getConnectedWallet(walletId: number) {
+        this.connectedWalletId = walletId;
+
+        ConnectionService.setRequestedFromConnections(false, this.ngRedux);
+        ConnectionService.setRequestedToConnections(false, this.ngRedux);
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getFromConnectionList(fromConnections: any[]) {
+        this.fromConnectionList = fromConnections;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    getToConnectionList(toConnections: any[]) {
+        this.toConnectionList = toConnections;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    requestFromConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId) {
+            this.ngRedux.dispatch(setRequestedFromConnections());
+
+            ConnectionService.requestFromConnectionList(
+                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
+    }
+
+    requestToConnectionList(requestedState: boolean) {
+        if (!requestedState && this.connectedWalletId) {
+            this.ngRedux.dispatch(setRequestedToConnections());
+
+            ConnectionService.requestToConnectionList(
+                this.connectionService, this.ngRedux, this.connectedWalletId.toString());
+        }
+    }
+
+    requestTypeOb(id: number): void {
+        this.requestType = id;
+    }
+
+    /* Request asset from selected wallet in Connection menu */
+    fromRelationshipOb(id: number): void {
+        /* Request the asset from the wallet */
+        this.walletFrom = id;
+        /* Set addressTo using Connection */
+        this.setAddressToUsingConnection();
+    }
+
+    walletFromOb(id: number): void {
+        this.walletFrom = id;
+    }
+
+    addressToOb(id: string): void {
+        this.addressTo = id;
     }
 
     ngOnDestroy() {
