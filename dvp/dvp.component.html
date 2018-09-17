@@ -21,7 +21,7 @@
                         </label>
 
                         <ng-select id="contract_creator"
-                                   [items]="addressList"
+                                   [items]="walletAddressSelectItems"
                                    [allowClear]="true"
                                    placeholder="Select Creator Address"
                                    [formControl]="createContractForm.controls['creator']"
@@ -62,8 +62,8 @@
                             <div class="form-group col-sm-10">
                                 <various-address-select
                                     [formControl]="createContractForm.controls[party.id].controls['address']"
-                                    [relationshipArray]="toRelationshipSelectItems"
-                                    [ownWalletAddressArray]="addressList"
+                                    [relationshipArray]="walletRelationships"
+                                    [ownWalletAddressArray]="walletAddressSelectItems"
                                     [class.error]="!createContractForm.controls[party.id].controls['address'].valid &&
                                     createContractForm.controls[party.id].controls['address'].touched"
                                     [required]="true">
