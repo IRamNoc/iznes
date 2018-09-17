@@ -277,3 +277,20 @@
 .no-active-top {
     top: 1px;
 }
+
+:host(.multiline) {
+    .ui-select-placeholder,
+    .ui-select-match-text{
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .ui-select-choices-row,
+    .ui-select-choices-row > a{
+        white-space: normal;
+    }
+
+    .dropdown-item {
+        height: auto;
+    }
+}
