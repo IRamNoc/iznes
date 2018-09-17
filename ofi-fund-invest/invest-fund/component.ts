@@ -60,7 +60,7 @@ import { validateKiid } from '@ofi/ofi-main/ofi-store/ofi-fund-invest/ofi-fund-a
     templateUrl: 'component.html',
     styleUrls: ['./component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: []
+    providers: [],
 })
 
 export class InvestFundComponent implements OnInit, OnDestroy {
@@ -116,7 +116,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         locale: 'en',
         isDayDisabledCallback: (thisDate) => {
             return false;
-        }
+        },
     };
 
     configDateValuation = {
@@ -127,7 +127,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         locale: 'en',
         isDayDisabledCallback: (thisDate) => {
             return false;
-        }
+        },
     };
 
     configDateSettlement = {
@@ -138,14 +138,13 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         locale: 'en',
         isDayDisabledCallback: (thisDate) => {
             return false;
-        }
+        },
     };
 
     // Dates
     cutoffDate: FormControl;
     valuationDate: FormControl;
     settlementDate: FormControl;
-
 
     //  sadata.
     shareData: any;
@@ -182,7 +181,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         3: true,
         4: true,
         5: true,
-        6: true
+        6: true,
     };
 
     orderHelper: OrderHelper;
@@ -275,7 +274,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     get actionByNumber() {
         return {
             a: OrderByType.Amount,
-            q: OrderByType.Quantity
+            q: OrderByType.Quantity,
         }[this.actionBy];
     }
 
@@ -294,18 +293,18 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         return {
             cutoff: this.cutoffDate.value,
             valuation: this.valuationDate.value + ' 00:00',
-            settlement: this.settlementDate.value + ' 00:00'
+            settlement: this.settlementDate.value + ' 00:00',
         }[this.dateBy];
     }
 
     get orderValue() {
         return {
             q: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.form.controls.quantity.value, 5)
+                this._moneyValuePipe.parse(this.form.controls.quantity.value, 5),
             ),
             a: this._numberConverterService.toBlockchain(
-                this._moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2)
-            )
+                this._moneyValuePipe.parse(this.trueAmount || this.form.controls.amount.value, 2),
+            ),
         }[this.actionBy];
     }
 
@@ -363,12 +362,11 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         if (typeof this.orderHelper === 'undefined') {
             return false;
         } else {
-            let isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
-            let isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
+            const isAllowedAmount = this.orderHelper.checkOrderByIsAllow('a').orderValid;
+            const isAllowedQuantity = this.orderHelper.checkOrderByIsAllow('q').orderValid;
             return isAllowedAmount && isAllowedQuantity;
         }
     }
-
 
     get shareAsset(): string {
         return this.shareData.isin + '|' + this.shareData.fundShareName;
@@ -429,7 +427,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
     }
 
     get amountTooBig() {
-        let value = this.amount.value;
+        const value = this.amount.value;
         let quantity = this._moneyValuePipe.parse(value, 4);
 
         if (isNaN(quantity)) {
@@ -669,7 +667,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                 this.showAlertCutOffError();
                 clearInterval(this.toastTimer);
             }
-        }, 1000);
+        },                 1000);
     }
 
     getFormattedUnixTime(value: number): string {
@@ -714,7 +712,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             return false;
         }
 
-        let quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
+        const quantity = this._numberConverterService.toFrontEnd(this.subPortfolioBalance);
 
         this.quantityInput.nativeElement.focus();
         this.form.get('quantity').setValue(quantity);
@@ -767,20 +765,19 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             if (addr && label) {
                 const addressItem = {
                     id: item.get('addr', ''),
-                    text: item.get('label', '')
+                    text: item.get('label', ''),
                 };
 
                 result.push(addressItem);
             }
 
             return result;
-        }, []);
+        },                                        []);
 
         // Set default or selected address.
         const hasSelectedAddressInList = immutableHelper.filter(this.addressList, (thisItem) => {
             return thisItem.get('id') === (this.addressSelected && this.addressSelected.id);
         });
-
 
         if (this.addressList.length > 0) {
             if (this.addressSelected) {
@@ -788,7 +785,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                     onlySelf: true,
                     emitEvent: true,
                     emitModelToViewChange: true,
-                    emitViewToModelChange: true
+                    emitViewToModelChange: true,
                 });
             }
         }
@@ -839,7 +836,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             orderType: this.orderType,
             orderBy: this.actionBy,
             orderValue: this.orderValue,
-            comment: this.form.controls.comment.value
+            comment: this.form.controls.comment.value,
         };
     }
 
@@ -854,7 +851,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
             ordertype: this.orderType, // ('s', 'r', 'sb')
             orderby: this.actionBy, // ('q', 'a' )
             ordervalue: this.orderValue, // (order value relate to orderby)
-            comment: ''
+            comment: '',
         };
     }
 
@@ -866,7 +863,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
         // check if this is a redemption order or if it is a sell buy order
         if ((this.type === 'sellbuy' || this.type === 'redeem') && (this.actionBy === 'a')) {
             const checkResponse = OrderHelper.isRedeemOver80Percent(this.orderValue, this.subPortfolioTotalBalance,
-                this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
+                                                                    this.subPortfolioEncumberedBalance, this.subPortfolioRedemptionEncumBalance, this.shareData.price);
 
             if (!OrderHelper.isResponseGood(checkResponse)) {
                 // redeem over 80%
@@ -912,7 +909,7 @@ export class InvestFundComponent implements OnInit, OnDestroy {
                         </tr>
                     </tbody>
                 </table>
-        `, { showCloseButton: false, overlayClickToClose: false });
+        `,                         { showCloseButton: false, overlayClickToClose: false });
 
         this._ofiOrdersService.addNewOrder(request).then((data) => {
 
@@ -987,28 +984,28 @@ The IZNES Team.</p>`;
                         link: '/#/manage-orders/list?orderID=${params.orderID}"',
                         anchorCss: 'btn btn-secondary',
                         anchorText: 'Go to this order',
-                    }
+                    },
                 ],
             },
         };
 
-        this._messagesService.sendMessage([amWalletID], subject, body, action);
+        this._messagesService.sendMessage([amWalletID], subject, body, action as any);
     }
 
     subscribeForChange(type: string): void {
         // define which one trigger which, depend on type.
         const triggering: FormControl = {
-            'quantity': this.quantity,
-            'amount': this.amount,
+            quantity: this.quantity,
+            amount: this.amount,
         }[type];
 
         const beTriggered: FormControl = {
-            'quantity': this.amount,
-            'amount': this.quantity
+            quantity: this.amount,
+            amount: this.quantity,
         }[type];
 
         const callBack = {
-            'quantity': (value) => {
+            quantity: (value) => {
 
                 /**
                  * amount = unit * nav
@@ -1022,7 +1019,7 @@ The IZNES Team.</p>`;
 
                 this.calcFeeNetAmount();
             },
-            'amount': (value) => {
+            amount: (value) => {
 
                 /**
                  * quantity = amount / nav
@@ -1032,13 +1029,13 @@ The IZNES Team.</p>`;
 
                 this.trueAmount = newValue;
 
-                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14) // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
+                const quantity = math.format(math.chain(newValue).divide(this.nav).done(), 14); // {notation: 'fixed', precision: this.shareData.maximumNumDecimal}
                 const newQuantity = this.roundDown(quantity, this.shareData.maximumNumDecimal).toString();
                 const newQuantityStr = this._moneyValuePipe.transform(newQuantity, this.shareData.maximumNumDecimal);
                 beTriggered.patchValue(newQuantityStr, { onlySelf: true, emitEvent: false });
 
                 this.calcFeeNetAmount();
-            }
+            },
         }[type];
 
         this.inputSubscription = triggering.valueChanges.pipe(distinctUntilChanged()).subscribe(callBack);
@@ -1113,7 +1110,6 @@ The IZNES Team.</p>`;
         return math.format((Math.floor(number * Math.pow(10, decimals)) / Math.pow(10, decimals)), 14);
     }
 
-
     isValidOrderValue() {
         // if the order type is sell buy we dont care the minimum order value.
         if (this.type === 'sellbuy') {
@@ -1133,15 +1129,15 @@ The IZNES Team.</p>`;
 
         // define which one trigger which, depend on type.
         const triggering: FormControl = {
-            'cutoff': this.cutoffDate,
-            'valuation': this.valuationDate,
-            'settlement': this.settlementDate
+            cutoff: this.cutoffDate,
+            valuation: this.valuationDate,
+            settlement: this.settlementDate,
         }[type];
 
         const beTriggered: FormControl = {
-            'cutoff': [this.valuationDate, this.settlementDate],
-            'valuation': [this.cutoffDate, this.settlementDate],
-            'settlement': [this.cutoffDate, this.valuationDate]
+            cutoff: [this.valuationDate, this.settlementDate],
+            valuation: [this.cutoffDate, this.settlementDate],
+            settlement: [this.cutoffDate, this.valuationDate],
         }[type];
 
         const momentDateValue = $event[0];
@@ -1164,7 +1160,6 @@ The IZNES Team.</p>`;
             const mSettlementDate = this.getSettlementDateFromCutoff(momentDateValue);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
 
-
             triggering.setValue(cutoffDateStr);
             beTriggered[0].setValue(valuationDateStr);
             beTriggered[1].setValue(settlementDateStr);
@@ -1175,7 +1170,6 @@ The IZNES Team.</p>`;
             const mCutoffDate = this.getCutoffDateFromValuation(momentDateValue);
             const cutoffDateStr = this.getCutoffTimeForSpecificDate(mCutoffDate)
             .format('YYYY-MM-DD HH:mm');
-
 
             const mSettlementDate = this.getSettlementDateFromCutoff(mCutoffDate);
             const settlementDateStr = mSettlementDate.format('YYYY-MM-DD');
@@ -1270,7 +1264,7 @@ The IZNES Team.</p>`;
            `;
         }
 
-        let message = `
+        const message = `
             <p class="mb-1"><span class="text-warning">Please check information about your order before confirm it:</span></p>
             ${conditionalMessage ? conditionalMessage : ''}
             ${amountMessage}
@@ -1312,7 +1306,7 @@ The IZNES Team.</p>`;
         this._confirmationService.create(
             '<span>Order confirmation</span>',
             message,
-            { confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary' }
+            { confirmText: 'Confirm', declineText: 'Cancel', btnClass: 'primary' },
         ).subscribe((ans) => {
             if (ans.resolved) {
                 this.handleSubmit();
@@ -1567,7 +1561,7 @@ The IZNES Team.</p>`;
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `,  {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
     /**
@@ -1590,7 +1584,7 @@ The IZNES Team.</p>`;
                         </tr>
                     </tbody>
                 </table>
-            `, {}, this._translate.getTranslationByString('Order above 80% of your position'));
+            `,  {}, this._translate.getTranslationByString('Order above 80% of your position'));
     }
 
     validateKiid() {
@@ -1665,7 +1659,6 @@ function numberValidator(control: FormControl): { [s: string]: boolean } {
  */
 function emptyArrayValidator(control: FormControl): { [s: string]: boolean } {
 
-
     const formValue = control.value;
     if (formValue instanceof Array && control.value.length === 0) {
         return { required: true };
@@ -1716,6 +1709,6 @@ function calNetAmount(amount: number | string, fee: number | string, orderType: 
     fee = Number(fee);
     return {
         s: Number(math.format(math.chain(amount).add(fee).done(), 14)),
-        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14))
+        r: Number(math.format(math.chain(amount).subtract(fee).done(), 14)),
     }[orderType];
 }
