@@ -17,6 +17,9 @@ import {SetlDirectivesModule} from '../directives';
 import {DynamicFormsModule} from './dynamic-forms/module';
 import {MultilingualModule} from '@setl/multilingual/multilingual.module';
 import {ClarityModule} from '@clr/angular';
+import {FormstepsComponent} from './formsteps/formsteps.component';
+import {FormstepComponent} from './formsteps/formstep.component';
+import {ProgressComponent} from './formsteps/progress/progress.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +27,10 @@ import {ClarityModule} from '@clr/angular';
         ConfirmationsComponent,
         ConfirmationComponent,
         SwitchButtonComponent,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
+        FormstepsComponent,
+        FormstepComponent,
+        ProgressComponent
     ],
     exports: [
         VariousAddressSelectComponent,
@@ -32,7 +38,10 @@ import {ClarityModule} from '@clr/angular';
         SelectModule,
         SwitchButtonComponent,
         DatePickerExtendedModule,
-        PasswordTooltipComponent
+        PasswordTooltipComponent,
+        FormstepsComponent,
+        FormstepComponent,
+        ProgressComponent
     ],
     imports: [
         CommonModule,

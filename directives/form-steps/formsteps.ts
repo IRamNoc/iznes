@@ -3,7 +3,6 @@ import {
     ElementRef,
     HostListener,
     Input,
-    OnInit,
     OnDestroy,
     Renderer2,
     AfterViewInit,
@@ -18,7 +17,7 @@ import { Observable } from 'rxjs/Rx';
 @Directive({
     selector: '[formsteps]'
 })
-export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
+export class FormStepsDirective implements OnDestroy, AfterViewInit {
 
     private el: any;
     config: any;
@@ -104,12 +103,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
     @HostListener('window:resize', ['$event']) onResize(event): void {
         this.resizeWidth();
         this.resizeHeight();
-    }
-
-    ngOnInit() {
-        // if (this.config) {
-        //     this.constructFormSteps();
-        // }
     }
 
     ngAfterViewInit() {
@@ -239,32 +232,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                     }
                 }
                 this.divProgressBar.appendChild(divStep);
-                // add click on progress bar steps to go directly to it
-                // removed click on progressbar steps for the moment
-                // divStep.onclick = (event) => {
-                //     if (!this.isAllFinished) {
-                //         // check previous
-                //         let checkStep;
-                //         if (this.isMultiForm) {
-                //             checkStep = (i === 0) ? 0 : (i - 1);
-                //             if (this.config[checkStep].form !== undefined) {
-                //                 if (this.config[checkStep].form.valid) {
-                //                     this.currentStep = i;
-                //                     this.move();
-                //                 }
-                //             } else {
-                //                 this.currentStep = i;
-                //                 this.move();
-                //             }
-                //         } else {
-                //             checkStep = (i === 0) ? 1 : i;
-                //             if (this.config.form.controls['step' + checkStep].valid) {
-                //                 this.currentStep = i;
-                //                 this.move();
-                //             }
-                //         }
-                //     }
-                // };
             }
 
             // add buttons
@@ -309,9 +276,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                         if (this.isMultiForm) {
                             this.clickSubmit(this.btNext);
 
-                            // if (this.config[this.currentStep].form !== undefined) {
-                            //     this.config[this.currentStep].submitted = true;
-                            // }
                             if (this.config[this.currentStep].goNext !== undefined) {
                                 this.currentStep = this.config[this.currentStep].goNext - 1;
                             } else {
@@ -337,9 +301,6 @@ export class FormStepsDirective implements OnInit, OnDestroy, AfterViewInit {
                     const missingSteps = this.applyStepToProgressBar();
                     if (missingSteps.length > 0 && this.isMultiForm && this.config[this.nbSteps - 1].form !== undefined) {
                         setTimeout(() => {
-                            // if (this.config[this.nbSteps - 1].form !== undefined) {
-                            //     this.config[this.nbSteps - 1].submitted = true;
-                            // }
                             this.currentStep = missingSteps[0];
                             this.move();
                         }, 50);

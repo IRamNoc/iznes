@@ -1,0 +1,5 @@
+<div class="steps">
+    <div *ngFor="let step of config" class="step" [class.active]="step.active" [style.width]="getWidth()">
+        <p>{{step.title}}</p>
+    </div>
+</div>
