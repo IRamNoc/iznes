@@ -124,7 +124,7 @@ export class EncumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Sends a encumberAsset request.
+     * Sends an encumberAsset request.
      *
      * @return {void}
      */

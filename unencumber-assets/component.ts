@@ -121,7 +121,7 @@ export class UnencumberAssetsComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Sends a unencumberAsset request. (To unencumber, the encumber must have ended before Date.now())
+     * Sends an unencumberAsset request. (To unencumber, the encumber must have ended before Date.now())
      *
      * @return {void}
      */
