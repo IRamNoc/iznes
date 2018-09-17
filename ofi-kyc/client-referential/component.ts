@@ -434,8 +434,15 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
             this.viewClient('list');
         } else {
             this.pageType = page;
-
-            if (page == 'audit') this.requestAuditSearch();
+            if (page == 'audit') {
+                if (this.kycId != '') {
+                    this.searchForm.controls['searchInvestor'].patchValue(this.clients[this.kycId].companyName);
+                    this.searchForm.controls['searchInvestor'].disable();
+                } else {
+                    this.searchForm.controls['searchInvestor'].enable();
+                }
+                this.requestAuditSearch();
+            }
         }
     }
 
