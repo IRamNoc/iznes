@@ -24,7 +24,7 @@
 
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="legalForm">{{'Legal form' | translate}}</label>
-                    <ng-select id="legalForm" [items]="legalFormList" [formControl]="form.get('legalForm')" placeholder="{{'Please select a legal form for your company' | translate}}"></ng-select>
+                    <ng-select class="multiline" id="legalForm" [items]="legalFormList" [formControl]="form.get('legalForm')" placeholder="{{'Please select a legal form for your company' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('legalForm')">{{'Field is required' | translate}}</span>
                 </div>
             </div>
@@ -103,7 +103,7 @@
             <div class="row">
                 <div class="form-group required-field col-sm-6">
                     <label class="control-label" for="sectorActivity">{{'Sector of activity' | translate}}</label>
-                    <ng-select [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Please fill in your sector activity' | translate}}"></ng-select>
+                    <ng-select class="multiline" [items]="sectorActivityList" id="sectorActivity" formControlName="sectorActivity" placeholder="{{'Please fill in your sector activity' | translate}}"></ng-select>
                     <span class="field-error" *ngIf="hasError('sectorActivity')">{{'Field is required' | translate}}</span>
                 </div>
                 <div class="form-group required-field col-sm-6" *ngIf="!isDisabled('sectorActivityText')">
