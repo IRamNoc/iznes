@@ -15,6 +15,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('myDataGrid') myDataGrid;
     @select(['user', 'connected', 'connectedWallet']) getConnectedWallet;
+    @select(['wallet', 'addressDirectory']) addressDirectory;
 
     private issuers$: Observable<any>;
     private tabControl: TabControl;
@@ -31,9 +32,9 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                 private reportingService: ReportingService) {
 
         this.subscriptions.push(this.getConnectedWallet.subscribe((connectedWalletId) => {
-            this.connectedWalletId = connectedWalletId;
-            this.closeTabs();
-        },
+                this.connectedWalletId = connectedWalletId;
+                this.closeTabs();
+            },
         ));
     }
 
@@ -68,6 +69,8 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.reportingService.getHoldings(asset.asset).then((holdings) => {
+            console.log('+++ holdings', holdings);
+
             this.tabControl.new({
                 title: asset.asset,
                 icon: 'th-list',
@@ -79,6 +82,22 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                     holdings,
                 },
             });
+
+            this.tabControl.tabs[1].data.holdings =
+                this.reportingService.mapHolding(this.tabControl.tabs[1].data.holdings);
+
+            this.subscriptions.push(this.addressDirectory.subscribe((addresses) => {
+                if (Object.keys(addresses).length) {
+                    //console.log('+++ addresses', addresses);
+                    const tab = this.tabControl.tabs[1].data.holdings;
+                    for (let i = 0; i < tab.length; i += 1) {
+                        tab[i].addrLabel = addresses[tab[i].walletID][tab[i].addr].label;
+                    }
+                    //console.log('+++ this.tabControl', this.tabControl);
+                    this.changeDetector.detectChanges();
+                }
+            }));
+
         });
     }
 
