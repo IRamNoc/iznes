@@ -11,17 +11,16 @@ import { ConfirmationService, SagaHelper } from '@setl/utils/index';
 import { FileService } from '@setl/core-req-services';
 import { NgRedux } from '@angular-redux/store';
 import { ToasterService } from 'angular2-toaster';
-import { OfiKycService } from "@ofi/ofi-main/ofi-req-services/ofi-kyc/service";
-import { MessagesService } from "@setl/core-messages/index";
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { MessagesService } from '@setl/core-messages/index';
 
 /* Redux */
-
 
 @Component({
     selector: 'access-table',
     styleUrls: ['./component.scss'],
     templateUrl: './component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OfiFundAccessTable {
 
@@ -72,7 +71,7 @@ export class OfiFundAccessTable {
     }
 
     onClickAccess(id) {
-        let index = this.tableData.findIndex((i) => i.id == id);
+        const index = this.tableData.findIndex((i) => i.id == id);
 
         this.tableData[index]['access'] = !this.tableData[index]['access'];
         this.tableData[index]['accessChanged'] = !this.tableData[index]['accessChanged'];
@@ -87,7 +86,7 @@ export class OfiFundAccessTable {
     }
 
     checkFee(id, type) {
-        let index = this.tableData.findIndex((i) => i.id == id);
+        const index = this.tableData.findIndex((i) => i.id == id);
 
         if (isNaN(parseFloat(this.tableData[index][type])) || !isFinite(this.tableData[index][type])) this.tableData[index][type] = 0;
         this.tableData[index][type] = Math.round((this.tableData[index][type]) * 10000) / 10000;
@@ -124,7 +123,6 @@ export class OfiFundAccessTable {
             }
             this.updateChanges('overrides');
         }
-
 
         this.newOverride = {
             amount: 0,
@@ -172,7 +170,7 @@ export class OfiFundAccessTable {
     }
 
     confirmSave() {
-        let message = (Object.keys(this.changes).length == 0 ?
+        const message = (Object.keys(this.changes).length == 0 ?
                 'No changes have been made to the Investors\' Fund Access permissions.'
                 :
                 'Please confirm the changes made to the Investors\' Fund Access permissions.'
@@ -181,7 +179,7 @@ export class OfiFundAccessTable {
         this._confirmationService.create('Confirm Fund Share Access:', message, {
             confirmText: 'Confirm Access and Save Changes',
             declineText: 'Cancel',
-            btnClass: 'primary'
+            btnClass: 'primary',
         }).subscribe((ans) => {
             if (ans.resolved) {
                 this.saveData();
@@ -191,10 +189,10 @@ export class OfiFundAccessTable {
 
     saveData() {
 
-        let changedData = this.tableData.filter((i) => this.changes.findIndex((j) => j.id == i.id) > -1);
+        const changedData = this.tableData.filter((i) => this.changes.findIndex((j) => j.id == i.id) > -1);
 
-        let promises = [];
-        let uploadData = {};
+        const promises = [];
+        const uploadData = {};
 
         Object.keys(changedData).forEach((key) => {
             if (changedData[key]['newOverride'] && changedData[key]['override']) {
@@ -216,7 +214,7 @@ export class OfiFundAccessTable {
 
                             uploadData[key] = data[1].Data[0][0];
                             resolve();
-                        })
+                        }),
                     ));
                 }));
             }
@@ -232,7 +230,7 @@ export class OfiFundAccessTable {
             });
 
             this._ofiKycService.saveFundAccess({
-                access: changedData
+                access: changedData,
             }).then(() => {
 
                 // success call back
@@ -252,12 +250,12 @@ export class OfiFundAccessTable {
                                 link: '/#/list-of-funds/0',
                                 anchorCss: 'btn',
                                 anchorText: 'Start Trading',
-                            }
+                            },
                         ],
                     },
                 };
 
-                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action);
+                this._messagesService.sendMessage(recipientsArr, subjectStr, bodyStr, action as any);
 
                 this.backBtn();
             }, () => {
