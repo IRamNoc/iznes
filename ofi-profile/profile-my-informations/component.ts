@@ -1,23 +1,23 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {NgRedux, select} from '@angular-redux/store';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import { NgRedux, select } from '@angular-redux/store';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import {ToasterService} from 'angular2-toaster';
+import { ToasterService } from 'angular2-toaster';
 
 import { MemberSocketService } from '@setl/websocket-service';
-import {APP_CONFIG, AppConfig} from '@setl/utils';
-import {SagaHelper} from '@setl/utils/index';
-import {passwordValidator} from '@setl/utils/helper/validators/password.directive';
-import {MyUserService} from '@setl/core-req-services/index';
-import {SET_NEW_PASSWORD} from '@setl/core-store/index';
-import {AlertsService} from '@setl/jaspero-ng2-alerts/index';
-import {MultilingualService} from '@setl/multilingual';
+import { APP_CONFIG, AppConfig } from '@setl/utils';
+import { SagaHelper } from '@setl/utils/index';
+import { passwordValidator } from '@setl/utils/helper/validators/password.directive';
+import { MyUserService } from '@setl/core-req-services/index';
+import { SET_NEW_PASSWORD } from '@setl/core-store/index';
+import { AlertsService } from '@setl/jaspero-ng2-alerts/index';
+import { MultilingualService } from '@setl/multilingual';
 
-import {OfiKycService} from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
+import { OfiKycService } from '@ofi/ofi-main/ofi-req-services/ofi-kyc/service';
 
 import { take } from 'rxjs/operators';
-import {get as getValue} from 'lodash'
+import { get as getValue } from 'lodash'
 
 
 @Component({
@@ -48,7 +48,7 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     oldPassword: AbstractControl;
     password: AbstractControl;
     passwordConfirm: AbstractControl;
-
+    validation: number = 3;
 
     public showPasswords = false;
 
@@ -119,8 +119,8 @@ export class OfiProfileMyInformationsComponent implements OnInit {
     }
 
     passwordValidator(g: FormGroup) {
-        const oldNew = g.get('oldPassword').value !== g.get('password').value ? null : {'oldNew': true};
-        const mismatch = g.get('password').value === g.get('passwordConfirm').value ? null : {'mismatch': true};
+        const oldNew = g.get('oldPassword').value !== g.get('password').value ? null : { 'oldNew': true };
+        const mismatch = g.get('password').value === g.get('passwordConfirm').value ? null : { 'mismatch': true };
         return (oldNew) ? oldNew : mismatch;
     }
 
@@ -130,39 +130,45 @@ export class OfiProfileMyInformationsComponent implements OnInit {
 
     changePass(formValues) {
 
-        const asyncTaskPipe = this.myUserService.saveNewPassword({
-            oldPassword: formValues.oldPassword,
-            newPassword: formValues.password
-        });
+        this.validation = 0;
 
-        // Get response
-        this._ngRedux.dispatch(
-            SagaHelper.runAsync(
-                [SET_NEW_PASSWORD],
-                [],
-                asyncTaskPipe,
-                {},
-                (data) => {
-                    const token = getValue(data, '[1].Data[0].Token', '');
-                    this.memberSocketService.token = token;
+        if (formValues.password.length > 7) {
+            this.validation += (formValues.password.match(/[A-Z]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[a-z]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[0-9]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[\u0020-\u002F|\u003A-\u0040|\u005B-\u0060|\u007B-\u007F]/) ? 1 : 0);
+            this.validation += (formValues.password.match(/[\u00A0-\uFFFF]/) ? 1 : 0);
+        }
 
-                    this.changePassForm.reset();
-                    this.alertsService.create('success', `
-                        Your password has been successfully changed!
-                    `)
-                    .asObservable()
-                    .pipe(take(1))
-                    .subscribe(() => {
+        if (this.validation > 2) {
+
+            const asyncTaskPipe = this.myUserService.saveNewPassword({
+                oldPassword: formValues.oldPassword,
+                newPassword: formValues.password
+            });
+
+            // Get response
+            this._ngRedux.dispatch(
+                SagaHelper.runAsync(
+                    [SET_NEW_PASSWORD],
+                    [],
+                    asyncTaskPipe,
+                    {},
+                    (data) => {
+                        const token = getValue(data, '[1].Data[0].Token', '');
+                        this.memberSocketService.token = token;
+
+                        this.toasterService.pop('success', 'Your password has been successfully changed!');
                         this.router.navigate(['home']);
-                    });
-                },
-                (e) => {
-                    this.alertsService.create('warning', `
+                    },
+                    (e) => {
+                        this.alertsService.create('warning', `
                         Failed to change your password!
                     `);
-                }
-            )
-        );
+                    }
+                )
+            );
+        }
 
     }
 
