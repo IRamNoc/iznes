@@ -219,7 +219,8 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             // funds details
             this.subscriptions.push(this.fundsDetailsListOb.subscribe((fundsDetailsList) => {
                 this.fundsDetails = fundsDetailsList;
-                if (this.fundsDetails.totals) {
+                //TODO: temp fix. this.fundsDetails.funds.length > 0 fix in backend.
+                if (this.fundsDetails.totals && this.fundsDetails.funds.length > 0) {
                     if (this.fundsDetails.totals.hasOwnProperty('totalNetAmount')) {
                         this.fundsTotalNetAmount = Number(this.fundsDetails.totals.totalNetAmount);
                         if (this.fundsDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
@@ -267,7 +268,8 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             // shares details
             this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
                 this.sharesDetails = sharesDetailsList;
-                if (this.sharesDetails.totals) {
+                //TODO: temp fix. this.sharesDetails.funds.length > 0 fix in backend.
+                if (this.sharesDetails.totals && this.sharesDetails.funds.length > 0) {
                     if (this.sharesDetails.totals.hasOwnProperty('totalNetAmount')) {
                         this.sharesTotalNetAmount = Number(this.sharesDetails.totals.totalNetAmount);
                         if (this.sharesDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
@@ -562,7 +564,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             searchDate = get(this.sharesDetails, ['shares', id, searchDateType], '');
         }
         // fund level
-        else  {
+        else {
             fundname = get(this.fundsDetails, ['funds', id, 'fundName'], '');
             searchDate = get(this.fundsDetails, ['funds', id, searchDateType], '');
         }
@@ -620,7 +622,7 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
         const curDateFilterVal = get(this.filtersForm.controls['specificDate'].value, '[0].id');
         // 0 or 2 is navDate
         if (curDateFilterVal === 0 || curDateFilterVal === 2) {
-           return 'navDate';
+            return 'navDate';
         }
 
         return 'settlementDate';
