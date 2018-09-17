@@ -173,7 +173,7 @@ export class MyRequestsDetailsComponent implements OnInit, AfterViewInit, OnDest
         }
 
         this.newRequestService.storeCurrentKycs(kycIDs);
-
+        this._ofiKycService.notifyAMKycContinuedFromAskMoreInfo(kycID);
         this.router.navigate(['my-requests', 'new'], extras);
     }
 }

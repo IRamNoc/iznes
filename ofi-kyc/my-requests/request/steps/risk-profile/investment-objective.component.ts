@@ -3,7 +3,7 @@ import {select} from '@angular-redux/store';
 import {FormControl} from '@angular/forms';
 import {Subject} from 'rxjs';
 import {filter, take, takeUntil} from 'rxjs/operators';
-import {isEmpty, values, map} from 'lodash';
+import {isEmpty, values, map, toNumber} from 'lodash';
 
 import {FormPercentDirective} from '@setl/utils/directives/form-percent/formpercent';
 import {NewRequestService} from '../../new-request.service';
@@ -47,8 +47,10 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe)
             )
             .subscribe((data: any) => {
-                if(data.objectivesSameInvestmentCrossAm){
-                    this.form.get('objectivesSameInvestmentCrossAm').patchValue(data.objectivesSameInvestmentCrossAm, {emitEvent: false})
+                const cross = toNumber(data.objectivesSameInvestmentCrossAm);
+                if(cross){
+                    this.form.get('objectivesSameInvestmentCrossAm').patchValue(cross, {emitEvent: false});
+                    this.formCheckSameInvestmentCrossAm(cross);
                 }
             })
         ;
@@ -68,7 +70,9 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
     }
 
     updateCrossAM(){
-        (this.form.get('objectivesSameInvestmentCrossAm') as FormControl).updateValueAndValidity();
+        const value = this.form.get('objectivesSameInvestmentCrossAm').value;
+        
+        this.formCheckSameInvestmentCrossAm(value);
     }
 
     initFormCheck() {
@@ -77,6 +81,7 @@ export class InvestmentObjectiveComponent implements OnInit, OnDestroy {
                 takeUntil(this.unsubscribe)
             )
             .subscribe(value => {
+                this.riskProfileService.currentServerData.riskobjective.next('');
                 this.formCheckSameInvestmentCrossAm(value);
             })
         ;
