@@ -198,6 +198,8 @@ export class OfiFundAccessTable {
 
         Object.keys(changedData).forEach((key) => {
             if (changedData[key]['newOverride'] && changedData[key]['override']) {
+                changedData[key]['overrideAmount'] = changedData[key]['overrideAmount'].replace(/\s+/g, '');
+
                 promises.push(new Promise((resolve, reject) => {
 
                     if (_.isEmpty(this.uploadFiles[key])) {
@@ -246,12 +248,12 @@ export class OfiFundAccessTable {
                     type: 'messageWithLink',
                     data: {
                         links: [
-                                {
-                                    link: '/#/list-of-funds/0',
-                                    anchorCss: 'btn',
-                                    anchorText: 'Start Trading',
-                                }
-                            ],
+                            {
+                                link: '/#/list-of-funds/0',
+                                anchorCss: 'btn',
+                                anchorText: 'Start Trading',
+                            }
+                        ],
                     },
                 };
 
