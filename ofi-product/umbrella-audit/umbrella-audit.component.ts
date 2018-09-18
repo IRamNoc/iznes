@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { select } from '@angular-redux/store';
 import * as _ from 'lodash';
+import { Location } from '@angular/common';
 
 import { OfiUmbrellaFundService } from '@ofi/ofi-main/ofi-req-services/ofi-product/umbrella-fund/service';
 
@@ -24,6 +25,7 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
         private umbrellaService: OfiUmbrellaFundService,
+        private location: Location,
     ) {
 
     }
@@ -67,5 +69,9 @@ export class UmbrellaAuditComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.unSubscribe.next();
         this.unSubscribe.complete();
+    }
+
+    navigateToPreviousLocation() {
+        this.location.back();
     }
 }
