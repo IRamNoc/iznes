@@ -1,8 +1,7 @@
 export interface AddressDirectoryDetail {
-    Glei: string;
-    commuPub: string;
+    label: string;
+    iban: string;
     walletID: number;
-    walletName: string;
 }
 
 export interface AddressDirectoryState {
