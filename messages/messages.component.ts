@@ -58,6 +58,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
 
     public unreadMessages;
     public selectAll: boolean = false;
+    private checkedMessages: any[] = [];
 
     public items: string[] = [];
 
@@ -160,8 +161,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         );
 
         this.subscriptionsArray.push(
-            this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState)),
-        );
+            this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState),
+            ));
 
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
@@ -200,9 +201,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
-                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
-                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
-                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                    '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                    reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                    reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
@@ -268,7 +269,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                     }
                 }
 
-                message.isChecked = false;
+                message.isChecked = this.checkedMessages.includes(message.mailId) ? true : false;
                 return message;
             }
         });
@@ -301,6 +302,7 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
      */
     refreshMailbox(page = 0) {
         this.currentPage = page;
+        this.checkedMessages = [];
         const categoryType = this.categories[this.currentCategory].type;
         this.requestMailboxByCategory(categoryType, page);
     }
@@ -460,6 +462,15 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         if (reset) {
             this.messageView = false;
         }
+
+        // Save any checked messages so we can restore them once new data comes in
+        this.checkedMessages = [];
+        this.messages.forEach((message) => {
+            if (message.isChecked) {
+                this.checkedMessages.push(message.mailId);
+            }
+        });
+
         this.resetMessages(reset);
         this.uncheckAll();
         this.clearSearch();
