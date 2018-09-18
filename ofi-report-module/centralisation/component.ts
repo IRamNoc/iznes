@@ -268,8 +268,8 @@ export class CentralisationReportComponent implements OnInit, OnDestroy {
             // shares details
             this.subscriptions.push(this.sharesDetailsListOb.subscribe((sharesDetailsList) => {
                 this.sharesDetails = sharesDetailsList;
-                //TODO: temp fix. this.sharesDetails.funds.length > 0 fix in backend.
-                if (this.sharesDetails.totals && this.sharesDetails.funds.length > 0) {
+                //TODO: temp fix. this.sharesDetails.shares.length > 0 fix in backend.
+                if (this.sharesDetails.totals && this.sharesDetails.shares.length > 0) {
                     if (this.sharesDetails.totals.hasOwnProperty('totalNetAmount')) {
                         this.sharesTotalNetAmount = Number(this.sharesDetails.totals.totalNetAmount);
                         if (this.sharesDetails.totals.hasOwnProperty('totalSubscriptionAmount')) {
