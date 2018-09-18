@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { TabControl, Tab } from '../tabs';
 import { select } from '@angular-redux/store';
+import { isEmpty } from 'lodash';
 
 @Component({
     selector: 'setl-issue',
@@ -69,8 +70,6 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.reportingService.getHoldings(asset.asset).then((holdings) => {
-            console.log('+++ holdings', holdings);
-
             this.tabControl.new({
                 title: asset.asset,
                 icon: 'th-list',
@@ -83,21 +82,14 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
             });
 
-            this.tabControl.tabs[1].data.holdings =
-                this.reportingService.mapHolding(this.tabControl.tabs[1].data.holdings);
-
+            /* Subscribe to get holdings wallet details and then map the holding */
             this.subscriptions.push(this.addressDirectory.subscribe((addresses) => {
-                if (Object.keys(addresses).length) {
-                    //console.log('+++ addresses', addresses);
-                    const tab = this.tabControl.tabs[1].data.holdings;
-                    for (let i = 0; i < tab.length; i += 1) {
-                        tab[i].addrLabel = addresses[tab[i].walletID][tab[i].addr].label;
-                    }
-                    //console.log('+++ this.tabControl', this.tabControl);
+                if (!isEmpty(addresses)) {
+                    this.tabControl.tabs[1].data.holdings =
+                        this.reportingService.mapHolding(this.tabControl.tabs[1].data.holdings, addresses);
                     this.changeDetector.detectChanges();
                 }
             }));
-
         });
     }
 
@@ -125,7 +117,9 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
      *
      * @param page - page number value emitted from datagrid
      */
-    public setCurrentPage(page) {
+    public
+
+    setCurrentPage(page) {
         if (!this.editTab) this.pageCurrent = page;
         this.editTab = false;
     }

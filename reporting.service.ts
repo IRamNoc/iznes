@@ -7,23 +7,21 @@ import { NgRedux } from '@angular-redux/store';
 import { HoldingByAsset, MyWalletHoldingState } from '@setl/core-store/wallet/my-wallet-holding';
 import { isEmpty, isArray, some } from 'lodash';
 import { InitialisationService, WalletNodeRequestService, MyWalletsService } from '@setl/core-req-services';
-import { SagaHelper, WalletTxHelper, WalletTxHelperModel, LogService } from '@setl/utils';
+import { SagaHelper, WalletTxHelper, LogService } from '@setl/utils';
 import { MemberSocketService } from '@setl/websocket-service';
 import {
     setRequestedWalletHolding,
     setRequestedWalletIssuer,
-    setRequestedWalletLabel,
     SET_WALLET_ISSUER_LIST,
     SET_ISSUE_HOLDING,
     SET_ALL_TRANSACTIONS,
     SET_ASSET_TRANSACTIONS,
+    SET_ADDRESS_DIRECTORY,
 } from '@setl/core-store';
 import { WalletIssuerDetail } from '@setl/core-store/assets/my-issuers';
 import { Transaction } from '@setl/core-store/wallet/transactions/model';
 import { TransactionsByAsset } from '@setl/core-store/wallet/transactions';
-import { SET_ADDRESS_DIRECTORY } from '@setl/core-store/index';
-import { RequestOwnWalletsMessageBody } from "@setl/core-req-services/my-wallets/my-wallets.service.model";
-import { createMemberNodeSagaRequest } from "@setl/utils/common";
+import { createMemberNodeSagaRequest } from '@setl/utils/common';
 
 export interface Asset {
     asset: string;
@@ -49,6 +47,7 @@ export class ReportingService {
     addressList = [];
     walletList = {};
     holdingByAddress: {}[] = [];
+    requestedWalletIDs: any[] = [];
 
     walletIssuerDetailSubject: BehaviorSubject<WalletIssuerDetail>;
     holdingsByAssetSubject: BehaviorSubject<any>;
@@ -121,7 +120,7 @@ export class ReportingService {
                 this.connectedWalletId = connectedWalletId;
                 this.connectedChainId = connectedChainId;
                 this.requestWalletData();
-            }))
+            }));
 
         const dataStream$ = observableCombineLatest(idStream$, ...this.onLoad$, (ids, ...rest) => {
                 return [...ids, ...rest];
@@ -183,7 +182,7 @@ export class ReportingService {
 
         const combinedWallet$ = observableCombineLatest(this.walletIssuerDetail$, this.holdingsByAssetSubject);
         combinedWallet$.subscribe(([walletIssuerDetail, holdingsByAsset]) => {
-            this.handleWalletIssuerDetail(<WalletIssuerDetail>walletIssuerDetail, holdingsByAsset)
+            this.handleWalletIssuerDetail(<WalletIssuerDetail>walletIssuerDetail, holdingsByAsset);
         });
     }
 
@@ -219,11 +218,11 @@ export class ReportingService {
                 // Merge in address labels
                 asset.breakdown = asset.breakdown.map(breakdown => ({
                     ...breakdown,
-                    ...addresses[breakdown.addr]
+                    ...addresses[breakdown.addr],
                 }));
 
                 return asset;
-            })
+            });
             this.holdingsByAssetSubject.next(next);
         }
     }
@@ -256,47 +255,77 @@ export class ReportingService {
                 const total = holdings.filter(h => h.balance > 0).reduce((a, h) => a + h.balance, 0);
                 return resolve(holdings.map(
                     (holding) => {
-                        //return this.mapHolding(holding, total);
+                        // Request the holding wallet detail and save to Redux
+                        this.requestHoldingWalletAddressDetail(holding);
                         return {
                             ...holding,
+                            walletName: 'Updating wallet name..',
+                            addrLabel: holding.addr,
                             percentage: (holding.balance > 0) ? (holding.balance / total) * 100 : null,
                         };
                     },
                 ));
-            });
-            //.catch(() => reject('Failed to get holdings for ' + asset));
+            })
+            .catch(() => reject(`Failed to get holdings for ${asset}`));
         });
     }
 
-    public mapHolding(holdings) {
-        holdings.map((holding) => {
-            let walletID;
-            let walletName;
-            /* Request wallet ID */
+    /**
+     * Request Holding Wallet Address Detail
+     * -------------------------------------
+     * Requests the address labels and wallet ID for a holding if needed, and saves to Redux
+     *
+     * @param holding
+     */
+    private requestHoldingWalletAddressDetail(holding) {
+
+        // Check if we know the wallet ID
+        let walletID = isEmpty(this.holdingByAddress) ? 0 : Number(Object.keys(this.holdingByAddress).find((wallet) => {
+            return this.holdingByAddress[wallet][holding.addr];
+        }));
+
+        // Request the wallet ID if we don't have it
+        if (!walletID) {
             const asyncTaskPipe = this.requestWalletID(holding.addr);
             this.ngRedux.dispatch(SagaHelper.runAsyncCallback(
                 asyncTaskPipe,
                 (data) => {
                     walletID = Number(data[1].Data[0].leiID);
                     /* Request the address labels for the wallet if we don't already have them */
-                    if (isEmpty(this.addressList[walletID])) {
-                        console.log('+++ req labels');
-                        this.requestAddressLabels(walletID);
-                    }
-                    walletName = this.walletList[walletID].walletName;
-
-                    return {
-                        ...holding,
-                        walletID,
-                        walletName,
-                    };
+                    this.requestAddressLabels(walletID, holding.addr);
                 },
             ));
+        } else {
+            // Request the address labels if we don't have them
+            this.requestAddressLabels(walletID, holding.addr);
+        }
+    }
+
+    /**
+     * Map Holding
+     * -----------
+     * Maps the holdings for issue reports to fetch the walletName and addrLabel
+     *
+     * @param holdings
+     * @param addresses
+     */
+    public mapHolding(holdings, addresses) {
+        return holdings.map((holding) => {
+            const walletID = addresses.hasOwnProperty(holding.addr) ? addresses[holding.addr].walletID : 0;
+            return {
+                walletName: walletID ? this.walletList[walletID].walletName : 'Updating wallet name..',
+                addrLabel: walletID ? addresses[holding.addr].label : 'Updating wallet name..',
+                addr: holding.addr,
+                percentage: holding.percentage,
+                balance: holding.balance,
+                encumbered: holding.encumbered,
+                free: holding.free,
+            };
         });
     }
 
     public getTransactions(): Observable<Transaction[]> {
-        this.initialised$.pipe(filter(init => !!init), first(),).subscribe(() => this.getTransactionsFromWalletNode());
+        this.initialised$.pipe(filter(init => !!init), first()).subscribe(() => this.getTransactionsFromWalletNode());
 
         return new Observable<Transaction[]>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs));
@@ -305,7 +334,7 @@ export class ReportingService {
     }
 
     public getTransaction(hash): Observable<Transaction> {
-        this.initialised$.pipe(filter(init => !!init), first(),).subscribe(() => this.getTransactionsFromWalletNode());
+        this.initialised$.pipe(filter(init => !!init), first()).subscribe(() => this.getTransactionsFromWalletNode());
 
         return new Observable<Transaction>((observer) => {
             const sub = this.allTransactions$.subscribe(txs => observer.next(txs.find(tx => tx.hash === hash)));
@@ -367,7 +396,7 @@ export class ReportingService {
                     if (payload.asset) {
                         const action: any = {
                             type: SET_ASSET_TRANSACTIONS,
-                            payload: { asset: payload.asset, items: transactions }
+                            payload: { asset: payload.asset, items: transactions },
                         };
                         this.ngRedux.dispatch(action);
                     } else {
@@ -410,17 +439,23 @@ export class ReportingService {
      *
      * @param walletId
      */
-    private requestAddressLabels(walletId: number) {
-        const asyncTaskPipe = this.myWalletService.requestWalletLabel({
-            walletId,
-        });
+    private requestAddressLabels(walletId: number, address: string) {
+        // Request the address labels if we don't have them
+        if (isEmpty(this.addressList[address]) && !this.requestedWalletIDs.includes(walletId)) {
+            const asyncTaskPipe = this.myWalletService.requestWalletLabel({
+                walletId,
+            });
 
-        this.ngRedux.dispatch(SagaHelper.runAsync(
-            [SET_ADDRESS_DIRECTORY],
-            [],
-            asyncTaskPipe,
-            {},
-        ));
+            this.ngRedux.dispatch(SagaHelper.runAsync(
+                [SET_ADDRESS_DIRECTORY],
+                [],
+                asyncTaskPipe,
+                {},
+            ));
+
+            // Push wallet ID to requested array
+            this.requestedWalletIDs.push(walletId);
+        }
     }
 
     /**
