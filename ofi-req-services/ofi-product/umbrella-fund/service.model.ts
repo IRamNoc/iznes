@@ -7,7 +7,6 @@ export interface UmbrellaFundRequestMessageBody extends MemberNodeMessageBody {
 
 export interface SaveUmbrellaFundRequestBody extends MemberNodeMessageBody {
     token: string;
-    walletID: any;
     draft: number;
     umbrellaFundName: string;
     registerOffice: string;

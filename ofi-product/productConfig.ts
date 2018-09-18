@@ -1,19 +1,5 @@
 import { Validators } from '@angular/forms';
 
-const unitTrustItems = [ // Unit Trust / Unit Investment Trust (UIT)
-    { id: 1, text: 'GB Authorised unit trust (AUT)' },
-    { id: 2, text: 'US For US UIT refer to "US Mutual Fund"' },
-    { id: 3, text: 'KY (Exempted) Unit trust' },
-    { id: 4, text: 'IE Unit trust' },
-    { id: 5, text: 'VG Unit trust' },
-    { id: 6, text: 'VM Unit trust' },
-    { id: 7, text: 'GG Unit trust' },
-    { id: 8, text: 'JE Unit trust' },
-    { id: 9, text: 'HK Unit trust' },
-    { id: 10, text: 'SG Unit trust' },
-    { id: 11, text: 'MT Unit trust' },
-];
-
 const unitTrusts = {
     1: 'GB Authorised unit trust (AUT)',
     2: 'US For US UIT refer to "US Mutual Fund"',
@@ -34,8 +20,8 @@ export const validators = {
         month: Validators.pattern(/^\d{4}-(0[1-9]|1[0-2])$/),
     },
     alphanumeric: Validators.pattern(/^[\w ]+$/),
-    lei: Validators.pattern(/^(\w{20})?$/),
-    giin: Validators.pattern(/^([0-9]{19})?$/),
+    lei: Validators.pattern(/^\d{4}00[a-zA-Z0-9]{12}\d{2}$/),
+    giin: Validators.pattern(/^[A-Z0-9]{6}.[A-Z0-9]{5}.[A-Z]{2}.[0-9]{3}$/),
     internalReference: Validators.maxLength(50),
     additionnalNotes: Validators.maxLength(500),
 };
