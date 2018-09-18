@@ -1,10 +1,10 @@
-import {FormControl} from '@angular/forms';
+import { FormControl } from '@angular/forms';
 
 export interface UsersDetail {
     userId: number;
 }
 
-export interface Select2Item{
+export interface Select2Item {
     id: string | number;
     text: string;
 }
@@ -18,14 +18,15 @@ export interface UserTab {
     active: boolean;
     formControl?: FormControl;
     selectedChain?: number;
-    filteredTxList?: Array<Select2Item>;
-    selectedTxList?: Array<Select2Item>;
-    allocatedTxList?: Array<Select2Item>;
-    filteredWalletsByAccount?: Array<Select2Item>;
+    filteredTxList?: Select2Item[];
+    selectedTxList?: Select2Item[];
+    allocatedTxList?: Select2Item[];
+    filteredWalletsByAccount?: Select2Item[];
     oldChainAccess?: object;
 }
 
 export interface UsersState {
-    usersList: Array<UsersDetail>;
-    openedTabs: Array<UserTab>;
+    usersList: UsersDetail[];
+    totalRecords: number;
+    openedTabs: UserTab[];
 }

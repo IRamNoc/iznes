@@ -4,9 +4,11 @@ import {Action, ActionCreator} from 'redux';
 import {UserTab} from './model';
 
 /**
- * Set users list
+ * Handle users list
  */
 export const SET_ADMIN_USERLIST = `${name}/SET_ADMIN_USERLIST`;
+export const UPDATE_ADMIN_USERLIST = `${name}/UPDATE_ADMIN_USERLIST`;
+export const DELETE_FROM_ADMIN_USERLIST = `${name}/DELETE_FROM_ADMIN_USERLIST`;
 
 // Add tab action
 export const ADD_TAB = `${name}/ADD_TAB`;
@@ -16,10 +18,7 @@ export interface AddTab extends Action {
 }
 
 export const addTab: ActionCreator<AddTab> = (tab: UserTab) => (
-    {
-        type: ADD_TAB,
-        tab
-    }
+    { type: ADD_TAB, tab }
 );
 
 // remove tab action

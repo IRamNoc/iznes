@@ -151,6 +151,8 @@ export {
 
     /* Users list. */
     SET_ADMIN_USERLIST,
+    UPDATE_ADMIN_USERLIST,
+    DELETE_FROM_ADMIN_USERLIST,
     getUsersList,
 
     userAdminActions,
