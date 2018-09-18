@@ -6,6 +6,8 @@ import {PersistService} from '@setl/core-persist';
 import {Subject} from 'rxjs';
 import {map, take, takeUntil, filter as rxFilter} from 'rxjs/operators';
 
+import {PersistRequestService} from '@setl/core-req-services';
+
 import {NewRequestService} from '../new-request.service';
 import {IdentificationService} from './identification.service';
 
@@ -30,6 +32,7 @@ export class NewKycIdentificationComponent implements OnInit {
         private newRequestService: NewRequestService,
         private identificationService: IdentificationService,
         private persistService: PersistService,
+        private persistRequestService: PersistRequestService
     ) {
     }
 
@@ -56,10 +59,56 @@ export class NewKycIdentificationComponent implements OnInit {
             )
             .subscribe(kyc => {
                 if(!kyc.completedStep || (steps[kyc.completedStep] < steps.identification)){
-                    this.persistForm();
+                    this.prePersistForm();
                 }
             })
         ;
+    }
+
+    prePersistForm() {
+        this.persistRequestService
+        .loadFormState('newkycrequest/identification', this.newRequestService.context)
+        .then((data) => {
+            data = getValue(data, [1, 'Data', 0, 'data']);
+
+            if (!data) {
+                throw 'No data';
+            }
+
+            try {
+                const parsed = JSON.parse(data);
+                this.prepareArrayControls(parsed);
+                this.persistForm();
+            } catch (e) {
+                throw 'Error';
+            }
+
+        })
+        .catch((e) => {
+            this.persistForm();
+        })
+        ;
+    }
+
+    prepareArrayControls(parsed) {
+        const beneficiaries = getValue(parsed, ['companyInformation', 'beneficiaries']);
+        const holders = getValue(parsed, ['bankingInformation', 'custodianHolderCustom']);
+
+        const beneficiariesControl = this.form.get(['companyInformation', 'beneficiaries']);
+        if (beneficiaries.length > 1) {
+            beneficiariesControl.controls.splice(0);
+            for (let i = 0; i < beneficiaries.length; i += 1) {
+                beneficiariesControl.push(this.newRequestService.createBeneficiary());
+            }
+        }
+
+        const holdersControl = this.form.get(['bankingInformation', 'custodianHolderCustom']);
+        if (holders.length > 1) {
+            holdersControl.controls.splice(0);
+            for (let i = 0; i < holders.length; i += 1) {
+                holdersControl.push(this.newRequestService.createHolderCustom());
+            }
+        }
     }
 
     persistForm() {

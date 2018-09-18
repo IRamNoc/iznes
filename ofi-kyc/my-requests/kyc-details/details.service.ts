@@ -66,7 +66,8 @@ export class KycDetailsService {
                 'assetManagementCompanyID',
                 'constraintsSameInvestmentCrossAm',
                 'companyBeneficiariesID',
-                'custodianID'
+                'custodianID',
+                'custodianHolderAccount'
             ])
             .omitBy(isNil)
             .toPairs()

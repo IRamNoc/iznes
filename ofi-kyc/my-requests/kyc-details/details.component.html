@@ -30,7 +30,15 @@
             <!-- Panel body -->
             <div class="panel-body" style="padding: 10px 0px 30px 47px;" [class.hidden]="!child.open">
                 <!--Child Contents-->
-                <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
+                <ng-container *ngIf="child.id !== 'banking'">
+                    <kyc-details-grid *ngIf="child.data" [data]="child.data" [id]="child.id" (open)="open($event)"></kyc-details-grid>
+                </ng-container>
+
+                <ng-container *ngIf="child.id === 'banking'">
+                    <ng-container *ngFor="let data of child.data">
+                        <kyc-details-grid class="mb-1" *ngIf="data" [data]="data" [id]="child.id"></kyc-details-grid>
+                    </ng-container>
+                </ng-container>
             </div>
         </div>
 

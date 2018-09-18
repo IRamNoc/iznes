@@ -125,6 +125,7 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
 
     getBanking() {
         let banking = {
+            id: 'banking',
             title: 'Banking Information',
             data: ''
         };
@@ -132,10 +133,18 @@ export class KycDetailsComponent implements OnInit, OnDestroy {
         this.kycBanking$
         .pipe(
             rxFilter(value => !isEmpty(value)),
-            map(data => this.kycDetailsService.toArray(data)),
-            takeUntil(this.unsubscribe)
+            map((data: any[]) => {
+                if (data.length) {
+                    return data.map((bankingRow) => {
+                        return this.kycDetailsService.toArray(bankingRow);
+                    });
+                }
+
+                return data;
+            }),
+            takeUntil(this.unsubscribe),
         )
-        .subscribe(data => {
+        .subscribe((data) => {
             banking.data = data;
             this.changeDetectorRef.markForCheck();
         })
