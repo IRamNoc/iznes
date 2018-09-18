@@ -455,6 +455,8 @@ export class OfiClientReferentialComponent implements OnInit, OnDestroy {
         };
         this._ofiKycService.updateInvestor(payload)
         .then(() => {
+            this._ofiKycService.setRequestedClientReferential(false);
+            this._ofiKycService.setRequestedAMKycList(false);
             this._toasterService.pop('success', 'Client reference updated');
         })
         .catch(() => {
