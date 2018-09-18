@@ -23,8 +23,9 @@
 
                     <div class="form-group">
                         <various-address-select [formControl]="issueAssetForm.controls['recipient']"
-                                                [relationshipArray]="toRelationshipSelectItems"
+                                                [relationshipArray]="walletRelationships"
                                                 [ownWalletAddressArray]="walletAddressSelectItems"
+                                                [required]="true"
                                                 [class.error]="!issueAssetForm.controls['recipient'].valid && issueAssetForm.controls['recipient'].touched"></various-address-select>
                         
                         <span *ngIf="issueAssetForm.controls['recipient'].hasError('required') && !issueAssetForm.controls['recipient'].pristine"
