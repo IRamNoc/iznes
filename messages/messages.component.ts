@@ -161,8 +161,8 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
         );
 
         this.subscriptionsArray.push(
-            this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState),
-            ));
+            this.requestMailList.subscribe(requestedState => this.reRequestMailList(requestedState)),
+        );
 
         this.subscriptionsArray.push(this.tokenOb.subscribe((token) => {
             this.socketToken = token;
@@ -201,9 +201,9 @@ export class SetlMessagesComponent implements OnDestroy, OnInit {
                                 subject: 'Re: ' + reply.subject,
                                 recipients: [{ id: { walletId: reply.senderId }, text: reply.senderWalletName }],
                                 body: '<br><p>&nbsp;&nbsp;&nbsp;<s>' +
-                                    '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
-                                    reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
-                                    reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
+                                '&nbsp;'.repeat(200) + '</s></p><p>&nbsp;&nbsp;&nbsp;<b>' +
+                                reply.senderWalletName + '</b> ' + reply.date + ':</p>' +
+                                reply.body.replace(/<p>/g, '<p>&nbsp;&nbsp;&nbsp;'),
                             });
                         }
                     });
