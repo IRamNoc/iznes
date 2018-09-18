@@ -117,9 +117,7 @@ export class SetlIssueComponent implements OnInit, OnDestroy, AfterViewInit {
      *
      * @param page - page number value emitted from datagrid
      */
-    public
-
-    setCurrentPage(page) {
+    public setCurrentPage(page) {
         if (!this.editTab) this.pageCurrent = page;
         this.editTab = false;
     }
