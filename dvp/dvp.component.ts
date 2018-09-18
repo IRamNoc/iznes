@@ -4,7 +4,6 @@ import { NgRedux, select } from '@angular-redux/store';
 import { Subscription } from 'rxjs/Subscription';
 import { AlertsService } from '@setl/jaspero-ng2-alerts';
 import * as moment from 'moment';
-
 import { walletHelper, mDateHelper } from '@setl/utils';
 import {
     setRequestedWalletAddresses,
@@ -15,7 +14,6 @@ import {
     InitialisationService,
     MyWalletsService,
 } from '@setl/core-req-services';
-
 import { DvpParty, DvpForm, DvpFormParty, partyA, partyB } from './dvp.model';
 import { DVPContractService } from './dvp.service';
 import { ContractService } from '../services';
@@ -28,27 +26,25 @@ import { ContractService } from '../services';
 export class ContractsDvpComponent implements OnInit, OnDestroy {
     createContractForm: FormGroup;
     parties: [DvpParty, DvpParty];
-
     allInstrumentList: any[];
     connectedWalletId: number;
     subscriptions: Subscription[] = [];
     addressList: any[];
     toRelationshipSelectItems: any[];
     walletDirectoryList: {} = {};
+    walletAddressSelectItems: any;
+    walletDirectoryListRaw: any[];
+    walletRelationships: any[];
 
+    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
     @select(['asset', 'allInstruments', 'requested']) requestedAllInstrumentOb;
     @select(['asset', 'allInstruments', 'instrumentList']) allInstrumentOb;
-
     @select(['wallet', 'myWalletAddress', 'addressList']) addressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedAddressList']) requestedAddressListOb;
     @select(['wallet', 'myWalletAddress', 'requestedLabel']) requestedLabelListOb;
-
-    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedToRelationship$;
-    @select(['wallet', 'walletRelationship', 'toRelationshipList']) toRelationshipListOb;
-
-    @select(['wallet', 'walletDirectory', 'walletList']) directoryListOb;
-
-    @select(['user', 'connected', 'connectedWallet']) connectedWalletOb;
+    @select(['wallet', 'walletRelationship', 'requestedToRelationship']) requestedWalletRelationshipListOb;
+    @select(['wallet', 'walletRelationship', 'toRelationshipList']) walletRelationshipListOb; 
+    @select(['wallet', 'walletDirectory', 'walletList']) walletDirectoryListOb;
 
     constructor(private ngRedux: NgRedux<any>,
                 private changeDetectorRef: ChangeDetectorRef,
@@ -72,7 +68,6 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
         this.subscriptions.push(this.connectedWalletOb.subscribe((connected) => {
             this.connectedWalletId = connected;
         }));
-
         this.subscriptions.push(
             this.requestedAllInstrumentOb.subscribe((requested) => {
                 this.requestAllInstrument(requested);
@@ -82,37 +77,49 @@ export class ContractsDvpComponent implements OnInit, OnDestroy {
             this.allInstrumentList = walletHelper.walletInstrumentListToSelectItem(instrumentList);
             this.changeDetectorRef.markForCheck();
         }));
-
-        this.subscriptions.push(this.addressListOb.subscribe((addressList) => {
-            this.addressList = walletHelper.walletAddressListToSelectItem(addressList, 'label');
+        this.subscriptions.push(this.addressListOb.subscribe((walletList) => {
+            this.walletDirectoryListRaw = walletList;
+            this.walletAddressSelectItems = walletHelper.walletAddressListToSelectItem(walletList, 'label');
             this.changeDetectorRef.markForCheck();
         }));
-
         this.subscriptions.push(this.requestedAddressListOb.subscribe((requested) => {
             this.requestAddressList(requested);
             this.changeDetectorRef.markForCheck();
         }));
-
         this.subscriptions.push(this.requestedLabelListOb.subscribe((requested) => {
             this.requestWalletLabel(requested);
         }));
-
-        this.subscriptions.push(this.requestedToRelationship$.subscribe((requested) => {
+        this.subscriptions.push(this.requestedWalletRelationshipListOb.subscribe((requested) => {
             this.requestWalletToRelationship(requested);
         }));
-
-        this.subscriptions.push(this.toRelationshipListOb.subscribe((toRelationshipList) => {
+        this.subscriptions.push(this.walletRelationshipListOb.subscribe((toRelationshipList) => {
             this.toRelationshipSelectItems = walletHelper.walletToRelationshipToSelectItem(
                 toRelationshipList,
                 this.walletDirectoryList,
             );
             this.changeDetectorRef.markForCheck();
         }));
-
-        this.subscriptions.push(this.directoryListOb.subscribe((directoryList) => {
-            this.walletDirectoryList = directoryList;
-            this.changeDetectorRef.markForCheck();
-        }));
+        this.subscriptions.push(
+            this.walletDirectoryListOb.subscribe((walletList) => {
+                this.walletDirectoryListRaw = walletList;
+                this.walletDirectoryList = walletHelper.walletAddressListToSelectItem(walletList, 'walletName');
+            }),
+        );
+        this.subscriptions.push(
+            this.requestedWalletRelationshipListOb.subscribe((requested) => {
+                if (!requested) {
+                    InitialisationService.requestToRelationship(
+                        this.ngRedux, this.myWalletService, this.connectedWalletId);
+                }
+            }),
+            this.walletRelationshipListOb.subscribe((walletList) => {
+                if (Object.keys(walletList).length) {
+                    this.walletRelationships = walletHelper.walletToRelationshipToSelectItem(
+                        walletList, this.walletDirectoryList);
+                }
+                this.changeDetectorRef.markForCheck();
+            }),
+        );
     }
 
     private requestAllInstrument(requested: boolean): void {
