@@ -154,7 +154,6 @@ export class ReportingService {
             this.initSubscriptions();
         });
 
-        /* Subscribe to get address labels by wallet ID */
         this.addressDirectory$.subscribe((addresses) => {
             this.addressDirectory = addresses;
         });
@@ -197,8 +196,8 @@ export class ReportingService {
         .map((issue) => {
             return {
                 asset: issue.asset,
-                addressLabel: isEmpty(issue.breakdown[0].label) ? 'Unknown' : issue.breakdown[0].label,
-                address: isEmpty(issue.breakdown[0].addr) ? 'Unknown' : issue.breakdown[0].addr,
+                addressLabel: issue.breakdown[0].label,
+                address: issue.breakdown[0].addr,
                 total: -issue.breakdown[0].free,
                 encumbered: issue.totalencumbered,
                 free: issue.total - issue.totalencumbered,
@@ -293,7 +292,7 @@ export class ReportingService {
                 asyncTaskPipe,
                 (data) => {
                     walletID = Number(data[1].Data[0].leiID);
-                    /* Request the address labels for the wallet if we don't already have them */
+                    // Request the address labels if we don't have them
                     this.requestAddressLabels(walletID, holding.addr);
                 },
             ));
@@ -442,7 +441,7 @@ export class ReportingService {
      * @param walletId
      */
     private requestAddressLabels(walletId: number, address: string) {
-        // Request the address labels if we don't have them
+        // Check we don't already have them
         if (isEmpty(this.addressDirectory[address]) && !this.requestedWalletIDs.includes(walletId)) {
             const asyncTaskPipe = this.myWalletService.requestWalletLabel({
                 walletId,
